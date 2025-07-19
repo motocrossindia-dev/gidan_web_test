@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Apply Poppins globally */
+body {
+    @apply font-sans;
+  }
+  
