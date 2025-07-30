@@ -493,47 +493,91 @@ const isAuthenticatedMobile = !!localStorage.getItem('userData');
     }
   };
 
+  // const handlePlanterColorClick = async (color, product) => {
+  //   try {
+  //     // Set the selected size
+  //     setSelectedColor(color);
+  //     // If the same color is clicked again, toggle the selection (deselect)
+  //     if (selectedColor?.id === color?.id) {
+  //       setSelectedColor(null); // Deselect the color
+  //     } else {
+  //       setSelectedColor(color); // Select the new color
+  //     }
+  //     // Make API call to filter products by size
+  //     const response = await axiosInstance.get(
+  //       `/product/filterProduct/${product.id}/`,
+  //       {
+  //         params: {
+  //           color_id: color.id,
+  //           planter_id: product.planter_id,
+  //           planter_size_id: product.planter_size_id,
+  //           size_id: product.size_id,
+  //         },
+  //       }
+  //     );
+
+  //     // Handle the API response
+  //     const data = response.data;
+  //     const images = data?.data?.product?.images || [];
+  //     setImageThumbnails(images);
+  //     setProductDetailData(data);
+
+  //     // You can update state or perform additional actions with the filtered products
+  //   } catch (error) {
+  //     console.error("Error fetching filtered products:", error);
+  //     // Handle error scenarios
+  //   }
+  // };
+
+
   const handlePlanterColorClick = async (color, product) => {
-    try {
-      // Set the selected size
-      setSelectedColor(color);
-      // If the same color is clicked again, toggle the selection (deselect)
-      if (selectedColor?.id === color?.id) {
-        setSelectedColor(null); // Deselect the color
-      } else {
-        setSelectedColor(color); // Select the new color
-      }
-      // Make API call to filter products by size
-      const response = await axiosInstance.get(
-        `/product/filterProduct/${product.id}/`,
-        {
-          params: {
-            color_id: color.id,
-            planter_id: product.planter_id,
-            planter_size_id: product.planter_size_id,
-            size_id: product.size_id,
-          },
-        }
-      );
+  try {
+    // Check if same color is clicked (toggle deselect)
+    const isSameColor = selectedColor?.id === color?.id;
 
-      // Handle the API response
-      const data = response.data;
-      const images = data?.data?.product?.images || [];
-      setImageThumbnails(images);
-      setProductDetailData(data);
+    // Update the selectedColor state
+    const newColor = isSameColor ? null : color;
+    setSelectedColor(newColor);
 
-      // You can update state or perform additional actions with the filtered products
-    } catch (error) {
-      console.error("Error fetching filtered products:", error);
-      // Handle error scenarios
+    // If deselected, reset to original product
+    if (isSameColor) {
+      const originalResponse = await axiosInstance.get(`/product/${product.id}`);
+      const originalData = originalResponse.data;
+      const originalImages = originalData?.data?.product?.images || [];
+
+      setImageThumbnails(originalImages);
+      setProductDetailData(originalData);
+      return;
     }
-  };
+
+    // Make API call to filter by new color
+    const response = await axiosInstance.get(
+      `/product/filterProduct/${product.id}/`,
+      {
+        params: {
+          color_id: color.id,
+          planter_id: product.planter_id,
+          planter_size_id: product.planter_size_id,
+          size_id: product.size_id,
+        },
+      }
+    );
+
+    const data = response.data;
+    const images = data?.data?.product?.images || [];
+
+    setImageThumbnails(images);
+    setProductDetailData(data);
+
+  } catch (error) {
+    console.error("Error fetching filtered products:", error);
+  }
+};
+
   useEffect(() => {
     if (productDetailData?.data?.product_type == 'plant') {
       const { size_id, planter_size_id, planter_id, color_id } =
         productDetailData.data.product;
-
-
 
       setSelectedSize(
         productDetailData?.data?.product_sizes?.find(
@@ -862,7 +906,7 @@ const isAuthenticatedMobile = !!localStorage.getItem('userData');
                     {productDetailData.data.product_colors.map((color) => (
                       <button
                         key={color?.id || color?.color_code}
-                        onClick={() => handlePlanterColorClick(color)}
+                        onClick={() => handlePlanterColorClick(color, productDetailData.data.product)}
                         className={`w-10 h-10 rounded-full mr-2 focus:outline-none ${selectedColor?.id === color?.id
                           ? "border-2 border-bio-green text-gray-700"
                           : "border-2 border-gray-300 text-black"

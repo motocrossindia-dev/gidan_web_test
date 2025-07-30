@@ -109,9 +109,45 @@ const Verification = ({ onClose, onSubmit }) => {
     }
   };
 
-  const handleResendOTP = () => {
-    enqueueSnackbar("OTP Resent Successfully!", { variant: "info" });
-  };
+  // const handleResendOTP = () => {
+  //   enqueueSnackbar("OTP Resent Successfully!", { variant: "info" });
+  // };
+
+
+  const handleResendOTP = async () => {
+  const mobile = JSON.parse(localStorage.getItem("storeUserData"))?.mobile;
+
+  if (!mobile) {
+    enqueueSnackbar("Mobile number not found.", { variant: "error" });
+    return;
+  }
+
+  const formDataToSend = new FormData();
+  formDataToSend.append("mobile", mobile);
+
+  try {
+    const response = await axios.post(
+      `${process.env.REACT_APP_API_URL}/account/registerWithMobile/`,
+      formDataToSend,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.status === 201 || response.status === 200) {
+      enqueueSnackbar(response?.data?.message || "OTP resent successfully.", {
+        variant: "info",
+      });
+    }
+  } catch (error) {
+    enqueueSnackbar(
+      error.response?.data?.message || "Failed to resend OTP.",
+      { variant: "error" }
+    );
+  }
+};
 
   return (
     <>
