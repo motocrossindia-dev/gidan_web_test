@@ -5,191 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df516f1c-c962-4e0d-8a95-1119b7efb609" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Components/Cart/cartcount.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/views/utilities/WishList/wishlistcount.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.git.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/NEWPROJECT25-12-24.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Components/Banner/Banner.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Banner/Banner.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Blog/Blog.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Blog/Blog.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Cart/Cart.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Cart/Cart.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Category/CategoryIcons.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Category/CategoryIcons.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/ComboOffer/ComboOffer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/ComboOffer/ComboOffer.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/EmptyCartMessage/EmptyCart.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/EmptyCartMessage/EmptyCart.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/ExploreWorks/ExploreWorks.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/ExploreWorks/ExploreWorks.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Footer/Faqs.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Footer/Faqs.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Footer/Footer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Footer/Footer.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Footer/PrivacyPolicy.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Footer/PrivacyPolicy.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Footer/ReturnPolicy.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Footer/ReturnPolicy.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Footer/ShippingPolicy.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Footer/ShippingPolicy.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Footer/TermsofServices.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Footer/TermsofServices.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Header/Header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Header/Header.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/HeroSection/HeroSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/HeroSection/HeroSection.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Components/Home/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Home/Home.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/NavigationBar/NavigationBar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/NavigationBar/NavigationBar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/OfferReward/OfferReward.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/OfferReward/OfferReward.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/RewardClub/RewardClub.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/RewardClub/RewardClub.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalProduct.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/ShopTheLook/PopupShopTheLook.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/ShopTheLook/PopupShopTheLook.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/ShopTheLook/ShopTheLook.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/ShopTheLook/ShopTheLook.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Store/CheckOutStore.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Store/CheckOutStore.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Testinomials/Testinomials.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Testinomials/Testinomials.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingSection.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/WalletActivation/WalletActivation.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/WalletActivation/WalletActivation.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/WithoutLoginHamburger/WithoutLoginHamburger.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/WithoutLoginHamburger/WithoutLoginHamburger.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CustomHooks/useDeviceDetect.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/CustomHooks/useDeviceDetect.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Layout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Layout.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MobileLogin/MobileLoginPage/MobileLoginPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/MobileLogin/MobileLoginPage/MobileLoginPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MobileLogin/MobileSignIn/MobileSignIn.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/MobileLogin/MobileSignIn/MobileSignIn.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MobileLogin/MobileVerification/Verification.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/MobileLogin/MobileVerification/Verification.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pages/Login/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/Login/Login.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pages/SignIn/Signin.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/SignIn/Signin.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pages/Verification/Verification.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/Verification/Verification.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/Service new/ServicePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/Service new/ServicePage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/ServiceHome/Services.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/ServiceHome/Services.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/ServicePage/DripIrrigation.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/ServicePage/DripIrrigation.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/ServicePage/GardenMaintenance.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/ServicePage/GardenMaintenance.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/ServicePage/Landscape.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/ServicePage/Landscape.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/ServicePage/Service03.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/ServicePage/Service03.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/ServicePage/ServicePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/ServicePage/ServicePage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/ServicePage/Terracegardening.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/ServicePage/Terracegardening.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/ServicePage/VerticalGardening.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/ServicePage/VerticalGardening.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/Slice/userSlice.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/Slice/userSlice.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/CartProducts/Cart/Cart.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/CartProducts/Cart/Cart.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/CartProducts/CartComponent/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/CartProducts/CartComponent/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/MobileUser/AddAGiftCardMobile/AddAGiftCardMobile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/MobileUser/AddAGiftCardMobile/AddAGiftCardMobile.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/MobileUser/AddNewAddressMobile/AddNewAddressMobile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/MobileUser/AddNewAddressMobile/AddNewAddressMobile.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/MobileUser/NotificationMobile/Notificationmobile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/MobileUser/NotificationMobile/Notificationmobile.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/MobileUser/ReferFriendMobile/ReferFriendMobile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/MobileUser/ReferFriendMobile/ReferFriendMobile.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/MobileUser/TrackOrderMobile/TrackOrderMobile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/MobileUser/TrackOrderMobile/TrackOrderMobile.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Stores/Stores.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Stores/Stores.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Users/GiftCard/GiftCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Users/GiftCard/GiftCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Users/Notification/Notification.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Users/Notification/Notification.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Users/ProfilePage/ProfilePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Users/ProfilePage/ProfilePage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Users/ReferAFriend/ReferAFriend.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Users/ReferAFriend/ReferAFriend.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Users/SideBar/SideBar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Users/SideBar/SideBar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Users/TrackOrder/TrackOrder.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Users/TrackOrder/TrackOrder.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/AnniversaryGifts.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/AnniversaryGifts.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/Banner1.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/CheckoutStores.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/CheckoutStores.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/RecentlyViewedCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/RecentlyViewedProduct.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/BestSeller/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BestSeller/Banner1.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/BestSeller/BestSeller.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BestSeller/BestSeller.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/BestSeller/CheckoutStores.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BestSeller/CheckoutStores.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/BestSeller/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BestSeller/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/BestSeller/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BestSeller/RecentlyViewedCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/BirthdayGifts/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BirthdayGifts/Banner1.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/BirthdayGifts/BirthdayGifts.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BirthdayGifts/BirthdayGifts.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/BirthdayGifts/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BirthdayGifts/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/BirthdayGifts/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BirthdayGifts/RecentlyViewedCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Blog/BlogComponent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Blog/BlogComponent.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Blog/Category.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Blog/Category.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Blog/CategoryFilter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Blog/CategoryFilter.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Blog/SingleBlog.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Blog/SingleBlog.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Carriers/Carriers.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Carriers/Carriers.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/CheckoutPage/CheckoutPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/CheckoutPage/CheckoutPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/ComboOffer/ComboImage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ComboOffer/ComboImage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/ComboOffer/ComboOffer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ComboOffer/ComboOffer.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/ComboOffer/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ComboOffer/RecentlyViewedCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/ContactUs/ContactUs.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ContactUs/ContactUs.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/CorperateGifting/CorporateGiftingPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/CorperateGifting/CorporateGiftingPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/CorperateGifting/SeasonalCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/CorperateGifting/SeasonalCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/E-GiftCard/EcommerceGiftCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/E-GiftCard/EcommerceGiftCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/Banner1.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/Featured.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/Featured.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/RecentlyViewedCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/Banner1.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/CheckoutStores.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/CheckoutStores.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/FloweringPlants.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/FloweringPlants.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/RecentlyViewedCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/FranchiseEnquires/FranchiseEnquires.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/FranchiseEnquires/FranchiseEnquires.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/FranchiseEnquires/FranchiseForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/FranchiseEnquires/FranchiseForm.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/FranchiseEnquires/HeroSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/FranchiseEnquires/HeroSection.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/FranchiseEnquires/StoreLocations.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/FranchiseEnquires/StoreLocations.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/FranchiseEnquires/WhyWeRock.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/FranchiseEnquires/WhyWeRock.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Gifts/Comingsoon.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Gifts/Comingsoon.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Gifts/Gifts.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Gifts/Gifts.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Gifts/Header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Gifts/Header.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Gifts/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Gifts/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Gifts/ShopBySection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Gifts/ShopBySection.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Hamburger/Hamburger.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Hamburger/Hamburger.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/HouseWarming/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/HouseWarming/Banner1.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/HouseWarming/CheckoutStores.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/HouseWarming/CheckoutStores.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/HouseWarming/HouseWarming.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/HouseWarming/HouseWarming.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/HouseWarming/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/HouseWarming/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/HouseWarming/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/HouseWarming/RecentlyViewedCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Latest/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Latest/Banner1.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Latest/Latest.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Latest/Latest.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Latest/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Latest/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Latest/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Latest/RecentlyViewedCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/MobileCheckout/OrderSummary.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/MobileCheckout/OrderSummary.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/MobileSidebar/MobileSidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/MobileSidebar/MobileSidebar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/My Orders/MyOrders.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/My Orders/MyOrders.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/My Orders/OrderModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/My Orders/OrderModal.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/OurWork/OurWork.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/OurWork/OurWork.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/Banner1.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/CheckoutStores.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/CheckoutStores.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/OutdoorPlants.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/OutdoorPlants.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/RecentlyViewedCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PaymentGateway/PaymentGateway.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PaymentGateway/PaymentGateway.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PaymentGateway/Successpage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PaymentGateway/Successpage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantCare/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantCare/Banner1.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantCare/PlantCare.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantCare/PlantCare.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantCare/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantCare/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantCare/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantCare/RecentlyViewedCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/Banner1.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/CheckoutStores.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/CheckoutStores.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductGrid.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/RecentlyViewedCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Pots/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Pots/Banner1.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Pots/Pots.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Pots/Pots.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Pots/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Pots/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Pots/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Pots/ProductGrid.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Pots/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Pots/RecentlyViewedCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/AddOnData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/AddOnData.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductData.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductFeatured.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductFeatured.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductFeaturedData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductFeaturedData.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductSeller.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductSeller.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductSellerData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductSellerData.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/WriteAReview.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/WriteAReview.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/RakshaBhandan/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/RakshaBhandan/Banner1.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/RakshaBhandan/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/RakshaBhandan/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/RakshaBhandan/RakshaBhandan.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/RakshaBhandan/RakshaBhandan.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/RakshaBhandan/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/RakshaBhandan/RecentlyViewedCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/Banner1.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/RecentlyViewedCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/SeasonalCollection1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/SeasonalCollection1.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Seeds/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Seeds/Banner1.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Seeds/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Seeds/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Seeds/RecentlyviewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Seeds/RecentlyviewedCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Seeds/Seeds.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Seeds/Seeds.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Thankyou/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Thankyou/Banner1.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Thankyou/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Thankyou/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Thankyou/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Thankyou/RecentlyViewedCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Thankyou/Thankyou.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Thankyou/Thankyou.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Wallet/BTCoinsHistory.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Wallet/BTCoinsHistory.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Wallet/BTcoins.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Wallet/BTcoins.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Wallet/Wallet.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Wallet/Wallet.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Wallet/WalletHistory.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Wallet/WalletHistory.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/WishList/WishList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/WishList/WishList.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -207,6 +25,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "MohanMotocross"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/motocrossindia-dev/Biotechmaali_ecommerce_mohan.git",
+    "accountId": "403ea78a-e7fe-42c7-b1dd-1a7093060d6b"
+  }
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
 }</component>
@@ -219,8 +49,8 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/COMPANY PROJECTS/BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN/git 3/git/src/views/utilities&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev__mohan&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/COMPANY PROJECTS/BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN/git 3/biotech_ecomerce&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -270,6 +100,9 @@
       <workItem from="1752473057317" duration="7262000" />
       <workItem from="1752485055430" duration="5516000" />
       <workItem from="1752905975904" duration="99000" />
+      <workItem from="1753767888648" duration="1173000" />
+      <workItem from="1753769953615" duration="24000" />
+      <workItem from="1753935422301" duration="353000" />
     </task>
     <servers />
   </component>

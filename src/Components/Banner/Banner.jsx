@@ -9,6 +9,7 @@ import "swiper/css/navigation";
 import { useNavigate } from "react-router-dom";
 
 const Banner = (home_images) => {
+  console.log(home_images,'===============hero');
 
   const navigate = useNavigate(); // Correct usage of useNavigate
 
@@ -31,11 +32,11 @@ const Banner = (home_images) => {
               {/* Left side with plant image */}
               <div className="w-1/4 sm:w-1/4 lg:w-1/2">
                 <img name=" "   
-                  src={`${process.env.REACT_APP_API_URL}${banner.web_banner}`}
+                  src={`https://backend.biotechmaali.com${banner.web_banner}`}
                   alt="Plant banner"
                   className="w-full h-auto object-cover rounded-lg sm:w-[50px] sm:h-[50px] lg:w-[400px] lg:h-[160px]"
                 />          <img name=" "
-                  src={`${process.env.REACT_APP_API_URL}${banner.mobile_banner}`}
+                  src={`https://backend.biotechmaali.com${banner.mobile_banner}`}
                   alt="Plant banner"
                   className="w-full h-auto object-cover rounded-lg sm:w-[50px] sm:h-[50px] lg:w-[400px] lg:h-[160px]"
                 />

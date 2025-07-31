@@ -17,6 +17,7 @@ import CheckOutStore from '../../Components/Store/CheckOutStore';
 import axiosInstance from '../../Axios/axiosInstance';
 import {Helmet} from "react-helmet";
 import {useLocation} from "react-router-dom";
+import axios from "axios";
 
 
 const Home = () => {
@@ -28,8 +29,9 @@ const Home = () => {
 
   const getBannerImages = async () => {
     try {
-      const response = await axiosInstance.get(`/promotion/banner/`);
+      const response = await axios.get(`/promotion/banner/`);
       const banner_images = response?.data?.data?.banners;
+      console.log(banner_images,'===============all banners');
       const home_images = banner_images.filter((images) => images.type === 'Home' && images.is_visible === true);
       setHomeImages(home_images);
       const hero_images = banner_images.filter((images) => images.type === 'Hero' && images.is_visible === true);
@@ -42,13 +44,13 @@ const Home = () => {
   };
 
   useEffect(() => {
+    console.log(homeImages,'------------home');
+    console.log(heroImages,'------------heroImages');
+
     getBannerImages();
   }, []);
 
-  // // ⬆️ Scroll to top on route change
-  // useEffect(() => {
-  //   window.scrollTo({ top: -10, left: 0, behavior: 'auto' }); // change to 'smooth' if needed
-  // }, [location.pathname]);
+
 
   return (
     <div>
