@@ -1,11 +1,10 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 
 const API_URL = `${process.env.REACT_APP_API_URL}/filters/filters/`;
 
-const FilterSidebar = ({setResults}) => {
+const FilterSidebar = ({ setResults, setShowMobileFilter }) => {
   const [selectedFilterType, setSelectedFilterType] = useState("plant");
   const [openFilters, setOpenFilters] = useState({});
   const [selectedFilters, setSelectedFilters] = useState({});
@@ -52,13 +51,12 @@ const FilterSidebar = ({setResults}) => {
   };
 
   const applyFilters = async () => {
-    // Construct the query parameters dynamically
     let queryParams = new URLSearchParams();
     queryParams.append("type", selectedFilterType);
 
     Object.entries(selectedFilters).forEach(([filter, values]) => {
       if (values.length > 0) {
-        queryParams.append(filter, values.join(",")); // Append multiple selected values
+        queryParams.append(filter, values.join(","));
       }
     });
 
@@ -69,13 +67,12 @@ const FilterSidebar = ({setResults}) => {
 
     try {
       const response = await axios.get(filterApiUrl);
-      if (response.status===200){
+      if (response.status === 200) {
         setResults(response.data.results);
-        // setAppliedFilters(response.data); 
+        if (setShowMobileFilter) {
+          setShowMobileFilter(false); // close sidebar
+        }
       }
-        
-      
-      // Store applied filter results (if needed)
     } catch (error) {
       console.error("Error applying filters:", error);
     }
@@ -84,12 +81,12 @@ const FilterSidebar = ({setResults}) => {
   return (
     <div className="w-full p-6 bg-white mt-4">
       <div className="mb-6 flex justify-between items-center">
-        <h2 className="text-base font-normal text-black">Filter</h2>
+        <h2 className="text-base font-normal text-black">Filter </h2>
         <button
           className="px-2 py-1 text-xs bg-gray-300 rounded text-gray-700 font-semibold"
           onClick={() => setSelectedFilters({})}
         >
-          RESET
+          RESET 
         </button>
       </div>
 
@@ -160,7 +157,6 @@ const FilterSidebar = ({setResults}) => {
         )
       ))}
 
-      {/* Apply Button */}
       <button
         className="w-full mt-4 py-2 bg-blue-500 text-white rounded text-sm font-semibold"
         onClick={applyFilters}

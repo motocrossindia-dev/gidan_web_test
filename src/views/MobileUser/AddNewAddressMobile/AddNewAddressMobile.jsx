@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { TrashIcon } from "lucide-react";
@@ -6,15 +6,18 @@ import Verify from "../../../Services/Services/Verify";
 import { isMobile } from "react-device-detect";
 import axiosInstance from "../../../Axios/axiosInstance";
 
+
+
+
+
+
+
 const AddressSection = () => {
   const accessToken = useSelector(selectAccessToken);
   const [address, setAddress] = useState([]);
 
-  useEffect(() => {
-    fetchAddresses();
-  }, [fetchAddresses]);
-
-  const fetchAddresses = async () => {
+  const fetchAddresses = useCallback(async () => {
+    if (!accessToken) return;
     try {
       const response = await axiosInstance.get(
         `${process.env.REACT_APP_API_URL}/account/address/`,
@@ -24,11 +27,18 @@ const AddressSection = () => {
           },
         }
       );
-      setAddress(response.data.data.address);
+      setAddress(response.data.data.address || []);
     } catch (error) {
       console.error("Error fetching addresses:", error);
     }
-  };
+  }, [accessToken]);
+
+  useEffect(() => {
+    fetchAddresses();
+  }, [fetchAddresses]);
+
+
+
 
   const handleDefaultAddressChange = async (addressId) => {
     try {
@@ -435,3 +445,4 @@ const AddressSection = () => {
 };
 
 export default AddressSection;
+

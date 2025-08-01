@@ -155,7 +155,7 @@ const NavBar = () => {
           <div className="sm:hidden flex justify-left items-center space-x-4 ">
             <WithoutLoginHamburger />
             <Link to="/" onClick={() => window.scrollTo({ top: -10, left: 0, behavior: 'auto' })}>
-              <img name=" "   
+              <img   
                 src={logo}
                 alt="Biotech Maali Logo"
                 className="w-full h-auto "
@@ -167,7 +167,7 @@ const NavBar = () => {
           {/* Desktop: Logo */}
           <div className="hidden sm:flex items-center">
             <Link to="/" onClick={() => window.scrollTo({ top: -10, left: 0, behavior: 'auto' })}>
-              <img name=" "   
+              <img   
                 src={logo}
                 alt="Biotech Maali Logo"
                 className="w-full h-auto"

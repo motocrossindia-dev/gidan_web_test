@@ -98,6 +98,25 @@ useEffect(() => {
             Login or Signup
           </Link>
         )}
+{/* {userName && userName !== 'Guest' ? (
+  <span
+    className="ml-2 text-black flex items-center justify-start cursor-pointer"
+    onClick={handleUserNameClick}
+  >
+    {userName.slice(0, 8)}
+  </span>
+) : (
+  <span
+    className="ml-2 text-black flex items-center justify-start cursor-pointer"
+    onClick={() => {
+      setIsOpen(false);
+      navigate("/mobile-signin");
+    }}
+  >
+    Login or Signup
+  </span>
+)} */}
+
       </div>
 
       {/* Menu Links */}
