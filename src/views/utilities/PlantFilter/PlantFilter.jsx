@@ -23,6 +23,22 @@ const { id } = useParams();
   const [showMobileFilter, setShowMobileFilter] = useState(false);
   const [products, setProducts] = useState([]);
     const [results,setResults]=useState([]);
+
+
+    useEffect(() => {
+  if (showMobileFilter) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "auto";
+  }
+
+  return () => {
+    document.body.style.overflow = "auto";
+  };
+}, [showMobileFilter]);
+
+
+
   useEffect(() => {
     window.scrollTo(0, 0); // Scroll to the top
   }, []);
@@ -113,7 +129,7 @@ getSubCategorywiseProduct(id)
       <div className="flex flex-row md:flex-row px-4 ">
         {/* Filter Sidebar */}
         <div className="hidden md:block">
-          <FilterSidebar setResults={setResults}  />
+          <FilterSidebar setResults={setResults} />
 
         </div>
         <div className="flex-1">
@@ -138,7 +154,7 @@ getSubCategorywiseProduct(id)
             >
               ✕
             </button>
-            <FilterSidebar setResults={setResults}  />
+            <FilterSidebar setResults={setResults} setShowMobileFilter={setShowMobileFilter} />
             </div>
         </div>
       )}
@@ -148,3 +164,4 @@ getSubCategorywiseProduct(id)
 }
 
 export default PlantFilter;
+
