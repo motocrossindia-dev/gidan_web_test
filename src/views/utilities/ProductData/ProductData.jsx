@@ -267,7 +267,7 @@ const isAuthenticatedMobile = !!localStorage.getItem('userData');
 
 
         if (response.status === 200) {
-          enqueueSnackbar("Order placed successfully!", { variant: "success" });
+    //      enqueueSnackbar("Order placed successfully!", { variant: "success" });
           window.dispatchEvent(new Event("cartUpdated"));
 
           if (window.innerWidth <= 768) {
