@@ -22,6 +22,22 @@ const PaymentGateway = () => {
   const [balance,setBalance] = useState(null)
   const [walletAdded,setWalletAdded] = useState(null)
 
+  const [isGstSelected, setIsGstSelected] = useState(false);
+const [isGst, setIsGst] = useState(false);
+const [selectedGst, setSelectedGst] = useState("");
+
+const gstFromProfile = useSelector((state) => state.user.gst);
+
+
+
+const handleGstCheckbox = (e) => {
+  const checked = e.target.checked;
+  setIsGstSelected(checked);
+  setIsGst(checked);
+  setSelectedGst(checked ? gstFromProfile : '');
+};
+
+
   const getWalletbalance =async()=>{
     try {
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/wallet/wallet`,
@@ -80,7 +96,8 @@ const PaymentGateway = () => {
       }
       const response = await axiosInstance.patch(
         `/order/proceedToPayment/`,
-        { order_id: order_id, payment_method: selectedMethod },
+        { order_id: order_id, payment_method: selectedMethod,  is_gst: isGst,
+           gst_number: selectedGst },
       );
   
       
@@ -158,6 +175,25 @@ const PaymentGateway = () => {
     <div className="flex flex-col lg:flex-row gap-6 p-6">
       <div className="lg:w-3/4 max-h-screen overflow-y-auto p-4 bg-gray-100 rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">Select a Payment Method</h2>
+
+<div className="mb-4">
+  <label className="flex items-center space-x-2 text-sm text-gray-700">
+    <input
+      type="checkbox"
+      checked={isGstSelected}
+      onChange={handleGstCheckbox}
+      className="w-4 h-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+    />
+    <span>Use My GST Number</span>
+  </label>
+
+    {isGstSelected && (
+    <p className="ml-6 mt-2 text-sm text-gray-600">
+      <strong>GST Number:</strong> {gstFromProfile || "Not provided"}
+    </p>
+  )}
+</div>
+
         <div className="bg-white p-6 shadow-md rounded-lg transition-all duration-300">
         <div className="space-y-6">
   {paymentOptions.map((option) => {
@@ -206,14 +242,23 @@ const PaymentGateway = () => {
   })}
 </div>
 
-          <div className="mt-8 flex justify-center">
-            <button
-              onClick={handlePayment}
-              className="bg-green-600 text-white font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-green-700 transition-all duration-300"
-            >
-              Proceed to Payment
-            </button>
-          </div>
+{!(isGstSelected && !gstFromProfile) && (
+  <div className="mt-8 flex justify-center">
+    <button
+      onClick={handlePayment}
+      className="bg-green-600 text-white font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-green-700 transition-all duration-300"
+    >
+      Proceed to Payment
+    </button>
+  </div>
+)}
+
+{isGstSelected && !gstFromProfile && (
+  <p className="text-red-500 text-center mt-4 text-sm font-medium">
+    Please add your GST number in Profile to proceed with this option.
+  </p>
+)}
+
         </div>
       </div>
       <div className="w-full lg:w-1/4 mt-6 lg:mt-4 lg:pl-6">

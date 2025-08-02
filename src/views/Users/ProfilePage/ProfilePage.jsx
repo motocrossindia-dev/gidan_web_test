@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { useSnackbar } from "notistack";
 import useDeviceDetect from "../../../CustomHooks/useDeviceDetect";
@@ -9,8 +9,11 @@ import AddressSection from "./AddressSection";
 import FAQSection from "./FAQSection";
 import Verify from "../../../Services/Services/Verify";
 import {Helmet} from "react-helmet";
+import { setGst } from '../../../redux/Slice/userSlice';
+
 
 const ProfileForm = () => {
+  const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { isDesktop } = useDeviceDetect();
   const accessToken = useSelector(selectAccessToken);
@@ -25,6 +28,9 @@ const ProfileForm = () => {
   const [userEmail, setUserEmail] = useState("");
   const [userMobile, setUserMobile] = useState("");
   const [userId, setUserId] = useState(null);
+
+  // const [userGst, setUserGst] = useState("");
+  const gst = useSelector((state) => state.user.gst);
 
   useEffect(() => {
     window.scrollTo(0, 0); // Scroll to the top
@@ -51,6 +57,8 @@ const ProfileForm = () => {
       setDateOfBirth(profileData.date_of_birth || "");
       setUserEmail(profileData.email || "");
       setUserMobile(profileData.mobile || "");
+      dispatch(setGst(profileData.gst || ""));
+
     } catch (error) {
       console.error("Error fetching profile data:", error);
     }
@@ -89,6 +97,7 @@ const ProfileForm = () => {
         ...(dateOfBirth ? { date_of_birth: dateOfBirth } : {}),
         gender: gender,
         mobile: userMobile,
+        gst: gst,
       },
     };
 
@@ -127,6 +136,10 @@ const ProfileForm = () => {
     setIsEditing(false);
   };
 
+    const handleGstChange = (e) => {
+    dispatch(setGst(e.target.value));
+  };
+
   return (
       <>
         <Helmet>
@@ -144,7 +157,7 @@ const ProfileForm = () => {
               <div className="border p-6 rounded-md shadow-md bg-white">
                 {/* Title */}
                 <div className="flex justify-between items-center">
-                  <h2 className="text-xl font-bold">Personal Information</h2>
+                  <h2 className="text-xl font-bold">Personal Information </h2>
                   {/* Edit Button */}
                   <div>
                     {!isEditing ? (
@@ -293,6 +306,23 @@ const ProfileForm = () => {
                         value={userMobile}
                         onChange={(e) => setUserMobile(e.target.value)} // Update state
                         required
+                      />
+                    </div>
+
+
+                    <div>
+                      <label className="block font-semibold">
+                        GST Number (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Enter your GST Number"
+                        className="p-3 border rounded w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        // disabled={true}
+                        disabled={!isEditing}
+                        value={gst}
+                        onChange={handleGstChange} // Update state
+                        
                       />
                     </div>
                   </div>
