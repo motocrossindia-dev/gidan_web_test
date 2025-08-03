@@ -27,6 +27,21 @@ useEffect(() => {
 }, [username]);
 
 
+useEffect(() => {
+  // Disable scroll when sidebar or logout dialog is open
+  if (isOpen || isLogoutDialogOpen) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = 'auto';
+  }
+
+  return () => {
+    document.body.style.overflow = 'auto';
+  };
+}, [isOpen, isLogoutDialogOpen]);
+
+
+
 
   const handleLogoutClick = () => {
     setIsOpen(false);
