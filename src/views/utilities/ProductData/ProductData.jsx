@@ -711,69 +711,70 @@ const isAuthenticatedMobile = !!localStorage.getItem('userData');
         <div className="container mx-auto px-3 py-4 font-sans md:px-8">
           <div className="flex flex-col md:flex-row -mx-4">
             <div className="md:flex-1 px-4">
-              <div className="flex justify-center h-auto bg-gray-50">
-                <div className="w-full h-full md:w-full md:h-1/2 rounded-lg bg-gray-100">
-                  <img name=" "   
-                    src={
-                      imageThumbnails[selectedImage]?.image ||
-                      productData.images[0].image
-                    }
-                    // src={productdata}
-                    loading="lazy"
-                    alt={`Product view ${selectedImage + 1}`}
-                    className="w-30 h-30 object-fill"
-                  />
-                </div>
-              </div>
+{/* Main Image */}
+<div className="flex justify-center h-auto bg-gray-50">
+  <div className="w-full h-full md:w-full md:h-1/2 rounded-lg bg-gray-100 flex items-center justify-center">
+    <img
+      src={
+        imageThumbnails[selectedImage]?.image ||
+        productData.images[0].image
+      }
+      loading="lazy"
+      alt={`Product view ${selectedImage + 1}`}
+      className="w-[500px] h-[500px] object-cover rounded"
+    />
+  </div>
+</div>
 
-              <div className="flex items-center mb-4 mt-6">
-                {/* Left Navigation Button */}
-                <button
-                  onClick={() =>
-                    setSelectedImage((prev) =>
-                      prev === 0 ? productData.images.length - 1 : prev - 1
-                    )
-                  }
-                  className="text-gray-500 hover:text-gray-800 focus:outline-none px-2"
-                >
-                  <FaChevronLeft size={24} />
-                </button>
 
-                {/* ==================== */}
-                <div className="flex flex-1 overflow-x-auto">
-                  {imageThumbnails.slice(1).map((image, i) => (
-                    <div className="flex-1 px-2" key={i + 1}>
-                      <button
-                        onClick={() => setSelectedImage(i + 1)}
-                        className={`focus:outline-none w-full rounded-lg h-3/4 md:h-3/4 bg-gray-100 flex items-center justify-center ${selectedImage === i + 1
-                          ? "ring-2 ring-indigo-300 ring-inset"
-                          : ""
-                          }`}
-                      >
-                        <img name=" "   
-                          src={image.image}
-                          loading="lazy"
-                          alt={`${productData.name} ${i + 2}`}
-                          className="h-full w-full object-cover"
-                        />
-                      </button>
-                    </div>
-                  ))}
-                </div>
+<div className="flex items-center justify-center gap-2 mt-6 overflow-x-auto px-2">
+  {/* Left Navigation Button */}
+  <button
+    onClick={() =>
+      setSelectedImage((prev) =>
+        prev === 0 ? productData.images.length - 1 : prev - 1
+      )
+    }
+    className="text-gray-500 hover:text-gray-800 focus:outline-none"
+  >
+    <FaChevronLeft size={24} />
+  </button>
 
-                {/* Right Navigation Button */}
-                <button
-                  onClick={() =>
-                    setSelectedImage((prev) =>
-                      prev === productData.images.length - 1 ? 0 : prev + 1
-                    )
-                  }
-                  className="text-gray-500 hover:text-gray-800 focus:outline-none px-2"
-                >
-                  <FaChevronRight size={24} />
-                </button>
-              </div>
-            </div>
+  {/* Thumbnail List */}
+  <div className="flex gap-3">
+    {imageThumbnails.slice(1).map((image, i) => (
+      <button
+        key={i + 1}
+        onClick={() => setSelectedImage(i + 1)}
+        className={`w-[90px] h-[90px] rounded-lg bg-gray-100 flex items-center justify-center shrink-0 ${
+          selectedImage === i + 1 ? "ring-2 ring-indigo-300 ring-inset" : ""
+        }`}
+      >
+        <img
+          src={image.image}
+          loading="lazy"
+          alt={`${productData.name} ${i + 2}`}
+          className="w-full h-full object-cover rounded"
+        />
+      </button>
+    ))}
+  </div>
+
+  {/* Right Navigation Button */}
+  <button
+    onClick={() =>
+      setSelectedImage((prev) =>
+        prev === productData.images.length - 1 ? 0 : prev + 1
+      )
+    }
+    className="text-gray-500 hover:text-gray-800 focus:outline-none"
+  >
+    <FaChevronRight size={24} />
+  </button>
+</div>
+
+</div>
+
             <div className="md:flex-1 px-4 font-sans">
               <h2 className="text-xl md:text-3xl font-bold mb-2">
                 {productDetailData?.data?.product?.main_product_name || ""}

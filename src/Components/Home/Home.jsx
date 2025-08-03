@@ -29,7 +29,8 @@ const Home = () => {
 
   const getBannerImages = async () => {
     try {
-      const response = await axios.get(`/promotion/banner/`);
+      const response = await axiosInstance.get(`/promotion/banner/`);
+      console.log(response);
       const banner_images = response?.data?.data?.banners;
       console.log(banner_images,'===============all banners');
       const home_images = banner_images.filter((images) => images.type === 'Home' && images.is_visible === true);

@@ -238,6 +238,7 @@ const handleGstCheckbox = (e) => {
           </p>
         </div>
       </div>
+      
     );
   })}
 </div>
