@@ -568,6 +568,7 @@ const isAuthenticatedMobile = !!localStorage.getItem('userData');
 
     setImageThumbnails(images);
     setProductDetailData(data);
+    setSelectedImage(0);
 
   } catch (error) {
     console.error("Error fetching filtered products:", error);
@@ -717,8 +718,9 @@ const isAuthenticatedMobile = !!localStorage.getItem('userData');
     <img
       src={
         imageThumbnails[selectedImage]?.image ||
-        productData.images[0].image
+        imageThumbnails[0]?.image || ""
       }
+
       loading="lazy"
       alt={`Product view ${selectedImage + 1}`}
       className="w-[500px] h-[500px] object-cover rounded"
@@ -732,8 +734,9 @@ const isAuthenticatedMobile = !!localStorage.getItem('userData');
   <button
     onClick={() =>
       setSelectedImage((prev) =>
-        prev === 0 ? productData.images.length - 1 : prev - 1
-      )
+  prev === 0 ? imageThumbnails.length - 1 : prev - 1
+)
+
     }
     className="text-gray-500 hover:text-gray-800 focus:outline-none"
   >
@@ -763,9 +766,10 @@ const isAuthenticatedMobile = !!localStorage.getItem('userData');
   {/* Right Navigation Button */}
   <button
     onClick={() =>
-      setSelectedImage((prev) =>
-        prev === productData.images.length - 1 ? 0 : prev + 1
-      )
+setSelectedImage((prev) =>
+  prev === imageThumbnails.length - 1 ? 0 : prev + 1
+)
+
     }
     className="text-gray-500 hover:text-gray-800 focus:outline-none"
   >
