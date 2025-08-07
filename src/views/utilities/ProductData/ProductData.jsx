@@ -369,27 +369,57 @@ const isAuthenticatedMobile = !!localStorage.getItem('userData');
     }
   };
 
-  const handleQuantity = async (product_id, action, qty) => {
+  // const handleQuantity = async (product_id, action, qty) => {
 
-    try {
+  //   try {
 
-      const response = await axiosInstance.get(`/product/stockCheck/${product_id}/`,
-        {
-          params: {
-            quantity: qty,
-            action: action,
+  //     const response = await axiosInstance.get(`/product/stockCheck/${product_id}/`,
+  //       {
+  //         params: {
+  //           quantity: qty,
+  //           action: action,
 
-          },
-        }
-      );
-      if (response.status === 200) {
+  //         },
+  //       }
+  //     );
+  //     if (response.status === 200) {
         
-        setQuantity(response?.data?.new_quantity)
-      }
-    } catch (error) {
-      enqueueSnackbar(error?.response?.data?.message,{variant:'info'})
+  //       setQuantity(response?.data?.new_quantity)
+  //     }
+  //   } catch (error) {
+  //     enqueueSnackbar(error?.response?.data?.message,{variant:'info'})
+  //   }
+  // }
+
+const handleQuantity = async (product_id, action, qty) => {
+  try {
+    // Always send an action — default to "increment"
+    const params = {
+      quantity: qty,
+      action: action === "decrement" ? "decrement" : "increment",
+    };
+
+    console.log(params); // For debugging
+    const response = await axiosInstance.get(`/product/stockCheck/${product_id}/`, {
+      params,
+    });
+
+    if (response.status === 200) {
+      setQuantity(response?.data?.new_quantity);
     }
+  } catch (error) {
+    enqueueSnackbar(error?.response?.data?.message, { variant: 'info' });
   }
+};
+
+
+
+
+
+
+
+
+
   const handleWeightClick = async (size, product) => {
     try {
 
@@ -937,9 +967,24 @@ setSelectedImage((prev) =>
                   >
                     -
                   </button>
-                  <span className=" border border-bio-green bg-gray-200 text-black py-2 px-4">
+                  {/* <span className=" border border-bio-green bg-gray-200 text-black py-2 px-4">
                     {quantity}
-                  </span>
+                  </span> */}
+ <input
+  type="number"
+  min="1"
+  className="w-20 text-center border border-bio-green bg-gray-200 text-black py-2 px-4"
+  value={quantity}
+  onChange={(e) => setQuantity(Number(e.target.value))}
+  onBlur={() =>
+    handleQuantity(
+      productDetailData?.data?.product?.id,
+      "direct", // still send "direct", function will convert it
+      quantity
+    )
+  }
+/>
+
                   <button
 
                     onClick={() => handleQuantity(productDetailData?.data?.product?.id, "increment", quantity)}
