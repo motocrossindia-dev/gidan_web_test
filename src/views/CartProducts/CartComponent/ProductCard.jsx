@@ -27,6 +27,14 @@ const ProductCard = ({ product, handleRemove, handleQuantityChange }) => {
     }
   };
 
+  // Manual quantity input
+  const handleInputChange = (e) => {
+    let value = parseInt(e.target.value, 10);
+    if (isNaN(value) || value < 1) value = 1;
+    setQuantity(value);
+    handleQuantityChange(product.id, value);
+  };
+
 
   return (
     <div className="flex flex-row justify-between items-center border-t border-b p-4 shadow-sm bg-white space-x-4">
@@ -67,9 +75,19 @@ const ProductCard = ({ product, handleRemove, handleQuantityChange }) => {
               >
                 -
               </button>
-              <span className="text-sm md:text-lg font-medium">
+              {/* <span className="text-sm md:text-lg font-medium">
                 {product.quantity}
-              </span>
+              </span> */}
+
+                            <input
+                type="number"
+                min="1"
+                value={quantity}
+                onChange={handleInputChange}
+                className="w-12 text-center border border-gray-300 rounded px-1 py-0.5 text-sm md:text-base"
+              />
+
+  
               <button
                 onClick={increment}
                 className="px-2 py-1 bg-lime-500 rounded text-xs md:text-sm font-semibold text-white"
