@@ -6,8 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="df516f1c-c962-4e0d-8a95-1119b7efb609" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Banner/Banner.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Banner/Banner.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Home/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Home/Home.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Category/CategoryIcons.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Category/CategoryIcons.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,18 +24,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "MohanMotocross"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;MohanMotocross&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/motocrossindia-dev/Biotechmaali_ecommerce_mohan.git",
-    "accountId": "403ea78a-e7fe-42c7-b1dd-1a7093060d6b"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/motocrossindia-dev/Biotechmaali_ecommerce_mohan.git&quot;,
+    &quot;accountId&quot;: &quot;403ea78a-e7fe-42c7-b1dd-1a7093060d6b&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
 }</component>
@@ -49,8 +48,9 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;dev__mohan&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/COMPANY PROJECTS/BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN/git 3/biotech_ecomerce&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/mohan my data/reddy/pgboking/flutter apps/pg_booking_app&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -102,7 +102,18 @@
       <workItem from="1752905975904" duration="99000" />
       <workItem from="1753767888648" duration="1173000" />
       <workItem from="1753769953615" duration="24000" />
-      <workItem from="1753935422301" duration="353000" />
+      <workItem from="1753935422301" duration="3235000" />
+      <workItem from="1754032963086" duration="722000" />
+      <workItem from="1754036578609" duration="24000" />
+      <workItem from="1754051124697" duration="2769000" />
+      <workItem from="1754128561719" duration="735000" />
+      <workItem from="1754234290507" duration="2685000" />
+      <workItem from="1754297685247" duration="129000" />
+      <workItem from="1754399159127" duration="2431000" />
+      <workItem from="1754495743925" duration="3281000" />
+      <workItem from="1754503740933" duration="79000" />
+      <workItem from="1754538175703" duration="5333000" />
+      <workItem from="1754558950491" duration="1225000" />
     </task>
     <servers />
   </component>
@@ -112,11 +123,6 @@
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/views/utilities/PlantCare/PlantCare.jsx</url>
-          <line>63</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/views/utilities/FloweringPlants/FloweringPlants.jsx</url>
           <line>26</line>
