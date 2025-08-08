@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 import axiosInstance from "../../Axios/axiosInstance";
 
 const CategoryIcons = () => {
   const [hoveredCategory, setHoveredCategory] = useState(null);
-  const [timeoutId, setTimeoutId] = useState(null); // Track timeout for hover delay
   const [categoryData, setCategoryData] = useState([]);
   const navigate = useNavigate();
+  const hoverTimeoutRef = useRef(null);
 
   const publishedCategoryData = categoryData.filter(
       (category) => category?.is_published === true
@@ -50,6 +50,13 @@ const CategoryIcons = () => {
 
   useEffect(() => {
     getCategory();
+
+    // Cleanup timeout on unmount
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+    };
   }, []);
 
   const getCategorywiseProduct = async (id, categoryname) => {
@@ -64,18 +71,33 @@ const CategoryIcons = () => {
     }
   };
 
-  // Handle mouse enter to show dropdown and clear any hide timeout
-  const handleMouseEnter = (idx) => {
-    if (timeoutId) clearTimeout(timeoutId); // Clear any existing timeout
+  // Show dropdown immediately
+  const showDropdown = (idx) => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
     setHoveredCategory(idx);
   };
 
-  // Handle mouse leave with a delay to hide dropdown
-  const handleMouseLeave = () => {
-    const id = setTimeout(() => {
+  // Hide dropdown with delay
+  const hideDropdown = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+
+    hoverTimeoutRef.current = setTimeout(() => {
       setHoveredCategory(null);
-    }, 200); // 200ms delay to allow moving to dropdown
-    setTimeoutId(id);
+      hoverTimeoutRef.current = null;
+    }, 200);
+  };
+
+  // Cancel hide when mouse enters dropdown area
+  const cancelHide = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
   };
 
   return (
@@ -91,13 +113,11 @@ const CategoryIcons = () => {
               <div
                   key={idx}
                   className="relative shrink-0 flex flex-col items-center mb-2 min-w-0 text-center"
+                  onMouseEnter={() => showDropdown(idx)}
+                  onMouseLeave={hideDropdown}
               >
-                {/* Container for image and text, both trigger hover */}
-                <div
-                    onMouseEnter={() => handleMouseEnter(idx)}
-                    onMouseLeave={handleMouseLeave}
-                    className="flex flex-col items-center group"
-                >
+                {/* Category Icon and Name */}
+                <div className="flex flex-col items-center group">
                   <div
                       className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 lg:w-20 lg:h-20 xl:w-22 xl:h-22 border-2 border-gray-400 group-hover:border-gray-500 rounded-full flex items-center justify-center bg-white shadow-md overflow-hidden transition-all duration-200 group-hover:shadow-lg cursor-pointer"
                       onClick={() => getCategorywiseProduct(category.id, category.name)}
@@ -112,47 +132,60 @@ const CategoryIcons = () => {
                   <h2 className="mt-2 text-center text-xs sm:text-sm md:text-base font-medium text-gray-800 max-w-[70px] xs:max-w-[80px] sm:max-w-[90px] md:max-w-[100px] lg:max-w-[110px] leading-tight group-hover:text-gray-900 transition-colors duration-200">
                     {category.name}
                   </h2>
-
-                  {hoveredCategory === idx && (
-                      <div
-                          className="absolute top-[calc(100%+0.5rem)] left-0 w-[180px] sm:w-[200px] md:w-[220px] bg-white border border-gray-200 shadow-lg rounded-lg z-[1000] origin-top-left"
-                          onMouseEnter={() => handleMouseEnter(idx)} // Keep dropdown open when hovering
-                          onMouseLeave={handleMouseLeave} // Hide dropdown with delay
-                      >
-                        <div className="p-3 sm:p-4">
-                          <h3 className="text-bio-green font-bold mb-2 text-sm sm:text-base">
-                            {category.name}
-                          </h3>
-                          {category.subCategory && category.subCategory.length > 0 ? (
-                              <ul className="text-gray-700 space-y-1">
-                                {category.subCategory.map((item, index) => (
-                                    <li
-                                        key={index}
-                                        className="hover:text-green-600 cursor-pointer transition-colors duration-200"
-                                    >
-                                      <Link
-                                          to={`/filter/subcategory/${item.id}`}
-                                          className="block py-1 px-2 rounded hover:bg-gray-50 text-xs sm:text-sm"
-                                      >
-                                        {item.name}
-                                      </Link>
-                                    </li>
-                                ))}
-                              </ul>
-                          ) : (
-                              <p className="text-gray-500 text-xs sm:text-sm">
-                                No subcategories available
-                              </p>
-                          )}
-                        </div>
-                      </div>
-                  )}
                 </div>
+
+                {/* Invisible bridge to connect trigger and dropdown */}
+                {hoveredCategory === idx && (
+                    <div
+                        className="absolute top-full left-0 right-0 h-2 bg-transparent z-[999]"
+                        onMouseEnter={cancelHide}
+                        onMouseLeave={hideDropdown}
+                    />
+                )}
+
+                {/* Dropdown Menu */}
+                {hoveredCategory === idx && (
+                    <div
+                        className="absolute top-full left-0 w-[180px] sm:w-[200px] md:w-[220px] bg-white border border-gray-200 shadow-lg rounded-lg z-[1000] mt-2 animate-fadeIn"
+                        onMouseEnter={cancelHide}
+                        onMouseLeave={hideDropdown}
+                        style={{
+                          // Ensure dropdown doesn't go off screen
+                          left: idx > publishedCategoryData.length - 3 ? 'auto' : '0',
+                          right: idx > publishedCategoryData.length - 3 ? '0' : 'auto'
+                        }}
+                    >
+                      <div className="p-3 sm:p-4">
+                        <h3 className="text-bio-green font-bold mb-2 text-sm sm:text-base">
+                          {category.name}
+                        </h3>
+                        {category.subCategory && category.subCategory.length > 0 ? (
+                            <ul className="text-gray-700 space-y-1">
+                              {category.subCategory.map((item, index) => (
+                                  <li key={index}>
+                                    <Link
+                                        to={`/filter/subcategory/${item.id}`}
+                                        className="block py-1 px-2 rounded hover:bg-gray-50 hover:text-green-600 cursor-pointer transition-colors duration-200 text-xs sm:text-sm"
+                                        onClick={() => setHoveredCategory(null)}
+                                    >
+                                      {item.name}
+                                    </Link>
+                                  </li>
+                              ))}
+                            </ul>
+                        ) : (
+                            <p className="text-gray-500 text-xs sm:text-sm">
+                              No subcategories available
+                            </p>
+                        )}
+                      </div>
+                    </div>
+                )}
               </div>
           ))}
         </div>
 
-        {/* Custom Scrollbar CSS */}
+        {/* Custom Scrollbar and Animation CSS */}
         <style jsx>{`
         .category-container {
           -webkit-overflow-scrolling: touch;
@@ -173,12 +206,16 @@ const CategoryIcons = () => {
         @keyframes fadeIn {
           from {
             opacity: 0;
-            transform: translateY(-5px);
+            transform: translateY(-8px);
           }
           to {
             opacity: 1;
             transform: translateY(0);
           }
+        }
+
+        .animate-fadeIn {
+          animation: fadeIn 0.15s ease-out forwards;
         }
       `}</style>
       </div>
@@ -186,6 +223,194 @@ const CategoryIcons = () => {
 };
 
 export default CategoryIcons;
+// import React, { useState, useEffect } from "react";
+// import { Link, useNavigate } from "react-router-dom";
+// import { isMobile } from "react-device-detect";
+// import axiosInstance from "../../Axios/axiosInstance";
+//
+// const CategoryIcons = () => {
+//   const [hoveredCategory, setHoveredCategory] = useState(null);
+//   const [timeoutId, setTimeoutId] = useState(null); // Track timeout for hover delay
+//   const [categoryData, setCategoryData] = useState([]);
+//   const navigate = useNavigate();
+//
+//   const publishedCategoryData = categoryData.filter(
+//       (category) => category?.is_published === true
+//   );
+//
+//   const getCategory = async () => {
+//     try {
+//       const response = await axiosInstance.get(`/category/`);
+//       const categories = response?.data?.data?.categories;
+//       if (categories?.length > 0) {
+//         const updatedCategories = await Promise.all(
+//             categories.map(async (category) => {
+//               if (category?.id) {
+//                 const subCategory = await getSubCategory(category?.id);
+//                 return { ...category, subCategory };
+//               }
+//               return category;
+//             })
+//         );
+//         setCategoryData(updatedCategories);
+//       }
+//     } catch (error) {
+//       console.error("Error fetching categories:", error);
+//     }
+//   };
+//
+//   const getSubCategory = async (categoryId) => {
+//     try {
+//       const response = await axiosInstance.get(
+//           `/category/categoryWiseSubCategory/${categoryId}/`
+//       );
+//       if (response.status === 200) {
+//         return response?.data?.data?.subCategorys || [];
+//       }
+//     } catch (error) {
+//       console.error("Error fetching subcategories:", error);
+//       return [];
+//     }
+//   };
+//
+//   useEffect(() => {
+//     getCategory();
+//   }, []);
+//
+//   const getCategorywiseProduct = async (id, categoryname) => {
+//     if (categoryname === "GIFTS") {
+//       navigate(`/gifts/`);
+//     } else if (categoryname === "SERVICES") {
+//       navigate(`/services/`);
+//     } else if (categoryname === "OFFERS") {
+//       navigate(`/combooffer`);
+//     } else {
+//       navigate(`/filter/${id}`);
+//     }
+//   };
+//
+//   // Handle mouse enter to show dropdown and clear any hide timeout
+//   const handleMouseEnter = (idx) => {
+//     if (timeoutId) clearTimeout(timeoutId); // Clear any existing timeout
+//     setHoveredCategory(idx);
+//   };
+//
+//   // Handle mouse leave with a delay to hide dropdown
+//   const handleMouseLeave = () => {
+//     const id = setTimeout(() => {
+//       setHoveredCategory(null);
+//     }, 200); // 200ms delay to allow moving to dropdown
+//     setTimeoutId(id);
+//   };
+//
+//   return (
+//       <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-5">
+//         <div
+//             className={`flex items-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 px-2 sm:px-4 mt-4 sm:py-2 w-full ${
+//                 isMobile
+//                     ? "overflow-x-auto whitespace-nowrap scrollbar-hide justify-start"
+//                     : "flex-wrap justify-between"
+//             }`}
+//         >
+//           {publishedCategoryData.map((category, idx) => (
+//               <div
+//                   key={idx}
+//                   className="relative shrink-0 flex flex-col items-center mb-2 min-w-0 text-center"
+//               >
+//                 {/* Container for image and text, both trigger hover */}
+//                 <div
+//                     onMouseEnter={() => handleMouseEnter(idx)}
+//                     onMouseLeave={handleMouseLeave}
+//                     className="flex flex-col items-center group"
+//                 >
+//                   <div
+//                       className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 lg:w-20 lg:h-20 xl:w-22 xl:h-22 border-2 border-gray-400 group-hover:border-gray-500 rounded-full flex items-center justify-center bg-white shadow-md overflow-hidden transition-all duration-200 group-hover:shadow-lg cursor-pointer"
+//                       onClick={() => getCategorywiseProduct(category.id, category.name)}
+//                   >
+//                     <img
+//                         src={`${process.env.REACT_APP_API_URL}${category.image}`}
+//                         alt={category.name || "Category"}
+//                         className="w-full h-full object-contain rounded-full"
+//                     />
+//                   </div>
+//
+//                   <h2 className="mt-2 text-center text-xs sm:text-sm md:text-base font-medium text-gray-800 max-w-[70px] xs:max-w-[80px] sm:max-w-[90px] md:max-w-[100px] lg:max-w-[110px] leading-tight group-hover:text-gray-900 transition-colors duration-200">
+//                     {category.name}
+//                   </h2>
+//
+//                   {hoveredCategory === idx && (
+//                       <div
+//                           className="absolute top-[calc(100%+0.5rem)] left-0 w-[180px] sm:w-[200px] md:w-[220px] bg-white border border-gray-200 shadow-lg rounded-lg z-[1000] origin-top-left"
+//                           onMouseEnter={() => handleMouseEnter(idx)} // Keep dropdown open when hovering
+//                           onMouseLeave={handleMouseLeave} // Hide dropdown with delay
+//                       >
+//                         <div className="p-3 sm:p-4">
+//                           <h3 className="text-bio-green font-bold mb-2 text-sm sm:text-base">
+//                             {category.name}
+//                           </h3>
+//                           {category.subCategory && category.subCategory.length > 0 ? (
+//                               <ul className="text-gray-700 space-y-1">
+//                                 {category.subCategory.map((item, index) => (
+//                                     <li
+//                                         key={index}
+//                                         className="hover:text-green-600 cursor-pointer transition-colors duration-200"
+//                                     >
+//                                       <Link
+//                                           to={`/filter/subcategory/${item.id}`}
+//                                           className="block py-1 px-2 rounded hover:bg-gray-50 text-xs sm:text-sm"
+//                                       >
+//                                         {item.name}
+//                                       </Link>
+//                                     </li>
+//                                 ))}
+//                               </ul>
+//                           ) : (
+//                               <p className="text-gray-500 text-xs sm:text-sm">
+//                                 No subcategories available
+//                               </p>
+//                           )}
+//                         </div>
+//                       </div>
+//                   )}
+//                 </div>
+//               </div>
+//           ))}
+//         </div>
+//
+//         {/* Custom Scrollbar CSS */}
+//         <style jsx>{`
+//         .category-container {
+//           -webkit-overflow-scrolling: touch;
+//           display: flex;
+//           flex-wrap: nowrap;
+//           gap: 12px;
+//           padding: 8px 4px;
+//           overflow-x: auto;
+//           scrollbar-width: none;
+//           -ms-overflow-style: none;
+//           justify-content: flex-start;
+//         }
+//
+//         .category-container::-webkit-scrollbar {
+//           display: none;
+//         }
+//
+//         @keyframes fadeIn {
+//           from {
+//             opacity: 0;
+//             transform: translateY(-5px);
+//           }
+//           to {
+//             opacity: 1;
+//             transform: translateY(0);
+//           }
+//         }
+//       `}</style>
+//       </div>
+//   );
+// };
+//
+// export default CategoryIcons;
 // import React, { useState, useEffect } from "react";
 // import { Link, useNavigate } from "react-router-dom";
 // import { isMobile } from "react-device-detect";
