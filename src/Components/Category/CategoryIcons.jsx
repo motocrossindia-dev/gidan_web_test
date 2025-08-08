@@ -67,7 +67,7 @@ const CategoryIcons = () => {
     } else if (categoryname === "OFFERS") {
       navigate(`/combooffer`);
     } else {
-      navigate(`/filter/${id}`);
+      navigate(`/filter/${id}/${formatForUrl(categoryname.toLowerCase())}`);
     }
   };
 
@@ -99,7 +99,9 @@ const CategoryIcons = () => {
       hoverTimeoutRef.current = null;
     }
   };
-
+  const formatForUrl = (str) => {
+    return encodeURIComponent(str.toLowerCase().replace(/\s+/g, '-'));
+  };
   return (
       <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-5">
         <div
@@ -164,7 +166,7 @@ const CategoryIcons = () => {
                               {category.subCategory.map((item, index) => (
                                   <li key={index}>
                                     <Link
-                                        to={`/filter/subcategory/${item.id}`}
+                                        to={`/filter/subcategory/${item.id}/${formatForUrl(category.name)}/${formatForUrl(item.name)}`}
                                         className="block py-1 px-2 rounded hover:bg-gray-50 hover:text-green-600 cursor-pointer transition-colors duration-200 text-xs sm:text-sm"
                                         onClick={() => setHoveredCategory(null)}
                                     >

@@ -6,23 +6,24 @@ import RecentlyViewedProduct from "./RecentlyViewedProduct";
 import CheckoutStores from "./CheckoutStores";
 
 import { FiFilter } from "react-icons/fi";
-import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import {Helmet} from "react-helmet";
 import axiosInstance from "../../../Axios/axiosInstance";
 
 function PlantFilter() {
-const { id } = useParams();
+const { id,category,subcategory } = useParams();
   const location = useLocation();
 
  const path = location.pathname;
 
-  console.log('id from params:', id);
+  console.log(path,'id from paramsssssssssssssssssssssssss:', id);
+  console.log(path,'category:', category);
+  console.log(path,'subcategory:', subcategory);
 
   const [showMobileFilter, setShowMobileFilter] = useState(false);
   const [products, setProducts] = useState([]);
-    const [results,setResults]=useState([]);
+  const [results,setResults]=useState([]);
 
 
     useEffect(() => {
@@ -46,66 +47,53 @@ const { id } = useParams();
     setShowMobileFilter(!showMobileFilter);
   };
 
-useEffect(() => {
-  if (path.includes("/filter/")) {
-            const getCategoryProducts = async()=>{
+    useEffect(() => {
+        const getCategoryProducts = async () => {
+            try {
+                if (id === "14") {
+                    // Special case for offers
+                    const response = await axiosInstance.get(
+                        `${process.env.REACT_APP_API_URL}/product/offerProducts/`
+                    );
+                    if (response.status === 200) {
+                        setResults(response.data.products || []);
+                        setProducts(response.data || {});
+                    }
+                    return; // stop here
+                }
 
-    if (id === 14) {
-       try {
-
-      const response = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/product/offerProducts/`)
-      if (response.status === 200) {
-
-        setResults(response.data.products || []);
-        setProducts(response.data || {});
-      }
-    } catch (error) {
-      console.error("Error fetching subcategories:", error);
-      return [];
-    }
-    }
-         try {
-          const response = await axiosInstance.get(
-            `${process.env.REACT_APP_API_URL}/product/category-products/${id}/`);
-            if (response.data.message==='success') {
-              setResults(response.data.products || []);
-              setProducts(response.data || {});
+                const response = await axiosInstance.get(
+                    `${process.env.REACT_APP_API_URL}/product/category-products/${id}/`
+                );
+                if (response.data.message === "success") {
+                    setResults(response.data.products || []);
+                    setProducts(response.data || {});
+                }
+            } catch (error) {
+                console.error("Error fetching category products:", error);
             }
-        } catch (error) {
-          console.error("Error fetching subcategories:", error);
-          return [];
+        };
 
+        const getSubCategorywiseProduct = async () => {
+            try {
+                const response = await axiosInstance.get(
+                    `${process.env.REACT_APP_API_URL}/product/subcategory-products/${id}/`
+                );
+                if (response.status === 200) {
+                    setResults(response.data.products || []);
+                    setProducts(response.data || {});
+                }
+            } catch (error) {
+                console.error("Error fetching subcategory products:", error);
+            }
+        };
+
+        if (path.startsWith("/filter/subcategory/")) {
+            getSubCategorywiseProduct();
+        } else if (path.startsWith("/filter/")) {
+            getCategoryProducts();
         }
-    }
-    getCategoryProducts();
-  } else if (path.includes("/filter/subcategory/")) {
-    // Call API B
-const getSubCategorywiseProduct = async (id) => {
-  try {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API_URL}/product/subcategory-products/${id}/`);
-
-
-      if (response?.status===200) {
-        setResults(response.data.products || []);
-        setProducts(response.data || {});
-
-      }
-  } catch (error) {
-    console.error("Error fetching subcategories:", error);
-    return [];
-
-  }
-}
-getSubCategorywiseProduct(id)
-  }
-}, [id]);
-
-
-
-
-
-
+    }, [id, path]);
 
   return (
       <>
@@ -129,7 +117,12 @@ getSubCategorywiseProduct(id)
       <div className="flex flex-row md:flex-row px-4 ">
         {/* Filter Sidebar */}
         <div className="hidden md:block">
-          <FilterSidebar setResults={setResults} />
+            <FilterSidebar
+                setResults={setResults}
+                categoryId={id}
+                category={category}
+                subcategory={subcategory}
+            />
 
         </div>
         <div className="flex-1">
@@ -154,7 +147,13 @@ getSubCategorywiseProduct(id)
             >
               ✕
             </button>
-            <FilterSidebar setResults={setResults} setShowMobileFilter={setShowMobileFilter} />
+              <FilterSidebar
+                  setResults={setResults}
+                  setShowMobileFilter={setShowMobileFilter}
+                  categoryId={id}
+                  category={category}
+                  subcategory={subcategory}
+              />
             </div>
         </div>
       )}

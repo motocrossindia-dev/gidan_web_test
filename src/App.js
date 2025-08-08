@@ -99,8 +99,8 @@ const DesktopRoutes = () => (
       <Route path="successpage" element={<Successpage />} />
       <Route path="orders" element={<MyOrders />} />
       <Route path="ourwork" element={<OurWork />} />
-      <Route path="filter/:id" element={<PlantFilter />} />
-      <Route path="filter/subcategory/:id" element={<PlantFilter />} />
+      <Route path="filter/:id/:category?" element={<PlantFilter />} />
+      <Route path="filter/subcategory/:id/:category?/:subcategory" element={<PlantFilter />} />
       <Route path="seasonal" element={<SeasonalCollection1 />} />
       <Route path="pots" element={<Pots />} />
       <Route path="faq" element={<FAQs />} />
