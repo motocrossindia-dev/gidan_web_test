@@ -75,97 +75,126 @@ const handleGstCheckbox = (e) => {
 
 
   
-  const handlePayment = async () => {
-    if (!orderData.order?.order_id || !selectedMethod) {
-      alert("Please select a payment method.");
-      return;
-    }
-  
-    try {
+const handlePayment = async () => {
+  if (!orderData.order?.order_id || !selectedMethod) {
+    alert("Please select a payment method.");
+    return;
+  }
 
-      if (selectedMethod === 'Wallet') {
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/order/proceedToPayment/`,
-          { order_id: order_id, payment_method: selectedMethod },
-        { headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" } }
-        )
-        if (response.status === 200 || response.status === 206) {          
-          enqueueSnackbar(response?.data?.message, { variant: "success" });
-          setWalletAdded(response?.data?.wallet_debited)
-          navigate('/successpage');
-        }
+  const payload = {
+    order_id: order_id,
+    payment_method: selectedMethod,
+    is_gst: isGst,
+    gst_number: selectedGst,
+  };
+
+  try {
+    const response = await axiosInstance.patch(`/order/proceedToPayment/`, payload);
+
+    if (response.status === 200 || response.status === 206) {
+      const usedWallet = response?.data?.wallet_debited || 0;
+      setWalletAdded(usedWallet);
+
+      const razorpayOrder = response?.data?.razorpay_order;
+
+      // ✅ CASE 1: Full wallet payment (no Razorpay required)
+      if (!razorpayOrder) {
+        enqueueSnackbar(response?.data?.message || "Payment Successful via Wallet", {
+          variant: "success",
+        });
+        navigate("/successpage");
+        return;
       }
-      const response = await axiosInstance.patch(
-        `/order/proceedToPayment/`,
-        { order_id: order_id, payment_method: selectedMethod,  is_gst: isGst,
-           gst_number: selectedGst },
-      );
-  
-      
-  
-      if (response.status === 200) {
 
-        const options = {
-          key: "rzp_test_y70g5dxx6kOQ7v",
-          amount: response?.data?.razorpay_order?.amount || 0,  // Ensure amount is set
-          currency: "INR",
-          name: "Bio-tech Maali",
-          description: "Test Transaction",
-          image: "https://your-logo-url.com",
-          order_id: response?.data?.razorpay_order?.id, // Corrected order_id
-          handler: async (paymentResponse) => {
-            try {
-              const verifyResponse = await axios.post(
-                `${process.env.REACT_APP_API_URL}/order/verifyPayment/`,
-                {
-                  razorpay_payment_id: paymentResponse.razorpay_payment_id,
-                  razorpay_order_id: paymentResponse.razorpay_order_id, // Ensure correct ID
-                  razorpay_signature: paymentResponse.razorpay_signature,
-                  order_id: response.data.order_id, // Ensure correct order ID
-                  payment_method: selectedMethod,
-                  amount: orderData.order.grand_total,
-                  payment_details: paymentResponse,
+      // ✅ CASE 2: Partial Wallet + Razorpay Required
+      const options = {
+        key: "rzp_test_y70g5dxx6kOQ7v",
+        amount: razorpayOrder.amount || 0,
+        currency: "INR",
+        name: "Bio-tech Maali",
+        description: "Pay remaining balance",
+        image: "https://your-logo-url.com",
+        order_id: razorpayOrder.id,
+        handler: async (paymentResponse) => {
+          try {
+            const verifyRes = await axios.post(
+              `${process.env.REACT_APP_API_URL}/order/verifyPayment/`,
+              {
+                razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                razorpay_order_id: paymentResponse.razorpay_order_id,
+                razorpay_signature: paymentResponse.razorpay_signature,
+                order_id: response.data.order_id,
+                payment_method: selectedMethod,
+                amount: razorpayOrder.amount / 100, // amount in INR
+                payment_details: paymentResponse,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                  "Content-Type": "application/json",
                 },
-                { headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" } }
-              );
-    
-              if (verifyResponse.data.message === "Payment successful") {
-                enqueueSnackbar("Payment Verified Successfully!", { variant: "success" });
-                navigate('/orders');
-              } else {
-                enqueueSnackbar("Payment Verification Failed.", { variant: "error" });
               }
-            } catch (error) {
-              console.error("Error verifying payment:", error);
-              enqueueSnackbar("Payment verification error.", { variant: "error" });
+            );
+
+            if (verifyRes.data.message === "Payment successful") {
+              enqueueSnackbar("Payment completed successfully!", { variant: "success" });
+              navigate("/successpage");
+            } else {
+              enqueueSnackbar("Payment verification failed.", { variant: "error" });
+            }
+          } catch (err) {
+            console.error("Verification error:", err);
+            enqueueSnackbar("Payment verification error.", { variant: "error" });
+          }
+        },
+        prefill: { name, email, contact: phone },
+        theme: { color: "#3399cc" },
+        modal: {
+          ondismiss: async () => {
+            if (usedWallet > 0) {
+              try {
+                await axios.post(
+                  `${process.env.REACT_APP_API_URL}/order/payments/rollback-wallet/`,
+                  {
+                    order_id: order_id,
+                    wallet_amount: usedWallet,
+                  },
+                  {
+                    headers: {
+                      Authorization: `Bearer ${accessToken}`,
+                      "Content-Type": "application/json",
+                    },
+                  }
+                );
+                enqueueSnackbar("Wallet rollback successful.", { variant: "info" });
+                setWalletAdded(0);
+              } catch (err) {
+                console.error("Rollback failed:", err);
+                enqueueSnackbar("Failed to rollback wallet.", { variant: "warning" });
+              }
             }
           },
-          prefill: { name, email, contact: phone },
-          theme: { color: "#3399cc" },
-        };
-  
-        
-        if (options.order_id && options.amount > 0) {
-          const razorpay = new window.Razorpay(options);
-          razorpay.open();
-  
-          razorpay.on("payment.failed", function (response) {
-            alert("Payment failed. Please try again.");
-          });
-        } else {
-          console.log("Razorpay options are invalid.");
-        }
-      }
-    }catch (error) {
-      console.error("Payment process error:", error);
-    
-      const errorMessage =
-        error?.response?.data?.message ||
-        "Oops! Something went wrong while processing your payment. Please try again.";
-    
-      enqueueSnackbar(errorMessage, { variant: "error" });
+        },
+      };
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+
+      razorpay.on("payment.failed", () => {
+        alert("Payment failed. Please try again.");
+      });
     }
-    
-  };
+  } catch (error) {
+    console.error("Payment error:", error);
+    enqueueSnackbar(
+      error?.response?.data?.message || "Error processing your payment.",
+      { variant: "error" }
+    );
+  }
+};
+
+
+
   
   return (
       <>
