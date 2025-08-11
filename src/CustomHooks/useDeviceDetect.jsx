@@ -28,8 +28,8 @@ const useDeviceDetect = () => {
 
   // Device brand detection (OnePlus, Nothing)
   const userAgent = typeof window !== 'undefined' ? window.navigator.userAgent : '';
-  const isOnePlus = /ONEPLUS|OnePlus/i.test(userAgent);
-  const isNothingPhone = /Nothing|NOTHING/i.test(userAgent);
+  // const isOnePlus = /ONEPLUS|OnePlus/i.test(userAgent);
+  // const isNothingPhone = /Nothing|NOTHING/i.test(userAgent);
 
   // Helper function to get current device type
   const getDeviceType = () => {
@@ -64,8 +64,8 @@ const useDeviceDetect = () => {
     prefersLightMode,
     
     // Brand-specific
-    isOnePlus,
-    isNothingPhone,
+    // isOnePlus,
+    // isNothingPhone,
     
     // Helper method
     getDeviceType,
