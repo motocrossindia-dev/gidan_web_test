@@ -19,7 +19,7 @@ const AboutProduct = ({ productDetailData }) => {
         return (
           <div>
             <p className="text-gray-600 leading-7 justify-center text-between md:text-md">
-              {productData?.data?.product?.short_description || ""}
+              {productData?.data?.product?.description || ""}
             </p>
           </div>
         );
