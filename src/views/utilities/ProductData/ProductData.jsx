@@ -560,27 +560,16 @@ const handleQuantity = async (product_id, action, qty) => {
   // };
 
 
-  const handlePlanterColorClick = async (color, product) => {
+const handlePlanterColorClick = async (color, product) => {
   try {
-    // Check if same color is clicked (toggle deselect)
-    const isSameColor = selectedColor?.id === color?.id;
-
-    // Update the selectedColor state
-    const newColor = isSameColor ? null : color;
-    setSelectedColor(newColor);
-
-    // If deselected, reset to original product
-    if (isSameColor) {
-      const originalResponse = await axiosInstance.get(`/product/${product.id}`);
-      const originalData = originalResponse.data;
-      const originalImages = originalData?.data?.product?.images || [];
-
-      setImageThumbnails(originalImages);
-      setProductDetailData(originalData);
-      return;
+    // 🚫 remove toggle/deselect logic
+    if (selectedColor?.id === color?.id) {
+      return; // if same color clicked, do nothing
     }
 
-    // Make API call to filter by new color
+    setSelectedColor(color);
+
+    // ✅ Make API call to filter by new color
     const response = await axiosInstance.get(
       `/product/filterProduct/${product.id}/`,
       {
@@ -605,122 +594,64 @@ const handleQuantity = async (product_id, action, qty) => {
   }
 };
 
-  useEffect(() => {
-    if (productDetailData?.data?.product_type == 'plant') {
-      const { size_id, planter_size_id, planter_id, color_id } =
-        productDetailData.data.product;
 
-      setSelectedSize(
-        productDetailData?.data?.product_sizes?.find(
-          (s) => s.id === size_id || s.size === size_id
-        ) || ""
-      );
-      setSelectedPlanterSize(
-        productDetailData?.data?.product_planter_sizes?.find(
-          (s) =>
-            s.id === planter_size_id ||
-            s.size === planter_size_id.size ||
-            s.name === planter_size_id.name
-        ) || ""
-      );
-      setSelectedPlanter(
-        productDetailData?.data?.product_planters?.find(
-          (s) => s.id === planter_id || s.name === planter_id.name
-        ) || ""
-      );
-
-      const selectedColor = productDetailData.data.product_colors.find(
-        (color) => color.id === Number(color_id) // Ensure color_id is a number
-      );
-      setSelectedColor(selectedColor || ""); // Default to an empty string if no match is found
-    }
-  }, [productDetailData]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axiosInstance.get(
-          `/product/defaultProduct/${id}/`);
-
-
-        if (response.status === 200) {
-                  const data = response.data;
-        const images = data?.data?.product?.images || [];
-        setImageThumbnails(images);
-        setProductDetailData(data);
-        }
-
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    if (id) {
-      fetchData();
-    }
-  }, [id]);
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axiosInstance.get(`/product/defaultProduct/${id}/`);
-
+// ✅ Fetch product data only once
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axiosInstance.get(`/product/defaultProduct/${id}/`);
+      if (response.status === 200) {
         const data = response.data;
-
-
-        setAddOnData(data?.data?.product_add_ons || []);
         setProductDetailData(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+        setAddOnData(data?.data?.product_add_ons || []);
+        setImageThumbnails(data?.data?.product?.images || []);
+
+        const { size_id, planter_size_id, planter_id, color_id } = data.data.product;
+
+        const defaultSize =
+          data.data.product_sizes.find(
+            (s) => s.id === size_id || s.size === size_id
+          ) || data.data.product_sizes[0] || "";
+
+        const defaultPlanterSize =
+          data.data.product_planter_sizes.find(
+            (s) =>
+              s.id === planter_size_id ||
+              s.size === planter_size_id?.size ||
+              s.name === planter_size_id?.name
+          ) || data.data.product_planter_sizes[0] || "";
+
+        const defaultPlanter =
+          data.data.product_planters.find(
+            (s) => s.id === planter_id || s.name === planter_id?.name
+          ) || data.data.product_planters[0] || "";
+
+        const defaultColor =
+          data.data.product_colors.find((c) => c.id === Number(color_id)) ||
+          data.data.product_colors[0] || null;
+
+        setSelectedSize(defaultSize);
+        setSelectedPlanterSize(defaultPlanterSize);
+        setSelectedPlanter(defaultPlanter);
+        setSelectedColor(defaultColor);
+
+        // ✅ Trigger the same flow as manual selection to update images
+        if (defaultColor) {
+          handlePlanterColorClick(defaultColor, data.data.product);
+        }
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
-    if (id) {
-      fetchData();
-    }
-  }, [id]);
-  console.log(productDetailData.data,'==============data')
+  if (id) fetchData();
+}, [id]);
 
-  useEffect(() => {
-   
-  }, [imageThumbnails]);
-  useEffect(() => {
-    if (selectedSize && productData.planterSizes[selectedSize]) {
-      const availablePlanterSizes = productData.planterSizes[selectedSize];
-      setSelectedPlanterSize(availablePlanterSizes[0] || "");
-    }
-  }, [selectedSize]);
-  useEffect(() => {
-    if (
-      selectedSize &&
-      selectedPlanter &&
-      productData.colors[selectedSize] &&
-      productData.colors[selectedSize][selectedPlanter]
-    ) {
-      const availableColors = productData.colors[selectedSize][selectedPlanter];
-      setSelectedColor(availableColors[0] || "");
-    } else {
-      setSelectedColor("");
-    }
-  }, [selectedPlanter, selectedSize]);
-  useEffect(() => {
-    if (selectedSize && productData.planters[selectedSize]) {
-      const availablePlanters = productData.planters[selectedSize];
-      const newPlanter = availablePlanters[0] || "";
-      setSelectedPlanter(newPlanter);
 
-      if (
-        newPlanter &&
-        productData.colors[selectedSize] &&
-        productData.colors[selectedSize][newPlanter]
-      ) {
-        const availableColors = productData.colors[selectedSize][newPlanter];
-        setSelectedColor(availableColors[0] || "");
-      } else {
-        setSelectedColor("");
-      }
-    }
-  }, [selectedSize]);
+
+
+
 
  
 
@@ -852,107 +783,113 @@ setSelectedImage((prev) =>
 
 
 
-              {productDetailData?.data?.product_weights?.length > 0 && (
-                <div className="space-y-6">
-                  <div className="mb-4">
-                    <span className="font-bold text-black-700">Select Packet Size:</span>
-                    <div className="flex items-center mt-2">
-                      {productDetailData.data.product_weights.map((size) => (
-                        <button
-                          key={size?.id || size?.size_grams}
-                          onClick={() => handleWeightClick(size, productDetailData?.data?.product)}
-                          className={`${selectedgram?.size_grams === size?.size_grams
-                            ? "border-2 border-bio-green text-gray-700"
-                            : "border-2 border-gray-300 text-black"
-                            } py-2 px-4 rounded-lg mr-2 focus:outline-none`}
-                        >
-                          {size?.size_grams}g
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
+{productDetailData?.data?.product_weights?.length > 0 && (
+  <div className="space-y-6">
+    <div className="mb-4">
+      <span className="font-bold text-gray-700">Select Packet Size:</span>
+      <div className="flex items-center mt-2">
+        {productDetailData?.data?.product_weights?.map((size, idx) => (
+          <button
+            key={size?.id || size?.size_grams || idx}
+            onClick={() => handleWeightClick(size, productDetailData?.data?.product)}
+            className={`${
+              selectedgram?.size_grams === size?.size_grams
+                ? "border-2 border-bio-green text-gray-700"
+                : "border-2 border-gray-300 text-gray-700"
+            } py-2 px-4 rounded-lg mr-2 focus:outline-none`}
+          >
+            {size?.size_grams}g
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+)}
 
-              {productDetailData?.data?.product_sizes?.length > 0 && (
-                <div className="mb-4">
-                  <span className="font-bold text-black-700">Select Plant Size:</span>
-                  <div className="flex items-center mt-2">
-                    {productDetailData.data.product_sizes.map((size) => (
-                      <button
-                        key={size?.id || size?.size}
-                        onClick={() => handleSizeClick(size, productDetailData?.data?.product)}
-                        className={`${selectedSize?.size === size?.size
-                          ? "border-2 border-bio-green text-gray-700"
-                          : "border-2 border-gray-300 text-black"
-                          } py-2 px-4 rounded-lg mr-2 focus:outline-none`}
-                      >
-                        {size?.size}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
+{productDetailData?.data?.product_sizes?.length > 0 && (
+  <div className="mb-4">
+    <span className="font-bold text-gray-700">Select Plant Size:</span>
+    <div className="flex items-center mt-2">
+      {productDetailData?.data?.product_sizes?.map((size, idx) => (
+        <button
+          key={size?.id || size?.size || idx}
+          onClick={() => handleSizeClick(size, productDetailData?.data?.product)}
+          className={`${
+            selectedSize?.size === size?.size
+              ? "border-2 border-bio-green text-gray-700"
+              : "border-2 border-gray-300 text-gray-700"
+          } py-2 px-4 rounded-lg mr-2 focus:outline-none`}
+        >
+          {size?.size}
+        </button>
+      ))}
+    </div>
+  </div>
+)}
 
-              {productDetailData?.data?.product_planter_sizes?.length > 0 && (
-                <div className="mb-4">
-                  <span className="font-bold text-black-700">Select Planter Size:</span>
-                  <div className="flex items-center mt-2">
-                    {productDetailData.data.product_planter_sizes.map((size) => (
-                      <button
-                        key={size?.id || size?.size}
-                        onClick={() => handlePlanterSizeClick(size, productDetailData?.data?.product)}
-                        className={`${selectedPlanterSize?.size === size?.size
-                          ? "border-2 border-bio-green text-gray-700"
-                          : "border-2 border-gray-300 text-black"
-                          } py-2 px-4 rounded-lg mr-2 focus:outline-none`}
-                      >
-                        {size?.size}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
+{productDetailData?.data?.product_planter_sizes?.length > 0 && (
+  <div className="mb-4">
+    <span className="font-bold text-gray-700">Select Planter Size:</span>
+    <div className="flex items-center mt-2">
+      {productDetailData?.data?.product_planter_sizes?.map((size, idx) => (
+        <button
+          key={size?.id || size?.size || idx}
+          onClick={() => handlePlanterSizeClick(size, productDetailData?.data?.product)}
+          className={`${
+            selectedPlanterSize?.size === size?.size
+              ? "border-2 border-bio-green text-gray-700"
+              : "border-2 border-gray-300 text-gray-700"
+          } py-2 px-4 rounded-lg mr-2 focus:outline-none`}
+        >
+          {size?.size}
+        </button>
+      ))}
+    </div>
+  </div>
+)}
 
-              {productDetailData?.data?.product_planters?.length > 0 && (
-                <div className="mb-4">
-                  <span className="font-bold text-black-700">Select Planter:</span>
-                  <div className="grid grid-cols-2 gap-2 mt-2 md:grid-cols-3">
-                    {productDetailData.data.product_planters.map((planter) => (
-                      <button
-                        key={planter?.id || planter?.name}
-                        onClick={() => handlePlanterClick(planter, productDetailData?.data?.product)}
-                        className={`${selectedPlanter?.id === planter?.id
-                          ? "border-2 border-bio-green text-gray-700"
-                          : "border-2 border-gray-300 text-black"
-                          } py-2 px-4 rounded-lg text-sm mr-2 focus:outline-none`}
-                      >
-                        {planter?.name}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
+{productDetailData?.data?.product_planters?.length > 0 && (
+  <div className="mb-4">
+    <span className="font-bold text-gray-700">Select Planter:</span>
+    <div className="grid grid-cols-2 gap-2 mt-2 md:grid-cols-3">
+      {productDetailData?.data?.product_planters?.map((planter, idx) => (
+        <button
+          key={planter?.id || planter?.name || idx}
+          onClick={() => handlePlanterClick(planter, productDetailData?.data?.product)}
+          className={`${
+            selectedPlanter?.id === planter?.id
+              ? "border-2 border-bio-green text-gray-700"
+              : "border-2 border-gray-300 text-gray-700"
+          } py-2 px-4 rounded-lg text-sm mr-2 focus:outline-none`}
+        >
+          {planter?.name}
+        </button>
+      ))}
+    </div>
+  </div>
+)}
 
-              {productDetailData?.data?.product_colors?.length > 0 && (
-                <div className="mb-4">
-                  <span className="font-bold text-black-700">Color:</span>
-                  <div className="flex items-center mt-2">
-                    {productDetailData.data.product_colors.map((color) => (
-                      <button
-                        key={color?.id || color?.color_code}
-                        onClick={() => handlePlanterColorClick(color, productDetailData.data.product)}
-                        className={`w-10 h-10 rounded-full mr-2 focus:outline-none ${selectedColor?.id === color?.id
-                          ? "border-2 border-bio-green text-gray-700"
-                          : "border-2 border-gray-300 text-black"
-                          }`}
-                        style={{ backgroundColor: color?.color_code }}
-                        aria-label={`Select ${color?.name || "color"}`}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
+{productDetailData?.data?.product_colors?.length > 0 && (
+  <div className="mb-4">
+    <span className="font-bold text-gray-700">Color:</span>
+    <div className="flex items-center mt-2">
+      {productDetailData?.data?.product_colors?.map((color, idx) => (
+        <button
+          key={color?.id || color?.color_code || idx}
+          onClick={() => handlePlanterColorClick(color, productDetailData?.data?.product)}
+          className={`w-10 h-10 rounded-full mr-2 focus:outline-none ${
+            selectedColor?.id === color?.id
+              ? "border-2 border-bio-green text-gray-700"
+              : "border-2 border-gray-300 text-gray-700"
+          }`}
+          style={{ backgroundColor: color?.color_code }}
+          aria-label={`Select ${color?.name || "color"}`}
+        />
+      ))}
+    </div>
+  </div>
+)}
+
 
 
 
