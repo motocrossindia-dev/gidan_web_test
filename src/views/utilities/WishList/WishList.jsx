@@ -60,9 +60,9 @@ const WishlistItem = ({
         {/* <div className="flex justify-center text-yellow-500 text-xs sm:text-sm">★ ★ ★ ★ ☆</div> */}
         <div className="flex justify-center gap-2 mt-1">
           <div className="flex items-center gap-2">
-            <span className="text-sm  text-navy-blue">₹{price}</span>
+            <span className="text-sm  text-navy-blue">₹{Math.round(price)}</span>
             {mrp && (
-              <span className="text-xs text-gray-400 line-through">₹{mrp}</span>
+              <span className="text-xs text-gray-400 line-through">₹{Math.round(mrp)}</span>
             )}
           </div>
         </div>
@@ -188,8 +188,8 @@ const WishList = () => {
               product={item}
               handleAddToCart={handleAddToCart}
               handleRemove={handleRemove}
-              mrp={item.mrp}
-              price={item.selling_price}
+              mrp={Math.round(item.mrp)}
+              price={Math.round(item.selling_price)}
               {...item}
             />
           ))}

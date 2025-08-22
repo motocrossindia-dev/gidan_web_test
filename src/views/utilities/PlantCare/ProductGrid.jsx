@@ -81,14 +81,14 @@ const ProductGrid = ({searchResults ,pagination}) => {
           <TrendingCard
             key={index}
             name={product.name}
-            price={product.selling_price}
-            oldPrice={product.oldPrice}
+            price={Math.round(product.selling_price)}
+            oldPrice={Math.round(product.oldPrice)}
             imageUrl={product.image}
             rating={product.rating}
             product={product}
             inCart={product.is_cart}
             inWishlist={product.is_wishlist}
-            mrp={product.mrp}
+            mrp={Math.round(product.mrp)}
           />
           </div>
         ))}

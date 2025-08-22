@@ -54,11 +54,26 @@ function ComboImage() {
 
 
         if (response.status === 200) {
-          enqueueSnackbar("Order placed successfully!", { variant: "success" });
+          // enqueueSnackbar("Order placed successfully!", { variant: "success" });
+
+          const ordersummary = response?.data?.data;
+          // 🟢 get the full offer object by id
+      const selectedOffer = comboOffers.find((o) => o.id === id) || null;
+
+            // also keep it in sessionStorage to survive page refresh on checkout
+      if (selectedOffer) {
+        sessionStorage.setItem("selected_combo_offer", JSON.stringify(selectedOffer));
+      }
           if (window.innerWidth <= 768) {
-            navigate("/checkout", { state: { ordersummary: response?.data?.data } }); // Navigate to mobile checkout
+            navigate("/checkout", {         state: {
+          ordersummary,
+          combo_offer: selectedOffer, // 🟢 pass offer to checkout
+        }, }); // Navigate to mobile checkout
           } else {
-            navigate("/checkout", { state: { ordersummary: response?.data?.data } }); // Navigate to regular checkout
+            navigate("/checkout", {         state: {
+          ordersummary,
+          combo_offer: selectedOffer, // 🟢 pass offer to checkout
+        }, }); // Navigate to regular checkout
           }
         }
 
@@ -102,10 +117,10 @@ function ComboImage() {
               <div className="bg-pink-100   p-6 md:p-6 text-start flex flex-col items-start">
                 <h3 className="text-xl font-semibold mb-2">{offer?.title}</h3>
                 <div className="mb-4">
-                  <span className="text-gray-600 text-md mb-4">Price : {offer?.final_price}</span>
+                  <span className="text-gray-600 text-md mb-4">Price : {Math.round(offer?.final_price)}</span>
                 </div>
                 <div className="mb-4">
-                  <span className="text-gray-600 text-md mb-4 line-through">Price : {offer?.total_price}</span>
+                  <span className="text-gray-600 text-md mb-4 line-through">Price : {Math.round(offer?.total_price)}</span>
                 </div>
                 <p className="text-gray-600 text-md mb-3">{offer?.description}</p>
               </div>

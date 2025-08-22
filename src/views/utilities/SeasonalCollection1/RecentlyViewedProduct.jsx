@@ -56,14 +56,14 @@ const RecentlyViewedProduct = () => {
                   <RecentlyViewedCard
                     product={product?.id}
                     name={product?.name}
-                    price={product?.price}
+                    price={Math.round(product?.price)}
                     imageUrl={product?.image || "/fallback-image.jpg"} // Use a default image
                     userRating={product?.product_rating?.avg_rating || 0}
                     ratingNumber={product?.product_rating?.num_ratings}
                     inCart={product?.is_cart}
                     inWishlist={product?.is_wishlist}
                     getProducts={getProducts}
-                    mrp={product?.mrp}
+                    mrp={Math.round(product?.mrp)}
                   />
                 </div>
               ))

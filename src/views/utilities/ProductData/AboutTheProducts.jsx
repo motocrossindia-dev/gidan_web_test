@@ -18,17 +18,17 @@ const AboutProduct = ({ productDetailData }) => {
       case "about":
         return (
           <div>
-            <p className="text-gray-600 leading-7 justify-center text-between md:text-md">
-              {productData?.data?.product?.description || ""}
-            </p>
+          <div className="text-gray-600 leading-7 justify-center text-between md:text-md whitespace-pre-line">
+            {productData?.data?.product?.short_description || ""}
+          </div>
           </div>
         );
       case "box":
         return (
           <div>
-            <p className="text-gray-600 leading-7 justify-center text-between ">
-              {productData?.data?.product?.whats_included || ""}
-            </p>
+          <div className="text-gray-600 leading-7 justify-center text-between whitespace-pre-line">
+            {productData?.data?.product?.whats_included || ""}
+          </div>
           </div>
         );
       case "video":

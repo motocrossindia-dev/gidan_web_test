@@ -60,18 +60,19 @@ const Stores = () => {
             >
               <h3 className="text-lg font-semibold mb-2 flex items-center justify-between">
                 {store.location}
-                <a
-                  href={
-                    store.address_link && store.address_link.includes('google.com/maps')
-                      ? store.address_link
-                      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(store.address)}`
-                  } // Always use a valid Google Maps link
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="ml-2 text-bio-green"
-                >
-                  <CiLocationOn />
-                </a>
+<a
+  href={
+    store.address_link 
+      ? store.address_link 
+      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(store.address)}`
+  }
+  target="_blank"
+  rel="noopener noreferrer"
+  className="ml-2 text-bio-green"
+>
+  <CiLocationOn />
+</a>
+
               </h3>
               <p className="text-sm mb-2">
                 <strong>Address:</strong> {store.address}

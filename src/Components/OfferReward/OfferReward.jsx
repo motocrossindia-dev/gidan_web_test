@@ -71,7 +71,7 @@ const OfferReward = () => {
       description: 'Express true emotions with a gift that grow faster',
       buttonText: 'Buy It Now',
       image: plant12,
-      link: `/productdata/${id}`, // Example filter link
+      link: '/dealofweek', // Example filter link
     },
   ];
 

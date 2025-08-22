@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Tag } from 'lucide-react';
 import { CheckCircle } from 'lucide-react';
 import { useLocation,useNavigate } from "react-router-dom";
@@ -10,6 +10,8 @@ import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 import {Helmet} from "react-helmet";
+
+
 
 const DeliveryAddress = ({setSelectedAddress}) => {
   const accessToken = useSelector(selectAccessToken);
@@ -481,10 +483,10 @@ const OrderSummaryItem = ({ title, Quantity, mrp, sales_price, total,image }) =>
           </div>
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-            <span className="text-lg font-semibold">₹{sales_price}</span>
+            <span className="text-lg font-semibold">₹{Math.round(sales_price)}</span>
             {/* <span className="text-gray-500 text-sm">{mrp}</span> */}
 
-              <span className="text-gray-500 line-through text-sm">MRP ₹{mrp}</span>
+              <span className="text-gray-500 line-through text-sm">MRP ₹{Math.round(mrp)}</span>
 
             </div>
             {/* <p className="text-bio-green text-sm">You Save ₹{saving}</p> */}
@@ -688,9 +690,9 @@ const handleSaveOrderSummary = async () => {
             <OrderSummaryItem
               title={item.product_name}
               Quantity={item.quantity}
-              mrp={item.mrp}
-              sales_price={item.selling_price}
-              total={item.total}
+              mrp={Math.round(item.mrp)}
+              sales_price={Math.round(item.selling_price)}
+              total={Math.round(item.total)}
               image={item.image}
             />
             ))}
@@ -1006,8 +1008,30 @@ const CheckoutPage = () => {
   useEffect(() => {
     if (resource) {
       setOrderResource(resource);
-    }      
+    }     
+    console.log("Checkout Data:", data);
+console.log("Checkout Coupon:", data.order.is_combo_purchase);
+ 
   },[resource]);
+
+const prefilledCombo = location.state?.combo_offer || null;
+
+const [comboOffer, setComboOffer] = useState(() => {
+  const stored = sessionStorage.getItem("selected_combo_offer");
+  return stored ? JSON.parse(stored) : null;
+});
+
+const isCombo = !!(data?.order?.is_combo_purchase || comboOffer);
+
+// 🟢 Clear combo if this order is not a combo
+useEffect(() => {
+  if (!data?.order?.is_combo_purchase) {
+    sessionStorage.removeItem("selected_combo_offer");
+    setComboOffer(null);
+  }
+}, [data?.order?.is_combo_purchase]);
+
+
 
 
   return (
@@ -1042,25 +1066,90 @@ const CheckoutPage = () => {
   </div>
 
   {/* Right Side - Price Details (Sticky) */}
-  <div className="w-full lg:w-1/4 lg:pl-6">
+<div className="w-full lg:w-1/4 lg:pl-6">
   <div className="bg-white p-4 rounded-md shadow-md sticky top-4">
-    <h2 className="text-gray-500 font-semibold mb-2">Price Details</h2>
+    {/* Product Images */}
+    <h2 className="text-gray-500 font-semibold mb-2">Your Items</h2>
+    <hr />
+    <div className="mt-4 space-y-4">
+      {isCombo ? (
+        // ✅ Combo Offer Block
+        <div className="flex items-center gap-4">
+<div className="flex flex-wrap gap-3 mt-4">
+  {data?.order_items?.map((item) => (
+    <div key={item.id} className="w-16 h-16 rounded-md overflow-hidden border">
+      <img
+        src={`${axiosInstance.defaults.baseURL}${item.image}`} // ✅ Prepend base URL
+        alt={item.product_name}
+        className="w-full h-full object-cover"
+        onError={(e) => (e.currentTarget.src = "/placeholder.png")} // fallback
+      />
+    </div>
+  ))}
+</div>
+
+          <div>
+            <h3 className="font-semibold text-gray-800">{comboOffer?.title}</h3>
+            <p className="text-sm text-gray-500">
+              {comboOffer?.products?.join(", ")}
+            </p>
+          </div>
+        </div>
+      ) : (
+        // ✅ Normal Products Block
+        data?.order_items?.map((item, index) => (
+          <div key={index} className="flex items-center gap-4">
+<div className="flex flex-wrap gap-3 mt-4">
+  {data?.order_items?.map((item) => (
+    <div key={item.id} className="w-16 h-16 rounded-md overflow-hidden border">
+      <img
+        src={`${axiosInstance.defaults.baseURL}${item.image}`} // ✅ Prepend base URL
+        alt={item.product_name}
+        className="w-full h-full object-cover"
+        onError={(e) => (e.currentTarget.src = "/placeholder.png")} // fallback
+      />
+    </div>
+  ))}
+</div>
+
+            <div>
+              <h3 className="font-semibold text-gray-800">{item?.product_name}</h3>
+              <p className="text-sm text-gray-500">
+                Qty: {item?.quantity} × ₹{item?.mrp}
+              </p>
+            </div>
+          </div>
+        ))
+      )}
+    </div>
+
+    {/* Price Details */}
+    <h2 className="text-gray-500 font-semibold mt-6 mb-2">Price Details</h2>
     <hr />
     <div className="space-y-2 mt-4">
       {/* Price */}
       <div className="flex justify-between text-gray-700">
-        <span>Price ({coupon?.order_items?.length ?? data?.order_items?.length})</span>
-        <span>₹{coupon?.order?.total_price ?? data?.order?.total_price}</span>
+        <span>Price ({data?.order_items?.length ?? 0})</span>
+        <span>
+          ₹
+          {Math.round(isCombo
+            ? (comboOffer?.total_price ?? 0)
+            : (coupon?.order?.total_price ?? data?.order?.total_price ?? 0))}
+        </span>
       </div>
+
       {/* Discount */}
       <div className="flex justify-between text-bio-green">
         <span>Discount</span>
-        <span>-₹{coupon?.order?.total_discount ?? data?.order?.total_discount}</span>
-      </div>   
-         <div className="flex justify-between text-bio-green">
-        <span>Coupon Discount</span>
-        <span>-₹{coupon?.discount_amount}</span>
+        <span>-₹{Math.round(coupon?.order?.total_discount ?? data?.order?.total_discount ?? 0)}</span>
       </div>
+
+      {/* Coupon Discount */}
+      <div className="flex justify-between text-bio-green">
+        <span>Coupon Discount</span>
+        <span>-₹{Math.round(coupon?.discount_amount ?? 0)}</span>
+      </div>
+
       {/* Delivery Charges */}
       <div className="flex justify-between text-gray-700">
         <span>Delivery Charges</span>
@@ -1069,6 +1158,7 @@ const CheckoutPage = () => {
           <span className="text-bio-green">Free</span>
         </span>
       </div>
+
       {/* Packaging Fee */}
       <div className="flex justify-between text-gray-700">
         <span>Secured Packaging Fee</span>
@@ -1076,26 +1166,33 @@ const CheckoutPage = () => {
         <span className="text-bio-green">Free</span>
       </div>
     </div>
+
     <hr className="my-4" />
+
     {/* Total Amount */}
     <div className="flex justify-between font-semibold text-gray-900">
-  <span>Total Amount</span>
-  <span>₹{(coupon?.order?.grand_total ?? data?.order?.grand_total) || 0}</span>
-</div>
+      <span>Total Amount</span>
+      <span>
+        ₹
+        {Math.round(isCombo
+          ? (comboOffer?.final_price ?? 0)
+          : (coupon?.order?.grand_total ?? data?.order?.grand_total ?? 0))}
+      </span>
+    </div>
 
     <hr className="my-4" />
+
     {/* Savings */}
     <div className="text-bio-green text-sm font-semibold">
-  You will save ₹
-  {coupon?.discount_amount 
-    ? coupon.discount_amount + (data?.order?.total_discount || 0) 
-    : data?.order?.total_discount || 0} 
- &nbsp; on this order
-</div>
-
-
+      You will save ₹
+      {Math.round(coupon?.discount_amount 
+        ? coupon.discount_amount + (data?.order?.total_discount || 0) 
+        : data?.order?.total_discount || 0)} 
+      &nbsp; on this order
+    </div>
   </div>
 </div>
+
 
 </div>
 </>

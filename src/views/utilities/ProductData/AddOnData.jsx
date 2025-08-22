@@ -117,11 +117,11 @@ const AddOnData = ({
 
   <div className="flex items-center gap-2 mb-4">
     <span className="text-sm font-semibold text-navy-blue">
-      ₹{price}.00
+      ₹{Math.round(price)}.00
     </span>
     {oldPrice && (
       <span className="text-xs text-gray-400 line-through">
-        ₹{oldPrice}.00
+        ₹{Math.round(oldPrice)}.00
       </span>
     )}
   </div>
@@ -192,11 +192,11 @@ const AddOnData = ({
 
               <div className="flex flex-col justify-center items-center mt-1">
                 <p className="text-xs font-medium text-black">
-                  ₹{product.selling_price}.00
+                  ₹{Math.round(product.selling_price)}.00
                 </p>
                 {product.mrp && (
                   <p className="text-xs text-gray-400 line-through">
-                    ₹{product.mrp}.00
+                    ₹{Math.round(product.mrp)}.00
                   </p>
                 )}
               </div>

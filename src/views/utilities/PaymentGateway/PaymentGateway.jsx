@@ -299,19 +299,19 @@ const handlePayment = async () => {
       {/* Price */}
       <div className="flex justify-between text-gray-700">
         <span>Price ({data?.order_items?.length})</span>
-        <span>₹{data?.order?.total_price}</span>
+        <span>₹{Math.round(data?.order?.total_price)}</span>
       </div>
 
       {/* Discount */}
       <div className="flex justify-between text-bio-green">
         <span>Discount</span>
-        <span>-₹{data?.order?.total_discount}</span>
+        <span>-₹{Math.round(data?.order?.total_discount)}</span>
       </div>
 
       {/* Coupon Discount */}
       <div className="flex justify-between text-bio-green">
         <span>Coupon Discount</span>
-        <span>-₹{data?.order?.coupon_discount}</span>
+        <span>-₹{Math.round(data?.order?.coupon_discount)}</span>
       </div>
 
       {/* Wallet Debit - conditional */}
@@ -346,10 +346,10 @@ const handlePayment = async () => {
       <span>Total Amount</span>
       <span>
         ₹
-        {(
+        {Math.round((
           data?.order?.grand_total -
           (walletAdded || 0)
-        ).toFixed(2)}
+        ).toFixed(2))}
       </span>
     </div>
 
@@ -358,8 +358,8 @@ const handlePayment = async () => {
     {/* Savings */}
     <div className="text-bio-green text-sm font-semibold">
       You will save ₹
-      {(data?.order?.total_discount || 0) +
-        (data?.order?.coupon_discount || 0) +(walletAdded|| 0)}{" "}
+      {Math.round((data?.order?.total_discount || 0) +
+        (data?.order?.coupon_discount || 0) +(walletAdded|| 0))}{" "}
       on this order
     </div>
   </div>

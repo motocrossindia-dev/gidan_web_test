@@ -228,9 +228,9 @@ const ProductSellerCard = ({
           <h3 className="text-sm font-medium mb-2">{name}</h3>
 
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-navy-blue">₹{price}.00</span>
+            <span className="text-sm font-semibold text-navy-blue">₹{Math.round(price)}.00</span>
             {oldPrice && (
-              <span className="text-xs text-gray-400 line-through">₹{oldPrice}.00</span>
+              <span className="text-xs text-gray-400 line-through">₹{Math.round(oldPrice)}.00</span>
             )}
           </div>
         </div>

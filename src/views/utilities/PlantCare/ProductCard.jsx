@@ -199,7 +199,7 @@ const ProductCard = ({ name, price, oldPrice, imageUrl, rating ,product,mrp}) =>
  
         
          <div className="flex items-center gap-2">
-           <span className="text-sm font-semibold text-navy-blue">₹{price}.00</span>
+           <span className="text-sm font-semibold text-navy-blue">₹{Math.round(price)}.00</span>
            {/* {mrp && (
              <span className="text-xs text-gray-400 line-through">₹{mrp}.00</span>
            )} */}
