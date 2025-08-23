@@ -1033,6 +1033,13 @@ useEffect(() => {
 
 
 
+console.log("Testing Deal of week", data);
+
+// ✅ Deduplicate items by product_name
+const uniqueItems = data?.order_items?.filter(
+  (item, index, self) =>
+    index === self.findIndex((i) => i.product_name === item.product_name)
+);
 
   return (
 
@@ -1068,25 +1075,25 @@ useEffect(() => {
   {/* Right Side - Price Details (Sticky) */}
 <div className="w-full lg:w-1/4 lg:pl-6">
   <div className="bg-white p-4 rounded-md shadow-md sticky top-4">
-    {/* Product Images */}
     <h2 className="text-gray-500 font-semibold mb-2">Your Items</h2>
     <hr />
+
     <div className="mt-4 space-y-4">
       {isCombo ? (
         // ✅ Combo Offer Block
         <div className="flex items-center gap-4">
-<div className="flex flex-wrap gap-3 mt-4">
-  {data?.order_items?.map((item) => (
-    <div key={item.id} className="w-16 h-16 rounded-md overflow-hidden border">
-      <img
-        src={`${axiosInstance.defaults.baseURL}${item.image}`} // ✅ Prepend base URL
-        alt={item.product_name}
-        className="w-full h-full object-cover"
-        onError={(e) => (e.currentTarget.src = "/placeholder.png")} // fallback
-      />
-    </div>
-  ))}
-</div>
+          <div className="flex flex-wrap gap-3 mt-4">
+            {data?.order_items?.map((item) => (
+              <div key={item.id} className="w-16 h-16 rounded-md overflow-hidden border">
+                <img
+                  src={`${axiosInstance.defaults.baseURL}${item.image}`}
+                  alt={item.product_name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => (e.currentTarget.src = "/placeholder.png")}
+                />
+              </div>
+            ))}
+          </div>
 
           <div>
             <h3 className="font-semibold text-gray-800">{comboOffer?.title}</h3>
@@ -1097,29 +1104,35 @@ useEffect(() => {
         </div>
       ) : (
         // ✅ Normal Products Block
-        data?.order_items?.map((item, index) => (
-          <div key={index} className="flex items-center gap-4">
-<div className="flex flex-wrap gap-3 mt-4">
-  {data?.order_items?.map((item) => (
-    <div key={item.id} className="w-16 h-16 rounded-md overflow-hidden border">
-      <img
-        src={`${axiosInstance.defaults.baseURL}${item.image}`} // ✅ Prepend base URL
-        alt={item.product_name}
-        className="w-full h-full object-cover"
-        onError={(e) => (e.currentTarget.src = "/placeholder.png")} // fallback
-      />
-    </div>
-  ))}
-</div>
-
-            <div>
-              <h3 className="font-semibold text-gray-800">{item?.product_name}</h3>
-              <p className="text-sm text-gray-500">
-                Qty: {item?.quantity} × ₹{item?.mrp}
-              </p>
-            </div>
+        <>
+          {/* Image Gallery - Render once */}
+          <div className="flex flex-wrap gap-3 mt-4">
+            {data?.order_items?.map((item) => (
+              <div key={item.id} className="w-16 h-16 rounded-md overflow-hidden border">
+                <img
+                  src={`${axiosInstance.defaults.baseURL}${item.image}`}
+                  alt={item.product_name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => (e.currentTarget.src = "/placeholder.png")}
+                />
+              </div>
+            ))}
           </div>
-        ))
+
+          {/* Product Details */}
+{/* Product Details (only unique ones) */}
+{/* {uniqueItems?.map((item) => (
+  <div key={item.id} className="flex items-center gap-4">
+    <div>
+      <h3 className="font-semibold text-gray-800">{item?.product_name}</h3>
+      <p className="text-sm text-gray-500">
+        Qty: {item?.quantity} × ₹{item?.mrp}
+      </p>
+    </div>
+  </div>
+))} */}
+
+        </>
       )}
     </div>
 
