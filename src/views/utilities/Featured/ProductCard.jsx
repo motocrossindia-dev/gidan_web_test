@@ -62,8 +62,8 @@ const ProductCard = ({ name, price, mrp, imageUrl, rating, product }) => {
           <h3 className="text-sm font-medium mb-2">{name}</h3>
 
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-navy-blue">₹{price}.00</span>
-            {mrp && <span className="text-xs text-gray-400 line-through">₹{mrp}.00</span>}
+            <span className="text-sm font-semibold text-navy-blue">₹{Math.round(price)}.00</span>
+            {mrp && <span className="text-xs text-gray-400 line-through">₹{Math.round(mrp)}.00</span>}
           </div>
         </Paper>
       </div>
@@ -111,9 +111,9 @@ const ProductCard = ({ name, price, mrp, imageUrl, rating, product }) => {
               </Typography>
 
               <div className="flex flex-col justify-center items-center mt-1">
-                <p className="text-xs font-medium text-black">₹{product.price}.00</p>
+                <p className="text-xs font-medium text-black">₹{Math.round(product.price)}.00</p>
                 {product.mrp && (
-                  <p className="text-xs text-gray-400 line-through">₹{product.mrp}.00</p>
+                  <p className="text-xs text-gray-400 line-through">₹{Math.round(product.mrp)}.00</p>
                 )}
               </div>
             </div>

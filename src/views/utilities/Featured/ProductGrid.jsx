@@ -56,8 +56,8 @@ const ProductGrid = ({ results }) => {
           <TrendingCard
             key={index}
             name={product.name}
-            price={product.selling_price}
-            mrp={product.mrp || 0}
+            price={Math.round(product.selling_price)}
+            mrp={Math.round(product.mrp || 0)}
             imageUrl={product?.image || plantImage}
             rating={product.rating}
             product={product}

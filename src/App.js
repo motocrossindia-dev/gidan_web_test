@@ -77,6 +77,7 @@ import TawkToWidget from './tawkto/tawkto';
 import GoogleAnalytics from './GoogleAnalytics/GoogleAnalytics';
 import FAQs from './Components/Footer/Faqs';
 import MobileBarLayout from './views/utilities/MobileSidebar/MbileBarLayout';
+import DealOfWeek from './views/utilities/DealOfWeek/DealOfWeek';
 
 const DesktopRoutes = () => (
   <Routes>
@@ -96,6 +97,7 @@ const DesktopRoutes = () => (
       <Route path="corporate" element={<CorporateGiftingPage />} />
       <Route path="franchiseenquery" element={<FranchiseEnquires />} />
       <Route path="gifts" element={<Comingsoon />} />
+      <Route path="dealofweek" element={<DealOfWeek />} />
       <Route path="successpage" element={<Successpage />} />
       <Route path="orders" element={<MyOrders />} />
       <Route path="ourwork" element={<OurWork />} />

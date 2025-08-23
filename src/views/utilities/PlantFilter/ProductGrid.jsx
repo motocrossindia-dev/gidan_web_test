@@ -86,12 +86,12 @@ const ProductGrid = ({productDetails,pagination,setResults,query}) => {
           <ProductCard
             key={index}
             name={product?.name}
-            price={product?.selling_price}
+            price={Math.round(product?.selling_price)}
             imageUrl={product?.image}
             userRating={product?.product_rating?.avg_rating}
             ratingNumber={product?.product_rating?.num_ratings}
             product={product?.id}
-            mrp={product?.mrp}
+            mrp={Math.round(product?.mrp)}
             inWishlist={product?.is_wishlist}
             inCart={product?.is_cart}
           />

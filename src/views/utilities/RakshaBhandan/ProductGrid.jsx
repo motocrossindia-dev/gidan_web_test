@@ -71,8 +71,8 @@ const ProductGrid = () => {
           <ProductCard
             key={index}
             name={product.name}
-            price={product.price}
-            oldPrice={product.oldPrice}
+            price={Math.round(product.price)}
+            oldPrice={Math.round(product.oldPrice)}
             imageUrl={plantImage}
             rating={product.rating}
           />

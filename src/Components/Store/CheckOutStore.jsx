@@ -58,18 +58,20 @@ const CheckOutStore = () => {
                 >
                   <h3 className="text-lg md:text-xl font-semibold flex items-center justify-between">
                     {store.location}
-                    <a
-                      href={
-                        store.address_link && store.address_link.includes('google.com/maps')
-                          ? store.address_link
-                          : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(store.address)}`
-                      }
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="ml-2 text-bio-green"
-                    >
-                      <CiLocationOn />
-                    </a>
+<a
+  href={
+    store.address_link 
+      ? store.address_link 
+      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(store.address)}`
+  }
+  target="_blank"
+  rel="noopener noreferrer"
+  className="ml-2 text-bio-green"
+>
+  <CiLocationOn />
+</a>
+
+
                   </h3>
                   <p className="text-sm md:text-md mb-2 mt-1">
                     <strong>Address:</strong> {store.address}

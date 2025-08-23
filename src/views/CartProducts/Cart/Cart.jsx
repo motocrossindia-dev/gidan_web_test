@@ -134,7 +134,7 @@ const Cart = () => {
           <div className="w-full md:w-1/5 mt-4 md:mt-0 md:ml-10">
             <CartSummary
               totalItems={totalItems}
-              totalAmount={totalAmount}
+              totalAmount={Math.round(totalAmount)}
               discount={discount}
               // packagingFee={packagingFee}
               products={products}

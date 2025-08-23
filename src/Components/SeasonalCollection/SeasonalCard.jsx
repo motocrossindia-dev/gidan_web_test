@@ -200,7 +200,7 @@ const SeasonalCard = ({
 
               {/* Price Section */}
               <div className="flex flex-col items-center justify-center mt-1">
-                <p className="text-xs font-medium text-black">₹{price}.00</p>
+                <p className="text-xs font-medium text-black">₹{Math.round(price)}.00</p>
                 {/* {mrp && (
                   <p className="text-[10px] text-gray-400 line-through">₹{mrp}.00</p>
                 )} */}
@@ -300,7 +300,7 @@ const SeasonalCard = ({
             <h3 className="text-sm text-gray-400 mb-2">{name}</h3>
 
             <div className="flex items-center gap-2">
-              <span className="text-sm  text-navy-blue">₹{price}.00</span>
+              <span className="text-sm  text-navy-blue">₹{Math.round(price)}.00</span>
               {/* {mrp && (
                 <span className="text-xs text-gray-400 line-through">₹{mrp}.00</span>
               )} */}

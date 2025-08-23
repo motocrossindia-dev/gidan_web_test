@@ -247,12 +247,12 @@ getMyOrders()
               {order?.product_details?.product_name}
             </h3>
             <div className="flex justify-between items-center">
-              <span className="text-lg font-semibold text-gray-900">₹{order?.grand_total.toLocaleString()}</span>
+              <span className="text-lg font-semibold text-gray-900">₹{Math.round(order?.grand_total).toLocaleString()}</span>
               <span className="text-xs text-gray-500 capitalize">{order?.delivery_option}</span>
             </div>
             {order?.total_discount > 0 && (
               <div className="text-xs text-green-600 mt-1">
-                Saved ₹{order?.total_discount?.toLocaleString()}
+                Saved ₹{Math.round(order?.total_discount || 0).toLocaleString()}
               </div>
             )}
           </div>
@@ -315,10 +315,10 @@ getMyOrders()
           </h3>
           <div className="flex justify-between items-center">
             <div>
-              <span className="text-xl font-semibold text-gray-900">₹{order?.grand_total.toLocaleString()}</span>
+              <span className="text-xl font-semibold text-gray-900">₹{Math.round(order?.grand_total).toLocaleString()}</span>
               {order?.total_discount > 0 && (
                 <div className="text-sm text-green-600">
-                  Saved ₹{order?.total_discount.toLocaleString()}
+                  Saved ₹{Math.round(order?.total_discount).toLocaleString()}
                 </div>
               )}
             </div>

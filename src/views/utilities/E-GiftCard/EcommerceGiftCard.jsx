@@ -36,7 +36,7 @@ const EcommerceGiftCard = () => {
             </h1>
             <div className="mt-2">
               <p className="text-xl font-semibold text-gray-900">
-                ₹{selectedAmount}.00
+                ₹{Math.round(selectedAmount)}.00
               </p>
               <div className="flex items-center mt-2">
                 {[...Array(3)].map((_, i) => (
@@ -57,7 +57,7 @@ const EcommerceGiftCard = () => {
                    onClick={() => setSelectedAmount(amount)}
                    className="px-4 py-2 text-sm rounded-md border text-black border-gray-300 hover:border-bio-green"
                  >
-                   ₹{amount}
+                   ₹{Math.round(amount)}
                  </button>
                 ))}
               </div>

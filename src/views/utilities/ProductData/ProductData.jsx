@@ -745,7 +745,7 @@ setSelectedImage((prev) =>
                 {productDetailData?.data?.product?.main_product_name || ""}
               </h2>
               <h4 className="text-md md:text-lg font-sans mb-4">
-                {productDetailData?.data?.product?.short_description || ""}
+                {productDetailData?.data?.product?.description || ""}
               </h4>
               <p className="text-black-600 text-sm mb-4">
                 {Array.from({ length: 5 }).map((_, i) => {
@@ -771,12 +771,12 @@ setSelectedImage((prev) =>
               <div className="flex mb-4">
                 <div className="mr-4">
                   <span className="font-bold text-bio-green text-lg md:text-2xl">
-                    ₹{productDetailData?.data?.product?.selling_price || 0}
+                    ₹{Math.round(productDetailData?.data?.product?.selling_price || 0)}
                     {/* ₹{productData.prices[selectedSize]} */}
                   </span>
                   <span className="text-gray-400 text-md md:text-xl line-through ml-2">
                     {/* ₹{productData.originalPrices[selectedSize]} */}₹
-                    {productDetailData?.data?.product?.mrp || 0}
+                    {Math.round(productDetailData?.data?.product?.mrp || 0)}
                   </span>
                 </div>
               </div>
@@ -869,7 +869,7 @@ setSelectedImage((prev) =>
   </div>
 )}
 
-{productDetailData?.data?.product_colors?.length > 0 && (
+{/* {productDetailData?.data?.product_colors?.length > 0 && (
   <div className="mb-4">
     <span className="font-bold text-gray-700">Color:</span>
     <div className="flex items-center mt-2">
@@ -888,7 +888,35 @@ setSelectedImage((prev) =>
       ))}
     </div>
   </div>
+)} */}
+
+
+{productDetailData?.data?.product_colors?.length > 0 && (
+  <div className="mb-4">
+    <span className="font-bold text-gray-700">Color:</span>
+    <div className="flex items-center mt-2 space-x-4">
+      {productDetailData?.data?.product_colors?.map((color, idx) => (
+        <div key={color?.id || color?.color_code || idx} className="flex flex-col items-center">
+          <button
+            onClick={() =>
+              handlePlanterColorClick(color, productDetailData?.data?.product)
+            }
+            className={`w-10 h-10 rounded-full mb-1 focus:outline-none ${
+              selectedColor?.id === color?.id
+                ? "border-2 border-bio-green text-gray-700"
+                : "border-2 border-gray-300 text-gray-700"
+            }`}
+            style={{ backgroundColor: color?.color_code }}
+            aria-label={`Select ${color?.name || "color"}`}
+          />
+          {/* ✅ Show color name */}
+          <span className="text-xs text-gray-600">{color?.color_name}</span>
+        </div>
+      ))}
+    </div>
+  </div>
 )}
+
 
 
 

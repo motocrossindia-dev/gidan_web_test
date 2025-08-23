@@ -73,11 +73,11 @@ const CartSummary = ({
       <div className="space-y-2">
         <div className="flex justify-between">
           <span>Price ({totalItems} items)</span>
-          <span>₹{totalAmount}</span>
+          <span>₹{Math.round(totalAmount)}</span>
         </div>
         <div className="flex justify-between text-green-600">
           <span>Discount</span>
-          <span>-₹{discount}</span>
+          <span>-₹{Math.round(discount)}</span>
         </div>
         
         <div className="flex justify-between">
@@ -90,10 +90,10 @@ const CartSummary = ({
         </div> */}
         <div className="border-y-2 border-dashed py-2 flex justify-between font-bold">
           <span>Total Amount</span>
-          <span>₹{totalAmount - discount}</span>
+          <span>₹{Math.round(totalAmount - discount)}</span>
         </div>
         <p className="text-green-600 mt-2">
-          You will save ₹{discount} on this order
+          You will save ₹{Math.round(discount)} on this order
         </p>
       </div>
       <div className="flex justify-end">

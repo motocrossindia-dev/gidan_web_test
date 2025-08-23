@@ -104,9 +104,9 @@ const ProductSeller = () => {
                         {product.name.slice(0, 5)}
                       </Typography>
                       <div className="flex flex-col justify-center items-center mt-1">
-                        <p className="text-xs font-medium text-black">₹{product.selling_price}.00</p>
+                        <p className="text-xs font-medium text-black">₹{Math.round(product.selling_price)}.00</p>
                         {product.oldPrice && (
-                          <p className="text-xs text-gray-400 line-through">₹{product.mrp}.00</p>
+                          <p className="text-xs text-gray-400 line-through">₹{Math.round(product.mrp)}.00</p>
                         )}
                       </div>
                     </div>
@@ -118,8 +118,8 @@ const ProductSeller = () => {
               <div className="hidden sm:block">
                 <TrendingCard
                   name={product?.name}
-                  price={product?.selling_price}
-                  mrp={product?.mrp}
+                  price={Math.round(product?.selling_price)}
+                  mrp={Math.round(product?.mrp)}
                   imageUrl={product?.image}
                   rating={product?.product_rating || 0}
                   product={product}

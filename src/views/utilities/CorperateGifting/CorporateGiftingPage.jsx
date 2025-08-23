@@ -189,8 +189,8 @@ const CorporateGiftingPage = () => {
                   <SeasonalCard
                       key={index}
                       name={product.name}
-                      price={product.selling_price}
-                      oldPrice={product.oldPrice}
+                      price={Math.round(product.selling_price)}
+                      oldPrice={Math.round(product.oldPrice)}
                       imageUrl={product.imageUrl}
                       rating={product.rating}
                   />
