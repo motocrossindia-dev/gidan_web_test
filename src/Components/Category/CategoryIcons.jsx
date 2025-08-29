@@ -67,7 +67,7 @@ const getCategorywiseProduct = async (id, categoryname) => {
   } else if (categoryname === "SERVICES") {
     navigate(`/services/`);
   } else if (categoryname === "OFFERS") {
-    navigate(`/combooffer`); // ✅ Navigate to combooffer page
+    navigate(`/offer`); // ✅ Navigate to offer page
   } else {
     navigate(`/filter/${id}`);
   }

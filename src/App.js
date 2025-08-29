@@ -78,6 +78,7 @@ import GoogleAnalytics from './GoogleAnalytics/GoogleAnalytics';
 import FAQs from './Components/Footer/Faqs';
 import MobileBarLayout from './views/utilities/MobileSidebar/MbileBarLayout';
 import DealOfWeek from './views/utilities/DealOfWeek/DealOfWeek';
+import Offer from './views/utilities/Offer/Offer';
 
 const DesktopRoutes = () => (
   <Routes>
@@ -98,6 +99,7 @@ const DesktopRoutes = () => (
       <Route path="franchiseenquery" element={<FranchiseEnquires />} />
       <Route path="gifts" element={<Comingsoon />} />
       <Route path="dealofweek" element={<DealOfWeek />} />
+      <Route path="offer" element={<Offer />} />
       <Route path="successpage" element={<Successpage />} />
       <Route path="orders" element={<MyOrders />} />
       <Route path="ourwork" element={<OurWork />} />

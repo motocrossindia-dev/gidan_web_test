@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
@@ -6,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import Verify from "../../../Services/Services/Verify";
 import axiosInstance from "../../../Axios/axiosInstance";
+import { useSnackbar } from "notistack";   // ✅ import notistack
 
 const CartSummary = ({
   totalItems,
@@ -16,6 +16,8 @@ const CartSummary = ({
 }) => {
   const accessToken = useSelector(selectAccessToken);
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+   
 
   useEffect(() => {
     window.scrollTo(0, 0); // Scroll to the top
@@ -43,7 +45,20 @@ const CartSummary = ({
         navigate("/checkout", { state: { ordersummary: response.data.data } });
       }
     } catch (error) {
-      console.error("Error placing order:", error);
+      if (error.response?.data) {
+        const { message, address_status } = error.response.data;
+
+        // ✅ Show snackbar with error message
+        enqueueSnackbar(message, { variant: "error" });
+
+        // If address not available → redirect to profile
+        if (address_status === false) {
+          navigate("/profile");
+        }
+      } else {
+        console.error("Error placing order:", error);
+        enqueueSnackbar("Something went wrong, please try again.", { variant: "error" });
+      }
     }
   };
   
@@ -96,6 +111,8 @@ const CartSummary = ({
           You will save ₹{Math.round(discount)} on this order
         </p>
       </div>
+
+
       <div className="flex justify-end">
         <button
           onClick={handlePlaceOrder}
