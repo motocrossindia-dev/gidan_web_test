@@ -5,8 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df516f1c-c962-4e0d-8a95-1119b7efb609" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/views/utilities/Offer/Offer.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Components/Category/CategoryIcons.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Category/CategoryIcons.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Store/CheckOutStore.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Store/CheckOutStore.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/CartProducts/CartComponent/Cartsummary.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/CartProducts/CartComponent/Cartsummary.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Stores/Stores.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Stores/Stores.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,22 +49,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev__mohan&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/mohan my data/reddy/pgboking/flutter apps/pg_booking_app&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.3.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "Merging dev__mohan",
+    "last_opened_file_path": "D:/mohan my data/full stack app/backend_ecomerce_globally/admin_dashboard_ecomerce",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2024.3.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\COMPANY PROJECTS\BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN\git 3\git\src\views\utilities" />
@@ -125,7 +130,13 @@
       <workItem from="1754981860675" duration="16000" />
       <workItem from="1755182711547" duration="1078000" />
       <workItem from="1755282835972" duration="7000" />
-      <workItem from="1755333385078" duration="1635000" />
+      <workItem from="1755333385078" duration="3340000" />
+      <workItem from="1755706694834" duration="93000" />
+      <workItem from="1755919397984" duration="562000" />
+      <workItem from="1755930544384" duration="1659000" />
+      <workItem from="1755954835687" duration="780000" />
+      <workItem from="1756216371962" duration="967000" />
+      <workItem from="1756470638909" duration="207000" />
     </task>
     <servers />
   </component>
