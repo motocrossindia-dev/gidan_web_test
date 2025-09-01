@@ -12,6 +12,10 @@ const CategoryIcons = () => {
       (category) => category?.is_published === true
   );
 
+  const formatForUrl = (str) => {
+    return encodeURIComponent(str.toLowerCase().replace(/\s+/g, '-'));
+  };
+
   const getCategory = async () => {
     try {
       const response = await axiosInstance.get(`/category/`);
@@ -59,7 +63,7 @@ const CategoryIcons = () => {
     } else if (categoryname === "OFFERS") {
       navigate(`/offer`);
     } else {
-      navigate(`/filter/${id}`);
+      navigate(`/filter/${id}/${formatForUrl(categoryname.toLowerCase())}`);
     }
   };
 
@@ -106,7 +110,7 @@ const CategoryIcons = () => {
                                     className="hover:text-green-600 cursor-pointer transition-colors duration-200"
                                 >
                                   <Link
-                                      to={`/filter/subcategory/${item.id}`}
+                                      to={`/filter/subcategory/${item.id}/${formatForUrl(category.name)}/${formatForUrl(item.name)}`}
                                       className="block py-1 px-2 rounded hover:bg-gray-50 text-xs sm:text-sm"
                                   >
                                     {item.name}
