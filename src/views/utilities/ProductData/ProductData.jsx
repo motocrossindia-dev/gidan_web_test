@@ -99,6 +99,7 @@ export default function Component() {
 
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedgram, setSelectedGram] = useState("");
+  const [selectedLitre, setSelectedLitre] = useState("");
   const [selectedPlanterSize, setSelectedPlanterSize] = useState("");
   const [selectedPlanter, setSelectedPlanter] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
@@ -117,6 +118,12 @@ const isAuthenticatedMobile = !!localStorage.getItem('userData');
   const token = localStorage.getItem("token")
   const accessToken = useSelector(selectAccessToken);
   const isInCart = productDetailData?.data?.product?.is_cart;
+
+  const [optionType, setOptionType] = useState(null);
+
+  const hasWeights = productDetailData?.data?.product_weights?.length > 0;
+const hasLitres = productDetailData?.data?.product_litres?.length > 0;
+
 
 
   // ⬆️ Scroll to top on route change
@@ -451,6 +458,38 @@ const handleQuantity = async (product_id, action, qty) => {
   };
 
 
+  
+  const handleLitreClick = async (litre, product) => {
+    try {
+
+      // Toggle selection properly
+      setSelectedLitre((prev) =>
+        prev?.name === litre?.name ? null : litre
+      );
+
+      // Make API call
+      const response = await axiosInstance.get(
+        `/product/filterProduct/${product?.id}/`,
+        {
+          params: { litre_id: litre.id},
+        }
+      );
+
+      // Ensure data exists before updating state
+
+      const data = response?.data;
+
+      if (data?.data?.product?.images) {
+        setImageThumbnails(data?.data?.product?.images || []);
+      }
+
+      setProductDetailData(data);
+    } catch (error) {
+      console.error("Error fetching filtered products:", error);
+    }
+  };
+
+
   const handlePlanterSizeClick = async (size, product) => {
     try {
       // Set the selected size
@@ -606,7 +645,7 @@ useEffect(() => {
         setAddOnData(data?.data?.product_add_ons || []);
         setImageThumbnails(data?.data?.product?.images || []);
 
-        const { size_id, planter_size_id, planter_id, color_id } = data.data.product;
+        const { size_id, planter_size_id, planter_id, color_id, litre_id, weight_id} = data.data.product;
 
         const defaultSize =
           data.data.product_sizes.find(
@@ -630,10 +669,22 @@ useEffect(() => {
           data.data.product_colors.find((c) => c.id === Number(color_id)) ||
           data.data.product_colors[0] || null;
 
+                const defaultLitre =
+          data.data.product_litres.find(
+            (s) => s.id === litre_id || s.name === litre_id?.name
+          ) || data.data.product_litres[0] || "";
+
+                          const defaultWeight =
+          data.data.product_weights.find(
+            (s) => s.id === weight_id || s.name === weight_id?.name
+          ) || data.data.product_weights[0] || "";
+
         setSelectedSize(defaultSize);
         setSelectedPlanterSize(defaultPlanterSize);
         setSelectedPlanter(defaultPlanter);
         setSelectedColor(defaultColor);
+        setSelectedLitre(defaultLitre);
+        setSelectedGram(defaultWeight);
 
         // ✅ Trigger the same flow as manual selection to update images
         if (defaultColor) {
@@ -675,7 +726,7 @@ useEffect(() => {
             <div className="md:flex-1 px-4">
 {/* Main Image */}
 <div className="flex justify-center h-auto bg-gray-50">
-  <div className="w-full h-full md:w-full md:h-1/2 rounded-lg bg-gray-100 flex items-center justify-center">
+  <div className="w-full h-auto rounded-lg bg-gray-100 flex items-center justify-center">
     <img
       src={
         imageThumbnails[selectedImage]?.image ||
@@ -684,7 +735,7 @@ useEffect(() => {
 
       loading="lazy"
       alt={`Product view ${selectedImage + 1}`}
-      className="w-[500px] h-[500px] object-cover rounded"
+      className="w-full max-w-[500px] h-auto object-contain rounded"
     />
   </div>
 </div>
@@ -699,21 +750,23 @@ useEffect(() => {
 )
 
     }
-    className="text-gray-500 hover:text-gray-800 focus:outline-none"
+    className="text-gray-500 hover:text-gray-800 focus:outline-none shrink-0"
   >
     <FaChevronLeft size={24} />
   </button>
 
   {/* Thumbnail List */}
-  <div className="flex gap-3">
+  <div className="flex gap-3 overflow-x-auto">
     {imageThumbnails.slice(1).map((image, i) => (
-      <button
-        key={i + 1}
-        onClick={() => setSelectedImage(i + 1)}
-        className={`w-[90px] h-[90px] rounded-lg bg-gray-100 flex items-center justify-center shrink-0 ${
-          selectedImage === i + 1 ? "ring-2 ring-indigo-300 ring-inset" : ""
-        }`}
-      >
+              <button
+                key={i + 1}
+                onClick={() => setSelectedImage(i + 1)}
+                className={`w-16 h-16 sm:w-20 sm:h-20 md:w-[90px] md:h-[90px] rounded-lg bg-gray-100 flex items-center justify-center shrink-0 ${
+                  selectedImage === i + 1
+                    ? "ring-2 ring-indigo-300 ring-inset"
+                    : ""
+                }`}
+              >
         <img
           src={image.image}
           loading="lazy"
@@ -732,7 +785,7 @@ setSelectedImage((prev) =>
 )
 
     }
-    className="text-gray-500 hover:text-gray-800 focus:outline-none"
+    className="text-gray-500 hover:text-gray-800 focus:outline-none shrink-0"
   >
     <FaChevronRight size={24} />
   </button>
@@ -798,13 +851,42 @@ setSelectedImage((prev) =>
                 : "border-2 border-gray-300 text-gray-700"
             } py-2 px-4 rounded-lg mr-2 focus:outline-none`}
           >
-            {size?.size_grams}g
+            {size?.size_grams}
           </button>
         ))}
       </div>
     </div>
   </div>
 )}
+
+{productDetailData?.data?.product_litres?.length > 0 && (
+  <div className="space-y-6">
+    <div className="mb-4">
+      <span className="font-bold text-gray-700">Select Capacity:</span>
+      <div className="flex items-center mt-2">
+        {productDetailData?.data?.product_litres?.map((litre, idx) => (
+          <button
+            key={litre?.id || litre?.name || idx}
+            onClick={() => handleLitreClick(litre, productDetailData?.data?.product)}
+            className={`${
+              selectedLitre?.name === litre?.name
+                ? "border-2 border-bio-green text-gray-700"
+                : "border-2 border-gray-300 text-gray-700"
+            } py-2 px-4 rounded-lg mr-2 focus:outline-none`}
+          >
+            {litre?.name}
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+)}
+
+
+
+
+
+
 
 {productDetailData?.data?.product_sizes?.length > 0 && (
   <div className="mb-4">
