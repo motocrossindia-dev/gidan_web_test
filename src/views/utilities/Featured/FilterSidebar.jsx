@@ -4,60 +4,61 @@ import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 
 const API_URL = `${process.env.REACT_APP_API_URL}/filters/filters/`;
 
-const FilterSidebar = ({ setResults, setShowMobileFilter, categoryId, category, subcategory }) => {
-  const [selectedFilterType, setSelectedFilterType] = useState("plant");
+const FilterSidebar = ({ setResults, setShowMobileFilter, categoryId, category, subcategory, typeKey }) => {
+  const [selectedFilterType, setSelectedFilterType] = useState(typeKey || "plant");
+  const [userSelectedFilterType, setUserSelectedFilterType] = useState(false);
   const [openFilters, setOpenFilters] = useState({
-    subcategories: !!subcategory // automatically open if subcategory exists
+    subcategories: !!subcategory
   });
   const [selectedFilters, setSelectedFilters] = useState({});
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
   const [filterData, setFilterData] = useState({});
   const [availableTypes, setAvailableTypes] = useState([]);
 
-  // Sync subcategory prop with selectedFilters, ensure it's an array for checkbox
+  // Reset user selection when category changes
   useEffect(() => {
-    if (filterData.subcategories && subcategory) {
-      // Normalize both the incoming subcategory and filter options for comparison
-      const normalizedSubcategory = subcategory.toLowerCase().replace(/-/g, ' ');
+    setUserSelectedFilterType(false);
+  }, [category]);
 
-      const matchedOption = filterData.subcategories.find(
-          (option) => option.toLowerCase().replace(/-/g, ' ') === normalizedSubcategory
-      );
-
-      setSelectedFilters((prev) => {
-        const copy = { ...prev };
-        if (matchedOption) {
-          copy.subcategories = [matchedOption]; // Use the exact option from filterData
-        } else {
-          delete copy.subcategories;
-        }
-        return copy;
-      });
+  // Handle typeKey changes
+  useEffect(() => {
+    if (typeKey) {
+      setSelectedFilterType(typeKey);
+      setUserSelectedFilterType(true);
     }
-  }, [filterData.subcategories, subcategory]);
+  }, [typeKey]);
+
   // Set selected filter type based on category and availableTypes
   useEffect(() => {
-    if (category && availableTypes.length > 0) {
-      const matchedType = availableTypes.find(
-          (type) =>
-              category.toLowerCase().includes(type.toLowerCase()) ||
-              type.toLowerCase().includes(category.toLowerCase())
-      );
-
-      if (matchedType) {
-        setSelectedFilterType(matchedType);
-      } else {
-        setSelectedFilterType("plant");
+    if (category && availableTypes.length > 0 && !userSelectedFilterType) {
+      // Only try to match if typeKey wasn't provided
+      if (!typeKey) {
+        const categoryStr = typeof category === 'string' ? category : String(category);
+        console.log(category, "===========given", categoryStr, '=========category==========takeing');
+        const matchedType = availableTypes.find(
+            (type) => {
+              const typeStr = typeof type === 'string' ? type : String(type);
+              return (
+                  categoryStr.toLowerCase().includes(typeStr.toLowerCase()) ||
+                  typeStr.toLowerCase().includes(categoryStr.toLowerCase())
+              );
+            }
+        );
+        if (matchedType) {
+          setSelectedFilterType(matchedType);
+        } else {
+          setSelectedFilterType("plant");
+        }
       }
     }
-  }, [category, availableTypes]);
+  }, [category, availableTypes, userSelectedFilterType, typeKey]);
 
   // Fetch filters data when selectedFilterType changes
   useEffect(() => {
     const fetchFilters = async () => {
       try {
         const response = await axios.get(
-            `${API_URL}?type=${selectedFilterType}&category_id=${categoryId}`
+            `${API_URL}?type=${selectedFilterType}`
         );
         setFilterData(response.data.filters);
         setAvailableTypes(response.data.filters.available_types || []);
@@ -73,6 +74,43 @@ const FilterSidebar = ({ setResults, setShowMobileFilter, categoryId, category, 
     };
     fetchFilters();
   }, [selectedFilterType, categoryId]);
+
+  // Sync subcategory prop with selectedFilters
+  useEffect(() => {
+    if (filterData.subcategories && subcategory) {
+      const subcategoryStr = typeof subcategory === 'string' ? subcategory : String(subcategory);
+      // More robust normalization that handles various punctuation and spacing
+      const normalizedSubcategory = subcategoryStr.toLowerCase()
+          .replace(/[-_\s]+/g, ' ')  // Replace hyphens, underscores, and multiple spaces with single space
+          .trim();
+
+      console.log('Normalized subcategory:', normalizedSubcategory);
+
+      const matchedOption = filterData.subcategories.find(
+          (option) => {
+            const optionStr = typeof option === 'string' ? option : String(option);
+            const normalizedOption = optionStr.toLowerCase()
+                .replace(/[-_\s]+/g, ' ')
+                .trim();
+
+            console.log('Comparing:', normalizedOption, 'with', normalizedSubcategory);
+            return normalizedOption === normalizedSubcategory;
+          }
+      );
+
+      console.log('Matched option:', matchedOption);
+
+      setSelectedFilters((prev) => {
+        const copy = { ...prev };
+        if (matchedOption) {
+          copy.subcategories = [matchedOption];
+        } else {
+          delete copy.subcategories;
+        }
+        return copy;
+      });
+    }
+  }, [filterData.subcategories, subcategory]);
 
   // Toggle open/close filter section
   const handleFilterToggle = (filter) => {
@@ -100,24 +138,20 @@ const FilterSidebar = ({ setResults, setShowMobileFilter, categoryId, category, 
   const applyFilters = async () => {
     let queryParams = new URLSearchParams();
     queryParams.append("type", selectedFilterType);
-
     Object.entries(selectedFilters).forEach(([filter, values]) => {
       if (values.length > 0) {
         queryParams.append(filter, values.join(","));
       }
     });
-
     if (priceRange.min) queryParams.append("price_min", priceRange.min);
     if (priceRange.max) queryParams.append("price_max", priceRange.max);
-
     const filterApiUrl = `${process.env.REACT_APP_API_URL}/filters/productsFilter/?${queryParams.toString()}`;
-
     try {
       const response = await axios.get(filterApiUrl);
       if (response.status === 200) {
         setResults(response.data.results);
         if (setShowMobileFilter) {
-          setShowMobileFilter(false); // close sidebar on mobile
+          setShowMobileFilter(false);
         }
       }
     } catch (error) {
@@ -136,13 +170,15 @@ const FilterSidebar = ({ setResults, setShowMobileFilter, categoryId, category, 
             RESET
           </button>
         </div>
-
         <div className="mb-4">
           <label className="text-sm text-gray-700">Type of Filter</label>
           <select
               className="w-full mt-1 p-2 border border-gray-300 rounded"
               value={selectedFilterType}
-              onChange={(e) => setSelectedFilterType(e.target.value)}
+              onChange={(e) => {
+                setSelectedFilterType(e.target.value);
+                setUserSelectedFilterType(true); // Mark that user manually selected
+              }}
           >
             {availableTypes.map((type) => (
                 <option key={type} value={type}>
@@ -151,7 +187,6 @@ const FilterSidebar = ({ setResults, setShowMobileFilter, categoryId, category, 
             ))}
           </select>
         </div>
-
         {Object.entries(filterData).map(
             ([filter, options], index) =>
                 filter !== "available_types" && (
@@ -175,7 +210,7 @@ const FilterSidebar = ({ setResults, setShowMobileFilter, categoryId, category, 
                                       <input
                                           type="checkbox"
                                           id={`${filter}-${idx}`}
-                                          checked={selectedFilters[filter]?.includes(option) || false} // here filter will be "subcategories"
+                                          checked={selectedFilters[filter]?.includes(option) || false}
                                           onChange={() => handleFilterSelection(filter, option)}
                                           className="mr-2"
                                       />
@@ -208,7 +243,6 @@ const FilterSidebar = ({ setResults, setShowMobileFilter, categoryId, category, 
                     </div>
                 )
         )}
-
         <button
             className="w-full mt-4 py-2 bg-blue-500 text-white rounded text-sm font-semibold"
             onClick={applyFilters}

@@ -7,6 +7,9 @@
     <list default="true" id="df516f1c-c962-4e0d-8a95-1119b7efb609" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Components/Category/CategoryIcons.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Category/CategoryIcons.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/FilterSidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/FilterSidebar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/FilterSidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/FilterSidebar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -132,7 +135,9 @@
       <workItem from="1755954835687" duration="780000" />
       <workItem from="1756216371962" duration="967000" />
       <workItem from="1756470638909" duration="1684000" />
-      <workItem from="1756726703302" duration="1584000" />
+      <workItem from="1756726703302" duration="2415000" />
+      <workItem from="1756730711890" duration="4323000" />
+      <workItem from="1756869854497" duration="8845000" />
     </task>
     <servers />
   </component>
