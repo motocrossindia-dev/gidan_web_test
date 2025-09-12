@@ -1,15 +1,28 @@
 import React, { useEffect, useState } from "react";
+import { ShoppingCart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
+import { addToCart } from "../../../redux/Slice/cartSlice";
+import { selectAccessToken } from "../../../redux/User/verificationSlice"; // adjust import
 
 function Offer() {
   const [offers, setOffers] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // ✅ Auth states
+  const token = localStorage.getItem("token");
+  const accessToken = useSelector(selectAccessToken);
 
   // ✅ Fetch Offer Products
   const getOfferProducts = async () => {
     try {
       const response = await axiosInstance.get(`/product/offerProducts/`);
       if (response.status === 200) {
-        setOffers(response.data.products || []); // use products array
+        setOffers(response.data.products || []);
       }
     } catch (error) {
       console.error("Error fetching offers:", error);
@@ -20,7 +33,35 @@ function Offer() {
     getOfferProducts();
   }, []);
 
+  // ✅ Add to Cart handler
+  const handleAddToCartSubmit = async (offer) => {
+    // 🔑 Check auth using token or accessToken
+    if (token || accessToken) {
+      const product_data = {
+        main_prod_id: offer.id,
+        quantity: 1,
+      };
 
+      try {
+        const response = await axiosInstance.post(`/order/cart/`, product_data);
+
+        if (response.status === 201) {
+          dispatch(addToCart(product_data));
+          enqueueSnackbar("Product added to cart successfully!", { variant: "success" });
+          window.dispatchEvent(new Event("cartUpdated"));
+          setCartItems((prev) => [...prev, offer.id]);
+        }
+      } catch (error) {
+        enqueueSnackbar(
+          error.response?.data?.message || "Failed to add product to cart",
+          { variant: "info" }
+        );
+      }
+    } else {
+      enqueueSnackbar("Please sign in", { variant: "info" });
+      navigate("/?modal=signIn", { replace: true });
+    }
+  };
 
   return (
     <div className="container mx-auto md:px-4 px-0 py-8">
@@ -36,6 +77,8 @@ function Offer() {
           const discount = originalPrice
             ? Math.round(((originalPrice - finalPrice) / originalPrice) * 100)
             : 0;
+
+          const isInCart = cartItems.includes(offer.id);
 
           return (
             <div key={index} className="bg-white rounded-lg overflow-hidden shadow-md">
@@ -57,6 +100,18 @@ function Offer() {
                   <span className="text-gray-600 line-through">₹{originalPrice}</span>
                 </div>
 
+                {/* ✅ Add to Cart Button */}
+                <button
+                  className="w-full border border-bio-green text-bio-green py-2 px-4 rounded-lg hover:bg-bio-green hover:text-white mt-4"
+                  onClick={
+                    isInCart
+                      ? () => navigate("/cart")
+                      : () => handleAddToCartSubmit(offer)
+                  }
+                >
+                  <ShoppingCart className="inline-block mr-2" />
+                  {isInCart ? "Go to Cart" : "Add to Cart"}
+                </button>
               </div>
             </div>
           );
