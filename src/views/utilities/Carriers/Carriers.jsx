@@ -12,22 +12,22 @@ const Carriers = () => {
   };
 
   // Fetch data from backend (using GET method with environment variable for API URL)
-  useEffect(() => {
-  
-        window.scrollTo(0, 0); // Scroll to the top
-    const response = axiosInstance.get(`/carrier/publicCarrier/`)
+useEffect(() => {
+  const fetchJobs = async () => {
     try {
-          if (response.status === 200) {
-      setJobListings(response.data.data.carrier)
-    }
+      window.scrollTo(0, 0);
+      const response = await axiosInstance.get(`/carrier/publicCarrier/`);
+      if (response.status === 200) {
+        setJobListings(response.data.data.carrier);
+      }
     } catch (error) {
       console.log(error.message);
-      
     }
+  };
 
+  fetchJobs();
+}, []);
 
-  
-  }, []);
 
   // Filter job listings based on the active tab
   const filteredJobs = jobListings.filter(
@@ -35,6 +35,7 @@ const Carriers = () => {
       (activeTab === 'non-tech' && job.categories === 'Non-Tech Positions') ||
       (activeTab === 'tech' && job.categories === 'Tech Positions')
   );
+
 
   return (
       <>
@@ -85,48 +86,74 @@ const Carriers = () => {
             <p className="text-gray-500">Stay tuned for new openings!</p>
           </div>
         ) : (
-          <div className="space-y-2">
-            {filteredJobs.map((job) => (
-              <div
-                key={job.id}
-                className="border rounded-lg p-4 cursor-pointer hover:shadow-md transition-shadow"
-                onClick={() => handleExpand(job.id)}
-              >
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span className="font-medium">{job.position_name}</span>
-                  </div>
-                  <svg
-                    className={`w-5 h-5 transform transition-transform ${
-                      expanded === job.id ? 'rotate-180' : ''
-                    }`}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </div>
-                {expanded === job.id && (
-                  <div className="mt-2 text-gray-500">
-                    <p><strong>Job Summary:</strong> {job.job_summary}</p>
-                    <p><strong>Responsibilities:</strong> {job.responsibilities}</p>
-                    <p><strong>Desired Skills:</strong> {job.desired_skills}</p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {filteredJobs.map((job) => (
+    <div
+      key={job.id}
+      className="border rounded-xl p-6 shadow-md hover:shadow-xl transition-transform transform hover:-translate-y-1 bg-white"
+    >
+      {/* Header */}
+      <div className="flex justify-between items-start">
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800">{job.position_name}</h2>
+          <p className="text-sm text-gray-500">{job.categories}</p>
+        </div>
+        {job.google_form && (
+          <a
+            href={job.google_form}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition"
+          >
+            Apply Now
+          </a>
         )}
+      </div>
+
+      {/* Expand/Collapse */}
+      <button
+        onClick={() => handleExpand(job.id)}
+        className="mt-4 text-sm font-medium text-blue-600 hover:underline"
+      >
+        {expanded === job.id ? "Hide Details ▲" : "View Details ▼"}
+      </button>
+
+      {/* Details (with animation) */}
+{/* Details (with animation) */}
+<div
+  className={`overflow-hidden transition-all duration-300 ease-in-out ${
+    expanded === job.id ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"
+  }`}
+>
+  <div className="space-y-4 text-gray-700 text-sm">
+    {/* Row with Job Summary + Responsibilities */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <span className="font-medium">Job Summary: </span>
+        <p>{job.job_summary}</p>
+      </div>
+      <div>
+        <span className="font-medium">Responsibilities: </span>
+        <p className="whitespace-pre-line">{job.responsibilities}</p>
       </div>
     </div>
 
+    {/* Desired Skills below full width */}
+    <div>
+      <span className="font-medium">Desired Skills: </span>
+      <p>{job.desired_skills}</p>
+    </div>
+  </div>
+</div>
+
+    </div>
+  ))}
+</div>
+
+
+        )}
+      </div>
+    </div>
         </>
   );
 };

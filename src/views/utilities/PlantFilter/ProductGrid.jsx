@@ -62,6 +62,7 @@ const ProductGrid = ({productDetails,pagination,setResults,query}) => {
       setCurrentUrl(pages?.previous);
     }
   };
+  console.log("11-09", productDetails);
   return (
     <div className="mt-8 p-2 bg-white rounded-md md:ml-16">
       {/* Heading with Sort By Button */}
@@ -90,7 +91,7 @@ const ProductGrid = ({productDetails,pagination,setResults,query}) => {
             imageUrl={product?.image}
             userRating={product?.product_rating?.avg_rating}
             ratingNumber={product?.product_rating?.num_ratings}
-            product={product?.id}
+            product={product}
             mrp={Math.round(product?.mrp)}
             inWishlist={product?.is_wishlist}
             inCart={product?.is_cart}

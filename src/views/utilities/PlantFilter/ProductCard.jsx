@@ -18,6 +18,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
     const navigate = useNavigate();
     const accessToken = useSelector(selectAccessToken);
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+    const {id, prod_id}=product;
 
     useEffect(() => {
         console.log("Product changed:", product);
@@ -29,8 +30,9 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
             return;
         }
 
-        const isMainProduct = !!product.main_prod_id;
-        const payload = isMainProduct ? { main_prod_id: product.main_prod_id, quantity: 1 } : { prod_id: product, quantity: 1 };
+        const isMainProduct = !!prod_id;
+    
+        const payload = isMainProduct ? { prod_id: prod_id, quantity: 1 } : { main_prod_id: id, quantity: 1 } ;
 
         try {
             if (inCart) {
@@ -70,9 +72,11 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
             return;
         }
 
-        const isMainProduct = !!product.main_prod_id;
-        const payload = isMainProduct ? { main_prod_id: product.main_prod_id, quantity: 1 } : { prod_id: product, quantity: 1 };
-
+        
+        const isMainProduct = !!prod_id;
+    
+        const payload = isMainProduct ? { prod_id: prod_id, quantity: 1 } : { main_prod_id: id, quantity: 1 } ;
+        
         try {
             if (inWishlist) {
                 const response = await axios.delete(`${process.env.REACT_APP_API_URL}/order/wishlist/`, {
