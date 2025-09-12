@@ -6,10 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="df516f1c-c962-4e0d-8a95-1119b7efb609" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Category/CategoryIcons.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Category/CategoryIcons.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/FilterSidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/FilterSidebar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/FilterSidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/FilterSidebar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductData.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,6 +67,7 @@
       <recent name="D:\COMPANY PROJECTS\biotech maali new build files\git 3\git\src\views\utilities\WishList" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\COMPANY PROJECTS\BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN\git 3\biotech_ecomerce\src\views\utilities\ProductData" />
       <recent name="D:\COMPANY PROJECTS\biotech maali new build files\git 3\git\src\redux\Slice" />
     </key>
   </component>
@@ -137,7 +135,8 @@
       <workItem from="1756470638909" duration="1684000" />
       <workItem from="1756726703302" duration="2415000" />
       <workItem from="1756730711890" duration="4323000" />
-      <workItem from="1756869854497" duration="8845000" />
+      <workItem from="1756869854497" duration="10416000" />
+      <workItem from="1757651603879" duration="3171000" />
     </task>
     <servers />
   </component>

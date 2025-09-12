@@ -827,10 +827,12 @@ setSelectedImage((prev) =>
                     ₹{Math.round(productDetailData?.data?.product?.selling_price || 0)}
                     {/* ₹{productData.prices[selectedSize]} */}
                   </span>
-                  <span className="text-gray-400 text-md md:text-xl line-through ml-2">
-                    {/* ₹{productData.originalPrices[selectedSize]} */}₹
-                    {Math.round(productDetailData?.data?.product?.mrp || 0)}
-                  </span>
+{productDetailData?.data?.product?.mrp > productDetailData?.data?.product?.selling_price && (
+  <span className="text-gray-400 text-md md:text-xl line-through ml-2">
+    ₹{Math.round(productDetailData?.data?.product?.mrp || 0)}
+  </span>
+)}
+
                 </div>
               </div>
 
