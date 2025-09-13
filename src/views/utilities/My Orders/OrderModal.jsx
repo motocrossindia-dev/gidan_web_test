@@ -120,7 +120,12 @@ const OrderModal = ({ isOpen, onClose, order, orderid }) => {
                             <h4 className="font-medium">{item?.product_name}</h4>
                             <p className="text-sm text-gray-500">{item?.delivery_option}</p>
                             <p className="font-medium mt-1">₹{Math.round(item?.selling_price)}</p>
-                            <p className="text-sm line-through mt-1 ">₹{Math.round(item?.mrp)}</p>
+
+                            {item?.mrp > item?.selling_price && (
+  <p className="text-sm line-through mt-1 ">
+    ₹{Math.round(item?.mrp || 0)}
+  </p>
+)}
                           </div>
                         </div>
                       ))}
