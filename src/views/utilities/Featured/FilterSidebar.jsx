@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
-
+import { selectAccessToken } from "../../../redux/User/verificationSlice";
+import { useSelector } from "react-redux";
 const API_URL = `${process.env.REACT_APP_API_URL}/filters/filters/`;
 
 const FilterSidebar = ({ setResults, setShowMobileFilter, categoryId, category, subcategory, typeKey }) => {
@@ -14,6 +15,9 @@ const FilterSidebar = ({ setResults, setShowMobileFilter, categoryId, category, 
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
   const [filterData, setFilterData] = useState({});
   const [availableTypes, setAvailableTypes] = useState([]);
+
+   const accessToken = useSelector(selectAccessToken);
+ 
 
   // Reset user selection when category changes
   useEffect(() => {
@@ -134,30 +138,76 @@ const FilterSidebar = ({ setResults, setShowMobileFilter, categoryId, category, 
     });
   };
 
+  
+  // const applyFilters = async () => {
+  //   let queryParams = new URLSearchParams();
+  //   queryParams.append("type", selectedFilterType);
+  //   Object.entries(selectedFilters).forEach(([filter, values]) => {
+  //     if (values.length > 0) {
+  //       queryParams.append(filter, values.join(","));
+  //     }
+  //   });
+  //   if (priceRange.min) queryParams.append("price_min", priceRange.min);
+  //   if (priceRange.max) queryParams.append("price_max", priceRange.max);
+  //   const filterApiUrl = `${process.env.REACT_APP_API_URL}/filters/productsFilter/?${queryParams.toString()}`;
+  //   try {
+  //     const response = await axios.get(filterApiUrl);
+  //     if (response.status === 200) {
+  //       setResults(response.data.results);
+  //       if (setShowMobileFilter) {
+  //         setShowMobileFilter(false);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error applying filters:", error);
+  //   }
+  // };
+
   // Apply selected filters and fetch filtered results
-  const applyFilters = async () => {
-    let queryParams = new URLSearchParams();
-    queryParams.append("type", selectedFilterType);
-    Object.entries(selectedFilters).forEach(([filter, values]) => {
-      if (values.length > 0) {
-        queryParams.append(filter, values.join(","));
-      }
-    });
-    if (priceRange.min) queryParams.append("price_min", priceRange.min);
-    if (priceRange.max) queryParams.append("price_max", priceRange.max);
-    const filterApiUrl = `${process.env.REACT_APP_API_URL}/filters/productsFilter/?${queryParams.toString()}`;
-    try {
-      const response = await axios.get(filterApiUrl);
-      if (response.status === 200) {
-        setResults(response.data.results);
-        if (setShowMobileFilter) {
-          setShowMobileFilter(false);
-        }
-      }
-    } catch (error) {
-      console.error("Error applying filters:", error);
+
+
+const applyFilters = async () => {
+  let queryParams = new URLSearchParams();
+  queryParams.append("type", selectedFilterType);
+
+  Object.entries(selectedFilters).forEach(([filter, values]) => {
+    if (values.length > 0) {
+      queryParams.append(filter, values.join(","));
     }
-  };
+  });
+
+  if (priceRange.min) queryParams.append("price_min", priceRange.min);
+  if (priceRange.max) queryParams.append("price_max", priceRange.max);
+
+  const filterApiUrl = `${process.env.REACT_APP_API_URL}/filters/productsFilter/?${queryParams.toString()}`;
+
+  try {
+  
+
+    const config = {
+      headers: accessToken
+        ? { Authorization: `Bearer ${accessToken}` } // attach only if logged in
+        : {},
+    };
+
+    const response = await axios.get(filterApiUrl, config);
+
+    if (response.status === 200) {
+      setResults(response.data.results);
+      if (setShowMobileFilter) {
+        setShowMobileFilter(false);
+      }
+    }
+  } catch (error) {
+    console.error("Error applying filters:", error);
+    if (error.response?.status === 401) {
+      // Optionally: redirect to login if unauthorized
+      console.warn("Unauthorized. Please log in again.");
+    }
+  }
+};
+
+
 
   return (
       <div className="w-full p-6 bg-white mt-4">

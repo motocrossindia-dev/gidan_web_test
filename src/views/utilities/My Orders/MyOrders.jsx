@@ -322,6 +322,7 @@ getMyOrders()
                 </div>
               )}
             </div>
+            
             <span className="text-sm text-gray-500 capitalize">{order?.delivery_option}</span>
           </div>
         </div>

@@ -36,14 +36,15 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
 
         try {
             if (inCart) {
-                const response = await axios.delete(`${process.env.REACT_APP_API_URL}/order/cart/`, {
-                    headers: { Authorization: `Bearer ${accessToken}` },
-                    data: payload,
-                });
-                window.dispatchEvent(new Event("cartUpdated"));
-                if ([200, 204].includes(response.status)) {
-                    enqueueSnackbar("Product removed from cart", { variant: "success" });
-                }
+                // const response = await axios.delete(`${process.env.REACT_APP_API_URL}/order/cart/`, {
+                //     headers: { Authorization: `Bearer ${accessToken}` },
+                //     data: payload,
+                // });
+                // window.dispatchEvent(new Event("cartUpdated"));
+                // if ([200, 204].includes(response.status)) {
+                //     enqueueSnackbar("Product removed from cart", { variant: "success" });
+                // }
+                enqueueSnackbar("Product already exists in cart.", { variant: "info" });
             } else {
                 const response = await axios.post(`${process.env.REACT_APP_API_URL}/order/cart/`, payload, {
                     headers: {
@@ -79,14 +80,15 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
         
         try {
             if (inWishlist) {
-                const response = await axios.delete(`${process.env.REACT_APP_API_URL}/order/wishlist/`, {
-                    headers: { Authorization: `Bearer ${accessToken}` },
-                    data: payload,
-                });
-                window.dispatchEvent(new Event("wishlistUpdated"));
-                if ([200, 204].includes(response.status)) {
-                    enqueueSnackbar("Product removed from wishlist", { variant: "success" });
-                }
+                // const response = await axios.delete(`${process.env.REACT_APP_API_URL}/order/wishlist/`, {
+                //     headers: { Authorization: `Bearer ${accessToken}` },
+                //     data: payload,
+                // });
+                // window.dispatchEvent(new Event("wishlistUpdated"));
+                // if ([200, 204].includes(response.status)) {
+                //     enqueueSnackbar("Product removed from wishlist", { variant: "success" });
+                // }
+                enqueueSnackbar("Product already exists in wishlist.", { variant: "info" });
             } else {
                 const response = await axios.post(`${process.env.REACT_APP_API_URL}/order/wishlist/`, payload, {
                     headers: { Authorization: `Bearer ${accessToken}` },
