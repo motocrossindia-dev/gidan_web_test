@@ -196,7 +196,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                         </div>
                         <h3 className="text-sm text-gray-500 mb-2">{name}</h3>
                         <div className="flex items-center gap-2">
-                            <span className="text-sm text-navy-blue font-medium">₹{Math.round(price)}.00</span>
+                            <span className="text-sm text-navy-blue font-medium">₹{Math.round(price)}</span>
                             {/*{mrp && <span className="text-xs text-gray-400 line-through">₹{mrp}.00</span>}*/}
                         </div>
                     </div>
@@ -251,7 +251,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                                 <p className="text-[10px] text-gray-500">({ratingNumber})</p>
                             </div>
                             <Typography variant="caption" className="mt-1">{name?.length > 20 ? `${name.slice(0, 18)}...` : name}</Typography>
-                            <p className="text-sm font-semibold text-black mt-1">₹{Math.round(price)}.00</p>
+                            <p className="text-sm font-semibold text-black mt-1">₹{Math.round(price)}</p>
                             {/*{mrp && <p className="text-xs text-gray-400 line-through">₹{mrp}.00*/}
                             {/*</p>*/}
                             {/*}*/}

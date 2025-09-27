@@ -821,19 +821,44 @@ export default function Component() {
                     );
                   })}
                 </p>
-                <div className="flex mb-4">
-                  <div className="mr-4">
+                {/* <div className="flex mb-4">
+                <div className="mr-4">
                   <span className="font-bold text-bio-green text-lg md:text-2xl">
                     ₹{Math.round(productDetailData?.data?.product?.selling_price || 0)}
-                    {/* ₹{productData.prices[selectedSize]} */}
+
                   </span>
-                    {productDetailData?.data?.product?.mrp > productDetailData?.data?.product?.selling_price && (
-                        <span className="text-gray-400 text-md md:text-xl line-through ml-2">
+{productDetailData?.data?.product?.mrp > productDetailData?.data?.product?.selling_price && (
+  <span className="text-gray-400 text-md md:text-xl line-through ml-2">
     ₹{Math.round(productDetailData?.data?.product?.mrp || 0)}
   </span>
+)}
+                </div>
+              </div> */}
+
+                <div className="flex mb-4 items-center">
+                  <div className="mr-4 flex items-center">
+    <span className="font-bold text-bio-green text-lg md:text-2xl">
+      ₹{Math.round(productDetailData?.data?.product?.selling_price || 0)}
+    </span>
+
+                    {productDetailData?.data?.product?.mrp > productDetailData?.data?.product?.selling_price && (
+                        <>
+        <span className="text-gray-400 text-md md:text-xl line-through ml-2">
+          ₹{Math.round(productDetailData?.data?.product?.mrp || 0)}
+        </span>
+                          <span className="ml-2 text-red-500 font-semibold text-md md:text-lg">
+          {Math.round(
+              ((productDetailData?.data?.product?.mrp - productDetailData?.data?.product?.selling_price) /
+                  productDetailData?.data?.product?.mrp) *
+              100
+          )}
+                            % OFF
+        </span>
+                        </>
                     )}
                   </div>
                 </div>
+
 
 
 

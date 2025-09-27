@@ -6,11 +6,37 @@
   <component name="ChangeListManager">
     <list default="true" id="df516f1c-c962-4e0d-8a95-1119b7efb609" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Carriers/Carriers.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Carriers/Carriers.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Offer/Offer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Offer/Offer.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/ProductCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/RecentlyViewedCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/BestSeller/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BestSeller/ProductCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/BestSeller/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BestSeller/RecentlyViewedCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/BirthdayGifts/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BirthdayGifts/ProductCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/BirthdayGifts/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BirthdayGifts/RecentlyViewedCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/ProductCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/RecentlyViewedCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/ProductCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/RecentlyViewedCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Latest/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Latest/ProductCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Latest/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Latest/RecentlyViewedCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/ProductCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/RecentlyViewedCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantCare/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantCare/ProductCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantCare/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantCare/RecentlyViewedCard.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/RecentlyViewedCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Plants/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Plants/ProductCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Plants/RecentlyviewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Plants/RecentlyviewedCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Pots/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Pots/ProductCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Pots/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Pots/RecentlyViewedCard.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductData.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/RakshaBhandan/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/RakshaBhandan/ProductCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/RakshaBhandan/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/RakshaBhandan/RecentlyViewedCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/ProductCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/RecentlyViewedCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Seeds/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Seeds/ProductCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Seeds/RecentlyviewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Seeds/RecentlyviewedCard.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,7 +167,12 @@
       <workItem from="1756730711890" duration="4323000" />
       <workItem from="1756869854497" duration="10416000" />
       <workItem from="1757651603879" duration="3171000" />
-      <workItem from="1757659476465" duration="431000" />
+      <workItem from="1757659476465" duration="1536000" />
+      <workItem from="1757734561094" duration="604000" />
+      <workItem from="1757745167699" duration="968000" />
+      <workItem from="1757774779342" duration="2653000" />
+      <workItem from="1757906443743" duration="91000" />
+      <workItem from="1758943099118" duration="489000" />
     </task>
     <servers />
   </component>
