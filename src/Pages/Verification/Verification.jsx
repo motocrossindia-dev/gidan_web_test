@@ -140,6 +140,7 @@ const Verification = ({ onClose, onSubmit }) => {
       enqueueSnackbar(response?.data?.message || "OTP resent successfully.", {
         variant: "info",
       });
+      setOtpDigits(["", "", "", ""]);
     }
   } catch (error) {
     enqueueSnackbar(
