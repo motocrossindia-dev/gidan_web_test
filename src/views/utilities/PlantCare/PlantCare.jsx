@@ -29,8 +29,8 @@ useEffect(() => {
   const fetchSearchResults = async () => {
     try {
      
-      const response = await axiosInstance.post(`${process.env.REACT_APP_API_URL}/product/searchProducts/`,
-          { search: query },
+      const response = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/product/searchProducts/?search=${query}`,
+          // { search: query },
         );
                 if (response?.status === 200) {
                     
