@@ -108,7 +108,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
     };
 
     const handleQuickView = () => {
-        navigate(`/productdata/${product}`, { state: { product } });
+        navigate(`/productdata/${prod_id}`, { state: { product } });
     };
 
     return (

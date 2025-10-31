@@ -141,15 +141,24 @@ const OrderModal = ({ isOpen, onClose, order, orderid }) => {
                       >
                         Download Invoice
                       </button>
-                    )}
-                    {orderid?.is_returnable && (
+                )} 
+                    {/* {orderid?.is_returnable && (
                       <button
                         onClick={() => setShowReturnPopup(true)}
                         className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50"
                       >
                         Return
                       </button>
-                    )}
+                    )} */}
+                    {orderid?.status === 'DELIVERED' && orderid?.is_returnable && (
+  <button
+    onClick={() => setShowReturnPopup(true)}
+    className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50"
+  >
+    Return
+  </button>
+)}
+
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
