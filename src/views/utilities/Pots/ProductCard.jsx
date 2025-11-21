@@ -97,6 +97,19 @@ const ProductCard = ({ name, price, oldPrice, imageUrl, rating }) => {
                 char="★" // ✅ string star
             />
           <h3 className="text-sm sm:text-md font-semibold mt-2">{name}</h3>
+          {/* <h3
+  className="
+    text-sm sm:text-md 
+    font-bold 
+    text-black
+    mt-2
+    truncate
+    max-w-full
+  "
+  title={name}  // shows full name on hover
+>
+  {name}
+</h3>   */}
           <div className="flex flex-col justify-center items-center mt-2">
             <p className="text-sm font-medium text-black">₹{Math.round(price)}</p>
             {oldPrice && (

@@ -14,7 +14,7 @@ import SignIn from "../../Pages/SignIn/Signin";
 import Verification from "../../Pages/Verification/Verification";
 import Login from "../../Pages/Login/Login";
 import WalletActivation from "../../Components/WalletActivation/WalletActivation";
-import logo from "../../../src/Assets/Biotech-Maali.png";
+import logo from "../../../src/Assets/Gidan_logo.jpg";
 import empty from "../../Assets/Cart.png";
 import { IoIosLogOut } from "react-icons/io";
 import WithoutLoginHamburger from "../../Components/WithoutLoginHamburger/WithoutLoginHamburger";
@@ -152,7 +152,7 @@ const NavBar = () => {
       <nav className="w-full px-4 py-3 bg-white shadow-sm font-sans">
         <div className="max-w-full mx-auto flex items-center justify-between sm:justify-between md:ml-10">
           {/* Mobile: Hamburger and Logo */}
-          <div className="sm:hidden flex justify-left items-center space-x-4 ">
+          {/* <div className="sm:hidden flex justify-left items-center space-x-4 ">
             <WithoutLoginHamburger />
             <Link to="/" onClick={() => window.scrollTo({ top: -10, left: 0, behavior: 'auto' })}>
               <img   
@@ -162,10 +162,22 @@ const NavBar = () => {
                 name="Biotech Maali"
               />
             </Link>
-          </div>
+          </div> */}
+          <div className="sm:hidden flex justify-left items-center space-x-4">
+  <WithoutLoginHamburger />
+  <Link to="/" onClick={() => window.scrollTo({ top: -10, left: 0, behavior: 'auto' })}>
+    <img
+      src={logo}
+      alt="Biotech Maali Logo"
+      className="h-14 w-auto"   // Smaller logo on mobile
+      name="Biotech Maali"
+    />
+  </Link>
+</div>
+
 
           {/* Desktop: Logo */}
-          <div className="hidden sm:flex items-center">
+          {/* <div className="hidden sm:flex items-center">
             <Link to="/" onClick={() => window.scrollTo({ top: -10, left: 0, behavior: 'auto' })}>
               <img   
                 src={logo}
@@ -174,7 +186,18 @@ const NavBar = () => {
                 name="Biotech Maali"
               />
             </Link>
-          </div>
+          </div> */}
+          <div className="hidden sm:flex items-center">
+  <Link to="/" onClick={() => window.scrollTo({ top: -10, left: 0, behavior: 'auto' })}>
+    <img
+      src={logo}
+      alt="Biotech Maali Logo"
+      className="h-20 w-auto"   // Slightly larger on desktop
+      name="Biotech Maali"
+    />
+  </Link>
+</div>
+
 
           {/* Desktop: Search bar */}
           <div className="flex-1 max-w-full mx-4 px-10 hidden sm:block ">

@@ -142,39 +142,39 @@ const SeasonalCard = ({
             },
           }}
         >
-          <div className="relative w-full flex flex-col items-center p-2">
-            <div className="relative w-full flex mb-4">
-              <img name=" "   
-                className="w-40 h-24 sm:w-40 sm:h-36 object-contain rounded-lg transition-transform duration-300 relative z-10 mt-6"
-                src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
-                alt={name}
-              />
-            </div>
+          <div className="relative w-full flex flex-col items-center">
+<div className="relative w-full flex mb-4">
+  <img
+    className="w-full h-40 object-cover rounded-lg transition-transform duration-300 relative z-10"
+    src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
+    alt={name}
+  />
 
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 transition-all duration-300 z-20 opacity-0 hover:opacity-100 hover:translate-y-0">
-              <button
-                onClickCapture={handleAddToCart}
-                className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
-              >
-                <MdOutlineShoppingBag className="w-4 h-4" />
-              </button>
-              <button
-                onClick={handleAddToWishlist}
-                className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
-              >
-                {inWishlist ? (
-                  <FaHeart className="w-4 h-4" />
-                ) : (
-                  <FaRegHeart className="w-4 h-4" />
-                )}
-              </button>
-              <button
-                onClick={handleQuickView}
-                className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
-              >
-                <FiEye className="w-4 h-4" />
-              </button>
-            </div>
+  {/* ICONS INSIDE IMAGE AREA */}
+  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+    <button
+      onClickCapture={handleAddToCart}
+      className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+    >
+      <MdOutlineShoppingBag className="w-4 h-4" />
+    </button>
+
+    <button
+      onClick={handleAddToWishlist}
+      className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+    >
+      {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
+    </button>
+
+    <button
+      onClick={handleQuickView}
+      className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+    >
+      <FiEye className="w-4 h-4" />
+    </button>
+  </div>
+</div>
+
 
             <div className="flex flex-col items-center justify-center p-2 w-full text-center gap-2">
               {/* Rating & Product Name */}
@@ -193,7 +193,7 @@ const SeasonalCard = ({
               </div>
 
               {/* Product Name */}
-              <Typography sx={{ typography: { xs: "caption", md: "subtitle2" } }}>
+              <Typography sx={{ typography: { xs: "caption", md: "subtitle2" } }} style={{ fontWeight: "bold", color: "black", fontSize: "0.9rem" }}>
                 {name.length > 15 ? `${name.slice(0, 8)}...` : name}
               </Typography>
 
@@ -297,10 +297,19 @@ const SeasonalCard = ({
               <StarsOnCards rating={userRating} ratingNumber={ratingNumber} />
             </div>
 
-            <h3 className="text-sm text-gray-400 mb-2">{name}</h3>
+            {/* <h3 className="text-sm text-gray-400 mb-2">{name}</h3> */}
+
+            {/* <h3 className="text-base font-semibold text-black mb-2 text-center leading-tight">
+  {name}
+</h3> */}
+
+<h3 className="text-base font-semibold text-black mb-2 text-center leading-tight truncate w-full">
+  {name}
+</h3>
 
             <div className="flex items-center gap-2">
               <span className="text-sm  text-navy-blue">₹{Math.round(price)}</span>
+
               {/* {mrp && (
                 <span className="text-xs text-gray-400 line-through">₹{mrp}.00</span>
               )} */}

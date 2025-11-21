@@ -61,6 +61,7 @@ const ProductCard = ({ name, price, mrp, imageUrl, rating, product }) => {
 
           <h3 className="text-sm font-medium mb-2">{name}</h3>
 
+
           <div className="flex items-center gap-2">
             <span className="text-sm font-semibold text-navy-blue">₹{Math.round(price)}</span>
             {mrp && <span className="text-xs text-gray-400 line-through">₹{Math.round(mrp)}</span>}
