@@ -57,7 +57,7 @@ const Home = () => {
     <div>
 
       <Helmet>
-        <title>Biotech Maali - Your ally in smarter gardening.</title>
+        <title>Gidan - Your ally in smarter gardening.</title>
       </Helmet>
 
       {loading ? (

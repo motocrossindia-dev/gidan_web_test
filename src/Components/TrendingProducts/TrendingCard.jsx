@@ -197,7 +197,11 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
               <StarsOnCards rating={userRating} ratingNumber={ratingNumber} />
             </div>
 
-            <h3 className="text-sm text-gray-400 mb-2">{name}</h3>
+            {/* <h3 className="text-sm text-gray-400 mb-2">{name}</h3> */}
+
+           <h3 className="text-base font-semibold text-black mb-2 truncate w-full text-center">
+  {name}
+</h3>
 
             <div className="flex items-center gap-2">
               <span className="text-sm  text-navy-blue">₹{Math.round(price)}</span>
@@ -210,123 +214,110 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
       </div>
 
       {/* Mobile View */}
-      <div className="sm:hidden">
-        <Paper
-          elevation={0}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            textAlign: "center",
-            position: "relative",
-            overflow: "hidden",
-            backgroundColor: "white",
-            borderRadius: "8px",
-            border: "1px solid transparent",
-            transition: "all 0.3s ease",
-            "&:hover": {
-              boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.1)",
-              transform: "translateY(-5px)",
-              backgroundColor: "#C2FFC7",
-              border: "1px solid #e5e7eb",
-            },
-          }}
-        >
-          <div className="relative w-full flex flex-col items-center p-2">
-            <img name=" "   
-              className="w-40 h-24 sm:w-40 sm:h-36 object-contain rounded-lg transition-transform duration-300 mt-6"
-              src={`${process.env.REACT_APP_API_URL}${product.image}`}
-              alt={product.name}
-            />
+<div className="sm:hidden">
+  <Paper
+    elevation={0}
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      textAlign: "center",
+      position: "relative",
+      overflow: "hidden",
+      backgroundColor: "white",
+      borderRadius: "8px",
+      border: "1px solid transparent",
+      transition: "all 0.3s ease",
+      "&:hover": {
+        boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.1)",
+        transform: "translateY(-5px)",
+        backgroundColor: "#C2FFC7",
+        border: "1px solid #e5e7eb",
+      },
+    }}
+  >
+    <div className="relative w-full flex flex-col items-center">
 
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 transition-all duration-300 z-20 opacity-0 hover:opacity-100 hover:translate-y-0">
-              {/* <button
-                  onClickCapture={handleAddToCart}
-                  className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
-                >
-                  <MdOutlineShoppingBag className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={handleAddToWishlist}
-                  className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
-                >
-                  {inWishlist ? (
-                    <FaHeart className="w-4 h-4" />
-                  ) : (
-                    <FaRegHeart className="w-4 h-4" />
-                  )}
-                </button>
-                <button
-                  onClick={handleQuickView}
-                  className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
-                >
-                  <FiEye className="w-4 h-4" />
-                </button> */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation(); // Prevents click from affecting parent elements
-                  handleAddToCart();
-                }}
-                className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
-              >
-                <MdOutlineShoppingBag className="w-4 h-4" />
-              </button>
+      {/* IMAGE WRAPPER */}
+      <div className="relative w-full flex mb-4">
+        <img
+          className="w-full h-40 object-cover rounded-lg transition-transform duration-300 relative z-10"
+          src={`${process.env.REACT_APP_API_URL}${product.image}`}
+          alt={product.name}
+        />
 
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAddToWishlist();
-                }}
-                className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
-              >
-                {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
-              </button>
+        {/* ICONS INSIDE IMAGE AREA */}
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+          
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAddToCart();
+            }}
+            className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+          >
+            <MdOutlineShoppingBag className="w-4 h-4" />
+          </button>
 
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleQuickView();
-                }}
-                className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
-              >
-                <FiEye className="w-4 h-4" />
-              </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAddToWishlist();
+            }}
+            className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+          >
+            {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
+          </button>
 
-            </div>
-            <div className="flex flex-col items-center justify-center p-2 w-full text-center gap-2">
-              {/* Rating & Product Name */}
-              <div className="flex items-center gap-1">
-                {product && (
-                    <ReactStars
-                        count={5}
-                        value={userRating}
-                        edit={false}
-                        size={10}
-                        activeColor="#0D2164"
-                        char="★" // ✅ string star
-                    />
-                )}
-                <p className="text-[10px] text-gray-500">({ratingNumber})</p> {/* Smaller text */}
-              </div>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleQuickView();
+            }}
+            className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+          >
+            <FiEye className="w-4 h-4" />
+          </button>
 
-              {/* Product Name */}
-              <Typography sx={{ typography: { xs: "caption", md: "subtitle2" } }}>
-                {product.name.length > 15 ? `${product.name.slice(0, 8)}...` : product.name}
-              </Typography>
-
-
-              {/* Price Section */}
-              <div className="flex flex-col items-center justify-center mt-1">
-                <p className="text-xs font-medium text-black">₹{Math.round(price)}</p>
-                {/* {product.mrp && (
-                  <p className="text-[10px] text-gray-400 line-through">₹{product.mrp}.00</p>
-                )} */}
-              </div>
-            </div>
-
-          </div>
-        </Paper>
+        </div>
       </div>
+
+      {/* CONTENT */}
+      <div className="flex flex-col items-center justify-center p-2 w-full text-center gap-2">
+        
+        {/* Rating */}
+        <div className="flex items-center gap-1">
+          {product && (
+            <ReactStars
+              count={5}
+              value={userRating}
+              edit={false}
+              size={10}
+              activeColor="#0D2164"
+              char="★"
+            />
+          )}
+          <p className="text-[10px] text-gray-500">({ratingNumber})</p>
+        </div>
+
+        {/* Product Name */}
+        <Typography sx={{ typography: { xs: "caption", md: "subtitle2" } }} style={{ fontWeight: "bold", color: "black", fontSize: "0.9rem" }}>
+          {product.name.length > 15
+            ? `${product.name.slice(0, 8)}...`
+            : product.name}
+        </Typography>
+
+        {/* Price */}
+        <div className="flex flex-col items-center justify-center mt-1">
+          <p className="text-xs font-medium text-black">₹{Math.round(price)}</p>
+        </div>
+
+      </div>
+
+    </div>
+  </Paper>
+</div>
+
     </>
   );
 };

@@ -194,9 +194,35 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                         <div className="flex gap-1 mb-2">
                             <StarsOnCards rating={userRating} ratingNumber={ratingNumber} />
                         </div>
-                        <h3 className="text-sm text-gray-500 mb-2">{name}</h3>
+                        {/* <h3 className="text-sm text-gray-500 mb-2">{name}</h3> */}
+                        <h3
+  className="
+    text-base 
+    sm:text-lg
+    font-bold 
+    text-black 
+    mb-2 
+    truncate 
+    max-w-full
+  "
+  title={name}
+>
+  {name}
+</h3>
+
                         <div className="flex items-center gap-2">
                             <span className="text-sm text-navy-blue font-medium">₹{Math.round(price)}</span>
+                            {/* <span
+  className="
+    text-base 
+    sm:text-lg 
+    font-bold 
+    text-black
+  "
+>
+  ₹{Math.round(price)}
+</span> */}
+
                             {/*{mrp && <span className="text-xs text-gray-400 line-through">₹{mrp}.00</span>}*/}
                         </div>
                     </div>
@@ -204,61 +230,88 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
             </div>
 
             {/* Mobile */}
-            <div className="sm:hidden transition-transform duration-300 hover:-translate-y-1.5">
-                <Paper
-                    elevation={0}
-                    sx={{
-                        height: "18rem", // match height with desktop for uniformity
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        textAlign: "center",
-                        borderRadius: "12px",
-                        // border: "1px solid #e5e7eb",
-                        backgroundColor: "white",
-                        transition: "box-shadow 0.3s ease",
-                        "&:hover": {
-                            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
-                            backgroundColor: "#CFFFBE",
-                        },
-                    }}
-                >
-                    <div className="w-full flex flex-col items-center p-3">
-                        <img
-                            className="w-32 h-32 object-contain rounded-md mt-4"
-                            src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
-                            alt={name}
-                            loading="lazy"
-                        />
+<div className="sm:hidden transition-transform duration-300 hover:-translate-y-1.5">
+  <Paper
+    elevation={0}
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      textAlign: "center",
+      borderRadius: "12px",
+      backgroundColor: "white",
+      transition: "all 0.3s ease",
+      "&:hover": {
+        boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+        backgroundColor: "#CFFFBE",
+      },
+    }}
+  >
+    <div className="relative w-full flex flex-col items-center p-3">
 
-                        {/* Actions */}
-                        <div className="flex gap-2 mt-2">
-                            <button onClick={handleAddToCart} className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors">
-                                <MdOutlineShoppingBag className="w-4 h-4" />
-                            </button>
-                            <button onClick={handleAddToWishlist} className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors">
-                                {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
-                            </button>
-                            <button onClick={handleQuickView} className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors">
-                                <FiEye className="w-4 h-4" />
-                            </button>
-                        </div>
+      {/* Image Section (updated like reference) */}
+      <div className="relative w-full flex justify-center mb-3">
+        <img
+          className="w-32 h-32 object-contain rounded-md transition-transform duration-300 relative z-10"
+          src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
+          alt={name}
+          loading="lazy"
+        />
+      </div>
 
-                        {/* Info */}
-                        <div className="text-center mt-2">
-                            <div className="flex justify-center gap-1 items-center">
-                                <ReactStars count={5} value={userRating} edit={false} size={12} activeColor="#0D2164" />
-                                <p className="text-[10px] text-gray-500">({ratingNumber})</p>
-                            </div>
-                            <Typography variant="caption" className="mt-1">{name?.length > 20 ? `${name.slice(0, 18)}...` : name}</Typography>
-                            <p className="text-sm font-semibold text-black mt-1">₹{Math.round(price)}</p>
-                            {/*{mrp && <p className="text-xs text-gray-400 line-through">₹{mrp}.00*/}
-                            {/*</p>*/}
-                            {/*}*/}
-                        </div>
-                    </div>
-                </Paper>
-            </div>
+      {/* Action Buttons */}
+      <div className="flex gap-2 mb-2">
+        <button
+          onClick={handleAddToCart}
+          className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+        >
+          <MdOutlineShoppingBag className="w-4 h-4" />
+        </button>
+
+        <button
+          onClick={handleAddToWishlist}
+          className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+        >
+          {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
+        </button>
+
+        <button
+          onClick={handleQuickView}
+          className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+        >
+          <FiEye className="w-4 h-4" />
+        </button>
+      </div>
+
+      {/* Product Info */}
+      <div className="flex flex-col items-center text-center">
+
+        {/* Rating */}
+        <div className="flex justify-center gap-1 items-center">
+          <ReactStars
+            count={5}
+            value={userRating}
+            edit={false}
+            size={12}
+            activeColor="#0D2164"
+          />
+          <p className="text-[10px] text-gray-500">({ratingNumber})</p>
+        </div>
+
+        {/* Product Name */}
+        <Typography variant="caption" className="mt-1" style={{ fontWeight: "bold", color: "black", fontSize: "0.9rem" }}>
+          {name?.length > 15 ? `${name.slice(0, 8)}...` : name}
+        </Typography>
+
+        {/* Price */}
+        <p className="text-xs font-medium text-black mt-1">
+          ₹{Math.round(price)}
+        </p>
+      </div>
+    </div>
+  </Paper>
+</div>
+
         </>
     );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../../redux/Slice/cartSlice";
 import { addtowishlist } from "../../../redux/Slice/addtowishlistSlice";
@@ -124,6 +124,15 @@ export default function Component() {
   const hasWeights = productDetailData?.data?.product_weights?.length > 0;
   const hasLitres = productDetailData?.data?.product_litres?.length > 0;
 
+  const [zoom, setZoom] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const lensSize = 120; // square lens size
+  const zoomLevel = 2.5; // magnification level
+
+  const imageRef = useRef(null);
+  const imgRef = useRef(null);
+
 
 
   // ⬆️ Scroll to top on route change
@@ -171,12 +180,7 @@ export default function Component() {
       });
     }
 
-    // Call your API or logic here
-
-    // example: checkPincodeAvailability(pincode)
   };
-
-
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -313,9 +317,6 @@ export default function Component() {
     }
   };
 
-
-
-
   const CustomPrevArrow = ({ className, onClick }) => (
       <button className={`${className} z-10 left-0`} onClick={onClick}>
         <ChevronLeft className="w-6 h-6 text-gray-800" />
@@ -337,8 +338,6 @@ export default function Component() {
     prevArrow: <CustomPrevArrow />,
     nextArrow: <CustomNextArrow />,
   };
-
-
 
   const handleSizeClick = async (size, product) => {
     try {
@@ -376,28 +375,6 @@ export default function Component() {
     }
   };
 
-  // const handleQuantity = async (product_id, action, qty) => {
-
-  //   try {
-
-  //     const response = await axiosInstance.get(`/product/stockCheck/${product_id}/`,
-  //       {
-  //         params: {
-  //           quantity: qty,
-  //           action: action,
-
-  //         },
-  //       }
-  //     );
-  //     if (response.status === 200) {
-
-  //       setQuantity(response?.data?.new_quantity)
-  //     }
-  //   } catch (error) {
-  //     enqueueSnackbar(error?.response?.data?.message,{variant:'info'})
-  //   }
-  // }
-
   const handleQuantity = async (product_id, action, qty) => {
     try {
       // Always send an action — default to "increment"
@@ -418,14 +395,6 @@ export default function Component() {
       enqueueSnackbar(error?.response?.data?.message, { variant: 'info' });
     }
   };
-
-
-
-
-
-
-
-
 
   const handleWeightClick = async (size, product) => {
     try {
@@ -456,8 +425,6 @@ export default function Component() {
       console.error("Error fetching filtered products:", error);
     }
   };
-
-
 
   const handleLitreClick = async (litre, product) => {
     try {
@@ -562,43 +529,6 @@ export default function Component() {
     }
   };
 
-  // const handlePlanterColorClick = async (color, product) => {
-  //   try {
-  //     // Set the selected size
-  //     setSelectedColor(color);
-  //     // If the same color is clicked again, toggle the selection (deselect)
-  //     if (selectedColor?.id === color?.id) {
-  //       setSelectedColor(null); // Deselect the color
-  //     } else {
-  //       setSelectedColor(color); // Select the new color
-  //     }
-  //     // Make API call to filter products by size
-  //     const response = await axiosInstance.get(
-  //       `/product/filterProduct/${product.id}/`,
-  //       {
-  //         params: {
-  //           color_id: color.id,
-  //           planter_id: product.planter_id,
-  //           planter_size_id: product.planter_size_id,
-  //           size_id: product.size_id,
-  //         },
-  //       }
-  //     );
-
-  //     // Handle the API response
-  //     const data = response.data;
-  //     const images = data?.data?.product?.images || [];
-  //     setImageThumbnails(images);
-  //     setProductDetailData(data);
-
-  //     // You can update state or perform additional actions with the filtered products
-  //   } catch (error) {
-  //     console.error("Error fetching filtered products:", error);
-  //     // Handle error scenarios
-  //   }
-  // };
-
-
   const handlePlanterColorClick = async (color, product) => {
     try {
       // 🚫 remove toggle/deselect logic
@@ -699,13 +629,6 @@ export default function Component() {
     if (id) fetchData();
   }, [id]);
 
-
-
-
-
-
-
-
   return (
       <>
         <Verify />
@@ -722,23 +645,94 @@ export default function Component() {
 
         <div className="w-full" style={{ backgroundColor: "whitesmoke" }}>
           <div className="container mx-auto px-3 py-4 font-sans md:px-8">
-            <div className="flex flex-col md:flex-row -mx-4">
+            <div className="flex flex-col md:flex-row -mx-4 relative overflow-visible">
               <div className="md:flex-1 px-4">
                 {/* Main Image */}
-                <div className="flex justify-center h-auto bg-gray-50">
-                  <div className="w-full h-auto rounded-lg bg-gray-100 flex items-center justify-center">
+                {/* <div className="flex justify-center h-auto bg-gray-50">
+  <div className="w-full h-auto rounded-lg bg-gray-100 flex items-center justify-center">
+    <img
+      src={
+        imageThumbnails[selectedImage]?.image ||
+        imageThumbnails[0]?.image || ""
+      }
+
+      loading="lazy"
+      alt={`Product view ${selectedImage + 1}`}
+      className="w-full max-w-[500px] h-auto object-contain rounded"
+    />
+  </div>
+</div> */}
+
+
+                {/* Main Image with Fully Working Zoom */}
+                {/* Main Image with Lens + Right Side Zoom */}
+                <div className="relative flex justify-center bg-gray-100">
+
+                  <div
+                      className="relative w-full max-w-[500px] bg-gray-100 rounded-lg overflow-hidden"
+                      onMouseEnter={() => setZoom(true)}
+                      onMouseLeave={() => setZoom(false)}
+                      onMouseMove={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+
+                        setPosition({ x, y });
+                      }}
+                      ref={imageRef}
+                  >
+                    {/* MAIN IMAGE */}
                     <img
                         src={
                             imageThumbnails[selectedImage]?.image ||
-                            imageThumbnails[0]?.image || ""
+                            imageThumbnails[0]?.image ||
+                            ""
                         }
-
-                        loading="lazy"
-                        alt={`Product view ${selectedImage + 1}`}
-                        className="w-full max-w-[500px] h-auto object-contain rounded"
+                        alt="Product zoom"
+                        className="w-full h-[500px] md:h-[450px] object-contain"
+                        ref={imgRef}
                     />
+
+                    {/* LENS BOX (Transparent Square) */}
+                    {zoom && (
+                        <div
+                            className="absolute pointer-events-none border border-blue-400 bg-white/20 rounded-sm"
+                            style={{
+                              width: lensSize,
+                              height: lensSize,
+                              top: position.y - lensSize / 2,
+                              left: position.x - lensSize / 2,
+                            }}
+                        />
+                    )}
                   </div>
+
+                  {/* ZOOM BOX ON RIGHT */}
+                  {/* ZOOM BOX ON RIGHT */}
+                  {zoom && (
+                      <div
+                          className="absolute top-0 right-0 translate-x-[110%] w-[500px] h-[500px] hidden md:block border border-gray-300 rounded-lg bg-white z-50 shadow-lg"
+                          style={{
+                            backgroundImage: `url(${
+                                imageThumbnails[selectedImage]?.image ||
+                                imageThumbnails[0]?.image
+                            })`,
+                            backgroundRepeat: "no-repeat",
+
+                            /* BIGGER IMAGE FOR MAGNIFICATION */
+                            backgroundSize: `${zoomLevel * 120}%`,
+
+                            /* MOVE ZOOM AREA BASED ON LENS POSITION */
+                            backgroundPosition: `
+        ${(position.x / (imageRef?.current?.offsetWidth || 1)) * 100}% 
+        ${(position.y / (imageRef?.current?.offsetHeight || 1)) * 100}%
+      `,
+                          }}
+                      ></div>
+                  )}
+
                 </div>
+
 
 
                 <div className="flex items-center justify-center gap-2 mt-6 overflow-x-auto px-2">
@@ -821,19 +815,6 @@ export default function Component() {
                     );
                   })}
                 </p>
-                {/* <div className="flex mb-4">
-                <div className="mr-4">
-                  <span className="font-bold text-bio-green text-lg md:text-2xl">
-                    ₹{Math.round(productDetailData?.data?.product?.selling_price || 0)}
-
-                  </span>
-{productDetailData?.data?.product?.mrp > productDetailData?.data?.product?.selling_price && (
-  <span className="text-gray-400 text-md md:text-xl line-through ml-2">
-    ₹{Math.round(productDetailData?.data?.product?.mrp || 0)}
-  </span>
-)}
-                </div>
-              </div> */}
 
                 <div className="flex mb-4 items-center">
                   <div className="mr-4 flex items-center">
@@ -858,8 +839,6 @@ export default function Component() {
                     )}
                   </div>
                 </div>
-
-
 
 
                 {productDetailData?.data?.product_weights?.length > 0 && (
@@ -907,12 +886,6 @@ export default function Component() {
                       </div>
                     </div>
                 )}
-
-
-
-
-
-
 
                 {productDetailData?.data?.product_sizes?.length > 0 && (
                     <div className="mb-4">
@@ -977,27 +950,6 @@ export default function Component() {
                     </div>
                 )}
 
-                {/* {productDetailData?.data?.product_colors?.length > 0 && (
-  <div className="mb-4">
-    <span className="font-bold text-gray-700">Color:</span>
-    <div className="flex items-center mt-2">
-      {productDetailData?.data?.product_colors?.map((color, idx) => (
-        <button
-          key={color?.id || color?.color_code || idx}
-          onClick={() => handlePlanterColorClick(color, productDetailData?.data?.product)}
-          className={`w-10 h-10 rounded-full mr-2 focus:outline-none ${
-            selectedColor?.id === color?.id
-              ? "border-2 border-bio-green text-gray-700"
-              : "border-2 border-gray-300 text-gray-700"
-          }`}
-          style={{ backgroundColor: color?.color_code }}
-          aria-label={`Select ${color?.name || "color"}`}
-        />
-      ))}
-    </div>
-  </div>
-)} */}
-
 
                 {productDetailData?.data?.product_colors?.length > 0 && (
                     <div className="mb-4">
@@ -1025,10 +977,6 @@ export default function Component() {
                     </div>
                 )}
 
-
-
-
-
                 <div className="mb-4">
                   <span className=" font-bold text-black-700">Quantity:</span>
                   <div className="flex items-center mt-4">
@@ -1040,9 +988,7 @@ export default function Component() {
                     >
                       -
                     </button>
-                    {/* <span className=" border border-bio-green bg-gray-200 text-black py-2 px-4">
-                    {quantity}
-                  </span> */}
+
                     <input
                         type="number"
                         min="1"
@@ -1057,7 +1003,6 @@ export default function Component() {
                             )
                         }
                     />
-
                     <button
 
                         onClick={() => handleQuantity(productDetailData?.data?.product?.id, "increment", quantity)}
@@ -1087,11 +1032,7 @@ export default function Component() {
                         onClick={!productDetailData?.data?.product?.is_wishlist ?  handleAddToWishlistSubmit :null}
                     >
                       <Heart className="inline-block mr-2" />
-                      {/* {inWishlist ? ( */}
-                      {/* // <Link to="/wishlist">Go to Wishlist</Link> */}
-                      {/* // ) : ( */}
                       Add to Wishlist
-                      {/* // )} */}
                     </button>
                   </div>
                 </div>
@@ -1103,14 +1044,10 @@ export default function Component() {
                   Buy It Now
                 </button>
 
-                {/* pincode */}
               </div>
 
             </div>
-            {/* <AddOnProduct productData={productData} /> */}
             <AddOnProduct addOnData={addOnData} />
-
-
           </div>
           <div className="py-4 md:pr-32">
             <div className="mt-2 flex w-full justify-center md:justify-end">
