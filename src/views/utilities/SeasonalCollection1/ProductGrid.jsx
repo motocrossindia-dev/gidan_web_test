@@ -75,6 +75,7 @@ const ProductGrid = () => {
             oldPrice={Math.round(product.oldPrice)}
             imageUrl={plantImage}
             rating={product.rating}
+            ribbon={product.ribbon}
           />
         ))}
       </div>

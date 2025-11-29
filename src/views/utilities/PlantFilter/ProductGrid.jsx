@@ -145,6 +145,7 @@ const ProductGrid = ({
                           ratingNumber={product?.product_rating?.num_ratings}
                           product={product}
                           mrp={Math.round(product?.mrp)}
+                          ribbon={product?.ribbon}
                           inWishlist={product?.is_wishlist}
                           inCart={product?.is_cart}
                       />

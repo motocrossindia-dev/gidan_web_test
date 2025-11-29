@@ -85,6 +85,7 @@ const SeasonalProduct = () => {
                   inWishlist={product?.is_wishlist}
                   getProducts={getProducts}
                   mrp={Math.round(product.mrp)}
+                  ribbon={product.ribbon}
                 />
               </div>
             ))}

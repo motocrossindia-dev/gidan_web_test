@@ -53,7 +53,7 @@ function SeasonalCollection1() {
       <div className="flex flex-row md:flex-row px-4 ">
         {/* Filter Sidebar */}
         <div className="hidden md:block">
-          <FilterSidebar />
+          <FilterSidebar />fdddddddddddddd
         </div>
         <div className="flex-1">
           {/* Product Grid */}

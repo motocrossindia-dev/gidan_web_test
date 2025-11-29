@@ -64,6 +64,7 @@ const ProductGrid = ({ results }) => {
             inCart={product.is_cart}
             inWishlist={product.is_wishlist}
             getProducts={getProducts}
+            ribbon={product.ribbon}
           />
             </div>
 

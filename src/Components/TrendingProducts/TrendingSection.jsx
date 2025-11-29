@@ -150,34 +150,22 @@ const TrendingSection = () => {
               onClick={() => handleProductClick(product.id)}
               className="cursor-pointer"
             >
-              {/* <TrendingCard
-                index={index}
-                name={product?.name}
-                price={product?.selling_price}
-                oldPrice={product?.oldPrice}
-                imageUrl={product?.image}
-                product={product}
-                userRating={product?.product_rating?.avg_rating}
-                ratingNumber={product?.product_rating?.num_ratings}
-                inWishlist={product?.is_wishlist}
-                inCart={product?.is_cart}
-                getProducts={getProducts}
-                mrp={product?.mrp}
-              /> */}
+
               <TrendingCard
-  index={index}
-  name={product?.name}
-  price={Math.round(product?.selling_price)}   // ✅ Rounded to integer
-  oldPrice={Math.round(product?.oldPrice)}     // (optional) if you also want oldPrice rounded
-  imageUrl={product?.image}
-  product={product}
-  userRating={product?.product_rating?.avg_rating}
-  ratingNumber={product?.product_rating?.num_ratings}
-  inWishlist={product?.is_wishlist}
-  inCart={product?.is_cart}
-  getProducts={getProducts}
-  mrp={Math.round(product?.mrp)}               // (optional) round MRP too
-/>
+              index={index}
+              name={product?.name}
+              price={Math.round(product?.selling_price)}   // ✅ Rounded to integer
+              oldPrice={Math.round(product?.oldPrice)}     // (optional) if you also want oldPrice rounded
+              imageUrl={product?.image}
+              product={product}
+              userRating={product?.product_rating?.avg_rating}
+              ratingNumber={product?.product_rating?.num_ratings}
+              inWishlist={product?.is_wishlist}
+              inCart={product?.is_cart}
+              getProducts={getProducts}
+              mrp={Math.round(product?.mrp)}               // (optional) round MRP too
+              ribbon={product.ribbon}
+            />
 
             </div>
           ))}
