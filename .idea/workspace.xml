@@ -6,17 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="df516f1c-c962-4e0d-8a95-1119b7efb609" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalProduct.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingSection.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/ProductGrid.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductGrid.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/RecentlyViewedCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductData.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/ProductGrid.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/SeasonalCollection1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/SeasonalCollection1.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Header/Header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Header/Header.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/Featured.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/Featured.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/FilterSidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/FilterSidebar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/RecentlyViewedProduct.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,6 +162,8 @@
       <workItem from="1764254771140" duration="8412000" />
       <workItem from="1764293023880" duration="20563000" />
       <workItem from="1764333043788" duration="591000" />
+      <workItem from="1764393159360" duration="21021000" />
+      <workItem from="1764588483002" duration="327000" />
     </task>
     <servers />
   </component>
@@ -190,6 +187,11 @@
           <url>file://$PROJECT_DIR$/src/views/utilities/E-GiftCard/EcommerceGiftCard.jsx</url>
           <line>14</line>
           <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/views/utilities/Featured/FilterSidebar.jsx</url>
+          <line>685</line>
+          <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

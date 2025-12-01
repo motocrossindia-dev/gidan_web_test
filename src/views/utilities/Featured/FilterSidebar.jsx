@@ -1,31 +1,130 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios"; // This can be removed if not used elsewhere
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { useSelector } from "react-redux";
-import axiosInstance from "../../../Axios/axiosInstance"; // <-- IMPORT THE AXIOS INSTANCE
+import axiosInstance from "../../../Axios/axiosInstance";
+import { createPortal } from "react-dom";
 
-const API_URL = `/filters/filters_n/`; // <-- REMOVE BASE URL, IT'S IN THE INSTANCE
+const API_URL = `/filters/filters_n/`;
 
-const FilterSidebar = ({ setResults, setShowMobileFilter, categoryId, category, subcategory, typeKey, subcategoryID }) => {
+const DropdownPortal = ({ isOpen, filter, options, selectedFilters, handleFilterSelection, buttonRef }) => {
+  if (!isOpen) return null;
+
+  const buttonRect = buttonRef.current?.getBoundingClientRect();
+  if (!buttonRect) return null;
+
+  const dropdownStyle = {
+    position: 'fixed',
+    top: `${buttonRect.bottom + window.scrollY + 4}px`,
+    left: `${buttonRect.left + window.scrollX}px`,
+    width: '16rem',
+    zIndex: 9999,
+  };
+
+  const handleDropdownMouseDown = (e) => e.stopPropagation();
+
+  return createPortal(
+      <div
+          style={dropdownStyle}
+          className="bg-white border border-gray-200 rounded-lg shadow-xl max-h-80 overflow-y-auto"
+          onMouseDown={handleDropdownMouseDown}
+      >
+        <div className="p-3 space-y-1">
+          {Array.isArray(options) && options.length > 0 ? (
+              options.map((option, idx) => {
+                const optionValue =
+                    filter === "subcategories"
+                        ? option.id
+                        : typeof option === "string"
+                            ? option
+                            : option.name;
+
+                const isSelected = selectedFilters[filter] === optionValue;
+
+                return (
+                    <div
+                        key={option.id || idx}
+                        onClick={() => handleFilterSelection(filter, option)}
+                        className={`flex items-center p-2 rounded cursor-pointer transition-colors ${
+                            isSelected ? "bg-blue-100 text-blue-700" : "hover:bg-gray-50"
+                        }`}
+                    >
+                      {isSelected && (
+                          <svg className="w-4 h-4 mr-3 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                fillRule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clipRule="evenodd"
+                            />
+                          </svg>
+                      )}
+                      {!isSelected && <span className="w-4 h-4 mr-3" />}
+
+                      <span className="text-sm">
+                  {typeof option === "string" ? option : option.name}
+                </span>
+                    </div>
+                );
+              })
+          ) : (
+              <div className="p-2 text-sm text-gray-500">No options available</div>
+          )}
+        </div>
+      </div>,
+      document.body
+  );
+};
+
+const FilterSidebar = ({
+                         setResults,
+                         setShowMobileFilter,
+                         categoryId,
+                         category,
+                         subcategory,
+                         typeKey,
+                         subcategoryID,
+                       }) => {
   const [selectedFilterType, setSelectedFilterType] = useState(typeKey || "plant");
   const [userSelectedFilterType, setUserSelectedFilterType] = useState(false);
-  const [openFilters, setOpenFilters] = useState({
-    subcategories: !!subcategory
-  });
+  const [openFilters, setOpenFilters] = useState({});
   const [selectedFilters, setSelectedFilters] = useState({});
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
   const [filterData, setFilterData] = useState({});
   const [availableTypes, setAvailableTypes] = useState([]);
 
+  const dropdownButtonRefs = useRef({});
+  const dropdownContainerRefs = useRef({});
+
   const accessToken = useSelector(selectAccessToken);
 
-  // Reset user selection when category changes
-  useEffect(() => {
-    setUserSelectedFilterType(false);
-  }, [category]);
+  // Close dropdown when clicking outside
+  const handleClickOutside = useCallback(
+      (event) => {
+        const isInside = Object.keys(openFilters).some((filter) => {
+          const btn = dropdownButtonRefs.current[filter];
+          const portal = document.querySelector(`[style*="z-index: 9999"]`);
+          return (
+              (btn && btn.contains(event.target)) ||
+              (portal && portal.contains(event.target))
+          );
+        });
 
-  // Handle typeKey changes
+        if (!isInside) {
+          setOpenFilters({});
+        }
+      },
+      [openFilters]
+  );
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [handleClickOutside]);
+
+  // Reset user selection when category changes
+  useEffect(() => setUserSelectedFilterType(false), [category]);
+
+  // Handle typeKey from URL
   useEffect(() => {
     if (typeKey) {
       setSelectedFilterType(typeKey);
@@ -33,73 +132,44 @@ const FilterSidebar = ({ setResults, setShowMobileFilter, categoryId, category, 
     }
   }, [typeKey]);
 
-  // Set selected filter type based on category and availableTypes
+  // Auto-select type based on category name
   useEffect(() => {
-    if (category && availableTypes.length > 0 && !userSelectedFilterType) {
-      if (!typeKey) {
-        const categoryStr = typeof category === 'string' ? category : String(category);
-        const matchedType = availableTypes.find(
-            (type) => {
-              const typeStr = typeof type === 'string' ? type : String(type);
-              return (
-                  categoryStr.toLowerCase().includes(typeStr.toLowerCase()) ||
-                  typeStr.toLowerCase().includes(categoryStr.toLowerCase())
-              );
-            }
-        );
-        if (matchedType) {
-          setSelectedFilterType(matchedType);
-        } else {
-          setSelectedFilterType("plant");
-        }
-      }
+    if (category && availableTypes.length > 0 && !userSelectedFilterType && !typeKey) {
+      const cat = String(category).toLowerCase();
+      const match = availableTypes.find(
+          (t) => cat.includes(t.toLowerCase()) || t.toLowerCase().includes(cat)
+      );
+      setSelectedFilterType(match || "plant");
     }
   }, [category, availableTypes, userSelectedFilterType, typeKey]);
 
-  // Fetch filters data when selectedFilterType changes
+  // Fetch filters
   useEffect(() => {
-    const fetchFilters = async () => {
-      try {
-        // *** FIX: Use axiosInstance instead of axios ***
-        const response = await axiosInstance.get(
-            `${API_URL}?type=${selectedFilterType}`
-        );
-        setFilterData(response.data.filters);
-
-        setAvailableTypes(response.data.filters.available_types || []);
-        if (response.data.filters.price) {
-          setPriceRange({
-            min: response.data.filters.price.price_min || "",
-            max: response.data.filters.price.price_max || "",
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching filters:", error);
-      }
-    };
-    fetchFilters();
+    axiosInstance
+        .get(`${API_URL}?type=${selectedFilterType}`)
+        .then((res) => {
+          setFilterData(res.data.filters);
+          setAvailableTypes(res.data.filters.available_types || []);
+          if (res.data.filters.price) {
+            setPriceRange({
+              min: res.data.filters.price.price_min || "",
+              max: res.data.filters.price.price_max || "",
+            });
+          }
+        })
+        .catch((err) => console.error(err));
   }, [selectedFilterType, categoryId]);
 
-  // Sync subcategory prop with selectedFilters using ID matching
+  // Preselect subcategory from URL
   useEffect(() => {
     if (filterData.subcategories && subcategoryID) {
-      const matchedOption = filterData.subcategories.find(
-          (option) => option.id === subcategoryID
-      );
-
-      setSelectedFilters((prev) => {
-        const copy = { ...prev };
-        if (matchedOption) {
-          copy.subcategories = [matchedOption.id];
-        } else {
-          delete copy.subcategories;
-        }
-        return copy;
-      });
+      const found = filterData.subcategories.find((o) => o.id === subcategoryID);
+      if (found) {
+        setSelectedFilters((prev) => ({ ...prev, subcategories: found.id }));
+      }
     }
   }, [filterData.subcategories, subcategoryID]);
 
-  // Toggle open/close filter section
   const handleFilterToggle = (filter) => {
     setOpenFilters((prev) => ({
       ...prev,
@@ -107,196 +177,348 @@ const FilterSidebar = ({ setResults, setShowMobileFilter, categoryId, category, 
     }));
   };
 
-  // Handle checkbox selection/unselection of filter options
   const handleFilterSelection = (filter, option) => {
-    setSelectedFilters((prev) => {
-      const currentSelections = prev[filter] || [];
-      let optionValue;
+    const value =
+        filter === "subcategories"
+            ? option.id
+            : typeof option === "string"
+                ? option
+                : option.name;
 
-      if (filter === 'subcategories') {
-        optionValue = option.id;
-      } else {
-        optionValue = typeof option === 'string' ? option : option.name;
-      }
-
-      const updatedSelections = currentSelections.includes(optionValue)
-          ? currentSelections.filter((item) => item !== optionValue)
-          : [...currentSelections, optionValue];
-      return {
-        ...prev,
-        [filter]: updatedSelections,
-      };
-    });
+    setSelectedFilters((prev) => ({
+      ...prev,
+      [filter]: prev[filter] === value ? null : value,
+    }));
+    setOpenFilters({});
   };
 
-  // Apply selected filters and fetch filtered results
   const applyFilters = async () => {
-    let queryParams = new URLSearchParams();
-    queryParams.append("type", selectedFilterType);
+    const params = new URLSearchParams();
+    params.append("type", selectedFilterType);
+    if (categoryId) params.append("category_id", categoryId);
 
-    if (categoryId) queryParams.append("category_id", categoryId);
-
-    Object.entries(selectedFilters).forEach(([filter, values]) => {
-      if (values.length > 0) {
-        if (filter === 'subcategories') {
-          values.forEach(id => queryParams.append('subcategory_id', id));
-        } else {
-          queryParams.append(filter, values.join(","));
-        }
+    Object.entries(selectedFilters).forEach(([k, v]) => {
+      if (v) {
+        k === "subcategories"
+            ? params.append("subcategory_id", v)
+            : params.append(k, v);
       }
     });
 
-    if (priceRange.min) queryParams.append("price_min", priceRange.min);
-    if (priceRange.max) queryParams.append("price_max", priceRange.max);
-
-    const filterApiUrl = `/filters/productsFilter/?${queryParams.toString()}`; // <-- REMOVE BASE URL
+    if (priceRange.min) params.append("price_min", priceRange.min);
+    if (priceRange.max) params.append("price_max", priceRange.max);
 
     try {
-      // *** FIX: Use axiosInstance and remove manual auth config ***
-      const response = await axiosInstance.get(filterApiUrl);
-
-      if (response.status === 200) {
-        setResults(response.data.results);
-        if (setShowMobileFilter) {
-          setShowMobileFilter(false);
-        }
-      }
-    } catch (error) {
-      console.error("Error applying filters:", error);
-      // You might want to show a user-friendly error message here
-      if (error.response?.status === 401) {
-        console.warn("Unauthorized. Please log in again.");
-      }
+      const res = await axiosInstance.get(`/filters/main_productsFilter/?${params}`);
+      setResults(res.data.results);
+      setOpenFilters({});
+      setShowMobileFilter?.(false);
+    } catch (err) {
+      console.error(err);
     }
   };
 
+  const resetFilters = () => {
+    setSelectedFilters({});
+    setPriceRange({ min: "", max: "" });
+    setOpenFilters({});
+  };
+
+  const removeFilter = (filter, value) => {
+    setSelectedFilters((prev) => {
+      const copy = { ...prev };
+      if (copy[filter] === value) delete copy[filter];
+      return copy;
+    });
+  };
+
+  const getDisplayName = (filter, value) => {
+    if (filter === "subcategories") {
+      const opt = filterData[filter]?.find((o) => o.id === value);
+      return opt ? opt.name : value;
+    }
+    return value;
+  };
+
   return (
-      <div className="w-full p-6 bg-white mt-4">
-        <div className="mb-6 flex justify-between items-center">
-          <h2 className="text-base font-normal text-black">Filter</h2>
-          <button
-              className="px-2 py-1 text-xs bg-gray-300 rounded text-gray-700 font-semibold"
-              onClick={() => setSelectedFilters({})}
-          >
-            RESET
-          </button>
+      <div className="w-full bg-white shadow-sm border-b border-gray-200">
+        {/* Header */}
+        <div className="px-6 py-4 border-b border-gray-200">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-gray-800">Filters</h2>
+            <div className="flex items-center gap-3">
+              <button
+                  onClick={resetFilters}
+                  className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700 font-medium"
+              >
+                Reset All
+              </button>
+              <button
+                  onClick={applyFilters}
+                  className="px-6 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium"
+              >
+                Apply Filters
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="mb-4">
-          <label className="text-sm text-gray-700">Type of Filter</label>
-          <select
-              className="w-full mt-1 p-2 border border-gray-300 rounded"
-              value={selectedFilterType}
-              onChange={(e) => {
-                setSelectedFilterType(e.target.value);
-                setUserSelectedFilterType(true);
+
+        {/* Filters Body - Responsive */}
+        <div className="px-6 py-4">
+          {/* This container hides scrollbar but allows scrolling */}
+          <div
+              className="flex flex-col md:flex-row md:gap-4 md:overflow-x-auto hide-scrollbar md:pb-2 space-y-4 md:space-y-0"
+              style={{
+                msOverflowStyle: "none",
+                scrollbarWidth: "none",
               }}
           >
-            {availableTypes.map((type) => (
-                <option key={type} value={type}>
-                  {type.charAt(0).toUpperCase() + type.slice(1)}
-                </option>
-            ))}
-          </select>
-        </div>
-        {Object.entries(filterData).map(
-            ([filter, options], index) =>
-                filter !== "available_types" && (
-                    <div key={index} className="relative mb-3">
+            {/* Type Selector */}
+            <div className="w-full md:w-48 flex-shrink-0">
+              <label className="block text-xs font-medium text-gray-600 mb-1">Type</label>
+              <select
+                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                  value={selectedFilterType}
+                  onChange={(e) => {
+                    setSelectedFilterType(e.target.value);
+                    setUserSelectedFilterType(true);
+                  }}
+              >
+                {availableTypes.map((t) => (
+                    <option key={t} value={t}>
+                      {t.charAt(0).toUpperCase() + t.slice(1)}
+                    </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Dynamic Filters */}
+            {Object.entries(filterData)
+                .filter(([k]) => k !== "available_types" && k !== "price")
+                .map(([filter, options]) => (
+                    <div
+                        key={filter}
+                        className="w-full md:w-48 flex-shrink-0"
+                        ref={(el) => (dropdownContainerRefs.current[filter] = el)}
+                    >
+                      <label className="block text-xs font-medium text-gray-600 mb-1 capitalize">
+                        {filter.replace("_", " ")}
+                      </label>
                       <button
-                          className="w-full py-2 flex justify-between items-center text-left border-b border-gray-200 text-sm"
+                          ref={(el) => (dropdownButtonRefs.current[filter] = el)}
                           onClick={() => handleFilterToggle(filter)}
+                          className="w-full px-3 py-2 text-sm text-left border border-gray-300 rounded-md bg-white hover:bg-gray-50 flex items-center justify-between"
                       >
-                        <span className="text-gray-700 capitalize">{filter.replace("_", " ")}</span>
+                  <span className="text-gray-700 truncate">
+                    {selectedFilters[filter]
+                        ? getDisplayName(filter, selectedFilters[filter])
+                        : "Select"}
+                  </span>
                         {openFilters[filter] ? (
-                            <FaAngleUp className="text-gray-500" />
+                            <FaAngleUp className="text-gray-500 ml-2 flex-shrink-0" />
                         ) : (
-                            <FaAngleDown className="text-gray-500" />
+                            <FaAngleDown className="text-gray-500 ml-2 flex-shrink-0" />
                         )}
                       </button>
-                      {openFilters[filter] && (
-                          <div className="mt-2 space-y-2 pl-4">
-                            {Array.isArray(options) ? (
-                                options.map((option, idx) => {
-                                  const checkValue = (filter === 'subcategories') ? option.id : (typeof option === 'string' ? option : option.name);
 
-                                  return (
-                                      <div key={option.id || idx} className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            id={`${filter}-${option.id || idx}`}
-                                            checked={selectedFilters[filter]?.includes(checkValue) || false}
-                                            onChange={() => handleFilterSelection(filter, option)}
-                                            className="mr-2"
-                                        />
-                                        <label htmlFor={`${filter}-${option.id || idx}`} className="text-sm">
-                                          {typeof option === 'string' ? option : option.name}
-                                        </label>
-                                      </div>
-                                  );
-                                })
-                            ) : filter === "price" ? (
-                                <div className="flex items-center space-x-2">
-                                  <input
-                                      type="number"
-                                      placeholder="Min"
-                                      value={priceRange.min || ""}
-                                      onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })}
-                                      className="w-20 p-1 border border-gray-300 rounded text-sm"
-                                  />
-                                  <span className="text-sm">-</span>
-                                  <input
-                                      type="number"
-                                      placeholder="Max"
-                                      value={priceRange.max || ""}
-                                      onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })}
-                                      className="w-20 p-1 border border-gray-300 rounded text-sm"
-                                  />
-                                </div>
-                            ) : null}
-                          </div>
-                      )}
+                      <DropdownPortal
+                          isOpen={openFilters[filter]}
+                          filter={filter}
+                          options={options}
+                          selectedFilters={selectedFilters}
+                          handleFilterSelection={handleFilterSelection}
+                          buttonRef={{ current: dropdownButtonRefs.current[filter] }}
+                      />
                     </div>
-                )
+                ))}
+
+            {/* Price Range */}
+            {filterData.price && (
+                <div className="w-full md:w-64 flex-shrink-0">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Price Range</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                        type="number"
+                        placeholder="Min"
+                        value={priceRange.min || ""}
+                        onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })}
+                        className="w-full md:w-28 px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                    />
+                    <span className="text-gray-400">-</span>
+                    <input
+                        type="number"
+                        placeholder="Max"
+                        value={priceRange.max || ""}
+                        onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })}
+                        className="w-full md:w-28 px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+            )}
+          </div>
+        </div>
+
+        {/* Active Filters */}
+        {Object.keys(selectedFilters).length > 0 && (
+            <div className="px-6 pb-4">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs font-medium text-gray-600">Active:</span>
+                {Object.entries(selectedFilters).map(
+                    ([filter, value]) =>
+                        value && (
+                            <span
+                                key={`${filter}-${value}`}
+                                className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs"
+                            >
+                    <span className="max-w-[150px] truncate">
+                      {getDisplayName(filter, value)}
+                    </span>
+                    <button
+                        onClick={() => removeFilter(filter, value)}
+                        className="ml-1 hover:text-blue-900 font-bold"
+                    >
+                      ×
+                    </button>
+                  </span>
+                        )
+                )}
+              </div>
+            </div>
         )}
-        <button
-            className="w-full mt-4 py-2 bg-blue-500 text-white rounded text-sm font-semibold"
-            onClick={applyFilters}
-        >
-          Apply
-        </button>
+
+        {/* Custom CSS to hide scrollbar */}
+        <style jsx>{`
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
       </div>
   );
 };
 
 export default FilterSidebar;
-// ============================================================
-// import React, { useState, useEffect } from "react";
-// import axios from "axios";
+// import React, { useState, useEffect, useRef, useCallback } from "react"; // <-- ADD useCallback
 // import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 // import { selectAccessToken } from "../../../redux/User/verificationSlice";
 // import { useSelector } from "react-redux";
-// const API_URL = `${process.env.REACT_APP_API_URL}/filters/filters/`;
+// import axiosInstance from "../../../Axios/axiosInstance";
+// import { createPortal } from "react-dom";
 //
-// const FilterSidebar = ({ setResults, setShowMobileFilter, categoryId, category, subcategory, typeKey }) => {
+// const API_URL = `/filters/filters_n/`;
+//
+// const DropdownPortal = ({ isOpen, filter, options, selectedFilters, handleFilterSelection, buttonRef }) => {
+//   if (!isOpen) return null;
+//
+//   const buttonRect = buttonRef.current?.getBoundingClientRect();
+//   if (!buttonRect) return null;
+//
+//   const dropdownStyle = {
+//     position: 'fixed',
+//     top: `${buttonRect.bottom + window.scrollY + 4}px`,
+//     left: `${buttonRect.left + window.scrollX}px`,
+//     width: '16rem',
+//     zIndex: 9999,
+//   };
+//
+//   const handleDropdownMouseDown = (event) => {
+//     event.stopPropagation();
+//   };
+//
+//   return createPortal(
+//       <div
+//           style={dropdownStyle}
+//           className="bg-white border border-gray-200 rounded-lg shadow-xl max-h-80 overflow-y-auto"
+//           onMouseDown={handleDropdownMouseDown}
+//       >
+//         <div className="p-3 space-y-1">
+//           {Array.isArray(options) && options.length > 0 ? (
+//               options.map((option, idx) => {
+//                 const optionValue = (filter === 'subcategories')
+//                     ? option.id
+//                     : (typeof option === 'string' ? option : option.name);
+//
+//                 const isSelected = selectedFilters[filter] === optionValue;
+//
+//                 return (
+//                     <div
+//                         key={option.id || idx}
+//                         onClick={() => handleFilterSelection(filter, option)}
+//                         className={`flex items-center p-2 rounded cursor-pointer transition-colors ${
+//                             isSelected ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-50'
+//                         }`}
+//                     >
+//                       {isSelected && (
+//                           <svg className="w-4 h-4 mr-3 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+//                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+//                           </svg>
+//                       )}
+//                       {!isSelected && <span className="w-4 h-4 mr-3"></span>}
+//
+//                       <span className="text-sm">
+// {typeof option === 'string' ? option : option.name}
+// </span>
+//                     </div>
+//                 );
+//               })
+//           ) : (
+//               <div className="p-2 text-sm text-gray-500">No options available</div>
+//           )}
+//         </div>
+//       </div>,
+//       document.body
+//   );
+// };
+//
+// const FilterSidebar = ({ setResults, setShowMobileFilter, categoryId, category, subcategory, typeKey, subcategoryID }) => {
 //   const [selectedFilterType, setSelectedFilterType] = useState(typeKey || "plant");
 //   const [userSelectedFilterType, setUserSelectedFilterType] = useState(false);
-//   const [openFilters, setOpenFilters] = useState({
-//     subcategories: !!subcategory
-//   });
+//   const [openFilters, setOpenFilters] = useState({});
 //   const [selectedFilters, setSelectedFilters] = useState({});
 //   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
 //   const [filterData, setFilterData] = useState({});
 //   const [availableTypes, setAvailableTypes] = useState([]);
 //
-//    const accessToken = useSelector(selectAccessToken);
+//   const dropdownButtonRefs = useRef({});
+//   const dropdownContainerRefs = useRef({});
 //
+//   const accessToken = useSelector(selectAccessToken);
 //
-//   // Reset user selection when category changes
+// // --- OPTIMIZED: Use useCallback to prevent infinite loops ---
+//   const handleClickOutside = useCallback((event) => {
+//     const isClickInsideAnyDropdown = Object.keys(openFilters).some((filter) => {
+//       const buttonRef = dropdownButtonRefs.current[filter];
+//       if (buttonRef && buttonRef.contains(event.target)) {
+//         return true;
+//       }
+//       const dropdownElement = document.querySelector(`[style*="z-index: 9999"]`);
+//       if (dropdownElement && dropdownElement.contains(event.target)) {
+//         return true;
+//       }
+//       return false;
+//     });
+//
+//     if (!isClickInsideAnyDropdown) {
+//       setOpenFilters({});
+//     }
+//   }, [openFilters]);
+//
+// // --- OPTIMIZED: The effect now depends on the stable function ---
+//   useEffect(() => {
+//     document.addEventListener("mousedown", handleClickOutside);
+//     return () => {
+//       document.removeEventListener("mousedown", handleClickOutside);
+//     };
+//   }, [handleClickOutside]);
+//
+// // ... (all other useEffect hooks remain the same) ...
 //   useEffect(() => {
 //     setUserSelectedFilterType(false);
 //   }, [category]);
 //
-//   // Handle typeKey changes
 //   useEffect(() => {
 //     if (typeKey) {
 //       setSelectedFilterType(typeKey);
@@ -304,13 +526,10 @@ export default FilterSidebar;
 //     }
 //   }, [typeKey]);
 //
-//   // Set selected filter type based on category and availableTypes
 //   useEffect(() => {
 //     if (category && availableTypes.length > 0 && !userSelectedFilterType) {
-//       // Only try to match if typeKey wasn't provided
 //       if (!typeKey) {
 //         const categoryStr = typeof category === 'string' ? category : String(category);
-//         console.log(category, "===========given", categoryStr, '=========category==========takeing');
 //         const matchedType = availableTypes.find(
 //             (type) => {
 //               const typeStr = typeof type === 'string' ? type : String(type);
@@ -329,15 +548,13 @@ export default FilterSidebar;
 //     }
 //   }, [category, availableTypes, userSelectedFilterType, typeKey]);
 //
-//   // Fetch filters data when selectedFilterType changes
 //   useEffect(() => {
 //     const fetchFilters = async () => {
 //       try {
-//         const response = await axios.get(
+//         const response = await axiosInstance.get(
 //             `${API_URL}?type=${selectedFilterType}`
 //         );
 //         setFilterData(response.data.filters);
-//
 //         setAvailableTypes(response.data.filters.available_types || []);
 //         if (response.data.filters.price) {
 //           setPriceRange({
@@ -352,226 +569,245 @@ export default FilterSidebar;
 //     fetchFilters();
 //   }, [selectedFilterType, categoryId]);
 //
-//   // Sync subcategory prop with selectedFilters
 //   useEffect(() => {
-//     if (filterData.subcategories && subcategory) {
-//       const subcategoryStr = typeof subcategory === 'string' ? subcategory : String(subcategory);
-//       // More robust normalization that handles various punctuation and spacing
-//       const normalizedSubcategory = subcategoryStr.toLowerCase()
-//           .replace(/[-_\s]+/g, ' ')  // Replace hyphens, underscores, and multiple spaces with single space
-//           .trim();
-//
-//       console.log('Normalized subcategory:', normalizedSubcategory);
-//
+//     if (filterData.subcategories && subcategoryID) {
 //       const matchedOption = filterData.subcategories.find(
-//           (option) => {
-//             const optionStr = typeof option === 'string' ? option : String(option);
-//             const normalizedOption = optionStr.toLowerCase()
-//                 .replace(/[-_\s]+/g, ' ')
-//                 .trim();
-//
-//             console.log('Comparing:', normalizedOption, 'with', normalizedSubcategory);
-//             return normalizedOption === normalizedSubcategory;
-//           }
+//           (option) => option.id === subcategoryID
 //       );
-//
-//       console.log('Matched option:', matchedOption);
 //
 //       setSelectedFilters((prev) => {
 //         const copy = { ...prev };
 //         if (matchedOption) {
-//           copy.subcategories = [matchedOption];
+//           copy.subcategories = matchedOption.id;
 //         } else {
 //           delete copy.subcategories;
 //         }
 //         return copy;
 //       });
 //     }
-//   }, [filterData.subcategories, subcategory]);
+//   }, [filterData.subcategories, subcategoryID]);
 //
-//   // Toggle open/close filter section
 //   const handleFilterToggle = (filter) => {
-//     setOpenFilters((prev) => ({
-//       ...prev,
-//       [filter]: !prev[filter],
-//     }));
-//   };
-//
-//   // Handle checkbox selection/unselection of filter options
-//   const handleFilterSelection = (filter, option) => {
-//     setSelectedFilters((prev) => {
-//       const currentSelections = prev[filter] || [];
-//       const updatedSelections = currentSelections.includes(option)
-//           ? currentSelections.filter((item) => item !== option)
-//           : [...currentSelections, option];
-//       return {
-//         ...prev,
-//         [filter]: updatedSelections,
-//       };
+//     setOpenFilters((prev) => {
+//       const newState = {};
+//       newState[filter] = !prev[filter];
+//       return newState;
 //     });
 //   };
 //
+//   const handleFilterSelection = (filter, option) => {
+//     const optionValue = (filter === 'subcategories')
+//         ? option.id
+//         : (typeof option === 'string' ? option : option.name);
 //
-//   // const applyFilters = async () => {
-//   //   let queryParams = new URLSearchParams();
-//   //   queryParams.append("type", selectedFilterType);
-//   //   Object.entries(selectedFilters).forEach(([filter, values]) => {
-//   //     if (values.length > 0) {
-//   //       queryParams.append(filter, values.join(","));
-//   //     }
-//   //   });
-//   //   if (priceRange.min) queryParams.append("price_min", priceRange.min);
-//   //   if (priceRange.max) queryParams.append("price_max", priceRange.max);
-//   //   const filterApiUrl = `${process.env.REACT_APP_API_URL}/filters/productsFilter/?${queryParams.toString()}`;
-//   //   try {
-//   //     const response = await axios.get(filterApiUrl);
-//   //     if (response.status === 200) {
-//   //       setResults(response.data.results);
-//   //       if (setShowMobileFilter) {
-//   //         setShowMobileFilter(false);
-//   //       }
-//   //     }
-//   //   } catch (error) {
-//   //     console.error("Error applying filters:", error);
-//   //   }
-//   // };
+//     setSelectedFilters((prev) => {
+//       const newValue = prev[filter] === optionValue ? null : optionValue;
+//       return {
+//         ...prev,
+//         [filter]: newValue,
+//       };
+//     });
 //
-//   // Apply selected filters and fetch filtered results
+//     setOpenFilters({});
+//   };
 //
+//   const applyFilters = async () => {
+//     let queryParams = new URLSearchParams();
+//     queryParams.append("type", selectedFilterType);
 //
-// const applyFilters = async () => {
-//   let queryParams = new URLSearchParams();
-//   queryParams.append("type", selectedFilterType);
+//     if (categoryId) queryParams.append("category_id", categoryId);
 //
-//   Object.entries(selectedFilters).forEach(([filter, values]) => {
-//     if (values.length > 0) {
-//       queryParams.append(filter, values.join(","));
-//     }
-//   });
+//     Object.entries(selectedFilters).forEach(([filter, value]) => {
+//       if (value) {
+//         if (filter === 'subcategories') {
+//           queryParams.append('subcategory_id', value);
+//         } else {
+//           queryParams.append(filter, value);
+//         }
+//       }
+//     });
 //
-//   if (priceRange.min) queryParams.append("price_min", priceRange.min);
-//   if (priceRange.max) queryParams.append("price_max", priceRange.max);
+//     if (priceRange.min) queryParams.append("price_min", priceRange.min);
+//     if (priceRange.max) queryParams.append("price_max", priceRange.max);
 //
-//   const filterApiUrl = `${process.env.REACT_APP_API_URL}/filters/productsFilter/?${queryParams.toString()}`;
+//     const filterApiUrl = `/filters/main_productsFilter/?${queryParams.toString()}`;
 //
-//   try {
+//     try {
+//       const response = await axiosInstance.get(filterApiUrl);
 //
-//
-//     const config = {
-//       headers: accessToken
-//         ? { Authorization: `Bearer ${accessToken}` } // attach only if logged in
-//         : {},
-//     };
-//
-//     const response = await axios.get(filterApiUrl, config);
-//
-//     if (response.status === 200) {
-//       setResults(response.data.results);
-//       if (setShowMobileFilter) {
-//         setShowMobileFilter(false);
+//       if (response.status === 200) {
+//         setResults(response.data.results);
+//         setOpenFilters({});
+//         if (setShowMobileFilter) {
+//           setShowMobileFilter(false);
+//         }
+//       }
+//     } catch (error) {
+//       console.error("Error applying filters:", error);
+//       if (error.response?.status === 401) {
+//         console.warn("Unauthorized. Please log in again.");
 //       }
 //     }
-//   } catch (error) {
-//     console.error("Error applying filters:", error);
-//     if (error.response?.status === 401) {
-//       // Optionally: redirect to login if unauthorized
-//       console.warn("Unauthorized. Please log in again.");
+//   };
+//
+//   const resetFilters = () => {
+//     setSelectedFilters({});
+//     setPriceRange({ min: "", max: "" });
+//     setOpenFilters({});
+//   };
+//
+//   const removeFilter = (filter, value) => {
+//     setSelectedFilters((prev) => {
+//       const copy = { ...prev };
+//       if (copy[filter] === value) {
+//         delete copy[filter];
+//       }
+//       return copy;
+//     });
+//   };
+//
+//   const getDisplayName = (filter, value) => {
+//     if (filter === 'subcategories') {
+//       const option = filterData[filter]?.find(opt => opt.id === value);
+//       return option ? option.name : value;
 //     }
-//   }
-// };
-//
-//
+//     return value;
+//   };
 //
 //   return (
-//       <div className="w-full p-6 bg-white mt-4">
-//         <div className="mb-6 flex justify-between items-center">
-//           <h2 className="text-base font-normal text-black">Filter</h2>
-//           <button
-//               className="px-2 py-1 text-xs bg-gray-300 rounded text-gray-700 font-semibold"
-//               onClick={() => setSelectedFilters({})}
-//           >
-//             RESET
-//           </button>
+//       <div className="w-full bg-white shadow-sm border-b border-gray-200 relative">
+//         <div className="px-6 py-4 border-b border-gray-200">
+//           <div className="flex items-center justify-between">
+//             <h2 className="text-lg font-semibold text-gray-800">Filters</h2>
+//             <div className="flex items-center gap-3">
+//               <button
+//                   className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700 font-medium transition-colors"
+//                   onClick={resetFilters}
+//               >
+//                 Reset All
+//               </button>
+//               <button
+//                   className="px-6 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors"
+//                   onClick={applyFilters}
+//               >
+//                 Apply Filters
+//               </button>
+//             </div>
+//           </div>
 //         </div>
-//         <div className="mb-4">
-//           <label className="text-sm text-gray-700">Type of Filter</label>
-//           <select
-//               className="w-full mt-1 p-2 border border-gray-300 rounded"
-//               value={selectedFilterType}
-//               onChange={(e) => {
-//                 setSelectedFilterType(e.target.value);
-//                 setUserSelectedFilterType(true); // Mark that user manually selected
-//               }}
-//           >
-//             {availableTypes.map((type) => (
-//                 <option key={type} value={type}>
-//                   {type.charAt(0).toUpperCase() + type.slice(1)}
-//                 </option>
-//             ))}
-//           </select>
+//
+//         <div className="px-6 py-4 overflow-visible">
+//           <div className="flex items-start gap-4 overflow-x-auto overflow-y-visible pb-2">
+//             <div className="flex-shrink-0 min-w-[180px]">
+//               <label className="block text-xs font-medium text-gray-600 mb-1">Type</label>
+//               <select
+//                   className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+//                   value={selectedFilterType}
+//                   onChange={(e) => {
+//                     setSelectedFilterType(e.target.value);
+//                     setUserSelectedFilterType(true);
+//                   }}
+//               >
+//                 {availableTypes.map((type) => (
+//                     <option key={type} value={type}>
+//                       {type.charAt(0).toUpperCase() + type.slice(1)}
+//                     </option>
+//                 ))}
+//               </select>
+//             </div>
+//
+//             {Object.entries(filterData).map(
+//                 ([filter, options]) =>
+//                     filter !== "available_types" && filter !== "price" && (
+//                         <div
+//                             key={filter}
+//                             className="relative flex-shrink-0 min-w-[180px]"
+//                             ref={(el) => (dropdownContainerRefs.current[filter] = el)}
+//                         >
+//                           <label className="block text-xs font-medium text-gray-600 mb-1 capitalize">
+//                             {filter.replace("_", " ")}
+//                           </label>
+//                           <button
+//                               ref={(el) => (dropdownButtonRefs.current[filter] = el)}
+//                               className="w-full px-3 py-2 text-sm text-left border border-gray-300 rounded-md bg-white hover:bg-gray-50 flex items-center justify-between"
+//                               onClick={() => handleFilterToggle(filter)}
+//                           >
+// <span className="text-gray-700 truncate">
+// {selectedFilters[filter]
+//     ? getDisplayName(filter, selectedFilters[filter])
+//     : "Select"}
+// </span>
+//                             {openFilters[filter] ? (
+//                                 <FaAngleUp className="text-gray-500 flex-shrink-0 ml-2" />
+//                             ) : (
+//                                 <FaAngleDown className="text-gray-500 flex-shrink-0 ml-2" />
+//                             )}
+//                           </button>
+//
+//                           <DropdownPortal
+//                               isOpen={openFilters[filter]}
+//                               filter={filter}
+//                               options={options}
+//                               selectedFilters={selectedFilters}
+//                               handleFilterSelection={handleFilterSelection}
+//                               buttonRef={{ current: dropdownButtonRefs.current[filter] }}
+//                           />
+//                         </div>
+//                     )
+//             )}
+//
+//             {filterData.price && (
+//                 <div className="flex-shrink-0 min-w-[200px]">
+//                   <label className="block text-xs font-medium text-gray-600 mb-1">
+//                     Price Range
+//                   </label>
+//                   <div className="flex items-center gap-2">
+//                     <input
+//                         type="number"
+//                         placeholder="Min"
+//                         value={priceRange.min || ""}
+//                         onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })}
+//                         className="w-20 px-2 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+//                     />
+//                     <span className="text-gray-400">-</span>
+//                     <input
+//                         type="number"
+//                         placeholder="Max"
+//                         value={priceRange.max || ""}
+//                         onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })}
+//                         className="w-20 px-2 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+//                     />
+//                   </div>
+//                 </div>
+//             )}
+//           </div>
 //         </div>
-//         {Object.entries(filterData).map(
-//             ([filter, options], index) =>
-//                 filter !== "available_types" && (
-//                     <div key={index} className="relative mb-3">
-//                       <button
-//                           className="w-full py-2 flex justify-between items-center text-left border-b border-gray-200 text-sm"
-//                           onClick={() => handleFilterToggle(filter)}
-//                       >
-//                         <span className="text-gray-700 capitalize">{filter.replace("_", " ")}</span>
-//                         {openFilters[filter] ? (
-//                             <FaAngleUp className="text-gray-500" />
-//                         ) : (
-//                             <FaAngleDown className="text-gray-500" />
-//                         )}
-//                       </button>
-//                       {openFilters[filter] && (
-//                           <div className="mt-2 space-y-2 pl-4">
-//                             {Array.isArray(options) ? (
-//                                 options.map((option, idx) => (
-//                                     <div key={idx} className="flex items-center">
-//                                       <input
-//                                           type="checkbox"
-//                                           id={`${filter}-${idx}`}
-//                                           checked={selectedFilters[filter]?.includes(option) || false}
-//                                           onChange={() => handleFilterSelection(filter, option)}
-//                                           className="mr-2"
-//                                       />
-//                                       <label htmlFor={`${filter}-${idx}`} className="text-sm">
-//                                         {option}
-//                                       </label>
-//                                     </div>
-//                                 ))
-//                             ) : filter === "price" ? (
-//                                 <div className="flex items-center space-x-2">
-//                                   <input
-//                                       type="number"
-//                                       placeholder="Min"
-//                                       value={priceRange.min || ""}
-//                                       onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })}
-//                                       className="w-20 p-1 border border-gray-300 rounded text-sm"
-//                                   />
-//                                   <span className="text-sm">-</span>
-//                                   <input
-//                                       type="number"
-//                                       placeholder="Max"
-//                                       value={priceRange.max || ""}
-//                                       onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })}
-//                                       className="w-20 p-1 border border-gray-300 rounded text-sm"
-//                                   />
-//                                 </div>
-//                             ) : null}
-//                           </div>
-//                       )}
-//                     </div>
-//                 )
+//
+//         {Object.keys(selectedFilters).length > 0 && (
+//             <div className="px-6 pb-4">
+//               <div className="flex items-center gap-2 flex-wrap">
+//                 <span className="text-xs font-medium text-gray-600">Active:</span>
+//                 {Object.entries(selectedFilters).map(([filter, value]) =>
+//                         value && (
+//                             <span
+//                                 key={`${filter}-${value}`}
+//                                 className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs"
+//                             >
+// <span className="max-w-[150px] truncate">
+// {getDisplayName(filter, value)}
+// </span>
+// <button
+//     onClick={() => removeFilter(filter, value)}
+//     className="hover:text-blue-900 font-bold text-base leading-none"
+// >
+// ×
+// </button>
+// </span>
+//                         )
+//                 )}
+//               </div>
+//             </div>
 //         )}
-//         <button
-//             className="w-full mt-4 py-2 bg-blue-500 text-white rounded text-sm font-semibold"
-//             onClick={applyFilters}
-//         >
-//           Apply
-//         </button>
 //       </div>
 //   );
 // };
