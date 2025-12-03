@@ -22,7 +22,7 @@ function Featured() {
   return (
       <>
         <Helmet>
-          <title>Biotech Maali - Featured</title>
+          <title>Gidan - Featured</title>
         </Helmet>
         <div className="container mx-auto pt-6  min-h-screen">
           {/* Mobile View Button */}
@@ -113,7 +113,7 @@ export default Featured;
 //   return (
 //       <>
 //           <Helmet>
-//               <title>Biotech Maali - Featured</title>
+//               <title>Gidan - Featured</title>
 //           </Helmet>
 //     <div className="container mx-auto  pt-6">
 //       {/* <Banner1 /> */}

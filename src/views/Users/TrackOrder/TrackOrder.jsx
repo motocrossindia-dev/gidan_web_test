@@ -20,7 +20,7 @@
 //   return (
 //       <>
 //         <Helmet>
-//           <title>Biotech Maali - Track Order Page</title>
+//           <title>Gidan - Track Order Page</title>
 //         </Helmet>
 //     <div className="flex justify-center items-center min-h-screen mx-10 bg-white font-sans">
 //       {!isSubmitted ? (
@@ -190,7 +190,7 @@ const TrackOrder = () => {
   return (
     <>
       <Helmet>
-        <title>Biotech Maali - Track Order Page</title>
+        <title>Gidan - Track Order Page</title>
       </Helmet>
 
       <div className="flex justify-center items-center min-h-screen mx-10 bg-white font-sans">

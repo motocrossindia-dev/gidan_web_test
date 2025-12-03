@@ -106,9 +106,9 @@ const Login = ({ onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative mb-4">
-          <img name="Biotech Maali Logo"
+          <img name="Gidan Logo"
             src={biotech}
-            alt="Biotech Maali Logo"
+            alt="Gidan Logo"
             className="mx-auto w-[129px] h-[82px]"
             loading="lazy"
           />

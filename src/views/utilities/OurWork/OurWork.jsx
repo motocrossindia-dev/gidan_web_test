@@ -22,7 +22,7 @@ const OurWork = () => {
   return (
       <>
         <Helmet>
-          <title>Biotech Maali - Our work</title>
+          <title>Gidan - Our work</title>
         </Helmet>
     <div className="App">
     <h4 className="text-sm sm:text-base p-4">Home / Our Work</h4>
@@ -36,7 +36,7 @@ const OurWork = () => {
     <div className="bg-gray-100 py-8 px-4 text-center">
       <h2 className="text-xl sm:text-2xl font-bold leading-tight">
         Elevate Your Outdoor Space. Transform your terrace into a lush green retreat with expert landscaping.
-        <br /> Biotech Maali
+        <br /> Gidan
       </h2>
     </div>
 
@@ -69,7 +69,7 @@ const OurWork = () => {
       <img name=" "
         src="/path-to-biotech-logo.png" // replace with actual path
         loading="lazy"
-        alt="Biotech Maali"
+        alt="Gidan"
         className="w-32 sm:w-48"
       />
     </div>
@@ -82,7 +82,7 @@ const OurWork = () => {
       <div className="container mx-auto flex flex-col lg:flex-row items-center max-w-[1280px]">
         <div className="w-full lg:w-1/2 text-center lg:text-left">
           <h4 className="text-xl sm:text-2xl lg:text-4xl font-bold mb-4">
-            Design Your Dreamscape: <br /> Personalized Landscaping with Biotech Maali
+            Design Your Dreamscape: <br /> Personalized Landscaping with Gidan
           </h4>
           <button className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mt-4" onClick={handleRedirect}>
             Contact
@@ -102,7 +102,7 @@ const OurWork = () => {
         </div>
         <div className="w-full lg:w-1/2 text-center lg:text-right mt-6 lg:mt-0">
           <h4 className="text-xl sm:text-2xl lg:text-4xl font-bold mb-4">
-            Expert Advice, Anytime <br /> Personalized Garden Consultations <br /> with Biotech Maali
+            Expert Advice, Anytime <br /> Personalized Garden Consultations <br /> with Gidan
           </h4>
           <button className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mt-4" onClick={handleRedirect}>
             Contact
@@ -126,7 +126,7 @@ const OurWork = () => {
     {/* Team Section */}
     <div className="py-8 px-4 bg-gray-50 text-center">
       <h2 className="text-xl sm:text-2xl font-bold mb-4">
-        Meet the Visionaries <br /> The People Behind the Plants at Biotech Maali
+        Meet the Visionaries <br /> The People Behind the Plants at Gidan
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {[...Array(3)].map((_, index) => (

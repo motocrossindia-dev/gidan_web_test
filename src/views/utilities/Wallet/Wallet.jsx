@@ -143,12 +143,12 @@ const Wallet = () => {
   return (
       <>
         <Helmet>
-          <title>Biotech Maali - Wallet</title>
+          <title>Gidan - Wallet</title>
         </Helmet>
     <div className="flex justify-center sm:justify-start px-4 sm:px-6 mt-2 bg-gray-100 min-h-screen w-full">
       <div className="w-full sm:w-full md:w-4/5 lg:w-full xl:w-full h-auto bg-white shadow-lg p-4 sm:p-6 rounded-lg">
         {/* Total Wallet Balance */}
-        <h2 className="text-lg font-semibold mb-2">Biotech Maali Wallet</h2>
+        <h2 className="text-lg font-semibold mb-2">Gidan Wallet</h2>
         <div className="bg-gray-100 p-4 rounded-lg mb-6">
           <div className="flex flex-col justify-between items-center space-y-5">
             <span className="text-gray-700 font-semibold">Total Wallet Balance</span>
@@ -208,7 +208,7 @@ const Wallet = () => {
         <div className="mb-6">
           <div className="bg-transparent border border-black-100 p-4 rounded-lg flex flex-col sm:flex-row justify-between mb-2 items-center">
             <div className="flex flex-col items-center sm:items-start">
-              <span>Biotech Maali Rewards</span>
+              <span>Gidan Rewards</span>
               <span className="flex items-center">
                 25% Utilization On Cart Value
                 <IconExclamationCircle className="ml-1" />
@@ -235,7 +235,7 @@ const Wallet = () => {
         {/* How to Use Section */}
         <div className="px-2 sm:px-4 py-6">
           <h1 className="text-xl sm:text-2xl text-left mb-4 sm:mb-6">
-            How to Pay with a Biotech Maali Card
+            How to Pay with a Gidan Card
           </h1>
           <ul className="list-decimal list-inside space-y-4 sm:space-y-6">
             <li>
@@ -261,9 +261,9 @@ const Wallet = () => {
               later stage, we will credit the refund back to your Gift Card.
             </li>
           </ul>
-          <h2 className="text-left mt-4 sm:mt-6">Does my Biotech Maali Card expire?</h2>
+          <h2 className="text-left mt-4 sm:mt-6">Does my Gidan Card expire?</h2>
           <p className="text-left mt-4 sm:mt-6">
-            All Biotech Maali Cards expire 1 year from the date of their
+            All Gidan Cards expire 1 year from the date of their
             creation.
           </p>
           <h2 className="text-xl sm:text-2xl text-left mt-8 sm:mt-10">
@@ -271,7 +271,7 @@ const Wallet = () => {
           </h2>
           <ul className="list-decimal list-inside space-y-6 py-8">
              <li>
-               Biotech Maali Cards ("GCs" or "Gift Cards") are issued by
+               Gidan Cards ("GCs" or "Gift Cards") are issued by
                Qwikilver Solutions Pvt. Ltd. ("Qwikilver"), which is a private
                limited company incorporated under the laws of India and is
                authorized by the Reserve Bank of India (RBI) to issue such Gift
@@ -279,19 +279,19 @@ const Wallet = () => {
              </li>
              <li>
                The Gift Cards can be redeemed online against Sellers listed on  
-               www.BiotechMaali.com or the Biotech Maali Mobile App or Biotech
+               www.BiotechMaali.com or the Gidan Mobile App or Biotech
                Maali me (Platform) only.
              </li>             <li>
                Gift Cards can be purchased only on www.BiotechMaali.com or
-               Biotech Maali Mobile App using the following payment modes: Credit
+               Gidan Mobile App using the following payment modes: Credit
                Card, Debit Card, and Net Banking.
              </li>
              <li>
                Gift Cards can be redeemed by selecting the payment mode as Gift
                Card.
              </li>
-             <li>               Gift Cards cannot be used to purchase other Biotech Maali Gift
-               Cards or Biotech Maali First subscriptions.
+             <li>               Gift Cards cannot be used to purchase other Gidan Gift
+               Cards or Gidan First subscriptions.
              </li>
              <li>
                Gift Cards cannot be used to make bulk purchases on the Platform.

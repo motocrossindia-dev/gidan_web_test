@@ -40,14 +40,14 @@ useEffect(() => {
   return (
       <>
         <Helmet>
-          <title>Biotech Maali - Carriers </title>
+          <title>Gidan - Carriers </title>
         </Helmet>
     <div className="min-h-screen flex flex-col items-center justify-between p-4">
       <div className="w-full border-b">
         {/* Header Title */}
         <div className="text-center py-4 border-b">
           <h1 className="text-xl font-semibold text-gray-800">
-            Shape the Future with Biotech Maali
+            Shape the Future with Gidan
           </h1>
         </div>
 

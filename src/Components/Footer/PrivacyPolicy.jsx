@@ -11,7 +11,7 @@ const PrivacyPolicy = () => {
 
       <>
         <Helmet>
-          <title>Biotech Maali - Privacy Policy</title>
+          <title>Gidan - Privacy Policy</title>
         </Helmet>
     <div className="max-w-4xl mx-auto p-6 bg-white text-gray-800 font-sans">
       {/* Header */}
@@ -21,7 +21,7 @@ const PrivacyPolicy = () => {
           Privacy Policy
         </h1>
         <p className="text-gray-600 leading-relaxed max-w-3xl mx-auto">
-          At Biotech Maali we recognize that privacy is very important. We promise to respect your contact preferences and to protect your private information. This Privacy Policy describes the information that is collected, how it is used and with whom it might be shared. This Privacy Policy applies to all of the services and products offered by Biotech Maali.
+          At Gidan we recognize that privacy is very important. We promise to respect your contact preferences and to protect your private information. This Privacy Policy describes the information that is collected, how it is used and with whom it might be shared. This Privacy Policy applies to all of the services and products offered by Gidan.
         </p>
       </div>
 
@@ -42,10 +42,10 @@ const PrivacyPolicy = () => {
           <div className="space-y-4 text-gray-700">
             <div className="bg-green-50 p-4 rounded-lg border border-green-200">
               <p className="font-semibold text-green-800 mb-2">Secure Payment Processing</p>
-              <p>We do not store your credit card information or other sensitive data on our servers. Biotech Maali uses the services of the most secure payment gateway to provide safe and secure payment procedures. Your credit card information is never transmitted via our website since the payment gateway is responsible for collecting, storing and encrypting your data.</p>
+              <p>We do not store your credit card information or other sensitive data on our servers. Gidan uses the services of the most secure payment gateway to provide safe and secure payment procedures. Your credit card information is never transmitted via our website since the payment gateway is responsible for collecting, storing and encrypting your data.</p>
             </div>
             <p>All the information that is collected is used for products and services provision, billing, identification and authentication, services improvement, contact and research.</p>
-            <p>Biotech Maali does not share your email address or other personally identifying information with any third parties, except our service providers, such as credit-card payment processors, performing services on our behalf. These service providers may have access to personal information needed to perform their functions but are not permitted to share or use such information for any other purposes.</p>
+            <p>Gidan does not share your email address or other personally identifying information with any third parties, except our service providers, such as credit-card payment processors, performing services on our behalf. These service providers may have access to personal information needed to perform their functions but are not permitted to share or use such information for any other purposes.</p>
           </div>
         </section>
 
@@ -66,7 +66,7 @@ const PrivacyPolicy = () => {
                 <li>• Track browser type, language, and visit patterns</li>
               </ul>
             </div>
-            <p>At Biotech Maali we do our best to protect the personal information from unauthorized access, alteration or disclosure.</p>
+            <p>At Gidan we do our best to protect the personal information from unauthorized access, alteration or disclosure.</p>
           </div>
         </section>
 
@@ -81,7 +81,7 @@ const PrivacyPolicy = () => {
               <p className="font-semibold text-yellow-800 mb-2">We do not sell your Personal Information</p>
               <p className="text-yellow-700">We do not sell your Personal Information to anyone for any purpose. We maintain information about you in our business records while you are a customer, or until it is no longer needed for business, tax or legal purposes.</p>
             </div>
-            <p>We have implemented encryption or other appropriate security controls to protect Personal Information when stored by Biotech Maali. All the passwords in our web service are hashed by using the SHA-1 cryptographic hash function. Both Biotech Maali and our third party hosting vendors do the best to protect the personal information from unauthorized access, alteration or disclosure.</p>
+            <p>We have implemented encryption or other appropriate security controls to protect Personal Information when stored by Gidan. All the passwords in our web service are hashed by using the SHA-1 cryptographic hash function. Both Gidan and our third party hosting vendors do the best to protect the personal information from unauthorized access, alteration or disclosure.</p>
           </div>
         </section>
 
@@ -112,7 +112,7 @@ const PrivacyPolicy = () => {
             Legal Disclosure Circumstances
           </h2>
           <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
-            <p className="text-orange-800 mb-3 font-medium">Biotech Maali may be required to disclose personally identifiable information under special circumstances:</p>
+            <p className="text-orange-800 mb-3 font-medium">Gidan may be required to disclose personally identifiable information under special circumstances:</p>
             <ul className="space-y-2 text-orange-700 ml-4">
               <li>• To comply with subpoenas, warrants, court orders or legal process</li>
               <li>• To establish or exercise our legal rights or defend against legal claims</li>
@@ -130,7 +130,7 @@ const PrivacyPolicy = () => {
             Android Application Privacy Policy
           </h2>
           <div className="space-y-4 text-gray-700">
-            <p>Biotech Maali built the Biotech Maali app as a Commercial app. This SERVICE is provided by Biotech Maali and is intended for use as is.</p>
+            <p>Gidan built the Gidan app as a Commercial app. This SERVICE is provided by Gidan and is intended for use as is.</p>
             <div className="bg-gray-50 p-4 rounded-lg">
               <p className="font-medium mb-2">Information We May Collect:</p>
               <ul className="space-y-1 ml-4">
@@ -164,7 +164,7 @@ const PrivacyPolicy = () => {
         <section>
           <h2 className="text-2xl font-semibold text-green-600 mb-4">Changes and Updates to This Privacy Notice</h2>
           <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-            <p className="text-yellow-800">This Privacy Notice may be revised periodically. Please revisit this page to stay aware of any changes. Your continued use of the Biotech Maali websites constitutes your agreement to this Privacy Notice and any future revisions.</p>
+            <p className="text-yellow-800">This Privacy Notice may be revised periodically. Please revisit this page to stay aware of any changes. Your continued use of the Gidan websites constitutes your agreement to this Privacy Notice and any future revisions.</p>
           </div>
         </section>
 
@@ -214,7 +214,7 @@ const PrivacyPolicy = () => {
 
       {/* Footer */}
       {/* <footer className="text-center text-gray-500 text-sm pt-6 border-t mt-8">
-        <p>© 2024 Biotech Maali - FARM AMMINO AGRITECH PRIVATE LIMITED. All rights reserved.</p>
+        <p>© 2024 Gidan - FARM AMMINO AGRITECH PRIVATE LIMITED. All rights reserved.</p>
         <p className="mt-1">This privacy policy is subject to change without notice. Last updated: 2024</p>
       </footer> */}
     </div>

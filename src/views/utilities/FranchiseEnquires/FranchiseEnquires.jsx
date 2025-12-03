@@ -14,7 +14,7 @@ function FranchiseEnquires() {
   return (
       <>
           <Helmet>
-              <title>Biotech Maali - Franchise Enquires</title>
+              <title>Gidan - Franchise Enquires</title>
           </Helmet>
           <div className="space-y-10 bg-gray-100 mt-10 px-4 md:px-0">
               <HeroSection />

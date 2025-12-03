@@ -22,7 +22,7 @@ function FloweringPlants() {
   return (
       <>
           <Helmet>
-              <title>Biotech Maali - Flowering Plants</title>
+              <title>Gidan - Flowering Plants</title>
           </Helmet>
     <div className="container mx-auto bg-gray-100 pt-6">
       <Banner1 />

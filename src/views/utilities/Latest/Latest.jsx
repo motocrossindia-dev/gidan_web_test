@@ -22,7 +22,7 @@ function Latest() {
   return (
       <>
           <Helmet>
-              <title>Biotech Maali - Latest</title>
+              <title>Gidan - Latest</title>
           </Helmet>
     <div className="container mx-auto bg-gray-100 pt-6">
       <Banner1 />

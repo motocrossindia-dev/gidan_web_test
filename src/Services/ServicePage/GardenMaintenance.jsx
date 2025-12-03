@@ -41,7 +41,7 @@ const handleConnectClick = () => {
 
       <>
         <Helmet>
-          <title>Biotech Maali - Garden Maintenance</title>
+          <title>Gidan - Garden Maintenance</title>
         </Helmet>
     <div className="min-h-screen bg-white">
       {/* Hero Section */}

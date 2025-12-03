@@ -164,7 +164,7 @@ const Verification = ({ onClose, onSubmit }) => {
         <div className="relative mb-4 flex justify-center">
           <img name=" "   
             src={biotech}
-            alt="Biotech Maali Logo"
+            alt="Gidan Logo"
             className="w-[129px] h-[82px]"
             loading="lazy"
           />

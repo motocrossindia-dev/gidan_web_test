@@ -23,7 +23,7 @@ function Thankyou() {
 
       <>
           <Helmet>
-              <title>Biotech Maali - Thank you</title>
+              <title>Gidan - Thank you</title>
           </Helmet>
 
           <div className="container mx-auto bg-gray-100 pt-6">

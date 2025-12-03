@@ -10,7 +10,7 @@ const Comingsoon = () => {
     return (
       <>
           <Helmet>
-            <title>Biotech Maali - Coming soon</title>
+            <title>Gidan - Coming soon</title>
           </Helmet>
                 {/* <Header />
         <Navigation/> */}

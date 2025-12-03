@@ -79,7 +79,7 @@ const MobileLoginPage = () => {
   return (
       <>
         <Helmet>
-          <title>Biotech Maali - Mobile Login Page</title>
+          <title>Gidan - Mobile Login Page</title>
         </Helmet>
     <div className="flex items-center justify-center bg-gray-50">
       <div className="w-full rounded-lg p-6">

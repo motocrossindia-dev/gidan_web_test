@@ -95,7 +95,7 @@ const SignIn = ({ onClose, onGetOtpClick }) => {
         <div className="relative mb-4">
           <img name=" "   
             src={biotech}
-            alt="Biotech Maali Logo"
+            alt="Gidan Logo"
             className="mx-auto w-[129px] h-[82px]"
           />
           <button
@@ -106,7 +106,7 @@ const SignIn = ({ onClose, onGetOtpClick }) => {
           </button>
         </div>
         <h2 className="text-center text-lg font-semibold mb-4">
-          Welcome to Biotech Maali
+          Welcome to Gidan
         </h2>
         <div className="mb-4">
           <label

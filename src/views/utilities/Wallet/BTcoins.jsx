@@ -45,7 +45,7 @@ const navigate = useNavigate()
   return (
       <>
         <Helmet>
-          <title>Biotech Maali - BTCoins</title>
+          <title>Gidan - BTCoins</title>
         </Helmet>
     <div className="flex justify-center sm:justify-start px-4 sm:px-6 bg-gray-100 min-h-screen w-full">
       <div className="w-full sm:w-full md:w-4/5 lg:w-full xl:w-full h-auto bg-white shadow-lg p-4 sm:p-6 rounded-lg">
@@ -147,10 +147,10 @@ const navigate = useNavigate()
         <div className="px-2 sm:px-4 py-6">
           <h2 className="text-xl sm:text-2xl text-left mb-4">Terms & Conditions</h2>
           <ul className="list-decimal list-inside space-y-4">
-            <li>BT Coins are reward points that can be earned and redeemed on Biotech Maali's platform.</li>
+            <li>BT Coins are reward points that can be earned and redeemed on Gidan's platform.</li>
             <li>Coins earned through referrals will be credited after the referred friend's first purchase.</li>
             <li>Coins cannot be exchanged for cash or transferred to other accounts.</li>
-            <li>Biotech Maali reserves the right to modify or terminate the BT Coins program at any time.</li>
+            <li>Gidan reserves the right to modify or terminate the BT Coins program at any time.</li>
             <li>Any misuse of the referral system will result in the forfeiture of earned coins.</li>
             <li>Coins can only be redeemed on plant purchases and cannot be used for accessories or gardening tools.</li>
             <li>A minimum purchase value may be required to redeem coins for discounts.</li>

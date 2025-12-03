@@ -143,7 +143,7 @@ const ProfileForm = () => {
   return (
       <>
         <Helmet>
-          <title>Biotech Maali - Profile Page</title>
+          <title>Gidan - Profile Page</title>
         </Helmet>
       <Verify />
       <div>

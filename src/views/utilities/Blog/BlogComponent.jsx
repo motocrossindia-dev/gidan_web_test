@@ -78,7 +78,7 @@ function Blog() {
   return (
       <>
         <Helmet>
-        <title>Biotech Maali - Blog</title>
+        <title>Gidan - Blog</title>
         </Helmet>
         <div className="container mx-auto px-4 py-8 bg-gray-100">
           <div className="text-center mb-8">

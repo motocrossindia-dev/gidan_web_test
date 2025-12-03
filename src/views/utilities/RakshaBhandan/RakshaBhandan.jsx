@@ -22,7 +22,7 @@ function RakshaBhandan() {
   return (
       <>
           <Helmet>
-              <title>Biotech Maali - RakshaBhandan</title>
+              <title>Gidan - RakshaBhandan</title>
           </Helmet>
     <div className="container mx-auto bg-gray-100 pt-6">
       <Banner1 />

@@ -10,7 +10,7 @@ const EcommerceGiftCard = () => {
   return (
       <>
         <Helmet>
-          <title>Biotech Maali - Ecommerce GiftCard</title>
+          <title>Gidan - Ecommerce GiftCard</title>
         </Helmet>
     <div className="min-h-screen bg-white">
       <div className="max-w-7xl mx-auto p-4 md:p-8">
@@ -32,7 +32,7 @@ const EcommerceGiftCard = () => {
           {/* Right: Product Details Section */}
           <div className="flex flex-col h-full">
             <h1 className="text-2xl font-bold text-gray-900">
-              Biotech Maali E-Gift Card
+              Gidan E-Gift Card
             </h1>
             <div className="mt-2">
               <p className="text-xl font-semibold text-gray-900">
@@ -103,7 +103,7 @@ const EcommerceGiftCard = () => {
   <h2 className="text-xl font-semibold text-gray-900 text-center">How it works</h2>
   <p className="mt-4 text-gray-600 leading-relaxed">
     Are you confused about what to give your friends and family? We have the perfect gift hamper for you – 
-    the Biotech Maali Gift Card. Gift your loved ones the Biotech Maali gift card and let them choose their 
+    the Gidan Gift Card. Gift your loved ones the Gidan gift card and let them choose their 
     favorite plants, planters, and plant care essentials for their gardening journey. Simply select the 
     value you prefer and watch your gift bring beauty to lives and homes.
   </p>

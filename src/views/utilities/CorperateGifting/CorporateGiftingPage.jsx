@@ -165,7 +165,7 @@ const CorporateGiftingPage = () => {
   return (
       <>
         <Helmet>
-          <title>Biotech Maali - Corporate Gifting</title>
+          <title>Gidan - Corporate Gifting</title>
         </Helmet>
         <div className="min-h-screen p-4 mt-6 bg-white">
           {/* Hero Section */}

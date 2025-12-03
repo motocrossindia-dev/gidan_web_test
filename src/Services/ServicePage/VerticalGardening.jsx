@@ -58,7 +58,7 @@ const VerticalGarden = () => {
 
       <>
         <Helmet>
-          <title>Biotech Maali - Vertical Garden</title>
+          <title>Gidan - Vertical Garden</title>
         </Helmet>
     <div className="min-h-screen bg-white">
       {/* Hero Section */}

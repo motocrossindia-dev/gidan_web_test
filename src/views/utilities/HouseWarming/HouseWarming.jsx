@@ -23,7 +23,7 @@ function HouseWarming() {
 
       <>
           <Helmet>
-              <title>Biotech Maali - House Warming</title>
+              <title>Gidan - House Warming</title>
           </Helmet>
 
           <div className="container mx-auto bg-gray-100 pt-6">

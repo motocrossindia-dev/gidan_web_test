@@ -10,7 +10,7 @@ const WhyWeRock = () => {
           Take the first step and become a part of the family that is
           ever-growing. Partner with the most trusted plant nursery in the
           market. The vision of{" "}
-          <span className="font-bold">Biotech Maali franchise</span> is to
+          <span className="font-bold">Gidan franchise</span> is to
           deliver our unique cultural blend and values to each corner of this
           world. Started 3 years back, we have accomplished great tasks and
           achieved incredible milestones.{" "}
@@ -24,7 +24,7 @@ const WhyWeRock = () => {
           <img name=" "   
             src={WhyWeRockImage}
             loading="lazy"
-            alt="Biotech Maali Outlet"
+            alt="Gidan Outlet"
             className="w-full max-w-4xl mx-auto rounded-lg shadow-lg"
           />
         </div>

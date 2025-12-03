@@ -9,7 +9,7 @@ const TermsOfService = () => {
 
       <>
         <Helmet>
-          <title>Biotech Maali - Terms Of Service</title>
+          <title>Gidan - Terms Of Service</title>
         </Helmet>
     <div className="max-w-4xl mx-auto p-6 bg-white text-gray-800 font-sans">
       <div className="mb-8">
@@ -37,9 +37,9 @@ const TermsOfService = () => {
         <section>
           <h2 className="text-2xl font-semibold text-green-600 mb-4">General Terms</h2>
           <div className="space-y-4 text-gray-700">
-            <p>The use of this website, its services and tools are all governed by the below mentioned terms and conditions. If you make any transaction through this website, you shall undergo policies that are applicable to the website. If you transact with this website means you are contracting with Biotech Maali and you shall follow the duties with this company.</p>
+            <p>The use of this website, its services and tools are all governed by the below mentioned terms and conditions. If you make any transaction through this website, you shall undergo policies that are applicable to the website. If you transact with this website means you are contracting with Gidan and you shall follow the duties with this company.</p>
             
-            <p>Please note that wherever is mentioned as "you" or "user" shall be considered as the member of the website who registers with Biotech Maali and provides his/her data using the computation systems. Biotech Maali allows its users to surf or make purchase from this website without registration process. The term "we", "us", "our" means the company or Biotech Maali (FARM AMMINO AGRITECH PRIVATE LIMITED).</p>
+            <p>Please note that wherever is mentioned as "you" or "user" shall be considered as the member of the website who registers with Gidan and provides his/her data using the computation systems. Gidan allows its users to surf or make purchase from this website without registration process. The term "we", "us", "our" means the company or Gidan (FARM AMMINO AGRITECH PRIVATE LIMITED).</p>
             
             <p>When you use this website including customer reviews, you are subject to guidelines, rules, policies, terms and conditions applicable to this website and its services. We reserve the sole right to modify, add, change or remove the portion or content of these Terms and Conditions without any notification.</p>
           </div>
@@ -52,7 +52,7 @@ const TermsOfService = () => {
           <ul className="space-y-3 text-gray-700">
             <li className="flex items-start">
               <span className="text-green-600 mr-2">•</span>
-              <span>The seller (Biotech Maali) will not be responsible for any damage, direct loss suffered by the buyer due to any negligence, breach of contract or excessive pricing of the goods.</span>
+              <span>The seller (Gidan) will not be responsible for any damage, direct loss suffered by the buyer due to any negligence, breach of contract or excessive pricing of the goods.</span>
             </li>
             <li className="flex items-start">
               <span className="text-green-600 mr-2">•</span>
@@ -64,7 +64,7 @@ const TermsOfService = () => {
             </li>
             <li className="flex items-start">
               <span className="text-green-600 mr-2">•</span>
-              <span>Placing an order on Biotech Maali will be treated as an evidence for acceptance of T&C on Biotech Maali</span>
+              <span>Placing an order on Gidan will be treated as an evidence for acceptance of T&C on Gidan</span>
             </li>
           </ul>
         </section>
@@ -85,9 +85,9 @@ const TermsOfService = () => {
           <h2 className="text-2xl font-semibold text-green-600 mb-4">Membership Eligibility</h2>
           <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
             <div className="space-y-3 text-gray-700">
-              <p>Biotech Maali website is available only to those users who can form legally binding contracts under the Indian Contract Act, 1872. Those who cannot follow the norms or are incompetent to the contract (including minors, undischarged bankrupts, etc.) are not eligible to use this website</p>
-              <p>If you are a minor or under the age of 18 years, you shall not be a member of Biotech Maali and shall not transact on this website</p>
-              <p>Biotech Maali reserves the right to terminate your membership and refuse your access if it is brought to Biotech Maali's notice or if discovered that you are underage to proceed</p>
+              <p>Gidan website is available only to those users who can form legally binding contracts under the Indian Contract Act, 1872. Those who cannot follow the norms or are incompetent to the contract (including minors, undischarged bankrupts, etc.) are not eligible to use this website</p>
+              <p>If you are a minor or under the age of 18 years, you shall not be a member of Gidan and shall not transact on this website</p>
+              <p>Gidan reserves the right to terminate your membership and refuse your access if it is brought to Gidan's notice or if discovered that you are underage to proceed</p>
             </div>
           </div>
         </section>
@@ -98,7 +98,7 @@ const TermsOfService = () => {
           <div className="space-y-3 text-gray-700">
             <p>If you are using this website, you are responsible for the maintenance of confidentiality of your User ID and Password and only you shall be responsible for all the activities on the website.</p>
             <p>With the use of this website, you agree to this that providing any information that is inaccurate, untrue, incomplete, not as per the terms of use then in that case we reserve the right to suspend or terminate or block access of your membership on the website.</p>
-            <p>Personal details provided by you to Biotech Maali through account creation or order placement will only be used in accordance with our privacy policy and shall not be used for any purpose other than sending you emails and SMS with offers of your interest or as directed by law.</p>
+            <p>Personal details provided by you to Gidan through account creation or order placement will only be used in accordance with our privacy policy and shall not be used for any purpose other than sending you emails and SMS with offers of your interest or as directed by law.</p>
           </div>
         </section>
 
@@ -113,10 +113,10 @@ const TermsOfService = () => {
           <h2 className="text-2xl font-semibold text-red-600 mb-4">Hazardous Garden Chemical Disclaimer</h2>
           <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded">
             <div className="space-y-3 text-gray-700">
-              <p>Biotech Maali uses a wide range of chemicals for its gardening products such as fertilizers, pesticides, weed killer and insecticide that contain harmful chemicals and shall be disposed of in a correct manner.</p>
+              <p>Gidan uses a wide range of chemicals for its gardening products such as fertilizers, pesticides, weed killer and insecticide that contain harmful chemicals and shall be disposed of in a correct manner.</p>
               <p className="font-semibold text-red-700">We strictly put this to your notice that these chemicals should not be used for food, feed, oil or any other personal, experimental purposes which otherwise may introduce hazardous elements in environment or water supply.</p>
               <p>Please do not pour these hazardous chemicals in sewage drains or sinks and do not dispose them normally. Instead please take them to your local recycling center so they can dispose them in an appropriate manner.</p>
-              <p className="font-semibold">Biotech Maali does not take any responsibility if the containers or the chemical contents are put in other uses that could harm individual or people.</p>
+              <p className="font-semibold">Gidan does not take any responsibility if the containers or the chemical contents are put in other uses that could harm individual or people.</p>
             </div>
           </div>
         </section>
@@ -138,7 +138,7 @@ const TermsOfService = () => {
         {/* Footer */}
         {/* <footer className="text-center text-gray-500 text-sm pt-6 border-t">
           <p>FARM AMMINO AGRITECH PRIVATE LIMITED reserves all rights</p>
-          <p className="mt-2">© 2024 Biotech Maali. All rights reserved.</p>
+          <p className="mt-2">© 2024 Gidan. All rights reserved.</p>
         </footer> */}
       </div>
     </div>

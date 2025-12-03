@@ -99,7 +99,7 @@ function PlantFilter() {
     return (
         <>
             <Helmet>
-                <title>Biotech Maali - Plant Filter</title>
+                <title>Gidan - Plant Filter</title>
             </Helmet>
             <div className="container mx-auto  min-h-screen">
                 {/* Mobile Filter Button */}
@@ -281,7 +281,7 @@ export default PlantFilter;
 //     return (
 //         <>
 //             <Helmet>
-//                 <title>Biotech Maali - Plant Filter</title>
+//                 <title>Gidan - Plant Filter</title>
 //             </Helmet>
 //             <div className="container mx-auto bg-gray-100 pt-1">
 //                 <br />
@@ -458,7 +458,7 @@ export default PlantFilter;
 //     return (
 //         <>
 //             <Helmet>
-//                 <title>Biotech Maali - Plant Filter</title>
+//                 <title>Gidan - Plant Filter</title>
 //             </Helmet>
 //             <div className="container mx-auto bg-gray-100 pt-1">
 //                 <br />
@@ -639,7 +639,7 @@ export default PlantFilter;
 // //     return (
 // //         <>
 // //             <Helmet>
-// //                 <title>Biotech Maali - Plant Filter</title>
+// //                 <title>Gidan - Plant Filter</title>
 // //             </Helmet>
 // //             <div className="container mx-auto bg-gray-100 pt-1">
 // //                 <br />
@@ -817,7 +817,7 @@ export default PlantFilter;
 // //     return (
 // //         <>
 // //             <Helmet>
-// //                 <title>Biotech Maali - Plant Filter</title>
+// //                 <title>Gidan - Plant Filter</title>
 // //             </Helmet>
 // //             <div className="container mx-auto bg-gray-100 pt-1">
 // //                 <br />

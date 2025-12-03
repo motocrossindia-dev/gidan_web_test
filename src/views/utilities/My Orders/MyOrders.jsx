@@ -500,7 +500,7 @@ getMyOrders()
   return (
       <>
         <Helmet>
-          <title>Biotech Maali - My Orders</title>
+          <title>Gidan - My Orders</title>
         </Helmet>
     <div className="bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 py-6">

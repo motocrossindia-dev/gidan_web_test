@@ -893,13 +893,13 @@ const PaymentMethods = () => {
   const paymentOptions = [
     {
       id: 'wallet',
-      title: 'Biotech Maali Wallet',
+      title: 'Gidan Wallet',
       description: 'Your current balance is ₹65.07.',
       type: 'checkbox'
     },
     {
       id: 'rewards',
-      title: 'Biotech Maali Rewards',
+      title: 'Gidan Rewards',
       description: '25% Utilization on Cart Value',
       type: 'checkbox'
     },
@@ -1045,7 +1045,7 @@ const uniqueItems = data?.order_items?.filter(
 
       <>
         <Helmet>
-          <title>Biotech Maali - CheckoutPage </title>
+          <title>Gidan - CheckoutPage </title>
         </Helmet>
 <div className="flex flex-col lg:flex-row bg-gray-100 p-4">
   {/* Left Side - Steps */}

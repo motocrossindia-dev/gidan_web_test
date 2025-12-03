@@ -94,7 +94,7 @@ const Cart = () => {
   return (
       <>
         <Helmet>
-          <title>Biotech Maali - Cart</title>
+          <title>Gidan - Cart</title>
         </Helmet>
     {/* <Verify /> */}
     <div className="flex flex-col md:flex-row justify-center md:p-8 bg-gray-50 overflow-y-auto">

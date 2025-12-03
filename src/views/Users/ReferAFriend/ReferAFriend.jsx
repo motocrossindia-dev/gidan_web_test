@@ -30,13 +30,13 @@ function ReferAFriend() {
 
   const handleShare = () => {
     const referralCode = data?.referral_code || "No Referral Code"; // Default if empty
-    const text = `Hey! I invite you to join Biotech Maali. Use my referral code:
+    const text = `Hey! I invite you to join Gidan. Use my referral code:
 : ${referralCode}`;
     const url =`https://biotechmaali.com/`;
   
     if (navigator.share) {
       navigator.share({
-        title: "Biotech Maali Referral",
+        title: "Gidan Referral",
         text: `${text}\n${url}`,
       })
       .then(() => console.log("Shared successfully"))
@@ -50,7 +50,7 @@ function ReferAFriend() {
   return (
       <>
         <Helmet>
-          <title>Biotech Maali - Refer A Friend </title>
+          <title>Gidan - Refer A Friend </title>
         </Helmet>
   <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4 sm:px-6 mt-2 lg:px-8">
   {/* Main Card */}
@@ -116,9 +116,9 @@ function ReferAFriend() {
 
       {/* Card Expiry */}
       <div className="mb-8">
-        <h3 className="text-lg font-medium mb-2">Does my Biotech Maali Card expire?</h3>
+        <h3 className="text-lg font-medium mb-2">Does my Gidan Card expire?</h3>
         <p className="text-gray-600 text-sm sm:text-base">
-          All Biotech Maali Cards expire 1 year from the date of their creation.
+          All Gidan Cards expire 1 year from the date of their creation.
         </p>
       </div>
 
@@ -127,7 +127,7 @@ function ReferAFriend() {
         <h3 className="text-lg font-medium mb-4">Terms & Conditions</h3>
         <ol className="list-decimal pl-5 text-gray-600 space-y-2 text-sm sm:text-base">
           <li>
-            Biotech Maali Cards ("GSCs" or "Gift Cards") are issued by Qwikcilver Solutions Pvt. Ltd. authorized by the RBI.
+            Gidan Cards ("GSCs" or "Gift Cards") are issued by Qwikcilver Solutions Pvt. Ltd. authorized by the RBI.
           </li>
           <li>
             Redeemable only on www.BiotechMaali.com or its mobile platforms.

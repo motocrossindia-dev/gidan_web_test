@@ -22,7 +22,7 @@ function BirthdayGifts() {
   return (
       <>
           <Helmet>
-              <title>Biotech Maali - Birthday Gifts</title>
+              <title>Gidan - Birthday Gifts</title>
           </Helmet>
           <div className="container mx-auto bg-gray-100 pt-6">
               <Banner1 />

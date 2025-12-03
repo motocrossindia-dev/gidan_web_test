@@ -61,7 +61,7 @@ const ServicePage = () => {
   return (
       <>
         <Helmet>
-          <title>Biotech Maali - Services Page</title>
+          <title>Gidan - Services Page</title>
         </Helmet>
     <div className="min-h-screen bg-white p-6">
       {/* Header */}

@@ -22,7 +22,7 @@ function OutdoorPlants() {
   return (
       <>
           <Helmet>
-              <title>Biotech Maali - Outdoor Plants</title>
+              <title>Gidan - Outdoor Plants</title>
           </Helmet>
     <div className="container mx-auto bg-gray-100 pt-6">
       <Banner1 />

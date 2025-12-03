@@ -36,7 +36,7 @@ const WalletHistory = () => {
 
       <>
         <Helmet>
-          <title>Biotech Maali - Wallet History</title>
+          <title>Gidan - Wallet History</title>
         </Helmet>
     <div className="flex justify-center sm:justify-start px-4 sm:px-6 bg-gray-100 min-h-screen w-full mt-2 sm:mt-3">
       <div className="w-full sm:w-full md:w-4/5 lg:w-full xl:w-full h-auto bg-white shadow-lg p-4 sm:p-6 rounded-lg">

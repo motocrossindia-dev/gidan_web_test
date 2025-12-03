@@ -64,7 +64,7 @@ const handleGstCheckbox = (e) => {
   }, [orderData]);
 
   const paymentOptions = [
-    { id: "Wallet", title: "Biotech Maali Wallet", description: `Your current balance is ₹${balance?.balance|| 0}`, type: "radio" },
+    { id: "Wallet", title: "Gidan Wallet", description: `Your current balance is ₹${balance?.balance|| 0}`, type: "radio" },
     { id: "UPI", title: "Razorpay Secure (UPI, Cards, Wallets, NetBanking)", type: "radio" },
     { id: "cod", title: "Cash on Delivery/Pay on Delivery", type: "radio" },
   ];
@@ -199,7 +199,7 @@ const handlePayment = async () => {
   return (
       <>
         <Helmet>
-          <title>Biotech Maali - Payment Gateway</title>
+          <title>Gidan - Payment Gateway</title>
         </Helmet>
     <div className="flex flex-col lg:flex-row gap-6 p-6">
       <div className="lg:w-3/4 max-h-screen overflow-y-auto p-4 bg-gray-100 rounded-lg shadow-lg">

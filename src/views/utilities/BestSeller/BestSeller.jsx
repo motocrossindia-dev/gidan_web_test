@@ -22,7 +22,7 @@ function BestSeller() {
   return (
       <>
           <Helmet>
-              <title>Biotech Maali - BestSeller</title>
+              <title>Gidan - BestSeller</title>
           </Helmet>
     <div className="container mx-auto bg-gray-100 pt-6">
       <Banner1 />

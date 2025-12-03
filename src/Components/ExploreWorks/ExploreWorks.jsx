@@ -18,13 +18,13 @@ const ExploreWorks = () => {
           <img name=" "   
             className="w-full h-full object-cover"
             src={creative}
-            alt="Biotech Maali"
+            alt="Gidan"
           />
 
           {/* Overlay with Text */}
           <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-center">
             <h3 className="text-md sm:text-lg md:text-5xl lg:text-3xl md:font-semibold font-normal text-white mb-2 mt-20">
-              What Makes Biotech Maali Stand Out?
+              What Makes Gidan Stand Out?
             </h3>
             <NavLink to="/ourwork">
               <button 

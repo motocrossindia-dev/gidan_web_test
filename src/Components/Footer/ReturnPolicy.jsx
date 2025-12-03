@@ -12,7 +12,7 @@ const RefundPolicy = () => {
 
       <>
         <Helmet>
-          <title>Biotech Maali - Refund Policy</title>
+          <title>Gidan - Refund Policy</title>
         </Helmet>
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 py-12 px-4">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -20,7 +20,7 @@ const RefundPolicy = () => {
         <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-8">
           <h1 className="text-4xl font-bold text-center mb-4">Refund Policy</h1>
           <p className="text-center text-green-100 text-lg">
-            Your satisfaction is our priority at Biotech Maali
+            Your satisfaction is our priority at Gidan
           </p>
         </div>
 
@@ -29,7 +29,7 @@ const RefundPolicy = () => {
           {/* Introduction */}
           <div className="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-lg">
             <p className="text-gray-700 leading-relaxed">
-              At <span className="font-semibold text-green-700">Biotech Maali</span>, we take great care in delivering healthy and thriving plants.
+              At <span className="font-semibold text-green-700">Gidan</span>, we take great care in delivering healthy and thriving plants.
             </p>
             <p className="text-gray-700 leading-relaxed mt-3">
               However, due to the nature of live plants, it is common for them to show minor signs of stress (such as slight drooping or yellowing leaves) during transit. Rest assured, with proper care, your plant will quickly recover and flourish in its new environment.
@@ -64,7 +64,7 @@ const RefundPolicy = () => {
           {/* Replacement Policy */}
           <section className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
             <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b border-gray-200 pb-3">
-              Biotech Maali Replacement Policy
+              Gidan Replacement Policy
             </h2>
             
             <div className="space-y-6">
@@ -245,7 +245,7 @@ const RefundPolicy = () => {
           {/* Refund Policy */}
           <section className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
             <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b border-gray-200 pb-3">
-              Biotech Maali Refund Policy
+              Gidan Refund Policy
             </h2>
             <div className="space-y-6">
               <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">

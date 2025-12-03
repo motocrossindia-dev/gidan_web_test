@@ -176,7 +176,7 @@ const WishList = () => {
   return (
       <>
         <Helmet>
-          <title>Biotech Maali - WishList</title>
+          <title>Gidan - WishList</title>
         </Helmet>
       <Verify />
       <div className="container mx-auto md:p-4 sm:p-0 bg-gray-50">

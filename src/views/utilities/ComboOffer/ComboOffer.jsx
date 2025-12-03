@@ -12,7 +12,7 @@ const ComboOffer = () => {
   return (
       <>
       <Helmet>
-        <title>Biotech Maali - Combo Offers</title>
+        <title>Gidan - Combo Offers</title>
       </Helmet>
     <div>
       {/* Combo Offer Section */}

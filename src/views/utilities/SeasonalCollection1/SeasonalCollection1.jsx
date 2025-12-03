@@ -22,7 +22,7 @@ function SeasonalCollection1() {
   return (
       <>
           <Helmet>
-              <title>Biotech Maali - Seasonal Collection</title>
+              <title>Gidan - Seasonal Collection</title>
           </Helmet>
     <div className="container mx-auto bg-gray-100 pt-6">
       <Banner1 />

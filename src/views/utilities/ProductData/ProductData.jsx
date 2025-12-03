@@ -636,8 +636,8 @@ export default function Component() {
             <Helmet>
                 <title>
                     {productDetailData?.data?.product?.main_product_name
-                        ? `Biotech Maali - ${productDetailData.data.product.main_product_name}`
-                        : 'Biotech Maali - Loading...'}
+                        ? `Gidan - ${productDetailData.data.product.main_product_name}`
+                        : 'Gidan - Loading...'}
                 </title>
             </Helmet>
 
@@ -646,22 +646,6 @@ export default function Component() {
                 <div className="container mx-auto px-3 py-4 font-sans md:px-8">
                     <div className="flex flex-col md:flex-row -mx-4 relative overflow-visible">
                         <div className="md:flex-1 px-4">
-                            {/* Main Image */}
-                            {/* <div className="flex justify-center h-auto bg-gray-50">
-  <div className="w-full h-auto rounded-lg bg-gray-100 flex items-center justify-center">
-    <img
-      src={
-        imageThumbnails[selectedImage]?.image ||
-        imageThumbnails[0]?.image || ""
-      }
-
-      loading="lazy"
-      alt={`Product view ${selectedImage + 1}`}
-      className="w-full max-w-[500px] h-auto object-contain rounded"
-    />
-  </div>
-</div> */}
-
 
                             {/* Main Image with Fully Working Zoom */}
                             {/* Main Image with Lens + Right Side Zoom */}
@@ -732,23 +716,22 @@ export default function Component() {
 
                             </div>
 
-
-                            <div className="flex items-center justify-center gap-2 mt-6 overflow-x-auto px-2">
+                            <div className="flex items-center justify-center gap-2 mt-6 overflow-x-auto px-2 relative">
                                 {/* Left Navigation Button */}
                                 <button
                                     onClick={() =>
                                         setSelectedImage((prev) =>
                                             prev === 0 ? imageThumbnails.length - 1 : prev - 1
                                         )
-
                                     }
-                                    className="text-gray-500 hover:text-gray-800 focus:outline-none shrink-0"
+                                    className="absolute left-0 z-10 text-gray-500 hover:text-gray-800 focus:outline-none bg-white rounded-full p-1 shadow-md md:relative md:bg-transparent md:shadow-none md:p-0"
+                                    aria-label="Previous image"
                                 >
-                                    <FaChevronLeft size={24}/>
+                                    <FaChevronLeft size={24} />
                                 </button>
 
                                 {/* Thumbnail List */}
-                                <div className="flex gap-3 overflow-x-auto">
+                                <div className="flex gap-3 overflow-x-auto px-8 md:px-0">
                                     {imageThumbnails.slice(1).map((image, i) => (
                                         <button
                                             key={i + 1}
@@ -775,13 +758,64 @@ export default function Component() {
                                         setSelectedImage((prev) =>
                                             prev === imageThumbnails.length - 1 ? 0 : prev + 1
                                         )
-
                                     }
-                                    className="text-gray-500 hover:text-gray-800 focus:outline-none shrink-0"
+                                    className="absolute right-0 z-10 text-gray-500 hover:text-gray-800 focus:outline-none bg-white rounded-full p-1 shadow-md md:relative md:bg-transparent md:shadow-none md:p-0"
+                                    aria-label="Next image"
                                 >
-                                    <FaChevronRight size={24}/>
+                                    <FaChevronRight size={24} />
                                 </button>
                             </div>
+
+
+                            {/*<div className="flex items-center justify-center gap-2 mt-6 overflow-x-auto px-2">*/}
+                            {/*    /!* Left Navigation Button *!/*/}
+                            {/*    <button*/}
+                            {/*        onClick={() =>*/}
+                            {/*            setSelectedImage((prev) =>*/}
+                            {/*                prev === 0 ? imageThumbnails.length - 1 : prev - 1*/}
+                            {/*            )*/}
+
+                            {/*        }*/}
+                            {/*        className="text-gray-500 hover:text-gray-800 focus:outline-none shrink-0"*/}
+                            {/*    >*/}
+                            {/*        <FaChevronLeft size={24}/>*/}
+                            {/*    </button>*/}
+
+                            {/*    /!* Thumbnail List *!/*/}
+                            {/*    <div className="flex gap-3 overflow-x-auto">*/}
+                            {/*        {imageThumbnails.slice(1).map((image, i) => (*/}
+                            {/*            <button*/}
+                            {/*                key={i + 1}*/}
+                            {/*                onClick={() => setSelectedImage(i + 1)}*/}
+                            {/*                className={`w-16 h-16 sm:w-20 sm:h-20 md:w-[90px] md:h-[90px] rounded-lg bg-gray-100 flex items-center justify-center shrink-0 ${*/}
+                            {/*                    selectedImage === i + 1*/}
+                            {/*                        ? "ring-2 ring-indigo-300 ring-inset"*/}
+                            {/*                        : ""*/}
+                            {/*                }`}*/}
+                            {/*            >*/}
+                            {/*                <img*/}
+                            {/*                    src={image.image}*/}
+                            {/*                    loading="lazy"*/}
+                            {/*                    alt={`${productData.name} ${i + 2}`}*/}
+                            {/*                    className="w-full h-full object-cover rounded"*/}
+                            {/*                />*/}
+                            {/*            </button>*/}
+                            {/*        ))}*/}
+                            {/*    </div>*/}
+
+                            {/*    /!* Right Navigation Button *!/*/}
+                            {/*    <button*/}
+                            {/*        onClick={() =>*/}
+                            {/*            setSelectedImage((prev) =>*/}
+                            {/*                prev === imageThumbnails.length - 1 ? 0 : prev + 1*/}
+                            {/*            )*/}
+
+                            {/*        }*/}
+                            {/*        className="text-gray-500 hover:text-gray-800 focus:outline-none shrink-0"*/}
+                            {/*    >*/}
+                            {/*        <FaChevronRight size={24}/>*/}
+                            {/*    </button>*/}
+                            {/*</div>*/}
 
                         </div>
 

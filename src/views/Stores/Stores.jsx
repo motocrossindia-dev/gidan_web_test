@@ -45,7 +45,7 @@
 //   return (
 //       <>
 //         <Helmet>
-//           <title>Biotech Maali - Stores</title>
+//           <title>Gidan - Stores</title>
 //         </Helmet>
 //     <div className="w-full bg-white-100 p-6 rounded-lg">
 //       <h2 className="text-2xl font-semibold text-start mb-6">
@@ -154,7 +154,7 @@ const Stores = () => {
   return (
     <>
       <Helmet>
-        <title>Biotech Maali - Stores</title>
+        <title>Gidan - Stores</title>
       </Helmet>
 
       <div className="w-full bg-white-100 p-6 rounded-lg">

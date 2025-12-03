@@ -14,7 +14,7 @@ const Successpage = () => {
   return (
       <>
           <Helmet>
-              <title>Biotech Maali - Success page</title>
+              <title>Gidan - Success page</title>
           </Helmet>
 
     <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4 text-center">

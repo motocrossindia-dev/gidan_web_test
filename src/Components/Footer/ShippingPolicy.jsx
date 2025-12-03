@@ -11,7 +11,7 @@ const ShippingPolicy = () => {
 
       <>
         <Helmet>
-          <title>Biotech Maali - Shipping Policy</title>
+          <title>Gidan - Shipping Policy</title>
         </Helmet>
     <div className="max-w-4xl mx-auto p-6 bg-white text-gray-800 font-sans">
       {/* Header */}
@@ -21,7 +21,7 @@ const ShippingPolicy = () => {
           Shipping and Return Policy
         </h1>
         <p className="text-gray-600 leading-relaxed max-w-2xl mx-auto">
-          Biotech Maali ensures quality products and packaging to our customers. We have partnered with reputed courier agencies for a safe and timely delivery. There is free shipping on orders above Rs.499.
+          Gidan ensures quality products and packaging to our customers. We have partnered with reputed courier agencies for a safe and timely delivery. There is free shipping on orders above Rs.499.
         </p>
       </div>
 
@@ -56,7 +56,7 @@ const ShippingPolicy = () => {
           </h2>
           <div className="space-y-4 text-gray-700">
             <p className="font-medium text-red-800">
-              Biotech Maali does not accept returns on plants as the poor plants will perish due to both way transit stress. But we do guarantee every plant will arrive at your doorstep in great condition.
+              Gidan does not accept returns on plants as the poor plants will perish due to both way transit stress. But we do guarantee every plant will arrive at your doorstep in great condition.
             </p>
             <div className="bg-yellow-100 p-4 rounded-md">
               <p className="text-yellow-800">
@@ -171,7 +171,7 @@ const ShippingPolicy = () => {
 
       {/* Footer */}
       {/* <footer className="text-center text-gray-500 text-sm pt-6 border-t mt-8">
-        <p>© 2024 Biotech Maali - FARM AMMINO AGRITECH PRIVATE LIMITED. All rights reserved.</p>
+        <p>© 2024 Gidan - FARM AMMINO AGRITECH PRIVATE LIMITED. All rights reserved.</p>
       </footer> */}
     </div>
         </>

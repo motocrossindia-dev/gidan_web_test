@@ -58,7 +58,7 @@ const ServicesPage = () => {
   return (
       <>
         <Helmet>
-          <title>Biotech Maali - Services Page</title>
+          <title>Gidan - Services Page</title>
         </Helmet>
     <div className="bg-white min-h-screen">
       <header className="bg-gray-100 text-black py-3 md:py-4 px-8 mt-4">
@@ -192,7 +192,7 @@ const ServicesPage = () => {
               />
             </div>
             <div className="md:w-1/2 w-full md:bg-white  md:p-6 rounded-lg md:shadow-lg">
-              <h2 className="text-xl text-center md:text-3xl font-semibold mb-6 text-black-600">Biotech Maali Service</h2>
+              <h2 className="text-xl text-center md:text-3xl font-semibold mb-6 text-black-600">Gidan Service</h2>
 
               {/* Show success/error comment */}
               {comment && (

@@ -135,7 +135,7 @@ const ContactUs = () => {
 
     <>
       <Helmet>
-        <title>Biotech Maali - Contact us</title>
+        <title>Gidan - Contact us</title>
       </Helmet>
       <div className="font-sans text-gray-800">
         {/* Header Section */}

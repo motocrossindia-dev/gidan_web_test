@@ -22,7 +22,7 @@ function Pots() {
   return (
       <>
           <Helmet>
-              <title>Biotech Maali - Pots</title>
+              <title>Gidan - Pots</title>
           </Helmet>
     <div className="container mx-auto bg-gray-100 pt-6">
       <Banner1 />
