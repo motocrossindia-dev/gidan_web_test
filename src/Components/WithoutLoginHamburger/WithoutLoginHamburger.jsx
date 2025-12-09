@@ -137,11 +137,11 @@ useEffect(() => {
       {/* Menu Links */}
       <div className="space-y-2">
         <Link onClick={() => setIsOpen(false)} to="/" className="block border-b pb-2">HOME</Link>
-        <Link onClick={() => setIsOpen(false)} to="/plants" className="block border-b pb-2">PLANTS</Link>
-        <Link onClick={() => setIsOpen(false)} to="/seeds" className="block border-b pb-2">SEEDS</Link>
-        <Link onClick={() => setIsOpen(false)} to="/pots" className="block border-b pb-2">POTS & PLANTERS</Link>
+        <Link onClick={() => setIsOpen(false)} to="/filter/19" className="block border-b pb-2">PLANTS</Link>
+        <Link onClick={() => setIsOpen(false)} to="/filter/21" className="block border-b pb-2">SEEDS</Link>
+        <Link onClick={() => setIsOpen(false)} to="/filter/20" className="block border-b pb-2">POTS & PLANTERS</Link>
         <Link onClick={() => setIsOpen(false)} to="/gifts" className="block border-b pb-2">GIFTING</Link>
-        <Link onClick={() => setIsOpen(false)} to="/combooffer" className="block border-b pb-2">Offers</Link>
+        <Link onClick={() => setIsOpen(false)} to="/offer" className="block border-b pb-2">Offers</Link>
       </div>
 
       {/* Additional Links */}

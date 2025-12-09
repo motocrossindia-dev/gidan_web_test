@@ -255,7 +255,7 @@ const FilterSidebar = ({
               </button>
               <button
                   onClick={applyFilters}
-                  className="px-6 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium"
+                  className="px-6 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-md font-medium"
               >
                 Apply Filters
               </button>

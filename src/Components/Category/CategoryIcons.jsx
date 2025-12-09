@@ -93,13 +93,14 @@ const CategoryIcons = () => {
   return (
       <>
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-5">
-          <div
-              className={`flex items-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 px-2 sm:px-4 mt-4 sm:py-2 w-full ${
-                  isMobile
-                      ? "overflow-x-auto whitespace-nowrap scrollbar-hide justify-start"
-                      : "flex-wrap justify-between"
-              }`}
-          >
+         <div
+  className={`flex items-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 px-2 sm:px-4 mt-4 sm:py-2 w-full
+    ${isMobile
+      ? "overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-hide justify-start"
+      : "flex-wrap justify-between"
+    } h-[115px] sm:h-auto`}
+>
+
             {publishedCategoryData.map((category, idx) => (
                 <div
                     key={idx}

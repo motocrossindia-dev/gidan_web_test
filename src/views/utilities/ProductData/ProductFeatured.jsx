@@ -65,14 +65,22 @@ const ProductFeatured = () => {
                   }}
                 >
                   <div className="relative w-full flex flex-col items-center p-2">
-                    <div className="relative w-full flex mb-4">
+                    {/* <div className="relative w-full flex mb-4">
                       <img name=" "   
                         className="w-40 h-24 sm:w-40 sm:h-36 object-contain rounded-lg transition-transform duration-300 relative z-10 mt-6"
                         src={`${process.env.REACT_APP_API_URL}${product.image}`}
                         loading="lazy"
                         alt={product.name}
                       />
-                    </div>
+                    </div> */}
+
+                      <div className="relative w-full flex justify-center mb-3">
+                           <img
+                                                    className="w-full h-40 object-cover rounded-lg transition-transform duration-300 relative z-10"
+                                                    src={`${process.env.REACT_APP_API_URL}${product.image}`}
+                                                    alt={product.name}
+                                                />
+                        </div>
 
                     {/* Action Icons */}
                     <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 transition-all duration-300 z-20 opacity-0 hover:opacity-100 hover:translate-y-0">
@@ -87,6 +95,16 @@ const ProductFeatured = () => {
                       </button>
                     </div>
 
+
+
+
+
+
+
+
+
+                    {/*  */}
+
                     <div className="flex flex-col p-2 w-full text-center gap-2">
                       <div className="flex justify-center">
                         <ReactStars
@@ -99,7 +117,7 @@ const ProductFeatured = () => {
                         />
                       </div>
 
-                      <Typography sx={{ typography: { xs: "caption", md: "subtitle2" } }}>
+                      {/* <Typography sx={{ typography: { xs: "caption", md: "subtitle2" } }}>
                         {product?.name.slice(0, 5)}
                       </Typography>
                       <div className="flex flex-col justify-center items-center mt-1">
@@ -107,7 +125,36 @@ const ProductFeatured = () => {
                         {product?.oldPrice && (
                           <p className="text-xs text-gray-400 line-through">₹{Math.round(product?.mrp)}.00</p>
                         )}
-                      </div>
+                      </div> */}
+
+
+                      {/* Product Name */}
+                                                  <Typography sx={{ typography: { xs: "caption", md: "subtitle2" } }} style={{ fontWeight: "bold", color: "black", fontSize: "0.9rem" }}>
+                                                      {product.name.length > 15
+                                                          ? `${product.name.slice(0, 8)}...`
+                                                          : product.name}
+                                                  </Typography>
+                      
+                                                  <div className="flex items-center gap-2">
+                                                      {/* Price */}
+                                                      <p className="text-base font-semibold text-black mt-1">
+                                                          ₹{Math.round(product?.selling_price)}
+                                                      </p>
+                      
+                                                      {/* MRP */}
+                                                      {product?.mrp && (product?.mrp>product?.selling_price) && (
+                                                          <span className="text-base text-gray-400 line-through mt-1">
+                            ₹{Math.round(product?.mrp)}
+                          </span>
+                                                      )}
+                      
+                                                      {/* Discount */}
+                                                      {product?.mrp && (product?.mrp>product?.selling_price) && (
+                                                          <span className="text-sm font-semibold text-green-600 mt-1">
+                            {Math.round(((product.mrp - product.selling_price) / product.mrp) * 100)}% OFF
+                          </span>
+                                                      )}
+                                                  </div>
                     </div>
                   </div>
                 </Paper>

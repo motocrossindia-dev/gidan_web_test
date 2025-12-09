@@ -151,7 +151,7 @@ const NavBar = () => {
                 <img
                     src={logo}
                     alt="Gidan Logo"
-                    className="h-24 w-auto"   // <-- INCREASED SIZE (Mobile)
+                    className="h-16 w-auto"   // <-- INCREASED SIZE (Mobile)
                     name="Gidan"
                 />
               </Link>
@@ -163,7 +163,7 @@ const NavBar = () => {
                 <img
                     src={logo}
                     alt="Gidan Logo"
-                    className="h-32 max-h-32 w-auto object-contain"
+                    className="h-24 max-h-32 w-auto object-contain"
                     name="Gidan"
                 />
 

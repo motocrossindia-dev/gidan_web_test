@@ -225,17 +225,17 @@ const ContactUs = () => {
         <section className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full p-6 bg-gray-50">
           {/* First Box: Bulk/Corporate Inquiry */}
           <div className="p-4 border border-fuchsia-200 bg-white rounded w-full">
-            <h3 className="">Bulk/Corporate Inquiry</h3>
-            <p>Contact Person - Kiran</p>
+            <h3 className="">Head Office, Jaynagar</h3>
+            <p>Contact Person - Sujith</p>
             <p>Contact No - +91 7892078318</p>
             <p>Email - contact@biotechmaali.com</p>
           </div>
 
           {/* Second Box: Gardening Services Enquiry */}
           <div className="p-4 border border-fuchsia-200 bg-white rounded w-full">
-            <h3 className="">Gardening Services Enquiry</h3>
+            <h3 className="">Nursery Store</h3>
             <p>Contact Person - Kiran</p>
-            <p>Contact No - +91 7892078318</p>
+            <p>Contact No - +91 8971710854</p>
             <p>Email - contact@biotechmaali.com</p>
           </div>
         </section>

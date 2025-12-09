@@ -76,7 +76,7 @@ const RefundPolicy = () => {
                 <ul className="space-y-2 ml-8">
                   <li className="flex items-start">
                     <span className="text-green-500 mr-2">•</span>
-                    <span className="text-gray-700">The plant/product is damaged or not in usable condition upon arrival</span>
+                    <span className="text-gray-700">The product is damaged or not in usable condition upon arrival</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-green-500 mr-2">•</span>
@@ -118,12 +118,12 @@ const RefundPolicy = () => {
                 <ul className="space-y-3 ml-8">
                   <li className="flex items-start">
                     <span className="text-green-500 mr-2">•</span>
-                    <span className="text-gray-700">Once approved, a new plant/product will be dispatched at no additional cost</span>
+                    <span className="text-gray-700">Once approved, a new product will be dispatched at no additional cost</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-green-500 mr-2">•</span>
                     <div className="text-gray-700">
-                      If the desired plant/product is unavailable, you can:
+                      If the desired product is unavailable, you can:
                       <ul className="mt-2 space-y-1 ml-4">
                         <li className="flex items-start">
                           <span className="text-emerald-400 mr-2">◦</span>

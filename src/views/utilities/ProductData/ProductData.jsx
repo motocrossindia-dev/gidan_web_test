@@ -619,6 +619,21 @@ export default function Component() {
                     if (defaultColor) {
                         handlePlanterColorClick(defaultColor, data.data.product);
                     }
+                    if (defaultSize) {
+                        handleSizeClick(defaultSize, data.data.product);
+                    }
+                    if (defaultPlanterSize) {
+                        handlePlanterSizeClick(defaultPlanterSize, data.data.product);
+                    }
+                    if (defaultPlanter) {
+                        handlePlanterClick(defaultPlanter, data.data.product);
+                    }
+                    if (defaultLitre) {
+                        handleLitreClick(defaultLitre, data.data.product);
+                    }
+                    if (defaultWeight) {
+                        handleWeightClick(defaultWeight, data.data.product);
+                    }
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -631,8 +646,6 @@ export default function Component() {
     return (
         <>
             <Verify/>
-
-
             <Helmet>
                 <title>
                     {productDetailData?.data?.product?.main_product_name

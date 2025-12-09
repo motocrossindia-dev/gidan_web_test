@@ -105,12 +105,12 @@ if (isMobile) {
             <li className="hover:text-green-500 ">
               <Link to="/">Home</Link>
             </li>
-            <li className="hover:text-green-500">
+            {/* <li className="hover:text-green-500">
               <Link to="/ourwork"> Our Work</Link>
             </li>
             <li className="hover:text-green-500">
               <Link to="/services">Services</Link>
-            </li>
+            </li> */}
             <li className="hover:text-green-500">
               <Link to="/carriers">Carriers</Link>
             </li>
@@ -122,6 +122,9 @@ if (isMobile) {
             </li>
             <li className="hover:text-green-500">
               <Link to="/franchiseenquery">Franchise Enquire</Link>
+            </li>
+            <li className="hover:text-green-500">
+               <Link to="/faq">FAQs</Link>
             </li>
           </ul>
         </div>
@@ -156,9 +159,7 @@ if (isMobile) {
             <li className="hover:text-green-500 ">
               <Link to="/return">Return Policy</Link>
             </li>
-            <li className="hover:text-green-500">
-               <Link to="/faq">FAQs</Link>
-              </li>
+
           </ul>
         </div>
         
@@ -174,9 +175,9 @@ if (isMobile) {
             className={`space-y-2 transition-all duration-300 md:block ${openSection === "offers-rewards" ? "block" : "hidden"
               }`}
           >
-            <li className="hover:text-green-500" onClick={handleClick}>
+            {/* <li className="hover:text-green-500" onClick={handleClick}>
               <Link to="">Rewards Club</Link>
-            </li>
+            </li> */}
             <li className="hover:text-green-500" onClick={handleWalletClick}>
               <Link to="">Wallet</Link>
             </li>

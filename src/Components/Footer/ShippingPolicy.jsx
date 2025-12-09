@@ -21,7 +21,7 @@ const ShippingPolicy = () => {
           Shipping and Return Policy
         </h1>
         <p className="text-gray-600 leading-relaxed max-w-2xl mx-auto">
-          Gidan ensures quality products and packaging to our customers. We have partnered with reputed courier agencies for a safe and timely delivery. There is free shipping on orders above Rs.499.
+          Gidan ensures quality products and packaging to our customers. We have partnered with reputed courier agencies for a safe and timely delivery. There is free shipping on orders above Rs.2000.
         </p>
       </div>
 
@@ -35,7 +35,7 @@ const ShippingPolicy = () => {
           <div className="space-y-3 text-gray-700">
             <p className="flex items-start gap-2">
               <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-              <span>All the orders are dispatched from our warehouse within <strong>2 working days</strong></span>
+              <span>All the orders are dispatched from our warehouse within <strong>1 working days</strong></span>
             </p>
             <p className="flex items-start gap-2">
               <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
@@ -74,7 +74,7 @@ const ShippingPolicy = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <MessageCircle className="w-4 h-4 text-green-600" />
-                  <span><strong>WhatsApp us</strong> at 7090970909</span>
+                  <span><strong>WhatsApp us</strong> at 7892078318</span>
                 </div>
               </div>
             </div>
@@ -89,12 +89,12 @@ const ShippingPolicy = () => {
           </h2>
           <div className="space-y-4 text-gray-700">
             <p className="font-medium">If any non-plant product reaches you in a damaged state.</p>
-            <p>We take great care selecting the best products for our customers that will help support and enhance your plant life. If you are not happy with your purchase, we will accept returns and exchanges on unused or unopened products within <strong>30 days of purchase</strong>. Simply reach out to our customer support team to start the process.</p>
+            <p>We take great care selecting the best products for our customers that will help support and enhance your plant life. If you are not happy with your purchase, we will accept returns and exchanges on unused or unopened products within <strong>3 days of purchase</strong>. Simply reach out to our customer support team to start the process.</p>
           </div>
         </section>
 
         {/* Self Return Process */}
-        <section className="bg-orange-50 rounded-lg p-6 border-l-4 border-orange-400">
+        {/* <section className="bg-orange-50 rounded-lg p-6 border-l-4 border-orange-400">
           <h2 className="text-2xl font-semibold text-orange-700 mb-4 flex items-center gap-2">
             <RefreshCw className="w-6 h-6" />
             What if you are not happy with the product? You can Self Return
@@ -116,7 +116,7 @@ const ShippingPolicy = () => {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Return Address */}
         <section className="bg-gray-50 rounded-lg p-6 border-l-4 border-gray-400">
@@ -149,8 +149,8 @@ const ShippingPolicy = () => {
                 Shipping
               </h3>
               <ul className="text-sm text-gray-700 space-y-1">
-                <li>• Free shipping on orders above Rs.499</li>
-                <li>• Dispatch within 2 working days</li>
+                <li>• Free shipping on orders above Rs.2000</li>
+                <li>• Dispatch within 1 working days</li>
                 <li>• Delivery in 2-6 working days</li>
               </ul>
             </div>
@@ -161,7 +161,7 @@ const ShippingPolicy = () => {
               </h3>
               <ul className="text-sm text-gray-700 space-y-1">
                 <li>• Plants: No returns accepted</li>
-                <li>• Non-plants: 30 days return policy</li>
+                <li>• Non-plants: 3 days return policy</li>
                 <li>• Self-return within 7 days</li>
               </ul>
             </div>

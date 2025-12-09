@@ -510,8 +510,8 @@ const DeliveryOptions = ({ setSelectedOption }) => {
   const [selectedStoreId, setSelectedStoreId] = useState(null);
 
   const deliveryOptions = [
-    { id: "standard", label: "Standard", price: "₹000.00" },
-    { id: "express", label: "Express Way", price: "₹000.00" },
+    // { id: "standard", label: "Standard", price: "₹000.00" },
+    // { id: "express", label: "Express Way", price: "₹000.00" },
     { id: "Pick Up Store", label: "Pickup From Store" }
   ];
 
@@ -616,49 +616,47 @@ const OrderSummary = ({ selectedOption,selectedAddress,data }) => {
   const location = useLocation();
   const orderData = location.state?.resource; 
 
-  
-
   const toggleDropdown = () => setIsOpen(!isOpen);
 
-const handleSaveOrderSummary = async () => {
-  if (!data?.order?.id || !selectedAddress || !selectedOption) {
-    enqueueSnackbar("Please fill in all the required details!", { variant: "warning" });
-    return;
-  }
+// const handleSaveOrderSummary = async () => {
+//   if (!data?.order?.id || !selectedAddress || !selectedOption) {
+//     enqueueSnackbar("Please fill in all the required details!", { variant: "warning" });
+//     return;
+//   }
 
-  const orderSummaryData = {
-    order_id: data.order.id,
-    address_id: selectedAddress,
-    delivery_option: selectedOption?.deliveryType,
-    store_id:selectedOption?.storeId,
-  };
+//   const orderSummaryData = {
+//     order_id: data.order.id,
+//     address_id: selectedAddress,
+//     delivery_option: selectedOption?.deliveryType,
+//     store_id:selectedOption?.storeId,
+//   };
 
-  try {
-    const response = await axios.patch(
-      `${process.env.REACT_APP_API_URL}/order/orderSummary/`,
-      orderSummaryData,
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      }
-    );
+//   try {
+//     const response = await axios.patch(
+//       `${process.env.REACT_APP_API_URL}/order/orderSummary/`,
+//       orderSummaryData,
+//       {
+//         headers: { Authorization: `Bearer ${accessToken}` },
+//       }
+//     );
 
-    if (response.data.message === "success") {
-      enqueueSnackbar("Order summary saved successfully!", { variant: "success" });
+//     if (response.data.message === "success") {
+//       enqueueSnackbar("Order summary saved successfully!", { variant: "success" });
 
-      navigate("/paymentgateway", { 
-        state: { resource: response.data.data, order_id: data.order.id } 
-      });
-    }
-  } catch (error) {
-    console.error("Error saving order summary:", error);
+//       navigate("/paymentgateway", { 
+//         state: { resource: response.data.data, order_id: data.order.id } 
+//       });
+//     }
+//   } catch (error) {
+//     console.error("Error saving order summary:", error);
 
-    // Show a detailed error message
-    enqueueSnackbar(
-      error.response?.data?.message || "Failed to save order summary. Please try again.",
-      { variant: "error" }
-    );
-  }
-};
+//     // Show a detailed error message
+//     enqueueSnackbar(
+//       error.response?.data?.message || "Failed to save order summary. Please try again.",
+//       { variant: "error" }
+//     );
+//   }
+// };
 
   return (
     <div className="bg-gray-100 p-4 mt-4">
@@ -698,7 +696,7 @@ const handleSaveOrderSummary = async () => {
             ))}
           </div>
           
-          {/* Save Order Summary Button */}
+          {/* Save Order Summary Button
           <div className="flex justify-center p-4 border-t mt-4">
             <button
               className="bg-bio-green text-white px-6 py-2 rounded-md hover:bg-lime-400 transition-colors"
@@ -706,7 +704,7 @@ const handleSaveOrderSummary = async () => {
             >
               Place Order
             </button>
-          </div>
+          </div> */}
         </div>
       )}
     </div>
@@ -993,18 +991,18 @@ const PaymentMethods = () => {
 
 const CheckoutPage = () => {
 
+  const accessToken = useSelector(selectAccessToken);
+  const navigate = useNavigate();
+
   const location = useLocation();
   const { resource } = location.state || {}; // Extract resource from state
   const [orderResource,setOrderResource] = useState(resource || {});
   const [selectedOption, setSelectedOption] = useState(null); // Lift state up
   const [selectedAddress, setSelectedAddress] = useState([]);
   const [coupon,setCoupon] = useState()
- const data = location.state?.ordersummary;
+  const data = location.state?.ordersummary;
   const id  = data?.order?.id
   
-  
-  
-
   useEffect(() => {
     if (resource) {
       setOrderResource(resource);
@@ -1040,6 +1038,46 @@ const uniqueItems = data?.order_items?.filter(
   (item, index, self) =>
     index === self.findIndex((i) => i.product_name === item.product_name)
 );
+
+const handleSaveOrderSummary = async () => {
+  if (!data?.order?.id || !selectedAddress || !selectedOption) {
+    enqueueSnackbar("Please fill in all the required details!", { variant: "warning" });
+    return;
+  }
+
+  const orderSummaryData = {
+    order_id: data.order.id,
+    address_id: selectedAddress,
+    delivery_option: selectedOption?.deliveryType,
+    store_id:selectedOption?.storeId,
+  };
+
+  try {
+    const response = await axios.patch(
+      `${process.env.REACT_APP_API_URL}/order/orderSummary/`,
+      orderSummaryData,
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
+
+    if (response.data.message === "success") {
+      enqueueSnackbar("Order summary saved successfully!", { variant: "success" });
+
+      navigate("/paymentgateway", { 
+        state: { resource: response.data.data, order_id: data.order.id } 
+      });
+    }
+  } catch (error) {
+    console.error("Error saving order summary:", error);
+
+    // Show a detailed error message
+    enqueueSnackbar(
+      error.response?.data?.message || "Failed to save order summary. Please try again.",
+      { variant: "error" }
+    );
+  }
+};
 
   return (
 
@@ -1203,6 +1241,17 @@ const uniqueItems = data?.order_items?.filter(
         : data?.order?.total_discount || 0)} 
       &nbsp; on this order
     </div>
+
+
+              {/* Save Order Summary Button */}
+          <div className="flex justify-center p-4 border-t mt-4">
+            <button
+              className="bg-bio-green text-white px-6 py-2 rounded-md hover:bg-lime-400 transition-colors"
+              onClick={handleSaveOrderSummary}
+            >
+              Place Order
+            </button>
+          </div>
   </div>
 </div>
 

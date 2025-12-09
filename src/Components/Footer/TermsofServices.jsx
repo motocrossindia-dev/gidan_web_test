@@ -128,7 +128,7 @@ const TermsOfService = () => {
             <p><strong>Company:</strong> FARM AMMINO AGRITECH PRIVATE LIMITED</p>
             <p><strong>Email:</strong> contact@biotechmaali.com</p>
             <p><strong>Phone:</strong> +91 7892078318</p>
-            <p><strong>Business Hours:</strong> Monday to Saturday, 09:30 AM to 06:30 PM</p>
+            <p><strong>Business Hours:</strong> Monday to Saturday, 09:00 AM to 06:00 PM</p>
             <p className="text-sm text-gray-600 mt-4">
               (During national holidays our offices may remain shut)
             </p>

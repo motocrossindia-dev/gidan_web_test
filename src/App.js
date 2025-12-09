@@ -183,6 +183,7 @@ const MobileRoutes = () => (
       <Route path="cart" element={<Cart />} />
       <Route path="wishlist" element={<WishList />} />
       <Route path="combooffer" element={<ComboOffer />} />
+      <Route path="offer" element={<Offer />} />
       <Route path="gifts" element={<Comingsoon />} />
       <Route path="anniversary" element={<AnniversaryGifts />} />
       <Route path="checkout" element={<CheckoutPage />} />
@@ -250,7 +251,7 @@ const App = () => {
   return (
     <div>
       <GoogleAnalytics />
-      <TawkToWidget />
+      {/* <TawkToWidget /> */}
       <Verify />
       {isMobile ? <MobileRoutes /> : <DesktopRoutes />}
     </div>
