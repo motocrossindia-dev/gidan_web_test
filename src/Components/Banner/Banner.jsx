@@ -47,18 +47,18 @@ const Banner = ({ home }) => {
                 <div className="w-full lg:w-1/2 mt-4 lg:mt-0 lg:pl-10 flex flex-col justify-center text-center lg:text-left">
 
                   <h2 className="text-sm md:text-lg lg:text-3xl text-green-800 mb-2">
-                    Vibrant and Thriving Plants Online
+                    {banner.title}
                   </h2>
 
                   <h3 className="text-sm md:text-xl lg:text-4xl font-semibold text-green-800 mb-4">
-                    Celebrate Friendship with 15% Off
+                    {banner.subtitle}
                   </h3>
 
                   <button
                     onClick={() => navigate(`/feature`)}
                     className="bg-bio-green text-white px-3 md:px-4 py-2 rounded-md w-fit mx-auto lg:mx-0 hover:bg-green-700 transition text-xs md:text-sm"
                   >
-                    Shop Now
+                    {banner.button_text}
                   </button>
 
                 </div>

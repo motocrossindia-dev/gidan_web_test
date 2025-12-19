@@ -36,7 +36,8 @@ const ProductGrid = ({ results }) => {
   };
 
   return (
-    <div className="mt-4 p-2 md:bg-white bg-gray-100 rounded-md md:ml-16">
+    <div className="mt-8 p-2 bg-white rounded-md md:ml-16 relative z-10">
+      
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xs md:text-lg text-gray-500 font-normal">
           Showing {products.length} products

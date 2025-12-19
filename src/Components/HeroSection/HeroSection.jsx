@@ -15,14 +15,17 @@ const HeroSection = ({ hero }) => {
     return () => clearInterval(interval);
   }, [hero]);
 
+  console.log("HERR", hero);
+
   const goToSlide = (index) => {
     setCurrentIndex(index);
   };
 
-  const handleBannerClick = (productId) => {
-    if (productId) {
-      navigate(`/productdata/${productId}`);
-    }
+  const handleBannerClick = (id) => {
+    navigate(`/carousel/${id}/`)
+      // window.location.href = link;
+
+    
   };
 
   const goLeft = () => {
@@ -38,7 +41,7 @@ const HeroSection = ({ hero }) => {
   };
 
   return (
-<div className="relative w-full overflow-hidden bg-white">
+<div className="relative w-full overflow-hidden bg-white mt-4">
   {hero && hero.length > 0 ? (
     <div className="relative w-full">
 
@@ -55,7 +58,7 @@ const HeroSection = ({ hero }) => {
             <img
               src={`https://backend.biotechmaali.com${banner.web_banner}`}
               alt="Hero Banner"
-              onClick={() => handleBannerClick(banner.product_id)}
+              onClick={() => handleBannerClick(banner?.id)}
               className="
                 w-full
                 h-auto             /* <-- SUPER IMPORTANT */

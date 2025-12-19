@@ -79,6 +79,7 @@ import FAQs from './Components/Footer/Faqs';
 import MobileBarLayout from './views/utilities/MobileSidebar/MbileBarLayout';
 import DealOfWeek from './views/utilities/DealOfWeek/DealOfWeek';
 import Offer from './views/utilities/Offer/Offer';
+import CarouselData from './views/utilities/CarouselData/CarouselData';
 
 const DesktopRoutes = () => (
   <Routes>
@@ -103,6 +104,7 @@ const DesktopRoutes = () => (
       <Route path="successpage" element={<Successpage />} />
       <Route path="orders" element={<MyOrders />} />
       <Route path="ourwork" element={<OurWork />} />
+      <Route path="carousel/:id" element={<CarouselData />} />
       <Route path="filter/:id/:category?" element={<PlantFilter />} />
       <Route path="filter/subcategory/:id/:category?/:subcategory" element={<PlantFilter />} />
       <Route path="seasonal" element={<SeasonalCollection1 />} />
@@ -190,6 +192,7 @@ const MobileRoutes = () => (
       <Route path="terms" element={<TermsofServices/>} />
       <Route path="productdata/:id" element={<ProductData />} />
       <Route path="stores" element={<Stores />} />
+      <Route path="carousel/:id" element={<CarouselData />} />
       <Route path="orders" element={<MyOrders />} />
       <Route path="filter/:id" element={<PlantFilter />} />
       <Route path="filter/subcategory/:id" element={<PlantFilter />} />

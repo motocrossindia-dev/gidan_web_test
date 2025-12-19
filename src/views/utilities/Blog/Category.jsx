@@ -119,9 +119,15 @@ function Category({ blogs, loading, selectedCategory }) {
                     <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#2F4333]"></div>
                   </div>
                 ) : (
-                  <div className={`prose max-w-none text-gray-600 mb-4 ${isExpanded ? '' : 'line-clamp-3'}`}>
-                    {isExpanded && expandedContent ? expandedContent.content : post.excerpt}
-                  </div>
+                 <div
+  className={`prose max-w-none text-gray-600 mb-4 ${isExpanded ? '' : 'line-clamp-3'}`}
+  dangerouslySetInnerHTML={{
+    __html: isExpanded && expandedContent
+      ? expandedContent.content
+      : post.excerpt
+  }}
+/>
+
                 )}
 
                 <div className="flex items-center justify-between mt-4">

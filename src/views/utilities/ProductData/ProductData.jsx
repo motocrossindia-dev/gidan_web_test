@@ -832,7 +832,7 @@ export default function Component() {
 
                         </div>
 
-                        <div className="md:flex-1 px-4 font-sans">
+                        <div className="md:flex-1 px-4 font-sans mt-8">
                             <h2 className="text-xl md:text-3xl font-bold mb-2">
                                 {productDetailData?.data?.product?.main_product_name || ""}
                             </h2>
@@ -1122,9 +1122,11 @@ export default function Component() {
                     <AboutTheProducts productDetailData={productDetailData}/>
 
                 </div>
-
-                <ProductFeatured/>
+            
+                 <ProductFeatured/>
                 <ProductSeller/>
+            
+                
                 <FaqAccordion/>
                 {productDetailData?.data?.product_rating && (
                     <ProductReviews

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { enqueueSnackbar } from "notistack";
-import logo from "../../Assets/Biotech-Maali.png";
+import logo from "../../Assets/Gidan_logo.jpg";
 import logoImage from "../../Assets/MobileLogin.png";
 import { signInSuccess } from "../../redux/Auth/authSlice"; // Action to update user state
 import { setVerifiedUser } from "../../redux/User/verificationSlice";
@@ -84,7 +84,7 @@ const MobileLoginPage = () => {
     <div className="flex items-center justify-center bg-gray-50">
       <div className="w-full rounded-lg p-6">
         <div className="flex justify-center mb-4">
-          <img name=" "    src={logo} alt="logo"  className="max-w-md" />
+          <img name=" "    src={logo} alt="logo"  className="mx-auto w-[110px] h-[70px]" />
         </div>
 
         <div className="flex justify-center mb-4">

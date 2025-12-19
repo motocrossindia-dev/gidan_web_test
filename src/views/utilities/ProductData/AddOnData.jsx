@@ -186,7 +186,7 @@ const AddOnData = ({
               </div>
 
               <Typography sx={{ typography: { xs: "caption", md: "subtitle2" } }}>
-  {product.name.length > 10 ? `${product.name.slice(0, 10)}...` : product.name}
+  {product.name.length > 12 ? `${product.name.slice(0, 11)}..` : product.name}
 </Typography>
 
 
