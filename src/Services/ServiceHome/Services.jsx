@@ -6,6 +6,9 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/autoplay";
 import { Navigation, Autoplay } from "swiper/modules";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 
 const ServiceCard = ({ image, title, heading }) => {
   const navigate = useNavigate();
@@ -37,13 +40,38 @@ const ServiceCard = ({ image, title, heading }) => {
 const Services = () => {
   const swiperRef = useRef(null);
 
-  const services = [
-    { title: "Landscape Design", Heading: "Transform Your Outdoor Space", Image: "https://images.unsplash.com/photo-1584479898061-15742e14f50d?auto=format&fit=crop&q=80&w=1200" },
-    { title: "Terrace & Kitchen Gardens", Heading: "Grow Your Own Urban Oasis", Image: "https://images.unsplash.com/photo-1622383563227-04401ab4e5ea?auto=format&fit=crop&q=80&w=1200" },
-    { title: "Vertical Gardens", Heading: "Living Walls & Green Facades", Image: "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=1200" },
-    { title: "Drip Irrigation", Heading: "Efficient Watering Solutions", Image: "https://images.unsplash.com/photo-1563911892437-1feda0179e1b?auto=format&fit=crop&q=80&w=1200" },
-    { title: "Garden Maintenance", Heading: "Keep Your Garden Thriving", Image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&q=80&w=1200" }
-  ];
+  const [services, setServices] = useState([]);
+
+useEffect(() => {
+  const fetchServices = async () => {
+    try {
+      const res = await axios.get(
+        "https://backend.biotechmaali.com/services/publicservice_list/"
+      );
+
+      // show only visible services
+      const visibleServices = res.data.filter(item => item.Visible);
+
+      setServices(visibleServices);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  fetchServices();
+}, []);
+
+
+  // const services = [
+  //   { title: "Landscape Design", Heading: "Transform Your Outdoor Space", Image: "https://images.unsplash.com/photo-1584479898061-15742e14f50d?auto=format&fit=crop&q=80&w=1200" },
+  //   { title: "Terrace & Kitchen Gardens", Heading: "Grow Your Own Urban Oasis", Image: "https://images.unsplash.com/photo-1622383563227-04401ab4e5ea?auto=format&fit=crop&q=80&w=1200" },
+  //   { title: "Vertical Gardens", Heading: "Living Walls & Green Facades", Image: "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=1200" },
+  //   { title: "Drip Irrigation", Heading: "Efficient Watering Solutions", Image: "https://images.unsplash.com/photo-1563911892437-1feda0179e1b?auto=format&fit=crop&q=80&w=1200" },
+  //   { title: "Garden Maintenance", Heading: "Keep Your Garden Thriving", Image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&q=80&w=1200" }
+  // ];
+
+
+  if (!services.length) return null;
 
   return (
     <div className="w-full bg-gray-100">
@@ -65,15 +93,16 @@ const Services = () => {
               navigation={{ prevEl: ".prev-button", nextEl: ".next-button" }}
               className="my-6"
             >
-              {services.map((service, index) => (
-                <SwiperSlide key={index}>
-                  <ServiceCard
-                    image={service.Image}
-                    heading={service.Heading}
-                    title={service.title}
-                  />
-                </SwiperSlide>
-              ))}
+             {services.map((service) => (
+  <SwiperSlide key={service.id}>
+    <ServiceCard
+      image={`https://backend.biotechmaali.com${service.Image}`}
+      title={service.title}
+      heading={service.Heading}
+    />
+  </SwiperSlide>
+))}
+
             </Swiper>
 
             <div className="flex justify-center mt-4">
@@ -102,15 +131,16 @@ const Services = () => {
               navigation={{ prevEl: ".prev-button", nextEl: ".next-button" }}
               className="my-6"
             >
-              {services.map((service, index) => (
-                <SwiperSlide key={index}>
-                  <ServiceCard
-                    image={service.Image}
-                    title={service.title}
-                    heading={service.Heading}
-                  />
-                </SwiperSlide>
-              ))}
+            {services.map((service) => (
+  <SwiperSlide key={service.id}>
+    <ServiceCard
+      image={`https://backend.biotechmaali.com${service.Image}`}
+      title={service.title}
+      heading={service.Heading}
+    />
+  </SwiperSlide>
+))}
+
             </Swiper>
 
             <div className="flex justify-center items-center mt-6 space-x-4">

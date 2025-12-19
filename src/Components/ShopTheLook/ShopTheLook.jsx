@@ -3,23 +3,47 @@ import React, { useState } from "react";
 import Image from "../../../src/Assets/ShopTheLook.png"; // Ensure the image path is correct
 import PopupShopTheLook from "./PopupShopTheLook"; // Ensure this file exists and is in the correct path
 
+  import { useEffect } from "react";
+  import axios from "axios";
+
 function ShopTheLook() {
   const [showPopup, setShowPopup] = useState(false);
 
+  
+    const [shoplookData, setShoplookData] = useState(null);
+  
+  useEffect(() => {
+    const fetchShoplook = async () => {
+      try {
+        const res = await axios.get(
+          "https://backend.biotechmaali.com/combo/combo-offers/"
+        );
+        setShoplookData(res?.data?.data?.shop_the_look[0]);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    fetchShoplook();
+  }, []);
+ 
+  if (!shoplookData) return null;
+
   return (
+    
     <div className="bg-gray-100 p-4 font-sans">
-      <h2 className="text-md md:text-xl md:pl-8 font-medium mb-4 text-left">Shop The Look</h2>
+      <h2 className="md:text-2xl text-xl mb-4 text-left md:font-bold font-semibold">Shop The Look</h2>
       <div className="flex flex-col">
         {/* Desktop Image */}
         <img name=" "   
-          src={Image}
+          src={`https://backend.biotechmaali.com${shoplookData?.image}`}
           alt="Shop the Look"
           className="hidden md:block w-full h-full object-cover cursor-pointer p-7 rounded-md"
           onClick={() => setShowPopup(true)}
         />
         {/* Mobile Image */}
         <img name=" "   
-          src={Image}
+          src={`https://backend.biotechmaali.com${shoplookData?.image}`}
           alt="Shop the Look Mobile"
           className="block md:hidden w-full h-[200px] object-cover cursor-pointer bg-gray-200"
           onClick={() => setShowPopup(true)}
@@ -29,6 +53,8 @@ function ShopTheLook() {
       {/* Popup Component */}
       {showPopup && <PopupShopTheLook onClose={() => setShowPopup(false)} />}
     </div>
+
+
   );
 }
 

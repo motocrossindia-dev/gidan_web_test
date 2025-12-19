@@ -33,7 +33,7 @@ const ProductFeatured = () => {
   };
 
   return (
-    <div className="my-8 p-4 bg-gray-100 rounded-md">
+    <div className="my-8 p-4 bg-white rounded-md">
       <h2 className="md:text-2xl text-xl mb-4 text-left font-sans">Featured Products</h2>
       <div className="max-w-7xl mx-auto px-3">
         <div className="grid gap-4 justify-items-center font-sans grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4">
@@ -130,8 +130,8 @@ const ProductFeatured = () => {
 
                       {/* Product Name */}
                                                   <Typography sx={{ typography: { xs: "caption", md: "subtitle2" } }} style={{ fontWeight: "bold", color: "black", fontSize: "0.9rem" }}>
-                                                      {product.name.length > 15
-                                                          ? `${product.name.slice(0, 8)}...`
+                                                      {product.name.length > 12
+                                                          ? `${product.name.slice(0, 11)}..`
                                                           : product.name}
                                                   </Typography>
                       

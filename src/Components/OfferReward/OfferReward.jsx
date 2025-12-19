@@ -7,6 +7,9 @@ import plant14 from '../../../src/Assets/OfferRewardImg/shopping 4.png';
 import plant15 from '../../../src/Assets/OfferRewardImg/shopping 5.png';
 import axiosInstance from '../../Axios/axiosInstance';
 
+import axios from "axios";
+
+
 const OfferCard = ({ title, description, buttonText, image, link }) => (
   <div className="flex bg-[#4A664A] rounded-lg overflow-hidden mb-6 h-[300px] sm:h-[300px] font-sans">
     <div className="w-full sm:w-1/2 p-8 text-white flex flex-col justify-center">
@@ -41,7 +44,24 @@ const SideOfferCard = ({ title, description, image, link }) => (
 
 const OfferReward = () => {
 
-  const [id,setID] = useState()
+  const [id,setID] = useState();
+  const [contentBlocks, setContentBlocks] = useState([]);
+
+useEffect(() => {
+  const fetchOffersRewards = async () => {
+    try {
+      const res = await axios.get(
+        "https://backend.biotechmaali.com/utils/content-blocks/?section=offers_rewards&title="
+      );
+      setContentBlocks(res.data || []);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  fetchOffersRewards();
+}, []);
+
   const getDealoftheweekproid=async()=>{
   try {
     
@@ -58,46 +78,69 @@ const OfferReward = () => {
   useEffect(()=>{
     getDealoftheweekproid()
   },[])
-  const offers = [
-    {
-      title: 'A Living Gift - Upto 40% off',
-      description: 'Express true emotions with a gift that grow faster',
-      buttonText: 'Buy It Now',
-      image: plant11,
-      link: '/gifts', // Example filter link
-    },
-    {
-      title: 'Deal of the week',
-      description: 'Express true emotions with a gift that grow faster',
-      buttonText: 'Buy It Now',
-      image: plant12,
-      link: '/dealofweek', // Example filter link
-    },
-  ];
+  // const offers = [
+  //   {
+  //     title: 'A Living Gift - Upto 40% off',
+  //     description: 'Express true emotions with a gift that grow faster',
+  //     buttonText: 'Buy It Now',
+  //     image: plant11,
+  //     link: '/gifts', // Example filter link
+  //   },
+  //   {
+  //     title: 'Deal of the week',
+  //     description: 'Express true emotions with a gift that grow faster',
+  //     buttonText: 'Buy It Now',
+  //     image: plant12,
+  //     link: '/dealofweek', // Example filter link
+  //   },
+  // ];
 
-  const sideOffers = [
-    {
-      title: 'Winter Flower Seeds',
-      description: 'Buy high quality hybrid Winter Flowering Seeds at best price ',
-      buttonText: 'Buy It Now',
-      image: plant13,
-      link: '/filter?offer=winter-flower-seeds', // Example filter link
-    },
-    {
-      title: 'Events Gifts - Rs.199',
-      description: 'Express true emotions with a gift that grow faster',
-      buttonText: 'Buy It Now',
-      image: plant14,
-      link: '/filter?offer=events-gifts', // Example filter link
-    },
-    {
-      title: 'Deal of the week',
-      description: 'Express true emotions with a gift that grow faster',
-      buttonText: 'Buy It Now',
-      image: plant15,
-      link: '/filter?offer=deal-of-the-week', // Example filter link
-    },
-  ];
+  const offers = contentBlocks.slice(0, 2).map((item) => ({
+  title: item.title,
+  description: item.subtitle,
+  buttonText: item.button_text || "Buy It Now",
+  image: item.image,
+  link:
+    item.title === "Deal of the week" && id
+      ? `/product/${id}`
+      : "/gifts",
+}));
+
+
+  // const sideOffers = [
+  //   {
+  //     title: 'Winter Flower Seeds',
+  //     description: 'Buy high quality hybrid Winter Flowering Seeds at best price ',
+  //     buttonText: 'Buy It Now',
+  //     image: plant13,
+  //     link: '/filter?offer=winter-flower-seeds', // Example filter link
+  //   },
+  //   {
+  //     title: 'Events Gifts - Rs.199',
+  //     description: 'Express true emotions with a gift that grow faster',
+  //     buttonText: 'Buy It Now',
+  //     image: plant14,
+  //     link: '/filter?offer=events-gifts', // Example filter link
+  //   },
+  //   {
+  //     title: 'Deal of the week',
+  //     description: 'Express true emotions with a gift that grow faster',
+  //     buttonText: 'Buy It Now',
+  //     image: plant15,
+  //     link: '/filter?offer=deal-of-the-week', // Example filter link
+  //   },
+  // ];
+
+  const sideOffers = contentBlocks.slice(2, 5).map((item) => ({
+  title: item.title,
+  description: item.subtitle,
+  image: item.image,
+  link: "/filter",
+}));
+
+
+if (!contentBlocks.length) return null;
+
 
   return (
     <div className="container mx-auto px-4 md:py-8 py-0">

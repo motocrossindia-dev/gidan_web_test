@@ -309,8 +309,8 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
 
                             {/* Product Name */}
                             <Typography sx={{ typography: { xs: "caption", md: "subtitle2" } }} style={{ fontWeight: "bold", color: "black", fontSize: "0.9rem" }}>
-                                {product.name.length > 15
-                                    ? `${product.name.slice(0, 8)}...`
+                                {product.name.length > 12
+                                    ? `${product.name.slice(0, 11)}..`
                                     : product.name}
                             </Typography>
 

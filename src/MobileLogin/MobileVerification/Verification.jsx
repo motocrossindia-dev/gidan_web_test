@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSnackbar } from "notistack";
-import logo from "../../Assets/Biotech-Maali.png";
+import logo from "../../Assets/Gidan_logo.jpg";
 import logoImage from "../../Assets/MobileLogin.png";
 import { useDispatch } from "react-redux";
 import {
@@ -95,7 +95,7 @@ const MobileVerification = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
         <div className="flex justify-center mb-4">
-          <img name=" "    src={logo}  alt="logo" className="max-w-xs" />
+          <img name=" "    src={logo}  alt="logo" className="mx-auto w-[110px] h-[70px]" />
         </div>
         <div className="flex justify-center mb-4">
           <img name=" "    src={logoImage}  alt="Illustration" className="w-full max-w-xs h-40" />

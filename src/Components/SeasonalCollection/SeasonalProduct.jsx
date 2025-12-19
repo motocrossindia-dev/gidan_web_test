@@ -66,9 +66,9 @@ const SeasonalProduct = () => {
   return (
     <div className="w-full bg-gray-100">
       <div className="my-8 p-4 bg-grey-200 rounded-md">
-        <h2 className="md:text-2xl text-xl mb-4  text-left  font-sans">
-          Seasonal Collections
-        </h2>
+
+        <h2 className="md:text-2xl text-xl mb-4 text-left md:font-bold font-semibold">Seasonal Collections</h2>
+        
 
         <div className="max-w-7xl mx-auto px-3">
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 lg:mx-10 gap-4 lg:gap-2 justify-items-center margin-bottom: -33px;">

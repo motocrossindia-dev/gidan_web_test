@@ -78,8 +78,8 @@ const Home = () => {
           <ComboOffer />
           <Blog />
           <VideoSection />
-          <Testimonials />
-          <ExploreWorks />
+          {/* <Testimonials />
+          <ExploreWorks /> */}
           <CheckOutStore/>
         </>
       )}

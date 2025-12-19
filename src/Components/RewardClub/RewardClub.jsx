@@ -4,9 +4,31 @@ import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import { useSelector } from "react-redux";
 import { isMobile } from "react-device-detect";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 
 const RewardClub = () => {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
+
+  const [bannerData, setBannerData] = useState(null);
+
+useEffect(() => {
+  const fetchBanner = async () => {
+    try {
+      const res = await axios.get(
+        "https://backend.biotechmaali.com/utils/content-blocks/?section=banner&title="
+      );
+      setBannerData(res.data?.[0]);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  fetchBanner();
+}, []);
+
 
   const navigate = useNavigate()
   const referafriend=async()=>{
@@ -35,19 +57,18 @@ const RewardClub = () => {
         <div className="flex flex-col lg:flex-row w-full">
           <div className="order-2 lg:order-1 w-full lg:w-[408px]">
             <img name=" "   
-              src={plantImage}
+              src={bannerData?.image || plantImage}
               alt="Rewards Club"
               className="w-full h-[278.77px] lg:h-full object-cover"
             />
           </div>
           <div className="order-1 lg:order-2 lg:flex-1 p-6 lg:p-8 flex flex-col justify-center w-full">
             <h2 className="text-md xs:text-base text-lg md:text-2xl lg:text-3xl font-semibold text-black mb-4 text-center whitespace-nowrap">
-              Join our Plant Parent Rewards Club
+              {bannerData?.title || "Join our Plant Parent Rewards Club"}
             </h2>
 
             <p className="md:text-2xl text-md text-center text-gray-600 mb-6">
-              Every plant purchase is a gift that keeps on giving. Earn coins
-              and redeem them for exclusive discounts.
+              {bannerData?.subtitle || "Every plant purchase is a gift that keeps on giving. Earn coins and redeem them for exclusive discounts."}
             </p>
 
             <div className="flex flex-row justify-center space-x-4">
@@ -58,7 +79,7 @@ const RewardClub = () => {
               {/* </NavLink> */}
                {/* <NavLink to="/profile/referal"> */}
               <button className="bg-bio-green text-white px-4 py-2  rounded font-semibold text-sm lg:text-base" onClick={referafriend}>
-                Refer A Friend
+                {bannerData?.button_text || "Refer A Friend"}
               </button>
               {/* </NavLink> */}
             </div>
