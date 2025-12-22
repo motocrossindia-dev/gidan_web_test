@@ -43,7 +43,7 @@ const Wallet = () => {
               
       
               const options = {
-                key: "rzp_live_RH46LqJqM4UlmU",
+                key: "rzp_test_y70g5dxx6kOQ7v",
                 amount: response?.data?.order?.amount || 0,  // Ensure amount is set
                 currency: "INR",
                 name: "Bio-tech Maali",

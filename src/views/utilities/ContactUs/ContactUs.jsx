@@ -5,6 +5,7 @@ import { CiLocationOn } from "react-icons/ci"; // Import the location icon
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import axiosInstance from "../../../Axios/axiosInstance";
 import {Helmet} from "react-helmet";
+import CheckOutStore from "../PlantFilter/CheckoutStores";
 
 
 const ContactUs = () => {
@@ -255,53 +256,8 @@ const ContactUs = () => {
 
         {/* Store Locations */}
 
-        <div className="w-full bg-white-100 p-6 rounded-lg">
-          <h2 className="text-2xl font-semibold text-start mb-6">
-            Checkout Our Stores
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {storesToDisplay && storesToDisplay.length > 0 ? (
-                storesToDisplay.map((store, index) => (
-                    <div
-                        key={index}
-                        className="p-4 border-2 border-bio-green rounded-md shadow-md bg-white w-full md:w-auto"
-                    >
-                      <h3 className="text-lg font-semibold mb-2 flex items-center justify-between">
-                        {store.location}
-                        <a
-                            href={store.address_link} // Set the address link for Google Maps
-                            target="_blank" // Open in a new tab
-                            rel="noopener noreferrer" // For security reasons
-                            className="ml-2 text-bio-green"
-                        >
-                          <CiLocationOn />
-                        </a>
-                      </h3>
-                      <p className="text-sm mb-2">
-                        <strong>Address:</strong> {store.address}
-                      </p>
-                      <p className="text-sm mb-2">
-                        <strong>Contact number:</strong> {store.contact}
-                      </p>
-                      <p className="text-sm">
-                        <strong>Time:</strong> {store.time_period}
-                      </p>
-                    </div>
-                ))
-            ) : (
-                <div>No stores available</div>
-            )}
-          </div>
+        <CheckOutStore />
 
-          <div className="flex justify-center mt-6">
-            <button
-                className="bg-bio-green text-white py-2 px-4 rounded-md hover:bg-green-700"
-                onClick={() => navigate("/stores")} // Navigate to the /stores page
-            >
-              View All
-            </button>
-          </div>
-        </div>
       </div>
     </>
 

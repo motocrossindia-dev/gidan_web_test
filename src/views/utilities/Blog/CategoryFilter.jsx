@@ -127,28 +127,25 @@ function CategoryFilter({
       </div>
 
       {/* Promotional Image with Download Button */}
-<div className="flex text-center mt-8 relative overflow-hidden rounded-lg max-w-2xl mx-auto">   
+{/* <div className="flex text-center mt-8 relative overflow-hidden rounded-lg max-w-2xl mx-auto">   
   <img name=" "         
     src={DownloadApp}      
     alt="Download Our App"
     loading="lazy"
     className="w-full rounded-lg object-cover mb-[5rem]"    
   />    
-  
-  {/* Overlay content positioned at the very bottom */}   
+     
   <div className="absolute inset-x-0 bottom-0 flex flex-col items-center pb-4 sm:pb-6">     
-    {/* <h3 className="text-black font-bold text-lg sm:text-xl mb-7 sm:mb-4 px-4">       
-      Get Our Mobile App     
-    </h3>      */}
+   
     <Link to={'https://play.google.com/store/apps/details?id=com.biotechmaali.app&pcampaignid=web_share'}>       
       <button className="px-6 py-2 bg-bio-green text-white rounded-full font-semibold hover:bg-bio-green transition-colors transform hover:scale-105 duration-200 text-sm sm:text-base">         
         DOWNLOAD APP       
       </button>     
     </Link>   
   </div> 
-</div>
+</div> */}
 
-    </div>
+</div>
   );
 }
 

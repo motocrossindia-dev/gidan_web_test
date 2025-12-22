@@ -53,7 +53,7 @@ function Featured() {
           {/* Additional Sections */}
           <div className="px-4 md:px-8 mt-8">
             <RecentlyViewedProduct />
-            <FAQSection />
+            {/* <FAQSection /> */}
             <CheckoutStores />
           </div>
 

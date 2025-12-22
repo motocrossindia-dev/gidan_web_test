@@ -43,7 +43,7 @@ const ComboOffer = () => {
         {/* Combo Image Section */}
         <ComboImage /> 
         <RecentlyViewedProduct/>
-        <FaqAccordion />
+        {/* <FaqAccordion /> */}
       </div>
     </div>
       </>

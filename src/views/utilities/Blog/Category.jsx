@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Calendar, User, ArrowRight, Clock, Tag, X } from 'lucide-react';
 import axiosInstance from '../../../Axios/axiosInstance';
+import linkifyHtml from 'linkify-html';
+
+
 // import 
 function Category({ blogs, loading, selectedCategory }) {
   const [expandedPost, setExpandedPost] = useState(null);
@@ -75,17 +78,19 @@ function Category({ blogs, loading, selectedCategory }) {
               }`}
             >
               <div className="relative">
-                <img name=" "   
-                  src={`${process.env.REACT_APP_API_URL}${post.image}`}
-                  alt={post.title}
-                  loading="lazy"
-                  className={`w-full object-cover ${isExpanded ? 'h-96' : 'h-48 sm:h-56 md:h-64'}`}
-                  
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = 'https://via.placeholder.com/800x500?text=Image+Not+Available';
-                  }}
-                />
+                <div className="w-full aspect-[800/665] bg-gray-100">
+  <img
+    src={`${process.env.REACT_APP_API_URL}${post.image}`}
+    alt={post.title}
+    loading="lazy"
+    className="w-full h-full object-contain"
+    onError={(e) => {
+      e.target.onerror = null;
+      e.target.src = 'https://via.placeholder.com/800x665?text=Image+Not+Available';
+    }}
+  />
+</div>
+
                 <div className="absolute top-4 right-4">
                   <span className="bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-medium px-3 py-1 rounded-full flex items-center gap-1">
                     <Tag size={14} />
@@ -120,13 +125,22 @@ function Category({ blogs, loading, selectedCategory }) {
                   </div>
                 ) : (
                  <div
-  className={`prose max-w-none text-gray-600 mb-4 ${isExpanded ? '' : 'line-clamp-3'}`}
+  className={`max-w-none mb-4 text-gray-600
+    [&_a]:text-blue-600
+    [&_a]:underline
+    [&_a]:font-medium
+    [&_a:hover]:text-blue-800
+    ${isExpanded ? '' : 'line-clamp-3'}
+  `}
   dangerouslySetInnerHTML={{
     __html: isExpanded && expandedContent
       ? expandedContent.content
-      : post.excerpt
+      : post.content
   }}
 />
+
+
+
 
                 )}
 
