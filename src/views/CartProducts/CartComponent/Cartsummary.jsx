@@ -95,10 +95,10 @@ const CartSummary = ({
           <span>-₹{Math.round(discount)}</span>
         </div>
         
-        <div className="flex justify-between">
+        {/* <div className="flex justify-between">
           <span>Delivery Charges</span>
           <span className="text-green-600">Free</span>
-        </div>
+        </div> */}
         {/* <div className="flex justify-between">
           <span>Packaging Fee</span>
           <span>₹{packagingFee}</span>

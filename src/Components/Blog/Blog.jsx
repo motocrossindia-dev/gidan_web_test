@@ -36,13 +36,19 @@ const Blog = () => {
   const Blogcard = ({ image, title, heading }) => {
     return (
       <div className="w-full max-w-[500px] mx-auto h-auto rounded-lg overflow-hidden font-sans flex flex-col items-center">
-        <div className="w-full h-[250px] flex items-center justify-center bg-gray-100 rounded-lg">
-          <img name=" "   
-            className="w-full h-full object-cover rounded-lg"
-            src={`${process.env.REACT_APP_API_URL}${image}`}
-            alt={title}
-          />
-        </div>
+       <div className="w-full aspect-[800/665] bg-gray-100 rounded-lg overflow-hidden">
+  <img
+    src={`${process.env.REACT_APP_API_URL}${image}`}
+    alt={title}
+    loading="lazy"
+    className="w-full h-full object-contain"
+    onError={(e) => {
+      e.target.onerror = null;
+      e.target.src = "https://via.placeholder.com/800x665?text=Image+Not+Available";
+    }}
+  />
+</div>
+
         <div className="flex flex-col items-center text-center mt-4">
           <h3 className="text-gray-500 text-xs md:text-lg mt-1 max-w-[90%]">{title}</h3>
           <p className="text-gray-700 text-sm md:text-2xl font-bold">{heading}</p>
@@ -56,7 +62,7 @@ const Blog = () => {
       <Verify />
       <section className="p-8">
         <div className="flex justify-between items-center mb-6 font-sans">
-          <h2 className="md:text-3xl text-xl font-bold mx-auto">Blog</h2>
+          <h2 className="md:text-3xl text-xl font-bold mx-auto">Blogs</h2>
           <NavLink
             to="/blogcomponent"
             className="text-white bg-bio-green md:text-xl text-xs rounded-md py-1 px-2 md:py-2 md:px-4 font-medium md:font-semibold"
