@@ -1211,11 +1211,24 @@ const handleSaveOrderSummary = async () => {
       </div>
 
       {/* Packaging Fee */}
-      <div className="flex justify-between text-gray-700">
+      {/* <div className="flex justify-between text-gray-700">
         <span>Secured Packaging Fee</span>
         <span className="line-through text-gray-400">₹198</span>
         <span className="text-bio-green">Free</span>
-      </div>
+      </div> */}
+
+      <div className="flex justify-between text-bio-green">
+  <span>BTcoins Earned 🪙</span>
+  <span>
+    {Math.round(
+      0.1 *
+        (isCombo
+          ? comboOffer?.total_price ?? 0
+          : coupon?.order?.total_price ?? data?.order?.total_price ?? 0)
+    )}
+  </span>
+</div>
+
     </div>
 
     <hr className="my-4" />
