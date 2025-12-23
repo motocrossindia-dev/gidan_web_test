@@ -14,8 +14,12 @@ const BTCoins = () => {
 
 
 
-  const [data,setData] = useState(null)
-const navigate = useNavigate()
+  const [data,setData] = useState(null);
+   const [redeemCoins, setRedeemCoins] = useState("");
+    const [loading, setLoading] = useState(false);
+
+const navigate = useNavigate();
+
   const getBTcoinsWallet = async()=>{
     try {
       
@@ -40,7 +44,28 @@ const navigate = useNavigate()
       console.log(error);
       
     }
-  }
+  }     
+
+
+    const handleRedeemCoins = async () => {
+    if (!redeemCoins) return;
+
+    try {
+      setLoading(true);
+      const response = await axiosInstace.post("/wallet/redeem-btcoins/", {
+        coins: redeemCoins,
+      });
+
+      if (response.status === 200 || response.status === 201) {
+        setRedeemCoins("");
+        getBTcoinsWallet(); // refresh balance after redeem
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
       <>
@@ -66,6 +91,28 @@ const navigate = useNavigate()
             </Link>
           </div>
         </div>
+
+
+        {/* Redeem Coins Input */}
+          <div className="mb-6">
+            <h2 className="text-lg font-semibold mb-4">Redeem Coins</h2>
+            <div className="flex flex-col sm:flex-row gap-3 max-w-md">
+              <input
+                type="number"
+                placeholder="Enter coins to redeem"
+                value={redeemCoins}
+                onChange={(e) => setRedeemCoins(e.target.value)}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-green-600"
+              />
+              <button
+                onClick={handleRedeemCoins}
+                disabled={loading}
+                className="bg-lime-600 text-white px-2 py-1 rounded-md hover:bg-green-700 disabled:opacity-60"
+              >
+                {loading ? "Redeeming..." : "Redeem Coins"}
+              </button>
+            </div>
+          </div>
 
         {/* Earn Coins Section */}
         <div className="mb-6">

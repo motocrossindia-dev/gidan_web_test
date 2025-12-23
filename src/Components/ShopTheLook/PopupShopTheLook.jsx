@@ -44,56 +44,58 @@ useEffect(()=>{
   getshpthelookproducts();
 },[])
 
-const handleBuyItNowSubmit = async () => {
+const handleBuyItNowSubmit = () => {
 
-  if (isAuthenticated) {
+  navigate(`/feature`);
+
+  // if (isAuthenticated) {
  
-    const product_data = {
-      order_source: "combo",
-      combo_id: shopid,
+  //   const product_data = {
+  //     order_source: "combo",
+  //     combo_id: shopid,
       
-    };
+  //   };
 
-    try {
-      const response = await axiosInstance.post(
-        `${process.env.REACT_APP_API_URL}/order/placeOrder/`,
-        product_data,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+  //   try {
+  //     const response = await axiosInstance.post(
+  //       `${process.env.REACT_APP_API_URL}/order/placeOrder/`,
+  //       product_data,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${accessToken}`,
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
 
 
-      if (response.status === 200) {
-        enqueueSnackbar("Order placed successfully!", { variant: "success" });
+  //     if (response.status === 200) {
+  //       enqueueSnackbar("Order placed successfully!", { variant: "success" });
 
-        if (window.innerWidth <= 768) {
-          navigate("/checkout", { state: { ordersummary: response.data.data } }); // Navigate to mobile checkout
-        } else {
-          navigate("/checkout", { state: { ordersummary: response.data.data } }); // Navigate to regular checkout
-        }
-      }
+  //       if (window.innerWidth <= 768) {
+  //         navigate("/checkout", { state: { ordersummary: response.data.data } }); // Navigate to mobile checkout
+  //       } else {
+  //         navigate("/checkout", { state: { ordersummary: response.data.data } }); // Navigate to regular checkout
+  //       }
+  //     }
 
-    } catch (error) {
-      console.error("Error placing order:", error);
-      if (error.response && error.response.status === 400) {
-        enqueueSnackbar(error.response.data.message, { variant: "error" });
-      } else {
-        enqueueSnackbar("Failed to place order. Please try again.", { variant: "error" });
-      }
-    }
-  } else {
-    // If not authenticated, redirect based on device type
-    enqueueSnackbar("Please Login or Signup to Buy Our Products.");
-    if (isMobile) {
-      navigate("/mobile-signin", { replace: true });
-    } else {
-      navigate("/?modal=signIn", { replace: true });
-    }
-  }
+  //   } catch (error) {
+  //     console.error("Error placing order:", error);
+  //     if (error.response && error.response.status === 400) {
+  //       enqueueSnackbar(error.response.data.message, { variant: "error" });
+  //     } else {
+  //       enqueueSnackbar("Failed to place order. Please try again.", { variant: "error" });
+  //     }
+  //   }
+  // } else {
+  //   // If not authenticated, redirect based on device type
+  //   enqueueSnackbar("Please Login or Signup to Buy Our Products.");
+  //   if (isMobile) {
+  //     navigate("/mobile-signin", { replace: true });
+  //   } else {
+  //     navigate("/?modal=signIn", { replace: true });
+  //   }
+  // }
 };
 
   return (
@@ -183,11 +185,11 @@ const handleBuyItNowSubmit = async () => {
             ))}
           </div>
         </Box>
-        {/* <div className="sticky bottom-0 z-10 bg-white p-4 flex justify-center">
+        <div className="sticky bottom-0 z-10 bg-white p-4 flex justify-center">
           <button className="w-1/2 py-2 bg-lime-500 text-white font-bold text-center rounded-lg hover:bg-lime-600" onClick={()=>handleBuyItNowSubmit()}>
             Place Order
           </button>
-        </div> */}
+        </div>
       </div>
     </div>
   );
