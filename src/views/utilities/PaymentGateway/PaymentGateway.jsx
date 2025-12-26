@@ -323,20 +323,31 @@ const handlePayment = async () => {
       )}
 
       {/* Delivery Charges */}
-      <div className="flex justify-between text-gray-700">
+      {/* <div className="flex justify-between text-gray-700">
         <span>Delivery Charges</span>
         <span>
           <span className="line-through text-gray-400">₹80</span>{" "}
           <span className="text-bio-green">Free</span>
         </span>
-      </div>
+      </div> */}
 
       {/* Packaging Fee */}
-      <div className="flex justify-between text-gray-700">
+      {/* <div className="flex justify-between text-gray-700">
         <span>Secured Packaging Fee</span>
         <span className="line-through text-gray-400">₹198</span>
         <span className="text-bio-green">Free</span>
       </div>
+    </div> */}
+
+    {/* Delivery Charges */}
+      <div className="flex justify-between text-gray-700">
+        <span>Delivery Charges</span>
+        <span>
+          <span className=" text-gray-700">₹{data?.shipping_info?.shipping_charge}</span>{" "}
+          {/* <span className="text-bio-green">Free</span> */}
+        </span>
+      </div>
+
     </div>
 
     <hr className="my-4" />
