@@ -1218,7 +1218,7 @@ const handleSaveOrderSummary = async () => {
       </div> */}
 
       <div className="flex justify-between text-bio-green">
-  <span>BTcoins Earned 🪙</span>
+  <span>BTCoins Earned 🪙</span>
   <span>
     {Math.round(
       0.1 *

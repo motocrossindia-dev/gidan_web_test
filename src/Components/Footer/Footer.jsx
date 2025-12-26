@@ -115,7 +115,7 @@ if (isMobile) {
               <Link to="/carriers">Carriers</Link>
             </li>
             <li className="hover:text-green-500">
-              <Link to="/blogcomponent">Blog</Link>
+              <Link to="/blogcomponent">Blogs</Link>
             </li>
             <li className="hover:text-green-500">
               <Link to="/stores">Our Stores</Link>
