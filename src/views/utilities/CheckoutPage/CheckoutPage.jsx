@@ -504,15 +504,19 @@ const OrderSummaryItem = ({ title, Quantity, mrp, sales_price, total,image }) =>
 
 
 const DeliveryOptions = ({ setSelectedOption }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState(null);
+  
+  const [isOpen, setIsOpen] = useState(true); // OPEN by default
+const [selected, setSelected] = useState("Door Delivery"); // DEFAULT
+
   const [stores, setStores] = useState([]);
   const [selectedStoreId, setSelectedStoreId] = useState(null);
 
   const deliveryOptions = [
     // { id: "standard", label: "Standard", price: "₹000.00" },
     // { id: "express", label: "Express Way", price: "₹000.00" },
+    { id: "Door Delivery", label: "Door Delivery" },
     { id: "Pick Up Store", label: "Pickup From Store" }
+    
   ];
 
   const getStoreList = async () => {
@@ -530,7 +534,18 @@ const DeliveryOptions = ({ setSelectedOption }) => {
     getStoreList();
   }, []);
 
-  const toggleDropdown = () => setIsOpen(!isOpen);
+
+  useEffect(() => {
+  setSelectedOption({
+    deliveryType: "Door Delivery",
+    storeId: null,
+  });
+}, []);
+
+  // const toggleDropdown = () => setIsOpen(!isOpen);
+
+  const toggleDropdown = () => setIsOpen((prev) => !prev);
+
 
   const handleOptionChange = (optionId) => {
     setSelected(optionId);
@@ -1079,6 +1094,21 @@ const handleSaveOrderSummary = async () => {
   }
 };
 
+const deliveryCharge = Number(data?.shipping_info?.shipping_charge || 0);
+
+
+const backendTotal = isCombo
+  ? comboOffer?.final_price ?? 0
+  : coupon?.order?.grand_total ?? data?.order?.grand_total ?? 0;
+
+// ✅ Remove delivery charge ONLY for Pickup Store
+const correctedPayableAmount =
+  selectedOption?.deliveryType === "Pick Up Store"
+    ? Math.max(backendTotal - deliveryCharge, 0)
+    : backendTotal;
+
+
+
   return (
 
       <>
@@ -1202,13 +1232,13 @@ const handleSaveOrderSummary = async () => {
       </div>
 
       {/* Delivery Charges */}
-      <div className="flex justify-between text-gray-700">
-        <span>Delivery Charges</span>
-        <span>
-          <span className=" text-gray-700">₹{data?.shipping_info?.shipping_charge}</span>{" "}
-          {/* <span className="text-bio-green">Free</span> */}
-        </span>
-      </div>
+       {selectedOption?.deliveryType === "Door Delivery" && (
+  <div className="flex justify-between text-gray-700">
+    <span>Delivery Charges</span>
+    <span>₹{deliveryCharge}</span>
+  </div>
+)}
+
 
       {/* Packaging Fee */}
       {/* <div className="flex justify-between text-gray-700">
@@ -1217,9 +1247,16 @@ const handleSaveOrderSummary = async () => {
         <span className="text-bio-green">Free</span>
       </div> */}
 
-      <div className="flex justify-between text-bio-green">
-  <span>BTCoins Earned 🪙</span>
-  <span>
+     <div className="bg-gradient-to-r from-yellow-100 to-orange-100 p-3 rounded-lg flex items-center justify-between mt-2">
+  <div className="flex items-center gap-2">
+    <span className="text-2xl">🪙</span>
+    <div>
+      <p className="text-sm font-semibold text-gray-800">BTCoins Earned</p>
+      <p className="text-xs text-gray-500">Use coins on your next order</p>
+    </div>
+  </div>
+
+  <span className="text-lg font-bold text-orange-600">
     {Math.round(
       0.1 *
         (isCombo
@@ -1229,20 +1266,19 @@ const handleSaveOrderSummary = async () => {
   </span>
 </div>
 
+
     </div>
 
     <hr className="my-4" />
 
     {/* Total Amount */}
     <div className="flex justify-between font-semibold text-gray-900">
-      <span>Total Amount</span>
-      <span>
-        ₹
-        {Math.round(isCombo
-          ? (comboOffer?.final_price ?? 0)
-          : (coupon?.order?.grand_total ?? data?.order?.grand_total ?? 0))}
-      </span>
-    </div>
+  <span>Total Amount</span>
+  <span>₹{Math.round(correctedPayableAmount)}</span>
+</div>
+
+
+
 
     <hr className="my-4" />
 

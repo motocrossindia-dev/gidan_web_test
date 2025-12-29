@@ -249,12 +249,13 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
 
                     <div className="relative w-full flex flex-col items-center">
                         {/* IMAGE WRAPPER */}
-                        <div className="relative w-full flex mb-4">
-                            <img
-                                className="w-full h-40 object-cover rounded-lg transition-transform duration-300 relative z-10"
-                                src={`${process.env.REACT_APP_API_URL}${product.image}`}
-                                alt={product.name}
-                            />
+                        <div className="relative w-full bg-white overflow-hidden">
+  <img
+    className="w-full h-40 object-cover"
+    src={`${process.env.REACT_APP_API_URL}${product.image}`}
+    alt={product.name}
+  />
+
 
                             {/* ICONS INSIDE IMAGE AREA */}
                             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-20">
