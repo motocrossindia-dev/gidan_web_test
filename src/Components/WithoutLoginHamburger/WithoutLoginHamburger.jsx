@@ -138,8 +138,8 @@ useEffect(() => {
       <div className="space-y-2">
         <Link onClick={() => setIsOpen(false)} to="/" className="block border-b pb-2">HOME</Link>
         <Link onClick={() => setIsOpen(false)} to="/filter/19" className="block border-b pb-2">PLANTS</Link>
-        <Link onClick={() => setIsOpen(false)} to="/filter/21" className="block border-b pb-2">SEEDS</Link>
         <Link onClick={() => setIsOpen(false)} to="/filter/20" className="block border-b pb-2">POTS & PLANTERS</Link>
+        <Link onClick={() => setIsOpen(false)} to="/filter/21" className="block border-b pb-2">SEEDS</Link>
         <Link onClick={() => setIsOpen(false)} to="/gifts" className="block border-b pb-2">GIFTING</Link>
         <Link onClick={() => setIsOpen(false)} to="/offer" className="block border-b pb-2">Offers</Link>
       </div>
