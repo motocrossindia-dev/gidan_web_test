@@ -194,8 +194,8 @@ const MobileRoutes = () => (
       <Route path="stores" element={<Stores />} />
       <Route path="carousel/:id" element={<CarouselData />} />
       <Route path="orders" element={<MyOrders />} />
-      <Route path="filter/:id" element={<PlantFilter />} />
-      <Route path="filter/subcategory/:id" element={<PlantFilter />} />
+      <Route path="filter/:id/:category?" element={<PlantFilter />} />
+      <Route path="filter/subcategory/:id/:category?/:subcategory" element={<PlantFilter />} />
       <Route path="seasonal" element={<SeasonalCollection1 />} />
       <Route path="pots" element={<Featured />} />
       <Route path="plants" element={<Featured />} />
