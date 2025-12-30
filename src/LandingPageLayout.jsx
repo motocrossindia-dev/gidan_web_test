@@ -21,10 +21,11 @@ const LandingPageLayout = () => {
       
       <main className="main-content">
         <Outlet />
+
+          {/* Footer */}
+          <Footer />
       </main>
 
-      {/* Footer */}
-      <Footer />
     </div>
   );
 };

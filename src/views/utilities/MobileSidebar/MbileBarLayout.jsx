@@ -19,10 +19,11 @@ const MobileBarLayout = () => {
 
         <div className='w-screen' >
         <Outlet/>
+            {/* Footer */}
+            <Footer />
         </div>
         </div>
     </div>
-      <Footer />
     </div>
   )
 }

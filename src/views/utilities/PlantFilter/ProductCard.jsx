@@ -206,16 +206,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
     </span>
                             )}
                         </div>
-                        {/*<div className="flex items-center gap-2">*/}
-                        {/*    <span className="text-base sm:text-lg font-bold text-black">*/}
-                        {/*        ₹{Math.round(price)}*/}
-                        {/*    </span>*/}
-                        {/*    {mrp && (*/}
-                        {/*        <span className="text-sm text-gray-400 line-through">*/}
-                        {/*            ₹{Math.round(mrp)}*/}
-                        {/*        </span>*/}
-                        {/*    )}*/}
-                        {/*</div>*/}
+
                     </div>
                 </Paper>
             </div>
@@ -323,17 +314,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
     </span>
                                 )}
                             </div>
-                            {/* Price */}
-                            {/*<div className="flex items-center gap-1 mt-1">*/}
-                            {/*    <p className="text-xs font-bold text-black">*/}
-                            {/*        ₹{Math.round(price)}*/}
-                            {/*    </p>*/}
-                            {/*    {mrp && (*/}
-                            {/*        <p className="text-[10px] text-gray-400 line-through">*/}
-                            {/*            ₹{Math.round(mrp)}*/}
-                            {/*        </p>*/}
-                            {/*    )}*/}
-                            {/*</div>*/}
+
                         </div>
                     </div>
                 </Paper>

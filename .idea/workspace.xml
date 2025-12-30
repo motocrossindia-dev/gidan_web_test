@@ -5,10 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df516f1c-c962-4e0d-8a95-1119b7efb609" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Layout.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/CheckoutStores.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/CheckoutStores.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/LandingPageLayout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/LandingPageLayout.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/MobileSidebar/MbileBarLayout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/MobileSidebar/MbileBarLayout.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/FAQSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/FAQSection.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductCard.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/RecentlyViewedProduct.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -174,7 +176,8 @@
       <workItem from="1766412319375" duration="778000" />
       <workItem from="1766483542131" duration="3900000" />
       <workItem from="1766754806198" duration="2990000" />
-      <workItem from="1767008571830" duration="6337000" />
+      <workItem from="1767008571830" duration="7084000" />
+      <workItem from="1767071880652" duration="5843000" />
     </task>
     <servers />
   </component>
@@ -208,6 +211,12 @@
           <url>file://$PROJECT_DIR$/src/Components/NavigationBar/NavigationBar.jsx</url>
           <line>24</line>
           <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/App.js</url>
+          <line>145</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="11" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
