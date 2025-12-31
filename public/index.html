@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <!-- <link rel="icon" href="./favicon.ico" /> -->
-    <link rel="icon" type="image/png" href="logo.png" />
+    <link id="favicon" rel="icon" type="image/png" href="logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="theme-color" content="#000000" />
     <!-- Cache-busting meta tags for development -->
@@ -14,7 +14,7 @@
       name="description"
       content="Web site created using create-react-app"
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo.png" />
+    <link id="appleIcon" rel="apple-touch-icon" href="%PUBLIC_URL%/logo.png" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -100,5 +100,28 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+      <script>
+  function updateLogoByTheme(isDark) {
+    const favicon = document.getElementById("favicon");
+    const appleIcon = document.getElementById("appleIcon");
+
+    const logo = isDark
+      ? "%PUBLIC_URL%/logo-white.png"
+      : "%PUBLIC_URL%/logo.png";
+
+    if (favicon) favicon.href = logo;
+    if (appleIcon) appleIcon.href = logo;
+  }
+
+  // Initial load
+  const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  updateLogoByTheme(darkModeQuery.matches);
+
+  // Listen for theme change
+  darkModeQuery.addEventListener("change", (e) => {
+    updateLogoByTheme(e.matches);
+  });
+</script>
+
   </body>
 </html>

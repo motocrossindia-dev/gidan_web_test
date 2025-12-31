@@ -187,7 +187,8 @@ const SeasonalCard = ({
 
                             {/* Product Name */}
                             <Typography sx={{ typography: { xs: "caption", md: "subtitle2" } }} style={{ fontWeight: "bold", color: "black", fontSize: "0.9rem" }}>
-                                {name.length > 15 ? `${name.slice(0, 8)}...` : name}
+                                {/* {name.length > 15 ? `${name.slice(0, 8)}...` : name} */}
+                                {name}
                             </Typography>
 
                             <div className="flex items-center gap-2">

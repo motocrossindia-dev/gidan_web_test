@@ -300,7 +300,8 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
 
                             {/* Product Name */}
                             <Typography variant="caption" className="mt-1" style={{ fontWeight: "bold", color: "black", fontSize: "0.9rem" }}>
-                                {name?.length > 12 ? `${name.slice(0, 11)}..` : name}
+                                {/* {name?.length > 12 ? `${name.slice(0, 11)}..` : name} */}
+                                {name}
                             </Typography>
 
                             <div className="flex items-center gap-2">

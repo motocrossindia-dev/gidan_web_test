@@ -87,17 +87,37 @@ function ShopTheLook() {
 
       {/* Image Wrapper with Aspect Ratio */}
    
-  <button
+ <button
   type="button"
   onClick={() => setShowPopup(true)}
-  className="w-full aspect-[1280/434] rounded-md overflow-hidden"
+  className="
+    w-full
+    rounded-md
+    overflow-hidden
+    bg-white
+    h-[260px]          /* Mobile height - BIG */
+    sm:h-[300px]
+    md:h-auto
+    md:aspect-[1280/434]
+  "
 >
-  <img
-    src={`https://backend.biotechmaali.com${shoplookData?.image}`}
-    alt="Shop the Look"
-    className="w-full h-full object-contain"
-  />
+<img
+  src={`https://backend.biotechmaali.com${shoplookData?.image}`}
+  alt="Shop the Look"
+  className="
+    w-full
+    h-full
+    object-contain
+    scale-y-[1.35]     /* 🔥 fills vertical white space */
+    sm:scale-y-[1.25]
+    md:scale-y-100     /* desktop normal */
+    transition-transform
+  "
+/>
+
 </button>
+
+
 
 
       {/* Popup */}
