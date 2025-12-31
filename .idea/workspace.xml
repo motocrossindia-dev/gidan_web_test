@@ -4,18 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df516f1c-c962-4e0d-8a95-1119b7efb609" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/public/logo-white.png" afterDir="false" />
+    <list default="true" id="df516f1c-c962-4e0d-8a95-1119b7efb609" name="Changes" comment="new">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Header/Header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Header/Header.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/RewardClub/RewardClub.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/RewardClub/RewardClub.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/ShopTheLook/ShopTheLook.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/ShopTheLook/ShopTheLook.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductData.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductFeatured.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductFeatured.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductSeller.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductSeller.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductCard.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +52,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "Merging dev__mohan",
+    "git-widget-placeholder": "dev__mohan",
     "last_opened_file_path": "D:/mohan_my_data/projects/CS_PROJECTS/ctcs_members_projects/ProjectAssignementsPrepaied/1.Zabhera begum(skilled)/25-DEC-2025/disease_prediction/dsease_preditction_frontend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -186,8 +177,25 @@
       <workItem from="1767008571830" duration="7084000" />
       <workItem from="1767071880652" duration="6541000" />
       <workItem from="1767105069078" duration="1256000" />
-      <workItem from="1767164089093" duration="1884000" />
+      <workItem from="1767164089093" duration="2179000" />
     </task>
+    <task id="LOCAL-00001" summary="new">
+      <option name="closed" value="true" />
+      <created>1767166075962</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1767166075962</updated>
+    </task>
+    <task id="LOCAL-00002" summary="new">
+      <option name="closed" value="true" />
+      <created>1767166144551</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1767166144551</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -206,7 +214,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="new" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <option name="LAST_COMMIT_MESSAGE" value="new" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
