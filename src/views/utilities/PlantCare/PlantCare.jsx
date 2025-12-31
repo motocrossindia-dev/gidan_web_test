@@ -46,11 +46,15 @@ function PlantCare() {
       if (query) {
         try {
           const response = await axiosInstance.get(
-              `${process.env.REACT_APP_API_URL}/product/searchProducts/?search=${query}`
+              `${process.env.REACT_APP_API_URL}/filters/main_productsFilter/?search=${query}`
           );
           if (response.status === 200) {
-            setResults(response.data.products || []);
-            setProducts(response.data || {});
+            setResults(response.data.results || []);
+           setProducts({
+            count: response.data.count,
+            next: response.data.next,
+            previous: response.data.previous,
+          });
           }
         } catch (error) {
           console.error("Error fetching search results:", error);
