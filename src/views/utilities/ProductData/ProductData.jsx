@@ -836,7 +836,7 @@ export default function Component() {
                             <h2 className="text-xl md:text-3xl font-bold mb-2">
                                 {productDetailData?.data?.product?.main_product_name || ""}
                             </h2>
-                            <h4 className="text-md md:text-lg font-sans mb-4">
+                            <h4 className="text-md md:text-lg font-sans mb-4 whitespace-pre-line">
                                 {productDetailData?.data?.product?.description || ""}
                             </h4>
                             <p className="text-black-600 text-sm mb-4">
