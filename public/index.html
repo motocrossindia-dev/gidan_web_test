@@ -3,7 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <!-- <link rel="icon" href="./favicon.ico" /> -->
-    <link id="favicon" rel="icon" type="image/png" href="logo.png" />
+    <!-- <link id="favicon" rel="icon" type="image/png"  /> -->
+    <link id="favicon" rel="icon" type="image/png" sizes="32x32" />
+<link id="appleIcon" rel="apple-touch-icon" sizes="180x180" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="theme-color" content="#000000" />
     <!-- Cache-busting meta tags for development -->
@@ -14,7 +17,7 @@
       name="description"
       content="Web site created using create-react-app"
     />
-    <link id="appleIcon" rel="apple-touch-icon" href="%PUBLIC_URL%/logo.png" />
+    <!-- <link id="appleIcon" rel="apple-touch-icon" /> -->
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -44,7 +47,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="msapplication-TileColor" content="#000000" />
-    <link rel="shortcut icon" href="%PUBLIC_URL%/logo.png" />
+    <!-- <link rel="shortcut icon" href="%PUBLIC_URL%/logo.png" /> -->
 
     <title>Gidan</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -105,19 +108,23 @@
     const favicon = document.getElementById("favicon");
     const appleIcon = document.getElementById("appleIcon");
 
+    const baseUrl = window.location.origin;
+    const ts = new Date().getTime(); // cache buster
+
     const logo = isDark
-      ? "%PUBLIC_URL%/logo-white.png"
-      : "%PUBLIC_URL%/logo.png";
+      ? `${baseUrl}/logo-white.png?v=${ts}`
+      : `${baseUrl}/logo.png?v=${ts}`;
 
     if (favicon) favicon.href = logo;
     if (appleIcon) appleIcon.href = logo;
+
+    console.log("Dark mode:", isDark);
+    console.log("Favicon set to:", logo);
   }
 
-  // Initial load
   const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
   updateLogoByTheme(darkModeQuery.matches);
 
-  // Listen for theme change
   darkModeQuery.addEventListener("change", (e) => {
     updateLogoByTheme(e.matches);
   });
