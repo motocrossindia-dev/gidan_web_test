@@ -5,8 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df516f1c-c962-4e0d-8a95-1119b7efb609" name="Changes" comment="new">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Banner/Banner.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Banner/Banner.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Cart/cartcount.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Cart/cartcount.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/ComboOffer/ComboOffer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/ComboOffer/ComboOffer.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/HeroSection/HeroSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/HeroSection/HeroSection.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/OfferReward/OfferReward.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/OfferReward/OfferReward.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/RewardClub/RewardClub.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/RewardClub/RewardClub.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/ShopTheLook/ShopTheLook.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/ShopTheLook/ShopTheLook.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/VideoSection/VideoSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/VideoSection/VideoSection.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Services/Service new/ServicePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/Service new/ServicePage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Services/ServiceHome/Services.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/ServiceHome/Services.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Stores/Stores.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Stores/Stores.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Users/TrackOrder/TrackOrder.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Users/TrackOrder/TrackOrder.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/CarouselData/CarouselData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/CarouselData/CarouselData.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/MobileCheckout/OrderSummary.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/MobileCheckout/OrderSummary.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/My Orders/OrderModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/My Orders/OrderModal.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/WishList/wishlistcount.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/WishList/wishlistcount.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,22 +63,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "dev__mohan",
-    "last_opened_file_path": "D:/mohan_my_data/projects/CS_PROJECTS/ctcs_members_projects/ProjectAssignementsPrepaied/1.Zabhera begum(skilled)/25-DEC-2025/disease_prediction/dsease_preditction_frontend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2024.3.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev__mohan&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/mohan_my_data/projects/CS_PROJECTS/ctcs_members_projects/ProjectAssignementsPrepaied/1.Zabhera begum(skilled)/25-DEC-2025/disease_prediction/dsease_preditction_frontend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.3.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\COMPANY PROJECTS\BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN\git 3\git\src\views\utilities" />
@@ -177,7 +193,11 @@
       <workItem from="1767008571830" duration="7084000" />
       <workItem from="1767071880652" duration="6541000" />
       <workItem from="1767105069078" duration="1256000" />
-      <workItem from="1767164089093" duration="2179000" />
+      <workItem from="1767164089093" duration="3915000" />
+      <workItem from="1767180578035" duration="1354000" />
+      <workItem from="1767699543106" duration="1964000" />
+      <workItem from="1767704943921" duration="904000" />
+      <workItem from="1767951569504" duration="3161000" />
     </task>
     <task id="LOCAL-00001" summary="new">
       <option name="closed" value="true" />

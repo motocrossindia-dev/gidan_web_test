@@ -46,7 +46,7 @@ useEffect(() => {
   const fetchServices = async () => {
     try {
       const res = await axios.get(
-        "https://backend.biotechmaali.com/services/publicservice_list/"
+        "https://backend.gidan.store/services/publicservice_list/"
       );
 
       // show only visible services
@@ -96,7 +96,7 @@ useEffect(() => {
              {services.map((service) => (
   <SwiperSlide key={service.id}>
     <ServiceCard
-      image={`https://backend.biotechmaali.com${service.Image}`}
+      image={`https://backend.gidan.store${service.Image}`}
       title={service.title}
       heading={service.Heading}
     />
@@ -134,7 +134,7 @@ useEffect(() => {
             {services.map((service) => (
   <SwiperSlide key={service.id}>
     <ServiceCard
-      image={`https://backend.biotechmaali.com${service.Image}`}
+      image={`https://backend.gidan.store${service.Image}`}
       title={service.title}
       heading={service.Heading}
     />

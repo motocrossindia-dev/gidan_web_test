@@ -168,7 +168,7 @@ const TrackOrder = () => {
 
     try {
       const res = await axios.get(
-        `https://backend.biotechmaali.com/tracking/shipway/order/${orderId}/`,
+        `https://backend.gidan.store/tracking/shipway/order/${orderId}/`,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         }

@@ -16,7 +16,7 @@
 //     const fetchBanner = async () => {
 //       try {
 //         const res = await axios.get(
-//           "https://backend.biotechmaali.com/utils/content-blocks/?section=banner&title="
+//           "https://backend.gidan.store/utils/content-blocks/?section=banner&title="
 //         );
 //         setBannerData(res.data?.[0]);
 //       } catch (err) {
@@ -106,7 +106,7 @@ const RewardClub = () => {
     const fetchBanner = async () => {
       try {
         const res = await axios.get(
-          "https://backend.biotechmaali.com/utils/content-blocks/?section=banner&title="
+          "https://backend.gidan.store/utils/content-blocks/?section=banner&title="
         );
         setBannerData(res.data?.[0]);
       } catch (err) {

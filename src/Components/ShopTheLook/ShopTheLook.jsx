@@ -16,7 +16,7 @@ import PopupShopTheLook from "./PopupShopTheLook"; // Ensure this file exists an
 //     const fetchShoplook = async () => {
 //       try {
 //         const res = await axios.get(
-//           "https://backend.biotechmaali.com/combo/combo-offers/"
+//           "https://backend.gidan.store/combo/combo-offers/"
 //         );
 //         setShoplookData(res?.data?.data?.shop_the_look[0]);
 //       } catch (error) {
@@ -36,14 +36,14 @@ import PopupShopTheLook from "./PopupShopTheLook"; // Ensure this file exists an
 //       <div className="flex flex-col">
 //         {/* Desktop Image */}
 //         <img name=" "   
-//           src={`https://backend.biotechmaali.com${shoplookData?.image}`}
+//           src={`https://backend.gidan.store${shoplookData?.image}`}
 //           alt="Shop the Look"
 //           className="hidden md:block w-full h-full object-cover cursor-pointer p-7 rounded-md"
 //           onClick={() => setShowPopup(true)}
 //         />
 //         {/* Mobile Image */}
 //         <img name=" "   
-//           src={`https://backend.biotechmaali.com${shoplookData?.image}`}
+//           src={`https://backend.gidan.store${shoplookData?.image}`}
 //           alt="Shop the Look Mobile"
 //           className="block md:hidden w-full h-[200px] object-cover cursor-pointer bg-gray-200"
 //           onClick={() => setShowPopup(true)}
@@ -66,7 +66,7 @@ function ShopTheLook() {
     const fetchShoplook = async () => {
       try {
         const res = await axios.get(
-          "https://backend.biotechmaali.com/combo/combo-offers/"
+          "https://backend.gidan.store/combo/combo-offers/"
         );
         setShoplookData(res?.data?.data?.shop_the_look[0]);
       } catch (error) {
@@ -102,7 +102,7 @@ function ShopTheLook() {
   "
 >
 <img
-  src={`https://backend.biotechmaali.com${shoplookData?.image}`}
+  src={`https://backend.gidan.store${shoplookData?.image}`}
   alt="Shop the Look"
   className="
     w-full

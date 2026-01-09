@@ -139,7 +139,7 @@ const OrderSummary = () => {
           {orderItem.map((item) => (
             <div key={""} className="flex items-center space-x-4">
               <img name=" "   
-                src={`https://backend.biotechmaali.com${item.image}`}
+                src={`https://backend.gidan.store${item.image}`}
                 loading="lazy"
                 alt="Product"
                 className="w-20 h-20 object-cover rounded"

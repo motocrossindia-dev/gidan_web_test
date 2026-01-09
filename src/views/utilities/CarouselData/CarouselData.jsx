@@ -72,7 +72,7 @@ function CarouselData() {
         try {
             
             const res = await axios.get(
-                `https://backend.biotechmaali.com/promotion/banner/${id}/`
+                `https://backend.gidan.store/promotion/banner/${id}/`
             );
 
             // 👇 IMPORTANT: take product_list only

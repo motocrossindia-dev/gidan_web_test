@@ -13,7 +13,7 @@ useEffect(() => {
   const fetchComboOffer = async () => {
     try {
       const res = await axios.get(
-        "https://backend.biotechmaali.com/utils/content-blocks/?section=combo_offers&title="
+        "https://backend.gidan.store/utils/content-blocks/?section=combo_offers&title="
       );
       setComboData(res.data?.[0]);
     } catch (error) {

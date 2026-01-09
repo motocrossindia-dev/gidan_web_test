@@ -21,11 +21,14 @@ const HeroSection = ({ hero }) => {
     setCurrentIndex(index);
   };
 
-  const handleBannerClick = (id) => {
-    navigate(`/carousel/${id}/`)
-      // window.location.href = link;
+  const handleBannerClick = () => {
+    const activeBanner = hero[currentIndex];
+    navigate(`/carousel/${activeBanner.id}/`);
+    console.log("Visible ID:", hero[currentIndex].id);
 
-    
+    // window.location.href = link;
+
+
   };
 
   const goLeft = () => {
@@ -56,9 +59,9 @@ const HeroSection = ({ hero }) => {
           {/* Maintain aspect ratio WITHOUT cropping */}
           <div className="w-full">
             <img
-              src={`https://backend.biotechmaali.com${banner.web_banner}`}
+              src={`https://backend.gidan.store${banner.web_banner}`}
               alt="Hero Banner"
-              onClick={() => handleBannerClick(banner?.id)}
+              onClick={() => handleBannerClick()}
               className="
                 w-full
                 h-auto             /* <-- SUPER IMPORTANT */

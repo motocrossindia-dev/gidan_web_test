@@ -17,7 +17,7 @@ useEffect(() => {
   const fetchServices = async () => {
     try {
       const res = await axios.get(
-        "https://backend.biotechmaali.com/services/publicservice_list/"
+        "https://backend.gidan.store/services/publicservice_list/"
       );
 
       const visibleServices = res.data.filter(item => item.Visible);
@@ -102,7 +102,7 @@ useEffect(() => {
       <div className="w-full bg-white rounded-lg p-4">
         <img
           className="w-full h-60 object-cover rounded-lg mb-4"
-          src={`https://backend.biotechmaali.com${service.Image}`}
+          src={`https://backend.gidan.store${service.Image}`}
           alt={service.Heading}
         />
         <h3 className="text-xl font-semibold text-center text-gray-800">

@@ -51,7 +51,7 @@ useEffect(() => {
   const fetchOffersRewards = async () => {
     try {
       const res = await axios.get(
-        "https://backend.biotechmaali.com/utils/content-blocks/?section=offers_rewards&title="
+        "https://backend.gidan.store/utils/content-blocks/?section=offers_rewards&title="
       );
       setContentBlocks(res.data || []);
     } catch (error) {

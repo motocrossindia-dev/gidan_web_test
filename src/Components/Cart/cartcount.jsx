@@ -17,7 +17,7 @@ const CartIconWithCount = () => {
 
         const fetchCartData = async () => {
             try {
-                const response = await axiosInstance.get('https://backend.biotechmaali.com/order/cart/');
+                const response = await axiosInstance.get('https://backend.gidan.store/order/cart/');
                 const cartItems = response.data?.data?.cart || [];
                 const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
                 setCartCount(totalQuantity);

@@ -14,7 +14,7 @@ useEffect(() => {
   const fetchVideoData = async () => {
     try {
       const res = await axios.get(
-        "https://backend.biotechmaali.com/utils/content-blocks/?section=home_screen_video"
+        "https://backend.gidan.store/utils/content-blocks/?section=home_screen_video"
       );
       setVideoData(res.data?.[0]);
     } catch (err) {

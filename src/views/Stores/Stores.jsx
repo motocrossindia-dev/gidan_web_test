@@ -179,7 +179,7 @@ const Stores = () => {
                   {/* Store Image */}
                   {store.image && (
                     <img
-                      src={`https://backend.biotechmaali.com${store.image}`}
+                      src={`https://backend.gidan.store${store.image}`}
                       alt={store.location}
                       className="w-full h-48 object-cover rounded-md mb-3"
                     />

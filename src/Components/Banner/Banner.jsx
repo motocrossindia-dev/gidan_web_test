@@ -30,14 +30,14 @@ const Banner = ({ home }) => {
                   
                   {/* Desktop Banner */}
                   <img
-                    src={`https://backend.biotechmaali.com${banner.web_banner}`}
+                    src={`https://backend.gidan.store${banner.web_banner}`}
                     alt="banner"
                     className="hidden sm:block w-full h-[250px] lg:h-[350px] object-cover rounded-lg"
                   />
 
                   {/* Mobile Banner */}
                   <img
-                    src={`https://backend.biotechmaali.com${banner.mobile_banner}`}
+                    src={`https://backend.gidan.store${banner.mobile_banner}`}
                     alt="banner-mobile"
                     className="block sm:hidden w-full h-[230px] object-contain rounded-lg"
                   />

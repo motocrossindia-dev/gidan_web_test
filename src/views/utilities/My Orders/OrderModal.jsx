@@ -331,7 +331,7 @@ const removeImage = (index) => {
     try {
       // ✅ Fetch product details from backend API
       const orderItemResponse = await axiosInstance.get(
-        `https://backend.biotechmaali.com/order/orderItem/?order_id=${orderid.id}`
+        `https://backend.gidan.store/order/orderItem/?order_id=${orderid.id}`
       );
 
       const orderItems = orderItemResponse?.data?.data?.order_items || [];

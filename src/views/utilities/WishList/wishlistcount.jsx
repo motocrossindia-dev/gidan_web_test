@@ -16,7 +16,7 @@ const WishlistIconWithCount = () => {
 
         const fetchWishlistCount = async () => {
             try {
-                const response = await axiosInstance.get(`https://backend.biotechmaali.com/order/wishlist/`);
+                const response = await axiosInstance.get(`https://backend.gidan.store/order/wishlist/`);
                 const wishlistItems = response?.data?.data?.wishlists || [];
                 setWishlistCount(wishlistItems.length);
             } catch (error) {
