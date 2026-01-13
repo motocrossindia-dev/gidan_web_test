@@ -2,17 +2,14 @@ import React, { useEffect, useState } from "react";
 import FilterSidebar from "../Featured/FilterSidebar";
 import ProductGrid from "./ProductGrid";
 import FAQSection from "./FAQSection";
-// import RecentlyViewedProduct from "./RecentlyViewedProduct";
 import CheckoutStores from "./CheckoutStores";
 import { FiFilter } from "react-icons/fi";
 import { useLocation } from "react-router-dom";
-import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import axiosInstance from "../../../Axios/axiosInstance";
 import RecentlyViewedProduct from "./RecentlyViewedProduct";
 
 function PlantFilter() {
-    const { id } = useParams();
     const location = useLocation();
     const path = location.pathname;
 
@@ -45,7 +42,7 @@ function PlantFilter() {
 
     useEffect(() => {
         const getInitialProducts = async () => {
-            if (id === "14") {
+            if (categoryId === "14") {
                 try {
                     const response = await axiosInstance.get(
                         `/product/offerProducts/`
@@ -67,8 +64,8 @@ function PlantFilter() {
                     queryParams.append("type", typeKey);
                 }
 
-                if (categoryId || id) {
-                    queryParams.append("category_id", categoryId || id);
+                if (categoryId) {
+                    queryParams.append("category_id", categoryId);
                 }
 
                 if (subcategoryID) {
@@ -95,7 +92,7 @@ function PlantFilter() {
         if (path.startsWith("/filter/")) {
             getInitialProducts();
         }
-    }, [id, path, typeKey, categoryId, subcategoryID]);
+    }, [ path, typeKey, categoryId, subcategoryID]);
 
     return (
         <>
@@ -118,7 +115,7 @@ function PlantFilter() {
                 <div className="hidden md:block mt-4 overflow-visible relative z-10">
                     <FilterSidebar
                         setResults={setResults}
-                        categoryId={categoryId || id}
+                        categoryId={categoryId}
                         category={categoryName}
                         subcategory={subCategoryName}
                         subcategoryID={subcategoryID}
@@ -168,7 +165,7 @@ function PlantFilter() {
                                 <FilterSidebar
                                     setResults={setResults}
                                     setShowMobileFilter={setShowMobileFilter}
-                                    categoryId={categoryId || id}
+                                    categoryId={categoryId}
                                     category={categoryName}
                                     subcategory={subCategoryName}
                                     subcategoryID={subcategoryID}

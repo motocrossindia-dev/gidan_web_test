@@ -5,24 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df516f1c-c962-4e0d-8a95-1119b7efb609" name="Changes" comment="new">
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Banner/Banner.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Banner/Banner.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Cart/cartcount.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Cart/cartcount.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/ComboOffer/ComboOffer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/ComboOffer/ComboOffer.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/HeroSection/HeroSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/HeroSection/HeroSection.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/OfferReward/OfferReward.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/OfferReward/OfferReward.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/RewardClub/RewardClub.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/RewardClub/RewardClub.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/ShopTheLook/ShopTheLook.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/ShopTheLook/ShopTheLook.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/VideoSection/VideoSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/VideoSection/VideoSection.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/Service new/ServicePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/Service new/ServicePage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/ServiceHome/Services.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/ServiceHome/Services.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Stores/Stores.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Stores/Stores.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Users/TrackOrder/TrackOrder.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Users/TrackOrder/TrackOrder.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/CarouselData/CarouselData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/CarouselData/CarouselData.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/MobileCheckout/OrderSummary.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/MobileCheckout/OrderSummary.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/My Orders/OrderModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/My Orders/OrderModal.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/WishList/wishlistcount.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/WishList/wishlistcount.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/FilterSidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/FilterSidebar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -197,7 +182,9 @@
       <workItem from="1767180578035" duration="1354000" />
       <workItem from="1767699543106" duration="1964000" />
       <workItem from="1767704943921" duration="904000" />
-      <workItem from="1767951569504" duration="3161000" />
+      <workItem from="1767951569504" duration="4662000" />
+      <workItem from="1768038599603" duration="195000" />
+      <workItem from="1768287387167" duration="2846000" />
     </task>
     <task id="LOCAL-00001" summary="new">
       <option name="closed" value="true" />
@@ -256,7 +243,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/views/utilities/Featured/FilterSidebar.jsx</url>
-          <line>685</line>
+          <line>1093</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
