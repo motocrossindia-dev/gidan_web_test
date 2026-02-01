@@ -2,7 +2,7 @@ import React, { useState,useEffect } from "react";
 import combooffer from "../../../Assets/ComboOffer/combooffer.png";
 import ComboImage from '../../../views/utilities/ComboOffer/ComboImage.jsx';
 import RecentlyViewedProduct from "./RecentlyViewedProduct.jsx";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const ComboOffer = () => {
 
@@ -12,8 +12,19 @@ const ComboOffer = () => {
   return (
       <>
       <Helmet>
-        <title>Gidan - Combo Offers</title>
-      </Helmet>
+  <title>Gidan - Combo Offers</title>
+
+  <meta
+    name="description"
+    content="Explore combo offers at Gidan and save more on plants, pots, seeds, and plant care products. Grab the best gardening deals in one place."
+  />
+
+  <link
+    rel="canonical"
+    href="https://gidan.store/combooffer"
+  />
+</Helmet>
+
     <div>
       {/* Combo Offer Section */}
       <div className="container mx-auto p-6">

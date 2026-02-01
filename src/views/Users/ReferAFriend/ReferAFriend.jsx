@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FiShare2 } from "react-icons/fi";
 import Refer from "../../../Assets/ReferAFriend.png"; // Ensure the image path is correct
 import axiosInstance from "../../../Axios/axiosInstance";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 
 function ReferAFriend() {
@@ -50,8 +50,19 @@ function ReferAFriend() {
   return (
       <>
         <Helmet>
-          <title>Gidan - Refer A Friend </title>
-        </Helmet>
+  <title>Gidan - Refer A Friend </title>
+
+  <meta
+    name="description"
+    content="Refer a friend to Gidan and earn rewards. Invite friends to shop plants, pots, seeds, and plant care products while enjoying exclusive benefits."
+  />
+
+  <link
+    rel="canonical"
+    href="https://gidan.store/profile/referal"
+  />
+</Helmet>
+
   <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4 sm:px-6 mt-2 lg:px-8">
   {/* Main Card */}
   <div className="bg-white rounded-lg shadow-md p-6 sm:p-8 w-full max-w-5xl">

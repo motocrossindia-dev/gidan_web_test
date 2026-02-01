@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const PaymentGateway = () => {
   const location = useLocation();
@@ -199,8 +199,19 @@ const handlePayment = async () => {
   return (
       <>
         <Helmet>
-          <title>Gidan - Payment Gateway</title>
-        </Helmet>
+  <title>Gidan - Payment Gateway</title>
+
+  <meta
+    name="description"
+    content="Securely complete your payment for plants, pots, seeds, and gardening products on Gidan. Enjoy a fast, safe, and seamless checkout experience."
+  />
+
+  <link
+    rel="canonical"
+    href="https://gidan.store/paymentgateway"
+  />
+</Helmet>
+
     <div className="flex flex-col lg:flex-row gap-6 p-6">
       <div className="lg:w-3/4 max-h-screen overflow-y-auto p-4 bg-gray-100 rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">Select a Payment Method</h2>

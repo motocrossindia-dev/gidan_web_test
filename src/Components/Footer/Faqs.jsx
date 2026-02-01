@@ -1,5 +1,5 @@
 import React,{useEffect} from "react";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const FAQs = () => {
       useEffect(() => {
@@ -7,9 +7,20 @@ const FAQs = () => {
     }, []);
   return (
       <>
-          <Helmet>
-              <title>Gidan - FAQs</title>
-          </Helmet>
+         <Helmet>
+  <title>Gidan - FAQs</title>
+
+  <meta
+    name="description"
+    content="Find answers to common questions about orders, delivery, payments, returns, and plant care at Gidan. Get quick help and support here."
+  />
+
+  <link
+    rel="canonical"
+    href="https://gidan.store/faq"
+  />
+</Helmet>
+
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg">
       <h1 className="text-2xl font-bold mb-4 text-center">Frequently Asked Questions (FAQs)</h1>
 

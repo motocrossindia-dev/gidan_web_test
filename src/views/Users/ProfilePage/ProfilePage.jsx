@@ -8,7 +8,7 @@ import DeactivationConfirmation from "../Deactivation/Deactivation"; // Import t
 import AddressSection from "./AddressSection";
 import FAQSection from "./FAQSection";
 import Verify from "../../../Services/Services/Verify";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { setGst } from '../../../redux/Slice/userSlice';
 
 
@@ -143,8 +143,19 @@ const ProfileForm = () => {
   return (
       <>
         <Helmet>
-          <title>Gidan - Profile Page</title>
-        </Helmet>
+  <title>Gidan - My Profile Page</title>
+
+  <meta
+    name="description"
+    content="Manage your Gidan account, view orders, track deliveries, and update your personal details. Access all your gardening purchases and rewards in one place."
+  />
+
+  <link
+    rel="canonical"
+    href="https://gidan.store/profile"
+  />
+</Helmet>
+
       <Verify />
       <div>
         <div className="flex px-8 ">
@@ -344,7 +355,7 @@ const ProfileForm = () => {
           )}
         </div>
         <AddressSection />
-        <FAQSection />
+        {/* <FAQSection /> */}
       </div>
     </>
   );

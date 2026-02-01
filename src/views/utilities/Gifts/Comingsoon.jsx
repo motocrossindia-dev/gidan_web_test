@@ -1,6 +1,6 @@
 import React from 'react'
 import { Plane as Plant, Gift, Sprout,} from 'lucide-react';
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 
 const Comingsoon = () => {
@@ -10,8 +10,19 @@ const Comingsoon = () => {
     return (
       <>
           <Helmet>
-            <title>Gidan - Coming soon</title>
-          </Helmet>
+  <title>Gidan - Coming soon</title>
+
+  <meta
+    name="description"
+    content="Gidan gifts are coming soon. Get ready to shop plant gifts, gardening kits, and green surprises for every occasion."
+  />
+
+  <link
+    rel="canonical"
+    href="https://gidan.store/gifts"
+  />
+</Helmet>
+
                 {/* <Header />
         <Navigation/> */}
         <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100 flex flex-col items-center justify-center p-4">

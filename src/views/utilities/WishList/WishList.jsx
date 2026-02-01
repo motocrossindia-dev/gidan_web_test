@@ -7,7 +7,7 @@ import axios from "axios";
 import Verify from "../../../Services/Services/Verify";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 
 const WishlistItem = ({
@@ -176,8 +176,19 @@ const WishList = () => {
   return (
       <>
         <Helmet>
-          <title>Gidan - WishList</title>
-        </Helmet>
+  <title>Gidan - WishList</title>
+
+  <meta
+    name="description"
+    content="View and manage your Gidan wishlist. Save your favorite plants, pots, seeds, and gardening products to buy later and never miss out on your favorite items."
+  />
+
+  <link
+    rel="canonical"
+    href="https://gidan.store/WishList"
+  />
+</Helmet>
+
       <Verify />
       <div className="container mx-auto md:p-4 sm:p-0 bg-gray-50">
         <h1 className="text-center text-xl sm:text-2xl font-bold mb-4 sm:mb-6">My Wishlist</h1>

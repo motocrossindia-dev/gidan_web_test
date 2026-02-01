@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Category from './Category';
 import CategoryFilter from './CategoryFilter';
 import axiosInstance from '../../../Axios/axiosInstance';
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 function Blog() {
   const [blogs, setBlogs] = useState([]);
@@ -78,8 +78,19 @@ function Blog() {
   return (
       <>
         <Helmet>
-        <title>Gidan - Blogs</title>
-        </Helmet>
+  <title>Gidan - Blogs</title>
+
+  <meta
+    name="description"
+    content="Read gardening tips, plant care guides, and expert advice on the Gidan blog. Learn how to grow healthier plants and garden smarter."
+  />
+
+  <link
+    rel="canonical"
+    href="https://gidan.store/blogcomponent"
+  />
+</Helmet>
+
         <div className="container mx-auto px-4 py-8 bg-gray-100">
           <div className="text-center mb-8">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Our Blogs</h1>

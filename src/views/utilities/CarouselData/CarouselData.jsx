@@ -53,7 +53,7 @@ import ProductGrid from "../PlantFilter/ProductGrid";
 import FAQSection from "../PlantFilter/FAQSection";
 import RecentlyViewedProduct from "../PlantFilter/RecentlyViewedProduct";
 import CheckoutStores from "../PlantFilter/CheckoutStores";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
@@ -85,8 +85,19 @@ function CarouselData() {
     return (
         <>
             <Helmet>
-                <title>Gidan - Carousel</title>
-            </Helmet>
+  <title>Gidan - Carousel</title>
+
+  <meta
+    name="description"
+    content="Explore featured plants, pots, seeds, and plant care products at Gidan. Discover curated collections and highlights for smarter gardening."
+  />
+
+  <link
+    rel="canonical"
+    href={`https://gidan.store/carousel/${id}`}
+  />
+</Helmet>
+
 
             <div className="container mx-auto min-h-screen">
                 {/* Product Grid */}

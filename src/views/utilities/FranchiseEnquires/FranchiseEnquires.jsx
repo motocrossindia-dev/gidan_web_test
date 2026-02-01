@@ -5,7 +5,7 @@ import WhyWeRockSection from "./WhyWeRock";
 import FeaturesSection from "./FeaturesSection";
 import StoreLocations from "./StoreLocations";
 import TestimonialsSection from "./Testimonials";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 function FranchiseEnquires() {
   useEffect(() => {
@@ -14,8 +14,19 @@ function FranchiseEnquires() {
   return (
       <>
           <Helmet>
-              <title>Gidan - Franchise Enquires</title>
-          </Helmet>
+  <title>Gidan - Franchise Enquires</title>
+
+  <meta
+    name="description"
+    content="Partner with Gidan through franchise opportunities. Submit your franchise enquiry and join our growing gardening and plant retail brand."
+  />
+
+  <link
+    rel="canonical"
+    href="https://gidan.store/franchiseenquery"
+  />
+</Helmet>
+
           <div className="space-y-10 bg-gray-100 mt-10 px-4 md:px-0">
               <HeroSection />
               <FranchiseForm />

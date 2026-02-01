@@ -138,7 +138,7 @@
 import React, { useEffect, useState } from "react";
 import useDeviceDetect from "../../../CustomHooks/useDeviceDetect";
 import location from "../../../Assets/21bd1d1e8c39ab293b04937cb183ed2d3481b3b4 (1).gif";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
@@ -189,9 +189,20 @@ const TrackOrder = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Gidan - Track Order Page</title>
-      </Helmet>
+     <Helmet>
+  <title>Gidan - Track Order Page</title>
+
+  <meta
+    name="description"
+    content="Track your Gidan order easily and stay updated on delivery status. Enter your details to view real-time order tracking and updates."
+  />
+
+  <link
+    rel="canonical"
+    href="https://gidan.store/profile/trackorder"
+  />
+</Helmet>
+
 
       <div className="flex justify-center items-center min-h-screen mx-10 bg-white font-sans">
         {!isSubmitted ? (

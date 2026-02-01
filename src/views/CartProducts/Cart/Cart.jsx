@@ -6,7 +6,7 @@ import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../../Axios/axiosInstance";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const Cart = () => {
   const accessToken = useSelector(selectAccessToken);
@@ -93,9 +93,20 @@ const Cart = () => {
 
   return (
       <>
-        <Helmet>
-          <title>Gidan - Cart</title>
-        </Helmet>
+       <Helmet>
+  <title>Gidan - Cart</title>
+
+  <meta
+    name="description"
+    content="Review the items in your Gidan cart before checkout. Manage your selected plants, pots, seeds, and gardening products for a smooth shopping experience."
+  />
+
+  <link
+    rel="canonical"
+    href="https://gidan.store/Cart"
+  />
+</Helmet>
+
     {/* <Verify /> */}
     <div className="flex flex-col md:flex-row justify-center md:p-8 bg-gray-50 overflow-y-auto">
       <style>
