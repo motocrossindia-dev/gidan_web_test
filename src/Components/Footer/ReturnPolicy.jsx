@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Mail, Phone, } from 'lucide-react';
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const RefundPolicy = () => {
   useEffect(() => {
@@ -12,8 +12,19 @@ const RefundPolicy = () => {
 
       <>
         <Helmet>
-          <title>Gidan - Refund Policy</title>
-        </Helmet>
+  <title>Gidan - Refund Policy</title>
+
+  <meta
+    name="description"
+    content="Read Gidan's refund and return policy. Understand how to return products, request refunds, and ensure a smooth shopping experience for plants and gardening items."
+  />
+
+  <link
+    rel="canonical"
+    href="https://gidan.store/return"
+  />
+</Helmet>
+
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 py-12 px-4">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
         {/* Header Section */}

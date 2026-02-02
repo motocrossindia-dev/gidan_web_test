@@ -9,7 +9,7 @@ import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 
 
@@ -1112,9 +1112,20 @@ const correctedPayableAmount =
   return (
 
       <>
-        <Helmet>
-          <title>Gidan - CheckoutPage </title>
-        </Helmet>
+       <Helmet>
+  <title>Gidan - CheckoutPage </title>
+
+  <meta
+    name="description"
+    content="Complete your Gidan order securely. Review your cart, provide shipping details, and make payment to get your plants, pots, seeds, and gardening products delivered safely."
+  />
+
+  <link
+    rel="canonical"
+    href="https://gidan.store/checkout"
+  />
+</Helmet>
+
 <div className="flex flex-col lg:flex-row bg-gray-100 p-4">
   {/* Left Side - Steps */}
   <div className="w-full lg:w-3/4">

@@ -34,8 +34,19 @@ const BTCoinsHistory = () => {
   return (
       <>
         <Helmet>
-          <title>Gidan - BTCoins History</title>
-        </Helmet>
+  <title>Gidan - BTCoins History</title>
+
+  <meta
+    name="description"
+    content="Check your Gidan BTCoins history to track all earned and spent coins. Stay updated on your rewards and enjoy a seamless gardening shopping experience."
+  />
+
+  <link
+    rel="canonical"
+    href="https://gidan.store/profile/history"
+  />
+</Helmet>
+
     <div className="flex justify-center sm:justify-start px-4 sm:px-6 bg-gray-100 min-h-screen w-full">
       <div className="w-full sm:w-full md:w-4/5 lg:w-full xl:w-full h-auto bg-white shadow-lg p-4 sm:p-6 rounded-lg">
         {/* Header */}

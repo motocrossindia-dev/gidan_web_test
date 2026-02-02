@@ -11,11 +11,13 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
+import { HelmetProvider } from "react-helmet-async";
 
 const root = ReactDOM.createRoot(document.getElementById('root')); // Updated for React 18
 
 root.render(
   <React.StrictMode>
+   <HelmetProvider>
     <Provider store={store}>
       <BrowserRouter>
         <SnackbarProvider maxSnack={3}> {/* Optional: Customize Snackbar */}
@@ -23,6 +25,7 @@ root.render(
         </SnackbarProvider>
       </BrowserRouter>
     </Provider>
+    </HelmetProvider>
   </React.StrictMode>
 );
 

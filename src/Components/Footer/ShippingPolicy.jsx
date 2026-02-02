@@ -1,6 +1,6 @@
 import React,{useEffect} from 'react';
 import { Truck, Package, RefreshCw, MessageCircle, Mail, Phone, MapPin, Clock, CheckCircle, XCircle } from 'lucide-react';
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const ShippingPolicy = () => {
 
@@ -11,8 +11,19 @@ const ShippingPolicy = () => {
 
       <>
         <Helmet>
-          <title>Gidan - Shipping Policy</title>
-        </Helmet>
+  <title>Gidan - Shipping Policy</title>
+
+  <meta
+    name="description"
+    content="Learn about Gidan's shipping policies, delivery timelines, and charges. Get your plants, pots, seeds, and gardening products delivered reliably."
+  />
+
+  <link
+    rel="canonical"
+    href="https://gidan.store/shipping"
+  />
+</Helmet>
+
     <div className="max-w-4xl mx-auto p-6 bg-white text-gray-800 font-sans">
       {/* Header */}
       <div className="mb-8 text-center">

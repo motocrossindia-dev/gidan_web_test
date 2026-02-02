@@ -15,7 +15,7 @@ import Testimonials from '../../Components/Testinomials/Testinomials';
 import ExploreWorks from '../../Components/ExploreWorks/ExploreWorks';
 import CheckOutStore from '../../Components/Store/CheckOutStore';
 import axiosInstance from '../../Axios/axiosInstance';
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import {useLocation} from "react-router-dom";
 import axios from "axios";
 
@@ -57,8 +57,13 @@ const Home = () => {
     <div>
 
       <Helmet>
-        <title>Gidan - Your ally in smarter gardening.</title>
-      </Helmet>
+  <title>Gidan - Your ally in smarter gardening.</title>
+  <meta
+    name="description"
+    content="Buy indoor & outdoor plants, pots, seeds, and plant care products online at Gidan. Discover everything you need for smarter, healthier gardening."
+  />
+  <link rel="canonical" href="https://gidan.store" />
+</Helmet>
 
       {loading ? (
         <div className="flex justify-center items-center h-screen">

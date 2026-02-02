@@ -114,7 +114,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../Axios/axiosInstance";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const Stores = () => {
   const navigate = useNavigate();
@@ -154,8 +154,19 @@ const Stores = () => {
   return (
     <>
       <Helmet>
-        <title>Gidan - Stores</title>
-      </Helmet>
+  <title>Gidan - Stores</title>
+
+  <meta
+    name="description"
+    content="Find Gidan stores near you and explore a wide range of plants, pots, seeds, and plant care products. Visit our stores for smarter gardening."
+  />
+
+  <link
+    rel="canonical"
+    href="https://gidan.store/stores"
+  />
+</Helmet>
+
 
       <div className="w-full bg-white-100 p-6 rounded-lg">
         <h2 className="text-2xl font-semibold text-start mb-6">

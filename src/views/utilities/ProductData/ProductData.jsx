@@ -27,7 +27,7 @@ import {useParams} from "react-router-dom";
 import {enqueueSnackbar} from "notistack";
 import Verify from "../../../Services/Services/Verify";
 import axiosInstance from "../../../Axios/axiosInstance";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const productdata =
     "https://firebasestorage.googleapis.com/v0/b/zpos-uk.appspot.com/o/67977213135ebb17c407e687%2F2025%2F1%2F1738430215367_scaled_Peacelilly.png?alt=media";
@@ -643,16 +643,36 @@ export default function Component() {
         if (id) fetchData();
     }, [id]);
 
+    console.log("iiiidd", id);
+
     return (
         <>
             <Verify/>
             <Helmet>
-                <title>
-                    {productDetailData?.data?.product?.main_product_name
-                        ? `Gidan - ${productDetailData.data.product.main_product_name}`
-                        : 'Gidan - Loading...'}
-                </title>
-            </Helmet>
+  <title>
+    {productDetailData?.data?.product?.main_product_name
+      ? `Gidan - ${productDetailData.data.product.main_product_name}`
+      : 'Gidan - Loading...'}
+  </title>
+
+  <meta
+    name="description"
+    content={
+      productDetailData?.data?.product?.main_product_name
+        ? `Buy ${productDetailData.data.product.main_product_name} online at Gidan. Explore premium plants, pots, seeds, and plant care products for smarter gardening.`
+        : 'Explore premium plants, pots, seeds, and plant care products at Gidan.'
+    }
+  />
+
+  <link
+    rel="canonical"
+    href={
+      id ? `https://gidan.store/productdata/${id}`
+        : 'https://gidan.store'
+    }
+  />
+</Helmet>
+
 
 
             <div className="w-full" style={{backgroundColor: "whitesmoke"}}>

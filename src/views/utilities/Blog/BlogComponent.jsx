@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Category from './Category';
 import CategoryFilter from './CategoryFilter';
 import axiosInstance from '../../../Axios/axiosInstance';
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 function Blog() {
   const [blogs, setBlogs] = useState([]);

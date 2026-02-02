@@ -5,7 +5,7 @@ import FAQSection from "./FAQSection";
 import RecentlyViewedProduct from "./RecentlyViewedProduct";
 import CheckoutStores from "./CheckoutStores";
 import { FiFilter } from "react-icons/fi";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 function Featured() {
   const [showMobileFilter, setShowMobileFilter] = useState(false);
@@ -22,8 +22,19 @@ function Featured() {
   return (
       <>
         <Helmet>
-          <title>Gidan - Featured</title>
-        </Helmet>
+  <title>Gidan - Featured</title>
+
+  <meta
+    name="description"
+    content="Discover featured plants, pots, seeds, and plant care essentials at Gidan. Shop our handpicked gardening products for healthier, smarter gardening."
+  />
+
+  <link
+    rel="canonical"
+    href="https://gidan.store/feature"
+  />
+</Helmet>
+
         <div className="container mx-auto pt-6  min-h-screen">
           {/* Mobile View Button */}
           <div className="md:hidden px-4 pt-4">

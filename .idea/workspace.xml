@@ -5,11 +5,42 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df516f1c-c962-4e0d-8a95-1119b7efb609" name="Changes" comment="new">
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Footer/Faqs.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Footer/Faqs.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Footer/PrivacyPolicy.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Footer/PrivacyPolicy.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Footer/ReturnPolicy.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Footer/ReturnPolicy.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Footer/ShippingPolicy.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Footer/ShippingPolicy.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Footer/TermsofServices.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Footer/TermsofServices.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Home/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Home/Home.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/CartProducts/Cart/Cart.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/CartProducts/Cart/Cart.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Stores/Stores.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Stores/Stores.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Users/ProfilePage/ProfilePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Users/ProfilePage/ProfilePage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Users/ReferAFriend/ReferAFriend.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Users/ReferAFriend/ReferAFriend.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Users/TrackOrder/TrackOrder.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Users/TrackOrder/TrackOrder.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Blog/BlogComponent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Blog/BlogComponent.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/CarouselData/CarouselData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/CarouselData/CarouselData.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Carriers/Carriers.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Carriers/Carriers.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/CheckoutPage/CheckoutPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/CheckoutPage/CheckoutPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/ComboOffer/ComboOffer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ComboOffer/ComboOffer.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/ContactUs/ContactUs.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ContactUs/ContactUs.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/Featured.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/Featured.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/FranchiseEnquires/FranchiseEnquires.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/FranchiseEnquires/FranchiseEnquires.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Gifts/Comingsoon.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Gifts/Comingsoon.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/utilities/PaymentGateway/PaymentGateway.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PaymentGateway/PaymentGateway.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PaymentGateway/Successpage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PaymentGateway/Successpage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductData.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductFaq.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductFaq.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Wallet/BTCoinsHistory.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Wallet/BTCoinsHistory.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Wallet/BTcoins.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Wallet/BTcoins.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Wallet/Faq.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Wallet/Faq.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/utilities/Wallet/Wallet.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Wallet/Wallet.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Wallet/WalletHistory.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Wallet/WalletHistory.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/WishList/WishList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/WishList/WishList.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,22 +81,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev__mohan&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/mohan_my_data/projects/my_template/MainHallBookingSystem/Admin&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.3.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "Merging dev__mohan",
+    "last_opened_file_path": "D:/mohan_my_data/projects/my_template/MainHallBookingSystem/Admin",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2024.3.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\COMPANY PROJECTS\BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN\git 3\git\src\views\utilities" />
@@ -196,6 +227,7 @@
       <workItem from="1769849045421" duration="2650000" />
       <workItem from="1769854587964" duration="901000" />
       <workItem from="1769944321834" duration="96000" />
+      <workItem from="1770000037852" duration="897000" />
     </task>
     <task id="LOCAL-00001" summary="new">
       <option name="closed" value="true" />

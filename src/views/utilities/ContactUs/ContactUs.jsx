@@ -4,7 +4,7 @@ import { useSnackbar } from "notistack"; // Import useSnackbar hook
 import { CiLocationOn } from "react-icons/ci"; // Import the location icon
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import axiosInstance from "../../../Axios/axiosInstance";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import CheckOutStore from "../PlantFilter/CheckoutStores";
 
 
@@ -136,8 +136,19 @@ const ContactUs = () => {
 
     <>
       <Helmet>
-        <title>Gidan - Contact us</title>
-      </Helmet>
+  <title>Gidan - Contact us</title>
+
+  <meta
+    name="description"
+    content="Get in touch with Gidan for support, enquiries, or feedback. Contact us for help with orders, plants, gardening products, and services."
+  />
+
+  <link
+    rel="canonical"
+    href="https://gidan.store/contactus"
+  />
+</Helmet>
+
       <div className="font-sans text-gray-800">
         {/* Header Section */}
         <header className="bg-red-200 text-center py-10 w-full">

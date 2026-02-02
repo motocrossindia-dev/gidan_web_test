@@ -5,9 +5,9 @@ import FAQSection from "./FAQSection";
 import CheckoutStores from "./CheckoutStores";
 import { FiFilter } from "react-icons/fi";
 import { useLocation } from "react-router-dom";
-import { Helmet } from "react-helmet";
 import axiosInstance from "../../../Axios/axiosInstance";
 import RecentlyViewedProduct from "./RecentlyViewedProduct";
+import { Helmet } from "react-helmet-async";
 
 function PlantFilter() {
     const location = useLocation();
@@ -20,6 +20,7 @@ function PlantFilter() {
     const [showMobileFilter, setShowMobileFilter] = useState(false);
     const [products, setProducts] = useState({});
     const [results, setResults] = useState([]);
+    console.log("Category Id", categoryId);
 
     useEffect(() => {
         if (showMobileFilter) {
@@ -97,8 +98,14 @@ function PlantFilter() {
     return (
         <>
             <Helmet>
-                <title>Gidan - Plant Filter</title>
-            </Helmet>
+  <title>Gidan - Filter</title>
+  <meta
+    name="description"
+    content="Filter and explore plants, pots, seeds, and plant care products at Gidan. Find the perfect match for your gardening needs with smart filters."
+  />
+  <link rel="canonical" href={`https://gidan.store/filter/${categoryId}`} />
+</Helmet>
+
             <div className="container mx-auto min-h-screen">
                 {/* Mobile Filter Button */}
                 <div className="md:hidden px-4 pt-4">
