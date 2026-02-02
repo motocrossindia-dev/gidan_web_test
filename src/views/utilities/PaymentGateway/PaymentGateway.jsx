@@ -108,7 +108,7 @@ const handlePayment = async () => {
 
       // ✅ CASE 2: Partial Wallet + Razorpay Required
       const options = {
-        key: "rzp_test_y70g5dxx6kOQ7v",
+        key: "rzp_live_RH46LqJqM4UlmU",
         amount: razorpayOrder.amount || 0,
         currency: "INR",
         name: "Bio-tech Maali",

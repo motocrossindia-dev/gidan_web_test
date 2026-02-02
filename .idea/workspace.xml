@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df516f1c-c962-4e0d-8a95-1119b7efb609" name="Changes" comment="new">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/FilterSidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/FilterSidebar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PaymentGateway/PaymentGateway.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PaymentGateway/PaymentGateway.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Wallet/Wallet.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Wallet/Wallet.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +56,7 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;dev__mohan&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/mohan_my_data/projects/CS_PROJECTS/ctcs_members_projects/ProjectAssignementsPrepaied/1.Zabhera begum(skilled)/25-DEC-2025/disease_prediction/dsease_preditction_frontend&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/mohan_my_data/projects/my_template/MainHallBookingSystem/Admin&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -71,6 +73,7 @@
       <recent name="D:\COMPANY PROJECTS\biotech maali new build files\git 3\git\src\views\utilities\WishList" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\COMPANY PROJECTS\BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN\git 3\biotech_ecomerce\public" />
       <recent name="D:\COMPANY PROJECTS\BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN\git 3\biotech_ecomerce\src\views\utilities\ProductData" />
       <recent name="D:\COMPANY PROJECTS\biotech maali new build files\git 3\git\src\redux\Slice" />
     </key>
@@ -184,7 +187,15 @@
       <workItem from="1767704943921" duration="904000" />
       <workItem from="1767951569504" duration="4662000" />
       <workItem from="1768038599603" duration="195000" />
-      <workItem from="1768287387167" duration="2846000" />
+      <workItem from="1768287387167" duration="4731000" />
+      <workItem from="1768381993848" duration="61000" />
+      <workItem from="1768798221696" duration="2951000" />
+      <workItem from="1769350712380" duration="50000" />
+      <workItem from="1769672358711" duration="1836000" />
+      <workItem from="1769736907822" duration="197000" />
+      <workItem from="1769849045421" duration="2650000" />
+      <workItem from="1769854587964" duration="901000" />
+      <workItem from="1769944321834" duration="96000" />
     </task>
     <task id="LOCAL-00001" summary="new">
       <option name="closed" value="true" />
@@ -250,11 +261,6 @@
           <url>file://$PROJECT_DIR$/src/Components/NavigationBar/NavigationBar.jsx</url>
           <line>24</line>
           <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/App.js</url>
-          <line>145</line>
-          <option name="timeStamp" value="11" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
