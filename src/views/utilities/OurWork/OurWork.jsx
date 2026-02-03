@@ -8,7 +8,7 @@ import ourwork6 from "../../../Assets/OurWork/ourwork6.png";
 import { useNavigate } from 'react-router-dom';
 
 import { FaPlay } from "react-icons/fa";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const OurWork = () => {
   const navigate = useNavigate();
@@ -22,7 +22,13 @@ const OurWork = () => {
   return (
       <>
         <Helmet>
-          <title>Gidan - Our work</title>
+          <title>About Gidan | Trusted Online Shopping Store</title>
+        
+          <meta
+            name="description"
+            content="Learn about Gidan – our story, values & commitment to quality products and customer satisfaction."
+          />
+        
         </Helmet>
     <div className="App">
     <h4 className="text-sm sm:text-base p-4">Home / Our Work</h4>

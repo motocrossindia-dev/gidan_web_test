@@ -651,27 +651,29 @@ export default function Component() {
             <Helmet>
   <title>
     {productDetailData?.data?.product?.main_product_name
-      ? `Gidan - ${productDetailData.data.product.main_product_name}`
-      : 'Gidan - Loading...'}
+      ? `Buy ${productDetailData.data.product.main_product_name} Online | Best Price – Gidan`
+      : 'Buy Gardening Products Online | Best Price – Gidan'}
   </title>
 
   <meta
     name="description"
     content={
       productDetailData?.data?.product?.main_product_name
-        ? `Buy ${productDetailData.data.product.main_product_name} online at Gidan. Explore premium plants, pots, seeds, and plant care products for smarter gardening.`
-        : 'Explore premium plants, pots, seeds, and plant care products at Gidan.'
+        ? `Buy ${productDetailData.data.product.main_product_name} online at Gidan. ✔ Premium quality ✔ Healthy & well-packed ✔ Trusted gardening brand. Fast delivery & easy returns.`
+        : 'Buy gardening products online at Gidan. ✔ Premium quality ✔ Trusted brand ✔ Fast delivery & easy returns.'
     }
   />
 
   <link
     rel="canonical"
     href={
-      id ? `https://gidan.store/productdata/${id}`
+      id
+        ? `https://gidan.store/productdata/${id}`
         : 'https://gidan.store'
     }
   />
 </Helmet>
+
 
 
 
