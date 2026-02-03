@@ -154,11 +154,11 @@ const Stores = () => {
   return (
     <>
       <Helmet>
-  <title>Gidan - Stores</title>
+  <title>About Gidan | Trusted Online Shopping Store</title>
 
   <meta
     name="description"
-    content="Find Gidan stores near you and explore a wide range of plants, pots, seeds, and plant care products. Visit our stores for smarter gardening."
+    content="Learn about Gidan – our story, values & commitment to quality products and customer satisfaction."
   />
 
   <link
@@ -166,6 +166,7 @@ const Stores = () => {
     href="https://gidan.store/stores"
   />
 </Helmet>
+
 
 
       <div className="w-full bg-white-100 p-6 rounded-lg">

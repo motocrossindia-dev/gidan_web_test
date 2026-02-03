@@ -136,11 +136,11 @@ const ContactUs = () => {
 
     <>
       <Helmet>
-  <title>Gidan - Contact us</title>
+  <title>Contact Gidan | Customer Support & Help</title>
 
   <meta
     name="description"
-    content="Get in touch with Gidan for support, enquiries, or feedback. Contact us for help with orders, plants, gardening products, and services."
+    content="Need help? Contact Gidan for orders, support & queries. We're here to assist you."
   />
 
   <link
@@ -148,6 +148,7 @@ const ContactUs = () => {
     href="https://gidan.store/contactus"
   />
 </Helmet>
+
 
       <div className="font-sans text-gray-800">
         {/* Header Section */}

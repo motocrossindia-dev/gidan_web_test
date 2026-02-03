@@ -20,7 +20,6 @@ function PlantFilter() {
     const [showMobileFilter, setShowMobileFilter] = useState(false);
     const [products, setProducts] = useState({});
     const [results, setResults] = useState([]);
-    console.log("Category Id", categoryId);
 
     useEffect(() => {
         if (showMobileFilter) {
@@ -97,14 +96,51 @@ function PlantFilter() {
 
     return (
         <>
-            <Helmet>
-  <title>Gidan - Filter</title>
-  <meta
-    name="description"
-    content="Filter and explore plants, pots, seeds, and plant care products at Gidan. Find the perfect match for your gardening needs with smart filters."
-  />
-  <link rel="canonical" href={`https://gidan.store/filter/${categoryId}`} />
+        <Helmet>
+  {/* SUB-CATEGORY META */}
+  {subCategoryName ? (
+    <>
+      <title>
+        {`${subCategoryName} for Home & Garden | Gidan`}
+      </title>
+
+      <meta
+        name="description"
+        content={`Explore ${subCategoryName} at Gidan. Perfect for home gardeners and plant lovers. Affordable prices & fast delivery.`}
+      />
+
+      <link
+        rel="canonical"
+        href={`https://gidan.store/filter/${categoryId}?subcategory=${subcategoryID}`}
+      />
+    </>
+  ) : (
+    /* CATEGORY META */
+    <>
+      <title>
+        {categoryName
+          ? `Buy ${categoryName} Online | Best Price in Bengaluru – Gidan`
+          : 'Buy Gardening Products Online | Best Price in Bengaluru – Gidan'}
+      </title>
+
+      <meta
+        name="description"
+        content={
+          categoryName
+            ? `Shop ${categoryName} online at best prices. Wide range of premium varieties and styles. Fast delivery & easy returns – Gidan.`
+            : 'Shop gardening products online at best prices. Wide range of plants, pots, seeds, and accessories. Fast delivery & easy returns – Gidan.'
+        }
+      />
+
+      <link
+        rel="canonical"
+        href={`https://gidan.store/filter/${categoryId}`}
+      />
+    </>
+  )}
 </Helmet>
+
+
 
             <div className="container mx-auto min-h-screen">
                 {/* Mobile Filter Button */}

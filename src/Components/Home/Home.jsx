@@ -57,7 +57,7 @@ const Home = () => {
     <div>
 
       <Helmet>
-  <title>Gardening & Plants Online in India | Gidan</title>
+  <title>Gardening & Plants Online in Bengaluru | Gidan</title>
 
   <meta
     name="description"
