@@ -57,13 +57,16 @@ const Home = () => {
     <div>
 
       <Helmet>
-  <title>Gidan - Your ally in smarter gardening.</title>
+  <title>Gardening & Plants Online in India | Gidan</title>
+
   <meta
     name="description"
-    content="Buy indoor & outdoor plants, pots, seeds, and plant care products online at Gidan. Discover everything you need for smarter, healthier gardening."
+    content="Shop plants, pots, seeds, and plant care products online at Gidan. ✔ Best prices ✔ Fast delivery ✔ Secure payments ✔ Easy returns. Order online today."
   />
+
   <link rel="canonical" href="https://gidan.store" />
 </Helmet>
+
 
       {loading ? (
         <div className="flex justify-center items-center h-screen">
