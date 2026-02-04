@@ -240,8 +240,8 @@ const ContactUs = () => {
           <div className="p-4 border border-fuchsia-200 bg-white rounded w-full">
             <h3 className="">Head Office, Jaynagar</h3>
             <p>Contact Person - Sujith</p>
-            <p>Contact No - +91 7892078318</p>
-            <p>Email - contact@biotechmaali.com</p>
+            <p>Contact No - +91 7483316150</p>
+            <p>Email - info@gidan.store</p>
           </div>
 
           {/* Second Box: Gardening Services Enquiry */}
@@ -249,7 +249,7 @@ const ContactUs = () => {
             <h3 className="">Nursery Store</h3>
             <p>Contact Person - Kiran</p>
             <p>Contact No - +91 8971710854</p>
-            <p>Email - contact@biotechmaali.com</p>
+            <p>Email - info@gidan.store</p>
           </div>
         </section>
 

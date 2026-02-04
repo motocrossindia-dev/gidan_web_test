@@ -137,8 +137,8 @@ const TermsOfService = () => {
           <h2 className="text-2xl font-semibold text-green-600 mb-4">Contact Information</h2>
           <div className="space-y-2 text-gray-700">
             <p><strong>Company:</strong> FARM AMMINO AGRITECH PRIVATE LIMITED</p>
-            <p><strong>Email:</strong> contact@biotechmaali.com</p>
-            <p><strong>Phone:</strong> +91 7892078318</p>
+            <p><strong>Email:</strong> info@gidan.store</p>
+            <p><strong>Phone:</strong> +91 7483316150</p>
             <p><strong>Business Hours:</strong> Monday to Saturday, 09:00 AM to 06:00 PM</p>
             <p className="text-sm text-gray-600 mt-4">
               (During national holidays our offices may remain shut)
