@@ -59,14 +59,14 @@ const RefundPolicy = () => {
             <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8">
               <div className="flex items-center space-x-2 text-emerald-700">
                 <Mail className="w-5 h-5" />
-                <a href="mailto:contact@biotechmaali.com" className="hover:text-emerald-900 transition-colors">
-                  contact@biotechmaali.com
+                <a href="mailto:info@gidan.store" className="hover:text-emerald-900 transition-colors">
+                  info@gidan.store
                 </a>
               </div>
               <div className="flex items-center space-x-2 text-emerald-700">
                 <Phone className="w-5 h-5" />
                 <a href="tel:+917892078318" className="hover:text-emerald-900 transition-colors">
-                  +91 7892078318
+                  +91 7483316150
                 </a>
               </div>
             </div>
@@ -104,7 +104,7 @@ const RefundPolicy = () => {
                 <div className="ml-8">
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-3">
                     <p className="text-gray-700 mb-2">
-                      Contact us on <span className="font-semibold text-blue-700">+91 7892078318</span> within 24 hours of delivery with:
+                      Contact us on <span className="font-semibold text-blue-700">+91 7483316150</span> within 24 hours of delivery with:
                     </p>
                   </div>
                   <ul className="space-y-2">
@@ -182,7 +182,7 @@ const RefundPolicy = () => {
                   Kindly follow these steps within 24 hours of delivery:
                 </p>
                 <p className="text-gray-700 mb-2">
-                  Contact us at <span className="font-semibold text-blue-700">+91 7892078318</span> with:
+                  Contact us at <span className="font-semibold text-blue-700">+91 7483316150</span> with:
                 </p>
                 <ul className="space-y-2 ml-4">
                   <li className="flex items-start">
@@ -234,7 +234,7 @@ const RefundPolicy = () => {
                 </ul>
                 <div className="ml-8 mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <p className="text-gray-700">
-                    For any assistance or queries, please feel free to reach out to our Customer Service team at <span className="font-semibold text-blue-700">+91 7892078318</span> – we're here to help!
+                    For any assistance or queries, please feel free to reach out to our Customer Service team at <span className="font-semibold text-blue-700">+91 7483316150</span> – we're here to help!
                   </p>
                 </div>
               </div>
@@ -246,7 +246,7 @@ const RefundPolicy = () => {
                 </h3>
                 <div className="ml-8 bg-emerald-50 border border-emerald-200 rounded-lg p-4">
                   <p className="text-gray-700">
-                    Contact us at <span className="font-semibold text-emerald-700">+91 7892078318</span> or email us at <a href="mailto:contact@biotechmaali.com" className="font-semibold text-emerald-700 hover:text-emerald-900 transition-colors">contact@biotechmaali.com</a> for assistance
+                    Contact us at <span className="font-semibold text-emerald-700">+91 7483316150</span> or email us at <a href="mailto:info@gidan.store" className="font-semibold text-emerald-700 hover:text-emerald-900 transition-colors">info@gidan.store</a> for assistance
                   </p>
                 </div>
               </div>
@@ -290,7 +290,7 @@ const RefundPolicy = () => {
                 <div className="ml-8">
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-3">
                     <p className="text-gray-700 mb-2">
-                      Contact us at <span className="font-semibold text-blue-700">+91 7892078318</span> within 24 hours of delivery with:
+                      Contact us at <span className="font-semibold text-blue-700">+91 7483316150</span> within 24 hours of delivery with:
                     </p>
                   </div>
                   <ul className="space-y-2">
@@ -316,13 +316,13 @@ const RefundPolicy = () => {
               <div className="flex items-center space-x-2">
                 <Phone className="w-5 h-5" />
                 <a href="tel:+917892078318" className="hover:text-green-200 transition-colors">
-                  +91 7892078318
+                  +91 7483316150
                 </a>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="w-5 h-5" />
-                <a href="mailto:contact@biotechmaali.com" className="hover:text-green-200 transition-colors">
-                  contact@biotechmaali.com
+                <a href="mailto:info@gidan.store" className="hover:text-green-200 transition-colors">
+                  info@gidan.store
                 </a>
               </div>
             </div>

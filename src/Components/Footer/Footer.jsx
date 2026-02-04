@@ -196,14 +196,14 @@ if (isMobile) {
             className={`space-y-2 transition-all duration-300 md:block ${openSection === "get-in-touch" ? "block" : "hidden"
               }`}
           >
-            <li className="text-gray-700">+91 7892078318</li>
+            <li className="text-gray-700">+91 7483316150</li>
             <li className="text-gray-700">
               Email:{" "}
               <Link
-                to="mailto:contact@biotechmaali.com"
+                to="mailto:info@gidan.store"
                 className="hover:text-green-500"
               >
-                contact@biotechmaali.com
+                info@gidan.store
               </Link>
             </li>
           </ul>

@@ -85,7 +85,7 @@ const ShippingPolicy = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <MessageCircle className="w-4 h-4 text-green-600" />
-                  <span><strong>WhatsApp us</strong> at 7892078318</span>
+                  <span><strong>WhatsApp us</strong> at7483316150</span>
                 </div>
               </div>
             </div>
@@ -144,7 +144,7 @@ const ShippingPolicy = () => {
               </p>
               <div className="flex items-center gap-2 mt-3">
                 <Phone className="w-4 h-4 text-green-600" />
-                <span><strong>Telephone:</strong>+91 7892078318</span>
+                <span><strong>Telephone:</strong>+91 7483316150</span>
               </div>
             </div>
           </div>

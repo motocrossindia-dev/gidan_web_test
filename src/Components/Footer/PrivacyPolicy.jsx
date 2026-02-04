@@ -192,7 +192,7 @@ const PrivacyPolicy = () => {
                 <p><strong>Name:</strong> Sujith Nadig</p>
                 <p className="flex items-center gap-2">
                   <Mail className="w-4 h-4 text-green-600" />
-                  <strong>Email:</strong> contact@biotechmaali.com
+                  <strong>Email:</strong> info@gidan.store
                 </p>
               </div>
             </div>

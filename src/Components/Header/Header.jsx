@@ -11,7 +11,7 @@ const Header = () => {
 
         <div>
           <p className="text-white text-[11px] px-3 md:text-[13px]">
-            Free Shipping above ₹2000 | All India Delivery
+            Free Shipping above ₹2000 | Delivery in Bengaluru
           </p>
         </div>
 
@@ -20,7 +20,7 @@ const Header = () => {
 
           <div className="flex flex-col text-white text-[10px] sm:text-xs leading-tight text-right">
             <p>Help line</p>
-            <p className="font-semibold">+91 7892078318</p>
+            <p className="font-semibold">+91 7483316150</p>
           </div>
 
           <button

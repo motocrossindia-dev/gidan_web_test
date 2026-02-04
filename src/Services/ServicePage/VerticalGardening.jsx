@@ -88,7 +88,7 @@ const VerticalGarden = () => {
               <div className="hidden md:block text-white">•</div>
               <div className="flex items-center gap-2">
                 <FaPhone className="text-white w-5 h-5" />
-                <span className="text-white">+91 7892078318</span>
+                <span className="text-white">+91 7483316150</span>
               </div>
             </div>
             
