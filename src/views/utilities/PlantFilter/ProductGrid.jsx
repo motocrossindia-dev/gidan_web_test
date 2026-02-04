@@ -28,8 +28,14 @@ const ProductGrid = ({
     }
   }, [pagination?.next, query, filtersApplied]);
 
-  const handleProductClick = (productId) => {
-    navigate("/productdata/" + productId);
+  const handleProductClick = (product) => {
+  // ?.prod_id || product?.id
+      console.log("id=========",product.id,'==============product id',product.prod_id);
+      navigate(`/products/${product.slug}/`,{
+          state: {
+              product_id: product.slug,
+          }
+      });
   };
 
   // Fetch next page and append results (only if no filters applied)
@@ -134,7 +140,7 @@ const ProductGrid = ({
                     <div
                         key={key}
                         ref={!filtersApplied && isLast ? lastProductRef : null}
-                        onClick={() => handleProductClick(product?.prod_id || product?.id)}
+                        onClick={() => handleProductClick(product)}
                         className="cursor-pointer"
                     >
                       <ProductCard
@@ -203,7 +209,7 @@ export default ProductGrid;
 //   }, [pagination?.next, query]);
 //
 //   const handleProductClick = (productId) => {
-//     navigate("/productdata/" + productId);
+//     navigate("/products/" + productId);
 //   };
 //
 //   // Fetch next page and append results (dedupe by id)

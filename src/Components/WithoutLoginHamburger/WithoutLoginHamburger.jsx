@@ -150,7 +150,7 @@ useEffect(() => {
         <Link onClick={() => setIsOpen(false)} to="/trackorder" className="block">Track Order</Link>
         <Link onClick={() => setIsOpen(false)} to="/services" className="block">Services</Link>
         <Link onClick={() => setIsOpen(false)} to="/franchiseenquery" className="block">Become A Franchise</Link>
-        <Link onClick={() => setIsOpen(false)} to="/contactus" className="block">Contact Us</Link>
+        <Link onClick={() => setIsOpen(false)} to="/contact-us" className="block">Contact Us</Link>
       </div>
 
       {/* Logout Button */}

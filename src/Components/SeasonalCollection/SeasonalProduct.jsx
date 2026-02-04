@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../redux/User/verificationSlice";
 import { Link } from "react-router-dom";
 import axiosInstance from '../../Axios/axiosInstance';
+import convertToSlug from "../../utils/slugConverter";
 
 const SeasonalProduct = () => {
   const [products, setProducts] = useState([]);
@@ -59,8 +60,11 @@ const SeasonalProduct = () => {
       console.error("Error fetching categories:", error);
     }
   };
-  const handleProductClick = (productId) => {
-    navigate("/productdata/" + productId);
+  const handleProductClick = (product) => {
+
+    navigate(`/products/${product.slug}/` ,{ state: {
+        product_id: product.id,
+      }});
   };
 
   return (
@@ -73,7 +77,7 @@ const SeasonalProduct = () => {
         <div className="max-w-7xl mx-auto px-3">
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 lg:mx-10 gap-4 lg:gap-2 justify-items-center margin-bottom: -33px;">
             {products.slice(0, visibleCount).map((product) => (
-              <div key={product?.id} onClick={() => handleProductClick(product?.id)}>
+              <div key={product?.id} onClick={() => handleProductClick(product)}>
                 <SeasonalCard
                   product={product?.id}
                   name={product?.name}

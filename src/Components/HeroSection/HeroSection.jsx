@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import convertToSlug from "../../utils/slugConverter";
 
 const HeroSection = ({ hero }) => {
   const navigate = useNavigate();
@@ -23,11 +24,19 @@ const HeroSection = ({ hero }) => {
 
   const handleBannerClick = () => {
     const activeBanner = hero[currentIndex];
-    navigate(`/carousel/${activeBanner.id}/`);
+    // Pass the product name string to the converter
+    const slug = convertToSlug(activeBanner.category);
+
+    // 2. Navigate with the URL + State
+    navigate(`/carousel/${slug}`, {
+      state: {
+        heroId: hero[currentIndex].id, // Sending the ID
+        // You can also send other data if needed
+        fullData: hero[currentIndex]
+      }
+    });
     console.log("Visible ID:", hero[currentIndex].id);
-
-    // window.location.href = link;
-
+    console.log("Visible slug:", slug);
 
   };
 

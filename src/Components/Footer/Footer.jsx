@@ -142,7 +142,7 @@ if (isMobile) {
               }`}
           >
             <li className="hover:text-green-500">
-              <Link to="/contactus">Contact Us</Link>
+              <Link to="/contact-us">Contact Us</Link>
             </li>
             <li className="hover:text-green-500" onClick={handleClickorder}>
               <Link to="/profile/trackorder">Track Order</Link>

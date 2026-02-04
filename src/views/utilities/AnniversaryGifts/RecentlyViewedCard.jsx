@@ -100,7 +100,7 @@ const RecentlyViewedCard = ({
   };
 
   const handleQuickView = (e) => {
-    navigate(`/productdata/${product}`, { state: { product } });
+    navigate(`/products/${product}`, { state: { product } });
   };
 
   return (

@@ -5,7 +5,47 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df516f1c-c962-4e0d-8a95-1119b7efb609" name="Changes" comment="new">
+      <change afterPath="$PROJECT_DIR$/src/utils/slugConverter.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Category/CategoryIcons.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Category/CategoryIcons.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Footer/Footer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Footer/Footer.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/HeroSection/HeroSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/HeroSection/HeroSection.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingSection.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/WithoutLoginHamburger/WithoutLoginHamburger.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/WithoutLoginHamburger/WithoutLoginHamburger.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/RecentlyViewedCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/BestSeller/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BestSeller/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/BirthdayGifts/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BirthdayGifts/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/CarouselData/CarouselData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/CarouselData/CarouselData.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/ComboOffer/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ComboOffer/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/ProductGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/HouseWarming/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/HouseWarming/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Latest/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Latest/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantCare/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantCare/ProductGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantCare/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantCare/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Plants/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Plants/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Pots/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Pots/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductData.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductFeatured.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductFeatured.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductFeaturedData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductFeaturedData.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductSeller.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductSeller.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductSellerData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductSellerData.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/RakshaBhandan/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/RakshaBhandan/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Seeds/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Seeds/RecentlyViewedProduct.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -195,7 +235,9 @@
       <workItem from="1770000037852" duration="1924000" />
       <workItem from="1770052593113" duration="1334000" />
       <workItem from="1770097267612" duration="1843000" />
-      <workItem from="1770120559310" duration="725000" />
+      <workItem from="1770120559310" duration="2481000" />
+      <workItem from="1770177449227" duration="1447000" />
+      <workItem from="1770188785876" duration="17197000" />
     </task>
     <task id="LOCAL-00001" summary="new">
       <option name="closed" value="true" />

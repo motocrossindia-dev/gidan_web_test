@@ -10,6 +10,7 @@ import { enqueueSnackbar } from "notistack";
 import StarsOnCards from "./StarsOnCards";
 import ReactStars from "react-rating-stars-component";
 import axiosInstance from "../../Axios/axiosInstance";
+import convertToSlug from "../../utils/slugConverter";
 
 const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, inCart, getProducts, ratingNumber, mrp, ribbon }) => {
     const [isHovered, setIsHovered] = useState(false);
@@ -85,7 +86,11 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
     };
 
     const handleQuickView = (e) => {
-        navigate(`/productdata/${product.id}`, { state: { product } });
+        const slug = convertToSlug(product.name);
+        navigate(`/products/${slug}/`, {       state: {
+                product_id: product.id,
+            } });
+        console.log("1------------")
     };
 
     return (
@@ -454,7 +459,7 @@ export default TrendingCard;
 //
 //   const handleQuickView = (e) => {
 //     // e.stopPropagation();
-//     navigate(`/productdata/${product.id}`, { state: { product } });
+//     navigate(`/products/${product.id}`, { state: { product } });
 //   };
 //
 //

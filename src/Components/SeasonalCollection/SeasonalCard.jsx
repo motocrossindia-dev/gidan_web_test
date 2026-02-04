@@ -11,6 +11,7 @@ import Verify from "../../Services/Services/Verify";
 import ReactStars from "react-rating-stars-component";
 import StarsOnCards from "../TrendingProducts/StarsOnCards";
 import axiosInstance from "../../Axios/axiosInstance";
+import convertToSlug from "../../utils/slugConverter";
 
 const SeasonalCard = ({
                           product,
@@ -98,7 +99,10 @@ const SeasonalCard = ({
     };
 
     const handleQuickView = (e) => {
-        navigate(`/productdata/${product}`, { state: { product } });
+        const slug = convertToSlug(product.name);
+        navigate(`/products/${slug}/`, {       state: {
+                product_id: product.id,
+            } });
     };
 
     return (
@@ -453,7 +457,7 @@ export default SeasonalCard;
 //   };
 //
 //   const handleQuickView = (e) => {
-//     navigate(`/productdata/${product}`, { state: { product } });
+//     navigate(`/products/${product}`, { state: { product } });
 //   };
 //
 //   return (

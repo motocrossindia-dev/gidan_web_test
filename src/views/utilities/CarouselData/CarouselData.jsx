@@ -55,14 +55,17 @@ import RecentlyViewedProduct from "../PlantFilter/RecentlyViewedProduct";
 import CheckoutStores from "../PlantFilter/CheckoutStores";
 import { Helmet } from "react-helmet-async";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 
 
 function CarouselData() {
     const [results, setResults] = useState([]);
-    
 
-    const { id } = useParams();
+    const location = useLocation();
+
+    const id = location.state.heroId;
+    console.log(id,'-------------------------------s');
+    // const { id } = useParams();
 
     useEffect(() => {
         fetchCarouselProducts();

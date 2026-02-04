@@ -32,7 +32,7 @@ const RecentlyViewedProduct = () => {
   }, []); 
 
   const handleProductClick = (productId) => {
-    navigate("/productdata/" + productId);
+    navigate("/products/" + productId);
   };
   
   return (

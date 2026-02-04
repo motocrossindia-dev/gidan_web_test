@@ -10,7 +10,7 @@ const ProductGrid = ({searchResults ,pagination}) => {
   
 
   const handleProductClick = (productId) => {
-    navigate("/productdata/" + productId);
+    navigate("/products/" + productId);
   };
   const totalProducts = searchResults.length;
   return (

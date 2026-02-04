@@ -135,7 +135,7 @@ const ProductSellerCard = ({
 
   const handleQuickView = (e) => {
     // e.stopPropagation();
-    navigate(`/productdata/${product}`, { state: { product } });
+    navigate(`/products/${product}`, { state: { product } });
   };
   return (
     <>

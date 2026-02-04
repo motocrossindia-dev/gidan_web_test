@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../redux/User/verificationSlice";
 import axiosInstance from "../../Axios/axiosInstance";
+import convertToSlug from "../../utils/slugConverter";
 
 
 const TrendingSection = () => {
@@ -52,8 +53,13 @@ const TrendingSection = () => {
     getProducts();
   }, []);
 
-  const handleProductClick = (productId) => {
-    navigate("/productdata/" + productId);
+  const handleProductClick = (product) => {
+    console.log("id=========",product.id)
+    navigate(`/products/${product.slug}/`,{
+      state: {
+        product_id: product.slug,
+      }
+    });
   };
 
 
@@ -147,7 +153,7 @@ const TrendingSection = () => {
           {visibleProducts.map((product, index) => (
             <div
               key={index}
-              onClick={() => handleProductClick(product.id)}
+              onClick={() => handleProductClick(product)}
               className="cursor-pointer"
             >
 

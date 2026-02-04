@@ -28,8 +28,14 @@ const ProductFeatured = () => {
       });
   }, []);
 
-  const handleProductClick = (productId) => {
-    navigate("/productdata/" + productId);
+  const handleProductClick = (product) => {
+
+      console.log("id=========",product.id);
+      navigate(`/products/${product.slug}/`,{
+          state: {
+              product_id: product.slug,
+          }
+      });
   };
 
   return (
@@ -39,7 +45,7 @@ const ProductFeatured = () => {
         <div className="grid gap-4 justify-items-center font-sans grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4">
 
           {products.map((product, index) => (
-            <div key={index} onClick={() => handleProductClick(product.id)} className="cursor-pointer">
+            <div key={index} onClick={() => handleProductClick(product)} className="cursor-pointer">
 
               {/* Mobile View */}
               <div className="sm:hidden">

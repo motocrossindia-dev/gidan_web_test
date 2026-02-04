@@ -31,8 +31,14 @@ const ProductGrid = ({ results }) => {
 
   // Sorting function
 
-  const handleProductClick = (productId) => {
-    navigate("/productdata/" + productId);
+  const handleProductClick = (product) => {
+    // ?.prod_id || product?.id
+    console.log("id=========",product.id,'==============product id',product);
+    navigate(`/products/${product.slug}/`,{
+      state: {
+        product_id: product.slug,
+      }
+    });
   };
 
   return (
@@ -51,7 +57,7 @@ const ProductGrid = ({ results }) => {
           {(results?.length ? results : products).map((product, index) => (
               <div
                   key={index}
-                  onClick={() => handleProductClick(product.id)}
+                  onClick={() => handleProductClick(product)}
                   className="cursor-pointer"
               >
                 <TrendingCard

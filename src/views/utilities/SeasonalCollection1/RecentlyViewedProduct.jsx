@@ -38,7 +38,7 @@ const RecentlyViewedProduct = () => {
   }, []); // Re-run if `accessToken` changes
 
   const handleProductClick = (productId) => {
-    navigate("/productdata/" + productId);
+    navigate("/products/" + productId);
   };
   
   return (

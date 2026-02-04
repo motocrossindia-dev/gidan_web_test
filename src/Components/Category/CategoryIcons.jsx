@@ -61,7 +61,8 @@ const CategoryIcons = () => {
     getCategory();
   }, []);
 
-  const getCategorywiseProduct = async (id, categoryname, typeKey) => {
+  const getCategorywiseProduct = async (id, categoryname,slug, typeKey) => {
+
     if (categoryname === "GIFTS") {
       navigate(`/gifts/`);
     } else if (categoryname === "SERVICES") {
@@ -71,7 +72,7 @@ const CategoryIcons = () => {
     } else {
       // For categories with typeKey (plants, pots, seeds, plantcare), include it in the URL
       if (typeKey) {
-        navigate(`/filter/${id}/`, {
+        navigate(`/category/${slug}/`, {
           state: {
             categoryId: id,
             categoryName: categoryname,
@@ -80,7 +81,7 @@ const CategoryIcons = () => {
         });
       } else {
         // For other categories (if any), navigate without typeKey
-        navigate(`/filter/${id}/`, {
+        navigate(`/category/${slug}/`, {
           state: {
             categoryId: id,
             categoryName: categoryname
@@ -112,6 +113,7 @@ const CategoryIcons = () => {
                         onClick={() => getCategorywiseProduct(
                             category.id,
                             category.name,
+                            category.slug,
                             category.typeKey || categoryToTypeMap[category.name] || ''
                         )}
                     >
@@ -136,8 +138,7 @@ const CategoryIcons = () => {
                               // Get the typeKey for this subcategory from its parent
                               const typeKey = category.typeKey || categoryToTypeMap[category.name] || '';
 
-                              const subcategoryUrl = `/filter/subcategory/${item.id}/`;
-
+                              const subcategoryUrl = `/category/subcategory/${item?.slug}/`;
                               return (
                                   <li
                                       key={index}

@@ -22,7 +22,7 @@ const RecentlyViewedProduct = () => {
   }, []);
 
   const handleProductClick = (productId) => {
-    navigate("/productdata/" + productId);
+    navigate("/products/" + productId);
   };
 
   return (
@@ -86,7 +86,7 @@ export default RecentlyViewedProduct;
 //   }, []);
 //
 //   const handleProductClick = (productId) => {
-//     navigate("/productdata/" + productId);
+//     navigate("/products/" + productId);
 //   };
 //
 //   return (
@@ -157,7 +157,7 @@ export default RecentlyViewedProduct;
 // //   }, []); // Re-run if `accessToken` changes
 // //
 // //   const handleProductClick = (productId) => {
-// //     navigate("/productdata/" + productId);
+// //     navigate("/products/" + productId);
 // //   };
 // //
 // //   return (

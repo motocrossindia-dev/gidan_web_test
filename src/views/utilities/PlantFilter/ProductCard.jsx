@@ -89,7 +89,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
     };
 
     const handleQuickView = () => {
-        navigate(`/productdata/${prod_id}`, { state: { product } });
+        navigate(`/products/${prod_id}`, { state: { product } });
     };
 
     return (
@@ -421,7 +421,7 @@ export default ProductCard;
 //     };
 //
 //     const handleQuickView = () => {
-//         navigate(`/productdata/${prod_id}`, { state: { product } });
+//         navigate(`/products/${prod_id}`, { state: { product } });
 //     };
 //
 //     return (

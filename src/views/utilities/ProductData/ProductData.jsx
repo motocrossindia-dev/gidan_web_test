@@ -108,7 +108,10 @@ export default function Component() {
     const [inWishlist, setInWishlist] = useState(null)
     const [productDetailData, setProductDetailData] = useState([]);
     const [imageThumbnails, setImageThumbnails] = useState([]);
-    const {id} = useParams(); // Retrieve the ID from the URL
+    const params = useParams();
+    const id = location.state?.product_id || params.id;
+    console.log(id,'========details');
+
     const [pincode, setPincode] = useState("");
     const [error, setError] = useState("");
     // ==========auth cart
@@ -668,7 +671,7 @@ export default function Component() {
     rel="canonical"
     href={
       id
-        ? `https://gidan.store/productdata/${id}`
+        ? `https://gidan.store/products/${id}`
         : 'https://gidan.store'
     }
   />

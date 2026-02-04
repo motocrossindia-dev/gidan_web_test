@@ -30,8 +30,13 @@ const ProductSeller = () => {
       });
   }, []);
 
-  const handleProductClick = (productId) => {
-    navigate('/productdata');
+  const handleProductClick = (product) => {
+      console.log("id=========",product.id);
+      navigate(`/products/${product.slug}/`,{
+          state: {
+              product_id: product.slug,
+          }
+      });
   };
 
   return (
@@ -40,7 +45,7 @@ const ProductSeller = () => {
       <div className="max-w-7xl mx-auto px-3">
         <div className="grid gap-4 justify-items-center font-sans grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
           {products.map((product) => (
-            <div key={product.id} onClick={() => handleProductClick(product.id)} className="w-full sm:max-w-xs">
+            <div key={product.id} onClick={() => handleProductClick(product)} className="w-full sm:max-w-xs">
 
               {/* Small Screens */}
               <div className="sm:hidden">

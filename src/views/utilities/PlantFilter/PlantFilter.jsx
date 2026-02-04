@@ -89,7 +89,7 @@ function PlantFilter() {
             }
         };
 
-        if (path.startsWith("/filter/")) {
+        if (path.startsWith("/category/")) {
             getInitialProducts();
         }
     }, [ path, typeKey, categoryId, subcategoryID]);
@@ -111,7 +111,7 @@ function PlantFilter() {
 
       <link
         rel="canonical"
-        href={`https://gidan.store/filter/${categoryId}?subcategory=${subcategoryID}`}
+        href={`https://gidan.store/category/${categoryId}?subcategory=${subcategoryID}`}
       />
     </>
   ) : (
@@ -134,7 +134,7 @@ function PlantFilter() {
 
       <link
         rel="canonical"
-        href={`https://gidan.store/filter/${categoryId}`}
+        href={`https://gidan.store/category/${categoryId}`}
       />
     </>
   )}
