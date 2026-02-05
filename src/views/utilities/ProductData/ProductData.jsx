@@ -770,7 +770,7 @@ export default function Component() {
 
                                 {/* Thumbnail List */}
                                 <div className="flex gap-3 overflow-x-auto px-8 md:px-0">
-                                    {imageThumbnails.slice(1).map((image, i) => (
+                                    {imageThumbnails.map((image, i) => (
                                         <button
                                             key={i + 1}
                                             onClick={() => setSelectedImage(i + 1)}

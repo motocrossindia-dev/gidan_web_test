@@ -21,8 +21,13 @@ const RecentlyViewedProduct = () => {
     getProducts();
   }, []);
 
-  const handleProductClick = (productId) => {
-    navigate("/products/" + productId);
+  const handleProductClick = (product) => {
+    console.log("id=========",product.id);
+    navigate(`/products/${product.slug}/`,{
+      state: {
+        product_id: product.slug,
+      }
+    });
   };
 
   return (
@@ -36,7 +41,7 @@ const RecentlyViewedProduct = () => {
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4 justify-items-center">
               {products.length > 0 ? (
                   products.map((product) => (
-                      <div key={product?.id} onClick={() => handleProductClick(product?.id)} className="cursor-pointer">
+                      <div key={product?.id} onClick={() => handleProductClick(product)} className="cursor-pointer">
                         <TrendingCard
                             product={product}
                             name={product?.name}
