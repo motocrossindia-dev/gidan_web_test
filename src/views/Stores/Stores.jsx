@@ -40,7 +40,7 @@
 //     return <div>{error}</div>;
 //   }
 //   const handleClick = () => {
-//     navigate('/franchiseenquery');
+//     navigate('/franchise-enquiry');
 //   };
 //   return (
 //       <>
@@ -148,7 +148,7 @@ const Stores = () => {
   }
 
   const handleClick = () => {
-    navigate("/franchiseenquery");
+    navigate("/franchise-enquiry");
   };
 
   return (

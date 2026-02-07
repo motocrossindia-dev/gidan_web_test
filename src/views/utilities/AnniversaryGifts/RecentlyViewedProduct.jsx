@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import TrendingCard from "../../../Components/TrendingProducts/TrendingCard"
 import axiosInstance from '../../../Axios/axiosInstance';
+import convertToSlug from "../../../utils/slugConverter";
 
 const RecentlyViewedProduct = () => {
   const [products, setProducts] = useState([]);
@@ -31,8 +32,16 @@ const RecentlyViewedProduct = () => {
     
   }, []); // Re-run if `accessToken` changes
 
-  const handleProductClick = (productId) => {
-    navigate("/products/" + productId);
+  const handleProductClick = (product) => {
+    const slug = convertToSlug(product.name);
+    const category_slug = convertToSlug(product.category_slug);
+    const sub_category_slug = convertToSlug(product.sub_category_slug);
+
+    navigate(`/category/${category_slug}/${slug}/`, {       state: {
+        product_id: product.id,
+
+      } });
+
   };
   
   return (
@@ -46,7 +55,7 @@ const RecentlyViewedProduct = () => {
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 lg:mx-10 gap-4 lg:gap-2 justify-items-center">
             {products.length > 0 ? (
               products.map((product) => (
-                <div key={product?.id} onClick={() => handleProductClick(product?.id)}>
+                <div key={product?.id} onClick={() => handleProductClick(product)}>
                   <TrendingCard
                     product={product}
                     name={product?.name}

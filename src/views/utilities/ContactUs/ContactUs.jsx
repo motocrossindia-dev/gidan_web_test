@@ -130,7 +130,7 @@ const ContactUs = () => {
     }
   };
   const handleClick = () => {
-    navigate('/franchiseenquery');
+    navigate('/franchise-enquiry');
   };
   return (
 
@@ -145,7 +145,7 @@ const ContactUs = () => {
 
   <link
     rel="canonical"
-    href="https://gidan.store/contactus"
+    href="https://gidan.store/contact-us"
   />
 </Helmet>
 

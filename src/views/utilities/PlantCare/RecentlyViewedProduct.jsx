@@ -40,8 +40,18 @@ const RecentlyViewedProduct = () => {
     
   }, []); // Re-run if `accessToken` changes
 
-  const handleProductClick = (productId) => {
-    navigate("/products/" + productId);
+  const handleProductClick = (product) => {
+    const category_slug = product?.category_slug;
+    const sub_category_slug = product?.sub_category_slug;
+
+    navigate(`/category/${category_slug}/${product.slug}/`, {       state: {
+        product_id: product.id,
+        category_slug:category_slug,
+        sub_category_slug:sub_category_slug
+
+      } });
+
+
   };
 
   console.log(products,'====================plant recentviews')
@@ -57,7 +67,7 @@ const RecentlyViewedProduct = () => {
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 lg:mx-10 gap-4 lg:gap-2 justify-items-center">
             {products.length > 0 ? (
               products.map((product,index) => (
-                <div key={product?.id} onClick={() => handleProductClick(product?.id)}>
+                <div key={product?.id} onClick={() => handleProductClick(product)}>
                   <TrendingCard
                       index={index}
                       name={product?.name}

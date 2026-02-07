@@ -27,7 +27,7 @@ const CategoryIcons = () => {
         const updatedCategories = await Promise.all(
             categories.map(async (category) => {
               if (category?.id) {
-                const subCategory = await getSubCategory(category?.id);
+                const subCategory = await getSubCategory(category?.slug);
                 // Add the type_choice key only for specific categories
                 const typeKey = categoryToTypeMap[category.name] || '';
                 return { ...category, subCategory, typeKey };
@@ -76,7 +76,8 @@ const CategoryIcons = () => {
           state: {
             categoryId: id,
             categoryName: categoryname,
-            typeKey: typeKey
+            typeKey: typeKey,
+            category_slug:slug
           }
         });
       } else {
@@ -84,7 +85,8 @@ const CategoryIcons = () => {
         navigate(`/category/${slug}/`, {
           state: {
             categoryId: id,
-            categoryName: categoryname
+            categoryName: categoryname,
+            category_slug:slug
           }
         });
       }
@@ -152,7 +154,8 @@ const CategoryIcons = () => {
                                           subcategoryID: item.id,
                                           subCategory: item, // Complete subcategory object
                                           typeKey: typeKey,
-                                          categoryId: category.id
+                                          categoryId: category.id,
+                                          subcategory_slug:item.slug
                                         }}
                                         className="block py-1 px-2 rounded hover:bg-gray-50 text-xs sm:text-sm"
                                     >

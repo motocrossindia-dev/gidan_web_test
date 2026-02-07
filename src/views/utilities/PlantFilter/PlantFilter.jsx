@@ -8,18 +8,46 @@ import { useLocation } from "react-router-dom";
 import axiosInstance from "../../../Axios/axiosInstance";
 import RecentlyViewedProduct from "./RecentlyViewedProduct";
 import { Helmet } from "react-helmet-async";
+import GenericPage from "../Info/GenericPage";
+
+
+const CategoryLayout = ({ data }) => {
+    // ✅ 4. FIX LOGIC: Check if data exists and has content (hero/sections)
+    // instead of checking for an ID.
+    const hasGenericContent = data && data.hero;
+    console.log(hasGenericContent,'--------------------------------hhh');
+
+    return (
+        <div className="space-y-12">
+
+                <>
+                    <RecentlyViewedProduct />
+                    {/* 2. Show FAQ ONLY if NO generic content is found (The conditional one) */}
+                    {!hasGenericContent && <FAQSection />}
+                    {/* Show GenericPage ONLY if we have the valid JSON content */}
+                    {hasGenericContent && <GenericPage data={data} />}
+
+                    <CheckoutStores />
+                </>
+        </div>
+    );
+};
 
 function PlantFilter() {
     const location = useLocation();
     const path = location.pathname;
 
     const stateData = location.state || {};
-    const { categoryId, categoryName, typeKey, subCategory, subcategoryID } = stateData;
-    const { name: subCategoryName } = subCategory || {};
+    const { categoryId, categoryName, typeKey, subCategory, subcategoryID ,category_slug,} = stateData;
+    const { name: subCategoryName ,subcategory_slug} = subCategory || {};
 
     const [showMobileFilter, setShowMobileFilter] = useState(false);
     const [products, setProducts] = useState({});
     const [results, setResults] = useState([]);
+
+
+    const [categoryData, setCategoryData] = useState(null);
+
 
     useEffect(() => {
         if (showMobileFilter) {
@@ -50,7 +78,9 @@ function PlantFilter() {
                     if (response.status === 200) {
                         setResults(response.data.products || []);
                         setProducts(response.data || {});
+
                     }
+
                 } catch (error) {
                     console.error("Error fetching offer products:", error);
                 }
@@ -83,6 +113,7 @@ function PlantFilter() {
                         next: response.data.next,
                         previous: response.data.previous,
                     });
+                    setCategoryData(response.data?.category_info?.category_info || null);
                 }
             } catch (error) {
                 console.error("Error fetching products via filter API:", error);
@@ -111,7 +142,7 @@ function PlantFilter() {
 
       <link
         rel="canonical"
-        href={`https://gidan.store/category/${categoryId}?subcategory=${subcategoryID}`}
+        href={`https://gidan.store/category/${category_slug}?subcategory=${subcategory_slug}`}
       />
     </>
   ) : (
@@ -134,7 +165,7 @@ function PlantFilter() {
 
       <link
         rel="canonical"
-        href={`https://gidan.store/category/${categoryId}`}
+        href={`https://gidan.store/category/${category_slug}`}
       />
     </>
   )}
@@ -163,6 +194,7 @@ function PlantFilter() {
                         subcategory={subCategoryName}
                         subcategoryID={subcategoryID}
                         typeKey={typeKey}
+                        setCategoryData={setCategoryData}
                     />
                 </div>
 
@@ -180,11 +212,7 @@ function PlantFilter() {
                 {/* Additional Sections - Fixed with proper spacing */}
                 <div className="mt-12 mb-8">
                     <div className="container mx-auto px-4 md:px-8">
-                        <div className="space-y-12">
-                            <RecentlyViewedProduct />
-                            <FAQSection />
-                            <CheckoutStores />
-                        </div>
+                      <CategoryLayout data={categoryData}/>
                     </div>
                 </div>
 
@@ -213,6 +241,7 @@ function PlantFilter() {
                                     subcategory={subCategoryName}
                                     subcategoryID={subcategoryID}
                                     typeKey={typeKey}
+                                    setCategoryData={setCategoryData}
                                 />
                             </div>
                         </div>

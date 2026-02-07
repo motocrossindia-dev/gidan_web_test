@@ -57,15 +57,16 @@ const Home = () => {
     <div>
 
       <Helmet>
-  <title>Gardening & Plants Online in Bengaluru | Gidan</title>
+        <title>Gidan® – Buy Plants, Planters, Pots & Seeds Online in Bangalore</title>
 
-  <meta
-    name="description"
-    content="Shop plants, pots, seeds, and plant care products online at Gidan. ✔ Best prices ✔ Fast delivery ✔ Secure payments ✔ Easy returns. Order online today."
-  />
+        <meta
+            name="description"
+            content="Buy plants, planters, pots & seeds online in Bangalore from Gidan. Fresh plants, garden décor and reliable doorstep delivery."
+        />
 
-  <link rel="canonical" href="https://gidan.store" />
-</Helmet>
+        <link rel="canonical" href="https://gidan.store" />
+      </Helmet>
+
 
 
       {loading ? (

@@ -24,7 +24,7 @@ const Header = () => {
           </div>
 
           <button
-            onClick={() => navigate("/franchiseenquery")}
+            onClick={() => navigate("/franchise-enquiry")}
             className="bg-bio-green text-white font-bold uppercase whitespace-nowrap rounded-lg px-2 md:py-1
             hover:bg-green-700 transition text-[11px] md:text-[13px]"
           >

@@ -49,7 +49,7 @@ useEffect(() => {
 
   <link
     rel="canonical"
-    href="https://gidan.store/carriers"
+    href="https://gidan.store/careers"
   />
 </Helmet>
 

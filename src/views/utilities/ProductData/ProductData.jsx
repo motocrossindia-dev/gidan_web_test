@@ -28,6 +28,7 @@ import {enqueueSnackbar} from "notistack";
 import Verify from "../../../Services/Services/Verify";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { Helmet } from "react-helmet-async";
+import ProductSchema from "../seo/ProductSchema";
 
 const productdata =
     "https://firebasestorage.googleapis.com/v0/b/zpos-uk.appspot.com/o/67977213135ebb17c407e687%2F2025%2F1%2F1738430215367_scaled_Peacelilly.png?alt=media";
@@ -110,6 +111,7 @@ export default function Component() {
     const [imageThumbnails, setImageThumbnails] = useState([]);
     const params = useParams();
     const id = location.state?.product_id || params.id;
+    const category_slug = location.state?.category_slug || params.id;
     console.log(id,'========details');
 
     const [pincode, setPincode] = useState("");
@@ -201,6 +203,20 @@ export default function Component() {
                         dispatch(addToCart(product_data));
                         enqueueSnackbar("Product added to cart successfully!", {variant: "success"});
                         window.dispatchEvent(new Event("cartUpdated"));
+                        window.dataLayer = window.dataLayer || [];
+                        window.dataLayer.push({
+                            event: "add_to_cart",
+                            ecommerce: {
+                                currency: "NGN",
+                                value: productDetailData?.data?.product?.selling_price,
+                                items: [{
+                                    item_name: productDetailData?.data?.product?.main_product_name,
+                                    item_id: productDetailData?.data?.product?.id,
+                                    price: productDetailData?.data?.product?.selling_price,
+                                    quantity: quantity
+                                }]
+                            }
+                        });
 
                     }
                 } else if (token) {
@@ -210,6 +226,20 @@ export default function Component() {
                         dispatch(addToCart(product_data));
                         enqueueSnackbar("Product added to cart successfully!", {variant: "success"});
                         window.dispatchEvent(new Event("cartUpdated"));
+                        window.dataLayer = window.dataLayer || [];
+                        window.dataLayer.push({
+                            event: "add_to_cart",
+                            ecommerce: {
+                                currency: "NGN",
+                                value: productDetailData?.data?.product?.selling_price,
+                                items: [{
+                                    item_name: productDetailData?.data?.product?.main_product_name,
+                                    item_id: productDetailData?.data?.product?.id,
+                                    price: productDetailData?.data?.product?.selling_price,
+                                    quantity: quantity
+                                }]
+                            }
+                        });
 
                     }
                 }
@@ -226,6 +256,8 @@ export default function Component() {
                 navigate("/?modal=signIn", {replace: true});
             }
         }
+
+
     };
 
 
@@ -283,9 +315,11 @@ export default function Component() {
                     //      enqueueSnackbar("Order placed successfully!", { variant: "success" });
                     window.dispatchEvent(new Event("cartUpdated"));
 
+
                     if (window.innerWidth <= 768) {
                         // navigate("/order-summary", { state: { resource: response.data.data } }); // Navigate to mobile checkout
                         navigate("/checkout", {state: {ordersummary: response.data.data}}); // Navigate to regular checkout
+
 
                     } else {
                         navigate("/checkout", {state: {ordersummary: response.data.data}}); // Navigate to regular checkout
@@ -671,7 +705,7 @@ export default function Component() {
     rel="canonical"
     href={
       id
-        ? `https://gidan.store/products/${id}`
+        ? `https://gidan.store/category/${category_slug}/${id}/`
         : 'https://gidan.store'
     }
   />
@@ -709,7 +743,7 @@ export default function Component() {
                                             imageThumbnails[0]?.image ||
                                             ""
                                         }
-                                        alt="Product zoom"
+                                        alt={productDetailData?.data?.product?.main_product_name || ""}
                                         className="w-full h-[500px] md:h-[450px] object-contain"
                                         ref={imgRef}
                                     />
@@ -885,6 +919,7 @@ export default function Component() {
                                     );
                                 })}
                             </p>
+                            <ProductSchema product={productDetailData?.data?.product} images={imageThumbnails} />
 
                             <div className="flex mb-4 items-center">
                                 <div className="mr-4 flex items-center">

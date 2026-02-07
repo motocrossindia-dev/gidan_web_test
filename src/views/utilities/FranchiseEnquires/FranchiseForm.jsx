@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSnackbar } from "notistack";
-import franchiseenquires2 from "../../../Assets/FranchiseEnquires/franchiseenquires2.png";
+import franchiseenquires2 from "../../../Assets/FranchiseEnquires/franchiseenquires_gidan.png";
 import axios from "axios";
 import Cookies from "js-cookie";
 

@@ -29,13 +29,15 @@ const ProductFeatured = () => {
   }, []);
 
   const handleProductClick = (product) => {
+      const category_slug = product?.category_slug;
+      const sub_category_slug = product?.sub_category_slug;
 
-      console.log("id=========",product.id);
-      navigate(`/products/${product.slug}/`,{
-          state: {
-              product_id: product.slug,
-          }
-      });
+      navigate(`/category/${category_slug}/${product.slug}/`, {       state: {
+              product_id: product.id,
+              category_slug:category_slug,
+              sub_category_slug:sub_category_slug
+
+          } });
   };
 
   return (

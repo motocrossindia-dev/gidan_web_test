@@ -32,13 +32,15 @@ const ProductGrid = ({ results }) => {
   // Sorting function
 
   const handleProductClick = (product) => {
-    // ?.prod_id || product?.id
-    console.log("id=========",product.id,'==============product id',product);
-    navigate(`/products/${product.slug}/`,{
-      state: {
-        product_id: product.slug,
-      }
-    });
+    const category_slug = product?.category_slug;
+    const sub_category_slug = product?.sub_category_slug;
+
+    navigate(`/category/${category_slug}/${product.slug}/`, {       state: {
+        product_id: product.id,
+        category_slug:category_slug,
+        sub_category_slug:sub_category_slug
+
+      } });
   };
 
   return (

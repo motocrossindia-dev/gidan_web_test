@@ -9,8 +9,16 @@ const ProductGrid = ({searchResults ,pagination}) => {
   const navigate = useNavigate();
   
 
-  const handleProductClick = (productId) => {
-    navigate("/products/" + productId);
+  const handleProductClick = (product) => {
+    const category_slug = product?.category_slug;
+    const sub_category_slug = product?.sub_category_slug;
+
+    navigate(`/category/${category_slug}/${product.slug}/`, {       state: {
+        product_id: product.id,
+        category_slug:category_slug,
+        sub_category_slug:sub_category_slug
+
+      } });
   };
   const totalProducts = searchResults.length;
   return (
@@ -75,7 +83,7 @@ const ProductGrid = ({searchResults ,pagination}) => {
         {searchResults.map((product, index) => (
           <div
           key={index}
-          onClick={() => handleProductClick(product.id)}
+          onClick={() => handleProductClick(product)}
           className="cursor-pointer"
         >
           <TrendingCard

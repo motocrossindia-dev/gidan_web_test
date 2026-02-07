@@ -5,12 +5,60 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df516f1c-c962-4e0d-8a95-1119b7efb609" name="Changes" comment="new">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/RecentlyViewedCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/RecentlyViewedCard.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Assets/FranchiseEnquires/franchiseenquires_gidan.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/utilities/AboutUs/About-Us.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/utilities/Info/GenericPage.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/utilities/seo/OrganizationSchema.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/utilities/seo/ProductSchema.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/utilities/seo/WebsiteSchema.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/biotech_ecomerce.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Category/CategoryIcons.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Category/CategoryIcons.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Footer/Footer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Footer/Footer.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Header/Header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Header/Header.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Home/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Home/Home.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingSection.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/WithoutLoginHamburger/WithoutLoginHamburger.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/WithoutLoginHamburger/WithoutLoginHamburger.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Stores/Stores.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Stores/Stores.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/BestSeller/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BestSeller/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/BirthdayGifts/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BirthdayGifts/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Carriers/Carriers.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Carriers/Carriers.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/ComboOffer/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ComboOffer/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/ContactUs/ContactUs.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ContactUs/ContactUs.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/Featured.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/Featured.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/FilterSidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/FilterSidebar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/ProductGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/FranchiseEnquires/FranchiseEnquires.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/FranchiseEnquires/FranchiseEnquires.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/FranchiseEnquires/FranchiseForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/FranchiseEnquires/FranchiseForm.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/HouseWarming/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/HouseWarming/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Latest/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Latest/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantCare/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantCare/ProductGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantCare/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantCare/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductGrid.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/RecentlyViewedProduct.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/utilities/Plants/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Plants/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Pots/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Pots/RecentlyViewedProduct.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductData.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductFeatured.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductFeatured.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductFeaturedData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductFeaturedData.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductSeller.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductSeller.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductSellerData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductSellerData.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/RakshaBhandan/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/RakshaBhandan/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/RecentlyViewedProduct.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Seeds/RecentlyViewedProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Seeds/RecentlyViewedProduct.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,8 +68,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JSX File" />
         <option value="JavaScript File" />
+        <option value="JSX File" />
       </list>
     </option>
   </component>
@@ -74,6 +122,7 @@
       <recent name="D:\COMPANY PROJECTS\biotech maali new build files\git 3\git\src\views\utilities\WishList" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\COMPANY PROJECTS\BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN\git 3\biotech_ecomerce\src\Assets\FranchiseEnquires" />
       <recent name="D:\COMPANY PROJECTS\BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN\git 3\biotech_ecomerce\public" />
       <recent name="D:\COMPANY PROJECTS\BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN\git 3\biotech_ecomerce\src\views\utilities\ProductData" />
       <recent name="D:\COMPANY PROJECTS\biotech maali new build files\git 3\git\src\redux\Slice" />
@@ -204,7 +253,10 @@
       <workItem from="1770177449227" duration="1447000" />
       <workItem from="1770188785876" duration="20000000" />
       <workItem from="1770289363618" duration="1137000" />
-      <workItem from="1770293577505" duration="6002000" />
+      <workItem from="1770293577505" duration="8076000" />
+      <workItem from="1770359616115" duration="11221000" />
+      <workItem from="1770378122813" duration="21905000" />
+      <workItem from="1770435214020" duration="9300000" />
     </task>
     <task id="LOCAL-00001" summary="new">
       <option name="closed" value="true" />
@@ -262,18 +314,13 @@
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/views/utilities/Featured/FilterSidebar.jsx</url>
-          <line>1093</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/Components/NavigationBar/NavigationBar.jsx</url>
           <line>24</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx</url>
-          <option name="timeStamp" value="11" />
+          <url>file://$PROJECT_DIR$/src/views/utilities/FranchiseEnquires/FranchiseEnquires.jsx</url>
+          <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

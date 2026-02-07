@@ -40,11 +40,16 @@ const RecentlyViewedProduct = () => {
   }, []); // Re-run if `accessToken` changes
 
   const handleProductClick = (product) => {
+
     const slug = convertToSlug(product.name);
-    navigate(`/products/${slug}/`, {       state: {
+    const category_slug = convertToSlug(product.category_slug);
+    const sub_category_slug = convertToSlug(product.sub_category_slug);
+
+    navigate(`/category/${category_slug}/${slug}/`, {       state: {
         product_id: product.id,
+
       } });
-    console.log("1------------")
+
   };
   
   return (

@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react'
-import {Routes, Route, Navigate, useLocation} from 'react-router-dom';
+import React from 'react'
+import {Routes, Route, Navigate} from 'react-router-dom';
 import { isMobile } from 'react-device-detect'
 import useDeviceDetect from './CustomHooks/useDeviceDetect';
 import applyChromeCompatibilityFixes from './Services/ChromeCompatibility';
@@ -80,6 +80,8 @@ import MobileBarLayout from './views/utilities/MobileSidebar/MbileBarLayout';
 import DealOfWeek from './views/utilities/DealOfWeek/DealOfWeek';
 import Offer from './views/utilities/Offer/Offer';
 import CarouselData from './views/utilities/CarouselData/CarouselData';
+import AboutUs from "./views/utilities/AboutUs/About-Us";
+import OrganizationSchema from "./views/utilities/seo/OrganizationSchema";
 
 const DesktopRoutes = () => (
   <Routes>
@@ -87,17 +89,18 @@ const DesktopRoutes = () => (
     <Route path="/" element={<LandingPageLayout />}>
       <Route index element={<Home />} />
       <Route path="anniversary" element={<AnniversaryGifts />} />
+      <Route path="about-us" element={<AboutUs />} />
       <Route path="birthday" element={<Birthday />} />
       <Route path="housewarming" element={<HouseWarming />} />
       <Route path="thankyou" element={<Thankyou />} />
       <Route path="blogcomponent" element={<BlogComponent />} />
       <Route path="blogcomponent/single/:id/" element={<SingleBlog />} /> {/* not used slug*/}
-      <Route path="carriers" element={<Carriers />} />
+      <Route path="careers" element={<Carriers />} />
       <Route path="checkout" element={<CheckoutPage />} />
       <Route path="combooffer" element={<ComboOffer />} />
       <Route path="contact-us" element={<ContactUs />} />
       <Route path="corporate" element={<CorporateGiftingPage />} />
-      <Route path="franchiseenquery" element={<FranchiseEnquires />} />
+      <Route path="franchise-enquiry" element={<FranchiseEnquires />} />
       <Route path="gifts" element={<Comingsoon />} />
       <Route path="dealofweek" element={<DealOfWeek />} />
       <Route path="offer" element={<Offer />} />
@@ -105,8 +108,9 @@ const DesktopRoutes = () => (
       <Route path="orders" element={<MyOrders />} />
       <Route path="ourwork" element={<OurWork />} />
       <Route path="carousel/:id?/:slug/" element={<CarouselData />} /> {/*  used slug*/}
-      <Route path="category/:id/:category?" element={<PlantFilter />} />  {/*  used slug*/}
-      <Route path="category/subcategory/:id/:category?/:subcategory" element={<PlantFilter />} /> {/*  used slug*/}
+
+      <Route path="category/:id/" element={<PlantFilter />} />  {/*  used slug*/}
+      <Route path="category/subcategory/:id?/:subcategory" element={<PlantFilter />} /> {/*  used slug*/}
       <Route path="seasonal" element={<SeasonalCollection1 />} />
       <Route path="pots" element={<Pots />} />
       <Route path="faq" element={<FAQs />} />
@@ -118,7 +122,10 @@ const DesktopRoutes = () => (
       <Route path="feature" element={<Featured />} />
       <Route path="latest" element={<Latest />} />
       <Route path="bestseller" element={<BestSeller />} />
-      <Route path="products/:id/" element={<ProductData />} /> {/*  used slug*/}
+      {/*<Route path="products/:id/" element={<ProductData />} /> /!*  used slug*!/*/}
+      <Route path="category/:category/:id" element={<ProductData />} />
+      <Route path="category/:category/:subcategory/:id" element={<ProductData />} />
+
       <Route path="services" element={<ServicesPage />} />
       <Route path="services/single/" element={<ServicePage />} />
       <Route path="wishlist" element={<WishList />} />
@@ -178,9 +185,9 @@ const MobileRoutes = () => (
       <Route path="successpage" element={<Successpage />} />
       <Route path="ourwork" element={<OurWork />} />
       <Route path="PaymentGateway" element={<PaymentGateway />} />
-      <Route path="franchiseenquery" element={<FranchiseEnquires />} />
+      <Route path="franchise-enquiry" element={<FranchiseEnquires />} />
       <Route path="contact-us" element={<ContactUs />} />
-      <Route path="carriers" element={<Carriers />} />
+      <Route path="careers" element={<Carriers />} />
       <Route path="side" element={<SideParrot />} />
       <Route path="cart" element={<Cart />} />
       <Route path="wishlist" element={<WishList />} />
@@ -190,12 +197,15 @@ const MobileRoutes = () => (
       <Route path="anniversary" element={<AnniversaryGifts />} />
       <Route path="checkout" element={<CheckoutPage />} />
       <Route path="terms" element={<TermsofServices/>} />
-      <Route path="products/:id" element={<ProductData />} />
+      {/*<Route path="products/:id" element={<ProductData />} />*/}
+      <Route path="category/:category/:id" element={<ProductData />} />
+      <Route path="category/:category/:subcategory/:id" element={<ProductData />} />
+
       <Route path="stores" element={<Stores />} />
       <Route path="carousel/:id" element={<CarouselData />} />
       <Route path="orders" element={<MyOrders />} />
-      <Route path="category/:id/:category?" element={<PlantFilter />} />
-      <Route path="category/subcategory/:id/:category?/:subcategory" element={<PlantFilter />} />
+      <Route path="category/:id/" element={<PlantFilter />} />  {/*  used slug*/}
+      <Route path="category/subcategory/:id?/:subcategory" element={<PlantFilter />} /> {/*  used slug*/}
       <Route path="seasonal" element={<SeasonalCollection1 />} />
       <Route path="pots" element={<Featured />} />
       <Route path="plants" element={<Featured />} />
@@ -254,6 +264,7 @@ const App = () => {
   return (
     <div>
       <GoogleAnalytics />
+      <OrganizationSchema />
       {/* <TawkToWidget /> */}
       <Verify />
       {isMobile ? <MobileRoutes /> : <DesktopRoutes />}

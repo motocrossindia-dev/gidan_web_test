@@ -62,9 +62,15 @@ const SeasonalProduct = () => {
   };
   const handleProductClick = (product) => {
 
-    navigate(`/products/${product.slug}/` ,{ state: {
+    const slug = convertToSlug(product.name);
+    const category_slug = convertToSlug(product.category_slug);
+    const sub_category_slug = convertToSlug(product.sub_category_slug);
+
+    navigate(`/category/${category_slug}/${slug}/`, {       state: {
         product_id: product.id,
-      }});
+
+      } });
+
   };
 
   return (

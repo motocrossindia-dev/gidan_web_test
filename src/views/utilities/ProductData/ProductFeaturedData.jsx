@@ -139,7 +139,15 @@ const ProductFeaturedCard = ({
 
   const handleQuickView = (e) => {
     // e.stopPropagation();
-    navigate(`/products/${product}`, { state: { product } });
+    const category_slug = product?.category_slug;
+    const sub_category_slug = product?.sub_category_slug;
+
+    navigate(`/category/${category_slug}/${product.slug}/`, {       state: {
+        product_id: product.id,
+        category_slug:category_slug,
+        sub_category_slug:sub_category_slug
+
+      } });
   };
 
   return (

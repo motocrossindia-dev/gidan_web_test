@@ -23,7 +23,7 @@ function FranchiseEnquires() {
 
   <link
     rel="canonical"
-    href="https://gidan.store/franchiseenquery"
+    href="https://gidan.store/franchise-enquiry"
   />
 </Helmet>
 

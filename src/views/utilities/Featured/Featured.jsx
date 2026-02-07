@@ -43,7 +43,7 @@ function Featured() {
                 onClick={toggleMobileFilter}
             >
               <FiFilter size={20} />
-              <span className="font-medium">Filters</span>
+              <span className="font-medium">Filter sss</span>
             </button>
           </div>
 
