@@ -19,7 +19,7 @@ export default function ProductSchema({ product,images }) {
             "@type": "Offer",
             "price": product.selling_price,
             "priceCurrency": "NGN",
-            "availability": product.in_stock,
+            "availability": `http://schema.org/${product.stock_word}`,
             "url": `https://gidan.store/product/${product.slug}`
         }
     };
