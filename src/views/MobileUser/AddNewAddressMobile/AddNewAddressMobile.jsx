@@ -1,10 +1,12 @@
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { TrashIcon } from "lucide-react";
 import Verify from "../../../Services/Services/Verify";
 import { isMobile } from "react-device-detect";
 import axiosInstance from "../../../Axios/axiosInstance";
+import HomepageSchema from "../../utilities/seo/HomepageSchema";
+import StoreSchema from "../../utilities/seo/StoreSchema";
 
 
 
@@ -440,6 +442,8 @@ const AddressSection = () => {
             </div>
           </main>
         </div>
+          <HomepageSchema/>
+          <StoreSchema/>
         </>
   );
 };

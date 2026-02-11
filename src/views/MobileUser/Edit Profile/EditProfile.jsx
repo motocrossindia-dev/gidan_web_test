@@ -4,6 +4,8 @@ import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
+import HomepageSchema from "../../utilities/seo/HomepageSchema";
+import StoreSchema from "../../utilities/seo/StoreSchema";
 
 
 const EditProfile = () => {
@@ -192,6 +194,9 @@ const EditProfile = () => {
         </form>
       </div>
     </div>
+
+      <HomepageSchema/>
+      <StoreSchema/>
     </>
   );
 };

@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { Mail, Phone, } from 'lucide-react';
 import { Helmet } from "react-helmet-async";
+import HomepageSchema from "../../views/utilities/seo/HomepageSchema";
+import StoreSchema from "../../views/utilities/seo/StoreSchema";
 
 const RefundPolicy = () => {
   useEffect(() => {
@@ -330,6 +332,8 @@ const RefundPolicy = () => {
         </div>
       </div>
     </div>
+        <HomepageSchema/>
+        <StoreSchema/>
         </>
   );
 };

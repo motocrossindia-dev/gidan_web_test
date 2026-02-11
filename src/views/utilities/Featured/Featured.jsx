@@ -6,6 +6,8 @@ import RecentlyViewedProduct from "./RecentlyViewedProduct";
 import CheckoutStores from "./CheckoutStores";
 import { FiFilter } from "react-icons/fi";
 import { Helmet } from "react-helmet-async";
+import HomepageSchema from "../seo/HomepageSchema";
+import StoreSchema from "../seo/StoreSchema";
 
 function Featured() {
   const [showMobileFilter, setShowMobileFilter] = useState(false);
@@ -94,6 +96,8 @@ function Featured() {
               </div>
           )}
         </div>
+        <HomepageSchema/>
+        <StoreSchema/>
       </>
   );
 }

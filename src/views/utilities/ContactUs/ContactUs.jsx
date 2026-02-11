@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate for naviga
 import axiosInstance from "../../../Axios/axiosInstance";
 import { Helmet } from "react-helmet-async";
 import CheckOutStore from "../PlantFilter/CheckoutStores";
+import ContactUsSchema from "../seo/ContactUsSchema";
 
 
 const ContactUs = () => {
@@ -271,6 +272,7 @@ const ContactUs = () => {
         <CheckOutStore />
 
       </div>
+      <ContactUsSchema/>
     </>
 
   );

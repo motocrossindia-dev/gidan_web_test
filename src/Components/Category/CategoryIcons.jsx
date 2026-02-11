@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 import axiosInstance from "../../Axios/axiosInstance";
+import CategorySchema from "../../views/utilities/seo/CategorySchema";
+import SubCategorySchema from "../../views/utilities/seo/SubCategorySchema";
 
 const CategoryIcons = () => {
   const [categoryData, setCategoryData] = useState([]);
@@ -135,43 +137,47 @@ const CategoryIcons = () => {
                         {category.name}
                       </h3>
                       {category.subCategory && category.subCategory.length > 0 ? (
-                          <ul className="text-gray-700 space-y-1">
-                            {category.subCategory.map((item, index) => {
-                              // Get the typeKey for this subcategory from its parent
-                              const typeKey = category.typeKey || categoryToTypeMap[category.name] || '';
+                          <>
+                            <ul className="text-gray-700 space-y-1">
+                              {category.subCategory.map((item, index) => {
+                                // Get the typeKey for this subcategory from its parent
+                                const typeKey = category.typeKey || categoryToTypeMap[category.name] || '';
 
-                              const subcategoryUrl = `/category/subcategory/${item?.slug}/`;
-                              return (
-                                  <li
-                                      key={index}
-                                      className="hover:text-green-600 cursor-pointer transition-colors duration-200"
-                                  >
-                                    <Link
-                                        to={subcategoryUrl}
-                                        // Pass the complete subcategory object in state
-                                        state={{
-                                          categoryName: category.name,
-                                          subcategoryID: item.id,
-                                          subCategory: item, // Complete subcategory object
-                                          typeKey: typeKey,
-                                          categoryId: category.id,
-                                          subcategory_slug:item.slug
-                                        }}
-                                        className="block py-1 px-2 rounded hover:bg-gray-50 text-xs sm:text-sm"
+                                const subcategoryUrl = `/category/subcategory/${item?.slug}/`;
+                                return (
+                                    <li
+                                        key={index}
+                                        className="hover:text-green-600 cursor-pointer transition-colors duration-200"
                                     >
-                                      {item.name}
-                                    </Link>
-                                  </li>
-                              );
-                            })}
-                          </ul>
+                                      <Link
+                                          to={subcategoryUrl}
+                                          // Pass the complete subcategory object in state
+                                          state={{
+                                            categoryName: category.name,
+                                            subcategoryID: item.id,
+                                            subCategory: item, // Complete subcategory object
+                                            typeKey: typeKey,
+                                            categoryId: category.id,
+                                            subcategory_slug:item.slug
+                                          }}
+                                          className="block py-1 px-2 rounded hover:bg-gray-50 text-xs sm:text-sm"
+                                      >
+                                        {item.name}
+                                      </Link>
+                                    </li>
+                                );
+                              })}
+                            </ul>
+                          </>
+
                       ) : (
                           <p className="text-gray-500 text-xs sm:text-sm">
-                            No subcategories available
+                            More subcategories will be added soon
                           </p>
                       )}
                     </div>
                   </div>
+
                 </div>
             ))}
           </div>

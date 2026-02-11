@@ -1,6 +1,9 @@
 import React,{useEffect} from 'react';
 import { Shield, Lock, Eye, Database, Smartphone, Users, AlertTriangle, Mail } from 'lucide-react';
 import { Helmet } from "react-helmet-async";
+import ReturnPolicySchema from "../../views/utilities/seo/ReturnPolicySchema";
+import HomepageSchema from "../../views/utilities/seo/HomepageSchema";
+import StoreSchema from "../../views/utilities/seo/StoreSchema";
 
 const PrivacyPolicy = () => {
       useEffect(() => {
@@ -229,7 +232,9 @@ const PrivacyPolicy = () => {
         <p className="mt-1">This privacy policy is subject to change without notice. Last updated: 2024</p>
       </footer> */}
     </div>
-
+<ReturnPolicySchema/>
+        <HomepageSchema/>
+        <StoreSchema/>
         </>
   );
 };

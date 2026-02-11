@@ -1,6 +1,8 @@
 import React from 'react'
 import { Plane as Plant, Gift, Sprout,} from 'lucide-react';
 import { Helmet } from "react-helmet-async";
+import HomepageSchema from "../seo/HomepageSchema";
+import StoreSchema from "../seo/StoreSchema";
 
 
 const Comingsoon = () => {
@@ -79,6 +81,9 @@ const Comingsoon = () => {
             © 2025 Plant Gifts. All rights reserved.
           </p>
         </div>
+
+        <HomepageSchema/>
+        <StoreSchema/>
         </>
       );
 }

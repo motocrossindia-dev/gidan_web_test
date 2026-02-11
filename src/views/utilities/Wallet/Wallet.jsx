@@ -9,6 +9,8 @@ import { enqueueSnackbar } from "notistack";
 import FAQSection from "./Faq";
 import { isMobile } from "react-device-detect";
 import { Helmet } from "react-helmet-async";
+import HomepageSchema from "../seo/HomepageSchema";
+import StoreSchema from "../seo/StoreSchema";
 
 
 
@@ -316,6 +318,9 @@ const Wallet = () => {
         </div> */}
       </div>
     </div>
+
+        <HomepageSchema/>
+        <StoreSchema/>
     </>
   );
 };

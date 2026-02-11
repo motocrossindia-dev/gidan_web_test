@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from 'notistack';
 import axios from 'axios';
+import HomepageSchema from "../seo/HomepageSchema";
+import StoreSchema from "../seo/StoreSchema";
 
 
 const PaymentPage = () => {
@@ -83,6 +85,8 @@ const PaymentPage = () => {
   };
 
   return (
+      <>
+
     <div className="max-w-md mx-auto bg-white min-h-screen">
       <div className="p-4">
         {/* Progress Bar Component */}
@@ -225,6 +229,9 @@ const PaymentPage = () => {
         </div>
       </div>
     </div>
+          <HomepageSchema/>
+          <StoreSchema/>
+          </>
   );
 };
 

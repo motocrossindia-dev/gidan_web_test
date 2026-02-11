@@ -36,7 +36,7 @@ const ProductGrid = ({ results }) => {
     const sub_category_slug = product?.sub_category_slug;
 
     navigate(`/category/${category_slug}/${product.slug}/`, {       state: {
-        product_id: product.id,
+        product_id: product.slug,
         category_slug:category_slug,
         sub_category_slug:sub_category_slug
 

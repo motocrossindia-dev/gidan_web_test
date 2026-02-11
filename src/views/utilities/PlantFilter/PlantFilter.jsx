@@ -9,26 +9,28 @@ import axiosInstance from "../../../Axios/axiosInstance";
 import RecentlyViewedProduct from "./RecentlyViewedProduct";
 import { Helmet } from "react-helmet-async";
 import GenericPage from "../Info/GenericPage";
-
+import SubCategorySchema from "../seo/SubCategorySchema";
+import CategorySchema from "../seo/CategorySchema";
+import HomepageSchema from "../seo/HomepageSchema";
+import StoreSchema from "../seo/StoreSchema";
 
 const CategoryLayout = ({ data }) => {
     // ✅ 4. FIX LOGIC: Check if data exists and has content (hero/sections)
     // instead of checking for an ID.
     const hasGenericContent = data && data.hero;
-    console.log(hasGenericContent,'--------------------------------hhh');
+    console.log(hasGenericContent, '--------------------------------hhh');
 
     return (
         <div className="space-y-12">
+            <>
+                <RecentlyViewedProduct />
+                {/* 2. Show FAQ ONLY if NO generic content is found (The conditional one) */}
+                {!hasGenericContent && <FAQSection />}
+                {/* Show GenericPage ONLY if we have the valid JSON content */}
+                {hasGenericContent && <GenericPage data={data} />}
 
-                <>
-                    <RecentlyViewedProduct />
-                    {/* 2. Show FAQ ONLY if NO generic content is found (The conditional one) */}
-                    {!hasGenericContent && <FAQSection />}
-                    {/* Show GenericPage ONLY if we have the valid JSON content */}
-                    {hasGenericContent && <GenericPage data={data} />}
-
-                    <CheckoutStores />
-                </>
+                <CheckoutStores />
+            </>
         </div>
     );
 };
@@ -38,16 +40,16 @@ function PlantFilter() {
     const path = location.pathname;
 
     const stateData = location.state || {};
-    const { categoryId, categoryName, typeKey, subCategory, subcategoryID ,category_slug,} = stateData;
-    const { name: subCategoryName ,subcategory_slug} = subCategory || {};
+    const { categoryId, categoryName, typeKey, subCategory, subcategoryID, category_slug } = stateData;
+    const { name: subCategoryName, subcategory_slug } = subCategory || {};
+
+    // NEW: State to track the currently selected Type from the Sidebar
+    const [currentFilterType, setCurrentFilterType] = useState(typeKey || null);
 
     const [showMobileFilter, setShowMobileFilter] = useState(false);
     const [products, setProducts] = useState({});
     const [results, setResults] = useState([]);
-
-
     const [categoryData, setCategoryData] = useState(null);
-
 
     useEffect(() => {
         if (showMobileFilter) {
@@ -78,7 +80,6 @@ function PlantFilter() {
                     if (response.status === 200) {
                         setResults(response.data.products || []);
                         setProducts(response.data || {});
-
                     }
 
                 } catch (error) {
@@ -123,55 +124,47 @@ function PlantFilter() {
         if (path.startsWith("/category/")) {
             getInitialProducts();
         }
-    }, [ path, typeKey, categoryId, subcategoryID]);
+    }, [path, typeKey, categoryId, subcategoryID]);
+
+    // LOGIC to determine the base name for Helmet tags
+    // Priority: 1. Selected Filter Type (e.g. 'Pots'), 2. Subcategory Name, 3. Category Name
+    const getDisplayName = () => {
+        if (currentFilterType) return currentFilterType;
+        if (subCategoryName) return subCategoryName;
+        return categoryName || "Gardening Products";
+    };
+
+    const displayName = getDisplayName();
 
     return (
         <>
-        <Helmet>
-  {/* SUB-CATEGORY META */}
-  {subCategoryName ? (
-    <>
-      <title>
-        {`${subCategoryName} for Home & Garden | Gidan`}
-      </title>
+            <Helmet>
+                {/* DYNAMIC TITLE & META LOGIC */}
+                <title>
+                    {displayName
+                        ? `Buy ${displayName} Online | Best Price in Bengaluru – Gidan`
+                        : 'Buy Gardening Products Online | Best Price in Bengaluru – Gidan'}
+                </title>
 
-      <meta
-        name="description"
-        content={`Explore ${subCategoryName} at Gidan. Perfect for home gardeners and plant lovers. Affordable prices & fast delivery.`}
-      />
+                <meta
+                    name="description"
+                    content={
+                        displayName
+                            ? `Shop ${displayName} online at best prices. Wide range of premium varieties and styles. Fast delivery & easy returns – Gidan.`
+                            : 'Shop gardening products online at best prices. Wide range of plants, pots, seeds, and accessories. Fast delivery & easy returns – Gidan.'
+                    }
+                />
 
-      <link
-        rel="canonical"
-        href={`https://gidan.store/category/${category_slug}?subcategory=${subcategory_slug}`}
-      />
-    </>
-  ) : (
-    /* CATEGORY META */
-    <>
-      <title>
-        {categoryName
-          ? `Buy ${categoryName} Online | Best Price in Bengaluru – Gidan`
-          : 'Buy Gardening Products Online | Best Price in Bengaluru – Gidan'}
-      </title>
-
-      <meta
-        name="description"
-        content={
-          categoryName
-            ? `Shop ${categoryName} online at best prices. Wide range of premium varieties and styles. Fast delivery & easy returns – Gidan.`
-            : 'Shop gardening products online at best prices. Wide range of plants, pots, seeds, and accessories. Fast delivery & easy returns – Gidan.'
-        }
-      />
-
-      <link
-        rel="canonical"
-        href={`https://gidan.store/category/${category_slug}`}
-      />
-    </>
-  )}
-</Helmet>
-
-
+                {/* Canonical logic handles both subcategory and main category */}
+                <link
+                    rel="canonical"
+                    href={
+                        subCategoryName
+                            ? `https://gidan.store/category/${category_slug}?subcategory=${subcategory_slug}`
+                            : `https://gidan.store/category/${category_slug}`
+                    }
+                />
+            </Helmet>
 
             <div className="container mx-auto min-h-screen">
                 {/* Mobile Filter Button */}
@@ -195,6 +188,8 @@ function PlantFilter() {
                         subcategoryID={subcategoryID}
                         typeKey={typeKey}
                         setCategoryData={setCategoryData}
+                        // PASS THIS PROP TO UPDATE TITLE ON FILTER CHANGE
+                        setCurrentFilterType={setCurrentFilterType}
                     />
                 </div>
 
@@ -212,7 +207,7 @@ function PlantFilter() {
                 {/* Additional Sections - Fixed with proper spacing */}
                 <div className="mt-12 mb-8">
                     <div className="container mx-auto px-4 md:px-8">
-                      <CategoryLayout data={categoryData}/>
+                        <CategoryLayout data={categoryData} />
                     </div>
                 </div>
 
@@ -242,43 +237,86 @@ function PlantFilter() {
                                     subcategoryID={subcategoryID}
                                     typeKey={typeKey}
                                     setCategoryData={setCategoryData}
+                                    // PASS THIS PROP TO UPDATE TITLE ON FILTER CHANGE (MOBILE)
+                                    setCurrentFilterType={setCurrentFilterType}
                                 />
                             </div>
                         </div>
                     </div>
                 )}
             </div>
+            <CategorySchema
+                categoryName={categoryName}
+                categorySlug={category_slug}
+                items={results || []}
+            />
+            <SubCategorySchema
+                categoryName={categoryName}
+                subCategoryName={subCategoryName}
+                categorySlug={category_slug}
+                subCategorySlug={subcategory_slug}
+                items={results || []}
+            />
+            <HomepageSchema/>
+            <StoreSchema/>
         </>
     );
 }
 
 export default PlantFilter;
-// //<editor-fold desc="working ovelap">
 // import React, { useEffect, useState } from "react";
 // import FilterSidebar from "../Featured/FilterSidebar";
 // import ProductGrid from "./ProductGrid";
 // import FAQSection from "./FAQSection";
-// // import RecentlyViewedProduct from "./RecentlyViewedProduct";
 // import CheckoutStores from "./CheckoutStores";
 // import { FiFilter } from "react-icons/fi";
 // import { useLocation } from "react-router-dom";
-// import { useParams } from "react-router-dom";
-// import { Helmet } from "react-helmet";
 // import axiosInstance from "../../../Axios/axiosInstance";
 // import RecentlyViewedProduct from "./RecentlyViewedProduct";
+// import { Helmet } from "react-helmet-async";
+// import GenericPage from "../Info/GenericPage";
+//
+//
+// const CategoryLayout = ({ data }) => {
+//     // ✅ 4. FIX LOGIC: Check if data exists and has content (hero/sections)
+//     // instead of checking for an ID.
+//     const hasGenericContent = data && data.hero;
+//     console.log(hasGenericContent,'--------------------------------hhh');
+//
+//     return (
+//         <div className="space-y-12">
+//
+//             <>
+//                 <RecentlyViewedProduct />
+//                 {/* 2. Show FAQ ONLY if NO generic content is found (The conditional one) */}
+//                 {!hasGenericContent && <FAQSection />}
+//                 {/* Show GenericPage ONLY if we have the valid JSON content */}
+//                 {hasGenericContent && <GenericPage data={data} />}
+//
+//                 <CheckoutStores />
+//             </>
+//         </div>
+//     );
+// };
 //
 // function PlantFilter() {
-//     const { id } = useParams();
 //     const location = useLocation();
 //     const path = location.pathname;
 //
 //     const stateData = location.state || {};
-//     const { categoryId, categoryName, typeKey, subCategory, subcategoryID } = stateData;
-//     const { name: subCategoryName } = subCategory || {};
+//     const { categoryId, categoryName, typeKey, subCategory, subcategoryID ,category_slug,} = stateData;
+//     const { name: subCategoryName ,subcategory_slug} = subCategory || {};
+//
+//     // New state to track the Type selected in the FilterSidebar
+//     const [currentFilterType, setCurrentFilterType] = useState(typeKey || null);
 //
 //     const [showMobileFilter, setShowMobileFilter] = useState(false);
 //     const [products, setProducts] = useState({});
 //     const [results, setResults] = useState([]);
+//
+//
+//     const [categoryData, setCategoryData] = useState(null);
+//
 //
 //     useEffect(() => {
 //         if (showMobileFilter) {
@@ -301,7 +339,7 @@ export default PlantFilter;
 //
 //     useEffect(() => {
 //         const getInitialProducts = async () => {
-//             if (id === "14") {
+//             if (categoryId === "14") {
 //                 try {
 //                     const response = await axiosInstance.get(
 //                         `/product/offerProducts/`
@@ -309,7 +347,9 @@ export default PlantFilter;
 //                     if (response.status === 200) {
 //                         setResults(response.data.products || []);
 //                         setProducts(response.data || {});
+//
 //                     }
+//
 //                 } catch (error) {
 //                     console.error("Error fetching offer products:", error);
 //                 }
@@ -323,8 +363,8 @@ export default PlantFilter;
 //                     queryParams.append("type", typeKey);
 //                 }
 //
-//                 if (categoryId || id) {
-//                     queryParams.append("category_id", categoryId || id);
+//                 if (categoryId) {
+//                     queryParams.append("category_id", categoryId);
 //                 }
 //
 //                 if (subcategoryID) {
@@ -342,23 +382,78 @@ export default PlantFilter;
 //                         next: response.data.next,
 //                         previous: response.data.previous,
 //                     });
+//                     setCategoryData(response.data?.category_info?.category_info || null);
 //                 }
 //             } catch (error) {
 //                 console.error("Error fetching products via filter API:", error);
 //             }
 //         };
 //
-//         if (path.startsWith("/filter/")) {
+//         if (path.startsWith("/category/")) {
 //             getInitialProducts();
 //         }
-//     }, [id, path, typeKey, categoryId, subcategoryID]);
+//     }, [ path, typeKey, categoryId, subcategoryID]);
+//
+//
+//     // Determine the base name for the Title
+//     // Priority: 1. Selected Filter Type, 2. Subcategory, 3. Category
+//     const getBaseName = () => {
+//         if (currentFilterType) return currentFilterType;
+//         if (subCategoryName) return subCategoryName;
+//         return categoryName || "Gardening Products";
+//     };
+//
+//     const baseName = getBaseName();
 //
 //     return (
 //         <>
 //             <Helmet>
-//                 <title>Gidan - Plant Filter</title>
+//                 {/* SUB-CATEGORY META */}
+//                 {subCategoryName ? (
+//                     <>
+//                         <title>
+//                             {`${subCategoryName} for Home & Garden | Gidan`}
+//                         </title>
+//
+//                         <meta
+//                             name="description"
+//                             content={`Explore ${subCategoryName} at Gidan. Perfect for home gardeners and plant lovers. Affordable prices & fast delivery.`}
+//                         />
+//
+//                         <link
+//                             rel="canonical"
+//                             href={`https://gidan.store/category/${category_slug}?subcategory=${subcategory_slug}`}
+//                         />
+//                     </>
+//                 ) : (
+//                     /* CATEGORY META */
+//                     <>
+//                         <title>
+//                             {categoryName
+//                                 ? `Buy ${categoryName} Online | Best Price in Bengaluru – Gidan`
+//                                 : 'Buy Gardening Products Online | Best Price in Bengaluru – Gidan'}
+//                         </title>
+//
+//                         <meta
+//                             name="description"
+//                             content={
+//                                 categoryName
+//                                     ? `Shop ${categoryName} online at best prices. Wide range of premium varieties and styles. Fast delivery & easy returns – Gidan.`
+//                                     : 'Shop gardening products online at best prices. Wide range of plants, pots, seeds, and accessories. Fast delivery & easy returns – Gidan.'
+//                             }
+//                         />
+//
+//                         <link
+//                             rel="canonical"
+//                             href={`https://gidan.store/category/${category_slug}`}
+//                         />
+//                     </>
+//                 )}
 //             </Helmet>
-//             <div className="container mx-auto  min-h-screen">
+//
+//
+//
+//             <div className="container mx-auto min-h-screen">
 //                 {/* Mobile Filter Button */}
 //                 <div className="md:hidden px-4 pt-4">
 //                     <button
@@ -374,11 +469,12 @@ export default PlantFilter;
 //                 <div className="hidden md:block mt-4 overflow-visible relative z-10">
 //                     <FilterSidebar
 //                         setResults={setResults}
-//                         categoryId={categoryId || id}
+//                         categoryId={categoryId}
 //                         category={categoryName}
 //                         subcategory={subCategoryName}
 //                         subcategoryID={subcategoryID}
 //                         typeKey={typeKey}
+//                         setCategoryData={setCategoryData}
 //                     />
 //                 </div>
 //
@@ -393,11 +489,11 @@ export default PlantFilter;
 //                     />
 //                 </div>
 //
-//                 {/* Additional Sections */}
-//                 <div className="px-4 md:px-8 mt-8">
-//                     <RecentlyViewedProduct />
-//                      <FAQSection />
-//                     <CheckoutStores />
+//                 {/* Additional Sections - Fixed with proper spacing */}
+//                 <div className="mt-12 mb-8">
+//                     <div className="container mx-auto px-4 md:px-8">
+//                         <CategoryLayout data={categoryData}/>
+//                     </div>
 //                 </div>
 //
 //                 {/* Mobile Filter Sidebar Overlay */}
@@ -420,11 +516,12 @@ export default PlantFilter;
 //                                 <FilterSidebar
 //                                     setResults={setResults}
 //                                     setShowMobileFilter={setShowMobileFilter}
-//                                     categoryId={categoryId || id}
+//                                     categoryId={categoryId}
 //                                     category={categoryName}
 //                                     subcategory={subCategoryName}
 //                                     subcategoryID={subcategoryID}
 //                                     typeKey={typeKey}
+//                                     setCategoryData={setCategoryData}
 //                                 />
 //                             </div>
 //                         </div>
@@ -436,711 +533,3 @@ export default PlantFilter;
 // }
 //
 // export default PlantFilter;
-// //</editor-fold>
-// // //<editor-fold desc="vertical">
-// // import React, { useEffect, useState } from "react";
-// // import FilterSidebar from "../Featured/FilterSidebar";
-// // import ProductGrid from "./ProductGrid";
-// // import FAQSection from "./FAQSection";
-// // import RecentlyViewedProduct from "./RecentlyViewedProduct";
-// // import CheckoutStores from "./CheckoutStores";
-// // import { FiFilter } from "react-icons/fi";
-// // import { useLocation } from "react-router-dom";
-// // import { useParams } from "react-router-dom";
-// // import { Helmet } from "react-helmet";
-// // import axiosInstance from "../../../Axios/axiosInstance";
-// //
-// // function PlantFilter() {
-// //     const { id } = useParams();
-// //     const location = useLocation();
-// //     const path = location.pathname;
-// //
-// //     const stateData = location.state || {};
-// //     const { categoryId, categoryName, typeKey, subCategory, subcategoryID } = stateData;
-// //     const { name: subCategoryName } = subCategory || {};
-// //
-// //     const [showMobileFilter, setShowMobileFilter] = useState(false);
-// //     const [products, setProducts] = useState({});
-// //     const [results, setResults] = useState([]);
-// //
-// //     useEffect(() => {
-// //         if (showMobileFilter) {
-// //             document.body.style.overflow = "hidden";
-// //         } else {
-// //             document.body.style.overflow = "auto";
-// //         }
-// //         return () => {
-// //             document.body.style.overflow = "auto";
-// //         };
-// //     }, [showMobileFilter]);
-// //
-// //     useEffect(() => {
-// //         window.scrollTo(0, 0);
-// //     }, []);
-// //
-// //     const toggleMobileFilter = () => {
-// //         setShowMobileFilter(!showMobileFilter);
-// //     };
-// //
-// //     useEffect(() => {
-// //         const getInitialProducts = async () => {
-// //             if (id === "14") {
-// //                 try {
-// //                     const response = await axiosInstance.get(
-// //                         `/product/offerProducts/`
-// //                     );
-// //                     if (response.status === 200) {
-// //                         setResults(response.data.products || []);
-// //                         setProducts(response.data || {});
-// //                     }
-// //                 } catch (error) {
-// //                     console.error("Error fetching offer products:", error);
-// //                 }
-// //                 return;
-// //             }
-// //
-// //             try {
-// //                 let queryParams = new URLSearchParams();
-// //
-// //                 if (typeKey) {
-// //                     queryParams.append("type", typeKey);
-// //                 }
-// //
-// //                 if (categoryId || id) {
-// //                     queryParams.append("category_id", categoryId || id);
-// //                 }
-// //
-// //                 if (subcategoryID) {
-// //                     queryParams.append("subcategory_id", subcategoryID);
-// //                 }
-// //
-// //                 const response = await axiosInstance.get(
-// //                     `/filters/main_productsFilter/?${queryParams.toString()}`
-// //                 );
-// //
-// //                 if (response.status === 200) {
-// //                     setResults(response.data.results || []);
-// //                     setProducts({
-// //                         count: response.data.count,
-// //                         next: response.data.next,
-// //                         previous: response.data.previous,
-// //                     });
-// //                 }
-// //             } catch (error) {
-// //                 console.error("Error fetching products via filter API:", error);
-// //             }
-// //         };
-// //
-// //         if (path.startsWith("/filter/")) {
-// //             getInitialProducts();
-// //         }
-// //     }, [id, path, typeKey, categoryId, subcategoryID]);
-// //
-// //     return (
-// //         <>
-// //             <Helmet>
-// //                 <title>Gidan - Plant Filter</title>
-// //             </Helmet>
-// //             <div className="container mx-auto bg-gray-100 pt-1">
-// //                 <br />
-// //                 <div className="flex md:hidden justify-between items-center">
-// //                     <button
-// //                         className="bg-white text-black w-full rounded-md flex items-center justify-center gap-2 my-2 p-2"
-// //                         onClick={toggleMobileFilter}
-// //                     >
-// //                         <FiFilter size={20} />
-// //                         Filter
-// //                     </button>
-// //                 </div>
-// //                 <div className="flex flex-row md:flex-row px-4">
-// //                     <div className="hidden md:block">
-// //                         <FilterSidebar
-// //                             setResults={setResults}
-// //                             categoryId={categoryId || id}
-// //                             category={categoryName}
-// //                             subcategory={subCategoryName}
-// //                             subcategoryID={subcategoryID}
-// //                             typeKey={typeKey}
-// //                         />
-// //                     </div>
-// //                     <div className="flex-1">
-// //                         {/* REMOVED key prop to prevent forced re-renders */}
-// //                         <ProductGrid
-// //                             productDetails={results}
-// //                             pagination={products}
-// //                             setResults={setResults}
-// //                             categoryName={categoryName}
-// //                             typeKey={typeKey}
-// //                         />
-// //                     </div>
-// //                 </div>
-// //                 <RecentlyViewedProduct />
-// //                 <div className="md:ml-16 overflow-x-hidden md:mr-12">
-// //                     <FAQSection />
-// //                     <CheckoutStores />
-// //                 </div>
-// //                 {showMobileFilter && (
-// //                     <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
-// //                         <div className="absolute top-0 right-0 w-3/4 max-w-xs bg-white h-full shadow-lg z-50 overflow-y-auto">
-// //                             <button
-// //                                 className="absolute top-4 right-4 bg-red-500 text-white rounded-full p-2"
-// //                                 onClick={toggleMobileFilter}
-// //                             >
-// //                                 ✕
-// //                             </button>
-// //                             <FilterSidebar
-// //                                 setResults={setResults}
-// //                                 setShowMobileFilter={setShowMobileFilter}
-// //                                 categoryId={categoryId || id}
-// //                                 category={categoryName}
-// //                                 subcategory={subCategoryName}
-// //                                 subcategoryID={subcategoryID}
-// //                                 typeKey={typeKey}
-// //                             />
-// //                         </div>
-// //                     </div>
-// //                 )}
-// //             </div>
-// //         </>
-// //     );
-// // }
-// //
-// // export default PlantFilter;
-// // //</editor-fold>
-// // // PlantFilter.js - Fixed version with proper state updates
-// //
-// // import React, { useEffect, useState } from "react";
-// // import FilterSidebar from "../Featured/FilterSidebar";
-// // import ProductGrid from "./ProductGrid";
-// // import FAQSection from "./FAQSection";
-// // import RecentlyViewedProduct from "./RecentlyViewedProduct";
-// // import CheckoutStores from "./CheckoutStores";
-// // import { FiFilter } from "react-icons/fi";
-// // import { useLocation } from "react-router-dom";
-// // import { useParams } from "react-router-dom";
-// // import { Helmet } from "react-helmet";
-// // import axiosInstance from "../../../Axios/axiosInstance";
-// //
-// // function PlantFilter() {
-// //     const { id } = useParams();
-// //     const location = useLocation();
-// //     const path = location.pathname;
-// //
-// //     const stateData = location.state || {};
-// //     const { categoryId, categoryName, typeKey, subCategory, subcategoryID } = stateData;
-// //     const { name: subCategoryName } = subCategory || {};
-// //
-// //     const [showMobileFilter, setShowMobileFilter] = useState(false);
-// //     const [products, setProducts] = useState({});
-// //     const [results, setResults] = useState([]);
-// //
-// //     useEffect(() => {
-// //         if (showMobileFilter) {
-// //             document.body.style.overflow = "hidden";
-// //         } else {
-// //             document.body.style.overflow = "auto";
-// //         }
-// //         return () => {
-// //             document.body.style.overflow = "auto";
-// //         };
-// //     }, [showMobileFilter]);
-// //
-// //     useEffect(() => {
-// //         window.scrollTo(0, 0);
-// //     }, []);
-// //
-// //     const toggleMobileFilter = () => {
-// //         setShowMobileFilter(!showMobileFilter);
-// //     };
-// //
-// //     useEffect(() => {
-// //         const getInitialProducts = async () => {
-// //             if (id === "14") {
-// //                 try {
-// //                     const response = await axiosInstance.get(
-// //                         `/product/offerProducts/`
-// //                     );
-// //                     if (response.status === 200) {
-// //                         setResults(response.data.products || []);
-// //                         setProducts(response.data || {});
-// //                     }
-// //                 } catch (error) {
-// //                     console.error("Error fetching offer products:", error);
-// //                 }
-// //                 return;
-// //             }
-// //
-// //             try {
-// //                 let queryParams = new URLSearchParams();
-// //
-// //                 if (typeKey) {
-// //                     queryParams.append("type", typeKey);
-// //                 }
-// //
-// //                 if (categoryId || id) {
-// //                     queryParams.append("category_id", categoryId || id);
-// //                 }
-// //
-// //                 if (subcategoryID) {
-// //                     queryParams.append("subcategory_id", subcategoryID);
-// //                 }
-// //
-// //                 const response = await axiosInstance.get(
-// //                     `/filters/productsFilter/?${queryParams.toString()}`
-// //                 );
-// //
-// //                 if (response.status === 200) {
-// //                     setResults(response.data.results || []);
-// //                     setProducts({
-// //                         count: response.data.count,
-// //                         next: response.data.next,
-// //                         previous: response.data.previous,
-// //                     });
-// //                 }
-// //             } catch (error) {
-// //                 console.error("Error fetching products via filter API:", error);
-// //             }
-// //         };
-// //
-// //         if (path.startsWith("/filter/")) {
-// //             getInitialProducts();
-// //         }
-// //     }, [id, path, typeKey, categoryId, subcategoryID]);
-// //
-// //     // *** ADD THIS: Update products state when results change ***
-// //     useEffect(() => {
-// //         console.log("Results updated:", results.length);
-// //         // Force re-render of ProductGrid when results change
-// //     }, [results]);
-// //
-// //     return (
-// //         <>
-// //             <Helmet>
-// //                 <title>Gidan - Plant Filter</title>
-// //             </Helmet>
-// //             <div className="container mx-auto bg-gray-100 pt-1">
-// //                 <br />
-// //                 <div className="flex md:hidden justify-between items-center">
-// //                     <button
-// //                         className="bg-white text-black w-full rounded-md flex items-center justify-center gap-2 my-2 p-2"
-// //                         onClick={toggleMobileFilter}
-// //                     >
-// //                         <FiFilter size={20} />
-// //                         Filter
-// //                     </button>
-// //                 </div>
-// //                 <div className="flex flex-row md:flex-row px-4">
-// //                     <div className="hidden md:block">
-// //                         <FilterSidebar
-// //                             setResults={setResults}
-// //                             categoryId={categoryId || id}
-// //                             category={categoryName}
-// //                             subcategory={subCategoryName}
-// //                             subcategoryID={subcategoryID}
-// //                             typeKey={typeKey}
-// //                         />
-// //                     </div>
-// //                     <div className="flex-1">
-// //                         {/* *** KEY FIX: Add key prop to force re-render *** */}
-// //                         <ProductGrid
-// //                             key={results.length} // Forces re-render when results length changes
-// //                             productDetails={results}
-// //                             pagination={products}
-// //                             setResults={setResults}
-// //                             categoryName={categoryName}
-// //                             typeKey={typeKey}
-// //                         />
-// //                     </div>
-// //                 </div>
-// //                 <RecentlyViewedProduct />
-// //                 <div className="md:ml-16 overflow-x-hidden md:mr-12">
-// //                     <FAQSection />
-// //                     <CheckoutStores />
-// //                 </div>
-// //                 {showMobileFilter && (
-// //                     <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
-// //                         <div className="absolute top-0 right-0 w-3/4 max-w-xs bg-white h-full shadow-lg z-50 overflow-y-auto">
-// //                             <button
-// //                                 className="absolute top-4 right-4 bg-red-500 text-white rounded-full p-2"
-// //                                 onClick={toggleMobileFilter}
-// //                             >
-// //                                 ✕
-// //                             </button>
-// //                             <FilterSidebar
-// //                                 setResults={setResults}
-// //                                 setShowMobileFilter={setShowMobileFilter}
-// //                                 categoryId={categoryId || id}
-// //                                 category={categoryName}
-// //                                 subcategory={subCategoryName}
-// //                                 subcategoryID={subcategoryID}
-// //                                 typeKey={typeKey}
-// //                             />
-// //                         </div>
-// //                     </div>
-// //                 )}
-// //             </div>
-// //         </>
-// //     );
-// // }
-// //
-// // export default PlantFilter;
-// // // //<editor-fold desc="above working">
-// // // // PlantFilter.js - Modified to use a single, unified filter API
-// // //
-// // // import React, { useEffect, useState } from "react";
-// // // import FilterSidebar from "../Featured/FilterSidebar";
-// // // import ProductGrid from "./ProductGrid";
-// // // import FAQSection from "./FAQSection";
-// // // import RecentlyViewedProduct from "./RecentlyViewedProduct";
-// // // import CheckoutStores from "./CheckoutStores";
-// // // import { FiFilter } from "react-icons/fi";
-// // // import { useLocation } from "react-router-dom";
-// // // import { useParams } from "react-router-dom";
-// // // import { Helmet } from "react-helmet";
-// // // import axiosInstance from "../../../Axios/axiosInstance";
-// // //
-// // // function PlantFilter() {
-// // //     const { id } = useParams();
-// // //     const location = useLocation();
-// // //     const path = location.pathname;
-// // //
-// // //     // Get state data passed from navigation
-// // //     const stateData = location.state || {};
-// // //     const { categoryId, categoryName, typeKey, subCategory, subcategoryID } = stateData;
-// // //     const { name: subCategoryName } = subCategory || {};
-// // //
-// // //     const [showMobileFilter, setShowMobileFilter] = useState(false);
-// // //     const [products, setProducts] = useState({}); // For pagination data
-// // //     const [results, setResults] = useState([]);   // For product list
-// // //
-// // //     useEffect(() => {
-// // //         if (showMobileFilter) {
-// // //             document.body.style.overflow = "hidden";
-// // //         } else {
-// // //             document.body.style.overflow = "auto";
-// // //         }
-// // //         return () => {
-// // //             document.body.style.overflow = "auto";
-// // //         };
-// // //     }, [showMobileFilter]);
-// // //
-// // //     useEffect(() => {
-// // //         window.scrollTo(0, 0);
-// // //     }, []);
-// // //
-// // //     const toggleMobileFilter = () => {
-// // //         setShowMobileFilter(!showMobileFilter);
-// // //     };
-// // //
-// // //     useEffect(() => {
-// // //         const getInitialProducts = async () => {
-// // //             // Special case for offers, as it might not be part of the main filter API
-// // //             if (id === "14") {
-// // //                 try {
-// // //                     const response = await axiosInstance.get(
-// // //                         `${process.env.REACT_APP_API_URL}/product/offerProducts/`
-// // //                     );
-// // //                     if (response.status === 200) {
-// // //                         setResults(response.data.products || []);
-// // //                         setProducts(response.data || {});
-// // //                     }
-// // //                 } catch (error) {
-// // //                     console.error("Error fetching offer products:", error);
-// // //                 }
-// // //                 return;
-// // //             }
-// // //
-// // //             // Use the unified filter API for all other categories and subcategories
-// // //             try {
-// // //                 let queryParams = new URLSearchParams();
-// // //
-// // //                 // Add type, which is crucial for the filter API
-// // //                 if (typeKey) {
-// // //                     queryParams.append("type", typeKey);
-// // //                 }
-// // //
-// // //                 // Add category ID from state or URL params
-// // //                 if (categoryId || id) {
-// // //                     queryParams.append("category_id", categoryId || id);
-// // //                 }
-// // //
-// // //                 // Add subcategory ID if it exists
-// // //                 if (subcategoryID) {
-// // //                     queryParams.append("subcategory_id", subcategoryID);
-// // //                 }
-// // //
-// // //                 const response = await axiosInstance.get(
-// // //                     `${process.env.REACT_APP_API_URL}/filters/productsFilter/?${queryParams.toString()}`
-// // //                 );
-// // //
-// // //                 if (response.status === 200) {
-// // //                     // The filter API returns data in a 'results' array
-// // //                     setResults(response.data.results || []);
-// // //                     // Set pagination data from the response
-// // //                     setProducts({
-// // //                         count: response.data.count,
-// // //                         next: response.data.next,
-// // //                         previous: response.data.previous,
-// // //                     });
-// // //                 }
-// // //             } catch (error) {
-// // //                 console.error("Error fetching products via filter API:", error);
-// // //             }
-// // //         };
-// // //
-// // //         // Call the unified function for all paths
-// // //         if (path.startsWith("/filter/")) {
-// // //             getInitialProducts();
-// // //         }
-// // //     }, [id, path, typeKey, categoryId, subcategoryID]); // Dependencies to refetch on change
-// // //
-// // //     return (
-// // //         <>
-// // //             <Helmet>
-// // //                 <title>Gidan - Plant Filter</title>
-// // //             </Helmet>
-// // //             <div className="container mx-auto bg-gray-100 pt-1">
-// // //                 <br />
-// // //                 {/* Mobile View Button */}
-// // //                 <div className="flex md:hidden justify-between items-center">
-// // //                     <button
-// // //                         className="bg-white text-black w-full rounded-md flex items-center justify-center gap-2 my-2 p-2"
-// // //                         onClick={toggleMobileFilter}
-// // //                     >
-// // //                         <FiFilter size={20} />
-// // //                         Filter
-// // //                     </button>
-// // //                 </div>
-// // //                 <div className="flex flex-row md:flex-row px-4">
-// // //                     {/* Filter Sidebar */}
-// // //                     <div className="hidden md:block">
-// // //                         <FilterSidebar
-// // //                             setResults={setResults}
-// // //                             categoryId={categoryId || id}
-// // //                             category={categoryName}
-// // //                             subcategory={subCategoryName}
-// // //                             subcategoryID={subcategoryID}
-// // //                             typeKey={typeKey}
-// // //                         />
-// // //                     </div>
-// // //                     <div className="flex-1">
-// // //                         {/* Product Grid */}
-// // //                         <ProductGrid
-// // //                             productDetails={results}
-// // //                             pagination={products}
-// // //                             setResults={setResults}
-// // //                             categoryName={categoryName}
-// // //                             typeKey={typeKey}
-// // //                         />
-// // //                     </div>
-// // //                 </div>
-// // //                 <RecentlyViewedProduct />
-// // //                 {/* FAQ Section */}
-// // //                 <div className="md:ml-16 overflow-x-hidden md:mr-12">
-// // //                     <FAQSection />
-// // //                     <CheckoutStores />
-// // //                 </div>
-// // //                 {/* Mobile Filter Sidebar */}
-// // //                 {showMobileFilter && (
-// // //                     <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
-// // //                         <div className="absolute top-0 right-0 w-3/4 max-w-xs bg-white h-full shadow-lg z-50 overflow-y-auto">
-// // //                             <button
-// // //                                 className="absolute top-4 right-4 bg-red-500 text-white rounded-full p-2"
-// // //                                 onClick={toggleMobileFilter}
-// // //                             >
-// // //                                 ✕
-// // //                             </button>
-// // //                             <FilterSidebar
-// // //                                 setResults={setResults}
-// // //                                 setShowMobileFilter={setShowMobileFilter}
-// // //                                 categoryId={categoryId || id}
-// // //                                 category={categoryName}
-// // //                                 subcategory={subCategoryName}
-// // //                                 subcategoryID={subcategoryID}
-// // //                                 typeKey={typeKey}
-// // //                             />
-// // //                         </div>
-// // //                     </div>
-// // //                 )}
-// // //             </div>
-// // //         </>
-// // //     );
-// // // }
-// // //
-// // // export default PlantFilter;
-// // // //</editor-fold>
-// // // ===================================================
-// // // // PlantFilter.js - Modified to use state data
-// // //
-// // // import React, { useEffect, useState } from "react";
-// // // import FilterSidebar from "../Featured/FilterSidebar";
-// // // import ProductGrid from "./ProductGrid";
-// // // import FAQSection from "./FAQSection";
-// // // import RecentlyViewedProduct from "./RecentlyViewedProduct";
-// // // import CheckoutStores from "./CheckoutStores";
-// // // import { FiFilter } from "react-icons/fi";
-// // // import { useLocation } from "react-router-dom";
-// // // import { useParams } from "react-router-dom";
-// // // import {Helmet} from "react-helmet";
-// // // import axiosInstance from "../../../Axios/axiosInstance";
-// // //
-// // // function PlantFilter() {
-// // //     const { id } = useParams();
-// // //     const location = useLocation();
-// // //     const path = location.pathname;
-// // //
-// // //     // Get state data passed from navigation
-// // //     const stateData = location.state || {};
-// // //     const {  categoryId,categoryName, typeKey, subCategory,subcategoryID } = stateData;
-// // //     const {name: subCategoryName,} = subCategory || {};
-// // //     // console.log(subCategoryName); // "Hand Tools"
-// // //     // console.log('ID from URL params:', id);
-// // //     console.log('ID from state categoryId:', categoryId);
-// // //     // console.log('Category name from state:', categoryName);
-// // //     // console.log('Type key from state:', typeKey);
-// // //     // console.log('Subcategory from state:', subCategory);
-// // //     //
-// // //     // console.log('Subcategory from state subcategoryID:', subcategoryID);
-// // //
-// // //     const [showMobileFilter, setShowMobileFilter] = useState(false);
-// // //     const [products, setProducts] = useState([]);
-// // //     const [results, setResults] = useState([]);
-// // //
-// // //     useEffect(() => {
-// // //         if (showMobileFilter) {
-// // //             document.body.style.overflow = "hidden";
-// // //         } else {
-// // //             document.body.style.overflow = "auto";
-// // //         }
-// // //         return () => {
-// // //             document.body.style.overflow = "auto";
-// // //         };
-// // //     }, [showMobileFilter]);
-// // //
-// // //     useEffect(() => {
-// // //         window.scrollTo(0, 0);
-// // //     }, []);
-// // //
-// // //     const toggleMobileFilter = () => {
-// // //         setShowMobileFilter(!showMobileFilter);
-// // //     };
-// // //
-// // //     useEffect(() => {
-// // //         const getCategoryProducts = async () => {
-// // //             try {
-// // //                 if (id === "14") {
-// // //                     // Special case for offers
-// // //                     const response = await axiosInstance.get(
-// // //                         `${process.env.REACT_APP_API_URL}/product/offerProducts/`
-// // //                     );
-// // //                     if (response.status === 200) {
-// // //                         setResults(response.data.products || []);
-// // //                         setProducts(response.data || {});
-// // //                     }
-// // //                     return;
-// // //                 }
-// // //                 const response = await axiosInstance.get(
-// // //                     `${process.env.REACT_APP_API_URL}/product/category-products/${id}/`
-// // //                 );
-// // //                 if (response.data.message === "success") {
-// // //                     setResults(response.data.products || []);
-// // //                     setProducts(response.data || {});
-// // //                 }
-// // //             } catch (error) {
-// // //                 console.error("Error fetching category products:", error);
-// // //             }
-// // //         };
-// // //
-// // //         const getSubCategorywiseProduct = async () => {
-// // //             try {
-// // //                 const response = await axiosInstance.get(
-// // //                     `${process.env.REACT_APP_API_URL}/product/subcategory-products/${subcategoryID}/`
-// // //                 );
-// // //                 if (response.status === 200) {
-// // //                     setResults(response.data.products || []);
-// // //                     setProducts(response.data || {});
-// // //                 }
-// // //             } catch (error) {
-// // //                 console.error("Error fetching subcategory products:", error);
-// // //             }
-// // //         };
-// // //
-// // //         if (path.startsWith("/filter/subcategory/")) {
-// // //             getSubCategorywiseProduct();
-// // //         } else if (path.startsWith("/filter/")) {
-// // //             getCategoryProducts();
-// // //         }
-// // //     }, [id, path]);
-// // //
-// // //     return (
-// // //         <>
-// // //             <Helmet>
-// // //                 <title>Gidan - Plant Filter</title>
-// // //             </Helmet>
-// // //             <div className="container mx-auto bg-gray-100 pt-1">
-// // //                 <br />
-// // //                 {/* Mobile View Button */}
-// // //                 <div className="flex md:hidden justify-between items-center">
-// // //                     <button
-// // //                         className="bg-white text-black w-full rounded-md flex items-center justify-center gap-2 my-2 p-2"
-// // //                         onClick={toggleMobileFilter}
-// // //                     >
-// // //                         <FiFilter size={20} />
-// // //                         Filter
-// // //                     </button>
-// // //                 </div>
-// // //                 <div className="flex flex-row md:flex-row px-4">
-// // //                     {/* Filter Sidebar */}
-// // //                     <div className="hidden md:block">
-// // //                         <FilterSidebar
-// // //                             setResults={setResults}
-// // //                             categoryId={id}
-// // //                             category={categoryName } // Use categoryName from state if available
-// // //                             subcategory={subCategoryName}
-// // //                             typeKey={typeKey} // Pass typeKey to FilterSidebar
-// // //                         />
-// // //                     </div>
-// // //                     <div className="flex-1">
-// // //                         {/* Product Grid */}
-// // //                         <ProductGrid
-// // //                             productDetails={results}
-// // //                             pagination={products}
-// // //                             setResults={setResults}
-// // //                             categoryName={categoryName} // Pass categoryName to ProductGrid
-// // //                             typeKey={typeKey} // Pass typeKey to ProductGrid
-// // //                         />
-// // //                     </div>
-// // //                 </div>
-// // //                 <RecentlyViewedProduct />
-// // //                 {/* FAQ Section */}
-// // //                 <div className="md:ml-16 overflow-x-hidden md:mr-12">
-// // //                     <FAQSection />
-// // //                     <CheckoutStores />
-// // //                 </div>
-// // //                 {/* Mobile Filter Sidebar */}
-// // //                 {showMobileFilter && (
-// // //                     <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
-// // //                         <div className="absolute top-0 right-0 w-3/4 max-w-xs bg-white h-full shadow-lg z-50 overflow-y-auto">
-// // //                             <button
-// // //                                 className="absolute top-4 right-4 bg-red-500 text-white rounded-full p-2"
-// // //                                 onClick={toggleMobileFilter}
-// // //                             >
-// // //                                 ✕
-// // //                             </button>
-// // //                             <FilterSidebar
-// // //                                 setResults={setResults}
-// // //                                 setShowMobileFilter={setShowMobileFilter}
-// // //                                 categoryId={id}
-// // //                                 category={categoryName} // Use categoryName from state if available
-// // //                                 subcategory={subCategoryName}
-// // //                                 typeKey={typeKey} // Pass typeKey to FilterSidebar
-// // //                             />
-// // //                         </div>
-// // //                     </div>
-// // //                 )}
-// // //             </div>
-// // //         </>
-// // //     );
-// // // }
-// // //
-// // // export default PlantFilter;

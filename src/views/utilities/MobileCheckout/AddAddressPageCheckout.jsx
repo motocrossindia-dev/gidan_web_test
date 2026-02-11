@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ProgressBar from "./OrderSummary"; // Adjust the import path as needed
+import ProgressBar from "./OrderSummary";
+import HomepageSchema from "../seo/HomepageSchema";
+import StoreSchema from "../seo/StoreSchema"; // Adjust the import path as needed
 
 const AddAddressPageCheckout = () => {
   const navigate = useNavigate();
   const [addressType, setAddressType] = useState('home');
 
   return (
-    <div className="max-w-md mx-auto bg-white min-h-screen flex flex-col">
+    <><div className="max-w-md mx-auto bg-white min-h-screen flex flex-col">
       <div className="p-4 flex-1">
         <ProgressBar currentStep="address" />
         
@@ -73,6 +75,8 @@ const AddAddressPageCheckout = () => {
         </button>
       </div>
     </div>
+      <HomepageSchema/>
+      <StoreSchema/></>
   );
 };
 

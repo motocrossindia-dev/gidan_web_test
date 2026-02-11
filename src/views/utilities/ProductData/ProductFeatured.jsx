@@ -29,6 +29,7 @@ const ProductFeatured = () => {
   }, []);
 
   const handleProductClick = (product) => {
+
       const category_slug = product?.category_slug;
       const sub_category_slug = product?.sub_category_slug;
 
@@ -38,6 +39,8 @@ const ProductFeatured = () => {
               sub_category_slug:sub_category_slug
 
           } });
+
+
   };
 
   return (

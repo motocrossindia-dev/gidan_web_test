@@ -3,6 +3,8 @@ import { useNavigate,useLocation } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import axios from 'axios';
+import HomepageSchema from "../seo/HomepageSchema";
+import StoreSchema from "../seo/StoreSchema";
 // Progress Bar Component
 const ProgressBar = ({ currentStep }) => {
   
@@ -112,7 +114,8 @@ const OrderSummary = () => {
     }
 
   return (
-    <div className="max-w-md mx-auto bg-white min-h-screen">
+
+      <><div className="max-w-md mx-auto bg-white min-h-screen">
       <div className="p-4">
         <ProgressBar currentStep="order" />
         
@@ -235,6 +238,9 @@ const OrderSummary = () => {
         </button>
       </div>
     </div>
+        <HomepageSchema/>
+        <StoreSchema/>
+      </>
   );
 };
 

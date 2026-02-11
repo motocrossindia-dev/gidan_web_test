@@ -82,6 +82,14 @@ import Offer from './views/utilities/Offer/Offer';
 import CarouselData from './views/utilities/CarouselData/CarouselData';
 import AboutUs from "./views/utilities/AboutUs/About-Us";
 import OrganizationSchema from "./views/utilities/seo/OrganizationSchema";
+import ProductSchema from "./views/utilities/seo/ProductSchema";
+import CategorySchema from "./views/utilities/seo/CategorySchema";
+import SubCategorySchema from "./views/utilities/seo/SubCategorySchema";
+import HomepageSchema from "./views/utilities/seo/HomepageSchema";
+import StoreSchema from "./views/utilities/seo/StoreSchema";
+import AboutUsSchema from "./views/utilities/seo/AboutUsSchema";
+import ContactUsSchema from "./views/utilities/seo/ContactUsSchema";
+import ReturnPolicySchema from "./views/utilities/seo/ReturnPolicySchema";
 
 const DesktopRoutes = () => (
   <Routes>
@@ -111,6 +119,9 @@ const DesktopRoutes = () => (
 
       <Route path="category/:id/" element={<PlantFilter />} />  {/*  used slug*/}
       <Route path="category/subcategory/:id?/:subcategory" element={<PlantFilter />} /> {/*  used slug*/}
+
+
+
       <Route path="seasonal" element={<SeasonalCollection1 />} />
       <Route path="pots" element={<Pots />} />
       <Route path="faq" element={<FAQs />} />
@@ -204,8 +215,11 @@ const MobileRoutes = () => (
       <Route path="stores" element={<Stores />} />
       <Route path="carousel/:id" element={<CarouselData />} />
       <Route path="orders" element={<MyOrders />} />
+
       <Route path="category/:id/" element={<PlantFilter />} />  {/*  used slug*/}
-      <Route path="category/subcategory/:id?/:subcategory" element={<PlantFilter />} /> {/*  used slug*/}
+      <Route path="category/:subcategory/:id?/:subcategory" element={<PlantFilter />} /> {/*  used slug*/}
+
+
       <Route path="seasonal" element={<SeasonalCollection1 />} />
       <Route path="pots" element={<Featured />} />
       <Route path="plants" element={<Featured />} />
@@ -264,7 +278,17 @@ const App = () => {
   return (
     <div>
       <GoogleAnalytics />
-      <OrganizationSchema />
+      <OrganizationSchema >
+        <HomepageSchema/>
+        <StoreSchema/>
+        <AboutUsSchema/>
+        <ContactUsSchema/>
+        <ReturnPolicySchema/>
+        <ProductSchema/>
+        <CategorySchema/>
+        <SubCategorySchema/>
+
+      </OrganizationSchema>
       {/* <TawkToWidget /> */}
       <Verify />
       {isMobile ? <MobileRoutes /> : <DesktopRoutes />}

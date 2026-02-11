@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ArrowUpRight, ArrowDownRight, Gift, CreditCard } from "lucide-react";
 import { Helmet } from "react-helmet-async";
+import HomepageSchema from "../seo/HomepageSchema";
+import StoreSchema from "../seo/StoreSchema";
 
 const WalletHistory = () => {
   const location = useLocation();
@@ -135,7 +137,8 @@ const WalletHistory = () => {
         </div>
       </div>
     </div>
-
+        <HomepageSchema/>
+        <StoreSchema/>
         </>
   );
 };

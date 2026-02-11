@@ -86,12 +86,13 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
     };
 
     const handleQuickView = (e) => {
-        const slug = convertToSlug(product.name);
-        const category_slug = convertToSlug(product.category_slug);
-        const sub_category_slug = convertToSlug(product.sub_category_slug);
+        const category_slug = product?.category_slug;
+        const sub_category_slug = product?.sub_category_slug;
 
-        navigate(`/category/${category_slug}/${slug}/`, {       state: {
+        navigate(`/category/${category_slug}/${product.slug}/`, {       state: {
                 product_id: product.id,
+                category_slug:category_slug,
+                sub_category_slug:sub_category_slug
 
             } });
 

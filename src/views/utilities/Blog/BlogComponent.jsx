@@ -5,6 +5,8 @@ import Category from './Category';
 import CategoryFilter from './CategoryFilter';
 import axiosInstance from '../../../Axios/axiosInstance';
 import { Helmet } from "react-helmet-async";
+import HomepageSchema from "../seo/HomepageSchema";
+import StoreSchema from "../seo/StoreSchema";
 
 function Blog() {
   const [blogs, setBlogs] = useState([]);
@@ -121,6 +123,8 @@ function Blog() {
             </div>
           </div>
         </div>
+        <HomepageSchema/>
+        <StoreSchema/>
       </>
 
   );

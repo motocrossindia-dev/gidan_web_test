@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import GiftCardVoucher from "../../../Assets/Gift/GiftCardVoucher.jpg";
 import { Link } from "react-router-dom";
 import {Helmet} from "react-helmet";
+import HomepageSchema from "../seo/HomepageSchema";
+import StoreSchema from "../seo/StoreSchema";
 const EcommerceGiftCard = () => {
   const [selectedAmount, setSelectedAmount] = useState(500);
 
@@ -123,6 +125,8 @@ const EcommerceGiftCard = () => {
 
       </div>
     </div>
+        <HomepageSchema/>
+        <StoreSchema/>
         </>
   );
 };

@@ -2,9 +2,7 @@ import React, { useEffect } from "react";
 import HeroSection from "./HeroSection";
 import FranchiseForm from "./FranchiseForm";
 import WhyWeRockSection from "./WhyWeRock";
-import FeaturesSection from "./FeaturesSection";
 import StoreLocations from "./StoreLocations";
-import TestimonialsSection from "./Testimonials";
 import { Helmet } from "react-helmet-async";
 
 function FranchiseEnquires() {
@@ -27,13 +25,11 @@ function FranchiseEnquires() {
   />
 </Helmet>
 
-          <div className="space-y-10 bg-gray-100 mt-10 px-4 md:px-0">
+          <div className="space-y-10 bg-gray-100 mt-10 px-4 md:px-0 mb-2">
               <HeroSection />
               <FranchiseForm />
               <WhyWeRockSection />
-              <FeaturesSection />
               <StoreLocations />
-              <TestimonialsSection />
           </div>
       </>
 

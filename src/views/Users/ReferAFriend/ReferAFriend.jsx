@@ -3,6 +3,8 @@ import { FiShare2 } from "react-icons/fi";
 import Refer from "../../../Assets/ReferAFriend.png"; // Ensure the image path is correct
 import axiosInstance from "../../../Axios/axiosInstance";
 import { Helmet } from "react-helmet-async";
+import HomepageSchema from "../../utilities/seo/HomepageSchema";
+import StoreSchema from "../../utilities/seo/StoreSchema";
 
 
 function ReferAFriend() {
@@ -163,7 +165,8 @@ function ReferAFriend() {
     </div>
   </div>
 </div>
-
+        <HomepageSchema/>
+        <StoreSchema/>
     </>
   );
 }

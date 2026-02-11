@@ -10,6 +10,8 @@ import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import axiosInstance from "../../../Axios/axiosInstance";
+import HomepageSchema from "../seo/HomepageSchema";
+import StoreSchema from "../seo/StoreSchema";
 
 function PlantCare() {
   const { id } = useParams();
@@ -153,6 +155,8 @@ function PlantCare() {
               </div>
           )}
         </div>
+        <HomepageSchema/>
+        <StoreSchema/>
       </>
   );
 }

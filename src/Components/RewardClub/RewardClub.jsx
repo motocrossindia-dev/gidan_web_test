@@ -189,20 +189,24 @@ const RewardClub = () => {
       "Earn coins on every plant purchase and redeem exclusive discounts."}
   </p>
 
+
   <button
-    onClick={referafriend}
-    className="
-      bg-bio-green text-white
-      px-2.5 py-1              /* Mobile */
-      lg:px-6 lg:py-3          /* Desktop BIG */
-      rounded
-      text-[11px] lg:text-base
-      mx-auto lg:mx-0
-    "
+      onClick={referafriend}
+      className="
+    block mx-auto
+    mt-[3px]
+    bg-bio-green text-white
+    px-2.5 py-1
+    lg:px-6 lg:py-3
+    rounded
+    text-[11px] lg:text-base
+  "
   >
     {bannerData?.button_text || "Refer A Friend"}
   </button>
-</div>
+
+
+        </div>
 
         </div>
       </div>

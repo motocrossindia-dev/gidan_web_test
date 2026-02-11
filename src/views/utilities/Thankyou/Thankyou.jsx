@@ -9,6 +9,8 @@ import Banner1 from "./Banner1";
 import { Card } from "@mui/material";
 import { FiFilter } from "react-icons/fi";
 import {Helmet} from "react-helmet";
+import HomepageSchema from "../seo/HomepageSchema";
+import StoreSchema from "../seo/StoreSchema";
 
 function Thankyou() {
   const [showMobileFilter, setShowMobileFilter] = useState(false);
@@ -84,6 +86,8 @@ function Thankyou() {
                   </div>
               )}
           </div>
+          <HomepageSchema/>
+          <StoreSchema/>
       </>
   );
 }

@@ -9,6 +9,8 @@ import Banner1 from "./Banner1";
 import { Card } from "@mui/material";
 import { FiFilter } from "react-icons/fi";
 import {Helmet} from "react-helmet";
+import HomepageSchema from "../seo/HomepageSchema";
+import StoreSchema from "../seo/StoreSchema";
 
 function OutdoorPlants() {
   const [showMobileFilter, setShowMobileFilter] = useState(false);
@@ -24,7 +26,7 @@ function OutdoorPlants() {
           <Helmet>
               <title>Gidan - Outdoor Plants</title>
           </Helmet>
-    <div className="container mx-auto bg-gray-100 pt-6">
+        <div className="container mx-auto bg-gray-100 pt-6">
       <Banner1 />
       <br />
       <div className="w-full">
@@ -82,6 +84,8 @@ function OutdoorPlants() {
         </div>
       )}
     </div>
+        <HomepageSchema/>
+        <StoreSchema/>
           </>
   );
 }

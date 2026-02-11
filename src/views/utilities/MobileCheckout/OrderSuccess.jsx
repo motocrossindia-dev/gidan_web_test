@@ -1,10 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import HomepageSchema from "../seo/HomepageSchema";
+import StoreSchema from "../seo/StoreSchema";
 
 const OrderSuccess = () => {
   const navigate = useNavigate();
 
   return (
+      <>
+
     <div className="max-w-md mx-auto bg-white min-h-screen flex flex-col items-center justify-center p-4">
       {/* Success Icon */}
       <div className="w-16 h-16 rounded-full border-4 border-orange-400 flex items-center justify-center mb-4">
@@ -45,6 +49,9 @@ const OrderSuccess = () => {
         </button>
       </div>
     </div>
+          <HomepageSchema/>
+          <StoreSchema/>
+      </>
   );
 };
 

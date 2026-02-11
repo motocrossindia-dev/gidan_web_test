@@ -29,6 +29,8 @@ import Verify from "../../../Services/Services/Verify";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { Helmet } from "react-helmet-async";
 import ProductSchema from "../seo/ProductSchema";
+import HomepageSchema from "../seo/HomepageSchema";
+import StoreSchema from "../seo/StoreSchema";
 
 const productdata =
     "https://firebasestorage.googleapis.com/v0/b/zpos-uk.appspot.com/o/67977213135ebb17c407e687%2F2025%2F1%2F1738430215367_scaled_Peacelilly.png?alt=media";
@@ -111,8 +113,8 @@ export default function Component() {
     const [imageThumbnails, setImageThumbnails] = useState([]);
     const params = useParams();
     const id = location.state?.product_id || params.id;
-    const category_slug = location.state?.category_slug || params.id;
-    console.log(id,'========details');
+    const [product_slug, setproduct_slug] = useState(location.state?.product_id || id);
+    const [scategory_slug, setcategory_slug] = useState(location.state?.category_slug);
 
     const [pincode, setPincode] = useState("");
     const [error, setError] = useState("");
@@ -137,7 +139,7 @@ export default function Component() {
 
     const imageRef = useRef(null);
     const imgRef = useRef(null);
-
+    const product = productDetailData?.data?.product;
 
     // ⬆️ Scroll to top on route change
     useEffect(() => {
@@ -375,6 +377,27 @@ export default function Component() {
         nextArrow: <CustomNextArrow/>,
     };
 
+
+    const handleQuantity = async (product_id, action, qty) => {
+        try {
+            // Always send an action — default to "increment"
+            const params = {
+                quantity: qty,
+                action: action === "decrement" ? "decrement" : "increment",
+            };
+
+            console.log(params); // For debugging
+            const response = await axiosInstance.get(`/product/stockCheck/${product_id}/`, {
+                params,
+            });
+
+            if (response.status === 200) {
+                setQuantity(response?.data?.new_quantity);
+            }
+        } catch (error) {
+            enqueueSnackbar(error?.response?.data?.message, {variant: 'info'});
+        }
+    };
     const handleSizeClick = async (size, product) => {
         try {
             // Set the selected size
@@ -401,6 +424,10 @@ export default function Component() {
             // Handle the API response
             const data = response.data;
             const images = data?.data?.product?.images || [];
+            setproduct_slug(data?.data?.product?.slug || id);
+            setcategory_slug(data?.data?.product?.category_slug);
+            const newUrl = `/category/${scategory_slug}/${product_slug}/`;
+            window.history.pushState(null, "", newUrl);
             setImageThumbnails(images);
             setProductDetailData(data);
 
@@ -408,27 +435,6 @@ export default function Component() {
         } catch (error) {
             console.error("Error fetching filtered products:", error);
             // Handle error scenarios
-        }
-    };
-
-    const handleQuantity = async (product_id, action, qty) => {
-        try {
-            // Always send an action — default to "increment"
-            const params = {
-                quantity: qty,
-                action: action === "decrement" ? "decrement" : "increment",
-            };
-
-            console.log(params); // For debugging
-            const response = await axiosInstance.get(`/product/stockCheck/${product_id}/`, {
-                params,
-            });
-
-            if (response.status === 200) {
-                setQuantity(response?.data?.new_quantity);
-            }
-        } catch (error) {
-            enqueueSnackbar(error?.response?.data?.message, {variant: 'info'});
         }
     };
 
@@ -455,7 +461,10 @@ export default function Component() {
             if (data?.data?.product?.images) {
                 setImageThumbnails(data?.data?.product?.images || []);
             }
-
+            setproduct_slug(data?.data?.product?.slug || id);
+            setcategory_slug(data?.data?.product?.category_slug);
+            const newUrl = `/category/${scategory_slug}/${product_slug}/`;
+            window.history.pushState(null, "", newUrl);
             setProductDetailData(data);
         } catch (error) {
             console.error("Error fetching filtered products:", error);
@@ -481,7 +490,10 @@ export default function Component() {
             // Ensure data exists before updating state
 
             const data = response?.data;
-
+            setproduct_slug(data?.data?.product?.slug || id);
+            setcategory_slug(data?.data?.product?.category_slug);
+            const newUrl = `/category/${scategory_slug}/${product_slug}/`;
+            window.history.pushState(null, "", newUrl);
             if (data?.data?.product?.images) {
                 setImageThumbnails(data?.data?.product?.images || []);
             }
@@ -519,6 +531,10 @@ export default function Component() {
             // Handle the API response
             const data = response.data;
             const images = data?.data?.product?.images || [];
+            setproduct_slug(data?.data?.product?.slug || id);
+            setcategory_slug(data?.data?.product?.category_slug);
+            const newUrl = `/category/${scategory_slug}/${product_slug}/`;
+            window.history.pushState(null, "", newUrl);
             setImageThumbnails(images);
             setProductDetailData(data);
 
@@ -555,6 +571,10 @@ export default function Component() {
             // Handle the API response
             const data = response.data;
             const images = data?.data?.product?.images || [];
+            setproduct_slug(data?.data?.product?.slug || id);
+            setcategory_slug(data?.data?.product?.category_slug);
+            const newUrl = `/category/${scategory_slug}/${product_slug}/`;
+            window.history.pushState(null, "", newUrl);
             setImageThumbnails(images);
             setProductDetailData(data);
 
@@ -589,7 +609,10 @@ export default function Component() {
 
             const data = response.data;
             const images = data?.data?.product?.images || [];
-
+            setproduct_slug(data?.data?.product?.slug || id);
+            setcategory_slug(data?.data?.product?.category_slug);
+            const newUrl = `/category/${scategory_slug}/${product_slug}/`;
+            window.history.pushState(null, "", newUrl);
             setImageThumbnails(images);
             setProductDetailData(data);
             setSelectedImage(0);
@@ -610,7 +633,10 @@ export default function Component() {
                     setProductDetailData(data);
                     setAddOnData(data?.data?.product_add_ons || []);
                     setImageThumbnails(data?.data?.product?.images || []);
-
+                    setproduct_slug(data?.data?.product?.slug || id);
+                    setcategory_slug(data?.data?.product?.category_slug);
+                    const newUrl = `/category/${scategory_slug}/${product_slug}/`;
+                    window.history.pushState(null, "", newUrl);
                     const {size_id, planter_size_id, planter_id, color_id, litre_id, weight_id} = data.data.product;
 
                     const defaultSize =
@@ -671,6 +697,7 @@ export default function Component() {
                     if (defaultWeight) {
                         handleWeightClick(defaultWeight, data.data.product);
                     }
+
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -680,39 +707,66 @@ export default function Component() {
         if (id) fetchData();
     }, [id]);
 
-    console.log("iiiidd", id);
+    console.log("iiiidd", id,'p_slug',product_slug);
+
+    const category_slug = location.state?.category_slug || product.category_slug;
+    console.log(id,'========details');
+    // Fallbacks if fields are missing
+    const metaTitle = product?.meta_title
+        ? product.meta_title
+        : product?.main_product_name
+            ? `Buy ${product.main_product_name} Online | Best Price - Gidan`
+            : 'Buy Gardening Products Online | Best Price - Gidan';
+
+    const metaDescription = product?.meta_description
+        ? product.meta_description
+        : product?.main_product_name
+            ? `Buy ${product.main_product_name} online at Gidan. ✔ Premium quality ✔ Healthy & well-packed ✔ Trusted gardening brand. Fast delivery & easy returns.`
+            : 'Buy gardening products online at Gidan. ✔ Premium quality ✔ Trusted brand ✔ Fast delivery & easy returns.';
+
+    const metaKeywords =
+        product?.meta_keywords || "gardening, plants, seeds, pots, plant care";
+
+    const canonicalUrl =
+        (id || product_slug || product?.slug) &&
+        (category_slug || product?.category_slug || scategory_slug)
+            ? `https://gidan.store/category/${encodeURIComponent(
+                category_slug || product?.category_slug || scategory_slug
+            )}/${encodeURIComponent(product_slug || product?.slug || id)}/`
+            : 'https://gidan.store';
+
+// OG image fallback
+    const ogImage =
+        product?.images?.[0]?.image ||
+        product?.main_image ||
+        "https://gidan.store/default-product.jpg";
+
 
     return (
         <>
             <Verify/>
             <Helmet>
-  <title>
-    {productDetailData?.data?.product?.main_product_name
-      ? `Buy ${productDetailData.data.product.main_product_name} Online | Best Price – Gidan`
-      : 'Buy Gardening Products Online | Best Price – Gidan'}
-  </title>
+                {/* Basic SEO */}
+                <title>{metaTitle}</title>
+                <meta name="description" content={metaDescription} />
+                <meta name="keywords" content={metaKeywords} />
+                <link rel="canonical" href={canonicalUrl} />
 
-  <meta
-    name="description"
-    content={
-      productDetailData?.data?.product?.main_product_name
-        ? `Buy ${productDetailData.data.product.main_product_name} online at Gidan. ✔ Premium quality ✔ Healthy & well-packed ✔ Trusted gardening brand. Fast delivery & easy returns.`
-        : 'Buy gardening products online at Gidan. ✔ Premium quality ✔ Trusted brand ✔ Fast delivery & easy returns.'
-    }
-  />
+                {/* Open Graph */}
+                <meta property="og:title" content={metaTitle} />
+                <meta property="og:description" content={metaDescription} />
+                <meta property="og:image" content={ogImage} />
+                <meta property="og:url" content={canonicalUrl} />
+                <meta property="og:type" content="product" />
+                <meta property="og:site_name" content="Gidan" />
+                <meta property="og:locale" content="en_IN" />
 
-  <link
-    rel="canonical"
-    href={
-      id
-        ? `https://gidan.store/category/${category_slug}/${id}/`
-        : 'https://gidan.store'
-    }
-  />
-</Helmet>
-
-
-
+                {/* Twitter Card */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={metaTitle} />
+                <meta name="twitter:description" content={metaDescription} />
+                <meta name="twitter:image" content={ogImage} />
+            </Helmet>
 
             <div className="w-full" style={{backgroundColor: "whitesmoke"}}>
                 <div className="container mx-auto px-3 py-4 font-sans md:px-8">
@@ -919,7 +973,12 @@ export default function Component() {
                                     );
                                 })}
                             </p>
-                            <ProductSchema product={productDetailData?.data?.product} images={imageThumbnails} />
+                            <ProductSchema
+                                product={productDetailData?.data?.product}
+                                images={imageThumbnails}
+                                rating={productDetailData?.data?.product_rating?.avg_rating || 0}
+                                ratingCount={productDetailData?.data?.product_rating?.num_ratings || 0}
+                            />
 
                             <div className="flex mb-4 items-center">
                                 <div className="mr-4 flex items-center">
@@ -1196,6 +1255,8 @@ export default function Component() {
                     />
                 )}
             </div>
+            <HomepageSchema/>
+            <StoreSchema/>
         </>
     );
 }

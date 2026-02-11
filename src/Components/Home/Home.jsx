@@ -18,6 +18,8 @@ import axiosInstance from '../../Axios/axiosInstance';
 import { Helmet } from "react-helmet-async";
 import {useLocation} from "react-router-dom";
 import axios from "axios";
+import HomepageSchema from "../../views/utilities/seo/HomepageSchema";
+import StoreSchema from "../../views/utilities/seo/StoreSchema";
 
 
 const Home = () => {
@@ -90,6 +92,8 @@ const Home = () => {
           {/* <Testimonials />
           <ExploreWorks /> */}
           <CheckOutStore/>
+          <HomepageSchema/>
+          <StoreSchema/>
         </>
       )}
     </div>

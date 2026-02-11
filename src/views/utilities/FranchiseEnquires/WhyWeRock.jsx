@@ -1,36 +1,39 @@
 import React from "react";
-import WhyWeRockImage from "../../../Assets/FranchiseEnquires/franchiseenquires3.png"; // Update path if needed
+// Make sure the actual file extension in your folder matches this import path.
+// Usually, it ends in either .jpg or .jpeg, not both.
+import WhyWeRockImage from "../../../Assets/franches_banners/Franchise Page Banner-3.jpg.jpeg";
 
 const WhyWeRock = () => {
-  return (
-    <div className="bg-gray-100 py-8 md:py-12 px-6">
-      <div className="w-full max-w-screen-xl mx-auto text-center">
-        <h2 className="text-2xl md:text-3xl font-bold mb-4">Why We Rock?</h2>
-        <p className="text-gray-700 text-base md:text-lg leading-relaxed">
-          Take the first step and become a part of the family that is
-          ever-growing. Partner with the most trusted plant nursery in the
-          market. The vision of{" "}
-          <span className="font-bold">Gidan franchise</span> is to
-          deliver our unique cultural blend and values to each corner of this
-          world. Started 3 years back, we have accomplished great tasks and
-          achieved incredible milestones.{" "}
-          <span className="font-bold">550+ outlets</span>,{" "}
-          <span className="font-bold">320+ cities</span>, countless kulhads, and
-          global presence say it all.
-        </p>
+    return (
+        // Outer container: Gray background with vertical padding
+        <div className="bg-gray-100 py-12 px-4 md:px-6">
 
-        {/* Image section */}
-        <div className="mt-8 ">
-          <img name=" "   
-            src={WhyWeRockImage}
-            loading="lazy"
-            alt="Gidan Outlet"
-            className="w-full max-w-4xl mx-auto rounded-lg shadow-lg"
-          />
+            {/* Inner container: Centers content and limits max width */}
+            <div className="w-full max-w-screen-xl mx-auto text-center">
+
+                {/* Section Title */}
+                <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800">
+                    Why We Rock?
+                </h2>
+
+                {/* Section Description */}
+                <p className="text-gray-700 text-lg md:text-xl leading-relaxed max-w-4xl mx-auto mb-10">
+                    GIDAN is India’s newest destination for thoughtfully curated garden products, plants, planters, pots, garden supplies, and garden equipment, built with a deep respect for nature and a strong commitment to education-driven gardening. GIDAN is a unit of Biotech Maali, and has been created by a plant parent—for plant lovers, growers, and cultivators across homes, farms, and agricultural ecosystems.
+                </p>
+
+                {/* Image Container */}
+                <div className="relative w-full mb-16 bg-white rounded-lg md:rounded-2xl shadow-lg md:shadow-2xl border border-gray-200 overflow-hidden">
+                    <img
+                        src={WhyWeRockImage}
+                        alt="Gidan Outlet"
+                        loading="lazy"
+                        className="w-full h-auto object-contain max-h-[400px] md:max-h-[600px]"
+                    />
+                </div>
+
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default WhyWeRock;

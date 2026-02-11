@@ -1,268 +1,240 @@
-import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
-  faBars,
-  faUser,
-  faSignOutAlt,
-} from "@fortawesome/free-solid-svg-icons";
-import {
-  faInstagram,
-  faFacebook,
-  faLinkedin,
-  faYoutube,
-} from "@fortawesome/free-brands-svg-icons";
-import { Link } from "react-router-dom";
+  FaBars,
+  FaUser,
+  FaSignOutAlt,
+  FaTimes,
+  FaFacebookF,
+  FaInstagram,
+  FaLinkedin,
+  FaYoutube,
+  FaWhatsapp
+} from "react-icons/fa";
+import axiosInstance from "../../../Axios/axiosInstance";
 
 const Hamburger = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
+  // Map categories to type_choices
+  const categoryToTypeMap = {
+    PLANTS: "plant",
+    POTS: "pot",
+    SEEDS: "seed",
+    "PLANT CARE": "plantcare",
+  };
+
+  // --- Data Fetching ---
+  const getCategories = async () => {
+    try {
+      const response = await axiosInstance.get(`/category/`);
+      const data = response?.data?.data?.categories;
+      if (data) {
+        setCategories(data);
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getCategories();
+  }, []);
+
+  // --- Handlers ---
   const handleLogoutClick = () => {
-    // You can add logout logic here
-    setIsOpen(false); // Close the sidebar
+    // Add your logout logic here
+    setIsOpen(false);
   };
 
-  const handleLinkClick = () => {
-    setIsOpen(false); // Close the sidebar on navigation
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
   };
 
-  const desktopMenu = [
-    { label: "PLANTS", path: "/filter/10" },
-    { label: "SEEDS", path: "/seeds" },
-    { label: "POTS & PLANTERS", path: "/pots-and-planters" },
-    { label: "PLANT CARE", path: "/plant-care" },
-    { label: "GIFTING", path: "/gifting" },
-    { label: "Offers", path: "/offers" },
-  ];
+  const closeMenu = () => {
+    setIsOpen(false);
+  };
 
-  const mobileMenu = [
-    { label: "PLANTS", path: "/filter/10" },
-    { label: "SEEDS", path: "/filter/13" },
-    { label: "POTS", path: "/pots-and-planters" },
-    { label: "PLANT CARE", path: "/plant-care" },
-    { label: "GIFTING", path: "/gifting" },
-    { label: "OFFERS", path: "/offers" },
-  ];
+  const handleCategoryClick = (category) => {
+    const { id, name, slug } = category;
+    const typeKey = categoryToTypeMap[name];
+
+    closeMenu();
+
+    if (name === "GIFTS") {
+      navigate(`/gifts/`);
+    } else if (name === "SERVICES") {
+      navigate(`/services/`);
+    } else if (name === "OFFERS") {
+      navigate(`/offer`);
+    } else {
+      navigate(`/category/${slug}/`, {
+        state: {
+          categoryId: id,
+          categoryName: name,
+          typeKey: typeKey || "",
+          category_slug: slug,
+        },
+      });
+    }
+  };
 
   const additionalLinks = [
-    { label: "Blog", path: "/blog" },
-    { label: "Track Order", path: "/track-order" },
+    { label: "My Account", path: "/orders" },
+    { label: "Track Order", path: "/orders" },
     { label: "Services", path: "/services" },
-    { label: "Become A Franchise", path: "/franchise" },
-    { label: "Contact Us", path: "/contact" },
+    { label: "Become A Franchise", path: "/franchise-enquiry" },
+    { label: "Contact Us", path: "/contact-us" },
     { label: "FAQ", path: "/faq" },
   ];
 
   return (
-    <div>
-      {/* Hamburger Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="p-2"
-        aria-label="Toggle Menu"
-      >
-        <FontAwesomeIcon icon={faBars} className="text-2xl" />
-      </button>
+      <div>
+        {/* 1. Hamburger Button */}
+        <button
+            onClick={toggleMenu}
+            className="p-2 focus:outline-none z-[1100] relative"
+            aria-label="Toggle Menu"
+        >
+          {isOpen ? <FaTimes className="text-2xl text-gray-700" /> : <FaBars className="text-2xl text-gray-700" />}
+        </button>
 
-      {/* Sidebar Menu */}
-      {isOpen && (
-        <div className="fixed inset-0 bg-white z-50 p-4 w-3/4 max-w-xs shadow-lg h-full overflow-y-auto">
-          {/* Account Section */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <FontAwesomeIcon icon={faUser} />
-              <span>My Account</span>
-            </div>
-            <button
-              className="text-gray-700 flex items-center justify-between ml-auto"
-              onClick={handleLogoutClick}
-            >
-              <span>Logout</span>
-              <FontAwesomeIcon icon={faSignOutAlt} className="ml-4" />
-            </button>
-          </div>
+        {/* 2. Sidebar Overlay */}
+        {isOpen && (
+            <>
+              {/* Backdrop */}
+              <div
+                  className="fixed inset-0 bg-black bg-opacity-50 z-[1000] md:hidden"
+                  onClick={closeMenu}
+              ></div>
 
-          {/* Menu Items - Desktop View */}
-          <div className="hidden md:block space-y-6">
-            {desktopMenu.map((item, index) => (
-              <Link
-                key={index}
-                to={item.path}
-                onClick={handleLinkClick}
-                className="block border-b pb-2"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
+              {/* Sidebar Menu Container */}
+              <div className="fixed top-0 left-0 w-3/4 max-w-xs h-full bg-white shadow-2xl z-[1001] transform transition-transform duration-300 ease-in-out overflow-y-auto md:hidden flex flex-col">
 
-          {/* Menu Items - Mobile View */}
-          <div className="md:hidden overflow-x-auto whitespace-nowrap flex gap-4 p-2 scrollbar-hide">
-            {mobileMenu.map((item, index) => (
-              <Link
-                key={index}
-                to={item.path}
-                onClick={handleLinkClick}
-                className="w-20 h-20 flex items-center justify-center rounded-full bg-gray-200 text-center text-xs"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
+                {/* Header */}
+                <div className="flex items-center justify-between p-5 border-b border-gray-100 bg-gray-50">
+                  <div className="flex items-center gap-3 font-semibold text-gray-800">
+                    <FaUser className="text-green-600" />
+                    <span>My Account</span>
+                  </div>
+                  <button
+                      className="text-gray-400 hover:text-red-500 transition-colors text-sm flex items-center gap-2"
+                      onClick={handleLogoutClick}
+                  >
+                    <span>Logout</span>
+                    <FaSignOutAlt />
+                  </button>
+                </div>
 
-          {/* Additional Links */}
-          <div className="space-y-6 mt-6 text-gray-500 text-sm">
-            {additionalLinks.map((item, index) => (
-              <Link
-                key={index}
-                to={item.path}
-                onClick={handleLinkClick}
-                className="block"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
+                {/* Scrollable Content */}
+                <div className="flex-1 overflow-y-auto p-5">
 
-          {/* Social Media Icons */}
-          <div className="flex items-center mt-8 space-x-6">
-            <a
-              href="https://facebook.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FontAwesomeIcon
-                icon={faFacebook}
-                className="text-xl text-gray-600"
-              />
-            </a>
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FontAwesomeIcon
-                icon={faInstagram}
-                className="text-xl text-gray-600"
-              />
-            </a>
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FontAwesomeIcon
-                icon={faLinkedin}
-                className="text-xl text-gray-600"
-              />
-            </a>
-            <a
-              href="https://youtube.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FontAwesomeIcon
-                icon={faYoutube}
-                className="text-xl text-gray-600"
-              />
-            </a>
-          </div>
-        </div>
-      )}
-    </div>
+                  {/* DYNAMIC CATEGORIES SECTION (List Only) */}
+                  <div className="mb-8">
+                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
+                      Shop Categories
+                    </h3>
+
+                    {loading ? (
+                        <div className="animate-pulse space-y-3">
+                          {[1, 2, 3, 4].map((i) => (
+                              <div key={i} className="h-10 bg-gray-200 rounded"></div>
+                          ))}
+                        </div>
+                    ) : (
+                        <div className="space-y-1">
+                          {categories.map((category) => (
+                              <div
+                                  key={category.id}
+                                  onClick={() => handleCategoryClick(category)}
+                                  className="flex items-center justify-between p-3 rounded-lg hover:bg-green-50 cursor-pointer transition-colors group border-b border-gray-50 last:border-0"
+                              >
+                        <span className="text-gray-700 font-medium group-hover:text-green-700">
+                          {category.name}
+                        </span>
+                                {/* Arrow Icon indicating navigation */}
+                                <FaBars className="text-gray-300 text-xs transform -rotate-90" />
+                              </div>
+                          ))}
+                        </div>
+                    )}
+                  </div>
+
+                  {/* ADDITIONAL LINKS SECTION */}
+                  <div>
+                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
+                      Information
+                    </h3>
+                    <div className="space-y-1">
+                      {additionalLinks.map((item, index) => (
+                          <Link
+                              key={index}
+                              to={item.path}
+                              onClick={closeMenu}
+                              className="block p-3 rounded-lg text-gray-600 hover:text-green-700 hover:bg-gray-50 transition-colors text-sm font-medium"
+                          >
+                            {item.label}
+                          </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* SOCIAL MEDIA FOOTER */}
+                <div className="p-6 border-t border-gray-100 bg-gray-50">
+                  <div className="flex justify-center items-center space-x-6">
+                    <a
+                        href="https://www.facebook.com/thegidanstore/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-black hover:text-green-500 transition-colors"
+                    >
+                      <FaFacebookF size={20} />
+                    </a>
+                    <a
+                        href="https://www.instagram.com/thegidanstore/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-black hover:text-green-500 transition-colors"
+                    >
+                      <FaInstagram size={20} />
+                    </a>
+                    <a
+                        href="https://www.linkedin.com/company/thegidanstore/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-black hover:text-green-500 transition-colors"
+                    >
+                      <FaLinkedin size={20} />
+                    </a>
+                    <a
+                        href="https://www.youtube.com/@thegidanstore/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-black hover:text-green-500 transition-colors"
+                    >
+                      <FaYoutube size={20} />
+                    </a>
+                    <a
+                        href="https://whatsapp.com/channel/0029Vac6g6TB4hdL2NqaEc1f/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-black hover:text-green-500 transition-colors"
+                    >
+                      <FaWhatsapp size={20} />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </>
+        )}
+      </div>
   );
 };
 
 export default Hamburger;
-
-
-
-
-
-// import React, { useState } from "react";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import {
-//   faBars,
-//   faUser,
-//   faSignOutAlt,
-// } from "@fortawesome/free-solid-svg-icons";
-// import {
-//   faInstagram,
-//   faFacebook,
-//   faLinkedin,
-//   faYoutube,
-// } from "@fortawesome/free-brands-svg-icons";
-// import { Link } from "react-router-dom";
-
-// const Hamburger = () => {
-//   const [isOpen, setIsOpen] = useState(false);
-
-//   const handleLogoutClick = () => {
-//     setIsOpen(false); // Close the sidebar when logout is clicked
-//   };
-
-//   return (
-//     <div>
-//       {/* Hamburger Button */}
-//       <button onClick={() => setIsOpen(!isOpen)} className="p-2">
-//         <FontAwesomeIcon icon={faBars} className="text-2xl" />
-//       </button>
-
-//       {/* Sidebar Menu */}
-//       {isOpen && (
-//         <div className="fixed inset-0 bg-white z-50 p-4 w-3/4 max-w-xs shadow-lg h-full">
-//           {/* Account Section */}
-//           <div className="flex items-center justify-between mb-6">
-//             <FontAwesomeIcon icon={faUser} />
-//             <span className="ml-2">My Account</span>
-//             <button
-//               className="text-gray-700 flex items-center justify-between ml-auto"
-//               onClick={handleLogoutClick}
-//             >
-//               <span>Logout</span>
-//               <FontAwesomeIcon icon={faSignOutAlt} className="ml-4" />
-//             </button>
-//           </div>
-
-//           {/* Menu Items - Desktop View */}
-//           <div className="hidden md:block space-y-6">
-//             <Link to="#" className="block border-b pb-2">PLANTS</Link>
-//             <Link to="#" className="block border-b pb-2">SEEDS</Link>
-//             <Link to="#" className="block border-b pb-2">POTS & PLANTERS</Link>
-//             <Link to="#" className="block border-b pb-2">PLANT CARE</Link>
-//             <Link to="#" className="block border-b pb-2">GIFTING</Link>
-//             <Link to="#" className="block border-b pb-2">Offers</Link>
-//           </div>
-
-//           {/* Menu Items - Mobile View (Scrollable Circles) */}
-//           <div className="md:hidden overflow-x-auto whitespace-nowrap flex gap-4 p-2 scrollbar-hide">
-//             {["PLANTS", "SEEDS", "POTS", "PLANT CARE", "GIFTING", "OFFERS"].map((item, index) => (
-//               <Link key={index} to="#" className="w-20 h-20 flex items-center justify-center rounded-full bg-gray-200 text-center text-xs">
-//                 {item}
-//               </Link>
-//             ))}
-//           </div>
-
-//           {/* Additional Links */}
-//           <div className="space-y-6 mt-6 text-gray-400">
-//             <Link to="#" className="block">Blog</Link>
-//             <Link to="#" className="block">Track Order</Link>
-//             <Link to="#" className="block">Services</Link>
-//             <Link to="#" className="block">Become A Franchise</Link>
-//             <Link to="#" className="block">Contact Us</Link>
-//             <Link to="#" className="block">FAQ</Link>
-//           </div>
-
-//           {/* Social Media Icons */}
-//           <div className="flex items-center mt-8 space-x-6">
-//             <Link to="#"><FontAwesomeIcon icon={faFacebook} className="text-xl text-gray-600" /></Link>
-//             <Link to="#"><FontAwesomeIcon icon={faInstagram} className="text-xl text-gray-600" /></Link>
-//             <Link to="#"><FontAwesomeIcon icon={faLinkedin} className="text-xl text-gray-600" /></Link>
-//             <Link to="#"><FontAwesomeIcon icon={faYoutube} className="text-xl text-gray-600" /></Link>
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Hamburger;

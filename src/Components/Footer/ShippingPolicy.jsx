@@ -1,6 +1,8 @@
 import React,{useEffect} from 'react';
 import { Truck, Package, RefreshCw, MessageCircle, Mail, Phone, MapPin, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { Helmet } from "react-helmet-async";
+import HomepageSchema from "../../views/utilities/seo/HomepageSchema";
+import StoreSchema from "../../views/utilities/seo/StoreSchema";
 
 const ShippingPolicy = () => {
 
@@ -185,6 +187,8 @@ const ShippingPolicy = () => {
         <p>© 2024 Gidan - FARM AMMINO AGRITECH PRIVATE LIMITED. All rights reserved.</p>
       </footer> */}
     </div>
+        <HomepageSchema/>
+        <StoreSchema/>
         </>
   );
 };
