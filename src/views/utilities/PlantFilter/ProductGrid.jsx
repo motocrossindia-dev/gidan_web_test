@@ -33,14 +33,14 @@ const ProductGrid = ({
       const category_slug = product?.category_slug;
       const sub_category_slug = product?.sub_category_slug;
 
-      navigate(`/category/${category_slug}/${product.slug}/`, {       state: {
+      // NEW: Use 3-segment URL pattern: /:categorySlug/:subcategorySlug/:productSlug/
+      navigate(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
+          state: {
               product_id: product.slug,
-              category_slug:category_slug,
-              sub_category_slug:sub_category_slug
-
-          } });
-
-
+              category_slug: category_slug,
+              sub_category_slug: sub_category_slug
+          }
+      });
   };
 
   // Fetch next page and append results (only if no filters applied)

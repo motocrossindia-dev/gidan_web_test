@@ -1,8 +1,6 @@
 
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-
-// import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
@@ -149,38 +147,9 @@ const handleBuyItNowSubmit = async () => {
                       {product?.mrp}
                     </span>
                   </div>
-                  {/* {product.inStock ? (
-                    <div className="flex items-center space-x-2 mt-2">
-                      <button
-                        onClick={() => decrement(product.id)}
-                        className="px-3 py-1 bg-lime-500 rounded text-xs md:text-sm font-semibold text-white"
-                      >
-                        -
-                      </button>
-                      <span className="text-sm md:text-lg font-medium">
-                        {quantities[product.id]}
-                      </span>
-                      <button
-                        onClick={() => increment(product.id)}
-                        className="px-3 py-1 bg-lime-500 rounded text-xs md:text-sm font-semibold text-white"
-                      >
-                        +
-                      </button>
-                    </div>
-                  ) : (
-                    <p className="text-red-600 mt-2 font-semibold text-sm">
-                      Out of stock
-                    </p>
-                  )} */}
+
                 </div>
-                {/* Adjust the positioning of the delete button */}
-                {/* <button
-                  onClick={() => handleRemove(product.id)}
-                  className="absolute top-2 right-2 p-2 hover:bg-gray-100 rounded-full transition-colors"
-                  aria-label="Delete item"
-                >
-                  <RiDeleteBin6Line className="w-5 h-5 text-gray-500 hover:text-red-500" />
-                </button> */}
+
               </div>
             ))}
           </div>

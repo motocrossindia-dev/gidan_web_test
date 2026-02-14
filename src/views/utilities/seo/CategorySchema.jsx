@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 export default function CategorySchema({
                                            categoryName,
                                            categorySlug,
-                                           items = [] // [{ slug: "snake-plant" }, ...]
+                                           items = [] // [{ slug: "product-slug", category_slug: "category", sub_category_slug: "subcategory" }, ...]
                                        }) {
     const baseUrl = "https://gidan.store";
 
@@ -39,11 +39,18 @@ export default function CategorySchema({
                 "@type": "ItemList",
                 "name": `${categoryName} Collection`,
                 "numberOfItems": items.length,
-                "itemListElement": items.map((item, index) => ({
-                    "@type": "ListItem",
-                    "position": index + 1,
-                    "url": `${baseUrl}/${item.slug}/`
-                }))
+                "itemListElement": items.map((item, index) => {
+                    // Build proper 3-segment product URL
+                    const productUrl = item.sub_category_slug
+                        ? `${baseUrl}/${item.category_slug}/${item.sub_category_slug}/${item.slug}/`
+                        : `${baseUrl}/${item.category_slug}/${item.slug}/`;
+                    
+                    return {
+                        "@type": "ListItem",
+                        "position": index + 1,
+                        "url": productUrl
+                    };
+                })
             }
         ]
     };

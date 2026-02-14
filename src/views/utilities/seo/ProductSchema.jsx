@@ -11,7 +11,10 @@ export default function ProductSchema({
                                       }) {
     if (!product) return null;
 
-    const productUrl = `${siteUrl}/category/${product.category_slug}/${product.slug}`;
+    // NEW: Clean URL structure
+    const productUrl = product.sub_category_slug
+        ? `${siteUrl}/${product.category_slug}/${product.sub_category_slug}/${product.slug}`
+        : `${siteUrl}/${product.category_slug}/${product.slug}`;
 
     const schema = {
         "@context": "https://schema.org",

@@ -76,7 +76,7 @@ const SideBar = () => {
 
             <MenuSection title="PAYMENTS">
               <MenuItem icon={<CiWallet className="text-green-500" />} text="Wallet" to="/profile/wallet" />
-              <MenuItem icon={<CiBitcoin className="text-green-500" />} text="BT Coins" to="/profile/btcoins" />
+              <MenuItem icon={<CiBitcoin className="text-green-500" />} text="GD Coins" to="/profile/btcoins" />
             </MenuSection>
 
             <MenuSection title="MY STUFF">
