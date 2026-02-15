@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import FilterSidebar from "./FilterSidebar"; // Ensure this path is correct
-import ProductGrid from "./ProductGrid";
-import FAQSection from "./FAQSection";
-import RecentlyViewedProduct from "./RecentlyViewedProduct";
+import ProductGrid from "../../../Components/Shared/ProductGrid";
+import RecentlyViewedProducts from "../../../Components/Shared/RecentlyViewedProducts";
 import CheckoutStores from "./CheckoutStores";
 import { FiFilter } from "react-icons/fi";
 import { Helmet } from "react-helmet-async";
@@ -65,7 +64,7 @@ function Featured() {
 
           {/* Additional Sections */}
           <div className="px-4 md:px-8 mt-8">
-            <RecentlyViewedProduct />
+            <RecentlyViewedProducts />
             {/* <FAQSection /> */}
             <CheckoutStores />
           </div>

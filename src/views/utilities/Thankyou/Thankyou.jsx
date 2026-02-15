@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import FilterSidebar from "./FilterSidebar";
 import FilterSidebarMobile from "./FilterSidebarMobile"; // Mobile version of FilterSidebar
-import ProductGrid from "./ProductGrid";
+import ProductGrid from "../../../Components/Shared/ProductGrid";
 import FAQSection from "./FAQSection";
-import RecentlyViewedProduct from "./RecentlyViewedProduct";
+import RecentlyViewedProducts from "../../../Components/Shared/RecentlyViewedProducts";
 import CheckoutStores from "./CheckoutStores";
 import Banner1 from "./Banner1";
 import { Card } from "@mui/material";
@@ -64,7 +64,7 @@ function Thankyou() {
                       <ProductGrid />
                   </div>
               </div>
-              <RecentlyViewedProduct />
+              <RecentlyViewedProducts />
               {/* FAQ Section */}
               <div className="md:ml-16 overflow-x-hidden md:mr-12 ">
                   <FAQSection />

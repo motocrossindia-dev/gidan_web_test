@@ -5,7 +5,7 @@ import { FiFilter } from "react-icons/fi";
 import { Close as CloseIcon } from "@mui/icons-material";
 
 import FilterSidebar from "../Featured/FilterSidebar";
-import ProductGrid from "./ProductGrid";
+import ProductGrid from "../../../Components/Shared/ProductGrid";
 import FAQSection from "./FAQSection";
 import CheckoutStores from "./CheckoutStores";
 import { useLocation, useParams } from "react-router-dom";
@@ -39,6 +39,27 @@ function PlantFilter() {
 
     // Extract slugs from URL
     const { categorySlug, subcategorySlug } = useParams();
+
+    // Detect filter type based on route path
+    const routeBasedFilters = {
+        isSeasonalCollection: path === '/seasonal' || path === '/seasonal/',
+        isTrending: path === '/trending' || path === '/trending/' || path === '/latest' || path === '/latest/',
+        isFeatured: path === '/featured' || path === '/featured/',
+        isBestSeller: path === '/bestseller' || path === '/bestseller/'
+    };
+
+    // Extract query parameters for boolean filters (fallback)
+    const searchParams = new URLSearchParams(location.search);
+    const queryIsSeasonalCollection = searchParams.get('is_seasonal_collection') === 'true';
+    const queryIsTrending = searchParams.get('is_trending') === 'true';
+    const queryIsFeatured = searchParams.get('is_featured') === 'true';
+    const queryIsBestSeller = searchParams.get('is_best_seller') === 'true';
+
+    // Combine route-based and query-based filters (route takes precedence)
+    const isSeasonalCollection = routeBasedFilters.isSeasonalCollection || queryIsSeasonalCollection;
+    const isTrending = routeBasedFilters.isTrending || queryIsTrending;
+    const isFeatured = routeBasedFilters.isFeatured || queryIsFeatured;
+    const isBestSeller = routeBasedFilters.isBestSeller || queryIsBestSeller;
 
     // Use location.state as primary data source (keep existing logic)
     const stateData = location.state || {};
@@ -113,7 +134,13 @@ function PlantFilter() {
                     queryParams.append("subcategory_slug", subcategorySlug);
                 }
 
-                // Only make API call if we have at least category info
+                // Add boolean filter flags
+                if (isSeasonalCollection) queryParams.append("is_seasonal_collection", "true");
+                if (isTrending) queryParams.append("is_trending", "true");
+                if (isFeatured) queryParams.append("is_featured", "true");
+                if (isBestSeller) queryParams.append("is_best_seller", "true");
+
+                // Only make API call if we have at least category info or boolean filters
                 if (queryParams.toString()) {
                     const response = await axiosInstance.get(
                         `/filters/main_productsFilter/?${queryParams.toString()}`
@@ -142,14 +169,18 @@ function PlantFilter() {
             }
         };
 
-        // Trigger product fetch when URL params exist (either from state or URL)
-        if (categoryId || categorySlug || path.startsWith("/category/")) {
+        // Trigger product fetch when URL params exist (either from state or URL) or boolean filters are present
+        if (categoryId || categorySlug || path.startsWith("/category/") || isSeasonalCollection || isTrending || isFeatured || isBestSeller) {
             getInitialProducts();
         }
-    }, [path, typeKey, categoryId, subcategoryID, categorySlug, subcategorySlug]);
+    }, [path, typeKey, categoryId, subcategoryID, categorySlug, subcategorySlug, isSeasonalCollection, isTrending, isFeatured, isBestSeller]);
 
     // Determine the base name for Helmet tags
     const getDisplayName = () => {
+        if (isSeasonalCollection) return "Seasonal Collections";
+        if (isTrending) return "Trending Products";
+        if (isFeatured) return "Featured Products";
+        if (isBestSeller) return "Best Sellers";
         if (currentFilterType) return currentFilterType;
         if (subCategoryName) return subCategoryName;
         if (fetchedSubcategoryName) return fetchedSubcategoryName;
@@ -192,51 +223,55 @@ function PlantFilter() {
                 />
             </Helmet>
 
-            <div className="container mx-auto min-h-screen">
-                {/* Mobile Filter Button - Triggers SwipeableDrawer */}
-                <div className="md:hidden px-4 pt-4 sticky top-0 z-30 bg-gray-50/95 backdrop-blur-sm py-2 -mx-4 px-4 border-b border-gray-200">
-                    <button
-                        onClick={toggleDrawer(true)}
-                        className="bg-white text-black w-full rounded-lg flex items-center justify-center gap-2 p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-200"
-                    >
-                        <FiFilter size={20} />
-                        <span className="font-medium">Filter Products</span>
-                    </button>
-                </div>
+            <div className="w-full overflow-x-hidden">
+                <div className="container mx-auto px-4 md:px-8 max-w-full">
+                    {/* Mobile Filter Button - Triggers SwipeableDrawer */}
+                    <div className="md:hidden pt-4 sticky top-0 z-30 bg-gray-50/95 backdrop-blur-sm py-2 border-b border-gray-200">
+                        <button
+                            onClick={toggleDrawer(true)}
+                            className="bg-white text-black w-full rounded-lg flex items-center justify-center gap-2 p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-200"
+                        >
+                            <FiFilter size={20} />
+                            <span className="font-medium">Filter Products</span>
+                        </button>
+                    </div>
 
-                {/* Desktop Horizontal Filter - Full Width */}
-                <div className="hidden md:block mt-4 overflow-visible relative z-10">
-                    <FilterSidebar
-                        setResults={setResults}
-                        categoryId={categoryId}
-                        category={categoryName || fetchedCategoryName}
-                        subcategory={subCategoryName || fetchedSubcategoryName}
-                        subcategoryID={subcategoryID}
-                        subcategorySlug={subcategorySlug}
-                        categorySlug={categorySlug}
-                        typeKey={typeKey}
-                        setCategoryData={setCategoryData}
-                        setCurrentFilterType={setCurrentFilterType}
-                    />
-                </div>
+                    {/* Desktop Horizontal Filter - Full Width */}
+                    <div className="hidden md:block mt-4 overflow-visible relative z-10">
+                        <FilterSidebar
+                            setResults={setResults}
+                            categoryId={categoryId}
+                            category={categoryName || fetchedCategoryName}
+                            subcategory={subCategoryName || fetchedSubcategoryName}
+                            subcategoryID={subcategoryID}
+                            subcategorySlug={subcategorySlug}
+                            categorySlug={categorySlug}
+                            typeKey={typeKey}
+                            setCategoryData={setCategoryData}
+                            setCurrentFilterType={setCurrentFilterType}
+                            isSeasonalCollection={isSeasonalCollection}
+                            isTrending={isTrending}
+                            isFeatured={isFeatured}
+                            isBestSeller={isBestSeller}
+                        />
+                    </div>
 
-                {/* Product Grid */}
-                <div className="px-4 mt-4">
-                    <ProductGrid
-                        productDetails={results}
-                        pagination={products}
-                        setResults={setResults}
-                        categoryName={categoryName || fetchedCategoryName}
-                        typeKey={typeKey}
-                        categorySlug={category_slug || categorySlug}
-                        subcategorySlug={subcategory_slug || subcategorySlug}
-                        hasSubcategory={!!subcategoryID}
-                    />
-                </div>
+                    {/* Product Grid */}
+                    <div className="mt-4">
+                        <ProductGrid
+                            productDetails={results}
+                            pagination={products}
+                            setResults={setResults}
+                            categoryName={categoryName || fetchedCategoryName}
+                            typeKey={typeKey}
+                            categorySlug={category_slug || categorySlug}
+                            subcategorySlug={subcategory_slug || subcategorySlug}
+                            hasSubcategory={!!subcategoryID}
+                        />
+                    </div>
 
-                {/* Additional Sections */}
-                <div className="mt-12 mb-8">
-                    <div className="container mx-auto px-4 md:px-8">
+                    {/* Additional Sections */}
+                    <div className="mt-12 mb-8">
                         <CategoryLayout data={categoryData} />
                     </div>
                 </div>
@@ -280,6 +315,10 @@ function PlantFilter() {
                         typeKey={typeKey}
                         setCategoryData={setCategoryData}
                         setCurrentFilterType={setCurrentFilterType}
+                        isSeasonalCollection={isSeasonalCollection}
+                        isTrending={isTrending}
+                        isFeatured={isFeatured}
+                        isBestSeller={isBestSeller}
                     />
                 </Box>
             </SwipeableDrawer>

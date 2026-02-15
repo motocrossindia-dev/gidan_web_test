@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from "react";
 import combooffer from "../../../Assets/ComboOffer/combooffer.png";
 import ComboImage from '../../../views/utilities/ComboOffer/ComboImage.jsx';
-import RecentlyViewedProduct from "./RecentlyViewedProduct.jsx";
+import RecentlyViewedProducts from "../../../Components/Shared/RecentlyViewedProducts";
 import { Helmet } from "react-helmet-async";
 
 const ComboOffer = () => {
@@ -53,7 +53,7 @@ const ComboOffer = () => {
 
         {/* Combo Image Section */}
         <ComboImage /> 
-        <RecentlyViewedProduct/>
+        <RecentlyViewedProducts/>
         {/* <FaqAccordion /> */}
       </div>
     </div>

@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   FaBars,
   FaUser,
   FaSignOutAlt,
-  FaTimes,
   FaFacebookF,
   FaInstagram,
   FaLinkedin,
@@ -17,6 +16,7 @@ const Hamburger = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [expandedCategory, setExpandedCategory] = useState(null);
   const navigate = useNavigate();
 
   // Map categories to type_choices
@@ -33,10 +33,30 @@ const Hamburger = () => {
       const response = await axiosInstance.get(`/category/`);
       const data = response?.data?.data?.categories;
       if (data) {
-        setCategories(data);
+        // Fetch subcategories for each category
+        const categoriesWithSubs = await Promise.all(
+          data.map(async (category) => {
+            const subcategories = await getSubCategories(category.slug);
+            return { ...category, subcategories };
+          })
+        );
+        setCategories(categoriesWithSubs);
       }
     } catch (error) {} finally {
       setLoading(false);
+    }
+  };
+
+  const getSubCategories = async (categorySlug) => {
+    try {
+      const response = await axiosInstance.get(
+        `/category/categoryWiseSubCategory/${categorySlug}/`
+      );
+      if (response.status === 200) {
+        return response?.data?.data?.subCategorys || [];
+      }
+    } catch (error) {
+      return [];
     }
   };
 
@@ -62,6 +82,12 @@ const Hamburger = () => {
     const { id, name, slug } = category;
     const typeKey = categoryToTypeMap[name];
 
+    // If category has subcategories, toggle expansion instead of navigating
+    if (category.subcategories && category.subcategories.length > 0) {
+      setExpandedCategory(expandedCategory === id ? null : id);
+      return;
+    }
+
     closeMenu();
 
     if (name === "GIFTS") {
@@ -81,6 +107,24 @@ const Hamburger = () => {
         },
       });
     }
+  };
+
+  const handleSubcategoryClick = (category, subcategory) => {
+    closeMenu();
+    const typeKey = categoryToTypeMap[category.name];
+    navigate(`/${category.slug}/${subcategory.slug}/`, {
+      state: {
+        categoryId: category.id,
+        categoryName: category.name,
+        subcategoryID: subcategory.id,
+        typeKey: typeKey || "",
+        category_slug: category.slug,
+        subCategory: {
+          name: subcategory.name,
+          subcategory_slug: subcategory.slug,
+        },
+      },
+    });
   };
 
   const additionalLinks = [
@@ -150,16 +194,47 @@ const Hamburger = () => {
                     ) : (
                         <div className="space-y-1">
                           {categories.map((category) => (
-                              <div
-                                  key={category.id}
-                                  onClick={() => handleCategoryClick(category)}
-                                  className="flex items-center justify-between p-3 rounded-lg hover:bg-green-50 cursor-pointer transition-colors group border-b border-gray-50 last:border-0"
-                              >
-                        <span className="text-gray-700 font-medium group-hover:text-green-700">
-                          {category.name}
-                        </span>
-                                {/* Arrow Icon indicating navigation */}
-                                <FaBars className="text-gray-700 text-xs transform -rotate-90" />
+                              <div key={category.id}>
+                                {/* Main Category */}
+                                <div
+                                    onClick={() => handleCategoryClick(category)}
+                                    className="flex items-center justify-between p-3 rounded-lg hover:bg-green-50 cursor-pointer transition-colors group border-b border-gray-50"
+                                >
+                                  <span className="text-gray-700 font-medium group-hover:text-green-700">
+                                    {category.name}
+                                  </span>
+                                  {category.subcategories && category.subcategories.length > 0 ? (
+                                      <FaBars 
+                                        className={`text-gray-700 text-xs transition-transform duration-200 ${
+                                          expandedCategory === category.id ? 'rotate-0' : '-rotate-90'
+                                        }`} 
+                                      />
+                                  ) : (
+                                      <FaBars className="text-gray-700 text-xs transform -rotate-90" />
+                                  )}
+                                </div>
+
+                                {/* Subcategories Dropdown */}
+                                {expandedCategory === category.id && category.subcategories && category.subcategories.length > 0 && (
+                                    <div className="ml-4 mt-1 mb-2 space-y-1 bg-gray-50 rounded-lg p-2">
+                                      {category.subcategories.map((subcategory) => (
+                                          <div
+                                              key={subcategory.id}
+                                              onClick={() => handleSubcategoryClick(category, subcategory)}
+                                              className="flex items-center justify-between p-2 pl-4 rounded-lg hover:bg-white cursor-pointer transition-colors group"
+                                          >
+                                            <span className="text-gray-600 text-sm group-hover:text-green-700">
+                                              {subcategory.name}
+                                            </span>
+                                            {subcategory.product_count && (
+                                              <span className="text-xs text-gray-400 bg-white px-2 py-1 rounded">
+                                                {subcategory.product_count}
+                                              </span>
+                                            )}
+                                          </div>
+                                      ))}
+                                    </div>
+                                )}
                               </div>
                           ))}
                         </div>

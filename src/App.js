@@ -116,13 +116,15 @@ const DesktopRoutes = () => (
         <Route path="category/:id/" element={<Navigate to="/:id/" replace />} />
         <Route path="category/subcategory/:id?/:subcategory" element={<Navigate to="/:id/:subcategory/" replace />} />
 
-        <Route path="seasonal" element={<SeasonalCollection1 />} />
+        <Route path="seasonal" element={<PlantFilter />} />
+        <Route path="trending" element={<PlantFilter />} />
+        <Route path="featured" element={<PlantFilter />} />
+        <Route path="latest" element={<PlantFilter />} />
+        <Route path="bestseller" element={<PlantFilter />} />
         <Route path="faq" element={<FAQs />} />
         <Route path="search" element={<PlantCare />} />
         <Route path="flower" element={<FloweringPlants />} />
         <Route path="feature" element={<Featured />} />
-        <Route path="latest" element={<Latest />} />
-        <Route path="bestseller" element={<BestSeller />} />
         <Route path="services" element={<ServicesPage />} />
         <Route path="services/single/" element={<ServicePage />} />
         <Route path="wishlist" element={<WishList />} />
@@ -193,6 +195,7 @@ const MobileRoutes = () => (
         <Route path="PaymentGateway" element={<PaymentGateway />} />
         <Route path="franchise-enquiry" element={<FranchiseEnquires />} />
         <Route path="contact-us" element={<ContactUs />} />
+        <Route path="about-us" element={<AboutUs />} />
         <Route path="careers" element={<Carriers />} />
         <Route path="side" element={<SideParrot />} />
         <Route path="cart" element={<Cart />} />
@@ -211,7 +214,11 @@ const MobileRoutes = () => (
         <Route path="category/:id/" element={<Navigate to="/:id/" replace />} />
         <Route path="category/:subcategory/:id?/:subcategory" element={<Navigate to="/:id/:subcategory/" replace />} />
 
-        <Route path="seasonal" element={<SeasonalCollection1 />} />
+        <Route path="seasonal" element={<PlantFilter />} />
+        <Route path="trending" element={<PlantFilter />} />
+        <Route path="featured" element={<PlantFilter />} />
+        <Route path="latest" element={<PlantFilter />} />
+        <Route path="bestseller" element={<PlantFilter />} />
         <Route path="faq" element={<FAQs />} />
         <Route path="return" element={<ReturnPolicy/>} />
         <Route path="shipping" element={<ShippingPolicy/>} />

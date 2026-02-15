@@ -84,7 +84,11 @@ const FilterSidebar = ({
                          subcategorySlug,
                          categorySlug,
                          setCategoryData,
-                         setCurrentFilterType
+                         setCurrentFilterType,
+                         isSeasonalCollection,
+                         isTrending,
+                         isFeatured,
+                         isBestSeller
                        }) => {
   // Track if this is the very first render of the component
   const isInitialMount = useRef(true);
@@ -167,6 +171,10 @@ const FilterSidebar = ({
         .then((res) => {
           setFilterData(res.data.filters);
           setAvailableTypes(res.data.filters.available_types || []);
+          
+          // Clear all selected filters when Type changes (except keep the Type itself)
+          setSelectedFilters({});
+          setPriceRange({ min: "", max: "" });
         })
         .catch((err) => {
           console.error(err);
@@ -246,6 +254,12 @@ const FilterSidebar = ({
     if (priceRange.min) params.append("price_min", priceRange.min);
     if (priceRange.max) params.append("price_max", priceRange.max);
 
+    // Add boolean filter flags
+    if (isSeasonalCollection) params.append("is_seasonal_collection", "true");
+    if (isTrending) params.append("is_trending", "true");
+    if (isFeatured) params.append("is_featured", "true");
+    if (isBestSeller) params.append("is_best_seller", "true");
+
     try {
       const res = await axiosInstance.get(`/filters/main_productsFilter/?${params}`);
       setResults(res.data.results);
@@ -260,7 +274,7 @@ const FilterSidebar = ({
         setShowMobileFilter(false);
       }
     } catch (err) {}
-  }, [selectedFilterType, categoryId, categorySlug, userHasSelectedType, selectedFilters, priceRange, setCurrentFilterType, setResults, setCategoryData, setShowMobileFilter]);
+  }, [selectedFilterType, categoryId, categorySlug, userHasSelectedType, selectedFilters, priceRange, setCurrentFilterType, setResults, setCategoryData, setShowMobileFilter, isSeasonalCollection, isTrending, isFeatured, isBestSeller]);
 
   // AUTO-APPLY LOGIC FIX
   useEffect(() => {

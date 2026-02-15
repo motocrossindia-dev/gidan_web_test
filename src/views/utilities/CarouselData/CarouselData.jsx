@@ -49,9 +49,9 @@
 
 
 import React, { useEffect, useState } from "react";
-import ProductGrid from "../PlantFilter/ProductGrid";
+import ProductGrid from "../../../Components/Shared/ProductGrid";
 import FAQSection from "../PlantFilter/FAQSection";
-import RecentlyViewedProduct from "../PlantFilter/RecentlyViewedProduct";
+import RecentlyViewedProducts from "../../../Components/Shared/RecentlyViewedProducts";
 import CheckoutStores from "../PlantFilter/CheckoutStores";
 import { Helmet } from "react-helmet-async";
 import axios from "axios";
@@ -114,7 +114,7 @@ function CarouselData() {
 
                 {/* Additional Sections */}
                 <div className="px-4 md:px-8 mt-8">
-                    <RecentlyViewedProduct />
+                    <RecentlyViewedProducts />
                     <FAQSection />
                     <CheckoutStores />
                 </div>

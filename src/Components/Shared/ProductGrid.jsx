@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import ProductCard from "./ProductCard";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../../../Axios/axiosInstance";
-import convertToSlug from "../../../utils/slugConverter";
+import axiosInstance from "../../Axios/axiosInstance";
 
 const ProductGrid = ({
                        productDetails = [],

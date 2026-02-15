@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import FilterSidebar from "../Featured/FilterSidebar";
 import FilterSidebarMobile from "./FilterSidebarMobile";
-import ProductGrid from "../PlantFilter/ProductGrid";
+import ProductGrid from "../../../Components/Shared/ProductGrid";
 import FAQSection from "./FAQSection";
-import RecentlyViewedProduct from "./RecentlyViewedProduct";
+import RecentlyViewedProducts from "../../../Components/Shared/RecentlyViewedProducts";
 import CheckoutStores from "./CheckoutStores";
 import { FiFilter } from "react-icons/fi";
 import { useLocation } from "react-router-dom";
@@ -124,10 +124,11 @@ function PlantCare() {
 
           {/* Additional Sections */}
           <div className="px-4 md:px-8 mt-8">
-            <RecentlyViewedProduct />
+            <RecentlyViewedProducts />
             <FAQSection />
             <CheckoutStores />
           </div>
+
 
           {/* Mobile Filter Sidebar Overlay */}
           {showMobileFilter && (
