@@ -1,40 +1,40 @@
-import React, { useEffect, useState } from 'react';
-import HeroSection from '../../Components/HeroSection/HeroSection';
-import CategoryIcons from '../../Components/Category/CategoryIcons';
-import Banner from '../../Components/Banner/Banner';
-import TrendingSection from '../../Components/TrendingProducts/TrendingSection';
-import RewardClub from '../../Components/RewardClub/RewardClub';
-import ShopTheLook from '../../Components/ShopTheLook/ShopTheLook';
-import SeasonalProduct from '../../Components/SeasonalCollection/SeasonalProduct';
-import Services from '../../Services/ServiceHome/Services';
-import OfferReward from '../../Components/OfferReward/OfferReward';
-import ComboOffer from '../../Components/ComboOffer/ComboOffer';
-import Blog from '../../Components/Blog/Blog';
-import VideoSection from '../../Components/VideoSection/VideoSection';
-import Testimonials from '../../Components/Testinomials/Testinomials';
-import ExploreWorks from '../../Components/ExploreWorks/ExploreWorks';
-import CheckOutStore from '../../Components/Store/CheckOutStore';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import axiosInstance from '../../Axios/axiosInstance';
 import { Helmet } from "react-helmet-async";
-import {useLocation} from "react-router-dom";
-import axios from "axios";
-import HomepageSchema from "../../views/utilities/seo/HomepageSchema";
-import StoreSchema from "../../views/utilities/seo/StoreSchema";
 
+// Lazy load components
+const HeroSection = lazy(() => import('../../Components/HeroSection/HeroSection'));
+const CategoryIcons = lazy(() => import('../../Components/Category/CategoryIcons'));
+const Banner = lazy(() => import('../../Components/Banner/Banner'));
+const TrendingSection = lazy(() => import('../../Components/TrendingProducts/TrendingSection'));
+const RewardClub = lazy(() => import('../../Components/RewardClub/RewardClub'));
+const ShopTheLook = lazy(() => import('../../Components/ShopTheLook/ShopTheLook'));
+const SeasonalProduct = lazy(() => import('../../Components/SeasonalCollection/SeasonalProduct'));
+const Services = lazy(() => import('../../Services/ServiceHome/Services'));
+const OfferReward = lazy(() => import('../../Components/OfferReward/OfferReward'));
+const ComboOffer = lazy(() => import('../../Components/ComboOffer/ComboOffer'));
+const Blog = lazy(() => import('../../Components/Blog/Blog'));
+const VideoSection = lazy(() => import('../../Components/VideoSection/VideoSection'));
+const CheckOutStore = lazy(() => import('../../Components/Store/CheckOutStore'));
+const HomepageSchema = lazy(() => import('../../views/utilities/seo/HomepageSchema'));
+const StoreSchema = lazy(() => import('../../views/utilities/seo/StoreSchema'));
+
+// Loading fallback component
+const LoadingFallback = () => (
+  <div className="flex justify-center items-center py-8">
+    <div className="animate-pulse text-gray-500">Loading...</div>
+  </div>
+);
 
 const Home = () => {
-
-  const location = useLocation(); // gets current route info
   const [homeImages, setHomeImages] = useState([]);
   const [heroImages, setHeroImages] = useState([]);
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true);
 
   const getBannerImages = async () => {
     try {
       const response = await axiosInstance.get(`/promotion/banner/`);
-      console.log(response);
       const banner_images = response?.data?.data?.banners;
-      console.log(banner_images,'===============all banners');
       const home_images = banner_images.filter((images) => images.type === 'Home' && images.is_visible === true);
       setHomeImages(home_images);
       const hero_images = banner_images.filter((images) => images.type === 'Hero' && images.is_visible === true);
@@ -42,41 +42,31 @@ const Home = () => {
     } catch (error) {
       console.error('Error fetching banner images:', error);
     } finally {
-      setLoading(false); // Set loading to false regardless of success or error
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    console.log(homeImages,'------------home');
-    console.log(heroImages,'------------heroImages');
-
     getBannerImages();
   }, []);
 
-
-
   return (
     <div>
-
       <Helmet>
         <title>Gidan® – Buy Plants, Planters, Pots & Seeds Online in Bangalore</title>
-
         <meta
-            name="description"
-            content="Buy plants, planters, pots & seeds online in Bangalore from Gidan. Fresh plants, garden décor and reliable doorstep delivery."
+          name="description"
+          content="Buy plants, planters, pots & seeds online in Bangalore from Gidan. Fresh plants, garden décor and reliable doorstep delivery."
         />
-
         <link rel="canonical" href="https://gidan.store" />
       </Helmet>
-
-
 
       {loading ? (
         <div className="flex justify-center items-center h-screen">
           <p className="text-gray-500 text-xl">Loading...</p>
         </div>
       ) : (
-        <>
+        <Suspense fallback={<LoadingFallback />}>
           <CategoryIcons />
           <HeroSection hero={heroImages} />
           <Banner home={homeImages} />
@@ -89,12 +79,10 @@ const Home = () => {
           <ComboOffer />
           <Blog />
           <VideoSection />
-          {/* <Testimonials />
-          <ExploreWorks /> */}
-          <CheckOutStore/>
-          <HomepageSchema/>
-          <StoreSchema/>
-        </>
+          <CheckOutStore />
+          <HomepageSchema />
+          <StoreSchema />
+        </Suspense>
       )}
     </div>
   );
