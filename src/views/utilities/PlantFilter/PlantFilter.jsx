@@ -1,9 +1,13 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+// Material UI imports
+import { SwipeableDrawer, IconButton, Box, Typography } from "@mui/material";
+import { FiFilter } from "react-icons/fi";
+import { Close as CloseIcon } from "@mui/icons-material";
+
 import FilterSidebar from "../Featured/FilterSidebar";
 import ProductGrid from "./ProductGrid";
 import FAQSection from "./FAQSection";
 import CheckoutStores from "./CheckoutStores";
-import { FiFilter } from "react-icons/fi";
 import { useLocation, useParams } from "react-router-dom";
 import axiosInstance from "../../../Axios/axiosInstance";
 import RecentlyViewedProducts from "../../../Components/Shared/RecentlyViewedProducts";
@@ -48,29 +52,31 @@ function PlantFilter() {
     // State to track the currently selected Type from the Sidebar
     const [currentFilterType, setCurrentFilterType] = useState(typeKey || null);
 
-    const [showMobileFilter, setShowMobileFilter] = useState(false);
+    // State for SwipeableDrawer
+    const [mobileOpen, setMobileOpen] = useState(false);
+
     const [products, setProducts] = useState({});
     const [results, setResults] = useState([]);
     const [categoryData, setCategoryData] = useState(null);
 
-    useEffect(() => {
-        if (showMobileFilter) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "auto";
+    // iOS Swipeable Drawer patch to prevent body bounce
+    const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+    // Handle drawer toggle
+    const toggleDrawer = (open) => (event) => {
+        if (
+            event &&
+            event.type === 'keydown' &&
+            (event.key === 'Tab' || event.key === 'Shift')
+        ) {
+            return;
         }
-        return () => {
-            document.body.style.overflow = "auto";
-        };
-    }, [showMobileFilter]);
+        setMobileOpen(open);
+    };
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
-
-    const toggleMobileFilter = () => {
-        setShowMobileFilter(!showMobileFilter);
-    };
 
     useEffect(() => {
         const getInitialProducts = async () => {
@@ -98,14 +104,12 @@ function PlantFilter() {
                 if (categoryId) {
                     queryParams.append("category_id", categoryId);
                 } else if (categorySlug) {
-                    // Try using slug - backend should support this
                     queryParams.append("category_slug", categorySlug);
                 }
 
                 if (subcategoryID) {
                     queryParams.append("subcategory_id", subcategoryID);
                 } else if (subcategorySlug) {
-                    // Try using slug - backend should support this
                     queryParams.append("subcategory_slug", subcategorySlug);
                 }
 
@@ -123,7 +127,7 @@ function PlantFilter() {
                             previous: response.data.previous,
                         });
                         setCategoryData(response.data?.category_info?.category_info || null);
-                        
+
                         // Update fetched names from API response if not in state
                         if (!categoryName && response.data?.category_info?.category_info?.category_name) {
                             setFetchedCategoryName(response.data.category_info.category_info.category_name);
@@ -178,7 +182,6 @@ function PlantFilter() {
                     }
                 />
 
-                {/* NEW: Clean canonical URLs */}
                 <link
                     rel="canonical"
                     href={
@@ -190,14 +193,14 @@ function PlantFilter() {
             </Helmet>
 
             <div className="container mx-auto min-h-screen">
-                {/* Mobile Filter Button */}
-                <div className="md:hidden px-4 pt-4">
-                    <button aria-label="Toggle filters"
-                            className="bg-white text-black w-full rounded-lg flex items-center justify-center gap-2 p-3 shadow-sm hover:shadow-md transition-shadow"
-                            onClick={toggleMobileFilter}
+                {/* Mobile Filter Button - Triggers SwipeableDrawer */}
+                <div className="md:hidden px-4 pt-4 sticky top-0 z-30 bg-gray-50/95 backdrop-blur-sm py-2 -mx-4 px-4 border-b border-gray-200">
+                    <button
+                        onClick={toggleDrawer(true)}
+                        className="bg-white text-black w-full rounded-lg flex items-center justify-center gap-2 p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-200"
                     >
                         <FiFilter size={20} />
-                        <span className="font-medium">Filters</span>
+                        <span className="font-medium">Filter Products</span>
                     </button>
                 </div>
 
@@ -237,40 +240,50 @@ function PlantFilter() {
                         <CategoryLayout data={categoryData} />
                     </div>
                 </div>
-
-                {/* Mobile Filter Sidebar Overlay */}
-                {showMobileFilter && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 md:hidden">
-                        <div className="absolute top-0 right-0 w-3/4 max-w-xs bg-white h-full shadow-lg z-50 overflow-y-auto">
-                            <div className="sticky top-0 bg-white border-b border-gray-300 p-4 flex items-center justify-between z-10">
-                                <h3 className="text-lg font-semibold text-gray-800">Filters</h3>
-                                <button
-                                    className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition-colors"
-                                    onClick={toggleMobileFilter}
-                                >
-                                    ✕
-                                </button>
-                            </div>
-
-                            <div className="p-4">
-                                <FilterSidebar
-                                    setResults={setResults}
-                                    setShowMobileFilter={setShowMobileFilter}
-                                    categoryId={categoryId}
-                                    category={categoryName || fetchedCategoryName}
-                                    subcategory={subCategoryName || fetchedSubcategoryName}
-                                    subcategoryID={subcategoryID}
-                                    subcategorySlug={subcategorySlug}
-                                    categorySlug={categorySlug}
-                                    typeKey={typeKey}
-                                    setCategoryData={setCategoryData}
-                                    setCurrentFilterType={setCurrentFilterType}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                )}
             </div>
+
+            {/* MUI Swipeable Drawer for Mobile */}
+            <SwipeableDrawer
+                anchor="right"
+                open={mobileOpen}
+                onClose={toggleDrawer(false)}
+                onOpen={toggleDrawer(true)}
+                disableBackdropTransition={!iOS}
+                disableDiscovery={iOS}
+                sx={{
+                    '& .MuiDrawer-paper': {
+                        boxSizing: 'border-box',
+                        width: '85%',
+                        maxWidth: '350px'
+                    },
+                }}
+            >
+                <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e5e7eb' }}>
+                    <Typography variant="h6" component="div" sx={{ fontWeight: 600, color: '#1f2937' }}>
+                        Filters
+                    </Typography>
+                    <IconButton onClick={toggleDrawer(false)} sx={{ color: '#4b5563' }}>
+                        <CloseIcon />
+                    </IconButton>
+                </Box>
+
+                <Box sx={{ overflowY: 'auto', flex: 1 }}>
+                    <FilterSidebar
+                        setResults={setResults}
+                        setShowMobileFilter={setMobileOpen} // Pass state setter to auto-close drawer on apply
+                        categoryId={categoryId}
+                        category={categoryName || fetchedCategoryName}
+                        subcategory={subCategoryName || fetchedSubcategoryName}
+                        subcategoryID={subcategoryID}
+                        subcategorySlug={subcategorySlug}
+                        categorySlug={categorySlug}
+                        typeKey={typeKey}
+                        setCategoryData={setCategoryData}
+                        setCurrentFilterType={setCurrentFilterType}
+                    />
+                </Box>
+            </SwipeableDrawer>
+
             <CategorySchema
                 categoryName={categoryName || fetchedCategoryName}
                 categorySlug={canonicalCategorySlug}
@@ -290,6 +303,299 @@ function PlantFilter() {
 }
 
 export default PlantFilter;
+// =====================muisidebar=============
+// import { useEffect, useState } from "react";
+// import FilterSidebar from "../Featured/FilterSidebar";
+// import ProductGrid from "./ProductGrid";
+// import FAQSection from "./FAQSection";
+// import CheckoutStores from "./CheckoutStores";
+// import { FiFilter } from "react-icons/fi";
+// import { useLocation, useParams } from "react-router-dom";
+// import axiosInstance from "../../../Axios/axiosInstance";
+// import RecentlyViewedProducts from "../../../Components/Shared/RecentlyViewedProducts";
+// import { Helmet } from "react-helmet-async";
+// import GenericPage from "../Info/GenericPage";
+// import SubCategorySchema from "../seo/SubCategorySchema";
+// import CategorySchema from "../seo/CategorySchema";
+// import HomepageSchema from "../seo/HomepageSchema";
+// import StoreSchema from "../seo/StoreSchema";
+//
+// const CategoryLayout = ({ data }) => {
+//     const hasGenericContent = data && data.hero;
+//
+//     return (
+//         <div className="space-y-12">
+//             <>
+//                 <RecentlyViewedProducts />
+//                 {!hasGenericContent && <FAQSection />}
+//                 {hasGenericContent && <GenericPage data={data} />}
+//                 <CheckoutStores />
+//             </>
+//         </div>
+//     );
+// };
+//
+// function PlantFilter() {
+//     const location = useLocation();
+//     const path = location.pathname;
+//
+//     // Extract slugs from URL
+//     const { categorySlug, subcategorySlug } = useParams();
+//
+//     // Use location.state as primary data source (keep existing logic)
+//     const stateData = location.state || {};
+//     const { categoryId, categoryName, typeKey, subCategory, subcategoryID, category_slug } = stateData;
+//     const { name: subCategoryName, subcategory_slug } = subCategory || {};
+//
+//     // State to store fetched category/subcategory names when navigating via URL
+//     const [fetchedCategoryName, setFetchedCategoryName] = useState(null);
+//     const [fetchedSubcategoryName, setFetchedSubcategoryName] = useState(null);
+//
+//     // State to track the currently selected Type from the Sidebar
+//     const [currentFilterType, setCurrentFilterType] = useState(typeKey || null);
+//
+//     const [showMobileFilter, setShowMobileFilter] = useState(false);
+//     const [products, setProducts] = useState({});
+//     const [results, setResults] = useState([]);
+//     const [categoryData, setCategoryData] = useState(null);
+//
+//     useEffect(() => {
+//         if (showMobileFilter) {
+//             document.body.style.overflow = "hidden";
+//         } else {
+//             document.body.style.overflow = "auto";
+//         }
+//         return () => {
+//             document.body.style.overflow = "auto";
+//         };
+//     }, [showMobileFilter]);
+//
+//     useEffect(() => {
+//         window.scrollTo(0, 0);
+//     }, []);
+//
+//     const toggleMobileFilter = () => {
+//         setShowMobileFilter(!showMobileFilter);
+//     };
+//
+//     useEffect(() => {
+//         const getInitialProducts = async () => {
+//             if (categoryId === "14") {
+//                 try {
+//                     const response = await axiosInstance.get(
+//                         `/product/offerProducts/`
+//                     );
+//                     if (response.status === 200) {
+//                         setResults(response.data.products || []);
+//                         setProducts(response.data || {});
+//                     }
+//                 } catch (error) {}
+//                 return;
+//             }
+//
+//             try {
+//                 let queryParams = new URLSearchParams();
+//
+//                 if (typeKey) {
+//                     queryParams.append("type", typeKey);
+//                 }
+//
+//                 // Priority: Use IDs from state if available, otherwise use slugs from URL
+//                 if (categoryId) {
+//                     queryParams.append("category_id", categoryId);
+//                 } else if (categorySlug) {
+//                     // Try using slug - backend should support this
+//                     queryParams.append("category_slug", categorySlug);
+//                 }
+//
+//                 if (subcategoryID) {
+//                     queryParams.append("subcategory_id", subcategoryID);
+//                 } else if (subcategorySlug) {
+//                     // Try using slug - backend should support this
+//                     queryParams.append("subcategory_slug", subcategorySlug);
+//                 }
+//
+//                 // Only make API call if we have at least category info
+//                 if (queryParams.toString()) {
+//                     const response = await axiosInstance.get(
+//                         `/filters/main_productsFilter/?${queryParams.toString()}`
+//                     );
+//
+//                     if (response.status === 200) {
+//                         setResults(response.data.results || []);
+//                         setProducts({
+//                             count: response.data.count,
+//                             next: response.data.next,
+//                             previous: response.data.previous,
+//                         });
+//                         setCategoryData(response.data?.category_info?.category_info || null);
+//
+//                         // Update fetched names from API response if not in state
+//                         if (!categoryName && response.data?.category_info?.category_info?.category_name) {
+//                             setFetchedCategoryName(response.data.category_info.category_info.category_name);
+//                         }
+//                         if (!subCategoryName && response.data?.category_info?.category_info?.subcategory_name) {
+//                             setFetchedSubcategoryName(response.data.category_info.category_info.subcategory_name);
+//                         }
+//                     }
+//                 }
+//             } catch (error) {
+//                 console.error("Error fetching products:", error);
+//             }
+//         };
+//
+//         // Trigger product fetch when URL params exist (either from state or URL)
+//         if (categoryId || categorySlug || path.startsWith("/category/")) {
+//             getInitialProducts();
+//         }
+//     }, [path, typeKey, categoryId, subcategoryID, categorySlug, subcategorySlug]);
+//
+//     // Determine the base name for Helmet tags
+//     const getDisplayName = () => {
+//         if (currentFilterType) return currentFilterType;
+//         if (subCategoryName) return subCategoryName;
+//         if (fetchedSubcategoryName) return fetchedSubcategoryName;
+//         if (categoryName) return categoryName;
+//         if (fetchedCategoryName) return fetchedCategoryName;
+//         return "Gardening Products";
+//     };
+//
+//     const displayName = getDisplayName();
+//
+//     // Use URL params for canonical, fallback to state slugs
+//     const canonicalCategorySlug = categorySlug || category_slug;
+//     const canonicalSubcategorySlug = subcategorySlug || subcategory_slug;
+//
+//     return (
+//         <>
+//             <Helmet>
+//                 <title>
+//                     {displayName
+//                         ? `Buy ${displayName} Online | Best Price in Bengaluru – Gidan`
+//                         : 'Buy Gardening Products Online | Best Price in Bengaluru – Gidan'}
+//                 </title>
+//
+//                 <meta
+//                     name="description"
+//                     content={
+//                         displayName
+//                             ? `Shop ${displayName} online at best prices. Wide range of premium varieties and styles. Fast delivery & easy returns – Gidan.`
+//                             : 'Shop gardening products online at best prices. Wide range of plants, pots, seeds, and accessories. Fast delivery & easy returns – Gidan.'
+//                     }
+//                 />
+//
+//                 {/* NEW: Clean canonical URLs */}
+//                 <link
+//                     rel="canonical"
+//                     href={
+//                         canonicalSubcategorySlug
+//                             ? `https://gidan.store/${canonicalCategorySlug}/${canonicalSubcategorySlug}/`
+//                             : `https://gidan.store/${canonicalCategorySlug}/`
+//                     }
+//                 />
+//             </Helmet>
+//
+//             <div className="container mx-auto min-h-screen">
+//                 {/* Mobile Filter Button */}
+//                 <div className="md:hidden px-4 pt-4">
+//                     <button aria-label="Toggle filters"
+//                             className="bg-white text-black w-full rounded-lg flex items-center justify-center gap-2 p-3 shadow-sm hover:shadow-md transition-shadow"
+//                             onClick={toggleMobileFilter}
+//                     >
+//                         <FiFilter size={20} />
+//                         <span className="font-medium">Filters ss</span>
+//                     </button>
+//                 </div>
+//
+//                 {/* Desktop Horizontal Filter - Full Width */}
+//                 <div className="hidden md:block mt-4 overflow-visible relative z-10">
+//                     <FilterSidebar
+//                         setResults={setResults}
+//                         categoryId={categoryId}
+//                         category={categoryName || fetchedCategoryName}
+//                         subcategory={subCategoryName || fetchedSubcategoryName}
+//                         subcategoryID={subcategoryID}
+//                         subcategorySlug={subcategorySlug}
+//                         categorySlug={categorySlug}
+//                         typeKey={typeKey}
+//                         setCategoryData={setCategoryData}
+//                         setCurrentFilterType={setCurrentFilterType}
+//                     />
+//                 </div>
+//
+//                 {/* Product Grid */}
+//                 <div className="px-4 mt-4">
+//                     <ProductGrid
+//                         productDetails={results}
+//                         pagination={products}
+//                         setResults={setResults}
+//                         categoryName={categoryName || fetchedCategoryName}
+//                         typeKey={typeKey}
+//                         categorySlug={category_slug || categorySlug}
+//                         subcategorySlug={subcategory_slug || subcategorySlug}
+//                         hasSubcategory={!!subcategoryID}
+//                     />
+//                 </div>
+//
+//                 {/* Additional Sections */}
+//                 <div className="mt-12 mb-8">
+//                     <div className="container mx-auto px-4 md:px-8">
+//                         <CategoryLayout data={categoryData} />
+//                     </div>
+//                 </div>
+//
+//                 {/* Mobile Filter Sidebar Overlay */}
+//                 {showMobileFilter && (
+//                     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 md:hidden">
+//                         <div className="absolute top-0 right-0 w-3/4 max-w-xs bg-white h-full shadow-lg z-50 overflow-y-auto">
+//                             <div className="sticky top-0 bg-white border-b border-gray-300 p-4 flex items-center justify-between z-10">
+//                                 <h3 className="text-lg font-semibold text-gray-800">Filters</h3>
+//                                 <button
+//                                     className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition-colors"
+//                                     onClick={toggleMobileFilter}
+//                                 >
+//                                     ✕
+//                                 </button>
+//                             </div>
+//
+//                             <div className="p-4">
+//                                 <FilterSidebar
+//                                     setResults={setResults}
+//                                     setShowMobileFilter={setShowMobileFilter}
+//                                     categoryId={categoryId}
+//                                     category={categoryName || fetchedCategoryName}
+//                                     subcategory={subCategoryName || fetchedSubcategoryName}
+//                                     subcategoryID={subcategoryID}
+//                                     subcategorySlug={subcategorySlug}
+//                                     categorySlug={categorySlug}
+//                                     typeKey={typeKey}
+//                                     setCategoryData={setCategoryData}
+//                                     setCurrentFilterType={setCurrentFilterType}
+//                                 />
+//                             </div>
+//                         </div>
+//                     </div>
+//                 )}
+//             </div>
+//             <CategorySchema
+//                 categoryName={categoryName || fetchedCategoryName}
+//                 categorySlug={canonicalCategorySlug}
+//                 items={results || []}
+//             />
+//             <SubCategorySchema
+//                 categoryName={categoryName || fetchedCategoryName}
+//                 subCategoryName={subCategoryName || fetchedSubcategoryName}
+//                 categorySlug={canonicalCategorySlug}
+//                 subCategorySlug={canonicalSubcategorySlug}
+//                 items={results || []}
+//             />
+//             <HomepageSchema/>
+//             <StoreSchema/>
+//         </>
+//     );
+// }
+//
+// export default PlantFilter;
 // import FilterSidebar from "../Featured/FilterSidebar";
 // import ProductGrid from "./ProductGrid";
 // import FAQSection from "./FAQSection";

@@ -5,31 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df516f1c-c962-4e0d-8a95-1119b7efb609" name="Changes" comment="new">
-      <change afterPath="$PROJECT_DIR$/src/Components/Shared/RecentlyViewedProducts.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Banner/Banner.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Banner/Banner.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Category/CategoryIcons.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Category/CategoryIcons.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/RewardClub/RewardClub.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/RewardClub/RewardClub.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalProduct.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/SeasonalCollection/SeasonalProduct.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/ShopTheLook/PopupShopTheLook.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/ShopTheLook/PopupShopTheLook.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/ShopTheLook/ShopTheLook.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/ShopTheLook/ShopTheLook.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/TrendingProducts/TrendingSection.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Components/WithoutLoginHamburger/WithoutLoginHamburger.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/WithoutLoginHamburger/WithoutLoginHamburger.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Users/SideBar/SideBar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Users/SideBar/SideBar.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/FilterSidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/FilterSidebar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Hamburger/Hamburger.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Hamburger/Hamburger.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/My Orders/MyOrders.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/My Orders/MyOrders.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/PlantFilter.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/ProductGrid.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ProductData/ProductData.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Wallet/BTCoinsHistory.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Wallet/BTCoinsHistory.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/Wallet/BTcoins.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Wallet/BTcoins.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/seo/CategorySchema.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/seo/CategorySchema.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/seo/ProductSchema.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/seo/ProductSchema.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/utilities/seo/SubCategorySchema.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/seo/SubCategorySchema.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,22 +49,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "dev__mohan",
-    "last_opened_file_path": "D:/COMPANY PROJECTS/BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN/git 3/biotech_ecomerce/src/Components",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2024.3.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev__mohan&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/COMPANY PROJECTS/BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN/git 3/biotech_ecomerce/src/Components&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.3.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\COMPANY PROJECTS\BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN\git 3\biotech_ecomerce\src\Components" />
