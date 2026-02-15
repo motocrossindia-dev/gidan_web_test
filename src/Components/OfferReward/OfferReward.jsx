@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'; // Import Link for navigation
-import plant11 from '../../../src/Assets/OfferRewardImg/shopping 1.png';
-import plant12 from '../../../src/Assets/OfferRewardImg/shopping 2.png';
-import plant13 from '../../../src/Assets/OfferRewardImg/shopping 3.png';
-import plant14 from '../../../src/Assets/OfferRewardImg/shopping 4.png';
-import plant15 from '../../../src/Assets/OfferRewardImg/shopping 5.png';
 import axiosInstance from '../../Axios/axiosInstance';
 
 import axios from "axios";

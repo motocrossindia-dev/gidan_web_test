@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import biotech from "../../../src/Assets/Gidan_logo.jpg"; // Adjust the path to your logo image
+import biotech from "../../../src/Assets/Gidan_logo.webp"; // Adjust the path to your logo image
 import { useSnackbar } from "notistack";
 import axios from "axios";
 import { useDispatch } from "react-redux";

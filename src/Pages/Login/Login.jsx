@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"; // Import the action
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import biotech from "../../../src/Assets/Gidan_logo.jpg"; // Adjust the path to your logo image
+import biotech from "../../../src/Assets/Gidan_logo.webp"; // Adjust the path to your logo image
 import { signInSuccess } from "../../redux/Auth/authSlice"; // Import the action to update the user state
 import { enqueueSnackbar } from "notistack";
 import { setVerifiedUser } from "../../redux/User/verificationSlice";

@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import ourwork from "../../../Assets/OurWork/ourwork1.png";
-import ourwork2 from "../../../Assets/OurWork/ourwork2.png";
-import ourwork3 from "../../../Assets/OurWork/ourwork3.png";
-import ourwork4 from "../../../Assets/OurWork/ourwork4.png";
-import ourwork5 from "../../../Assets/OurWork/ourwork5.png";
-import ourwork6 from "../../../Assets/OurWork/ourwork6.png";
+import ourwork from "../../../Assets/OurWork/ourwork1.webp";
+import ourwork2 from "../../../Assets/OurWork/ourwork2.webp";
+import ourwork3 from "../../../Assets/OurWork/ourwork3.webp";
+import ourwork4 from "../../../Assets/OurWork/ourwork4.webp";
+import ourwork5 from "../../../Assets/OurWork/ourwork5.webp";
+import ourwork6 from "../../../Assets/OurWork/ourwork6.webp";
 import { useNavigate } from 'react-router-dom';
 
 import { FaPlay } from "react-icons/fa";

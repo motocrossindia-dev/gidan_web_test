@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import contactus from "../../../Assets/contactus.png";
+import contactus from "../../../Assets/contactus.webp";
 import { useSnackbar } from "notistack"; // Import useSnackbar hook
-import { CiLocationOn } from "react-icons/ci"; // Import the location icon
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import axiosInstance from "../../../Axios/axiosInstance";
 import { Helmet } from "react-helmet-async";

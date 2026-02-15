@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
-import location1 from "../../../Assets/Location tracking 1.png";
+import location1 from "../../../Assets/Location tracking 1.webp";
 import { FaArrowLeft } from "react-icons/fa";
 import HomepageSchema from "../../utilities/seo/HomepageSchema";
 import StoreSchema from "../../utilities/seo/StoreSchema";

@@ -192,7 +192,7 @@ export default ShopTheLook;
 // =========================old===================
 //
 // import React, { useState } from "react";
-// import Image from "../../../src/Assets/ShopTheLook.png"; // Ensure the image path is correct
+// import Image from "../../../src/Assets/ShopTheLook.webp"; // Ensure the image path is correct
 // import PopupShopTheLook from "./PopupShopTheLook"; // Ensure this file exists and is in the correct path
 //
 //   import { useEffect } from "react";

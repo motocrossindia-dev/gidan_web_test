@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import combo from "../../../src/Assets/ComboOffer/combooffer.png";
+import combo from "../../../src/Assets/ComboOffer/combooffer.webp";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 

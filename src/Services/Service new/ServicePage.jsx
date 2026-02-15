@@ -3,7 +3,7 @@ import { FaHandPointer } from "react-icons/fa";
 import { RiCustomerService2Fill } from "react-icons/ri";
 import { SlCalender } from "react-icons/sl";
 import { FaScissors } from "react-icons/fa6";
-import service from "../../Assets/Serviceform.png";
+import service from "../../Assets/Serviceform.webp";
 import { Link } from "react-router-dom";
 import axiosInstance from "../../Axios/axiosInstance";
 import {Helmet} from "react-helmet";

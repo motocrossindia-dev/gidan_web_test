@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSnackbar } from "notistack";
-import logo from "../../Assets/Gidan_logo.jpg";
-import logoImage from "../../Assets/MobileLogin.png";
+import logo from "../../Assets/Gidan_logo.webp";
+import logoImage from "../../Assets/MobileLogin.webp";
 import { useDispatch } from "react-redux";
 import {
   signInSuccess,

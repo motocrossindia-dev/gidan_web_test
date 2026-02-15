@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet-async";
-import logo from "../../../Assets/FranchiseEnquires/franchiseenquires_gidan.png";
+import logo from "../../../Assets/FranchiseEnquires/franchiseenquires_gidan.webp";
 
 export default function HomepageSchema({
                                            siteUrl = "https://gidan.store",

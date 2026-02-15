@@ -4,7 +4,7 @@
 
 import React, { useEffect, useState } from "react";
 import useDeviceDetect from "../../../CustomHooks/useDeviceDetect";
-import gift22 from "../../../Assets/Gift/Gift card 1.png";
+import gift22 from "../../../Assets/Gift/Gift card 1.webp";
 
 const TrackOrder = () => {
   const [giftId, setGiftId] = useState("");

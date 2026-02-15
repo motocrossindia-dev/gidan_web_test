@@ -1,5 +1,5 @@
 import React from "react";
-import aboutUsImg from "../../../Assets/FranchiseEnquires/franchiseenquires_gidan.png";// Ensure you have an image asset
+import aboutUsImg from "../../../Assets/FranchiseEnquires/franchiseenquires_gidan.webp";// Ensure you have an image asset
 import { Helmet } from "react-helmet-async";
 import AboutUsSchema from "../seo/AboutUsSchema";
 

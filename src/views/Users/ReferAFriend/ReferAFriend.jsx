@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FiShare2 } from "react-icons/fi";
-import Refer from "../../../Assets/ReferAFriend.png"; // Ensure the image path is correct
+import Refer from "../../../Assets/ReferAFriend.webp"; // Ensure the image path is correct
 import axiosInstance from "../../../Axios/axiosInstance";
 import { Helmet } from "react-helmet-async";
 import HomepageSchema from "../../utilities/seo/HomepageSchema";

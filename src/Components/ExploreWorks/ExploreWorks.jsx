@@ -1,6 +1,6 @@
 
 import React from 'react';
-import creative from '../../../src/Assets/ExploreWorks.png';
+import creative from '../../../src/Assets/ExploreWorks.webp';
 import { NavLink } from 'react-router-dom';
 
 const ExploreWorks = () => {

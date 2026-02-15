@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import plantImage from "../../../Assets/Gift/Gift3.png";
+import plantImage from "../../../Assets/Gift/Gift3.webp";
 import ProductCard from './ProductCard';
 import {FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { ChevronDown, ChevronUp } from 'lucide-react';

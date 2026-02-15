@@ -1,8 +1,8 @@
 
 import React, { useState } from "react";
 import SeasonalCard from "./SeasonalCard";
-import plantImage from "../../../Assets/Gift/Gift3.png"; // Adjust path as necessary
-import gift34 from "../../../Assets/Gift/Gift1.png";
+import plantImage from "../../../Assets/Gift/Gift3.webp"; // Adjust path as necessary
+import gift34 from "../../../Assets/Gift/Gift1.webp";
 import {Helmet} from "react-helmet";
 
 const CorporateGiftingForm = () => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import plantImage from "../../../Assets/Gift/Gift3.png";
+import plantImage from "../../../Assets/Gift/Gift3.webp";
 import TrendingCard from '../../../Components/TrendingProducts/TrendingCard';
 
 import { useNavigate } from "react-router-dom"; // Import the useNavigate hook

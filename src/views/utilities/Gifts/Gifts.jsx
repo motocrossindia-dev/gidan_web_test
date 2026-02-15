@@ -2,9 +2,9 @@
 
 import React from "react";
 import { FaChevronLeft, FaChevronRight,FaChevronDown } from "react-icons/fa";
-import Gift1 from "../../../Assets/Gift/Gift1.png";
-import Gift2 from "../../../Assets/Gift/Gift2.png";
-import Gift3 from "../../../Assets/Gift/Gift3.png";
+import Gift1 from "../../../Assets/Gift/Gift1.webp";
+import Gift2 from "../../../Assets/Gift/Gift2.webp";
+import Gift3 from "../../../Assets/Gift/Gift3.webp";
 
 // Header Component
 const Header = () => (

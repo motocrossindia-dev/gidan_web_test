@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../../Assets/Gidan_logo.jpg";
-import logoImage from "../../Assets/MobileSignin.png";
+import logo from "../../Assets/Gidan_logo.webp";
+import logoImage from "../../Assets/MobileSignin.webp";
 import { useDispatch } from "react-redux";
 import { signInStart, signInFail, signInSuccess } from "../../redux/Auth/authSlice";
 import { useSnackbar } from "notistack";

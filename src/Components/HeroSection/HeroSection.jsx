@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import convertToSlug from "../../utils/slugConverter";
 
 const HeroSection = ({ hero }) => {
@@ -16,28 +16,20 @@ const HeroSection = ({ hero }) => {
     return () => clearInterval(interval);
   }, [hero]);
 
-  console.log("HERR", hero);
-
   const goToSlide = (index) => {
     setCurrentIndex(index);
   };
 
   const handleBannerClick = () => {
     const activeBanner = hero[currentIndex];
-    // Pass the product name string to the converter
     const slug = convertToSlug(activeBanner.category);
 
-    // 2. Navigate with the URL + State
     navigate(`/carousel/${slug}`, {
       state: {
-        heroId: hero[currentIndex].id, // Sending the ID
-        // You can also send other data if needed
+        heroId: hero[currentIndex].id,
         fullData: hero[currentIndex]
       }
     });
-    console.log("Visible ID:", hero[currentIndex].id);
-    console.log("Visible slug:", slug);
-
   };
 
   const goLeft = () => {
@@ -73,11 +65,16 @@ const HeroSection = ({ hero }) => {
               onClick={() => handleBannerClick()}
               className="
                 w-full
-                h-auto             /* <-- SUPER IMPORTANT */
-                object-contain     /* shows full image */
+                h-auto
+                object-contain
                 bg-white
                 cursor-pointer
               "
+              loading={index === 0 ? "eager" : "lazy"}
+              fetchpriority={index === 0 ? "high" : "low"}
+              decoding="async"
+              width="1920"
+              height="600"
             />
           </div>
 
@@ -87,6 +84,7 @@ const HeroSection = ({ hero }) => {
       {/* Left Arrow */}
       <button
         onClick={goLeft}
+        aria-label="Previous slide"
         className="absolute left-3 top-1/2 -translate-y-1/2
                   bg-black/50 hover:bg-black/70 text-white
                   w-10 h-10 rounded-full flex items-center justify-center
@@ -98,6 +96,7 @@ const HeroSection = ({ hero }) => {
       {/* Right Arrow */}
       <button
         onClick={goRight}
+        aria-label="Next slide"
         className="absolute right-3 top-1/2 -translate-y-1/2
                   bg-black/50 hover:bg-black/70 text-white
                   w-10 h-10 rounded-full flex items-center justify-center
@@ -112,6 +111,7 @@ const HeroSection = ({ hero }) => {
           <button
             key={index}
             onClick={() => goToSlide(index)}
+            aria-label={`Go to slide ${index + 1}`}
             className={`w-3 h-3 rounded-full ${
               index === currentIndex ? "bg-green-600" : "bg-gray-300"
             }`}

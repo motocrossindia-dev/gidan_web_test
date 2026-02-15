@@ -137,7 +137,7 @@
 
 import React, { useEffect, useState } from "react";
 import useDeviceDetect from "../../../CustomHooks/useDeviceDetect";
-import location from "../../../Assets/21bd1d1e8c39ab293b04937cb183ed2d3481b3b4 (1).gif";
+import location from "../../../Assets/21bd1d1e8c39ab293b04937cb183ed2d3481b3b4 (1).webp";
 import { Helmet } from "react-helmet-async";
 import axios from "axios";
 import { useSelector } from "react-redux";

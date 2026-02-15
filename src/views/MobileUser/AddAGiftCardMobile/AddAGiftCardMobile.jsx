@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
-import giftcard from "../../../Assets/Gift/Gift card 1.png"
+import giftcard from "../../../Assets/Gift/Gift card 1.webp"
 const AddGiftCardMobile = () => {
   const [giftCardNumber, setGiftCardNumber] = useState("");
 

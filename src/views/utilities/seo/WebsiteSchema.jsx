@@ -1,6 +1,6 @@
 // src/seo/WebsiteSchema.jsx
 import { Helmet } from "react-helmet-async";
-import logo from "../../../Assets/FranchiseEnquires/franchiseenquires_gidan.png";
+import logo from "../../../Assets/FranchiseEnquires/franchiseenquires_gidan.webp";
 export default function WebsiteSchema() {
     const schema = {
         "@context": "https://schema.org",

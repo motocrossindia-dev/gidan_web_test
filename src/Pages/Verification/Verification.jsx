@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import biotech from "../../../src/Assets/Gidan_logo.jpg";
+import biotech from "../../../src/Assets/Gidan_logo.webp";
 import { useSnackbar } from "notistack"; // Correct import
 import { useNavigate } from "react-router-dom";
 import axios from "axios";

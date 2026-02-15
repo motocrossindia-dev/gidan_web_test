@@ -1,6 +1,6 @@
 import React from "react";
 import { FaArrowLeft, FaShareAlt } from "react-icons/fa";
-import referafriend from "../../../Assets/ReferAFriend.png"
+import referafriend from "../../../Assets/ReferAFriend.webp"
 const ReferFriendMobile = () => {
   const referralLink = "https://yourapp.com/referral";
 

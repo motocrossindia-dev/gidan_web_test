@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef } from "react";
-import empty from '../../../src/Assets/emptycart.png';
+import empty from '../../../src/Assets/emptycart.webp';
 
 const EmptyCart = ({ onClose }) => {
   const modalRef = useRef(null);

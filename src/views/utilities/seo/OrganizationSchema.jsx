@@ -1,6 +1,6 @@
 // src/seo/OrganizationSchema.jsx
 import { Helmet } from "react-helmet-async";
-import logo from "../../../Assets/FranchiseEnquires/franchiseenquires_gidan.png";
+import logo from "../../../Assets/FranchiseEnquires/franchiseenquires_gidan.webp";
 export default function OrganizationSchema() {
     const schema = {
         "@context": "https://schema.org",

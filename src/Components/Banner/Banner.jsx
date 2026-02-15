@@ -1,9 +1,9 @@
 import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
+import {Swiper, SwiperSlide} from "swiper/react";
+import {Autoplay} from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 const Banner = ({ home }) => {
     const navigate = useNavigate();
@@ -19,6 +19,7 @@ const Banner = ({ home }) => {
                         delay: 3000,
                         disableOnInteraction: false,
                     }}
+                    lazy={true}
                     className="w-full"
                 >
                     {home.map((banner, index) => (
@@ -33,6 +34,11 @@ const Banner = ({ home }) => {
                                         src={`https://backend.gidan.store${banner.web_banner}`}
                                         alt="banner"
                                         className="hidden sm:block w-full h-auto max-h-[350px] object-contain rounded-lg"
+                                        loading={index === 0 ? "eager" : "lazy"}
+                                        fetchpriority={index === 0 ? "high" : "low"}
+                                        decoding="async"
+                                        width="800"
+                                        height="350"
                                     />
 
                                     {/* Mobile Banner */}
@@ -40,6 +46,11 @@ const Banner = ({ home }) => {
                                         src={`https://backend.gidan.store${banner.mobile_banner}`}
                                         alt="banner-mobile"
                                         className="block sm:hidden w-full h-auto max-h-[230px] object-contain rounded-lg"
+                                        loading={index === 0 ? "eager" : "lazy"}
+                                        fetchpriority={index === 0 ? "high" : "low"}
+                                        decoding="async"
+                                        width="400"
+                                        height="230"
                                     />
                                 </div>
 

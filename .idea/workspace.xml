@@ -5,7 +5,152 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df516f1c-c962-4e0d-8a95-1119b7efb609" name="Changes" comment="new">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/logo-white.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/logo.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Assets/ComboOffer/combooffer.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Assets/FranchiseEnquires/franchiseenquires_gidan.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Assets/Gift/Gift card 1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Assets/Gift/Gift1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Assets/Gift/Gift2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Assets/Gift/Gift3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Assets/Gift/GiftCardVoucher.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Assets/franches_banners/Franchise Page Banner-1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Assets/franches_banners/Franchise Page Banner-2.jpg.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Assets/franches_banners/Franchise Page Banner-3.jpg.webp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/Banner.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/Biotech-Maali.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/BlogComponent23.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/Cart.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/CategoryImg/Blog.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/CategoryImg/Gifts.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/CategoryImg/PlantCare.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/CategoryImg/PlantSeeds.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/CategoryImg/Plants234.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/CategoryImg/Pots.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/CategoryImg/Services.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/ComboOffer/Combooffer1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/DownloadApp.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/ExploreWorks.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/Filter/Filter1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/Filter/Filter2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/FranchiseEnquires/franchiseenquires.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/FranchiseEnquires/franchiseenquires2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/FranchiseEnquires/franchiseenquires3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/FranchiseEnquires/franchiseenquires_gidan.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/Gidan_logo.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/Gift/Gift card 1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/Gift/Gift1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/Gift/Gift2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/Gift/Gift3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/Gift/GiftCardVoucher.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/Location tracking 1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/Location tracking 1.webp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Assets/Location tracking 1.webp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/MobileLogin.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/MobileSignin.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/Noti.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/OfferRewardImg/shopping 1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/OfferRewardImg/shopping 2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/OfferRewardImg/shopping 3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/OfferRewardImg/shopping 4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/OfferRewardImg/shopping 5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/OurWork/ourwork1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/OurWork/ourwork2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/OurWork/ourwork3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/OurWork/ourwork4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/OurWork/ourwork5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/OurWork/ourwork6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/OurWork/ourwork7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/OurWork/ourwork8.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/OurWork/ourwork9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/Plant.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/Plant1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/PlantProduct/Peacelilly.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/ReferAFriend.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/Serviceform.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/Services.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/ShopTheLook.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/Testinomial image.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/Trending.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/contactus.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/emptycart.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/franches_banners/Banner1.webp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Assets/franches_banners/Banner1.webp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/franches_banners/Banner2.webp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Assets/franches_banners/Banner2.webp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/franches_banners/Franchise Page Banner-1.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/franches_banners/Franchise Page Banner-2.jpg.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/franches_banners/Franchise Page Banner-3.jpg.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/homeBanner.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/landscaping.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Assets/popup.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Banner/Banner.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Banner/Banner.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/ComboOffer/ComboOffer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/ComboOffer/ComboOffer.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/EmptyCartMessage/EmptyCart.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/EmptyCartMessage/EmptyCart.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/ExploreWorks/ExploreWorks.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/ExploreWorks/ExploreWorks.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/HeroSection/HeroSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/HeroSection/HeroSection.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Home/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Home/Home.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/NavigationBar/NavigationBar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/NavigationBar/NavigationBar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/OfferReward/OfferReward.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/OfferReward/OfferReward.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/ShopTheLook/ShopTheLook.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/ShopTheLook/ShopTheLook.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/WalletActivation/WalletActivation.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/WalletActivation/WalletActivation.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MobileLogin/MobileLoginPage/MobileLoginPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/MobileLogin/MobileLoginPage/MobileLoginPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MobileLogin/MobileSignIn/MobileSignIn.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/MobileLogin/MobileSignIn/MobileSignIn.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MobileLogin/MobileVerification/Verification.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/MobileLogin/MobileVerification/Verification.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/Login/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/Login/Login.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/SignIn/Signin.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/SignIn/Signin.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/Verification/Verification.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/Verification/Verification.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Services/Service new/ServicePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/Service new/ServicePage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/MobileUser/AddAGiftCardMobile/AddAGiftCardMobile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/MobileUser/AddAGiftCardMobile/AddAGiftCardMobile.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/MobileUser/ReferFriendMobile/ReferFriendMobile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/MobileUser/ReferFriendMobile/ReferFriendMobile.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/MobileUser/TrackOrderMobile/TrackOrderMobile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/MobileUser/TrackOrderMobile/TrackOrderMobile.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Users/GiftCard/GiftCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Users/GiftCard/GiftCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Users/Notification/Notification.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Users/Notification/Notification.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Users/ReferAFriend/ReferAFriend.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Users/ReferAFriend/ReferAFriend.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Users/TrackOrder/TrackOrder.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Users/TrackOrder/TrackOrder.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/AboutUs/About-Us.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/AboutUs/About-Us.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/Banner1.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/AnniversaryGifts/ProductGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/BestSeller/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BestSeller/Banner1.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/BestSeller/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BestSeller/ProductGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/BirthdayGifts/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BirthdayGifts/Banner1.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/BirthdayGifts/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/BirthdayGifts/ProductGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Blog/CategoryFilter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Blog/CategoryFilter.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/ContactUs/ContactUs.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/ContactUs/ContactUs.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/CorperateGifting/CorporateGiftingPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/CorperateGifting/CorporateGiftingPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/E-GiftCard/EcommerceGiftCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/E-GiftCard/EcommerceGiftCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/Banner1.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Featured/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Featured/ProductGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/Banner1.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/FloweringPlants/ProductGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/FranchiseEnquires/WhyWeRock.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/FranchiseEnquires/WhyWeRock.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Gifts/Gifts.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Gifts/Gifts.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/HouseWarming/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/HouseWarming/Banner1.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/HouseWarming/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/HouseWarming/ProductGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Latest/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Latest/Banner1.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Latest/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Latest/ProductGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/OurWork/OurWork.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/OurWork/OurWork.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/Banner1.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/OutdoorPlants/ProductGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantCare/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantCare/Banner1.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/PlantFilter/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/PlantFilter/Banner1.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Plants/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Plants/Banner1.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Plants/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Plants/ProductGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Pots/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Pots/Banner1.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Pots/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Pots/ProductGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/RakshaBhandan/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/RakshaBhandan/Banner1.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/RakshaBhandan/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/RakshaBhandan/ProductGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/Banner1.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/SeasonalCollection1/ProductGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Seeds/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Seeds/Banner1.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Seeds/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Seeds/ProductGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Thankyou/Banner1.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Thankyou/Banner1.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/Thankyou/ProductGrid.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/Thankyou/ProductGrid.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/seo/AboutUsSchema.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/seo/AboutUsSchema.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/seo/ContactUsSchema.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/seo/ContactUsSchema.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/seo/HomepageSchema.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/seo/HomepageSchema.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/seo/OrganizationSchema.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/seo/OrganizationSchema.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/utilities/seo/WebsiteSchema.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/utilities/seo/WebsiteSchema.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,10 +216,10 @@
       <recent name="D:\COMPANY PROJECTS\biotech maali new build files\git 3\git\src\views\utilities\WishList" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\COMPANY PROJECTS\BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN\git 3\biotech_ecomerce\src\Components" />
-      <recent name="D:\COMPANY PROJECTS\BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN\git 3\biotech_ecomerce\src\views\utilities\seo" />
-      <recent name="D:\COMPANY PROJECTS\BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN\git 3\biotech_ecomerce\src\Assets\franches_banners" />
+      <recent name="D:\COMPANY PROJECTS\BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN\git 3\biotech_ecomerce\src\Assets\Gift" />
       <recent name="D:\COMPANY PROJECTS\BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN\git 3\biotech_ecomerce\src\Assets\FranchiseEnquires" />
+      <recent name="D:\COMPANY PROJECTS\BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN\git 3\biotech_ecomerce\src\Assets\franches_banners" />
+      <recent name="D:\COMPANY PROJECTS\BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN\git 3\biotech_ecomerce\src\Assets\ComboOffer" />
       <recent name="D:\COMPANY PROJECTS\BIOTECHMAALI_BACKEND_FRONTEND_CLIENT_AND_ADMIN\git 3\biotech_ecomerce\public" />
     </key>
   </component>
@@ -218,7 +363,7 @@
       <workItem from="1771040333816" duration="31000" />
       <workItem from="1771081002214" duration="11829000" />
       <workItem from="1771127602605" duration="788000" />
-      <workItem from="1771130032743" duration="15226000" />
+      <workItem from="1771130032743" duration="23113000" />
     </task>
     <task id="LOCAL-00001" summary="new">
       <option name="closed" value="true" />

@@ -1,5 +1,5 @@
 import React from "react";
-import bannerImage from "../../../Assets/Banner.png"; // Ensure correct path
+import bannerImage from "../../../Assets/Banner.webp"; // Ensure correct path
 
 const Banner1 = () => {
   const banner = {

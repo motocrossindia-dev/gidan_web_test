@@ -1,7 +1,7 @@
 
 
 import React, { useState } from "react";
-import GiftCardVoucher from "../../../Assets/Gift/GiftCardVoucher.jpg";
+import GiftCardVoucher from "../../../Assets/Gift/GiftCardVoucher.webp";
 import { Link } from "react-router-dom";
 import {Helmet} from "react-helmet";
 import HomepageSchema from "../seo/HomepageSchema";

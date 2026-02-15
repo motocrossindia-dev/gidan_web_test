@@ -2,7 +2,7 @@
 
 
 import React, { useEffect } from "react";
-import notificationImage from "../../../Assets/Noti.png"; // Ensure the path is correct
+import notificationImage from "../../../Assets/Noti.webp"; // Ensure the path is correct
 import { Link } from 'react-router-dom';
 const Notification = () => {
   const dummyNotifications = [

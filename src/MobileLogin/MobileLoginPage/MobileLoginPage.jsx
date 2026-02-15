@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { enqueueSnackbar } from "notistack";
-import logo from "../../Assets/Gidan_logo.jpg";
-import logoImage from "../../Assets/MobileLogin.png";
+import logo from "../../Assets/Gidan_logo.webp";
+import logoImage from "../../Assets/MobileLogin.webp";
 import { signInSuccess } from "../../redux/Auth/authSlice"; // Action to update user state
 import { setVerifiedUser } from "../../redux/User/verificationSlice";
 import { setUsername } from "../../redux/Slice/userSlice";

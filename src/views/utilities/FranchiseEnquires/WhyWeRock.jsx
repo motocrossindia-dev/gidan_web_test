@@ -1,7 +1,7 @@
 import React from "react";
 // Make sure the actual file extension in your folder matches this import path.
 // Usually, it ends in either .jpg or .jpeg, not both.
-import WhyWeRockImage from "../../../Assets/franches_banners/Franchise Page Banner-3.jpg.jpeg";
+import WhyWeRockImage from "../../../Assets/franches_banners/Franchise Page Banner-3.jpg.webp";
 
 const WhyWeRock = () => {
     return (

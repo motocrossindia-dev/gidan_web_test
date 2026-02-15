@@ -147,8 +147,8 @@
         const ts = new Date().getTime(); // cache buster
 
         const logo = isDark
-            ? `${baseUrl}/logo-white.png?v=${ts}`
-            : `${baseUrl}/logo.png?v=${ts}`;
+            ? `${baseUrl}/logo-white.webp?v=${ts}`
+            : `${baseUrl}/logo.webp?v=${ts}`;
 
         if (favicon) favicon.href = logo;
         if (appleIcon) appleIcon.href = logo;

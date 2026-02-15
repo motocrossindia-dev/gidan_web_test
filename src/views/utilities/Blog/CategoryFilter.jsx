@@ -1,6 +1,6 @@
 // import React, { useEffect, useState } from 'react';
 // import { AiOutlineSearch } from 'react-icons/ai'; // Import search icon
-import DownloadApp from "../../../Assets/DownloadApp.png";
+import DownloadApp from "../../../Assets/DownloadApp.webp";
 
 
 import React, { useState } from 'react';

@@ -1,6 +1,6 @@
 
 import React, { useRef, useEffect } from 'react';
-import wallet from '../../Assets/Wallet.png';
+import wallet from '../../Assets/Wallet.webp';
 
 const WalletActivation = ({ onClose }) => {
   // Create a ref for the popup container
