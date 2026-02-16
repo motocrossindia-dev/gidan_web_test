@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 /**
- * Advanced Optimized Image Component
+ * Optimized Image Component
  * Features:
  * - Lazy loading with Intersection Observer
  * - WebP format with fallback

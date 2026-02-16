@@ -1,152 +1,126 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'; // Import Link for navigation
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axiosInstance from '../../Axios/axiosInstance';
-
 import axios from "axios";
 
-
 const OfferCard = ({ title, description, buttonText, image, link }) => (
-  <div className="flex bg-[#4A664A] rounded-lg overflow-hidden mb-6 h-[300px] sm:h-[300px] font-sans">
-    <div className="w-full sm:w-1/2 p-8 text-white flex flex-col justify-center">
-      <h2 className="text-2xl sm:text-4xl font-bold mb-4">{title}</h2>
-      <p className="mb-6 text-xs sm:text-sm">{description}</p>
-      <Link to={link} className="bg-white text-green-700 font-medium py-1 px-2 md:px-6 rounded-md w-fit hover:bg-gray-100 transition duration-300">
-        {buttonText}
-      </Link>
-    </div>
-    <div className="w-full sm:w-1/2">
-      <img name=" "    src={image}  alt={title} className="w-full h-full object-cover" />
+  <div className="bg-[#4A664A] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full">
+    <div className="flex flex-col md:flex-row h-full md:min-h-[280px] lg:min-h-[300px]">
+      {/* Content Section */}
+      <div className="w-full md:w-1/2 p-5 sm:p-6 md:p-7 lg:p-8 text-white flex flex-col justify-center order-2 md:order-1">
+        <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-2 sm:mb-3 md:mb-4 leading-tight">{title}</h2>
+        <p className="mb-3 sm:mb-4 md:mb-5 lg:mb-6 text-xs sm:text-sm md:text-base leading-relaxed">{description}</p>
+        <Link 
+          to={link} 
+          className="bg-white text-green-700 font-medium py-2 sm:py-2.5 px-5 sm:px-6 rounded-md text-sm sm:text-base text-center w-fit hover:bg-gray-100 transition duration-300 active:scale-[0.98]"
+        >
+          {buttonText}
+        </Link>
+      </div>
+      
+      {/* Image Section */}
+      <div className="w-full md:w-1/2 h-[180px] sm:h-[220px] md:h-auto order-1 md:order-2">
+        <img 
+          src={image} 
+          alt={title} 
+          className="w-full h-full object-cover" 
+        />
+      </div>
     </div>
   </div>
 );
 
-const SideOfferCard = ({ title, description, image, link }) => (
-  <div className="bg-[#4A664A] rounded-lg overflow-hidden mb-6 h-[192px] sm:h-[192px]">
-    <div className="flex h-full">
-      <div className="w-full sm:w-1/2 p-4 text-white flex flex-col justify-center">
-        <h3 className="text-xl sm:text-2xl font-bold mb-2">{title}</h3>
-        <p className="text-xs sm:text-sm mb-3">{description}</p>
-        {/* <Link to={link} className="bg-white text-green-700 font-medium py-1 px-4 rounded-md w-fit text-sm sm:text-base hover:bg-gray-100 transition duration-300">
-          {buttonText}
-        </Link> */}
+const SideOfferCard = ({ title, description, image }) => (
+  <div className="bg-[#4A664A] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full">
+    <div className="flex h-full min-h-[160px] sm:min-h-[180px] md:min-h-[185px]">
+      {/* Content Section */}
+      <div className="w-1/2 p-3 sm:p-4 md:p-5 text-white flex flex-col justify-center">
+        <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold mb-1.5 md:mb-2 leading-tight">{title}</h3>
+        <p className="text-[11px] sm:text-xs md:text-sm leading-relaxed line-clamp-3 md:line-clamp-4">{description}</p>
       </div>
-      <div className="w-full sm:w-1/2">
-        <img name=" "    src={image}  alt={title} className="w-full h-full object-cover" />
+      
+      {/* Image Section */}
+      <div className="w-1/2">
+        <img 
+          src={image} 
+          alt={title} 
+          className="w-full h-full object-cover" 
+        />
       </div>
     </div>
   </div>
 );
 
 const OfferReward = () => {
-
-  const [id,setID] = useState();
+  const [id, setID] = useState();
   const [contentBlocks, setContentBlocks] = useState([]);
 
-useEffect(() => {
-  const fetchOffersRewards = async () => {
+  useEffect(() => {
+    const fetchOffersRewards = async () => {
+      try {
+        const res = await axios.get(
+          "https://backend.gidan.store/utils/content-blocks/?section=offers_rewards&title="
+        );
+        setContentBlocks(res.data || []);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchOffersRewards();
+  }, []);
+
+  const getDealoftheweekproid = async () => {
     try {
-      const res = await axios.get(
-        "https://backend.gidan.store/utils/content-blocks/?section=offers_rewards&title="
-      );
-      setContentBlocks(res.data || []);
+      const response = await axiosInstance.get(`/dealOfTheWeek/dealOfTheWeek/`);
+      if (response.status === 200) {
+        setID(response.data.main_product_id);
+      }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 
-  fetchOffersRewards();
-}, []);
-
-  const getDealoftheweekproid=async()=>{
-  try {
-    
-    const response = await axiosInstance.get(`/dealOfTheWeek/dealOfTheWeek/`)
-    if (response.status===200) {
-      setID(response.data.main_product_id)
-    }
-  } catch (error) {
-    console.log(error);
-    
-  }  
-  }
-
-  useEffect(()=>{
-    getDealoftheweekproid()
-  },[])
-  // const offers = [
-  //   {
-  //     title: 'A Living Gift - Upto 40% off',
-  //     description: 'Express true emotions with a gift that grow faster',
-  //     buttonText: 'Buy It Now',
-  //     image: plant11,
-  //     link: '/gifts', // Example filter link
-  //   },
-  //   {
-  //     title: 'Deal of the week',
-  //     description: 'Express true emotions with a gift that grow faster',
-  //     buttonText: 'Buy It Now',
-  //     image: plant12,
-  //     link: '/dealofweek', // Example filter link
-  //   },
-  // ];
+  useEffect(() => {
+    getDealoftheweekproid();
+  }, []);
 
   const offers = contentBlocks.slice(0, 2).map((item) => ({
-  title: item.title,
-  description: item.subtitle,
-  buttonText: item.button_text || "Buy It Now",
-  image: item.image,
-  link:
-    item.title === "Deal of the week" && id
-      ? `/product/${id}`
-      : "/gifts",
-}));
-
-
-  // const sideOffers = [
-  //   {
-  //     title: 'Winter Flower Seeds',
-  //     description: 'Buy high quality hybrid Winter Flowering Seeds at best price ',
-  //     buttonText: 'Buy It Now',
-  //     image: plant13,
-  //     link: '/filter?offer=winter-flower-seeds', // Example filter link
-  //   },
-  //   {
-  //     title: 'Events Gifts - Rs.199',
-  //     description: 'Express true emotions with a gift that grow faster',
-  //     buttonText: 'Buy It Now',
-  //     image: plant14,
-  //     link: '/filter?offer=events-gifts', // Example filter link
-  //   },
-  //   {
-  //     title: 'Deal of the week',
-  //     description: 'Express true emotions with a gift that grow faster',
-  //     buttonText: 'Buy It Now',
-  //     image: plant15,
-  //     link: '/filter?offer=deal-of-the-week', // Example filter link
-  //   },
-  // ];
+    title: item.title,
+    description: item.subtitle,
+    buttonText: item.button_text || "Buy It Now",
+    image: item.image,
+    link:
+      item.title === "Deal of the week" && id
+        ? `/product/${id}`
+        : "/gifts",
+  }));
 
   const sideOffers = contentBlocks.slice(2, 5).map((item) => ({
-  title: item.title,
-  description: item.subtitle,
-  image: item.image,
-  link: "/filter",
-}));
+    title: item.title,
+    description: item.subtitle,
+    image: item.image,
+    link: "/filter",
+  }));
 
-
-if (!contentBlocks.length) return null;
-
+  if (!contentBlocks.length) return null;
 
   return (
-    <div className="container mx-auto px-4 md:py-8 py-0">
-      <h1 className="md:text-2xl text-xl font-bold mb-6 text-center">Offers & Rewards</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div className="sm:col-span-2">
+    <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8 lg:py-10">
+      <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-4 sm:mb-5 md:mb-6 text-center">
+        Offers & Rewards
+      </h1>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 lg:gap-6 md:auto-rows-fr">
+        {/* Main Offers - Takes 2 columns on desktop */}
+        <div className="md:col-span-2 grid grid-cols-1 gap-4 md:gap-5 lg:gap-6">
           {offers.map((offer, index) => (
             <OfferCard key={index} {...offer} />
           ))}
         </div>
-        <div className="sm:col-span-1">
+        
+        {/* Side Offers - Takes 1 column on desktop, equal height cards */}
+        <div className="md:col-span-1 grid grid-cols-1 gap-4 md:gap-5 lg:gap-6">
           {sideOffers.map((sideOffer, index) => (
             <SideOfferCard key={index} {...sideOffer} />
           ))}
@@ -157,3 +131,139 @@ if (!contentBlocks.length) return null;
 };
 
 export default OfferReward;
+
+// ================old=================
+// import { useEffect, useState } from 'react';
+// import { Link } from 'react-router-dom';
+// import axiosInstance from '../../Axios/axiosInstance';
+// import axios from "axios";
+
+// // Desktop: Keep original side-by-side layout
+// // Mobile: Stack image on top, content below for better UX
+// const OfferCard = ({ title, description, buttonText, image, link }) => (
+//   <div className="bg-[#4A664A] rounded-lg overflow-hidden mb-6 font-sans">
+//     {/* Mobile: Vertical stack | Desktop: Horizontal flex */}
+//     <div className="flex flex-col sm:flex-row sm:h-[300px]">
+//       {/* Content Section */}
+//       <div className="w-full sm:w-1/2 p-6 sm:p-8 text-white flex flex-col justify-center order-2 sm:order-1">
+//         <h2 className="text-2xl sm:text-4xl font-bold mb-3 sm:mb-4">{title}</h2>
+//         <p className="mb-5 sm:mb-6 text-sm sm:text-sm leading-relaxed">{description}</p>
+//         <Link 
+//           to={link} 
+//           className="bg-white text-green-700 font-medium py-3 sm:py-1 px-6 sm:px-6 rounded-md text-center sm:w-fit hover:bg-gray-100 transition duration-300 active:scale-[0.98]"
+//         >
+//           {buttonText}
+//         </Link>
+//       </div>
+      
+//       {/* Image Section - Shows first on mobile */}
+//       <div className="w-full sm:w-1/2 aspect-[16/9] sm:aspect-auto order-1 sm:order-2">
+//         <img 
+//           src={image} 
+//           alt={title} 
+//           className="w-full h-full object-cover" 
+//         />
+//       </div>
+//     </div>
+//   </div>
+// );
+
+// // Desktop: Keep original layout
+// // Mobile: Optimize for single column with better spacing
+// const SideOfferCard = ({ title, description, image }) => (
+//   <div className="bg-[#4A664A] rounded-lg overflow-hidden mb-6 sm:mb-6">
+//     <div className="flex h-[160px] sm:h-[192px]">
+//       {/* Content Section */}
+//       <div className="w-[55%] sm:w-1/2 p-4 text-white flex flex-col justify-center">
+//         <h3 className="text-lg sm:text-2xl font-bold mb-2 leading-tight">{title}</h3>
+//         <p className="text-xs sm:text-sm leading-relaxed line-clamp-3">{description}</p>
+//       </div>
+      
+//       {/* Image Section */}
+//       <div className="w-[45%] sm:w-1/2">
+//         <img 
+//           src={image} 
+//           alt={title} 
+//           className="w-full h-full object-cover" 
+//         />
+//       </div>
+//     </div>
+//   </div>
+// );
+
+// const OfferReward = () => {
+//   const [id, setID] = useState();
+//   const [contentBlocks, setContentBlocks] = useState([]);
+
+//   useEffect(() => {
+//     const fetchOffersRewards = async () => {
+//       try {
+//         const res = await axios.get(
+//           "https://backend.gidan.store/utils/content-blocks/?section=offers_rewards&title="
+//         );
+//         setContentBlocks(res.data || []);
+//       } catch (error) {
+//         console.error(error);
+//       }
+//     };
+
+//     fetchOffersRewards();
+//   }, []);
+
+//   const getDealoftheweekproid = async () => {
+//     try {
+//       const response = await axiosInstance.get(`/dealOfTheWeek/dealOfTheWeek/`);
+//       if (response.status === 200) {
+//         setID(response.data.main_product_id);
+//       }
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+
+//   useEffect(() => {
+//     getDealoftheweekproid();
+//   }, []);
+
+//   const offers = contentBlocks.slice(0, 2).map((item) => ({
+//     title: item.title,
+//     description: item.subtitle,
+//     buttonText: item.button_text || "Buy It Now",
+//     image: item.image,
+//     link:
+//       item.title === "Deal of the week" && id
+//         ? `/product/${id}`
+//         : "/gifts",
+//   }));
+
+//   const sideOffers = contentBlocks.slice(2, 5).map((item) => ({
+//     title: item.title,
+//     description: item.subtitle,
+//     image: item.image,
+//     link: "/filter",
+//   }));
+
+//   if (!contentBlocks.length) return null;
+
+//   return (
+//     <div className="container mx-auto px-4 py-4 md:py-8">
+//       <h1 className="text-2xl md:text-2xl font-bold mb-6 text-center">Offers & Rewards</h1>
+      
+//       {/* Desktop: Original grid layout | Mobile: Single column stack */}
+//       <div className="grid grid-cols-1 sm:grid-cols-3 gap-0 sm:gap-6">
+//         <div className="sm:col-span-2">
+//           {offers.map((offer, index) => (
+//             <OfferCard key={index} {...offer} />
+//           ))}
+//         </div>
+//         <div className="sm:col-span-1">
+//           {sideOffers.map((sideOffer, index) => (
+//             <SideOfferCard key={index} {...sideOffer} />
+//           ))}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default OfferReward;

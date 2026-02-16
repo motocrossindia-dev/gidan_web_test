@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Verify from "../../Services/Services/Verify";
 import { enqueueSnackbar } from "notistack";
-import OptimizedImage from "./OptimizedImage";
+// import img from "./img";
 import ReactStars from "react-rating-stars-component";
 import axiosInstance from "../../Axios/axiosInstance";
 
@@ -183,8 +183,8 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
 
                     <div className="relative w-full flex justify-center mb-2">
                         <div className="relative rounded-lg flex justify-center items-center w-full">
-                            <OptimizedImage
-                                src={imageUrl}
+                            <img
+                                src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
                                 alt={name}
                                 width={226}
                                 height={260}
@@ -306,8 +306,8 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                     <div className="relative w-full flex flex-col items-center">
                         {/* IMAGE WRAPPER */}
                         <div className="relative w-full bg-white overflow-hidden">
-                            <OptimizedImage
-                                src={imageUrl}
+                            <img
+                                src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
                                 alt={name}
                                 width={400}
                                 height={160}
