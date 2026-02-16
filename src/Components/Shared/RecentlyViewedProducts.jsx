@@ -37,6 +37,9 @@ const RecentlyViewedProducts = () => {
               sub_category_slug: sub_category_slug
           }
       });
+      
+      // Scroll to top when navigating to product
+      window.scrollTo(0, 0);
   };
 
   if (products.length === 0) {

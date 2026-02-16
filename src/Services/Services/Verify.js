@@ -27,7 +27,6 @@ const Verify = () => {
       const data = error.response.data;
       setVerification(data);
 
-      console.error('Error creating new token ', error);
       removeToken();
       localStorage.removeItem('user');
       navigate('/'); ;

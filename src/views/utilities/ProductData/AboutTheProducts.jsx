@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ReactPlayer from "react-player";
+import ReactPlayer from "react-player/lazy"; // Lazy load only needed players instead of all 13+
 
 const AboutProduct = ({ productDetailData }) => {
   const [activeTab, setActiveTab] = useState("about"); // 'about', 'box', or 'video'

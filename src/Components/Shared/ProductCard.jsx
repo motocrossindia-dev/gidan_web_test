@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Verify from "../../Services/Services/Verify";
 import { enqueueSnackbar } from "notistack";
-
+import OptimizedImage from "./OptimizedImage";
 import ReactStars from "react-rating-stars-component";
 import axiosInstance from "../../Axios/axiosInstance";
 
@@ -98,23 +98,47 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
         } catch (error) {}
     }, [isAuthenticated, navigate, inCart, product.id, getProducts, isAdded]);
 
+    // ========== OLD CODE (Before Feb 16, 2026) - COMMENTED OUT ==========
+    // const handleQuickView = useCallback((e) => {
+    //     const category_slug = product?.category_slug;
+    //     const sub_category_slug = product?.sub_category_slug;
+    //     const productUrl = `/${category_slug}/${sub_category_slug}/${product.slug}/`;
+    //     navigate(productUrl, {
+    //         state: {
+    //             product_id: product.id,
+    //             category_slug: category_slug,
+    //             sub_category_slug: sub_category_slug
+    //         }
+    //     });
+    // }, [navigate, product.category_slug, product.sub_category_slug, product.slug, product.id]);
+    // ========== END OLD CODE ==========
+
+    // ========== NEW CODE (Feb 16, 2026) - Added smooth scroll to top ==========
     const handleQuickView = useCallback((e) => {
         const category_slug = product?.category_slug;
         const sub_category_slug = product?.sub_category_slug;
 
-        // NEW: Clean URL structure
-        const productUrl = sub_category_slug
-            ? `/${category_slug}/${sub_category_slug}/${product.slug}/`
-            : `/${category_slug}/${product.slug}/`;
+        // All products have category, subcategory, and product slug
+        const productUrl = `/${category_slug}/${sub_category_slug}/${product.slug}/`;
 
-        navigate(productUrl, {
-            state: {
-                product_id: product.id,
-                category_slug: category_slug,
-                sub_category_slug: sub_category_slug
-            }
+        // Scroll to top smoothly before navigation
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
         });
+
+        // Small delay to allow scroll animation to start
+        setTimeout(() => {
+            navigate(productUrl, {
+                state: {
+                    product_id: product.id,
+                    category_slug: category_slug,
+                    sub_category_slug: sub_category_slug
+                }
+            });
+        }, 100);
     }, [navigate, product.category_slug, product.sub_category_slug, product.slug, product.id]);
+    // ========== END NEW CODE ==========
 
     return (
         <>
@@ -127,7 +151,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}
                     sx={{
-                        width: { xs: "80%", sm: "14rem", lg: "16rem" },
+                        width: { xs: "100%", sm: "14rem", md: "15rem", lg: "16rem" },
                         height: { xs: "20", sm: "24rem", md: "30rem", lg: "25rem" },
                         display: "flex",
                         flexDirection: "column",
@@ -159,10 +183,15 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
 
                     <div className="relative w-full flex justify-center mb-2">
                         <div className="relative rounded-lg flex justify-center items-center w-full">
-                            <img name=" "
-                                 className="w-40 h-43 sm:w-48 sm:h-53 lg:h-[260px] mt-4 lg:w-[226px] object-contain transition-transform duration-300 rounded-[2rem] scale-100 hover:scale-105"
-                                 src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
-                                 alt={name} loading="lazy" width="400" height="400" style={{ aspectRatio: '1/1' }} />
+                            <OptimizedImage
+                                src={imageUrl}
+                                alt={name}
+                                width={226}
+                                height={260}
+                                className="w-40 h-43 sm:w-48 sm:h-53 lg:h-[260px] mt-4 lg:w-[226px] object-contain transition-transform duration-300 rounded-[2rem] scale-100 hover:scale-105"
+                                objectFit="contain"
+                                placeholder="blur"
+                            />
 
                             <div
                                 className={`absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 transition-all duration-300 ease-in-out ${
@@ -277,10 +306,15 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                     <div className="relative w-full flex flex-col items-center">
                         {/* IMAGE WRAPPER */}
                         <div className="relative w-full bg-white overflow-hidden">
-                            <img
+                            <OptimizedImage
+                                src={imageUrl}
+                                alt={name}
+                                width={400}
+                                height={160}
                                 className="w-full h-40 object-cover"
-                                src={`${process.env.REACT_APP_API_URL}${product.image}`}
-                                alt={product.name} loading="lazy" width="400" height="400" style={{ aspectRatio: '1/1' }} />
+                                objectFit="cover"
+                                placeholder="blur"
+                            />
 
 
                             {/* ICONS INSIDE IMAGE AREA */}
@@ -336,10 +370,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
 
                             {/* Product Name */}
                             <Typography sx={{ typography: { xs: "caption", md: "subtitle2" } }} style={{ fontWeight: "bold", color: "black", fontSize: "0.9rem" }}>
-                                {/* {product.name.length > 12
-                                    ? `${product.name.slice(0, 11)}..`
-                                    : product.name} */}
-                                {product.name}
+                                {name}
                             </Typography>
 
                             <div className="flex items-center gap-2">

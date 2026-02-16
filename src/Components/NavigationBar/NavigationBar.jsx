@@ -151,7 +151,9 @@ const NavBar = () => {
                 <img
                     src={logo}
                     alt="Gidan Logo"
-                    className="h-16 w-auto"   // <-- INCREASED SIZE (Mobile)
+                    width="115"
+                    height="82"
+                    className="h-16 w-auto"
                     name="Gidan"
                 />
               </Link>
@@ -163,6 +165,8 @@ const NavBar = () => {
                 <img
                     src={logo}
                     alt="Gidan Logo"
+                    width="172"
+                    height="122"
                     className="h-24 max-h-32 w-auto object-contain"
                     name="Gidan"
                 />
@@ -187,22 +191,38 @@ const NavBar = () => {
             {/* Icons */}
             <div className="flex items-center md:space-x-6 space-x-4 md:pr-10">
 
-              <button onClick={handleWishListClick} className="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-bio-green hover:text-white">
+              <button 
+                onClick={handleWishListClick} 
+                className="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-bio-green hover:text-white"
+                aria-label="View wishlist"
+              >
                 <WishlistIconWithCount />
               </button>
 
-              <button onClick={handleCartClick} className="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-bio-green hover:text-white">
+              <button 
+                onClick={handleCartClick} 
+                className="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-bio-green hover:text-white"
+                aria-label="View shopping cart"
+              >
                 <CartIconWithCount />
               </button>
 
-              <button onClick={handleWalletClick} className="hidden sm:flex w-12 h-12 items-center justify-center rounded-lg hover:bg-bio-green hover:text-white">
+              <button 
+                onClick={handleWalletClick} 
+                className="hidden sm:flex w-12 h-12 items-center justify-center rounded-lg hover:bg-bio-green hover:text-white"
+                aria-label="View wallet"
+              >
                 <IoWalletOutline className="text-xl" />
               </button>
 
               {/* User Dropdown */}
               <div className="relative hidden sm:flex gap-4">
                 {username === "Guest" ? (
-                    <button className="flex items-center space-x-2 text-gray-500" onClick={() => setIsSignInOpen(true)}>
+                    <button 
+                      className="flex items-center space-x-2 text-gray-500" 
+                      onClick={() => setIsSignInOpen(true)}
+                      aria-label="Sign in to your account"
+                    >
                       <FaRegUser className="text-xl" />
                       <span>Guest</span>
                     </button>
@@ -210,6 +230,7 @@ const NavBar = () => {
                     <button
                         className="flex items-center justify-between px-4 py-2 bg-bio-green text-white rounded-md w-40"
                         onClick={toggleDropdown}
+                        aria-label="User account menu"
                     >
                       <div className="flex items-center space-x-2">
                         <FaRegUser className="text-xl" />
@@ -279,7 +300,11 @@ const NavBar = () => {
                     <Box className="w-80 p-4 mt-10 shadow-lg rounded-lg bg-white border">
                       <p className="text-center text-md">To add or view items in your wishlist, please sign in first.</p>
                       <div className="text-center mt-4">
-                        <button onClick={handleSignIn} className="border border-green-500 text-green-500 px-4 py-2 rounded-md">
+                        <button 
+                          onClick={handleSignIn} 
+                          className="border border-green-500 text-green-500 px-4 py-2 rounded-md"
+                          aria-label="Sign in to view wishlist"
+                        >
                           Sign In
                         </button>
                       </div>
@@ -298,8 +323,20 @@ const NavBar = () => {
                 <img src={LogoutGif} alt="Logout" className="mx-auto w-40 mb-4" />
                 <p className="mb-6">Are you sure you want to logout?</p>
                 <div className="flex justify-around">
-                  <button className="bg-gray-300 px-4 py-2 rounded" onClick={handleCancelLogout}>Cancel</button>
-                  <button className="bg-red-500 text-white px-4 py-2 rounded" onClick={handleLogOutConfirm}>Logout</button>
+                  <button 
+                    className="bg-gray-300 px-4 py-2 rounded" 
+                    onClick={handleCancelLogout}
+                    aria-label="Cancel logout"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    className="bg-red-500 text-white px-4 py-2 rounded" 
+                    onClick={handleLogOutConfirm}
+                    aria-label="Confirm logout"
+                  >
+                    Logout
+                  </button>
                 </div>
               </div>
             </div>
@@ -311,7 +348,11 @@ const NavBar = () => {
               <div className="bg-white p-6 rounded-lg w-80 text-center" onClick={(e) => e.stopPropagation()}>
                 <img src={empty} alt="Empty Cart" className="mx-auto mb-4" />
                 <h2 className="text-lg font-semibold mb-4">Your cart is currently empty</h2>
-                <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={() => setIsCartOpen(false)}>
+                <button 
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md" 
+                  onClick={() => setIsCartOpen(false)}
+                  aria-label="Close empty cart message and add products"
+                >
                   Add Products
                 </button>
               </div>

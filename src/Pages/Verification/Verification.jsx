@@ -165,6 +165,8 @@ const Verification = ({ onClose, onSubmit }) => {
           <img name=" "   
             src={biotech}
             alt="Gidan Logo"
+            width="129"
+            height="82"
             className="w-[129px] h-[82px]"
             loading="lazy"
           />

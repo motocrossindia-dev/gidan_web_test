@@ -112,10 +112,12 @@ const HeroSection = ({ hero }) => {
             key={index}
             onClick={() => goToSlide(index)}
             aria-label={`Go to slide ${index + 1}`}
-            className={`w-3 h-3 rounded-full ${
+            className="w-12 h-12 flex items-center justify-center"
+          >
+            <span className={`w-3 h-3 rounded-full block ${
               index === currentIndex ? "bg-green-600" : "bg-gray-300"
-            }`}
-          />
+            }`} />
+          </button>
         ))}
       </div>
 

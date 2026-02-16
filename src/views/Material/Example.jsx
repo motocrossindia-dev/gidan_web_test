@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSnackbar } from 'notistack';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { useSelector } from 'react-redux';
 
 const Example = () => {

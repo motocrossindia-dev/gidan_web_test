@@ -25,7 +25,8 @@ const RecentlyViewedProduct = () => {
     const category_slug = product?.category_slug;
     const sub_category_slug = product?.sub_category_slug;
 
-    navigate(`/category/${category_slug}/${product.slug}/`, {       state: {
+    // All products have category, subcategory, and product slug
+    navigate(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {       state: {
         product_id: product.slug,
         category_slug:category_slug,
         sub_category_slug:sub_category_slug

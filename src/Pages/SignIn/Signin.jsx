@@ -96,6 +96,8 @@ const SignIn = ({ onClose, onGetOtpClick }) => {
           <img name=" "   
             src={biotech}
             alt="Gidan Logo"
+            width="129"
+            height="82"
             className="mx-auto w-[129px] h-[82px]"
           />
           <button

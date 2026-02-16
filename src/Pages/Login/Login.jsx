@@ -109,6 +109,8 @@ const Login = ({ onClose }) => {
           <img name="Gidan Logo"
             src={biotech}
             alt="Gidan Logo"
+            width="129"
+            height="82"
             className="mx-auto w-[129px] h-[82px]"
             loading="lazy"
           />

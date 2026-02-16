@@ -1,15 +1,17 @@
 
 import React,{useEffect} from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Header from "./Components/Header/Header";
 import Footer from "./Components/Footer/Footer";
 import Navigation from "./Components/NavigationBar/NavigationBar";
 
 const LandingPageLayout = () => {
+   const location = useLocation();
 
    useEffect(() => {
-      window.scrollTo(0, 0); // Scroll to top on component mount
-    }, []);
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }); // Smooth scroll to top on route change
+    }, [location.pathname]);
+    
   return (
     <div className="landing-page-layout w-full min-h-screen flex flex-col overflow-x-hidden">
       {/* sticky Header */}

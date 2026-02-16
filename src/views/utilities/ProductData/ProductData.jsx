@@ -10,8 +10,6 @@ import {
     ChevronLeft,
     ChevronRight,
 } from "lucide-react";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import ProductSeller from "./ProductSeller";
 import ProductReviews from "./ProductReviews";
 import FaqAccordion from "./ProductFaq";
@@ -148,10 +146,10 @@ export default function Component() {
     const imgRef = useRef(null);
     const product = productDetailData?.data?.product;
 
-    // ⬆️ Scroll to top on route change
+    // ⬆️ Scroll to top on route change or product change
     useEffect(() => {
-        window.scrollTo({top: -10, left: 0, behavior: 'auto'}); // change to 'smooth' if needed
-    }, [location.pathname]);
+        window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+    }, [location.pathname, params.productSlug]);
 
     const handlePincodeChange = (e) => {
         const value = e.target.value;
@@ -647,11 +645,15 @@ export default function Component() {
     };
 
 
-// ✅ Fetch product data only once
+// ========== NEW CODE (Feb 16, 2026) - Auto-select variant matching clicked product slug ==========
+// ✅ Fetch product data and auto-select variant matching the URL slug
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axiosInstance.get(`/product/defaultProduct/${id}/`);
+                // Use the slug from URL params to fetch the exact product variant
+                const productSlug = params.productSlug || id;
+                const response = await axiosInstance.get(`/product/defaultProduct/${productSlug}/`);
+                
                 if (response.status === 200) {
                     const data = response.data;
                     setProductDetailData(data);
@@ -709,6 +711,7 @@ export default function Component() {
                     setSelectedGram(defaultWeight);
 
                     // ✅ Trigger the same flow as manual selection to update images
+                    // This ensures the variant matching the clicked product slug is displayed
                     if (defaultColor) {
                         handlePlanterColorClick(defaultColor, data.data.product);
                     }
@@ -733,7 +736,97 @@ export default function Component() {
         };
 
         if (id) fetchData();
-    }, [id]);const category_slug = location.state?.category_slug || product?.category_slug;// Fallbacks if fields are missing
+    }, [id, params.productSlug]); // Added params.productSlug to dependencies
+// ========== END NEW CODE ==========
+
+// ========== OLD CODE (Before Feb 16, 2026) - COMMENTED OUT ==========
+// useEffect(() => {
+//     const fetchData = async () => {
+//         try {
+//             const response = await axiosInstance.get(`/product/defaultProduct/${id}/`);
+//             if (response.status === 200) {
+//                 const data = response.data;
+//                 setProductDetailData(data);
+//                 setAddOnData(data?.data?.product_add_ons || []);
+//                 setImageThumbnails(data?.data?.product?.images || []);
+//
+//                 // NEW: Clean URL structure - Always 3-segment
+//                 const newUrl = `/${data?.data?.product?.category_slug}/${data?.data?.product?.sub_category_slug}/${data?.data?.product?.slug || id}/`;
+//                 window.history.replaceState(null, "", newUrl);
+//                 setCurrentUrl(newUrl); // Update state to trigger re-render
+//
+//                 setproduct_slug(data?.data?.product?.slug || id);
+//                 setcategory_slug(data?.data?.product?.category_slug);
+//                 setsubcategory_slug(data?.data?.product?.sub_category_slug);
+//
+//                 const {size_id, planter_size_id, planter_id, color_id, litre_id, weight_id} = data.data.product;
+//
+//                 const defaultSize =
+//                     data.data.product_sizes.find(
+//                         (s) => s.id === size_id || s.size === size_id
+//                     ) || data.data.product_sizes[0] || "";
+//
+//                 const defaultPlanterSize =
+//                     data.data.product_planter_sizes.find(
+//                         (s) =>
+//                             s.id === planter_size_id ||
+//                             s.size === planter_size_id?.size ||
+//                             s.name === planter_size_id?.name
+//                     ) || data.data.product_planter_sizes[0] || "";
+//
+//                 const defaultPlanter =
+//                     data.data.product_planters.find(
+//                         (s) => s.id === planter_id || s.name === planter_id?.name
+//                     ) || data.data.product_planters[0] || "";
+//
+//                 const defaultColor =
+//                     data.data.product_colors.find((c) => c.id === Number(color_id)) ||
+//                     data.data.product_colors[0] || null;
+//
+//                 const defaultLitre =
+//                     data.data.product_litres.find(
+//                         (s) => s.id === litre_id || s.name === litre_id?.name
+//                     ) || data.data.product_litres[0] || "";
+//
+//                 const defaultWeight =
+//                     data.data.product_weights.find(
+//                         (s) => s.id === weight_id || s.name === weight_id?.name
+//                     ) || data.data.product_weights[0] || "";
+//
+//                 setSelectedSize(defaultSize);
+//                 setSelectedPlanterSize(defaultPlanterSize);
+//                 setSelectedPlanter(defaultPlanter);
+//                 setSelectedColor(defaultColor);
+//                 setSelectedLitre(defaultLitre);
+//                 setSelectedGram(defaultWeight);
+//
+//                 // ✅ Trigger the same flow as manual selection to update images
+//                 if (defaultColor) {
+//                     handlePlanterColorClick(defaultColor, data.data.product);
+//                 }
+//                 if (defaultSize) {
+//                     handleSizeClick(defaultSize, data.data.product);
+//                 }
+//                 if (defaultPlanterSize) {
+//                     handlePlanterSizeClick(defaultPlanterSize, data.data.product);
+//                 }
+//                 if (defaultPlanter) {
+//                     handlePlanterClick(defaultPlanter, data.data.product);
+//                 }
+//                 if (defaultLitre) {
+//                     handleLitreClick(defaultLitre, data.data.product);
+//                 }
+//                 if (defaultWeight) {
+//                     handleWeightClick(defaultWeight, data.data.product);
+//                 }
+//
+//             }
+//         } catch (error) {}
+//     };
+//
+//     if (id) fetchData();
+// }, [id]);
+// ========== END OLD CODE ==========const category_slug = location.state?.category_slug || product?.category_slug;// Fallbacks if fields are missing
     const metaTitle = product?.meta_title
         ? product.meta_title
         : product?.main_product_name
@@ -876,10 +969,10 @@ export default function Component() {
                                 <div className="flex gap-3 overflow-x-auto px-8 md:px-0">
                                     {imageThumbnails.map((image, i) => (
                                         <button aria-label="Button"
-                                                key={i + 1}
-                                                onClick={() => setSelectedImage(i + 1)}
+                                                key={i}
+                                                onClick={() => setSelectedImage(i)}
                                                 className={`w-16 h-16 sm:w-20 sm:h-20 md:w-[90px] md:h-[90px] rounded-lg bg-gray-100 flex items-center justify-center shrink-0 ${
-                                                    selectedImage === i + 1
+                                                    selectedImage === i
                                                         ? "ring-2 ring-indigo-300 ring-inset"
                                                         : ""
                                                 }`}
@@ -887,7 +980,7 @@ export default function Component() {
                                             <img
                                                 src={image.image}
                                                 loading="lazy"
-                                                alt={`${productData.name} ${i + 2}`}
+                                                alt={`${productData.name} ${i + 1}`}
                                                 className="w-full h-full object-cover rounded" width="400" height="300" style={{ aspectRatio: '4/3' }}
                                             />
                                         </button>

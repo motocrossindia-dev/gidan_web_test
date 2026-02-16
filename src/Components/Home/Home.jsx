@@ -1,139 +1,47 @@
-import {lazy, Suspense, useEffect, useState} from 'react';
-import axiosInstance from '../../Axios/axiosInstance';
-import {Helmet} from "react-helmet-async";
+/**
+ * ============================================
+ * PERFORMANCE OPTIMIZATION - Updated: Feb 16, 2026
+ * ============================================
+ * Changes:
+ * 1. Added lazy loading for below-the-fold components
+ * 2. Implemented code splitting with webpack chunk names
+ * 3. Added ResourceHints and LazyLoadWrapper for better performance
+ * 4. Integrated TanStack Query for data fetching & caching
+ * 5. Target: Increase performance score from 47 to 90+
+ * ============================================
+ */
 
-// CRITICAL: Load above-the-fold components immediately (no lazy)
-import CategoryIcons from '../../Components/Category/CategoryIcons';
-import HeroSection from '../../Components/HeroSection/HeroSection';
-
-// Lazy load below-the-fold components with priority
-const Banner = lazy(() => import('../../Components/Banner/Banner'));
-const TrendingSection = lazy(() => import('../../Components/TrendingProducts/TrendingSection'));
-
-// Lazy load non-critical components (load on scroll/idle)
-const RewardClub = lazy(() => import('../../Components/RewardClub/RewardClub'));
-const ShopTheLook = lazy(() => import('../../Components/ShopTheLook/ShopTheLook'));
-const SeasonalProduct = lazy(() => import('../../Components/SeasonalCollection/SeasonalProduct'));
-const Services = lazy(() => import('../../Services/ServiceHome/Services'));
-const OfferReward = lazy(() => import('../../Components/OfferReward/OfferReward'));
-const ComboOffer = lazy(() => import('../../Components/ComboOffer/ComboOffer'));
-const Blog = lazy(() => import('../../Components/Blog/Blog'));
-const VideoSection = lazy(() => import('../../Components/VideoSection/VideoSection'));
-const CheckOutStore = lazy(() => import('../../Components/Store/CheckOutStore'));
-const HomepageSchema = lazy(() => import('../../views/utilities/seo/HomepageSchema'));
-const StoreSchema = lazy(() => import('../../views/utilities/seo/StoreSchema'));
-
-// Minimal loading fallback
-const LoadingFallback = () => <div className="h-20" />;
-
-const Home = () => {
-  const [homeImages, setHomeImages] = useState([]);
-  const [heroImages, setHeroImages] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showBelowFold, setShowBelowFold] = useState(false);
-
-  const getBannerImages = async () => {
-    try {
-      const response = await axiosInstance.get(`/promotion/banner/`);
-      const banner_images = response?.data?.data?.banners;
-      const home_images = banner_images.filter((images) => images.type === 'Home' && images.is_visible === true);
-      setHomeImages(home_images);
-      const hero_images = banner_images.filter((images) => images.type === 'Hero' && images.is_visible === true);
-      setHeroImages(hero_images);
-    } catch (error) {
-      console.error('Error fetching banner images:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getBannerImages();
-    
-    // Load below-the-fold content after initial render
-    const timer = setTimeout(() => {
-      setShowBelowFold(true);
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  return (
-    <div>
-      <Helmet>
-        <title>Gidan® – Buy Plants, Planters, Pots & Seeds Online in Bangalore</title>
-        <meta
-          name="description"
-          content="Buy plants, planters, pots & seeds online in Bangalore from Gidan. Fresh plants, garden décor and reliable doorstep delivery."
-        />
-        <link rel="canonical" href="https://gidan.store" />
-        {/* Preconnect to API */}
-        <link rel="preconnect" href={process.env.REACT_APP_API_URL} />
-        <link rel="dns-prefetch" href={process.env.REACT_APP_API_URL} />
-      </Helmet>
-
-      {/* Above-the-fold: Load immediately for fast LCP */}
-      <CategoryIcons />
-      {!loading && <HeroSection hero={heroImages} />}
-
-      {/* Below-the-fold: Load progressively */}
-      {showBelowFold && (
-        <Suspense fallback={<LoadingFallback />}>
-          <Banner home={homeImages} />
-          <TrendingSection />
-          <RewardClub />
-          <ShopTheLook />
-          <SeasonalProduct />
-          <Services />
-          <OfferReward />
-          <ComboOffer />
-          <Blog />
-          <VideoSection />
-          <CheckOutStore />
-          <HomepageSchema />
-          <StoreSchema />
-        </Suspense>
-      )}
-    </div>
-  );
-};
-
-export default Home;
-
-// ==================== OLD CODE (COMMENTED) ====================
+// ========== OLD CODE (Before Feb 16, 2026 - TanStack Query) - COMMENTED OUT ==========
 // import { useEffect, useState, lazy, Suspense } from 'react';
 // import axiosInstance from '../../Axios/axiosInstance';
 // import { Helmet } from "react-helmet-async";
-//
-// // Lazy load components
-// const HeroSection = lazy(() => import('../../Components/HeroSection/HeroSection'));
-// const CategoryIcons = lazy(() => import('../../Components/Category/CategoryIcons'));
-// const Banner = lazy(() => import('../../Components/Banner/Banner'));
-// const TrendingSection = lazy(() => import('../../Components/TrendingProducts/TrendingSection'));
-// const RewardClub = lazy(() => import('../../Components/RewardClub/RewardClub'));
-// const ShopTheLook = lazy(() => import('../../Components/ShopTheLook/ShopTheLook'));
-// const SeasonalProduct = lazy(() => import('../../Components/SeasonalCollection/SeasonalProduct'));
-// const Services = lazy(() => import('../../Services/ServiceHome/Services'));
-// const OfferReward = lazy(() => import('../../Components/OfferReward/OfferReward'));
-// const ComboOffer = lazy(() => import('../../Components/ComboOffer/ComboOffer'));
-// const Blog = lazy(() => import('../../Components/Blog/Blog'));
-// const VideoSection = lazy(() => import('../../Components/VideoSection/VideoSection'));
-// const CheckOutStore = lazy(() => import('../../Components/Store/CheckOutStore'));
-// const HomepageSchema = lazy(() => import('../../views/utilities/seo/HomepageSchema'));
-// const StoreSchema = lazy(() => import('../../views/utilities/seo/StoreSchema'));
-//
-// // Loading fallback component
-// const LoadingFallback = () => (
-//   <div className="flex justify-center items-center py-8">
-//     <div className="animate-pulse text-gray-500">Loading...</div>
-//   </div>
-// );
-//
+// import ResourceHints from '../Shared/ResourceHints';
+// import LazyLoadWrapper from '../Shared/LazyLoadWrapper';
+// 
+// // Critical above-the-fold components - load immediately (no lazy loading)
+// import CategoryIcons from '../../Components/Category/CategoryIcons';
+// import HeroSection from '../../Components/HeroSection/HeroSection';
+// import Banner from '../../Components/Banner/Banner';
+// 
+// // Below-the-fold components - lazy load with code splitting for better performance
+// const TrendingSection = lazy(() => import(/* webpackChunkName: "trending" */ '../../Components/TrendingProducts/TrendingSection'));
+// const RewardClub = lazy(() => import(/* webpackChunkName: "reward-club" */ '../../Components/RewardClub/RewardClub'));
+// const ShopTheLook = lazy(() => import(/* webpackChunkName: "shop-look" */ '../../Components/ShopTheLook/ShopTheLook'));
+// const SeasonalProduct = lazy(() => import(/* webpackChunkName: "seasonal" */ '../../Components/SeasonalCollection/SeasonalProduct'));
+// const Services = lazy(() => import(/* webpackChunkName: "services" */ '../../Services/ServiceHome/Services'));
+// const OfferReward = lazy(() => import(/* webpackChunkName: "offer-reward" */ '../../Components/OfferReward/OfferReward'));
+// const ComboOffer = lazy(() => import(/* webpackChunkName: "combo-offer" */ '../../Components/ComboOffer/ComboOffer'));
+// const Blog = lazy(() => import(/* webpackChunkName: "blog" */ '../../Components/Blog/Blog'));
+// const VideoSection = lazy(() => import(/* webpackChunkName: "video" */ '../../Components/VideoSection/VideoSection'));
+// const CheckOutStore = lazy(() => import(/* webpackChunkName: "store" */ '../../Components/Store/CheckOutStore'));
+// const HomepageSchema = lazy(() => import(/* webpackChunkName: "schema" */ '../../views/utilities/seo/HomepageSchema'));
+// const StoreSchema = lazy(() => import(/* webpackChunkName: "schema" */ '../../views/utilities/seo/StoreSchema'));
+// 
 // const Home = () => {
 //   const [homeImages, setHomeImages] = useState([]);
 //   const [heroImages, setHeroImages] = useState([]);
 //   const [loading, setLoading] = useState(true);
-//
+// 
 //   const getBannerImages = async () => {
 //     try {
 //       const response = await axiosInstance.get(`/promotion/banner/`);
@@ -148,11 +56,25 @@ export default Home;
 //       setLoading(false);
 //     }
 //   };
-//
+// 
 //   useEffect(() => {
 //     getBannerImages();
+// 
+//     // Prefetch below-the-fold components when browser is idle
+//     if ('requestIdleCallback' in window) {
+//       requestIdleCallback(() => {
+//         import(/* webpackChunkName: "trending" */ '../../Components/TrendingProducts/TrendingSection');
+//         import(/* webpackChunkName: "reward-club" */ '../../Components/RewardClub/RewardClub');
+//         import(/* webpackChunkName: "seasonal" */ '../../Components/SeasonalCollection/SeasonalProduct');
+//       });
+//     }
 //   }, []);
-//
+// 
+//   // Loading fallback component
+//   const LoadingFallback = () => (
+//     <div className="w-full h-32 bg-gray-100 animate-pulse rounded" />
+//   );
+// 
 //   return (
 //     <div>
 //       <Helmet>
@@ -163,32 +85,245 @@ export default Home;
 //         />
 //         <link rel="canonical" href="https://gidan.store" />
 //       </Helmet>
-//
+// 
+//       <ResourceHints />
+// 
 //       {loading ? (
 //         <div className="flex justify-center items-center h-screen">
 //           <p className="text-gray-500 text-xl">Loading...</p>
 //         </div>
 //       ) : (
-//         <Suspense fallback={<LoadingFallback />}>
+//         <>
 //           <CategoryIcons />
 //           <HeroSection hero={heroImages} />
 //           <Banner home={homeImages} />
-//           <TrendingSection />
-//           <RewardClub />
-//           <ShopTheLook />
-//           <SeasonalProduct />
-//           <Services />
-//           <OfferReward />
-//           <ComboOffer />
-//           <Blog />
-//           <VideoSection />
-//           <CheckOutStore />
-//           <HomepageSchema />
-//           <StoreSchema />
-//         </Suspense>
+// 
+//           <LazyLoadWrapper height="400px">
+//             <Suspense fallback={<LoadingFallback />}>
+//               <TrendingSection />
+//             </Suspense>
+//           </LazyLoadWrapper>
+// 
+//           <LazyLoadWrapper height="300px">
+//             <Suspense fallback={<LoadingFallback />}>
+//               <RewardClub />
+//             </Suspense>
+//           </LazyLoadWrapper>
+// 
+//           <LazyLoadWrapper height="400px">
+//             <Suspense fallback={<LoadingFallback />}>
+//               <ShopTheLook />
+//             </Suspense>
+//           </LazyLoadWrapper>
+// 
+//           <LazyLoadWrapper height="500px">
+//             <Suspense fallback={<LoadingFallback />}>
+//               <SeasonalProduct />
+//             </Suspense>
+//           </LazyLoadWrapper>
+// 
+//           <LazyLoadWrapper height="400px">
+//             <Suspense fallback={<LoadingFallback />}>
+//               <Services />
+//             </Suspense>
+//           </LazyLoadWrapper>
+// 
+//           <LazyLoadWrapper height="300px">
+//             <Suspense fallback={<LoadingFallback />}>
+//               <OfferReward />
+//             </Suspense>
+//           </LazyLoadWrapper>
+// 
+//           <LazyLoadWrapper height="400px">
+//             <Suspense fallback={<LoadingFallback />}>
+//               <ComboOffer />
+//             </Suspense>
+//           </LazyLoadWrapper>
+// 
+//           <LazyLoadWrapper height="400px">
+//             <Suspense fallback={<LoadingFallback />}>
+//               <Blog />
+//             </Suspense>
+//           </LazyLoadWrapper>
+// 
+//           <LazyLoadWrapper height="400px">
+//             <Suspense fallback={<LoadingFallback />}>
+//               <VideoSection />
+//             </Suspense>
+//           </LazyLoadWrapper>
+// 
+//           <LazyLoadWrapper height="300px">
+//             <Suspense fallback={<LoadingFallback />}>
+//               <CheckOutStore />
+//             </Suspense>
+//           </LazyLoadWrapper>
+// 
+//           <Suspense fallback={null}>
+//             <HomepageSchema />
+//             <StoreSchema />
+//           </Suspense>
+//         </>
 //       )}
 //     </div>
 //   );
 // };
-//
+// 
 // export default Home;
+// ========== END OLD CODE ==========
+
+// ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
+import { useEffect, lazy, Suspense } from 'react';
+import { Helmet } from "react-helmet-async";
+import ResourceHints from '../Shared/ResourceHints';
+import LazyLoadWrapper from '../Shared/LazyLoadWrapper';
+import { useBannerImages } from '../../hooks/useBannerImages'; // TanStack Query hook
+
+// Critical above-the-fold components - load immediately (no lazy loading)
+import CategoryIcons from '../../Components/Category/CategoryIcons';
+import HeroSection from '../../Components/HeroSection/HeroSection';
+import Banner from '../../Components/Banner/Banner';
+
+// Below-the-fold components - lazy load with code splitting for better performance
+const TrendingSection = lazy(() => import(/* webpackChunkName: "trending" */ '../../Components/TrendingProducts/TrendingSection'));
+const RewardClub = lazy(() => import(/* webpackChunkName: "reward-club" */ '../../Components/RewardClub/RewardClub'));
+const ShopTheLook = lazy(() => import(/* webpackChunkName: "shop-look" */ '../../Components/ShopTheLook/ShopTheLook'));
+const SeasonalProduct = lazy(() => import(/* webpackChunkName: "seasonal" */ '../../Components/SeasonalCollection/SeasonalProduct'));
+const Services = lazy(() => import(/* webpackChunkName: "services" */ '../../Services/ServiceHome/Services'));
+const OfferReward = lazy(() => import(/* webpackChunkName: "offer-reward" */ '../../Components/OfferReward/OfferReward'));
+const ComboOffer = lazy(() => import(/* webpackChunkName: "combo-offer" */ '../../Components/ComboOffer/ComboOffer'));
+const Blog = lazy(() => import(/* webpackChunkName: "blog" */ '../../Components/Blog/Blog'));
+const VideoSection = lazy(() => import(/* webpackChunkName: "video" */ '../../Components/VideoSection/VideoSection'));
+const CheckOutStore = lazy(() => import(/* webpackChunkName: "store" */ '../../Components/Store/CheckOutStore'));
+const HomepageSchema = lazy(() => import(/* webpackChunkName: "schema" */ '../../views/utilities/seo/HomepageSchema'));
+const StoreSchema = lazy(() => import(/* webpackChunkName: "schema" */ '../../views/utilities/seo/StoreSchema'));
+
+const Home = () => {
+  // ✅ Use TanStack Query hook - automatic caching, no unnecessary re-renders
+  const { data, isLoading, isError } = useBannerImages();
+
+  // Prefetch below-the-fold components when browser is idle
+  useEffect(() => {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(() => {
+        import(/* webpackChunkName: "trending" */ '../../Components/TrendingProducts/TrendingSection');
+        import(/* webpackChunkName: "reward-club" */ '../../Components/RewardClub/RewardClub');
+        import(/* webpackChunkName: "seasonal" */ '../../Components/SeasonalCollection/SeasonalProduct');
+      });
+    }
+  }, []);
+
+  // Loading fallback component
+  const LoadingFallback = () => (
+    <div className="w-full h-32 bg-gray-100 animate-pulse rounded" />
+  );
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-gray-500 text-xl">Loading...</p>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (isError) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-red-500 text-xl">Error loading banner images</p>
+      </div>
+    );
+  }
+
+  const { homeImages = [], heroImages = [] } = data || {};
+
+  return (
+    <div>
+      <Helmet>
+        <title>Gidan® – Buy Plants, Planters, Pots & Seeds Online in Bangalore</title>
+        <meta
+          name="description"
+          content="Buy plants, planters, pots & seeds online in Bangalore from Gidan. Fresh plants, garden décor and reliable doorstep delivery."
+        />
+        <link rel="canonical" href="https://gidan.store" />
+      </Helmet>
+
+      <ResourceHints />
+
+      {/* Critical above-the-fold content - no lazy loading */}
+      <CategoryIcons />
+      <HeroSection hero={heroImages} />
+      <Banner home={homeImages} />
+
+      {/* Below-the-fold content - lazy load with intersection observer */}
+      <LazyLoadWrapper height="400px">
+        <Suspense fallback={<LoadingFallback />}>
+          <TrendingSection />
+        </Suspense>
+      </LazyLoadWrapper>
+
+      <LazyLoadWrapper height="300px">
+        <Suspense fallback={<LoadingFallback />}>
+          <RewardClub />
+        </Suspense>
+      </LazyLoadWrapper>
+
+      <LazyLoadWrapper height="400px">
+        <Suspense fallback={<LoadingFallback />}>
+          <ShopTheLook />
+        </Suspense>
+      </LazyLoadWrapper>
+
+      <LazyLoadWrapper height="500px">
+        <Suspense fallback={<LoadingFallback />}>
+          <SeasonalProduct />
+        </Suspense>
+      </LazyLoadWrapper>
+
+      {/* <LazyLoadWrapper height="400px">
+        <Suspense fallback={<LoadingFallback />}>
+          <Services />
+        </Suspense>
+      </LazyLoadWrapper> */}
+
+      <LazyLoadWrapper height="300px">
+        <Suspense fallback={<LoadingFallback />}>
+          <OfferReward />
+        </Suspense>
+      </LazyLoadWrapper>
+
+      <LazyLoadWrapper height="400px">
+        <Suspense fallback={<LoadingFallback />}>
+          <ComboOffer />
+        </Suspense>
+      </LazyLoadWrapper>
+
+      <LazyLoadWrapper height="400px">
+        <Suspense fallback={<LoadingFallback />}>
+          <Blog />
+        </Suspense>
+      </LazyLoadWrapper>
+
+      <LazyLoadWrapper height="400px">
+        <Suspense fallback={<LoadingFallback />}>
+          <VideoSection />
+        </Suspense>
+      </LazyLoadWrapper>
+
+      <LazyLoadWrapper height="300px">
+        <Suspense fallback={<LoadingFallback />}>
+          <CheckOutStore />
+        </Suspense>
+      </LazyLoadWrapper>
+
+      {/* Schema components - load at the end */}
+      <Suspense fallback={null}>
+        <HomepageSchema />
+        <StoreSchema />
+      </Suspense>
+    </div>
+  );
+};
+
+export default Home;
+// ========== END NEW CODE ==========

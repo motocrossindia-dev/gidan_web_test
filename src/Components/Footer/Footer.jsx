@@ -248,6 +248,7 @@ const Footer = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-black hover:text-green-500"
+                            aria-label="Visit our Facebook page"
                         >
                             <FaFacebookF size={20} />
                         </a>
@@ -256,6 +257,7 @@ const Footer = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-black hover:text-green-500"
+                            aria-label="Visit our Instagram page"
                         >
                             <FaInstagram size={20} />
                         </a>
@@ -264,6 +266,7 @@ const Footer = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-black hover:text-green-500"
+                            aria-label="Visit our LinkedIn page"
                         >
                             <FaLinkedin size={20} />
                         </a>
@@ -272,14 +275,16 @@ const Footer = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-black hover:text-green-500"
+                            aria-label="Visit our YouTube channel"
                         >
                             <FaYoutube size={20} />
                         </a>
                         <a
-                            href="https://whatsapp.com/channel/0029Vac6g6TB4hdL2NqaEc1f/" // Replace with your WhatsApp number
+                            href="https://whatsapp.com/channel/0029Vac6g6TB4hdL2NqaEc1f/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-black hover:text-green-500"
+                            aria-label="Join our WhatsApp channel"
                         >
                             <FaWhatsapp size={20} />
                         </a>

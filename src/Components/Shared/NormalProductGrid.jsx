@@ -31,13 +31,17 @@ const NormalProductGrid = ({
     const category_slug = product?.category_slug;
     const sub_category_slug = product?.sub_category_slug;
 
-    navigate(`/category/${category_slug}/${product.slug}/`, {
+    // All products have category, subcategory, and product slug
+    navigate(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
       state: {
         product_id: product.id,
         category_slug: category_slug,
         sub_category_slug: sub_category_slug
       }
     });
+    
+    // Scroll to top when navigating to product
+    window.scrollTo(0, 0);
   };
 
   // Fetch next page and append results

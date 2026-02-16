@@ -40,6 +40,9 @@ const ProductGrid = ({
               sub_category_slug: sub_category_slug
           }
       });
+      
+      // Scroll to top when navigating to product
+      window.scrollTo(0, 0);
   };
 
   // Fetch next page and append results (only if no filters applied)

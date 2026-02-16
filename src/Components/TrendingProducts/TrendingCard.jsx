@@ -10,7 +10,6 @@ import { enqueueSnackbar } from "notistack";
 import StarsOnCards from "./StarsOnCards";
 import ReactStars from "react-rating-stars-component";
 import axiosInstance from "../../Axios/axiosInstance";
-import convertToSlug from "../../utils/slugConverter";
 
 const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, inCart, getProducts, ratingNumber, mrp, ribbon }) => {
     const [isHovered, setIsHovered] = useState(false);
