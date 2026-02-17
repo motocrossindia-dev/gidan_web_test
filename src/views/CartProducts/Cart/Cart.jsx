@@ -95,7 +95,7 @@ const Cart = () => {
       <>
        <Helmet>
   <title>Gidan - Cart</title>
-
+  <meta name="robots" content="noindex, nofollow" />
   <meta
     name="description"
     content="Review the items in your Gidan cart before checkout. Manage your selected plants, pots, seeds, and gardening products for a smooth shopping experience."

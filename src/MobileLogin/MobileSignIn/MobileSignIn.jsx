@@ -54,6 +54,7 @@ const MobileSignIn = () => {
         <>
             <Helmet>
                 <title>Gidan - Mobile SignIn</title>
+                <meta name="robots" content="noindex, nofollow" />
             </Helmet>
         <div className="flex items-center justify-center bg-gray-50 p-4">
             <div className="w-full max-w-md p-6 rounded-lg bg-white ">

@@ -63,6 +63,7 @@ const GDCoins = () => {
       <>
         <Helmet>
           <title>Gidan - GD Coins</title>
+          <meta name="robots" content="noindex, nofollow" />
         </Helmet>
         <div className="flex justify-center sm:justify-start px-4 sm:px-6 bg-gray-100 min-h-screen w-full">
           <div className="w-full sm:w-full md:w-4/5 lg:w-full xl:w-full h-auto bg-white shadow-lg p-4 sm:p-6 rounded-lg">

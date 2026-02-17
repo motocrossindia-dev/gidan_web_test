@@ -146,7 +146,7 @@ const Wallet = () => {
       <>
         <Helmet>
   <title>Gidan - Wallet</title>
-
+  <meta name="robots" content="noindex, nofollow" />
   <meta
     name="description"
     content="Manage your Gidan wallet to track balances, add funds, and redeem rewards. Enjoy a seamless shopping experience for plants, pots, seeds, and gardening products."

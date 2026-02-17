@@ -191,7 +191,7 @@ const TrackOrder = () => {
     <>
      <Helmet>
   <title>Gidan - Track Order Page</title>
-
+  <meta name="robots" content="noindex, nofollow" />
   <meta
     name="description"
     content="Track your Gidan order easily and stay updated on delivery status. Enter your details to view real-time order tracking and updates."

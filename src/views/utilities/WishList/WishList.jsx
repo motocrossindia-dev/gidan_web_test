@@ -177,7 +177,7 @@ const WishList = () => {
       <>
         <Helmet>
   <title>Gidan - WishList</title>
-
+  <meta name="robots" content="noindex, nofollow" />
   <meta
     name="description"
     content="View and manage your Gidan wishlist. Save your favorite plants, pots, seeds, and gardening products to buy later and never miss out on your favorite items."

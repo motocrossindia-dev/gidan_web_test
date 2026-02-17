@@ -144,7 +144,7 @@ const ProfileForm = () => {
       <>
         <Helmet>
   <title>Gidan - My Profile Page</title>
-
+  <meta name="robots" content="noindex, nofollow" />
   <meta
     name="description"
     content="Manage your Gidan account, view orders, track deliveries, and update your personal details. Access all your gardening purchases and rewards in one place."

@@ -80,6 +80,7 @@ const MobileLoginPage = () => {
       <>
         <Helmet>
           <title>Gidan - Mobile Login Page</title>
+          <meta name="robots" content="noindex, nofollow" />
         </Helmet>
     <div className="flex items-center justify-center bg-gray-50">
       <div className="w-full rounded-lg p-6">

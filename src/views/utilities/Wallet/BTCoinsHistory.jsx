@@ -35,7 +35,7 @@ const GDCoinsHistory = () => {
       <>
         <Helmet>
           <title>Gidan - GD Coins History</title>
-
+          <meta name="robots" content="noindex, nofollow" />
           <meta
               name="description"
               content="Check your Gidan GD Coins history to track all earned and spent coins. Stay updated on your rewards and enjoy a seamless gardening shopping experience."

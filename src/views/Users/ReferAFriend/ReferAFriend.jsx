@@ -53,7 +53,7 @@ function ReferAFriend() {
       <>
         <Helmet>
   <title>Gidan - Refer A Friend </title>
-
+  <meta name="robots" content="noindex, nofollow" />
   <meta
     name="description"
     content="Refer a friend to Gidan and earn rewards. Invite friends to shop plants, pots, seeds, and plant care products while enjoying exclusive benefits."

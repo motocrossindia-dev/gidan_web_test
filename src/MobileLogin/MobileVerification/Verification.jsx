@@ -91,6 +91,7 @@ const MobileVerification = () => {
       <>
         <Helmet>
           <title>Gidan - Mobile Verification</title>
+          <meta name="robots" content="noindex, nofollow" />
         </Helmet>
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">

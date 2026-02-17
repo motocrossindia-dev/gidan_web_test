@@ -1181,7 +1181,7 @@ console.log("💰 Corrected Payable Amount:", correctedPayableAmount);
       <>
        <Helmet>
   <title>Gidan - CheckoutPage </title>
-
+  <meta name="robots" content="noindex, nofollow" />
   <meta
     name="description"
     content="Complete your Gidan order securely. Review your cart, provide shipping details, and make payment to get your plants, pots, seeds, and gardening products delivered safely."

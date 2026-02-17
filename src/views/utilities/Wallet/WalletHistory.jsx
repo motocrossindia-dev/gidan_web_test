@@ -39,7 +39,7 @@ const WalletHistory = () => {
       <>
        <Helmet>
   <title>Gidan - Wallet History</title>
-
+  <meta name="robots" content="noindex, nofollow" />
   <meta
     name="description"
     content="View your Gidan wallet history to track all transactions, rewards, and redemptions. Stay updated on your wallet activity for a seamless shopping experience."
