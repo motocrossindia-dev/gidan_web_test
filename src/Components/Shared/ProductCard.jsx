@@ -71,6 +71,13 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
             return;
         }
 
+        // Debug: Check if product and product.id exist
+        if (!product || !product.id) {
+            console.error("Product or product.id is undefined:", product);
+            enqueueSnackbar("Error: Product information is missing", { variant: "error" });
+            return;
+        }
+
         try {
             if (inCart) {
                 const response = await axiosInstance.delete(
@@ -83,9 +90,12 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                     window.dispatchEvent(new Event("cartUpdated"));
                 }
             } else {
+                const payload = { main_prod_id: product.id };
+                console.log("Add to cart payload:", payload); // Debug log
+                
                 const response = await axiosInstance.post(
                     `/order/cart/`,
-                    { main_prod_id: product.id },
+                    payload,
                 );
 
                 if (response.status === 200 || response.status === 201) {
@@ -95,8 +105,11 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                 }
             }
             getProducts()
-        } catch (error) {}
-    }, [isAuthenticated, navigate, inCart, product.id, getProducts, isAdded]);
+        } catch (error) {
+            console.error("Add to cart error:", error);
+            enqueueSnackbar("Failed to add to cart", { variant: "error" });
+        }
+    }, [isAuthenticated, navigate, inCart, product, getProducts, isAdded]);
 
     // ========== OLD CODE (Before Feb 16, 2026) - COMMENTED OUT ==========
     // const handleQuickView = useCallback((e) => {

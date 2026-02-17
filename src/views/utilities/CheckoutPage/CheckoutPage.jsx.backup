@@ -758,7 +758,6 @@ const ApplyCoupon = ({ id, setCoupon }) => {
 
   const applyCouponById = async (couponId) => {
     try {
-      console.log("🎟️ Applying coupon ID:", couponId, "to order:", id);
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/order/applyCoupon/`,
         {
@@ -774,15 +773,10 @@ const ApplyCoupon = ({ id, setCoupon }) => {
       );
 
       if (response.status === 200) {
-        console.log("✅ Coupon API Response:", response.data);
-        console.log("✅ New Grand Total:", response.data?.order?.grand_total);
-        console.log("✅ Discount Amount:", response.data?.discount_amount);
-        console.log("✅ Coupon Applied:", response.data?.success);
         setCoupon(response.data);
         enqueueSnackbar("Coupon applied successfully!", { variant: "success" });
       }
     } catch (error) {
-      console.error("❌ Coupon application error:", error.response?.data);
       const errorMessage = error.response?.data?.error || "Failed to apply coupon. Please try again.";
       enqueueSnackbar(errorMessage, { variant: "error" });
     }
@@ -1024,61 +1018,35 @@ const CheckoutPage = () => {
   const data = location.state?.ordersummary;
   const id  = data?.order?.id
   
-  // Get combo_offer from navigation state (passed from ShopTheLook)
-  const prefilledCombo = location.state?.combo_offer || null;
-
-  // Initialize comboOffer state - prioritize navigation state over sessionStorage
-  const [comboOffer, setComboOffer] = useState(() => {
-    if (prefilledCombo) {
-      return prefilledCombo;
-    }
-    const stored = sessionStorage.getItem("selected_combo_offer");
-    return stored ? JSON.parse(stored) : null;
-  });
-
-  const isCombo = !!(data?.order?.is_combo_purchase || data?.order?.is_shop_the_look || comboOffer);
-
   useEffect(() => {
     if (resource) {
       setOrderResource(resource);
     }     
-    console.log("✅ Checkout Data:", data);
-    console.log("✅ Is Combo Purchase:", data?.order?.is_combo_purchase);
-    console.log("✅ Is Shop The Look:", data?.order?.is_shop_the_look);
-    console.log("✅ Combo Offer:", comboOffer);
-    console.log("✅ Prefilled Combo:", prefilledCombo);
-  },[resource, data, comboOffer, prefilledCombo]);
+    console.log("Checkout Data:", data);
+console.log("Checkout Coupon:", data.order.is_combo_purchase);
+ 
+  },[resource]);
 
-  // Update comboOffer if prefilledCombo is provided
-  useEffect(() => {
-    if (prefilledCombo && !comboOffer) {
-      console.log("✅ Setting combo offer from navigation state:", prefilledCombo);
-      setComboOffer(prefilledCombo);
-    }
-  }, [prefilledCombo]);
+const prefilledCombo = location.state?.combo_offer || null;
 
-  // Clear combo if this order is not a combo or shop the look
-  useEffect(() => {
-    if (!data?.order?.is_combo_purchase && !data?.order?.is_shop_the_look) {
-      sessionStorage.removeItem("selected_combo_offer");
-      if (!prefilledCombo) {
-        setComboOffer(null);
-      }
-    }
-  }, [data?.order?.is_combo_purchase, data?.order?.is_shop_the_look, prefilledCombo]);
+const [comboOffer, setComboOffer] = useState(() => {
+  const stored = sessionStorage.getItem("selected_combo_offer");
+  return stored ? JSON.parse(stored) : null;
+});
 
-  console.log("✅ Final isCombo value:", isCombo);
-  console.log("✅ Final comboOffer:", comboOffer);
-  console.log("✅ Coupon State:", coupon);
-  console.log("✅ Coupon Order Grand Total:", coupon?.order?.grand_total);
+const isCombo = !!(data?.order?.is_combo_purchase || comboOffer);
 
-  // Log when coupon changes
-  useEffect(() => {
-    if (coupon) {
-      console.log("🎟️ Coupon Updated:", coupon);
-      console.log("🎟️ New Grand Total:", coupon?.order?.grand_total);
-    }
-  }, [coupon]);
+// 🟢 Clear combo if this order is not a combo
+useEffect(() => {
+  if (!data?.order?.is_combo_purchase) {
+    sessionStorage.removeItem("selected_combo_offer");
+    setComboOffer(null);
+  }
+}, [data?.order?.is_combo_purchase]);
+
+
+
+console.log("Testing Deal of week", data);
 
 // ✅ Deduplicate items by product_name
 const uniqueItems = data?.order_items?.filter(
@@ -1111,28 +1079,8 @@ const handleSaveOrderSummary = async () => {
     if (response.data.message === "success") {
       enqueueSnackbar("Order summary saved successfully!", { variant: "success" });
 
-      // ✨✨✨ FIXED: Use coupon-updated order data if available ✨✨✨
-      console.log("📦 Order Summary Response:", response.data.data);
-      console.log("🎟️ Coupon State:", coupon);
-      
-      // If coupon was applied, merge the coupon data into the response
-      const finalOrderData = coupon?.success 
-        ? {
-            ...response.data.data,
-            order: {
-              ...response.data.data.order,
-              grand_total: coupon.order.grand_total,
-              coupon_applied: true,
-              coupon_discount: coupon.discount_amount,
-              applied_coupon: coupon.order.applied_coupon
-            }
-          }
-        : response.data.data;
-
-      console.log("📦 Final Order Data for Payment:", finalOrderData);
-
       navigate("/paymentgateway", { 
-        state: { resource: finalOrderData, order_id: data.order.id } 
+        state: { resource: response.data.data, order_id: data.order.id } 
       });
     }
   } catch (error) {
@@ -1148,31 +1096,16 @@ const handleSaveOrderSummary = async () => {
 
 const deliveryCharge = Number(data?.shipping_info?.shipping_charge || 0);
 
-// Calculate backend total based on order type
-// Priority: coupon response > combo offer > original order data
-// ✨✨✨ FIXED: Properly check if coupon is applied and use its grand_total ✨✨✨
-console.log("💰 Calculating backendTotal...");
-console.log("💰 Coupon Applied:", coupon?.success);
-console.log("💰 Coupon Order Grand Total:", coupon?.order?.grand_total);
-console.log("💰 Original Order Grand Total:", data?.order?.grand_total);
-console.log("💰 Is Combo:", isCombo);
-console.log("💰 Is Shop The Look:", data?.order?.is_shop_the_look);
 
-const backendTotal = (coupon?.success && coupon?.order?.grand_total !== undefined)
-  ? Number(coupon.order.grand_total)
-  : (isCombo || data?.order?.is_shop_the_look)
-    ? (comboOffer?.final_price ?? data?.order?.grand_total ?? 0)
-    : (data?.order?.grand_total ?? 0);
-
-console.log("💰 Final backendTotal:", backendTotal);
+const backendTotal = isCombo
+  ? comboOffer?.final_price ?? 0
+  : coupon?.order?.grand_total ?? data?.order?.grand_total ?? 0;
 
 // ✅ Remove delivery charge ONLY for Pickup Store
 const correctedPayableAmount =
   selectedOption?.deliveryType === "Pick Up Store"
     ? Math.max(backendTotal - deliveryCharge, 0)
     : backendTotal;
-
-console.log("💰 Corrected Payable Amount:", correctedPayableAmount);
 
 
 
@@ -1225,11 +1158,10 @@ console.log("💰 Corrected Payable Amount:", correctedPayableAmount);
     <hr />
 
     <div className="mt-4 space-y-4">
-      {(isCombo || data?.order?.is_shop_the_look) ? (
-        // ✅ Combo/Shop The Look Offer Block
-        <div className="flex flex-col gap-4">
-          {/* Image Gallery */}
-          <div className="flex flex-wrap gap-3">
+      {isCombo ? (
+        // ✅ Combo Offer Block
+        <div className="flex items-center gap-4">
+          <div className="flex flex-wrap gap-3 mt-4">
             {data?.order_items?.map((item) => (
               <div key={item.id} className="w-16 h-16 rounded-md overflow-hidden border">
                 <img
@@ -1242,13 +1174,10 @@ console.log("💰 Corrected Payable Amount:", correctedPayableAmount);
             ))}
           </div>
 
-          {/* Combo Title */}
           <div>
-            <h3 className="font-semibold text-gray-800">
-              {comboOffer?.title || "Shop The Look"}
-            </h3>
+            <h3 className="font-semibold text-gray-800">{comboOffer?.title}</h3>
             <p className="text-sm text-gray-500">
-              {data?.order_items?.length} items
+              {comboOffer?.products?.join(", ")}
             </p>
           </div>
         </div>
@@ -1268,6 +1197,20 @@ console.log("💰 Corrected Payable Amount:", correctedPayableAmount);
               </div>
             ))}
           </div>
+
+          {/* Product Details */}
+{/* Product Details (only unique ones) */}
+{/* {uniqueItems?.map((item) => (
+  <div key={item.id} className="flex items-center gap-4">
+    <div>
+      <h3 className="font-semibold text-gray-800">{item?.product_name}</h3>
+      <p className="text-sm text-gray-500">
+        Qty: {item?.quantity} × ₹{item?.mrp}
+      </p>
+    </div>
+  </div>
+))} */}
+
         </>
       )}
     </div>
@@ -1281,8 +1224,8 @@ console.log("💰 Corrected Payable Amount:", correctedPayableAmount);
         <span>Price ({data?.order_items?.length ?? 0})</span>
         <span>
           ₹
-          {Math.round((isCombo || data?.order?.is_shop_the_look)
-            ? (data?.order?.total_price ?? 0)
+          {Math.round(isCombo
+            ? (comboOffer?.total_price ?? 0)
             : (coupon?.order?.total_price ?? data?.order?.total_price ?? 0))}
         </span>
       </div>
@@ -1319,7 +1262,7 @@ console.log("💰 Corrected Payable Amount:", correctedPayableAmount);
   <div className="flex items-center gap-2">
     <span className="text-2xl">🪙</span>
     <div>
-      <p className="text-sm font-semibold text-gray-800">GD Coins Earned</p>
+      <p className="text-sm font-semibold text-gray-800">BTCoins Earned</p>
       <p className="text-xs text-gray-500">Use coins on your next order</p>
     </div>
   </div>
@@ -1327,7 +1270,9 @@ console.log("💰 Corrected Payable Amount:", correctedPayableAmount);
   <span className="text-lg font-bold text-orange-600">
     {Math.round(
       0.1 *
-        (correctedPayableAmount)
+        (isCombo
+          ? comboOffer?.total_price ?? 0
+          : coupon?.order?.total_price ?? data?.order?.total_price ?? 0)
     )}
   </span>
 </div>

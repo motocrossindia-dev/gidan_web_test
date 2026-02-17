@@ -42,56 +42,114 @@ useEffect(()=>{
   getshpthelookproducts();
 },[])
 
-const handleBuyItNowSubmit = async () => {
-
-  // navigate(`/feature`);
-
-  if (isAuthenticated) {
-
-    const product_data = {
-      order_source: "combo",
-      combo_id: shopid,
-
-    };
-
-    try {
-      const response = await axiosInstance.post(
-          `${process.env.REACT_APP_API_URL}/order/placeOrder/`,
-          product_data,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-      );
-
-
-      if (response.status === 200) {
-        enqueueSnackbar("Order placed successfully!", {variant: "success"});
-
-        if (window.innerWidth <= 768) {
-          navigate("/checkout", {state: {ordersummary: response.data.data}}); // Navigate to mobile checkout
-        } else {
-          navigate("/checkout", {state: {ordersummary: response.data.data}}); // Navigate to regular checkout
-        }
-      }
-
-    } catch (error) {
-      console.error("Error placing order:", error);
-      if (error.response && error.response.status === 400) {
-        enqueueSnackbar(error.response.data.message, {variant: "error"});
-      } else {
-        enqueueSnackbar("Failed to place order. Please try again.", {variant: "error"});
-      }
-    }
-  } else {
-    // If not authenticated, redirect based on device type
-    enqueueSnackbar("Please Login or Signup to Buy Our Products.");
+const handleAddToCart = async () => {
+  if (!isAuthenticated) {
+    enqueueSnackbar("Please Login or Signup to add products to cart.");
     if (isMobile) {
-      navigate("/mobile-signin", {replace: true});
+      navigate("/mobile-signin", { replace: true });
     } else {
-      navigate("/?modal=signIn", {replace: true});
+      navigate("/?modal=signIn", { replace: true });
+    }
+    return;
+  }
+
+  try {
+    const response = await axiosInstance.post(
+      `/order/cart/add-combo/`,
+      { combo_id: shopid }
+    );
+
+    console.log("✅ Add Combo to Cart Response:", response.data);
+    console.log("✅ Cart Data:", response.data.data.cart);
+    console.log("✅ Combo Add Info:", response.data.data.combo_add_info);
+
+    if (response.status === 200 || response.status === 201) {
+      const { combo_add_info } = response.data.data;
+      
+      if (combo_add_info.added_count > 0) {
+        enqueueSnackbar(
+          `${combo_add_info.added_count} products added to cart!`, 
+          { variant: "success" }
+        );
+      } else if (combo_add_info.already_in_cart_count > 0) {
+        enqueueSnackbar(
+          "All products are already in your cart!", 
+          { variant: "info" }
+        );
+      }
+      
+      onClose();
+    }
+  } catch (error) {
+    console.error("❌ Add to Cart Error:", error);
+    console.error("❌ Error Response:", error.response?.data);
+    
+    if (error.response && error.response.status === 400) {
+      enqueueSnackbar(error.response.data.message, { variant: "error" });
+    } else {
+      enqueueSnackbar("Failed to add to cart. Please try again.", { variant: "error" });
+    }
+  }
+};
+
+const handlePlaceOrder = async () => {
+  if (!isAuthenticated) {
+    enqueueSnackbar("Please Login or Signup to place order.");
+    if (isMobile) {
+      navigate("/mobile-signin", { replace: true });
+    } else {
+      navigate("/?modal=signIn", { replace: true });
+    }
+    return;
+  }
+
+  try {
+    // Place order directly using shop_the_look order source
+    const placeOrderResponse = await axiosInstance.post(
+      `${process.env.REACT_APP_API_URL}/order/placeOrder/`,
+      { 
+        order_source: "shop_the_look",
+        combo_id: shopid
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    console.log("✅ Shop The Look Order Response:", placeOrderResponse.data);
+    console.log("✅ Order Data:", placeOrderResponse.data.data);
+
+    if (placeOrderResponse.status === 200) {
+      onClose();
+      enqueueSnackbar("Order placed successfully!", { variant: "success" });
+      
+      // Prepare combo offer data for checkout
+      const comboOfferData = {
+        id: shopid,
+        title: "Shop The Look",
+        final_price: placeOrderResponse.data.data.order.grand_total,
+        products: productss.map(p => p.name),
+        is_shop_the_look: true
+      };
+
+      navigate("/checkout", {
+        state: {
+          ordersummary: placeOrderResponse.data.data,
+          combo_offer: comboOfferData
+        }
+      });
+    }
+  } catch (error) {
+    console.error("❌ Place Order Error:", error);
+    console.error("❌ Error Response:", error.response?.data);
+    
+    if (error.response && error.response.status === 400) {
+      enqueueSnackbar(error.response.data.message, { variant: "error" });
+    } else {
+      enqueueSnackbar("Failed to place order. Please try again.", { variant: "error" });
     }
   }
 };
@@ -154,8 +212,17 @@ const handleBuyItNowSubmit = async () => {
             ))}
           </div>
         </Box>
-        <div className="sticky bottom-0 z-10 bg-white p-4 flex justify-center">
-          <button className="w-1/2 py-2 bg-lime-500 text-white font-bold text-center rounded-lg hover:bg-lime-600" onClick={()=>handleBuyItNowSubmit()}>
+        <div className="sticky bottom-0 z-10 bg-white p-4 flex justify-center gap-2">
+          <button 
+            className="w-1/2 py-2 bg-blue-600 text-white font-bold text-center rounded-lg hover:bg-blue-700" 
+            onClick={handleAddToCart}
+          >
+            Add to Cart
+          </button>
+          <button 
+            className="w-1/2 py-2 bg-lime-500 text-white font-bold text-center rounded-lg hover:bg-lime-600" 
+            onClick={handlePlaceOrder}
+          >
             Place Order
           </button>
         </div>

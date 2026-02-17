@@ -70,12 +70,14 @@ const SeasonalProduct = () => {
 
         <div className="max-w-7xl mx-auto px-3">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 justify-items-center">
-            {visibleProducts.map((product) => (
+            {visibleProducts.map((product, index) => (
               <div key={product?.id} onClick={() => handleProductClick(product)}>
                 <SeasonalCard
-                  product={product?.id}
+                  index={index}
+                  product={product}
                   name={product?.name}
                   price={Math.round(product?.selling_price)}
+                  oldPrice={Math.round(product?.oldPrice)}
                   imageUrl={product?.image || "/fallback-image.jpg"}
                   userRating={product?.product_rating?.avg_rating || 0}
                   ratingNumber={product?.product_rating?.num_ratings}
