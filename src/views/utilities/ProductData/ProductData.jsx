@@ -29,6 +29,7 @@ import { Helmet } from "react-helmet-async";
 import ProductSchema from "../seo/ProductSchema";
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
+import { trackViewItem, trackAddToCart } from "../../../utils/ga4Ecommerce";
 
 const productdata =
     "https://firebasestorage.googleapis.com/v0/b/zpos-uk.appspot.com/o/67977213135ebb17c407e687%2F2025%2F1%2F1738430215367_scaled_Peacelilly.png?alt=media";
@@ -210,20 +211,9 @@ export default function Component() {
                         dispatch(addToCart(product_data));
                         enqueueSnackbar("Product added to cart successfully!", {variant: "success"});
                         window.dispatchEvent(new Event("cartUpdated"));
-                        window.dataLayer = window.dataLayer || [];
-                        window.dataLayer.push({
-                            event: "add_to_cart",
-                            ecommerce: {
-                                currency: "NGN",
-                                value: productDetailData?.data?.product?.selling_price,
-                                items: [{
-                                    item_name: productDetailData?.data?.product?.main_product_name,
-                                    item_id: productDetailData?.data?.product?.id,
-                                    price: productDetailData?.data?.product?.selling_price,
-                                    quantity: quantity
-                                }]
-                            }
-                        });
+                        
+                        // GA4: Track add_to_cart event
+                        trackAddToCart(productDetailData?.data?.product, quantity);
 
                     }
                 } else if (token) {
@@ -233,20 +223,9 @@ export default function Component() {
                         dispatch(addToCart(product_data));
                         enqueueSnackbar("Product added to cart successfully!", {variant: "success"});
                         window.dispatchEvent(new Event("cartUpdated"));
-                        window.dataLayer = window.dataLayer || [];
-                        window.dataLayer.push({
-                            event: "add_to_cart",
-                            ecommerce: {
-                                currency: "NGN",
-                                value: productDetailData?.data?.product?.selling_price,
-                                items: [{
-                                    item_name: productDetailData?.data?.product?.main_product_name,
-                                    item_id: productDetailData?.data?.product?.id,
-                                    price: productDetailData?.data?.product?.selling_price,
-                                    quantity: quantity
-                                }]
-                            }
-                        });
+                        
+                        // GA4: Track add_to_cart event
+                        trackAddToCart(productDetailData?.data?.product, quantity);
 
                     }
                 }
@@ -659,6 +638,11 @@ export default function Component() {
                     setProductDetailData(data);
                     setAddOnData(data?.data?.product_add_ons || []);
                     setImageThumbnails(data?.data?.product?.images || []);
+
+                    // GA4: Track view_item event
+                    if (data?.data?.product) {
+                        trackViewItem(data.data.product);
+                    }
 
                     // NEW: Clean URL structure - Always 3-segment
                     const newUrl = `/${data?.data?.product?.category_slug}/${data?.data?.product?.sub_category_slug}/${data?.data?.product?.slug || id}/`;

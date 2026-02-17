@@ -7,6 +7,7 @@ import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 import {Helmet} from "react-helmet";
+import { trackPurchase } from "../../../utils/ga4Ecommerce";
 
 const PaymentGateway = () => {
   const location = useLocation();
@@ -102,6 +103,16 @@ const handlePayment = async () => {
         enqueueSnackbar(response?.data?.message || "Payment Successful via Wallet", {
           variant: "success",
         });
+        
+        // GA4: Track purchase event for wallet payment
+        trackPurchase({
+          transaction_id: response.data.order_id,
+          value: orderData?.order?.grand_total || 0,
+          items: orderData?.order_items || [],
+          shipping: orderData?.order?.delivery_charge || 0,
+          payment_type: 'Wallet'
+        });
+        
         navigate("/successpage");
         return;
       }
@@ -138,6 +149,15 @@ const handlePayment = async () => {
 
             if (verifyRes.data.message === "Payment successful") {
               enqueueSnackbar("Payment completed successfully!", { variant: "success" });
+              
+              // GA4: Track purchase event
+              trackPurchase({
+                transaction_id: response.data.order_id,
+                value: razorpayOrder.amount / 100,
+                items: orderData?.order_items || [],
+                shipping: orderData?.order?.delivery_charge || 0
+              });
+              
               navigate("/successpage");
             } else {
               enqueueSnackbar("Payment verification failed.", { variant: "error" });

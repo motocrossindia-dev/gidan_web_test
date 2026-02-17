@@ -10,6 +10,7 @@ import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { Helmet } from "react-helmet-async";
+import { trackBeginCheckout, trackAddPaymentInfo } from "../../../utils/ga4Ecommerce";
 
 
 
@@ -1047,6 +1048,11 @@ const CheckoutPage = () => {
     console.log("✅ Is Shop The Look:", data?.order?.is_shop_the_look);
     console.log("✅ Combo Offer:", comboOffer);
     console.log("✅ Prefilled Combo:", prefilledCombo);
+    
+    // GA4: Track begin_checkout event
+    if (data?.order_items && data.order_items.length > 0) {
+      trackBeginCheckout(data.order_items, data?.order?.grand_total);
+    }
   },[resource, data, comboOffer, prefilledCombo]);
 
   // Update comboOffer if prefilledCombo is provided
