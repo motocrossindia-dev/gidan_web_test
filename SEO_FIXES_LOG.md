@@ -876,3 +876,167 @@ Breadcrumb: Home > Plants > Indoor Plants > Peace Lily Plant
 ✅ Task 4: URL Standardization utility created
 ✅ Task 5: GA4 Ecommerce Events (critical events implemented)
 ✅ Task 6: Breadcrumb Alignment (visual + structured data)
+
+
+---
+
+## Task 7: Fix Sitemap URLs & Add Robots.txt ✅ COMPLETED
+
+**Date:** 2026-02-18  
+**Status:** Completed
+
+### Problem:
+- Sitemap URLs don't match current URL structure
+- Old URLs: `/category/{slug}/` and `/category/subcategory/{slug}/`
+- New URLs: `/{category}/` and `/{category}/{subcategory}/{product}/`
+- Missing robots.txt file
+
+### Solution Implemented:
+
+#### 1. Fixed Backend Sitemap (`seo/sitemap.py`): ✅
+
+**StaticSitemap:**
+- Added trailing slashes to all static URLs
+- Updated URLs: `/about-us/`, `/contact-us/`, etc.
+
+**CategorySitemap:**
+- OLD: `/category/{slug}/` or `/{slug}/` (special cases)
+- NEW: `/{slug}/` (all categories)
+- Removed special case handling
+- Clean, consistent URL pattern
+
+**SubCategorySitemap:**
+- OLD: `/category/subcategory/{slug}/`
+- NEW: `/{category}/{subcategory}/`
+- Added `.select_related('category')` for performance
+- Matches frontend URL structure
+
+**ProductSitemap:**
+- OLD: `/category/{category}/{subcategory}/{product}/`
+- NEW: `/{category}/{subcategory}/{product}/`
+- Added filter to exclude products with 'null' in slug
+- Added `is_published=True` filter
+- Improved query performance with select_related
+- Handles 2-segment and 3-segment URLs
+- Proper fallback logic
+
+#### 2. Created Robots.txt (`public/robots.txt`): ✅
+
+**Features:**
+- Allows all crawlers by default
+- Disallows private/account pages:
+  - `/cart/`, `/checkout/`, `/profile/`, `/orders/`
+  - `/wishlist/`, `/wallet/`, `/btcoins/`
+  - Mobile login pages
+- Disallows admin/API endpoints
+- Allows all static assets (CSS, JS, images)
+- Points to sitemap: `https://gidan.store/sitemap.xml`
+
+**Content:**
+```
+User-agent: *
+Allow: /
+
+# Disallow account/private pages
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /profile/
+...
+
+# Sitemap location
+Sitemap: https://gidan.store/sitemap.xml
+```
+
+### URL Structure Alignment:
+
+#### Before (OLD):
+```
+Category:     /category/plants/
+Subcategory:  /category/subcategory/indoor-plants/
+Product:      /category/plants/indoor-plants/peace-lily/
+```
+
+#### After (NEW):
+```
+Category:     /plants/
+Subcategory:  /plants/indoor-plants/
+Product:      /plants/indoor-plants/peace-lily/
+```
+
+### Sitemap Structure:
+
+The sitemap now generates 4 sections:
+
+1. **Static Pages** (priority: 0.6, changefreq: monthly)
+   - Homepage, About, Contact, FAQ, etc.
+
+2. **Categories** (priority: 0.8, changefreq: weekly)
+   - All published categories
+   - Format: `/{category}/`
+
+3. **Subcategories** (priority: 0.7, changefreq: weekly)
+   - All published subcategories
+   - Format: `/{category}/{subcategory}/`
+
+4. **Products** (priority: 0.9, changefreq: daily)
+   - All published products (excluding null slugs)
+   - Format: `/{category}/{subcategory}/{product}/`
+
+### Testing:
+
+**Sitemap Access:**
+```
+https://gidan.store/sitemap.xml
+```
+
+**Robots.txt Access:**
+```
+https://gidan.store/robots.txt
+```
+
+**Verification Steps:**
+- [ ] Access sitemap.xml on live site
+- [ ] Verify all URLs match current structure
+- [ ] Check robots.txt is accessible
+- [ ] Submit sitemap to Google Search Console
+- [ ] Submit sitemap to Bing Webmaster Tools
+- [ ] Verify no 404 errors in sitemap URLs
+
+### Benefits:
+- ✅ Search engines can discover all pages
+- ✅ URLs match current frontend structure
+- ✅ Private pages blocked from indexing
+- ✅ Improved crawl efficiency
+- ✅ Better indexing of new products
+- ✅ Proper priority and changefreq settings
+- ✅ Performance optimized with select_related
+
+### Files Modified: 2
+- `biotechmaali main server/seo/sitemap.py` (updated)
+- `git 3/biotech_ecomerce/public/robots.txt` (created)
+
+### Next Steps:
+1. Deploy changes to production
+2. Test sitemap.xml accessibility
+3. Submit sitemap to Google Search Console
+4. Submit sitemap to Bing Webmaster Tools
+5. Monitor crawl stats in Search Console
+6. Verify no 404 errors from sitemap URLs
+
+### Notes:
+- Sitemap automatically updates as products/categories are added
+- Products with 'null' in slug are excluded
+- Only published items appear in sitemap
+- Robots.txt blocks private pages from all crawlers
+- Static assets are explicitly allowed for performance
+
+---
+
+## Summary of Completed Tasks:
+✅ Task 1: Added noindex to 14 account pages  
+✅ Task 2: Removed duplicate Organization schema and implemented @id references  
+✅ Task 3: Fixed product URL slug generation (backend complete)
+✅ Task 4: URL Standardization utility created
+✅ Task 5: GA4 Ecommerce Events (critical events implemented)
+✅ Task 6: Breadcrumb Alignment (visual + structured data)
+✅ Task 7: Fix Sitemap URLs & Add Robots.txt
