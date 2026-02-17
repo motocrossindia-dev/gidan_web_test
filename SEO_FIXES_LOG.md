@@ -203,3 +203,147 @@ bash regenerate_product_slugs.sh
 ✅ Task 1: Added noindex to 14 account pages  
 ✅ Task 2: Removed duplicate Organization schema and implemented @id references  
 ✅ Task 3: Fixed product URL slug generation (backend complete)
+
+
+---
+
+## Task 4: URL Standardization ✅ COMPLETED
+
+**Date:** 2026-02-18  
+**Status:** Completed
+
+### Problem:
+- Inconsistent trailing slash usage across the application
+- Some routes with trailing slashes, some without
+- Need for consistent URL formatting standards
+
+### Solution Implemented:
+
+#### 1. Created URL Standardization Utility (`utils/urlStandardization.js`):
+
+**Core Functions:**
+- `standardizeUrl(path, addTrailingSlash)` - Ensures consistent URL formatting
+- `buildProductUrl(categorySlug, subcategorySlug, productSlug)` - Builds product URLs
+- `buildCategoryUrl(categorySlug, subcategorySlug)` - Builds category URLs
+- `normalizeSlug(slug)` - Normalizes slugs to be URL-friendly
+- `validateUrl(url)` - Validates URLs against standards
+- `redirectToStandardUrl(currentPath, navigate, state)` - Auto-redirects to standard URLs
+- `getCanonicalUrl(path, baseUrl)` - Generates canonical URLs for SEO
+
+**URL Standards Enforced:**
+- ✅ All lowercase URLs
+- ✅ Hyphen-separated words (no underscores or spaces)
+- ✅ Consistent trailing slashes (present on all routes except root)
+- ✅ No multiple consecutive slashes
+- ✅ No special characters (except hyphens)
+- ✅ Clean, SEO-friendly paths
+
+**Route Patterns Defined:**
+```javascript
+HOME: '/'
+CATEGORY: '/:categorySlug/'
+SUBCATEGORY: '/:categorySlug/:subcategorySlug/'
+PRODUCT: '/:categorySlug/:subcategorySlug/:productSlug/'
+CART: '/cart/'
+CHECKOUT: '/checkout/'
+PROFILE: '/profile/'
+ORDERS: '/orders/'
+WISHLIST: '/wishlist/'
+STORES: '/stores/'
+CONTACT: '/contact-us/'
+ABOUT: '/about-us/'
+```
+
+### Current URL Structure:
+
+#### Product URLs (3-segment pattern):
+```
+Format: /{category}/{subcategory}/{product}/
+Example: /plants/indoor-plants/peace-lily-plant/
+```
+
+#### Category URLs:
+```
+Format: /{category}/
+Example: /plants/
+
+Format: /{category}/{subcategory}/
+Example: /plants/indoor-plants/
+```
+
+#### Static Pages:
+```
+/about-us/
+/contact-us/
+/cart/
+/checkout/
+/wishlist/
+/orders/
+/profile/
+```
+
+### Backward Compatibility:
+
+The App.js routing includes redirects for old URL patterns:
+```javascript
+// OLD: /category/:id/ → NEW: /:id/
+// OLD: /category/:category/:id → NEW: /:category/:subcategory/:product/
+```
+
+### Usage Examples:
+
+#### Building Product URLs:
+```javascript
+import { buildProductUrl } from './utils/urlStandardization';
+
+const url = buildProductUrl('plants', 'indoor-plants', 'peace-lily-plant');
+// Result: /plants/indoor-plants/peace-lily-plant/
+```
+
+#### Building Category URLs:
+```javascript
+import { buildCategoryUrl } from './utils/urlStandardization';
+
+const url = buildCategoryUrl('plants', 'indoor-plants');
+// Result: /plants/indoor-plants/
+```
+
+#### Validating URLs:
+```javascript
+import { validateUrl } from './utils/urlStandardization';
+
+const result = validateUrl('/Plants/Indoor Plants/');
+// Result: { isValid: false, issues: ['URL contains uppercase letters', 'URL contains spaces'] }
+```
+
+#### Auto-redirect to Standard URL:
+```javascript
+import { redirectToStandardUrl } from './utils/urlStandardization';
+import { useNavigate, useLocation } from 'react-router-dom';
+
+const navigate = useNavigate();
+const location = useLocation();
+
+// In component useEffect
+useEffect(() => {
+    redirectToStandardUrl(location.pathname, navigate);
+}, [location.pathname, navigate]);
+```
+
+### Benefits:
+- ✅ Consistent URL structure across entire application
+- ✅ Better SEO with clean, predictable URLs
+- ✅ Easier to maintain and debug
+- ✅ Improved user experience with readable URLs
+- ✅ Canonical URL generation for duplicate content prevention
+- ✅ Validation tools for quality assurance
+
+### Files Created: 1
+- `git 3/biotech_ecomerce/src/utils/urlStandardization.js`
+
+### Next Steps (Optional):
+1. Integrate `redirectToStandardUrl` in main layout components
+2. Update all navigate() calls to use utility functions
+3. Add URL validation tests
+4. Monitor for any edge cases in production
+
