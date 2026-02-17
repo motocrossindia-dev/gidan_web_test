@@ -17,6 +17,7 @@ import SubCategorySchema from "../seo/SubCategorySchema";
 import CategorySchema from "../seo/CategorySchema";
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
+import Breadcrumb from "../../../Components/Shared/Breadcrumb";
 
 const CategoryLayout = ({ data }) => {
     const hasGenericContent = data && data.hero;
@@ -223,6 +224,27 @@ function PlantFilter() {
                 />
             </Helmet>
 
+            {/* Breadcrumb Navigation */}
+            {(canonicalCategorySlug || canonicalSubcategorySlug) && (
+                <Breadcrumb
+                    items={
+                        canonicalSubcategorySlug
+                            ? [
+                                {
+                                    label: categoryName || fetchedCategoryName || canonicalCategorySlug,
+                                    path: `/${canonicalCategorySlug}/`
+                                }
+                            ]
+                            : []
+                    }
+                    currentPage={
+                        canonicalSubcategorySlug
+                            ? (subCategoryName || fetchedSubcategoryName || canonicalSubcategorySlug)
+                            : (categoryName || fetchedCategoryName || canonicalCategorySlug)
+                    }
+                />
+            )}
+
             <div className="w-full overflow-x-hidden">
                 <div className="container mx-auto px-4 md:px-8 max-w-full">
                     {/* Mobile Filter Button - Triggers SwipeableDrawer */}
@@ -329,10 +351,16 @@ function PlantFilter() {
                 items={results || []}
             />
             <SubCategorySchema
-                categoryName={categoryName || fetchedCategoryName}
-                subCategoryName={subCategoryName || fetchedSubcategoryName}
-                categorySlug={canonicalCategorySlug}
-                subCategorySlug={canonicalSubcategorySlug}
+                category={{
+                    name: categoryName || fetchedCategoryName,
+                    slug: canonicalCategorySlug
+                }}
+                subCategory={
+                    canonicalSubcategorySlug ? {
+                        name: subCategoryName || fetchedSubcategoryName,
+                        slug: canonicalSubcategorySlug
+                    } : null
+                }
                 items={results || []}
             />
             <HomepageSchema/>

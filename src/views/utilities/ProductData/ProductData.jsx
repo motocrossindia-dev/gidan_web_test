@@ -30,6 +30,7 @@ import ProductSchema from "../seo/ProductSchema";
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
 import { trackViewItem, trackAddToCart } from "../../../utils/ga4Ecommerce";
+import Breadcrumb from "../../../Components/Shared/Breadcrumb";
 
 const productdata =
     "https://firebasestorage.googleapis.com/v0/b/zpos-uk.appspot.com/o/67977213135ebb17c407e687%2F2025%2F1%2F1738430215367_scaled_Peacelilly.png?alt=media";
@@ -861,6 +862,21 @@ export default function Component() {
                 <meta name="twitter:description" content={metaDescription} />
                 <meta name="twitter:image" content={ogImage} />
             </Helmet>
+
+            {/* Breadcrumb Navigation */}
+            <Breadcrumb
+                items={[
+                    {
+                        label: productDetailData?.data?.product?.category_name || scategory_slug,
+                        path: `/${scategory_slug}/`
+                    },
+                    {
+                        label: productDetailData?.data?.product?.sub_category_name || ssubcategory_slug,
+                        path: `/${scategory_slug}/${ssubcategory_slug}/`
+                    }
+                ]}
+                currentPage={productDetailData?.data?.product?.main_product_name}
+            />
 
             <div className="w-full" style={{backgroundColor: "whitesmoke"}}>
                 <div className="container mx-auto px-3 py-4 font-sans md:px-8">

@@ -672,3 +672,207 @@ All events follow GA4 specification:
 - All tracking functions include console logging for debugging
 - Utility is production-ready and follows GA4 best practices
 
+
+
+---
+
+## Task 6: Breadcrumb Alignment ✅ COMPLETED
+
+**Date:** 2026-02-18  
+**Status:** Completed
+
+### Problem:
+- Need visual breadcrumbs matching URL structure
+- Breadcrumb structured data exists but needs to be verified
+- Visual breadcrumbs missing from product and category pages
+
+### Solution Implemented:
+
+#### 1. Created Reusable Breadcrumb Component (`Components/Shared/Breadcrumb.jsx`): ✅
+
+**Features:**
+- Material-UI Breadcrumbs component
+- Home icon with link to homepage
+- Dynamic breadcrumb items from props
+- Current page displayed (not linked)
+- Responsive design with proper styling
+- Matches URL structure exactly
+
+**Props:**
+```javascript
+{
+    items: [{ label, path }],  // Array of breadcrumb links
+    currentPage: string         // Current page name (not linked)
+}
+```
+
+#### 2. Added Visual Breadcrumbs to Product Pages (`ProductData.jsx`): ✅
+
+**Breadcrumb Structure:**
+```
+Home > Category > Subcategory > Product Name
+```
+
+**Implementation:**
+- Displays category and subcategory as clickable links
+- Product name shown as current page (not linked)
+- Uses data from product API response
+- Matches 3-segment URL pattern: `/{category}/{subcategory}/{product}/`
+
+#### 3. Added Visual Breadcrumbs to Category Pages (`PlantFilter.jsx`): ✅
+
+**Breadcrumb Structures:**
+
+**Category Page:**
+```
+Home > Category Name
+```
+
+**Subcategory Page:**
+```
+Home > Category Name > Subcategory Name
+```
+
+**Implementation:**
+- Conditional rendering based on URL structure
+- Uses fetched category/subcategory names
+- Fallback to slugs if names not available
+- Matches URL structure exactly
+
+#### 4. Updated ProductSchema with Breadcrumb Structured Data: ✅
+
+**Changes:**
+- Converted to @graph structure (like other schemas)
+- Added BreadcrumbList to Product schema
+- Breadcrumb includes: Home → Category → Subcategory → Product
+- Proper @id referencing: `{productUrl}#breadcrumb`
+- Position-based itemListElement
+- Handles both 2-segment and 3-segment URLs
+
+**Schema Structure:**
+```json
+{
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": "Product",
+            "@id": "{productUrl}#product",
+            ...
+        },
+        {
+            "@type": "BreadcrumbList",
+            "@id": "{productUrl}#breadcrumb",
+            "itemListElement": [
+                { "position": 1, "name": "Home", "item": "https://gidan.store" },
+                { "position": 2, "name": "Category", "item": "..." },
+                { "position": 3, "name": "Subcategory", "item": "..." },
+                { "position": 4, "name": "Product", "item": "..." }
+            ]
+        }
+    ]
+}
+```
+
+#### 5. Fixed SubCategorySchema Props in PlantFilter: ✅
+
+**Before:**
+```javascript
+<SubCategorySchema
+    categoryName={...}
+    subCategoryName={...}
+    categorySlug={...}
+    subCategorySlug={...}
+/>
+```
+
+**After:**
+```javascript
+<SubCategorySchema
+    category={{ name: ..., slug: ... }}
+    subCategory={{ name: ..., slug: ... }}
+    items={results}
+/>
+```
+
+### Breadcrumb Structured Data Status:
+
+#### ✅ CategorySchema.jsx:
+- Already has BreadcrumbList
+- Structure: Home → Category
+- Proper @id: `{categoryUrl}#breadcrumb`
+
+#### ✅ SubCategorySchema.jsx:
+- Already has BreadcrumbList
+- Structure: Home → Category → Subcategory
+- Proper @id: `{subcategoryUrl}#breadcrumb`
+
+#### ✅ ProductSchema.jsx:
+- NOW has BreadcrumbList (newly added)
+- Structure: Home → Category → Subcategory → Product
+- Proper @id: `{productUrl}#breadcrumb`
+- Handles optional subcategory
+
+### URL Structure Alignment:
+
+All breadcrumbs (visual and structured data) match the URL patterns:
+
+**Category:**
+```
+URL: /plants/
+Breadcrumb: Home > Plants
+```
+
+**Subcategory:**
+```
+URL: /plants/indoor-plants/
+Breadcrumb: Home > Plants > Indoor Plants
+```
+
+**Product:**
+```
+URL: /plants/indoor-plants/peace-lily-plant/
+Breadcrumb: Home > Plants > Indoor Plants > Peace Lily Plant
+```
+
+### Testing Checklist:
+
+- [x] Visual breadcrumbs display on product pages
+- [x] Visual breadcrumbs display on category pages
+- [x] Visual breadcrumbs display on subcategory pages
+- [x] Breadcrumb links navigate correctly
+- [x] Current page is not linked
+- [x] Breadcrumb structured data in ProductSchema
+- [x] Breadcrumb structured data in CategorySchema
+- [x] Breadcrumb structured data in SubCategorySchema
+- [x] URLs match breadcrumb paths exactly
+- [ ] Test with Google Rich Results Test (user should verify)
+
+### Benefits:
+- ✅ Improved user navigation
+- ✅ Better SEO with breadcrumb structured data
+- ✅ Enhanced search result appearance (breadcrumb snippets)
+- ✅ Consistent navigation across all pages
+- ✅ Matches URL structure exactly
+- ✅ Mobile-friendly responsive design
+
+### Files Modified: 4
+- `git 3/biotech_ecomerce/src/Components/Shared/Breadcrumb.jsx` (created)
+- `git 3/biotech_ecomerce/src/views/utilities/ProductData/ProductData.jsx` (updated)
+- `git 3/biotech_ecomerce/src/views/utilities/PlantFilter/PlantFilter.jsx` (updated)
+- `git 3/biotech_ecomerce/src/views/utilities/seo/ProductSchema.jsx` (updated)
+
+### Next Steps (Optional):
+1. Test breadcrumbs on live site
+2. Verify structured data with Google Rich Results Test
+3. Check breadcrumb appearance in search results
+4. Add breadcrumbs to other pages (blog, stores, etc.) if needed
+
+---
+
+## Summary of Completed Tasks:
+✅ Task 1: Added noindex to 14 account pages  
+✅ Task 2: Removed duplicate Organization schema and implemented @id references  
+✅ Task 3: Fixed product URL slug generation (backend complete)
+✅ Task 4: URL Standardization utility created
+✅ Task 5: GA4 Ecommerce Events (critical events implemented)
+✅ Task 6: Breadcrumb Alignment (visual + structured data)
