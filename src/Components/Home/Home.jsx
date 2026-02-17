@@ -174,6 +174,7 @@
 // ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
 import { useEffect, lazy, Suspense } from 'react';
 import { Helmet } from "react-helmet-async";
+import HomepageSchema from '../../views/utilities/seo/HomepageSchema';
 import ResourceHints from '../Shared/ResourceHints';
 import LazyLoadWrapper from '../Shared/LazyLoadWrapper';
 import { useBannerImages } from '../../hooks/useBannerImages'; // TanStack Query hook
@@ -247,6 +248,7 @@ const Home = () => {
         />
         <link rel="canonical" href="https://gidan.store" />
       </Helmet>
+      <HomepageSchema />
 
       <ResourceHints />
 

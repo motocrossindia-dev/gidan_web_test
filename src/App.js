@@ -281,17 +281,7 @@ const App = () => {
   return (
       <div>
         <GoogleAnalytics />
-        <OrganizationSchema >
-          <HomepageSchema/>
-          <StoreSchema/>
-          <AboutUsSchema/>
-          <ContactUsSchema/>
-          <ReturnPolicySchema/>
-          <ProductSchema/>
-          <CategorySchema/>
-          <SubCategorySchema/>
-
-        </OrganizationSchema>
+        <OrganizationSchema />
         <Verify />
         {isMobile ? <MobileRoutes /> : <DesktopRoutes />}
       </div>
