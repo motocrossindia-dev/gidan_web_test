@@ -1,7 +1,7 @@
 'use client';
 
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import React, { useEffect, useState, useMemo } from "react";
 import { Tag } from 'lucide-react';
 import { CheckCircle } from 'lucide-react';

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { FaRegUser, FaRegHeart, FaChevronDown } from "react-icons/fa";

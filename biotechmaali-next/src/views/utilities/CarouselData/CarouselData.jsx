@@ -1,6 +1,6 @@
 'use client';
 
-import { useSearchParams, useParams } from "next/navigation";
+import { useSearchParams, useParams, usePathname } from "next/navigation";
 // import React, { useEffect, useState } from "react";
 // import ProductGrid from "../PlantFilter/ProductGrid";
 // import FAQSection from "../PlantFilter/FAQSection";
