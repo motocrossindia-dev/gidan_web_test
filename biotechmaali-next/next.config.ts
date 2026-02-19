@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
   // Map CRA env vars to Next.js NEXT_PUBLIC_ equivalents
@@ -43,6 +44,17 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
     ];
+  },
+
+  // Shim react-helmet / react-helmet-async (not compatible with React 19 / Next.js App Router)
+  webpack(config) {
+    const shimPath = path.resolve(
+      __dirname,
+      "src/lib/helmet-shim.js"
+    );
+    config.resolve.alias["react-helmet"] = shimPath;
+    config.resolve.alias["react-helmet-async"] = shimPath;
+    return config;
   },
 
   // Transpile MUI packages
