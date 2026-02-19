@@ -66,7 +66,7 @@ const MobileSidebar = () => {
       <div className="mt-4 space-y-2">
         {options.map((option, index) => (
           <Link
-            to={option.link}
+            href={option.link || "#"}
             key={index}
             className="flex items-center justify-between p-4 bg-white rounded-lg shadow-md hover:bg-gray-100 transition"
           >

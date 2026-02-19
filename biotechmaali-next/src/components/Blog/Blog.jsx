@@ -47,7 +47,7 @@ const Blog = () => {
           <div className="flex justify-between items-center mb-6 font-sans">
             <h2 className="md:text-3xl text-xl font-bold mx-auto">Blogs</h2>
             <Link
-              to="/blogcomponent"
+              href="/blogcomponent"
               className="text-white bg-bio-green md:text-xl text-xs rounded-md py-1 px-2 md:py-2 md:px-4 font-medium md:font-semibold"
             >
               View All

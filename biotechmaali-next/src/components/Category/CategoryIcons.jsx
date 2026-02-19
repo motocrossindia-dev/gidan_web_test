@@ -148,18 +148,7 @@ const CategoryIcons = () => {
                             className="hover:text-green-600 cursor-pointer transition-colors duration-200"
                           >
                             <Link
-                              to={subcategoryUrl}
-                              state={{
-                                categoryId: category.id,
-                                categoryName: category.name,
-                                category_slug: category.slug,
-                                typeKey: category.typeKey || '',
-                                subcategoryID: item.id,
-                                subCategory: {
-                                  name: item.name,
-                                  subcategory_slug: item.slug
-                                }
-                              }}
+                              href={subcategoryUrl}
                               className="block py-1 px-2 rounded hover:bg-gray-50 text-xs sm:text-sm"
                             >
                               {item.name}

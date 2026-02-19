@@ -253,7 +253,7 @@ const Hamburger = () => {
                       {additionalLinks.map((item, index) => (
                           <Link
                               key={index}
-                              to={item.path}
+                              href={item.path}
                               onClick={closeMenu}
                               className="block p-3 rounded-lg text-gray-600 hover:text-green-700 hover:bg-gray-50 transition-colors text-sm font-medium"
                           >

@@ -100,7 +100,7 @@ useEffect(() => {
   {services.map((service) => (
     <Link
       key={service.id}
-      to={`/services/single/${service.Heading.replace(/\s+/g, "").toLowerCase()}`}
+      href={`/services/single/${service.Heading.replace(/\s+/g, "").toLowerCase()}`}
       className="text-center"
     >
       <div className="w-full bg-white rounded-lg p-4">

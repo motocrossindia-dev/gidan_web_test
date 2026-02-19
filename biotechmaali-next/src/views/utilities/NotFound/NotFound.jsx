@@ -20,7 +20,7 @@ const NotFound = () => {
             Sorry, the page you are looking for doesn't exist or has been moved.
           </p>
           <Link
-            to="/"
+            href="/"
             className="inline-block bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors"
           >
             Go Back Home

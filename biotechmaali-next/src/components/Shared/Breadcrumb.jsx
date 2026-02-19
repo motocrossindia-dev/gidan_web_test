@@ -29,7 +29,7 @@ export default function Breadcrumb({ items = [], currentPage }) {
                 >
                     {/* Home Link */}
                     <Link
-                        to="/"
+                        href="/"
                         className="flex items-center gap-1 text-gray-600 hover:text-bio-green transition-colors"
                     >
                         <Home fontSize="small" />
@@ -40,7 +40,7 @@ export default function Breadcrumb({ items = [], currentPage }) {
                     {items.map((item, index) => (
                         <Link
                             key={index}
-                            to={item.path}
+                            href={item.path}
                             className="text-gray-600 hover:text-bio-green transition-colors capitalize"
                         >
                             {item.label}

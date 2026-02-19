@@ -13,7 +13,7 @@ const OfferCard = ({ title, description, buttonText, image, link }) => (
         <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-2 sm:mb-3 md:mb-4 leading-tight">{title}</h2>
         <p className="mb-3 sm:mb-4 md:mb-5 lg:mb-6 text-xs sm:text-sm md:text-base leading-relaxed">{description}</p>
         <Link 
-          to={link} 
+          href={link || "#"} 
           className="bg-white text-green-700 font-medium py-2 sm:py-2.5 px-5 sm:px-6 rounded-md text-sm sm:text-base text-center w-fit hover:bg-gray-100 transition duration-300 active:scale-[0.98]"
         >
           {buttonText}
