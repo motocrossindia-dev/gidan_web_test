@@ -187,7 +187,7 @@ export default PlantCare;
 //     setShowMobileFilter(!showMobileFilter);
 //   };
 //   const pathname = usePathname();
-  const searchParams = useSearchParams();
+//   const searchParams = useSearchParams();
 //   const queryParams = new URLSearchParams(`?${searchParams.toString()}`);
 //   const query = queryParams.get('query') || '';
 //

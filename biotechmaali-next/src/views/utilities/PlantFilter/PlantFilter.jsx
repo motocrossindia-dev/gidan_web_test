@@ -53,7 +53,6 @@ function PlantFilter() {
     };
 
     // Extract query parameters for boolean filters (fallback)
-    const searchParams = new URLSearchParams(`?${searchParams.toString()}`);
     const queryIsSeasonalCollection = searchParams.get('is_seasonal_collection') === 'true';
     const queryIsTrending = searchParams.get('is_trending') === 'true';
     const queryIsFeatured = searchParams.get('is_featured') === 'true';
@@ -406,7 +405,7 @@ export default PlantFilter;
 //
 // function PlantFilter() {
 //     const pathname = usePathname();
-  const searchParams = useSearchParams();
+//   const searchParams = useSearchParams();
 //     const path = pathname;
 //
 //     // Extract slugs from URL
@@ -700,7 +699,7 @@ export default PlantFilter;
 //
 // function PlantFilter() {
 //     const pathname = usePathname();
-  const searchParams = useSearchParams();
+//   const searchParams = useSearchParams();
 //     const path = pathname;
 //
 //     const stateData = null || {};
@@ -970,7 +969,7 @@ export default PlantFilter;
 //
 // function PlantFilter() {
 //     const pathname = usePathname();
-  const searchParams = useSearchParams();
+//   const searchParams = useSearchParams();
 //     const path = pathname;
 //
 //     const stateData = null || {};
@@ -1234,7 +1233,7 @@ export default PlantFilter;
 // //
 // // function PlantFilter() {
 // //     const pathname = usePathname();
-  const searchParams = useSearchParams();
+// //   const searchParams = useSearchParams();
 // //     const path = pathname;
 // //
 // //     const stateData = null || {};
