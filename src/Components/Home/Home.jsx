@@ -174,7 +174,6 @@
 // ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
 import { useEffect, lazy, Suspense } from 'react';
 import { Helmet } from "react-helmet-async";
-import HomepageSchema from '../../views/utilities/seo/HomepageSchema';
 import ResourceHints from '../Shared/ResourceHints';
 import LazyLoadWrapper from '../Shared/LazyLoadWrapper';
 import { useBannerImages } from '../../hooks/useBannerImages'; // TanStack Query hook
@@ -189,7 +188,6 @@ const TrendingSection = lazy(() => import(/* webpackChunkName: "trending" */ '..
 const RewardClub = lazy(() => import(/* webpackChunkName: "reward-club" */ '../../Components/RewardClub/RewardClub'));
 const ShopTheLook = lazy(() => import(/* webpackChunkName: "shop-look" */ '../../Components/ShopTheLook/ShopTheLook'));
 const SeasonalProduct = lazy(() => import(/* webpackChunkName: "seasonal" */ '../../Components/SeasonalCollection/SeasonalProduct'));
-const Services = lazy(() => import(/* webpackChunkName: "services" */ '../../Services/ServiceHome/Services'));
 const OfferReward = lazy(() => import(/* webpackChunkName: "offer-reward" */ '../../Components/OfferReward/OfferReward'));
 const ComboOffer = lazy(() => import(/* webpackChunkName: "combo-offer" */ '../../Components/ComboOffer/ComboOffer'));
 const Blog = lazy(() => import(/* webpackChunkName: "blog" */ '../../Components/Blog/Blog'));
@@ -248,7 +246,6 @@ const Home = () => {
         />
         <link rel="canonical" href="https://gidan.store" />
       </Helmet>
-      <HomepageSchema />
 
       <ResourceHints />
 

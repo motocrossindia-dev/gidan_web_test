@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { createPortal } from "react-dom";
 
@@ -92,6 +93,7 @@ const FilterSidebar = ({
                        }) => {
   // Track if this is the very first render of the component
   const isInitialMount = useRef(true);
+  const navigate = useNavigate();
 
   const [selectedFilterType, setSelectedFilterType] = useState(typeKey || "plant");
   const [userHasSelectedType, setUserHasSelectedType] = useState(false);
@@ -225,7 +227,15 @@ const FilterSidebar = ({
       [filter]: prev[filter] === value ? null : value,
     }));
     setOpenFilters({});
-  }, []);
+    
+    // Navigate to new URL when subcategory is selected
+    if (filter === "subcategories" && option.slug) {
+      const newPath = categorySlug 
+        ? `/${categorySlug}/${option.slug}/`
+        : `/${option.slug}/`;
+      navigate(newPath, { replace: false });
+    }
+  }, [categorySlug, navigate]);
 
   const applyFilters = useCallback(async () => {
     const params = new URLSearchParams();

@@ -743,6 +743,10 @@ const ApplyCoupon = ({ id, setCoupon }) => {
       const response = await axiosInstance.get(`/coupon/coupons/?order_id=${id}`);
       if (response.status === 200) {
         setCoupons(response.data.coupons);
+        // Auto-open accordion if coupons are available
+        if (response.data.coupons && response.data.coupons.length > 0) {
+          setIsOpen(true);
+        }
       }
     } catch (error) {
       console.error(error);
@@ -1284,7 +1288,7 @@ console.log("💰 Corrected Payable Amount:", correctedPayableAmount);
     <div className="space-y-2 mt-4">
       {/* Price */}
       <div className="flex justify-between text-gray-700">
-        <span>Price ({data?.order_items?.length ?? 0})</span>
+        <span>Sub Total x {data?.order_items?.length ?? 0}</span>
         <span>
           ₹
           {Math.round((isCombo || data?.order?.is_shop_the_look)

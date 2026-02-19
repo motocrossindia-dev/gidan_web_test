@@ -239,12 +239,12 @@ function ShopTheLook() {
         </DialogContent>
 
         <DialogActions sx={{ p: 2, justifyContent: 'center', gap: 2, flexDirection: { xs: 'column', md: 'row' } }}>
-          <button
+          {/* <button
             className="w-full md:w-1/2 py-3 bg-blue-600 text-white font-bold text-center rounded-lg hover:bg-blue-700 transition-colors"
             onClick={handleAddToCart}
           >
             Add to Cart
-          </button>
+          </button> */}
           <button
             className="w-full md:w-1/2 py-3 bg-lime-500 text-white font-bold text-center rounded-lg hover:bg-lime-600 transition-colors"
             onClick={handlePlaceOrder}

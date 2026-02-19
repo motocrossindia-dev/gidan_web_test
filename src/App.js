@@ -77,14 +77,6 @@ import Offer from './views/utilities/Offer/Offer';
 import CarouselData from './views/utilities/CarouselData/CarouselData';
 import AboutUs from "./views/utilities/AboutUs/About-Us";
 import OrganizationSchema from "./views/utilities/seo/OrganizationSchema";
-import ProductSchema from "./views/utilities/seo/ProductSchema";
-import CategorySchema from "./views/utilities/seo/CategorySchema";
-import SubCategorySchema from "./views/utilities/seo/SubCategorySchema";
-import HomepageSchema from "./views/utilities/seo/HomepageSchema";
-import StoreSchema from "./views/utilities/seo/StoreSchema";
-import AboutUsSchema from "./views/utilities/seo/AboutUsSchema";
-import ContactUsSchema from "./views/utilities/seo/ContactUsSchema";
-import ReturnPolicySchema from "./views/utilities/seo/ReturnPolicySchema";
 
 const DesktopRoutes = () => (
     <Routes>
