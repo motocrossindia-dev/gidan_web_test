@@ -112,7 +112,7 @@ useEffect(() => {
               <button className="prev-button bg-white w-[30.24px] h-[30.24px] flex items-center justify-center rounded-full mx-1 border">
                 <FaChevronLeft className="text-bio-green" />
               </button>
-              <Link to="/services" className="bg-bio-green text-white px-6 py-1 rounded">
+              <Link href="/services" className="bg-bio-green text-white px-6 py-1 rounded">
                 View All
               </Link>
               <button className="next-button bg-white w-[30.24px] h-[30.24px] flex items-center justify-center rounded-full mx-1 border">
@@ -151,7 +151,7 @@ useEffect(() => {
                 <FaChevronLeft className="text-bio-green" />
               </button>
 
-              <Link to="/services" className="bg-bio-green text-white px-6 py-1 md:py-2 rounded">
+              <Link href="/services" className="bg-bio-green text-white px-6 py-1 md:py-2 rounded">
                 View All
               </Link>
 

@@ -107,20 +107,20 @@ const Footer = () => {
                         }`}
                     >
                         <li className="hover:text-green-500 ">
-                            <Link to="/">Home</Link>
+                            <Link href="/">Home</Link>
                         </li>
 
                         <li className="hover:text-green-500">
-                            <Link to="/careers">Careers</Link>
+                            <Link href="/careers">Careers</Link>
                         </li>
                         <li className="hover:text-green-500">
-                            <Link to="/blogcomponent">Blogs</Link>
+                            <Link href="/blogcomponent">Blogs</Link>
                         </li>
                         <li className="hover:text-green-500">
-                            <Link to="/stores">Our Stores</Link>
+                            <Link href="/stores">Our Stores</Link>
                         </li>
                         <li className="hover:text-green-500">
-                            <Link to="/franchise-enquiry">Franchise Enquiry</Link>
+                            <Link href="/franchise-enquiry">Franchise Enquiry</Link>
                         </li>
                     </ul>
                 </div>
@@ -138,16 +138,16 @@ const Footer = () => {
                         }`}
                     >
                         <li className="hover:text-green-500">
-                            <Link to="/contact-us">Contact Us</Link>
+                            <Link href="/contact-us">Contact Us</Link>
                         </li>
                         <li className="hover:text-green-500">
-                            <Link to="/about-us">About Us</Link>
+                            <Link href="/about-us">About Us</Link>
                         </li>
                         <li className="hover:text-green-500" onClick={handleClickorder}>
-                            <Link to="/profile/trackorder">Track Order</Link>
+                            <Link href="/profile/trackorder">Track Order</Link>
                         </li>
                         <li className="hover:text-green-500">
-                            <Link to="/faq">FAQs</Link>
+                            <Link href="/faq">FAQs</Link>
                         </li>
                     </ul>
                 </div>
@@ -165,16 +165,16 @@ const Footer = () => {
                         }`}
                     >
                         <li className="hover:text-green-500 ">
-                            <Link to="/terms">Terms and Conditions</Link>
+                            <Link href="/terms">Terms and Conditions</Link>
                         </li>
                         <li className="hover:text-green-500 ">
-                            <Link to="/privacy-policy">Privacy Policy</Link>
+                            <Link href="/privacy-policy">Privacy Policy</Link>
                         </li>
                         <li className="hover:text-green-500 ">
-                            <Link to="/shipping">Shipping Policy</Link>
+                            <Link href="/shipping">Shipping Policy</Link>
                         </li>
                         <li className="hover:text-green-500 ">
-                            <Link to="/return">Return Policy</Link>
+                            <Link href="/return">Return Policy</Link>
                         </li>
                     </ul>
                 </div>
@@ -192,7 +192,7 @@ const Footer = () => {
                         }`}
                     >
                         <li className="hover:text-green-500" onClick={handleWalletClick}>
-                            <Link to="">Wallet</Link>
+                            <Link href="">Wallet</Link>
                         </li>
                     </ul>
                 </div>
@@ -415,28 +415,28 @@ export default Footer;
 //               }`}
 //           >
 //             <li className="hover:text-green-500 ">
-//               <Link to="/">Home</Link>
+//               <Link href="/">Home</Link>
 //             </li>
 //             {/* <li className="hover:text-green-500">
-//               <Link to="/ourwork"> Our Work</Link>
+//               <Link href="/ourwork"> Our Work</Link>
 //             </li>
 //             <li className="hover:text-green-500">
-//               <Link to="/services">Services</Link>
+//               <Link href="/services">Services</Link>
 //             </li> */}
 //             <li className="hover:text-green-500">
-//               <Link to="/careers">Careers</Link>
+//               <Link href="/careers">Careers</Link>
 //             </li>
 //             <li className="hover:text-green-500">
-//               <Link to="/blogcomponent">Blogs</Link>
+//               <Link href="/blogcomponent">Blogs</Link>
 //             </li>
 //             <li className="hover:text-green-500">
-//               <Link to="/stores">Our Stores</Link>
+//               <Link href="/stores">Our Stores</Link>
 //             </li>
 //             <li className="hover:text-green-500">
-//               <Link to="/franchise-enquiry">Franchise Enquiry</Link>
+//               <Link href="/franchise-enquiry">Franchise Enquiry</Link>
 //             </li>
 //             <li className="hover:text-green-500">
-//                <Link to="/faq">FAQs</Link>
+//                <Link href="/faq">FAQs</Link>
 //             </li>
 //           </ul>
 //         </div>
@@ -454,26 +454,26 @@ export default Footer;
 //               }`}
 //           >
 //             <li className="hover:text-green-500">
-//               <Link to="/contact-us">Contact Us</Link>
+//               <Link href="/contact-us">Contact Us</Link>
 //             </li>
 //             <li className="hover:text-green-500">
-//               <Link to="/about-us">About Us</Link>
+//               <Link href="/about-us">About Us</Link>
 //             </li>
 //
 //             <li className="hover:text-green-500" onClick={handleClickorder}>
-//               <Link to="/profile/trackorder">Track Order</Link>
+//               <Link href="/profile/trackorder">Track Order</Link>
 //             </li>
 //             <li className="hover:text-green-500 ">
-//               <Link to="/terms">Terms and Conditions</Link>
+//               <Link href="/terms">Terms and Conditions</Link>
 //             </li>
 //             <li className="hover:text-green-500 ">
-//               <Link to="/privacy-policy">Privacy Policy</Link>
+//               <Link href="/privacy-policy">Privacy Policy</Link>
 //             </li>
 //             <li className="hover:text-green-500 ">
-//               <Link to="/shipping">Shipping Policy</Link>
+//               <Link href="/shipping">Shipping Policy</Link>
 //             </li>
 //             <li className="hover:text-green-500 ">
-//               <Link to="/return">Return Policy</Link>
+//               <Link href="/return">Return Policy</Link>
 //             </li>
 //
 //           </ul>
@@ -492,10 +492,10 @@ export default Footer;
 //               }`}
 //           >
 //             {/* <li className="hover:text-green-500" onClick={handleClick}>
-//               <Link to="">Rewards Club</Link>
+//               <Link href="">Rewards Club</Link>
 //             </li> */}
 //             <li className="hover:text-green-500" onClick={handleWalletClick}>
-//               <Link to="">Wallet</Link>
+//               <Link href="">Wallet</Link>
 //             </li>
 //           </ul>
 //         </div>

@@ -66,7 +66,7 @@ const MenuSection = ({ title, children }) => (
 
 const MenuItem = ({ icon, text, badge, to }) => (
   <div className="flex items-center justify-between px-2 py-2 hover:bg-gray-200 cursor-pointer">
-    <Link to={to || "#"} className="flex items-center space-x-2 w-full">
+    <Link href={to || "#"} className="flex items-center space-x-2 w-full">
       {icon && <span className="text-xl">{icon}</span>} {/* Removed the previous color styling here */}
       <span className="text-md font-semibold">{text}</span>
     </Link>

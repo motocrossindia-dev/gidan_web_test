@@ -155,7 +155,7 @@ const NavBar = () => {
             {/* MOBILE */}
             <div className="sm:hidden flex justify-left items-center space-x-4">
               <WithoutLoginHamburger />
-              <Link to="/" onClick={() => window.scrollTo({ top: -10 })}>
+              <Link href="/" onClick={() => window.scrollTo({ top: -10 })}>
                 <img
                     src={logo}
                     alt="Gidan Logo"
@@ -169,7 +169,7 @@ const NavBar = () => {
 
             {/* DESKTOP */}
             <div className="hidden sm:flex items-center">
-              <Link to="/" onClick={() => window.scrollTo({ top: -10 })}>
+              <Link href="/" onClick={() => window.scrollTo({ top: -10 })}>
                 <img
                     src={logo}
                     alt="Gidan Logo"
@@ -252,14 +252,14 @@ const NavBar = () => {
                     <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 bg-white rounded-lg shadow-lg w-40 z-50">
                       <ul className="py-1">
                         <li className="px-4 py-3 hover:bg-gray-50">
-                          <Link to="/profile" className="flex items-center">
+                          <Link href="/profile" className="flex items-center">
                             <FaRegUser className="mr-3 text-gray-600" />
                             My Profile
                           </Link>
                         </li>
 
                         <li className="px-4 py-3 hover:bg-gray-50">
-                          <Link to="/profile/trackorder" className="flex items-center">
+                          <Link href="/profile/trackorder" className="flex items-center">
                             <TbCurrentLocation className="mr-3 text-gray-600" />
                             Track Order
                           </Link>

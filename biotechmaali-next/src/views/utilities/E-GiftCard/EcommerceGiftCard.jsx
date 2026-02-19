@@ -94,7 +94,7 @@ const EcommerceGiftCard = () => {
             {/* Share Section */}
             <div className="mt-8 text-gray-600 text-sm flex items-center">
              <span>Share:</span>
-             <Link to="#"
+             <Link href="#"
               className="text-bio-green ml-2">
                 🔗
                 </Link>

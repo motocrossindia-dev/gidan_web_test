@@ -107,22 +107,22 @@ function CategoryFilter({
         <h2 className="text-lg font-semibold mb-3">Recent Posts</h2>
         <ul className="space-y-3 text-gray-700">
           <li className="border-b border-gray-100 pb-2">
-            <Link to="#" className="hover:text-[#2F4333] transition-colors block text-sm line-clamp-2">
+            <Link href="#" className="hover:text-[#2F4333] transition-colors block text-sm line-clamp-2">
               Top 5 Scenic Road Trips from Chennai to Coastal Getaways
             </Link>
           </li>
           <li className="border-b border-gray-100 pb-2">
-            <Link to="#" className="hover:text-[#2F4333] transition-colors block text-sm line-clamp-2">
+            <Link href="#" className="hover:text-[#2F4333] transition-colors block text-sm line-clamp-2">
               How to Plan a Road Trip from Bangalore to Ooty: Route and Tips
             </Link>
           </li>
           <li className="border-b border-gray-100 pb-2">
-            <Link to="#" className="hover:text-[#2F4333] transition-colors block text-sm line-clamp-2">
+            <Link href="#" className="hover:text-[#2F4333] transition-colors block text-sm line-clamp-2">
               Solo Women Travel: Safe and Scenic Routes in South India
             </Link>
           </li>
           <li>
-            <Link to="#" className="hover:text-[#2F4333] transition-colors block text-sm line-clamp-2">
+            <Link href="#" className="hover:text-[#2F4333] transition-colors block text-sm line-clamp-2">
               Tips for Renting a Car During Monsoon: Stay Safe on the Road
             </Link>
           </li>
@@ -140,7 +140,7 @@ function CategoryFilter({
      
   <div className="absolute inset-x-0 bottom-0 flex flex-col items-center pb-4 sm:pb-6">     
    
-    <Link to={'https://play.google.com/store/apps/details?id=com.biotechmaali.app&pcampaignid=web_share'}>       
+    <Link href={'https://play.google.com/store/apps/details?id=com.biotechmaali.app&pcampaignid=web_share'}>       
       <button className="px-6 py-2 bg-bio-green text-white rounded-full font-semibold hover:bg-bio-green transition-colors transform hover:scale-105 duration-200 text-sm sm:text-base">         
         DOWNLOAD APP       
       </button>     

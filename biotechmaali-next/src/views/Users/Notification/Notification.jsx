@@ -76,7 +76,7 @@ const Notification = () => {
                 <p className="text-gray-600 text-sm">{notification.price}</p>
                 <p className="text-xs text-gray-400">{notification.date}</p>
               </div>
-              <Link to={`productdata/${notification.id}`} className="text-green-600 text-sm font-semibold ml-auto">
+              <Link href={`productdata/${notification.id}`} className="text-green-600 text-sm font-semibold ml-auto">
   More Details &rarr;
 </Link>
 

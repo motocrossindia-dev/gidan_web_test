@@ -135,7 +135,7 @@ const MenuItem = ({ icon, text, to, onClick }) => (
     className="flex items-center justify-between px-4 py-3 rounded-md hover:bg-gray-100 transition cursor-pointer"
     onClick={onClick}
   >
-    <Link to={to || "#"} className="flex items-center space-x-3 w-full">
+    <Link href={to || "#"} className="flex items-center space-x-3 w-full">
       {icon && <span className="text-xl">{icon}</span>}
       <span className="text-md font-medium text-gray-700">{text}</span>
     </Link>

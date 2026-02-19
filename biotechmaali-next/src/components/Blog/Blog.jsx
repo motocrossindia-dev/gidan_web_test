@@ -125,7 +125,7 @@ const Blog = () => {
                     aria-label="View all blogs"
                     className="bg-bio-green text-white w-[94px] h-[34px] rounded mx-1"
                   >
-                    <Link to="/blogcomponent">View All</Link>
+                    <Link href="/blogcomponent">View All</Link>
                   </button>
                   <button
                     aria-label="Next"
@@ -296,7 +296,7 @@ export default Blog;
 //                     onClick={ViewAll}
 //                     className="bg-bio-green text-white w-[94px] h-[34px] rounded mx-1"
 //                   >
-//                     <Link to="/blogcomponent">View All</Link>
+//                     <Link href="/blogcomponent">View All</Link>
 //                   </button>
 //                   <button
 //                     className="bg-white w-[30.24px] h-[30.24px] flex items-center justify-center rounded-full mx-1 border"

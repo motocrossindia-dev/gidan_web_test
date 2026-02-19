@@ -29,7 +29,7 @@ const ExploreWorks = () => {
             <h3 className="text-md sm:text-lg md:text-5xl lg:text-3xl md:font-semibold font-normal text-white mb-2 mt-20">
               What Makes Gidan Stand Out?
             </h3>
-            <Link to="/ourwork">
+            <Link href="/ourwork">
               <button 
                 className="bg-bio-green text-white md:font-semibold font-normal py-1 md:py-2 px-4 md:px-6 rounded-md hover:bg-green-600 text-md md:text-base"
               >
