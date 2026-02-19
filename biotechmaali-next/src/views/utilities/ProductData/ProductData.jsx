@@ -1477,7 +1477,7 @@ export default function Component() {
 //
 // export default function Component() {
 //     const pathname = usePathname();
-  const searchParams = useSearchParams();
+//   const searchParams = useSearchParams();
 //     const [selectedImage, setSelectedImage] = useState(0);
 //
 //     const [selectedSize, setSelectedSize] = useState("");

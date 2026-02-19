@@ -37,7 +37,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
             if (inCart) {
                 enqueueSnackbar("Product already exists in cart.", { variant: "info" });
             } else {
-                const response = await axios.post(`${process.env.REACT_APP_API_URL}/order/cart/`, payload, {
+                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/order/cart/`, payload, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
                         "Content-Type": "application/json",
@@ -71,7 +71,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
             if (inWishlist) {
                 enqueueSnackbar("Product already exists in wishlist.", { variant: "info" });
             } else {
-                const response = await axios.post(`${process.env.REACT_APP_API_URL}/order/wishlist/`, payload, {
+                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/`, payload, {
                     headers: { Authorization: `Bearer ${accessToken}` },
                 });
                 window.dispatchEvent(new Event("wishlistUpdated"));
@@ -147,7 +147,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                     >
                         <img
                             className={`w-40 sm:w-48 lg:w-[226px] h-[200px] lg:h-[260px] object-contain mt-4 transition-transform duration-300 rounded-[2rem] ${isImageHovered ? "scale-105" : "scale-100"}`}
-                            src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
+                            src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
                             alt={name}
                             loading="lazy" width="400" height="400" style={{ aspectRatio: '1/1' }}
                         />
@@ -254,7 +254,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                         <div className="relative w-full flex justify-center mb-3">
                             <img
                                 className="w-32 h-32 object-contain rounded-md transition-transform duration-300 relative z-10"
-                                src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
+                                src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
                                 alt={name}
                                 loading="lazy" width="400" height="400" style={{ aspectRatio: '1/1' }}
                             />
@@ -373,7 +373,7 @@ export default ProductCard;
 //             if (inCart) {
 //                 enqueueSnackbar("Product already exists in cart.", { variant: "info" });
 //             } else {
-//                 const response = await axios.post(`${process.env.REACT_APP_API_URL}/order/cart/`, payload, {
+//                 const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/order/cart/`, payload, {
 //                     headers: {
 //                         Authorization: `Bearer ${accessToken}`,
 //                         "Content-Type": "application/json",
@@ -407,7 +407,7 @@ export default ProductCard;
 //             if (inWishlist) {
 //                 enqueueSnackbar("Product already exists in wishlist.", { variant: "info" });
 //             } else {
-//                 const response = await axios.post(`${process.env.REACT_APP_API_URL}/order/wishlist/`, payload, {
+//                 const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/`, payload, {
 //                     headers: { Authorization: `Bearer ${accessToken}` },
 //                 });
 //                 window.dispatchEvent(new Event("wishlistUpdated"));
@@ -483,7 +483,7 @@ export default ProductCard;
 //                     >
 //                         <img
 //                             className={`w-40 sm:w-48 lg:w-[226px] h-[200px] lg:h-[260px] object-contain mt-4 transition-transform duration-300 rounded-[2rem] ${isImageHovered ? "scale-105" : "scale-100"}`}
-//                             src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
+//                             src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
 //                             alt={name}
 //                             loading="lazy"
 //                         />
@@ -590,7 +590,7 @@ export default ProductCard;
 //                         <div className="relative w-full flex justify-center mb-3">
 //                             <img
 //                                 className="w-32 h-32 object-contain rounded-md transition-transform duration-300 relative z-10"
-//                                 src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
+//                                 src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
 //                                 alt={name}
 //                                 loading="lazy"
 //                             />

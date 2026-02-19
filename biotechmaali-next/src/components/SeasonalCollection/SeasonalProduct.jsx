@@ -132,7 +132,7 @@ export default SeasonalProduct;
 //
 //   const getProducts = useCallback(async () => {
 //     try {
-//       const url = `${process.env.REACT_APP_API_URL}/product/homeProducts/`;
+//       const url = `${process.env.NEXT_PUBLIC_API_URL}/product/homeProducts/`;
 //       const config = accessToken
 //           ? { headers: { Authorization: `Bearer ${accessToken}` } }
 //           : {};

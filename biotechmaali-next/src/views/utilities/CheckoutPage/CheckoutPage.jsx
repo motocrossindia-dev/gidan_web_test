@@ -285,7 +285,7 @@ const AddNewAddress = () => {
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/account/address/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/account/address/`,
         addressData,
         {
           headers: {
@@ -474,7 +474,7 @@ const OrderSummaryItem = ({ title, Quantity, mrp, sales_price, total,image }) =>
     <div className="flex items-center justify-between p-4 border-b">
       <div className="flex gap-4">
         <img name=" "    
-          src={`${process.env.REACT_APP_API_URL}${image}`}
+          src={`${process.env.NEXT_PUBLIC_API_URL}${image}`}
           alt={title}
           loading="lazy"
           className="w-24 h-24 object-cover rounded-md"
@@ -652,7 +652,7 @@ const OrderSummary = ({ selectedOption,selectedAddress,data }) => {
 
 //   try {
 //     const response = await axios.patch(
-//       `${process.env.REACT_APP_API_URL}/order/orderSummary/`,
+//       `${process.env.NEXT_PUBLIC_API_URL}/order/orderSummary/`,
 //       orderSummaryData,
 //       {
 //         headers: { Authorization: `Bearer ${accessToken}` },
@@ -768,7 +768,7 @@ const ApplyCoupon = ({ id, setCoupon }) => {
     try {
       console.log("🎟️ Applying coupon ID:", couponId, "to order:", id);
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/order/applyCoupon/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/order/applyCoupon/`,
         {
           selected_coupon_id: couponId,
           order_id: id,
@@ -1115,7 +1115,7 @@ const handleSaveOrderSummary = async () => {
 
   try {
     const response = await axios.patch(
-      `${process.env.REACT_APP_API_URL}/order/orderSummary/`,
+      `${process.env.NEXT_PUBLIC_API_URL}/order/orderSummary/`,
       orderSummaryData,
       {
         headers: { Authorization: `Bearer ${accessToken}` },

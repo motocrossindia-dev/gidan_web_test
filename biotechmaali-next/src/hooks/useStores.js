@@ -18,7 +18,7 @@ import axiosInstance from '../Axios/axiosInstance';
 
 const fetchStores = async () => {
   const response = await axiosInstance.get(
-    `${process.env.REACT_APP_API_URL}/store/store_list/`
+    `${process.env.NEXT_PUBLIC_API_URL}/store/store_list/`
   );
   return response?.data?.data?.stores || [];
 };

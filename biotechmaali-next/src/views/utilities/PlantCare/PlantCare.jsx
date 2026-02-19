@@ -50,7 +50,7 @@ function PlantCare() {
       if (query) {
         try {
           const response = await axiosInstance.get(
-              `${process.env.REACT_APP_API_URL}/filters/main_productsFilter/?search=${query}`
+              `${process.env.NEXT_PUBLIC_API_URL}/filters/main_productsFilter/?search=${query}`
           );
           if (response.status === 200) {
             setResults(response.data.results || []);
@@ -196,7 +196,7 @@ export default PlantCare;
 //   const fetchSearchResults = async () => {
 //     try {
 //
-//       const response = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/product/searchProducts/?search=${query}`,
+//       const response = await axiosInstance.get(`${process.env.NEXT_PUBLIC_API_URL}/product/searchProducts/?search=${query}`,
 //           // { search: query },
 //         );
 //                 if (response?.status === 200) {

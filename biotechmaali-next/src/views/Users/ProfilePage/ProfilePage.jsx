@@ -42,7 +42,7 @@ const ProfileForm = () => {
   const fetchProfileData = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/account/profile/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/account/profile/`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -105,7 +105,7 @@ const ProfileForm = () => {
 
     try {
       const response = await axios.patch(
-        `${process.env.REACT_APP_API_URL}/account/profile/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/account/profile/`,
         profileData,
         {
           headers: {

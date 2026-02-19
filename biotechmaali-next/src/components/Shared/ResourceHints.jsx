@@ -7,7 +7,7 @@ import { Helmet } from 'react-helmet-async';
  * Optimizes resource loading with preconnect, dns-prefetch, and preload
  */
 const ResourceHints = () => {
-  const apiDomain = process.env.REACT_APP_API_URL;
+  const apiDomain = process.env.NEXT_PUBLIC_API_URL;
 
   return (
     <Helmet>

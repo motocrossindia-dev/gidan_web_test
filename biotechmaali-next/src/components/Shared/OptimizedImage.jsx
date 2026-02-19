@@ -70,7 +70,7 @@ const OptimizedImage = ({
     return url.replace(/\.(jpg|jpeg|png)$/i, '.webp');
   };
 
-  const imageSrc = `${process.env.REACT_APP_API_URL}${src}`;
+  const imageSrc = `${process.env.NEXT_PUBLIC_API_URL}${src}`;
   const webpSrc = getWebPUrl(imageSrc);
 
   return (

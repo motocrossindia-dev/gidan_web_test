@@ -50,7 +50,7 @@ const MobileLoginPage = () => {
   
     try {
       const response = await axiosInstance.post(
-        `${process.env.REACT_APP_API_URL}/account/register/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/account/register/`,
         {
           name: formData.name,
           mobile: new_user_mobile.mobile,

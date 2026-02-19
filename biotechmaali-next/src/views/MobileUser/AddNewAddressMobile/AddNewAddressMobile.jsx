@@ -24,7 +24,7 @@ const AddressSection = () => {
     if (!accessToken) return;
     try {
       const response = await axiosInstance.get(
-        `${process.env.REACT_APP_API_URL}/account/address/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/account/address/`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

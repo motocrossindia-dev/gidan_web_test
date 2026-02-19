@@ -43,7 +43,7 @@ const ProductCard = ({ product, handleRemove, handleQuantityChange }) => {
       <div className="flex flex-row space-x-4 items-center">
         {/* Adjust image size responsively */}
         <img name=" "   
-          src={`${process.env.REACT_APP_API_URL}${product.image}`}
+          src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
           alt={product.name}
           className="w-24 h-36 md:w-32 md:h-32 lg:w-40 lg:h-40 rounded-md object-cover"
         />

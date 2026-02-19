@@ -36,7 +36,7 @@ const AddOnData = ({
     try {
       if (inCart) {
         const response = await axios.delete(
-          `${process.env.REACT_APP_API_URL}/order/cart/?main_product_id=${product.id}/`,
+          `${process.env.NEXT_PUBLIC_API_URL}/order/cart/?main_product_id=${product.id}/`,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
             // data: { main_prod_id: product.id }, // <-- Pass data inside `data`
@@ -49,7 +49,7 @@ const AddOnData = ({
         }
       } else {
         const response = await axios.post(
-          `${process.env.REACT_APP_API_URL}/order/cart/`,
+          `${process.env.NEXT_PUBLIC_API_URL}/order/cart/`,
           { main_prod_id: product.id },
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
@@ -102,7 +102,7 @@ const AddOnData = ({
     <img name=" "   
       className={`w-30 h-28 sm:w-44 sm:h-40 lg:h-[200px] object-cover mt-4 lg:w-[200px] object-contain transition-transform duration-300 rounded-[2rem] 
           ${isImageHovered ? "scale-105" : "scale-100"}`}
-      src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
+      src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
       loading="lazy"
       alt={name}
     />
@@ -174,7 +174,7 @@ const AddOnData = ({
           <div className="relative w-full flex flex-col items-center p-2">
             <img name=" "   
               className="w-40 h-24 sm:w-40 sm:h-36 object-contain rounded-lg transition-transform duration-300 mt-6"
-              src={`${process.env.REACT_APP_API_URL}${product.image}`}
+              src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
               loading="lazy"
               alt={product.name}
             />

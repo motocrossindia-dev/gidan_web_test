@@ -65,7 +65,7 @@ const Verification = ({ onClose, onSubmit }) => {
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/account/validateOtp/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/account/validateOtp/`,
         payload,
         {
           headers: { "Content-Type": "application/json" },
@@ -131,7 +131,7 @@ const Verification = ({ onClose, onSubmit }) => {
 
   try {
     const response = await axios.post(
-      `${process.env.REACT_APP_API_URL}/account/registerWithMobile/`,
+      `${process.env.NEXT_PUBLIC_API_URL}/account/registerWithMobile/`,
       formDataToSend,
       {
         headers: {

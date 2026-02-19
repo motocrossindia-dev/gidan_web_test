@@ -16,7 +16,7 @@ const CheckOutStore = () => {
   const fetchStores = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/store/store_list/`
+        `${process.env.NEXT_PUBLIC_API_URL}/store/store_list/`
       );
       setStores(response?.data?.data?.stores || []); // Set the stores if the response is an array
     } catch (error) {

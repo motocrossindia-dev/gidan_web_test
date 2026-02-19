@@ -97,7 +97,7 @@ function DealOfWeek() {
             <div key={index} className="bg-white rounded-lg overflow-hidden shadow-md">
               {deal?.main_products?.image && (
                 <img
-                  src={`${process.env.REACT_APP_API_URL}${deal.main_products.image}`}
+                  src={`${process.env.NEXT_PUBLIC_API_URL}${deal.main_products.image}`}
                   alt={deal?.main_products?.name}
                   className="w-full h-48 object-cover"
                   loading="lazy"

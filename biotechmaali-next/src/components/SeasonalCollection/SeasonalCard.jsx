@@ -153,7 +153,7 @@ const SeasonalCard = ({
                         <div className="relative w-full flex mb-4">
                             <img
                                 className="w-full h-40 object-cover rounded-lg transition-transform duration-300 relative z-10"
-                                src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
+                                src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
                                 alt={name} loading="lazy" width="400" height="400" style={{ aspectRatio: '1/1' }} />
 
                             {/* ICONS INSIDE IMAGE AREA */}
@@ -273,7 +273,7 @@ const SeasonalCard = ({
                         <div className="relative rounded-lg flex justify-center items-center w-full">
                             <img name=" "
                                  className={`w-40 h-43 sm:w-48 sm:h-53 lg:h-[260px] mt-4 lg:w-[226px] object-contain transition-transform duration-300 rounded-[2rem] ${isImageHovered ? "scale-105" : "scale-100"}`}
-                                 src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
+                                 src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
                                  alt={name} loading="lazy" width="400" height="400" style={{ aspectRatio: '1/1' }} />
 
                             <div
@@ -517,7 +517,7 @@ export default memo(SeasonalCard, (prevProps, nextProps) => {
 //                         <div className="relative w-full flex mb-4">
 //                             <img
 //                                 className="w-full h-40 object-cover rounded-lg transition-transform duration-300 relative z-10"
-//                                 src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
+//                                 src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
 //                                 alt={name}
 //                             />
 //
@@ -638,7 +638,7 @@ export default memo(SeasonalCard, (prevProps, nextProps) => {
 //                         <div className="relative rounded-lg flex justify-center items-center w-full">
 //                             <img name=" "
 //                                  className={`w-40 h-43 sm:w-48 sm:h-53 lg:h-[260px] mt-4 lg:w-[226px] object-contain transition-transform duration-300 rounded-[2rem] ${isImageHovered ? "scale-105" : "scale-100"}`}
-//                                  src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
+//                                  src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
 //                                  alt={name}
 //                             />
 //

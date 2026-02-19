@@ -19,7 +19,7 @@ const Cart = () => {
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
-        const response = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/order/cart/`, {
+        const response = await axiosInstance.get(`${process.env.NEXT_PUBLIC_API_URL}/order/cart/`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
@@ -41,7 +41,7 @@ const Cart = () => {
   const handleUpdateQuantity = async (cartId, newQuantity) => {
     try {
       const response = await axiosInstance.patch(
-        `${process.env.REACT_APP_API_URL}/order/cart/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/order/cart/`,
         { cart_id: cartId, quantity: newQuantity },
         {
           headers: {
@@ -68,7 +68,7 @@ const Cart = () => {
   // Handle removing products from cart
   const handleRemove = async (id) => {
     try {
-      const response = await axiosInstance.delete(`${process.env.REACT_APP_API_URL}/order/cart/${id}/`, {
+      const response = await axiosInstance.delete(`${process.env.NEXT_PUBLIC_API_URL}/order/cart/${id}/`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",

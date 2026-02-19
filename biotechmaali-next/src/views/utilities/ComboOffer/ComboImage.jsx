@@ -107,7 +107,7 @@ function ComboImage() {
         {comboOffers?.map((offer, index) => (
           <div key={index} className="bg-white rounded-lg overflow-hidden shadow-md">
             <img name=" "   
-              src={`${process.env.REACT_APP_API_URL}${offer?.image}`} // Use the imageUrl from the offer object
+              src={`${process.env.NEXT_PUBLIC_API_URL}${offer?.image}`} // Use the imageUrl from the offer object
               loading="lazy"
               alt={offer?.name}
               width={300}

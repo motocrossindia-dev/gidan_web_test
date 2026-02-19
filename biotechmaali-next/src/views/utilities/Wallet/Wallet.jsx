@@ -33,7 +33,7 @@ const Wallet = () => {
     if (!amount) return alert("Please enter a valid amount");
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/wallet/create-order/`,
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/wallet/create-order/`,
         { amount: parseFloat(amount).toFixed(2) },
         {
           headers: {
@@ -56,7 +56,7 @@ const Wallet = () => {
                 order_id: response?.data?.order?.id, // Corrected order_id
                 handler: async (paymentResponse) => {
                   try {
-                    const verifyResponse = await axios.post(`${process.env.REACT_APP_API_URL}/wallet/verify-payment/`,
+                    const verifyResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/wallet/verify-payment/`,
                       {
                         razorpay_payment_id: paymentResponse.razorpay_payment_id,
                         razorpay_order_id: paymentResponse.razorpay_order_id, // Ensure correct ID
@@ -101,7 +101,7 @@ const Wallet = () => {
   };
   const getWallet =async()=>{
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/wallet/wallet/`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/wallet/wallet/`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
@@ -118,7 +118,7 @@ const Wallet = () => {
   }
   const getTransactions = async()=>{
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/wallet/transactions/`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/wallet/transactions/`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",

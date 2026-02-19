@@ -214,7 +214,7 @@ function ShopTheLook() {
                 className="flex items-center p-2 md:p-4 border-b last:border-b-0"
               >
                 <img
-                  src={`${process.env.REACT_APP_API_URL}${product?.image}`}
+                  src={`${process.env.NEXT_PUBLIC_API_URL}${product?.image}`}
                   alt={product?.name}
                   className="w-16 h-16 md:w-20 md:h-20 rounded-lg mr-3 md:mr-4 object-cover flex-shrink-0"
                   loading="lazy"
@@ -411,7 +411,7 @@ export default ShopTheLook;
 //                       className="flex items-center p-2 md:p-4 border-b last:border-b-0"
 //                   >
 //                     <img
-//                         src={`${process.env.REACT_APP_API_URL}${product?.image}`}
+//                         src={`${process.env.NEXT_PUBLIC_API_URL}${product?.image}`}
 //                         alt={product?.name}
 //                         className="w-16 h-16 md:w-20 md:h-20 rounded-lg mr-3 md:mr-4 object-cover flex-shrink-0"
 //                         loading="lazy"

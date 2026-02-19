@@ -64,7 +64,7 @@ const Login = ({ onClose }) => {
     try {
       // Make POST request to the API
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/account/register/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/account/register/`,
         {
           name: formData.name, // Use the correct name value
           mobile: new_user_mobile,

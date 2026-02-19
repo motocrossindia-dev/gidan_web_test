@@ -67,7 +67,7 @@ const OrderSummary = () => {
   const fetchDefaultAddress = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/account/address/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/account/address/`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -104,7 +104,7 @@ const OrderSummary = () => {
         address_id:address.id
       }
       try {
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/order/orderSummary/`,
+        const response = await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/order/orderSummary/`,
           data,{
             headers: { Authorization: `Bearer ${accessToken}` },
           })

@@ -27,7 +27,7 @@ const PaymentPage = () => {
       
     }
     try {
-      const response = await axios.patch(`${process.env.REACT_APP_API_URL}/order/proceedToPayment/`, {
+      const response = await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/order/proceedToPayment/`, {
         order_id: data.id,
         payment_method: paymentMethod,
       },
@@ -47,7 +47,7 @@ const PaymentPage = () => {
           
    try {
             const verifyResponse = await axios.post(
-              `${process.env.REACT_APP_API_URL}/order/verifyPayment/`,
+              `${process.env.NEXT_PUBLIC_API_URL}/order/verifyPayment/`,
               {
                 razorpay_payment_id: paymentResponse?.razorpay_payment_id,
                 razorpay_order_id: paymentResponse?.razorpay_order_id, // Use the correct ID from Razorpay

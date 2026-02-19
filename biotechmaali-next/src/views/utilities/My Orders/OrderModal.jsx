@@ -111,7 +111,7 @@
 //                         <div key={index} className="flex gap-4 border-t border-b py-4">
 //                           <div className="w-20 h-20">
 //                             <img name=" "   
-//                               src={`${process.env.REACT_APP_API_URL}${item?.image}`}
+//                               src={`${process.env.NEXT_PUBLIC_API_URL}${item?.image}`}
 //                               loading="lazy"
 //                               alt={item?.product_name}
 //                               className="w-full h-full object-contain"
@@ -450,7 +450,7 @@ const response = await axiosInstance.post(
                           <div className="w-20 h-20">
                             <img
                               name=" "
-                              src={`${process.env.REACT_APP_API_URL}${item?.image}`}
+                              src={`${process.env.NEXT_PUBLIC_API_URL}${item?.image}`}
                               loading="lazy"
                               alt={item?.product_name}
                               className="w-full h-full object-contain"

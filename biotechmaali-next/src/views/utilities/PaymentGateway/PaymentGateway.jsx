@@ -44,7 +44,7 @@ const handleGstCheckbox = (e) => {
 
   const getWalletbalance =async()=>{
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/wallet/wallet`,
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/wallet/wallet`,
         { headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" } }
 
       )
@@ -132,7 +132,7 @@ const handlePayment = async () => {
         handler: async (paymentResponse) => {
           try {
             const verifyRes = await axios.post(
-              `${process.env.REACT_APP_API_URL}/order/verifyPayment/`,
+              `${process.env.NEXT_PUBLIC_API_URL}/order/verifyPayment/`,
               {
                 razorpay_payment_id: paymentResponse.razorpay_payment_id,
                 razorpay_order_id: paymentResponse.razorpay_order_id,
@@ -177,7 +177,7 @@ const handlePayment = async () => {
             if (usedWallet > 0) {
               try {
                 await axios.post(
-                  `${process.env.REACT_APP_API_URL}/order/payments/rollback-wallet/`,
+                  `${process.env.NEXT_PUBLIC_API_URL}/order/payments/rollback-wallet/`,
                   {
                     order_id: order_id,
                     wallet_amount: usedWallet,

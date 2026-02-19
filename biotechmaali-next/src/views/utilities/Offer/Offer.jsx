@@ -86,7 +86,7 @@ function Offer() {
             <div key={index} className="bg-white rounded-lg overflow-hidden shadow-md">
               {offer?.image && (
                 <img
-                  src={`${process.env.REACT_APP_API_URL}${offer.image}`}
+                  src={`${process.env.NEXT_PUBLIC_API_URL}${offer.image}`}
                   alt={offer?.name}
                   className="w-full h-48 object-cover"
                   loading="lazy"

@@ -22,7 +22,7 @@ const fetchHomeProducts = async (accessToken) => {
     : {};
 
   const response = await axiosInstance.get(
-    `${process.env.REACT_APP_API_URL}/product/homeProducts/`,
+    `${process.env.NEXT_PUBLIC_API_URL}/product/homeProducts/`,
     config
   );
 

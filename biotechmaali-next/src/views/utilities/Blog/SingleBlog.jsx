@@ -13,7 +13,7 @@ const SingleBlog = () => {
     const getBlogbyid=async()=>{
         try {
             
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/blog/blogs/${id}/`)
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/blog/blogs/${id}/`)
             if (response.status=== 200 ) {
                 SetBlogs(response.data.data.blog_details)
             }
@@ -37,7 +37,7 @@ useEffect(()=>{
                    >
                      <div className="relative">
                        <img name=" "   
-                         src={`${process.env.REACT_APP_API_URL}${blog?.image}`}
+                         src={`${process.env.NEXT_PUBLIC_API_URL}${blog?.image}`}
                          alt={blog?.title}
                          loading="lazy"
                          className="w-full h-64 object-cover"

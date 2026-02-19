@@ -37,7 +37,7 @@ const FranchiseForm = () => {
 
     try {
       const response = await axios.post(
-          `${process.env.REACT_APP_API_URL}/franchise/add_franchise/`,
+          `${process.env.NEXT_PUBLIC_API_URL}/franchise/add_franchise/`,
           formData,
           {
             headers: {

@@ -86,7 +86,7 @@ const CheckOutStore = () => {
                       {/* Store Image */}
                       {store.image && (
                         <img
-                          src={`${process.env.REACT_APP_API_URL}${store.image}`}
+                          src={`${process.env.NEXT_PUBLIC_API_URL}${store.image}`}
                           alt={store.location}
                           className="w-full h-40 object-cover rounded-md mb-3"
                           loading="lazy"
@@ -147,7 +147,7 @@ export default CheckOutStore;
 //   const fetchStores = async () => {
 //     try {
 //       const response = await axiosInstance.get(
-//         `${process.env.REACT_APP_API_URL}/store/store_list/`
+//         `${process.env.NEXT_PUBLIC_API_URL}/store/store_list/`
 //       );
 //       setStores(response?.data?.data?.stores || []); 
 //     } catch (error) {
@@ -200,7 +200,7 @@ export default CheckOutStore;
 //                       {/* Store Image */}
 //                       {store.image && (
 //                         <img
-//                           src={`${process.env.REACT_APP_API_URL}${store.image}`}
+//                           src={`${process.env.NEXT_PUBLIC_API_URL}${store.image}`}
 //                           alt={store.location}
 //                           className="w-full h-40 object-cover rounded-md mb-3"
 //                         />

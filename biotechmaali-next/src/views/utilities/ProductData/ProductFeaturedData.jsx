@@ -39,7 +39,7 @@ const ProductFeaturedCard = ({
       }
 
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/order/wishlist/?main_product_id_list=true`,
+        `${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/?main_product_id_list=true`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -73,7 +73,7 @@ const ProductFeaturedCard = ({
 
       if (inWishlist) {
         const response = await axios.delete(
-          `${process.env.REACT_APP_API_URL}/order/wishlist/?main_product_id=${product}/`,
+          `${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/?main_product_id=${product}/`,
           // { main_prod_id: product.id },
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
@@ -83,7 +83,7 @@ const ProductFeaturedCard = ({
         }
       } else {
         const response = await axios.post(
-          `${process.env.REACT_APP_API_URL}/order/wishlist/`,
+          `${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/`,
           { main_prod_id: product },
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
@@ -110,7 +110,7 @@ const ProductFeaturedCard = ({
 
       if (inCart) {
         const response = await axios.delete(
-          `${process.env.REACT_APP_API_URL}/order/cart/?main_product_id=${product}/`,
+          `${process.env.NEXT_PUBLIC_API_URL}/order/cart/?main_product_id=${product}/`,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
             // data: { main_prod_id: product.id }, // <-- Pass data inside `data`
@@ -123,7 +123,7 @@ const ProductFeaturedCard = ({
         }
       } else {
         const response = await axios.post(
-          `${process.env.REACT_APP_API_URL}/order/cart/`,
+          `${process.env.NEXT_PUBLIC_API_URL}/order/cart/`,
           { main_prod_id: product },
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
@@ -186,7 +186,7 @@ const ProductFeaturedCard = ({
             <img name=" "   
               className={`w-40 h-44 sm:w-52 sm:h-59 object-contain rounded-lg transition-transform duration-300 ${isHovered ? "scale-105" : "scale-100"
                 }`}
-              src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
+              src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
               loading="lazy"
               alt={name}
             />

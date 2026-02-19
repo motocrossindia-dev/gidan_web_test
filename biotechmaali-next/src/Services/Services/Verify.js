@@ -14,7 +14,7 @@ const Verify = () => {
 
   const createToken = async () => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/token/refresh/`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/token/refresh/`, {
         refresh: refresh_token
       });
       const data = response.data;
@@ -39,7 +39,7 @@ const Verify = () => {
 
   const tokenVerify = async (token) => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/token/verify/`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/token/verify/`, {
         token: token || access_token
       });
       const data = response.data;

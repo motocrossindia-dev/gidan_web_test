@@ -38,7 +38,7 @@ const ProductSellerCard = ({
       }
 
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/order/wishlist/?main_product_id_list=true`,
+        `${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/?main_product_id_list=true`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -71,7 +71,7 @@ const ProductSellerCard = ({
 
       if (inWishlist) {
         const response = await axios.delete(
-          `${process.env.REACT_APP_API_URL}/order/wishlist/?main_product_id=${product}/`,
+          `${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/?main_product_id=${product}/`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         if (response.status === 200) {
@@ -80,7 +80,7 @@ const ProductSellerCard = ({
         }
       } else {
         const response = await axios.post(
-          `${process.env.REACT_APP_API_URL}/order/wishlist/`,
+          `${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/`,
           { main_prod_id: product },
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
@@ -106,7 +106,7 @@ const ProductSellerCard = ({
 
       if (inCart) {
         const response = await axios.delete(
-          `${process.env.REACT_APP_API_URL}/order/cart/?main_product_id=${product}/`,
+          `${process.env.NEXT_PUBLIC_API_URL}/order/cart/?main_product_id=${product}/`,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
             // data: { main_prod_id: product.id }, // <-- Pass data inside `data`
@@ -119,7 +119,7 @@ const ProductSellerCard = ({
         }
       } else {
         const response = await axios.post(
-          `${process.env.REACT_APP_API_URL}/order/cart/`,
+          `${process.env.NEXT_PUBLIC_API_URL}/order/cart/`,
           { main_prod_id: product },
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
@@ -186,7 +186,7 @@ const ProductSellerCard = ({
               className={`w-40 h-43 sm:w-48 sm:h-53 lg:h-[260px] object-cover mt-4 lg:w-[226px] object-contain transition-transform duration-300 rounded-[2rem] 
                 ${isImageHovered ? "scale-105" : "scale-100"}
               `}
-              src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
+              src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
               loading="lazy"
               alt={name}
             />

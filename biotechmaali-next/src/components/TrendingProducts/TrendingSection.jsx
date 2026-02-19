@@ -204,7 +204,7 @@ export default TrendingSection;
 //     try {
 //       if (accessToken) {
 //         const response = await axiosInstance.get(
-//             `${process.env.REACT_APP_API_URL}/product/homeProducts/`,
+//             `${process.env.NEXT_PUBLIC_API_URL}/product/homeProducts/`,
 //             {
 //               headers: {
 //                 "Content-Type": "application/json",
@@ -217,7 +217,7 @@ export default TrendingSection;
 //         }
 //       } else {
 //         const response = await axiosInstance.get(
-//             `${process.env.REACT_APP_API_URL}/product/homeProducts/`);
+//             `${process.env.NEXT_PUBLIC_API_URL}/product/homeProducts/`);
 //         if (response.status === 200) {
 //           setProductsDetails(response?.data?.data?.products);
 //         }
@@ -285,7 +285,7 @@ export default TrendingSection;
 //   const ViewAll = useCallback(async () => {
 //     try {
 //       const response = await axiosInstance.get(
-//           `${process.env.REACT_APP_API_URL}/product/viewAll`,
+//           `${process.env.NEXT_PUBLIC_API_URL}/product/viewAll`,
 //           {
 //             headers: {
 //               "Content-Type": "application/json",

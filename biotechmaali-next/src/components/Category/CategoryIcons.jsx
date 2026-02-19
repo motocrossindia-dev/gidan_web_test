@@ -112,7 +112,7 @@ const CategoryIcons = () => {
                   }}
                 >
                   <img
-                    src={`${process.env.REACT_APP_API_URL}${category.image}`}
+                    src={`${process.env.NEXT_PUBLIC_API_URL}${category.image}`}
                     alt={category.name || "Category"}
                     className="w-full h-full object-contain rounded-full"
                     loading="lazy"
@@ -320,7 +320,7 @@ export default CategoryIcons;
 //                   }}
 //                 >
 //                   <img
-//                     src={`${process.env.REACT_APP_API_URL}${category.image}`}
+//                     src={`${process.env.NEXT_PUBLIC_API_URL}${category.image}`}
 //                     alt={category.name || "Category"}
 //                     className="w-full h-full object-contain rounded-full"
 //                     loading="lazy"

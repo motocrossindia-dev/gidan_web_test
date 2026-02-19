@@ -107,7 +107,7 @@ const handlePlaceOrder = async () => {
   try {
     // Place order directly using shop_the_look order source
     const placeOrderResponse = await axiosInstance.post(
-      `${process.env.REACT_APP_API_URL}/order/placeOrder/`,
+      `${process.env.NEXT_PUBLIC_API_URL}/order/placeOrder/`,
       { 
         order_source: "shop_the_look",
         combo_id: shopid
@@ -187,7 +187,7 @@ const handlePlaceOrder = async () => {
                 className="flex items-center p-2 md:p-4 border-b last:border-b-0 relative"
               >
                 <img name=" "
-                  src={`${process.env.REACT_APP_API_URL}${product?.image}`}
+                  src={`${process.env.NEXT_PUBLIC_API_URL}${product?.image}`}
                   alt={product?.name}
                   className="w-16 h-16 md:w-20 md:h-20 rounded-lg mr-3 md:mr-4"
                 />

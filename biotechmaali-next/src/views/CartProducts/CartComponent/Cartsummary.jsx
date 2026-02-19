@@ -33,7 +33,7 @@ const CartSummary = ({
   
     try {
       const response = await axiosInstance.post(
-        `${process.env.REACT_APP_API_URL}/order/placeOrder/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/order/placeOrder/`,
         cartData,
         {
           headers: {

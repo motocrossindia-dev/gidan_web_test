@@ -53,7 +53,7 @@ const SignIn = ({ onClose, onGetOtpClick }) => {
     try {
       dispatch(signInStart());
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/account/registerWithMobile/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/account/registerWithMobile/`,
         formDataToSend,
         {
           headers: {

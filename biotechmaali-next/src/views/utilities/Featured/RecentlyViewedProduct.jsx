@@ -19,7 +19,7 @@ const RecentlyViewedProduct = () => {
   const getProducts = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/product/recentlyViewed/${`?${searchParams.toString()}`}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/product/recentlyViewed/${`?${searchParams.toString()}`}`,
         {
           headers: {
             "Content-Type": "application/json",

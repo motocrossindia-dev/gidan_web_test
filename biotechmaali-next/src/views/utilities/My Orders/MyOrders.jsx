@@ -234,7 +234,7 @@ const MyOrders = () => {
             <div className="flex gap-3">
               <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
                 <img
-                    src={`${process.env.REACT_APP_API_URL}${order?.product_details?.product_image}`}
+                    src={`${process.env.NEXT_PUBLIC_API_URL}${order?.product_details?.product_image}`}
                     loading="lazy"
                     alt={order?.product_details?.product_name}
                     className="w-full h-full object-cover"
@@ -305,7 +305,7 @@ const MyOrders = () => {
           <div className="p-6 flex items-center gap-6">
             <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
               <img
-                  src={`${process.env.REACT_APP_API_URL}${order?.product_details?.product_image}`}
+                  src={`${process.env.NEXT_PUBLIC_API_URL}${order?.product_details?.product_image}`}
                   loading="lazy"
                   alt={order?.product_details?.product_name}
                   className="w-full h-full object-cover"
@@ -770,7 +770,7 @@ export default MyOrders;
 //         <div className="flex gap-3">
 //           <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
 //             <img name=" "
-//               src={`${process.env.REACT_APP_API_URL}${order?.product_details?.product_image}`}
+//               src={`${process.env.NEXT_PUBLIC_API_URL}${order?.product_details?.product_image}`}
 //               loading="lazy"
 //               alt={order?.product_details?.product_name}
 //               className="w-full h-full object-cover"
@@ -837,7 +837,7 @@ export default MyOrders;
 //       <div className="p-6 flex items-center gap-6">
 //         <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
 //           <img name=" "
-//             src={`${process.env.REACT_APP_API_URL}${order?.product_details?.product_image}`}
+//             src={`${process.env.NEXT_PUBLIC_API_URL}${order?.product_details?.product_image}`}
 //             loading="lazy"
 //             alt={order?.product_details?.product_name}
 //             className="w-full h-full object-cover"

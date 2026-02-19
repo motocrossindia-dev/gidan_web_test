@@ -38,7 +38,7 @@ const RecentlyViewedCard = ({
       }
 
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/order/wishlist/?main_product_id_list=true`,
+        `${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/?main_product_id_list=true`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -75,7 +75,7 @@ const RecentlyViewedCard = ({
     
 
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/order/wishlist/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/`,
         { main_prod_id: productId },
         {
           headers: {
@@ -105,7 +105,7 @@ const RecentlyViewedCard = ({
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/order/cart/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/order/cart/`,
         { main_prod_id: product.id },
         {
           headers: {
@@ -154,7 +154,7 @@ const RecentlyViewedCard = ({
               <div className="relative w-full flex mb-4">
                 <img name=" "   
                   className="w-40 h-24 sm:w-40 sm:h-36 object-contain rounded-lg transition-transform duration-300 relative z-10 mt-6"
-                  src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
+                  src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
                   loading="lazy"
                   alt={name}
                 />
@@ -248,7 +248,7 @@ const RecentlyViewedCard = ({
               <img name=" "   
                 className={`w-40 h-43 sm:w-48 sm:h-53 lg:h-[260px] object-cover mt-4 lg:w-[226px] object-contain transition-transform duration-300 rounded-[2rem] ${isImageHovered ? "scale-105" : "scale-100"
                   }`}
-                src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
+                src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
                 loading="lazy"
                 alt={name}
               />

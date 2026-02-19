@@ -145,7 +145,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                         <div className="relative rounded-lg flex justify-center items-center w-full">
                             <img name=" "
                                  className="w-40 h-43 sm:w-48 sm:h-53 lg:h-[260px] mt-4 lg:w-[226px] object-contain transition-transform duration-300 rounded-[2rem] scale-100 hover:scale-105"
-                                 src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
+                                 src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
                                  alt={name} loading="lazy" width="400" height="400" style={{ aspectRatio: '1/1' }} />
 
                             <div
@@ -263,7 +263,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                         <div className="relative w-full bg-white overflow-hidden">
                             <img
                                 className="w-full h-40 object-cover"
-                                src={`${process.env.REACT_APP_API_URL}${product.image}`}
+                                src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
                                 alt={product.name} loading="lazy" width="400" height="400" style={{ aspectRatio: '1/1' }} />
 
 
@@ -525,7 +525,7 @@ export default memo(TrendingCard, (prevProps, nextProps) => {
 //                         <div className="relative rounded-lg flex justify-center items-center w-full">
 //                             <img name=" "
 //                                  className="w-40 h-43 sm:w-48 sm:h-53 lg:h-[260px] mt-4 lg:w-[226px] object-contain transition-transform duration-300 rounded-[2rem] scale-100 hover:scale-105"
-//                                  src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
+//                                  src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
 //                                  alt={name}
 //                             />
 //
@@ -644,7 +644,7 @@ export default memo(TrendingCard, (prevProps, nextProps) => {
 //                         <div className="relative w-full bg-white overflow-hidden">
 //   <img
 //     className="w-full h-40 object-cover"
-//     src={`${process.env.REACT_APP_API_URL}${product.image}`}
+//     src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
 //     alt={product.name}
 //   />
 //

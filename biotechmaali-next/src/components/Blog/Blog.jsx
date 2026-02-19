@@ -20,7 +20,7 @@ const Blog = () => {
       <div className="w-full max-w-[500px] mx-auto h-auto rounded-lg overflow-hidden font-sans flex flex-col items-center">
         <div className="w-full aspect-[800/665] bg-gray-100 rounded-lg overflow-hidden">
           <img
-            src={`${process.env.REACT_APP_API_URL}${image}`}
+            src={`${process.env.NEXT_PUBLIC_API_URL}${image}`}
             alt={title}
             loading="lazy"
             className="w-full h-full object-contain"
@@ -184,7 +184,7 @@ export default Blog;
 //       <div className="w-full max-w-[500px] mx-auto h-auto rounded-lg overflow-hidden font-sans flex flex-col items-center">
 //        <div className="w-full aspect-[800/665] bg-gray-100 rounded-lg overflow-hidden">
 //   <img
-//     src={`${process.env.REACT_APP_API_URL}${image}`}
+//     src={`${process.env.NEXT_PUBLIC_API_URL}${image}`}
 //     alt={title}
 //     loading="lazy"
 //     className="w-full h-full object-contain"

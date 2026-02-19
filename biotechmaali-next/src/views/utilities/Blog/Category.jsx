@@ -82,7 +82,7 @@ function Category({ blogs, loading, selectedCategory }) {
               <div className="relative">
                 <div className="w-full aspect-[800/665] bg-gray-100">
   <img
-    src={`${process.env.REACT_APP_API_URL}${post.image}`}
+    src={`${process.env.NEXT_PUBLIC_API_URL}${post.image}`}
     alt={post.title}
     loading="lazy"
     className="w-full h-full object-contain"

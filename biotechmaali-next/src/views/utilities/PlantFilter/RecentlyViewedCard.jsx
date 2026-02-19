@@ -54,7 +54,7 @@
 //               className={`w-40 h-43 sm:w-48 sm:h-53 lg:h-[260px] object-cover mt-4 lg:w-[226px] object-contain transition-transform duration-300 rounded-[2rem]
 //                  ${isImageHovered ? "scale-105" : "scale-100"}
 //                 `}
-//               src={`${process.env.REACT_APP_API_URL}${imageUrl}`}
+//               src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
 //               loading="lazy"
 //               alt={name}
 //             />
