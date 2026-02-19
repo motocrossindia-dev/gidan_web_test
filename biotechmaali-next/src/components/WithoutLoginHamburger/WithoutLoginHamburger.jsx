@@ -213,7 +213,7 @@ const WithoutLoginHamburger = () => {
                       </span>
                     ) : (
                       <Link
-                        to="/mobile-signin"
+                        href="/mobile-signin"
                         className="hover:text-green-700"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -304,7 +304,7 @@ const WithoutLoginHamburger = () => {
                     {additionalLinks.map((item, index) => (
                       <Link
                         key={index}
-                        to={item.path}
+                        href={item.path}
                         onClick={(e) => {
                           e.stopPropagation();
                           setIsOpen(false);
