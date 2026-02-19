@@ -9,6 +9,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import GoogleAnalytics from "@/GoogleAnalytics/GoogleAnalytics";
 import OrganizationSchema from "@/views/utilities/seo/OrganizationSchema";
 import Verify from "@/Services/Services/Verify";
+import TawkToWidget from "@/tawkto/tawkto";
 
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito-sans",
@@ -39,6 +40,7 @@ export default function RootLayout({
           <OrganizationSchema />
           <Verify />
           <ScrollToTop />
+          <TawkToWidget />
           <div className="landing-page-layout w-full min-h-screen flex flex-col overflow-x-hidden">
             {/* Sticky Header */}
             <div className="sticky top-0 left-0 w-full z-50">
@@ -46,7 +48,7 @@ export default function RootLayout({
               <NavBar />
             </div>
             {/* Main Content */}
-            <main className="main-content w-full overflow-x-hidden">
+            <main className="main-content w-full">
               {children}
               <Footer />
             </main>

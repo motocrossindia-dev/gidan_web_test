@@ -2,6 +2,7 @@
 
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
+import Image from 'next/image';
 import convertToSlug from "../../utils/slugConverter";
 
 const HeroSection = ({ hero }) => {
@@ -60,23 +61,17 @@ const HeroSection = ({ hero }) => {
         >
 
           {/* Maintain aspect ratio WITHOUT cropping */}
-          <div className="w-full">
-            <img
+          <div className="relative w-full" style={{ aspectRatio: '1920/600' }}>
+            <Image
               src={`https://backend.gidan.store${banner.web_banner}`}
-              alt="Hero Banner"
+              alt={`Hero Banner ${index + 1}`}
+              fill
+              sizes="100vw"
               onClick={() => handleBannerClick()}
-              className="
-                w-full
-                h-auto
-                object-contain
-                bg-white
-                cursor-pointer
-              "
+              className="object-contain bg-white cursor-pointer"
+              priority={index === 0}
               loading={index === 0 ? "eager" : "lazy"}
-              fetchPriority={index === 0 ? "high" : "low"}
-              decoding="async"
-              width="1920"
-              height="600"
+              quality={80}
             />
           </div>
 

@@ -203,6 +203,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                                 alt={name}
                                 width={226}
                                 height={260}
+                                loading="lazy"
                                 className="w-40 h-43 sm:w-48 sm:h-53 lg:h-[260px] mt-4 lg:w-[226px] object-contain transition-transform duration-300 rounded-[2rem] scale-100 hover:scale-105"
                             />
 
@@ -324,6 +325,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                                 alt={name}
                                 width={400}
                                 height={160}
+                                loading="lazy"
                                 className="w-full h-40 object-cover"
                             />
 
