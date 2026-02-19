@@ -1,13 +1,13 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 // ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
 import { useMemo } from "react";
-import { useNavigate } from "react-router-dom"; 
 import Card from "@mui/material/Card";
 import { useStores } from "../../hooks/useStores";
 
 const CheckOutStore = () => {
-  const navigate = useNavigate(); 
+  const router = useRouter(); 
 
   // Use TanStack Query hook for stores data
   const { data: stores = [], isLoading, isError } = useStores();
@@ -118,7 +118,7 @@ const CheckOutStore = () => {
             <div className="flex justify-center mt-6">
               <button
                 className="bg-bio-green text-white py-2 px-4 rounded-md hover:bg-green-700"
-                onClick={() => navigate("/stores")} 
+                onClick={() => router.push("/stores")} 
               >
                 View All
               </button>
@@ -134,15 +134,14 @@ export default CheckOutStore;
 
 // ========== OLD CODE (Before Feb 16, 2026 - TanStack Query) - COMMENTED OUT ==========
 // import React, { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom"; 
-// import Card from "@mui/material/Card";
+// // import Card from "@mui/material/Card";
 // import axiosInstance from "../../Axios/axiosInstance";
 //
 // const CheckOutStore = () => {
 //   const [loading, setLoading] = useState(true); 
 //   const [error, setError] = useState(null); 
 //   const [stores, setStores] = useState([]); 
-//   const navigate = useNavigate(); 
+//   const router = useRouter(); 
 //
 //   // Fetch stores from API when component mounts
 //   const fetchStores = async () => {
@@ -232,7 +231,7 @@ export default CheckOutStore;
 //             <div className="flex justify-center mt-6">
 //               <button
 //                 className="bg-bio-green text-white py-2 px-4 rounded-md hover:bg-green-700"
-//                 onClick={() => navigate("/stores")} 
+//                 onClick={() => router.push("/stores")} 
 //               >
 //                 View All
 //               </button>

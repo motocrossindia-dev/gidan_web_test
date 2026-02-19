@@ -1,8 +1,9 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { CiLocationOn } from "react-icons/ci"; // Import the location icon
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+// Import useNavigate for navigation
 import Card from "@mui/material/Card";
 import axiosInstance from "../../../Axios/axiosInstance";
 
@@ -10,7 +11,7 @@ const CheckOutStore = () => {
   const [loading, setLoading] = useState(true); // State to track loading status
   const [error, setError] = useState(null); // State to handle errors
   const [stores, setStores] = useState([]); // State for stores list
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const router = useRouter(); // Initialize useNavigate hook
 
   // Fetch stores from API when component mounts
   const fetchStores = async () => {
@@ -95,7 +96,7 @@ const CheckOutStore = () => {
           <div className="flex justify-center mt-6">
             <button
               className="bg-bio-green text-white py-2 px-4 rounded-md hover:bg-green-700"
-              onClick={() => navigate("/stores")} // Navigate to the /stores page
+              onClick={() => router.push("/stores")} // Navigate to the /stores page
             >
               View All
             </button>

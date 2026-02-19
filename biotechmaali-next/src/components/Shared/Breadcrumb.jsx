@@ -1,7 +1,8 @@
 'use client';
 
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import { Breadcrumbs, Typography } from '@mui/material';
 import { NavigateNext, Home } from '@mui/icons-material';
 
@@ -16,7 +17,7 @@ import { NavigateNext, Home } from '@mui/icons-material';
  * @param {string} props.currentPage - Current page name (not linked)
  */
 export default function Breadcrumb({ items = [], currentPage }) {
-    const location = useLocation();
+    const pathname = usePathname();
 
     return (
         <div className="py-3 px-4 bg-gray-50 border-b border-gray-200">

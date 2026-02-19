@@ -1,9 +1,9 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
-import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import Verify from "../../../Services/Services/Verify";
 import axiosInstance from "../../../Axios/axiosInstance";
@@ -17,7 +17,7 @@ const CartSummary = ({
   products,
 }) => {
   const accessToken = useSelector(selectAccessToken);
-  const navigate = useNavigate();
+  const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
    
 
@@ -44,7 +44,7 @@ const CartSummary = ({
       );
   
       if (response.status === 200) {
-        navigate("/checkout", { state: { ordersummary: response.data.data } });
+        router.push("/checkout", { state: { ordersummary: response.data.data } });
       }
     } catch (error) {
       if (error.response?.data) {
@@ -55,7 +55,7 @@ const CartSummary = ({
 
         // If address not available → redirect to profile
         if (address_status === false) {
-          navigate("/profile");
+          router.push("/profile");
         }
       } else {
         console.error("Error placing order:", error);

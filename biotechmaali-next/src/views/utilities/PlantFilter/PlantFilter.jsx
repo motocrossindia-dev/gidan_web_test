@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname, useSearchParams, useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 // Material UI imports
 import { SwipeableDrawer, IconButton, Box, Typography } from "@mui/material";
@@ -10,7 +11,6 @@ import FilterSidebar from "../Featured/FilterSidebar";
 import ProductGrid from "../../../components/Shared/ProductGrid";
 import FAQSection from "./FAQSection";
 import CheckoutStores from "./CheckoutStores";
-import { useLocation, useParams } from "react-router-dom";
 import axiosInstance from "../../../Axios/axiosInstance";
 import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
 import { Helmet } from "react-helmet-async";
@@ -37,8 +37,9 @@ const CategoryLayout = ({ data }) => {
 };
 
 function PlantFilter() {
-    const location = useLocation();
-    const path = location.pathname;
+    const pathname = usePathname();
+  const searchParams = useSearchParams();
+    const path = pathname;
 
     // Extract slugs from URL
     const { categorySlug, subcategorySlug } = useParams();
@@ -52,7 +53,7 @@ function PlantFilter() {
     };
 
     // Extract query parameters for boolean filters (fallback)
-    const searchParams = new URLSearchParams(location.search);
+    const searchParams = new URLSearchParams(`?${searchParams.toString()}`);
     const queryIsSeasonalCollection = searchParams.get('is_seasonal_collection') === 'true';
     const queryIsTrending = searchParams.get('is_trending') === 'true';
     const queryIsFeatured = searchParams.get('is_featured') === 'true';
@@ -64,8 +65,8 @@ function PlantFilter() {
     const isFeatured = routeBasedFilters.isFeatured || queryIsFeatured;
     const isBestSeller = routeBasedFilters.isBestSeller || queryIsBestSeller;
 
-    // Use location.state as primary data source (keep existing logic)
-    const stateData = location.state || {};
+    // Use null as primary data source (keep existing logic)
+    const stateData = null || {};
     const { categoryId, categoryName, typeKey, subCategory, subcategoryID, category_slug } = stateData;
     const { name: subCategoryName, subcategory_slug } = subCategory || {};
 
@@ -379,8 +380,7 @@ export default PlantFilter;
 // import FAQSection from "./FAQSection";
 // import CheckoutStores from "./CheckoutStores";
 // import { FiFilter } from "react-icons/fi";
-// import { useLocation, useParams } from "react-router-dom";
-// import axiosInstance from "../../../Axios/axiosInstance";
+// // import axiosInstance from "../../../Axios/axiosInstance";
 // import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
 // import { Helmet } from "react-helmet-async";
 // import GenericPage from "../Info/GenericPage";
@@ -405,14 +405,15 @@ export default PlantFilter;
 // };
 //
 // function PlantFilter() {
-//     const location = useLocation();
-//     const path = location.pathname;
+//     const pathname = usePathname();
+  const searchParams = useSearchParams();
+//     const path = pathname;
 //
 //     // Extract slugs from URL
 //     const { categorySlug, subcategorySlug } = useParams();
 //
-//     // Use location.state as primary data source (keep existing logic)
-//     const stateData = location.state || {};
+//     // Use null as primary data source (keep existing logic)
+//     const stateData = null || {};
 //     const { categoryId, categoryName, typeKey, subCategory, subcategoryID, category_slug } = stateData;
 //     const { name: subCategoryName, subcategory_slug } = subCategory || {};
 //
@@ -670,8 +671,7 @@ export default PlantFilter;
 // import FAQSection from "./FAQSection";
 // import CheckoutStores from "./CheckoutStores";
 // import { FiFilter } from "react-icons/fi";
-// import { useLocation } from "react-router-dom";
-// import axiosInstance from "../../../Axios/axiosInstance";
+// // import axiosInstance from "../../../Axios/axiosInstance";
 // import RecentlyViewedProduct from "./RecentlyViewedProduct";
 // import { Helmet } from "react-helmet-async";
 // import GenericPage from "../Info/GenericPage";
@@ -699,10 +699,11 @@ export default PlantFilter;
 // };
 //
 // function PlantFilter() {
-//     const location = useLocation();
-//     const path = location.pathname;
+//     const pathname = usePathname();
+  const searchParams = useSearchParams();
+//     const path = pathname;
 //
-//     const stateData = location.state || {};
+//     const stateData = null || {};
 //     const { categoryId, categoryName, typeKey, subCategory, subcategoryID ,category_slug,} = stateData;
 //     const { name: subCategoryName ,subcategory_slug} = subCategory || {};
 //
@@ -937,8 +938,7 @@ export default PlantFilter;
 // import FAQSection from "./FAQSection";
 // import CheckoutStores from "./CheckoutStores";
 // import { FiFilter } from "react-icons/fi";
-// import { useLocation } from "react-router-dom";
-// import axiosInstance from "../../../Axios/axiosInstance";
+// // import axiosInstance from "../../../Axios/axiosInstance";
 // import RecentlyViewedProduct from "./RecentlyViewedProduct";
 // import { Helmet } from "react-helmet-async";
 // import GenericPage from "../Info/GenericPage";
@@ -969,10 +969,11 @@ export default PlantFilter;
 // };
 //
 // function PlantFilter() {
-//     const location = useLocation();
-//     const path = location.pathname;
+//     const pathname = usePathname();
+  const searchParams = useSearchParams();
+//     const path = pathname;
 //
-//     const stateData = location.state || {};
+//     const stateData = null || {};
 //     const { categoryId, categoryName, typeKey, subCategory, subcategoryID, category_slug } = stateData;
 //     const { name: subCategoryName, subcategory_slug } = subCategory || {};
 //
@@ -1203,8 +1204,7 @@ export default PlantFilter;
 // // import FAQSection from "./FAQSection";
 // // import CheckoutStores from "./CheckoutStores";
 // // import { FiFilter } from "react-icons/fi";
-// // import { useLocation } from "react-router-dom";
-// // import axiosInstance from "../../../Axios/axiosInstance";
+// // // // import axiosInstance from "../../../Axios/axiosInstance";
 // // import RecentlyViewedProduct from "./RecentlyViewedProduct";
 // // import { Helmet } from "react-helmet-async";
 // // import GenericPage from "../Info/GenericPage";
@@ -1233,10 +1233,11 @@ export default PlantFilter;
 // // };
 // //
 // // function PlantFilter() {
-// //     const location = useLocation();
-// //     const path = location.pathname;
+// //     const pathname = usePathname();
+  const searchParams = useSearchParams();
+// //     const path = pathname;
 // //
-// //     const stateData = location.state || {};
+// //     const stateData = null || {};
 // //     const { categoryId, categoryName, typeKey, subCategory, subcategoryID ,category_slug,} = stateData;
 // //     const { name: subCategoryName ,subcategory_slug} = subCategory || {};
 // //

@@ -1,6 +1,6 @@
 'use client';
 
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import __location1 from "../../../Assets/Location tracking 1.webp";
 const _location1 = typeof __location1 === 'string' ? __location1 : __location1?.src || __location1;
@@ -12,11 +12,11 @@ import StoreSchema from "../../utilities/seo/StoreSchema";
 // import Navigation from '../../../components/NavigationBar/NavigationBar';
 
 const TrackOrderMobile = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [trackingId, setTrackingId] = useState("");
 
   const handleBackClick = () => {
-    navigate("/mobilesidebar"); // Navigate to MobileSidebar
+    router.push("/mobilesidebar"); // Navigate to MobileSidebar
   };
 
   return (

@@ -1,18 +1,18 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import ProductCard from "../CartComponent/ProductCard";
 import CartSummary from "../CartComponent/Cartsummary";
 import {  useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
-import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { Helmet } from "react-helmet-async";
 
 const Cart = () => {
   const accessToken = useSelector(selectAccessToken);
-  const navigate = useNavigate();
+  const router = useRouter();
   const [products, setProducts] = useState([]);
 
   // Fetch cart items
@@ -159,7 +159,7 @@ const Cart = () => {
           <h2 className="text-2xl font-semibold text-gray-700 mb-4">Your cart is empty</h2>
           <button
             className="bg-lime-500 text-white py-2 px-4 rounded hover:bg-green-600"
-            onClick={() => navigate("/shop")}
+            onClick={() => router.push("/shop")}
           >
             Continue Shopping
           </button>

@@ -5,16 +5,29 @@ User-agent: *
 Allow: /
 
 # Disallow account/private pages
-Disallow: /cart/
-Disallow: /checkout/
+Disallow: /cart
+Disallow: /checkout
 Disallow: /profile/
-Disallow: /orders/
-Disallow: /wishlist/
-Disallow: /wallet/
-Disallow: /btcoins/
-Disallow: /mobile-login/
-Disallow: /mobile-signin/
-Disallow: /mobile-verification/
+Disallow: /orders
+Disallow: /wishlist
+Disallow: /wallet
+Disallow: /wallethistory
+Disallow: /btcoins
+Disallow: /mobile-login
+Disallow: /mobile-signin
+Disallow: /mobile-verification
+Disallow: /mobilesidebar/
+Disallow: /add-address
+Disallow: /address
+Disallow: /history
+Disallow: /order-summary
+Disallow: /order-success
+Disallow: /payment
+Disallow: /PaymentGateway
+Disallow: /successpage
+Disallow: /thankyou
+Disallow: /hamburger
+Disallow: /side
 
 # Disallow admin/API endpoints
 Disallow: /api/
@@ -36,4 +49,4 @@ Allow: /*.svg
 Allow: /*.gif
 
 # Sitemap location
-Sitemap: https://gidan.store/sitemap.xml
+Sitemap: https://www.gidan.store/sitemap.xml

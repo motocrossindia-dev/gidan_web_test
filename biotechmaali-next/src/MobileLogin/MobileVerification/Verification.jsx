@@ -1,7 +1,7 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import __logo from "../../Assets/Gidan_logo.webp";
@@ -22,7 +22,7 @@ import {Helmet} from "react-helmet";
 
 
 const MobileVerification = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const [otpDigits, setOtpDigits] = useState(["", "", "", ""]);
   const [error, setError] = useState("");
@@ -73,7 +73,7 @@ const MobileVerification = () => {
 
       if (response.data?.message) {
         if (response.data.message === "OTP is valid. and only registered with mobile number.") {
-          navigate("/mobile-login"); // Open login for new users
+          router.push("/mobile-login"); // Open login for new users
         } else {
           storeToken(response?.data?.data?.token, response?.data?.data?.token);
           const user = response.data.data.user;
@@ -82,7 +82,7 @@ const MobileVerification = () => {
           dispatch(signInSuccess(response?.data?.data));
           localStorage.setItem("userData", JSON.stringify(response.data.data.user));
           localStorage.setItem("token", JSON.stringify(response.data.data.token.access));
-          navigate("/"); // Redirect to homepage after successful login
+          router.push("/"); // Redirect to homepage after successful login
         }
       }
     } catch (error) {

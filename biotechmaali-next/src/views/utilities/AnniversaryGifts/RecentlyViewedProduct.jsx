@@ -1,7 +1,7 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from 'react';    
-import { useNavigate } from 'react-router-dom';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import TrendingCard from "../../../components/TrendingProducts/TrendingCard"
 import axiosInstance from '../../../Axios/axiosInstance';
@@ -9,7 +9,7 @@ import convertToSlug from "../../../utils/slugConverter";
 
 const RecentlyViewedProduct = () => {
   const [products, setProducts] = useState([]);
-  const navigate = useNavigate();
+  const router = useRouter();
   
   
   const getProducts = async () => {
@@ -39,7 +39,7 @@ const RecentlyViewedProduct = () => {
     const category_slug = product?.category_slug;
     const sub_category_slug = product?.sub_category_slug;
 
-    navigate(`/category/${category_slug}/${product.slug}/`, {       state: {
+    router.push(`/category/${category_slug}/${product.slug}/`, {       state: {
         product_id: product.slug,
         category_slug:category_slug,
         sub_category_slug:sub_category_slug

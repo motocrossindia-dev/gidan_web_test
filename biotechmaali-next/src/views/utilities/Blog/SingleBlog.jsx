@@ -1,9 +1,9 @@
 'use client';
 
+import { useParams } from "next/navigation";
 import React, { useEffect, useState } from 'react'
 import { Tag } from 'lucide-react';
 import CategoryFilter from './CategoryFilter';
-import { useParams } from 'react-router-dom';
 import axios from 'axios';
 const SingleBlog = () => {
 

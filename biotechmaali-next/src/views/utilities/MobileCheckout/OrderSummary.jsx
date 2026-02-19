@@ -1,7 +1,7 @@
 'use client';
 
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState,useEffect } from 'react';
-import { useNavigate,useLocation } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import axios from 'axios';
@@ -45,11 +45,12 @@ const ProgressBar = ({ currentStep }) => {
 
 // Order Summary Page
 const OrderSummary = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
   const [orderItem,setOrderItem] = useState([]);
   const [order, setOrder] = useState();
-  const orderData = location.state?.resource; 
+  const orderData = null?.resource; 
   useEffect(() => {
     if (orderData?.order_items) {
       setOrderItem(orderData.order_items);
@@ -108,7 +109,7 @@ const OrderSummary = () => {
             headers: { Authorization: `Bearer ${accessToken}` },
           })
           if (response.data.message === 'success') {            
-            navigate('/payment', { state: { resource: response.data.data } });
+            router.push('/payment', { state: { resource: response.data.data } });
           }
       } catch (error) {
         console.error("Error fetching default address:", error);
@@ -126,7 +127,7 @@ const OrderSummary = () => {
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Order Summary</h2>
             <button 
-              onClick={() => navigate('/address')}
+              onClick={() => router.push('/address')}
               className="text-sm text-green-600"
             >
               Change

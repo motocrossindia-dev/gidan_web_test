@@ -1,17 +1,17 @@
 'use client';
 
 
+import { useRouter } from "next/navigation";
 import React from 'react';
 import { Heart, Leaf, Sparkles, Link, PencilRuler, Plane as Plant, Shovel, Droplets, Award, Clock, Phone } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import {Helmet} from "react-helmet";
 const Landscape = () => {
 
-  const navigate = useNavigate();
+  const router = useRouter();
 
 const handleConnectClick = () => {
   
-  navigate('/services'); // Replace '/connect' with your actual route
+  router.push('/services'); // Replace '/connect' with your actual route
 };
 
   const steps = [

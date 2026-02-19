@@ -1,7 +1,7 @@
 'use client';
 
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from 'react';
-import { useNavigate,useLocation} from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from 'notistack';
@@ -11,10 +11,11 @@ import StoreSchema from "../seo/StoreSchema";
 
 
 const PaymentPage = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [paymentMethod, setPaymentMethod] = useState('');
-  const location = useLocation();
-  const orderData = location.state?.resource;
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const orderData = null?.resource;
   const data = orderData.orders;
   const accessToken = useSelector(selectAccessToken);
 
@@ -60,7 +61,7 @@ const PaymentPage = () => {
             );
             if (verifyResponse.data.message==="Payment successful") {
               enqueueSnackbar("Payment Verified Successfully!" , { variant: "success" });
-              navigate('/orders')
+              router.push('/orders')
             } else {
               enqueueSnackbar("Payment Verification Failed.", { variant: "error" });
             }
@@ -83,7 +84,7 @@ const PaymentPage = () => {
       console.log(error);
       
     }
-    // navigate('/order-success');
+    // router.push('/order-success');
   };
 
   return (
@@ -223,7 +224,7 @@ const PaymentPage = () => {
   Proceed To Payment
 </button>
           <button 
-            onClick={() => navigate('/order-summary')}
+            onClick={() => router.push('/order-summary')}
             className="w-full py-3 border border-gray-300 rounded-lg font-medium"
           >
             Cancel

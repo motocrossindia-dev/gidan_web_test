@@ -1,11 +1,11 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Paper, Typography } from "@mui/material";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { FiEye } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { enqueueSnackbar } from "notistack";
@@ -17,7 +17,7 @@ import Verify from "../../../Services/Services/Verify";
 const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, inCart, ratingNumber, mrp, ribbon }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [isImageHovered, setIsImageHovered] = useState(false);
-    const navigate = useNavigate();
+    const router = useRouter();
     const accessToken = useSelector(selectAccessToken);
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const {id, prod_id}=product;
@@ -26,7 +26,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
 
     const handleAddToCart = async () => {
         if (!isAuthenticated) {
-            navigate(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+            router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
             return;
         }
 
@@ -60,7 +60,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
     const handleAddToWishlist = async () => {
         if (!isAuthenticated) {
             enqueueSnackbar("Please sign in to add to wishlist", { variant: "error" });
-            navigate(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+            router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
             return;
         }
 
@@ -92,7 +92,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
         const category_slug = product?.category_slug;
         const sub_category_slug = product?.sub_category_slug;
 
-        navigate(`/category/${category_slug}/${product.slug}/`, {       state: {
+        router.push(`/category/${category_slug}/${product.slug}/`, {       state: {
                 product_id: product.id,
                 category_slug:category_slug,
                 sub_category_slug:sub_category_slug
@@ -340,8 +340,7 @@ export default ProductCard;
 // import { FaRegHeart, FaHeart } from "react-icons/fa";
 // import { MdOutlineShoppingBag } from "react-icons/md";
 // import { FiEye } from "react-icons/fi";
-// import { useNavigate } from "react-router-dom";
-// import { useSelector } from "react-redux";
+// // import { useSelector } from "react-redux";
 // import axios from "axios";
 // import { enqueueSnackbar } from "notistack";
 // import { selectAccessToken } from "../../../redux/User/verificationSlice";
@@ -352,7 +351,7 @@ export default ProductCard;
 // const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, inCart, ratingNumber, mrp, ribbon }) => {
 //     const [isHovered, setIsHovered] = useState(false);
 //     const [isImageHovered, setIsImageHovered] = useState(false);
-//     const navigate = useNavigate();
+//     const router = useRouter();
 //     const accessToken = useSelector(selectAccessToken);
 //     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 //     const {id, prod_id}=product;
@@ -363,7 +362,7 @@ export default ProductCard;
 //
 //     const handleAddToCart = async () => {
 //         if (!isAuthenticated) {
-//             navigate(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+//             router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
 //             return;
 //         }
 //
@@ -397,7 +396,7 @@ export default ProductCard;
 //     const handleAddToWishlist = async () => {
 //         if (!isAuthenticated) {
 //             enqueueSnackbar("Please sign in to add to wishlist", { variant: "error" });
-//             navigate(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+//             router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
 //             return;
 //         }
 //
@@ -429,7 +428,7 @@ export default ProductCard;
 //         const category_slug = product?.category_slug;
 //         const sub_category_slug = product?.sub_category_slug;
 //
-//         navigate(`/category/${category_slug}/${product.slug}/`, {       state: {
+//         router.push(`/category/${category_slug}/${product.slug}/`, {       state: {
 //                 product_id: product.id,
 //                 category_slug:category_slug,
 //                 sub_category_slug:sub_category_slug

@@ -1,13 +1,13 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 // import React, { useState, useEffect } from "react";
 // import { CiLocationOn } from "react-icons/ci"; // Import the location icon
-// import { useNavigate } from "react-router-dom";
-// import axiosInstance from "../../Axios/axiosInstance";
+// // import axiosInstance from "../../Axios/axiosInstance";
 // import {Helmet} from "react-helmet";
 
 // const Stores = () => {
-//   const navigate = useNavigate();
+//   const router = useRouter();
 //   // State to store selected store data for the form
 //   const [loading, setLoading] = useState(true); // State to track loading status
 //   const [error, setError] = useState(null); // State to handle errors
@@ -42,7 +42,7 @@
 //     return <div>{error}</div>;
 //   }
 //   const handleClick = () => {
-//     navigate('/franchise-enquiry');
+//     router.push('/franchise-enquiry');
 //   };
 //   return (
 //       <>
@@ -114,12 +114,11 @@
 // export default Stores;
 
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../Axios/axiosInstance";
 import { Helmet } from "react-helmet-async";
 
 const Stores = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null); 
   const [stores, setStores] = useState([]);
@@ -150,7 +149,7 @@ const Stores = () => {
   }
 
   const handleClick = () => {
-    navigate("/franchise-enquiry");
+    router.push("/franchise-enquiry");
   };
 
   return (

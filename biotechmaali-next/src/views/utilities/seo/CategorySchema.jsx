@@ -1,7 +1,3 @@
-'use client';
-
-import { Helmet } from "react-helmet-async";
-
 export default function CategorySchema({
                                            categoryName,
                                            categorySlug,
@@ -58,10 +54,9 @@ export default function CategorySchema({
     };
 
     return (
-        <Helmet>
-            <script type="application/ld+json">
-                {JSON.stringify(schema)}
-            </script>
-        </Helmet>
+        <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
     );
 }

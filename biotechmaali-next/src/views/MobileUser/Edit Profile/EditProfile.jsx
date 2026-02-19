@@ -1,9 +1,9 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { isMobile } from "react-device-detect";
 import { FaArrowLeft } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 import HomepageSchema from "../../utilities/seo/HomepageSchema";
@@ -11,7 +11,7 @@ import StoreSchema from "../../utilities/seo/StoreSchema";
 
 
 const EditProfile = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [profile, setProfile] = useState({
     first_name: "",
     last_name: "",
@@ -22,7 +22,7 @@ const EditProfile = () => {
   });
 
   const handleBackClick = () => {
-    navigate("/mobilesidebar"); // Navigate to MobileSidebar
+    router.push("/mobilesidebar"); // Navigate to MobileSidebar
   };
 
   const getProfile = async () => {

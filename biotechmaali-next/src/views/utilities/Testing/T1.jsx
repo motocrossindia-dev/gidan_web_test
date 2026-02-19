@@ -1,7 +1,7 @@
 'use client';
 
+import Link from "next/link";
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { IoReorderThree } from "react-icons/io5";
 import { IoMdPerson } from "react-icons/io";
 import { FaMapMarker } from "react-icons/fa";

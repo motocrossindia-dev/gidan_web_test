@@ -1,11 +1,11 @@
 'use client';
 
 
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import { selectAccessToken } from "../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
-import { useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 import { useSelector } from "react-redux";
 import axiosInstance from "../../Axios/axiosInstance";
@@ -16,8 +16,7 @@ const PopupShopTheLook = ({ onClose }) => {
     const accessToken = useSelector(selectAccessToken);
     const [productss,setProducts] = useState([])
     const [shopid,setShopid] = useState()
-    const navigate = useNavigate()
-  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+    const router = useRouter();const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
 const getshpthelookproducts=async()=>{
   try {
@@ -48,9 +47,9 @@ const handleAddToCart = async () => {
   if (!isAuthenticated) {
     enqueueSnackbar("Please Login or Signup to add products to cart.");
     if (isMobile) {
-      navigate("/mobile-signin", { replace: true });
+      router.push("/mobile-signin", { replace: true });
     } else {
-      navigate("/?modal=signIn", { replace: true });
+      router.push("/?modal=signIn", { replace: true });
     }
     return;
   }
@@ -98,9 +97,9 @@ const handlePlaceOrder = async () => {
   if (!isAuthenticated) {
     enqueueSnackbar("Please Login or Signup to place order.");
     if (isMobile) {
-      navigate("/mobile-signin", { replace: true });
+      router.push("/mobile-signin", { replace: true });
     } else {
-      navigate("/?modal=signIn", { replace: true });
+      router.push("/?modal=signIn", { replace: true });
     }
     return;
   }
@@ -137,7 +136,7 @@ const handlePlaceOrder = async () => {
         is_shop_the_look: true
       };
 
-      navigate("/checkout", {
+      router.push("/checkout", {
         state: {
           ordersummary: placeOrderResponse.data.data,
           combo_offer: comboOfferData

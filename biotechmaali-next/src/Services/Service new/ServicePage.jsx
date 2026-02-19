@@ -1,5 +1,6 @@
 'use client';
 
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { FaHandPointer } from "react-icons/fa";
 import { RiCustomerService2Fill } from "react-icons/ri";
@@ -8,7 +9,6 @@ import { FaScissors } from "react-icons/fa6";
 import __service from "../../Assets/Serviceform.webp";
 const _service = typeof __service === 'string' ? __service : __service?.src || __service;
 const service = typeof _service === 'string' ? _service : _service?.src || _service;
-import { Link } from "react-router-dom";
 import axiosInstance from "../../Axios/axiosInstance";
 import {Helmet} from "react-helmet";
 import axios from "axios";

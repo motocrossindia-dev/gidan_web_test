@@ -1,10 +1,10 @@
 'use client';
 
 
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState, useMemo } from "react";
 import { Tag } from 'lucide-react';
 import { CheckCircle } from 'lucide-react';
-import { useLocation,useNavigate } from "react-router-dom";
 import RazorpayPayment from "../RazorPayment/RazorpayPayment";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
@@ -605,7 +605,7 @@ const [selected, setSelected] = useState("Door Delivery"); // DEFAULT
                         : 'hover:bg-gray-100 border-gray-200'
                     }`}
                   >
-                    <p className="font-semibold text-gray-800">{store.location}</p>
+                    <p className="font-semibold text-gray-800">{store.pathname}</p>
                     <p className="text-sm text-gray-500">{store.address}</p>
                   </div>
                 ))}
@@ -629,10 +629,11 @@ const [selected, setSelected] = useState("Door Delivery"); // DEFAULT
 const OrderSummary = ({ selectedOption,selectedAddress,data }) => {
   const accessToken = useSelector(selectAccessToken);
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
+  const router = useRouter();
   // const [orderSummary, setOrderSummary] = useState([]);
-  const location = useLocation();
-  const orderData = location.state?.resource; 
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const orderData = null?.resource; 
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
@@ -661,7 +662,7 @@ const OrderSummary = ({ selectedOption,selectedAddress,data }) => {
 //     if (response.data.message === "success") {
 //       enqueueSnackbar("Order summary saved successfully!", { variant: "success" });
 
-//       navigate("/paymentgateway", { 
+//       router.push("/paymentgateway", { 
 //         state: { resource: response.data.data, order_id: data.order.id } 
 //       });
 //     }
@@ -1020,19 +1021,20 @@ const PaymentMethods = () => {
 const CheckoutPage = () => {
 
   const accessToken = useSelector(selectAccessToken);
-  const navigate = useNavigate();
+  const router = useRouter();
 
-  const location = useLocation();
-  const { resource } = location.state || {}; // Extract resource from state
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { resource } = null || {}; // Extract resource from state
   const [orderResource,setOrderResource] = useState(resource || {});
   const [selectedOption, setSelectedOption] = useState(null); // Lift state up
   const [selectedAddress, setSelectedAddress] = useState([]);
   const [coupon,setCoupon] = useState()
-  const data = location.state?.ordersummary;
+  const data = null?.ordersummary;
   const id  = data?.order?.id
   
   // Get combo_offer from navigation state (passed from ShopTheLook)
-  const prefilledCombo = location.state?.combo_offer || null;
+  const prefilledCombo = null?.combo_offer || null;
 
   // Initialize comboOffer state - prioritize navigation state over sessionStorage
   const [comboOffer, setComboOffer] = useState(() => {
@@ -1143,7 +1145,7 @@ const handleSaveOrderSummary = async () => {
 
       console.log("📦 Final Order Data for Payment:", finalOrderData);
 
-      navigate("/paymentgateway", { 
+      router.push("/paymentgateway", { 
         state: { resource: finalOrderData, order_id: data.order.id } 
       });
     }

@@ -1,13 +1,13 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import ProgressBar from "./OrderSummary";
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema"; // Adjust the import path as needed
 
 const AddressPage = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [selectedAddress, setSelectedAddress] = useState(0);
 
   return (
@@ -18,7 +18,7 @@ const AddressPage = () => {
         <ProgressBar currentStep="address" />
         
         <button 
-          onClick={() => navigate('/add-address')}
+          onClick={() => router.push('/add-address')}
           className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 mb-6 flex items-center justify-center"
         >
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -40,7 +40,7 @@ const AddressPage = () => {
                   <button 
                     onClick={(e) => {
                       e.stopPropagation();
-                      navigate('/add-address');
+                      router.push('/add-address');
                     }}
                     className="text-sm text-green-600"
                   >
@@ -56,7 +56,7 @@ const AddressPage = () => {
 
       <div className="p-4 border-t">
         <button 
-          onClick={() => navigate('/order-summary')}
+          onClick={() => router.push('/order-summary')}
           className="w-full py-3 bg-green-600 text-white rounded-lg font-medium"
         >
           Deliver Here

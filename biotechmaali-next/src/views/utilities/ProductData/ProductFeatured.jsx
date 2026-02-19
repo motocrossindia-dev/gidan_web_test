@@ -1,7 +1,7 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Paper, Typography } from "@mui/material";
 import { FaStar } from "react-icons/fa";
@@ -13,7 +13,7 @@ import TrendingCard from '../../../components/Shared/ProductCard';
 
 const ProductFeatured = () => {
   const [products, setProducts] = useState([]);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_URL}/product/homeProducts/`)
@@ -36,7 +36,7 @@ const ProductFeatured = () => {
       const sub_category_slug = product?.sub_category_slug;
 
       // All products have category, subcategory, and product slug
-      navigate(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {       state: {
+      router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {       state: {
               product_id: product.id,
               category_slug:category_slug,
               sub_category_slug:sub_category_slug

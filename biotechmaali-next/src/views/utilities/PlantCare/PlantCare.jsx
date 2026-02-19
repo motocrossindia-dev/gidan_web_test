@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname, useSearchParams, useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import FilterSidebar from "../Featured/FilterSidebar";
 import FilterSidebarMobile from "./FilterSidebarMobile";
@@ -8,8 +9,6 @@ import FAQSection from "./FAQSection";
 import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
 import CheckoutStores from "./CheckoutStores";
 import { FiFilter } from "react-icons/fi";
-import { useLocation } from "react-router-dom";
-import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import axiosInstance from "../../../Axios/axiosInstance";
 import HomepageSchema from "../seo/HomepageSchema";
@@ -17,9 +16,10 @@ import StoreSchema from "../seo/StoreSchema";
 
 function PlantCare() {
   const { id } = useParams();
-  const location = useLocation();
-  const path = location.pathname;
-  const queryParams = new URLSearchParams(location.search);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const path = pathname;
+  const queryParams = new URLSearchParams(`?${searchParams.toString()}`);
   const query = queryParams.get('query') || '';
 
   const [showMobileFilter, setShowMobileFilter] = useState(false);
@@ -173,8 +173,7 @@ export default PlantCare;
 // import RecentlyViewedProduct from "./RecentlyViewedProduct";
 // import CheckoutStores from "./CheckoutStores";
 // import { FiFilter } from "react-icons/fi";
-// import { useLocation } from "react-router-dom";
-// import  axiosInstance  from "../../../Axios/axiosInstance";
+// // import  axiosInstance  from "../../../Axios/axiosInstance";
 // import {Helmet} from "react-helmet"; // Adjust the import path as necessary
 //
 //
@@ -187,8 +186,9 @@ export default PlantCare;
 //   const toggleMobileFilter = () => {
 //     setShowMobileFilter(!showMobileFilter);
 //   };
-//   const location = useLocation();
-//   const queryParams = new URLSearchParams(location.search);
+//   const pathname = usePathname();
+  const searchParams = useSearchParams();
+//   const queryParams = new URLSearchParams(`?${searchParams.toString()}`);
 //   const query = queryParams.get('query') || '';
 //
 // useEffect(() => {

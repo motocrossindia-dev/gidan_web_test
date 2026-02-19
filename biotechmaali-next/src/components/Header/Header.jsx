@@ -1,10 +1,10 @@
 'use client';
 
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
     <header className="bg-gradient-to-r from-[#062e25] via-[#062e25] to-white font-poppins">
@@ -26,7 +26,7 @@ const Header = () => {
           </div>
 
           <button
-            onClick={() => navigate("/franchise-enquiry")}
+            onClick={() => router.push("/franchise-enquiry")}
             className="bg-bio-green text-white font-bold uppercase whitespace-nowrap rounded-lg px-2 md:py-1
             hover:bg-green-700 transition text-[11px] md:text-[13px]"
           >

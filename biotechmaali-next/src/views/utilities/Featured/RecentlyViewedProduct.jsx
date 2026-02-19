@@ -3,24 +3,23 @@
 
 
 
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import TrendingCard from "../../../components/TrendingProducts/TrendingCard";
-import { useLocation } from "react-router-dom";
-
 const RecentlyViewedProduct = () => {
   const [products, setProducts] = useState([]);
-  const navigate = useNavigate();
+  const router = useRouter();
   const accessToken = useSelector(selectAccessToken);
-  const location = useLocation();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   const getProducts = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/product/recentlyViewed/${location.search}`,
+        `${process.env.REACT_APP_API_URL}/product/recentlyViewed/${`?${searchParams.toString()}`}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -37,14 +36,14 @@ const RecentlyViewedProduct = () => {
 
   useEffect(() => {
     getProducts();
-  }, [location.search]);
+  }, [`?${searchParams.toString()}`]);
 
   const handleProductClick = (product) => {
     const category_slug = product?.category_slug;
     const sub_category_slug = product?.sub_category_slug;
 
     // All products have category, subcategory, and product slug
-    navigate(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {       state: {
+    router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {       state: {
         product_id: product.slug,
         category_slug:category_slug,
         sub_category_slug:sub_category_slug

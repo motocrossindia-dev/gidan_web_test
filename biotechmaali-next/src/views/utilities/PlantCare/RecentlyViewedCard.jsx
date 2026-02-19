@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useState,useEffect } from "react";
 import { Paper } from "@mui/material";
 import { FaStar } from "react-icons/fa";
@@ -7,7 +8,6 @@ import { FaRegHeart } from "react-icons/fa";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { FiEye } from "react-icons/fi";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { isMobile } from "react-device-detect";
@@ -16,7 +16,7 @@ import { FaHeart } from "react-icons/fa";
 const RecentlyViewedCard = ({ name, price, oldPrice, imageUrl, rating, isNewArrival,product }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isImageHovered, setIsImageHovered] = useState(false);
-  const navigate = useNavigate();
+  const router = useRouter();
   const accessToken = useSelector(selectAccessToken);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const [inWishlist, setInWishlist] = useState(false);
@@ -52,7 +52,7 @@ const RecentlyViewedCard = ({ name, price, oldPrice, imageUrl, rating, isNewArri
     }, [product?.id, isAuthenticated, accessToken]);
   const handleAddToWishlist = async () => {
     if (!isAuthenticated) {
-      navigate(isMobile ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+      router.push(isMobile ? "/mobile-signin" : "/?modal=signIn", { replace: true });
       return;
     }
   
@@ -74,9 +74,9 @@ const RecentlyViewedCard = ({ name, price, oldPrice, imageUrl, rating, isNewArri
       // Check if the user is authenticated
       if (!isAuthenticated) {
         if (isMobile) {
-          navigate("/mobile-signin", { replace: true });
+          router.push("/mobile-signin", { replace: true });
         } else {
-          navigate("/?modal=signIn", { replace: true });
+          router.push("/?modal=signIn", { replace: true });
         }
         return;
       }
@@ -103,7 +103,7 @@ const RecentlyViewedCard = ({ name, price, oldPrice, imageUrl, rating, isNewArri
   };
   const handleQuickView = (e) => {
     e.stopPropagation();
-    navigate(`/product/${product.id}`, { state: { product } });
+    router.push(`/product/${product.id}`, { state: { product } });
   };
   return (
  <Paper

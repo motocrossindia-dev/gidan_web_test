@@ -1,7 +1,7 @@
 'use client';
 
+import Link from "next/link";
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import axiosInstance from '../../Axios/axiosInstance';
 import axios from "axios";
 
@@ -136,8 +136,7 @@ export default OfferReward;
 
 // ================old=================
 // import { useEffect, useState } from 'react';
-// import { Link } from 'react-router-dom';
-// import axiosInstance from '../../Axios/axiosInstance';
+// // import axiosInstance from '../../Axios/axiosInstance';
 // import axios from "axios";
 
 // // Desktop: Keep original side-by-side layout

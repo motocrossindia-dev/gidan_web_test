@@ -1,11 +1,11 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { Paper } from "@mui/material";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { FiEye } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
 import axios from "axios";
@@ -25,7 +25,7 @@ const ProductFeaturedCard = ({
 
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const navigate = useNavigate();
+  const router = useRouter();
   const accessToken = useSelector(selectAccessToken);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const [isAdded, setIsAdded] = useState(false);
@@ -65,7 +65,7 @@ const ProductFeaturedCard = ({
   const handleAddToWishlist = async () => {
     if (!isAuthenticated) {
       enqueueSnackbar("Please sign in to add to wishlist", { variant: "error" });
-      navigate(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+      router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
       return;
     }
 
@@ -102,7 +102,7 @@ const ProductFeaturedCard = ({
   const handleAddToCart = async (e) => {
     // e.stopPropagation();
     if (!isAuthenticated) {
-      navigate(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+      router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
       return;
     }
 
@@ -144,7 +144,7 @@ const ProductFeaturedCard = ({
     const category_slug = product?.category_slug;
     const sub_category_slug = product?.sub_category_slug;
 
-    navigate(`/category/${category_slug}/${product.slug}/`, {       state: {
+    router.push(`/category/${category_slug}/${product.slug}/`, {       state: {
         product_id: product.slug,
         category_slug:category_slug,
         sub_category_slug:sub_category_slug

@@ -1,13 +1,14 @@
 'use client';
 
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 // ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
 import { useState, useEffect, useMemo } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { useCategories } from "../../hooks/useCategories";
 
 const CategoryIcons = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   // Use TanStack Query hook for categories
   const { data: categoryData = [], isLoading } = useCategories();
@@ -39,13 +40,13 @@ const CategoryIcons = () => {
   const getCategorywiseProduct = (id, categoryname, slug, typeKey) => {
     // Always navigate directly on mobile (no dropdown toggle)
     if (categoryname === "GIFTS") {
-      navigate(`/gifts/`);
+      router.push(`/gifts/`);
     } else if (categoryname === "SERVICES") {
-      navigate(`/services/`);
+      router.push(`/services/`);
     } else if (categoryname === "OFFERS") {
-      navigate(`/offer/`);
+      router.push(`/offer/`);
     } else {
-      navigate(`/${slug}/`, {
+      router.push(`/${slug}/`, {
         state: {
           categoryId: id,
           categoryName: categoryname,
@@ -197,13 +198,12 @@ export default CategoryIcons;
 
 // ========== OLD CODE (Before Feb 16, 2026 - TanStack Query) - COMMENTED OUT ==========
 // import { useState, useEffect } from "react";
-// import { Link, useNavigate } from "react-router-dom";
-// import axiosInstance from "../../Axios/axiosInstance";
+// // import axiosInstance from "../../Axios/axiosInstance";
 //
 // const CategoryIcons = () => {
 //   const [categoryData, setCategoryData] = useState([]);
 //   const [openDropdown, setOpenDropdown] = useState(null);
-//   const navigate = useNavigate();
+//   const router = useRouter();
 //
 //   // Map categories to type_choices
 //   const categoryToTypeMap = {
@@ -269,13 +269,13 @@ export default CategoryIcons;
 //   const getCategorywiseProduct = (id, categoryname, slug, typeKey) => {
 //     // Always navigate directly on mobile (no dropdown toggle)
 //     if (categoryname === "GIFTS") {
-//       navigate(`/gifts/`);
+//       router.push(`/gifts/`);
 //     } else if (categoryname === "SERVICES") {
-//       navigate(`/services/`);
+//       router.push(`/services/`);
 //     } else if (categoryname === "OFFERS") {
-//       navigate(`/offer/`);
+//       router.push(`/offer/`);
 //     } else {
-//       navigate(`/${slug}/`, {
+//       router.push(`/${slug}/`, {
 //         state: {
 //           categoryId: id,
 //           categoryName: categoryname,

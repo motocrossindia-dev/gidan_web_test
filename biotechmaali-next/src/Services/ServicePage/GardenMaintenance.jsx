@@ -1,14 +1,14 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React from 'react';
 import { FaHeart, FaLeaf, FaMagic, FaLink, FaClipboard, FaSeedling, FaTools, FaTint, FaAward, FaClock, FaPhone } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
 import {Helmet} from "react-helmet";
 const GardenMaintenance = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
 const handleConnectClick = () => {
   
-  navigate('/services'); // Replace '/connect' with your actual route
+  router.push('/services'); // Replace '/connect' with your actual route
 };
   const steps = [
     {

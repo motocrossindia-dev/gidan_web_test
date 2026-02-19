@@ -1,15 +1,16 @@
 'use client';
 
+import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import { ArrowUpRight, ArrowDownRight, Gift, CreditCard } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
 
 const WalletHistory = () => {
-  const location = useLocation();
-  const data = location.state?.resourse || {};
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const data = null?.resourse || {};
   const allTransactions = data.transactions || [];
   const balance = data.balance || 0;
 

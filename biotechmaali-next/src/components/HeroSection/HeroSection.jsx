@@ -1,12 +1,12 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import {useEffect, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
 import Image from 'next/image';
 import convertToSlug from "../../utils/slugConverter";
 
 const HeroSection = ({ hero }) => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Auto-slide every 4 seconds
@@ -27,7 +27,7 @@ const HeroSection = ({ hero }) => {
     const activeBanner = hero[currentIndex];
     const slug = convertToSlug(activeBanner.category);
 
-    navigate(`/carousel/${slug}`, {
+    router.push(`/carousel/${slug}`, {
       state: {
         heroId: hero[currentIndex].id,
         fullData: hero[currentIndex]

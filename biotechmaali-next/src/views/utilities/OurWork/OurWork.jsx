@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import __ourwork from "../../../Assets/OurWork/ourwork1.webp";
 const _ourwork = typeof __ourwork === 'string' ? __ourwork : __ourwork?.src || __ourwork;
@@ -19,19 +20,17 @@ const ourwork5 = typeof _ourwork5 === 'string' ? _ourwork5 : _ourwork5?.src || _
 import __ourwork6 from "../../../Assets/OurWork/ourwork6.webp";
 const _ourwork6 = typeof __ourwork6 === 'string' ? __ourwork6 : __ourwork6?.src || __ourwork6;
 const ourwork6 = typeof _ourwork6 === 'string' ? _ourwork6 : _ourwork6?.src || _ourwork6;
-import { useNavigate } from 'react-router-dom';
-
 import { FaPlay } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
 
 const OurWork = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   useEffect(() => {
     window.scrollTo(0, 0); // Scroll to the top
   }, []);
 
   const handleRedirect = () => {
-    navigate('/services');
+    router.push('/services');
   };
   return (
       <>

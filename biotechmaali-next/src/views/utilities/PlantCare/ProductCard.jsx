@@ -1,11 +1,11 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import ReactStars from 'react-rating-stars-component';
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { isMobile } from "react-device-detect";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { Paper } from "@mui/material";
 import { FaStar } from "react-icons/fa";
 import { FaRegHeart,FaHeart } from "react-icons/fa";
@@ -19,7 +19,7 @@ const ProductCard = ({ name, price, oldPrice, imageUrl, rating ,product,mrp}) =>
   const [isAdded, setIsAdded] = useState(false);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const accessToken = useSelector(selectAccessToken);
-  const navigate = useNavigate();
+  const router = useRouter();
   const [inWishlist, setInWishlist] = useState(false);
 
     const handleAddToCart = async (e) => {
@@ -28,9 +28,9 @@ const ProductCard = ({ name, price, oldPrice, imageUrl, rating ,product,mrp}) =>
   
       if (!isAuthenticated) {
         if (isMobile) {
-          navigate("/mobile-signin", { replace: true });
+          router.push("/mobile-signin", { replace: true });
         } else {
-          navigate("/?modal=signIn", { replace: true });
+          router.push("/?modal=signIn", { replace: true });
         }
         return;
       }
@@ -58,7 +58,7 @@ const ProductCard = ({ name, price, oldPrice, imageUrl, rating ,product,mrp}) =>
  
     const handleAddToWishlist = async () => {
       if (!isAuthenticated) {
-        navigate(isMobile ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+        router.push(isMobile ? "/mobile-signin" : "/?modal=signIn", { replace: true });
         return;
       }
     
@@ -102,7 +102,7 @@ const ProductCard = ({ name, price, oldPrice, imageUrl, rating ,product,mrp}) =>
 
       const handleQuickView = (e) => {
         e.stopPropagation();
-        navigate(`/product/${product.id}`, { state: { product } });
+        router.push(`/product/${product.id}`, { state: { product } });
       };
   return (
  <Paper

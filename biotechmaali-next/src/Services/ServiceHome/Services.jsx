@@ -1,8 +1,9 @@
 'use client';
 
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import React, { useRef } from "react";
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { Link, useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -13,10 +14,10 @@ import axios from "axios";
 
 
 const ServiceCard = ({ image, title, heading }) => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleClick = () => {
-    navigate("/services");
+    router.push("/services");
   };
 
   return (

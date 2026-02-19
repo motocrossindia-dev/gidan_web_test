@@ -1,7 +1,3 @@
-'use client';
-
-import { Helmet } from "react-helmet-async";
-
 export default function SubCategorySchema({
                                               category,
                                               subCategory,
@@ -66,10 +62,9 @@ export default function SubCategorySchema({
     };
 
     return (
-        <Helmet>
-            <script type="application/ld+json">
-                {JSON.stringify(schema)}
-            </script>
-        </Helmet>
+        <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
     );
 }

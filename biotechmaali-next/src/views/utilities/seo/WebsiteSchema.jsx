@@ -1,7 +1,4 @@
-'use client';
-
 // src/seo/WebsiteSchema.jsx
-import { Helmet } from "react-helmet-async";
 import __logo from "../../../Assets/FranchiseEnquires/franchiseenquires_gidan.webp";
 const _logo = typeof __logo === 'string' ? __logo : __logo?.src || __logo;
 const logo = typeof _logo === 'string' ? _logo : _logo?.src || _logo;
@@ -14,10 +11,9 @@ export default function WebsiteSchema() {
     };
 
     return (
-        <Helmet>
-            <script type="application/ld+json">
-                {JSON.stringify(schema)}
-            </script>
-        </Helmet>
+        <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
     );
 }

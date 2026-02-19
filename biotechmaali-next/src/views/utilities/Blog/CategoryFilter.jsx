@@ -1,5 +1,6 @@
 'use client';
 
+import Link from "next/link";
 // import React, { useEffect, useState } from 'react';
 // import { AiOutlineSearch } from 'react-icons/ai'; // Import search icon
 import __DownloadApp from "../../../Assets/DownloadApp.webp";
@@ -9,8 +10,6 @@ const DownloadApp = typeof _DownloadApp === 'string' ? _DownloadApp : _DownloadA
 
 import React, { useState } from 'react';
 import { Search, X } from 'lucide-react';
-import { Link } from 'react-router-dom';
-
 function CategoryFilter({ 
   categories, 
   selectedCategory, 

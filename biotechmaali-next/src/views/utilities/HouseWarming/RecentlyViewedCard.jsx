@@ -1,11 +1,11 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { Paper, Typography } from "@mui/material";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { FiEye } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -23,7 +23,7 @@ const RecentlyViewedCard = ({
   
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const navigate = useNavigate();
+  const router = useRouter();
   const accessToken = useSelector(selectAccessToken);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const [isAdded, setIsAdded] = useState(false);
@@ -66,9 +66,9 @@ const RecentlyViewedCard = ({
     try {
       if (!isAuthenticated) {
         if (window.innerWidth <= 640) { 
-            navigate("/mobile-signin", { replace: true });
+            router.push("/mobile-signin", { replace: true });
         } else {
-            navigate("/?modal=signIn", { replace: true });
+            router.push("/?modal=signIn", { replace: true });
         }
         return;
     }
@@ -96,9 +96,9 @@ const RecentlyViewedCard = ({
 
     if (!isAuthenticated) {
       if (window.innerWidth <= 640) { // Matches Tailwind's `sm` breakpoint
-          navigate("/mobile-signin", { replace: true });
+          router.push("/mobile-signin", { replace: true });
       } else {
-          navigate("/?modal=signIn", { replace: true });
+          router.push("/?modal=signIn", { replace: true });
       }
       return;
   }
@@ -121,7 +121,7 @@ const RecentlyViewedCard = ({
 
   const handleQuickView = (e) => {
     e.stopPropagation();
-    navigate(`/product/${product.id}`, { state: { product } });
+    router.push(`/product/${product.id}`, { state: { product } });
   };
 
   return (

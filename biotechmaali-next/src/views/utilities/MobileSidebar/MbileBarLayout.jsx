@@ -1,8 +1,6 @@
 'use client';
 
 import React from 'react'
-import { Outlet } from "react-router-dom";
-
 import Header from '../../../components/Header/Header';
 import Footer from '../../../components/Footer/Footer';
 import Navigation from '../../../components/NavigationBar/NavigationBar';
@@ -20,7 +18,7 @@ const MobileBarLayout = () => {
 
 
         <div className='w-screen' >
-        <Outlet/>
+        {/* Outlet removed - use Next.js layout children */}
             {/* Footer */}
             <Footer />
         </div>

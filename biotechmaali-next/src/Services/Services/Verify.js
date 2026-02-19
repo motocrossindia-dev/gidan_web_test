@@ -3,14 +3,14 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { getToken, removeToken, storeToken } from './LocalStorageServices'; // Import the necessary functions
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 
 const Verify = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [verification, setVerification] = useState({});
   const { access_token, refresh_token } = getToken();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const createToken = async () => {
     try {
@@ -31,7 +31,7 @@ const Verify = () => {
 
       removeToken();
       localStorage.removeItem('user');
-      navigate('/'); ;
+      router.push('/');
 
       enqueueSnackbar('Session expired! Please login again', { variant: 'error' });
     }

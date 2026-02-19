@@ -1,11 +1,11 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useState, useCallback, memo } from "react";
 import { Paper, Typography } from "@mui/material";
 import { FaRegHeart, FaHeart, FaStar } from "react-icons/fa";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { FiEye } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Verify from "../../Services/Services/Verify";
 import { enqueueSnackbar } from "notistack";
@@ -15,14 +15,14 @@ import axiosInstance from "../../Axios/axiosInstance";
 
 const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, inCart, getProducts, ratingNumber, mrp, ribbon }) => {
     const [isHovered, setIsHovered] = useState(false);
-    const navigate = useNavigate();
+    const router = useRouter();
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const [isAdded, setIsAdded] = useState(false);
 
     const handleAddToWishlist = useCallback(async () => {
         if (!isAuthenticated) {
             enqueueSnackbar("Please sign..", { variant: "info" });
-            navigate(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+            router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
             return;
         }
 
@@ -51,7 +51,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
 
     const handleAddToCart = useCallback(async (e) => {
         if (!isAuthenticated) {
-            navigate(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+            router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
             return;
         }
 
@@ -91,7 +91,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
             ? `/${category_slug}/${sub_category_slug}/${product.slug}/`
             : `/${category_slug}/${product.slug}/`;
 
-        navigate(productUrl, {
+        router.push(productUrl, {
             state: {
                 product_id: product.id,
                 category_slug: category_slug,
@@ -386,8 +386,7 @@ export default memo(TrendingCard, (prevProps, nextProps) => {
 // import { FaRegHeart, FaHeart, FaStar } from "react-icons/fa";
 // import { MdOutlineShoppingBag } from "react-icons/md";
 // import { FiEye } from "react-icons/fi";
-// import { useNavigate } from "react-router-dom";
-// import { useSelector } from "react-redux";
+// // import { useSelector } from "react-redux";
 // import Verify from "../../Services/Services/Verify";
 // import { enqueueSnackbar } from "notistack";
 // import StarsOnCards from "./StarsOnCards";
@@ -397,14 +396,14 @@ export default memo(TrendingCard, (prevProps, nextProps) => {
 //
 // const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, inCart, getProducts, ratingNumber, mrp, ribbon }) => {
 //     const [isHovered, setIsHovered] = useState(false);
-//     const navigate = useNavigate();
+//     const router = useRouter();
 //     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 //     const [isAdded, setIsAdded] = useState(false);
 //
 //     const handleAddToWishlist = async () => {
 //         if (!isAuthenticated) {
 //             enqueueSnackbar("Please sign..", { variant: "info" });
-//             navigate(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+//             router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
 //             return;
 //         }
 //
@@ -435,7 +434,7 @@ export default memo(TrendingCard, (prevProps, nextProps) => {
 //
 //     const handleAddToCart = async (e) => {
 //         if (!isAuthenticated) {
-//             navigate(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+//             router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
 //             return;
 //         }
 //
@@ -472,7 +471,7 @@ export default memo(TrendingCard, (prevProps, nextProps) => {
 //         const category_slug = product?.category_slug;
 //         const sub_category_slug = product?.sub_category_slug;
 //
-//         navigate(`/category/${category_slug}/${product.slug}/`, {       state: {
+//         router.push(`/category/${category_slug}/${product.slug}/`, {       state: {
 //                 product_id: product.id,
 //                 category_slug:category_slug,
 //                 sub_category_slug:sub_category_slug

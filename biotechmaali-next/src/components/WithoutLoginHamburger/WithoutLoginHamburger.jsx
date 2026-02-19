@@ -1,7 +1,8 @@
 'use client';
 
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/Slice/userSlice";
 import axiosInstance from "../../Axios/axiosInstance";
@@ -22,7 +23,7 @@ import {
 
 const WithoutLoginHamburger = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const username = useSelector((state) => state.user.username || "Guest");
   const [userName, setUserName] = useState("Guest");
@@ -103,7 +104,7 @@ const WithoutLoginHamburger = () => {
     dispatch(logout());
     setUserName("Guest");
     setIsLogoutDialogOpen(false);
-    navigate("/");
+    router.push("/");
   };
 
   const handleCancelLogout = () => {
@@ -112,12 +113,12 @@ const WithoutLoginHamburger = () => {
 
   const handleUserNameClick = () => {
     setIsOpen(false);
-    navigate("/mobilesidebar");
+    router.push("/mobilesidebar");
   };
 
   const navigateToSignup = () => {
     setIsOpen(false);
-    navigate("/mobile-signin");
+    router.push("/mobile-signin");
   };
 
   const handleCategoryClick = (category) => {
@@ -132,13 +133,13 @@ const WithoutLoginHamburger = () => {
     setIsOpen(false);
 
     if (name === "GIFTS") {
-      navigate(`/gifts/`);
+      router.push(`/gifts/`);
     } else if (name === "SERVICES") {
-      navigate(`/services/`);
+      router.push(`/services/`);
     } else if (name === "OFFERS") {
-      navigate(`/offer`);
+      router.push(`/offer`);
     } else {
-      navigate(`/${slug}/`, {
+      router.push(`/${slug}/`, {
         state: {
           categoryId: id,
           categoryName: name,
@@ -152,7 +153,7 @@ const WithoutLoginHamburger = () => {
   const handleSubcategoryClick = (category, subcategory) => {
     setIsOpen(false);
     const typeKey = categoryToTypeMap[category.name];
-    navigate(`/${category.slug}/${subcategory.slug}/`, {
+    router.push(`/${category.slug}/${subcategory.slug}/`, {
       state: {
         categoryId: category.id,
         categoryName: category.name,
@@ -426,8 +427,7 @@ export default WithoutLoginHamburger;
 
 // ==================== OLD CODE (COMMENTED) ====================
 // import React, { useState, useEffect } from "react";
-// import { Link, useNavigate } from "react-router-dom";
-// import { useSelector, useDispatch } from "react-redux";
+// // import { useSelector, useDispatch } from "react-redux";
 // import { logout } from "../../redux/Slice/userSlice";
 // import axiosInstance from "../../Axios/axiosInstance";
 // import LogoutGif from "../../Assets/logout.gif";
@@ -445,7 +445,7 @@ export default WithoutLoginHamburger;
 // 
 // const WithoutLoginHamburger = () => {
 //   const dispatch = useDispatch();
-//   const navigate = useNavigate();
+//   const router = useRouter();
 // 
 //   const username = useSelector((state) => state.user.username || "Guest");
 //   const [userName, setUserName] = useState("Guest");
@@ -526,7 +526,7 @@ export default WithoutLoginHamburger;
 //     dispatch(logout());
 //     setUserName("Guest");
 //     setIsLogoutDialogOpen(false);
-//     navigate("/");
+//     router.push("/");
 //   };
 // 
 //   const handleCancelLogout = () => {
@@ -535,12 +535,12 @@ export default WithoutLoginHamburger;
 // 
 //   const handleUserNameClick = () => {
 //     setIsOpen(false);
-//     navigate("/mobilesidebar");
+//     router.push("/mobilesidebar");
 //   };
 // 
 //   const navigateToSignup = () => {
 //     setIsOpen(false);
-//     navigate("/mobile-signin");
+//     router.push("/mobile-signin");
 //   };
 // 
 //   const handleCategoryClick = (category) => {
@@ -555,13 +555,13 @@ export default WithoutLoginHamburger;
 //     setIsOpen(false);
 // 
 //     if (name === "GIFTS") {
-//       navigate(`/gifts/`);
+//       router.push(`/gifts/`);
 //     } else if (name === "SERVICES") {
-//       navigate(`/services/`);
+//       router.push(`/services/`);
 //     } else if (name === "OFFERS") {
-//       navigate(`/offer`);
+//       router.push(`/offer`);
 //     } else {
-//       navigate(`/category/${slug}/`, {
+//       router.push(`/category/${slug}/`, {
 //         state: {
 //           categoryId: id,
 //           categoryName: name,
@@ -574,7 +574,7 @@ export default WithoutLoginHamburger;
 // 
 //   const handleSubcategoryClick = (category, subcategory) => {
 //     setIsOpen(false);
-//     navigate(`/${category.slug}/${subcategory.slug}/`, {
+//     router.push(`/${category.slug}/${subcategory.slug}/`, {
 //       state: {
 //         categoryId: category.id,
 //         categoryName: category.name,

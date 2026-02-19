@@ -1,9 +1,9 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 // ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import SeasonalCard from "../Shared/ProductCard";
-import { useNavigate } from 'react-router-dom';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../redux/User/verificationSlice";
@@ -11,7 +11,7 @@ import { useHomeProducts } from "../../hooks/useHomeProducts";
 
 const SeasonalProduct = () => {
   const [visibleCount, setVisibleCount] = useState(8);
-  const navigate = useNavigate();
+  const router = useRouter();
   const accessToken = useSelector(selectAccessToken);
 
   // Use TanStack Query hook - shared cache with Home.jsx and TrendingSection.jsx
@@ -39,7 +39,7 @@ const SeasonalProduct = () => {
     const category_slug = product?.category_slug;
     const sub_category_slug = product?.sub_category_slug;
 
-    navigate(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
+    router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
       state: {
         product_id: product.slug,
         category_slug: category_slug,
@@ -100,7 +100,7 @@ const SeasonalProduct = () => {
           </button>
           <button
             aria-label="View all"
-            onClick={() => navigate('/seasonal/')}
+            onClick={() => router.push('/seasonal/')}
             className="bg-bio-green text-white w-[94px] h-[34px] rounded mx-1"
           >
             View All
@@ -119,8 +119,7 @@ export default SeasonalProduct;
 // ========== OLD CODE (Before Feb 16, 2026 - TanStack Query) - COMMENTED OUT ==========
 // import { useEffect, useState, useCallback, useMemo } from 'react';
 // import SeasonalCard from "../Shared/ProductCard";
-// import { useNavigate } from 'react-router-dom';
-// import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
+// // import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 // import { useSelector } from "react-redux";
 // import { selectAccessToken } from "../../redux/User/verificationSlice";
 // import axiosInstance from '../../Axios/axiosInstance';
@@ -128,7 +127,7 @@ export default SeasonalProduct;
 // const SeasonalProduct = () => {
 //   const [products, setProducts] = useState([]);
 //   const [visibleCount, setVisibleCount] = useState(8);
-//   const navigate = useNavigate();
+//   const router = useRouter();
 //   const accessToken = useSelector(selectAccessToken);
 //
 //   const getProducts = useCallback(async () => {
@@ -178,7 +177,7 @@ export default SeasonalProduct;
 //     const sub_category_slug = product?.sub_category_slug;
 //
 //     // All products have category, subcategory, and product slug
-//     navigate(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
+//     router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
 //       state: {
 //         product_id: product.slug,
 //         category_slug:category_slug,
@@ -226,7 +225,7 @@ export default SeasonalProduct;
 //               <span className="text-bio-green"><FaAngleLeft /></span>
 //             </button>
 //             <button aria-label="View all"
-//                     onClick={() => navigate('/seasonal/')}
+//                     onClick={() => router.push('/seasonal/')}
 //                     className="bg-bio-green text-white w-[94px] h-[34px] rounded mx-1"
 //             >
 //               View All

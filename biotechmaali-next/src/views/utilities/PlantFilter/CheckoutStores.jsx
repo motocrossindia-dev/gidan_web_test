@@ -1,7 +1,7 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; 
 import Card from "@mui/material/Card";
 import axiosInstance from "../../../Axios/axiosInstance";
 
@@ -9,7 +9,7 @@ const CheckOutStore = () => {
   const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null); 
   const [stores, setStores] = useState([]); 
-  const navigate = useNavigate(); 
+  const router = useRouter(); 
 
   // Fetch stores from API when component mounts
   const fetchStores = async () => {
@@ -99,7 +99,7 @@ const CheckOutStore = () => {
             <div className="flex justify-center mt-6">
               <button
                 className="bg-bio-green text-white py-2 px-4 rounded-md hover:bg-green-700"
-                onClick={() => navigate("/stores")} 
+                onClick={() => router.push("/stores")} 
               >
                 View All
               </button>

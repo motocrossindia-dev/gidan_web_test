@@ -1,11 +1,11 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { ShoppingCart } from "lucide-react";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
-import { useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 import axiosInstance from "../../../Axios/axiosInstance";
 
@@ -13,8 +13,7 @@ function ComboImage() {
   const accessToken = useSelector(selectAccessToken);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const [comboOffers, setComboOffers] = useState([])
-  const navigate = useNavigate()
-  const getAllcombos = async () => {
+  const router = useRouter();const getAllcombos = async () => {
     try {
 
       if (accessToken) {
@@ -67,12 +66,12 @@ function ComboImage() {
         sessionStorage.setItem("selected_combo_offer", JSON.stringify(selectedOffer));
       }
           if (window.innerWidth <= 768) {
-            navigate("/checkout", {         state: {
+            router.push("/checkout", {         state: {
           ordersummary,
           combo_offer: selectedOffer, // 🟢 pass offer to checkout
         }, }); // Navigate to mobile checkout
           } else {
-            navigate("/checkout", {         state: {
+            router.push("/checkout", {         state: {
           ordersummary,
           combo_offer: selectedOffer, // 🟢 pass offer to checkout
         }, }); // Navigate to regular checkout
@@ -91,9 +90,9 @@ function ComboImage() {
       // If not authenticated, redirect based on device type
       enqueueSnackbar("Please Login or Signup to Buy Our Products.");
       if (isMobile) {
-        navigate("/mobile-signin", { replace: true });
+        router.push("/mobile-signin", { replace: true });
       } else {
-        navigate("/?modal=signIn", { replace: true });
+        router.push("/?modal=signIn", { replace: true });
       }
     }
   };

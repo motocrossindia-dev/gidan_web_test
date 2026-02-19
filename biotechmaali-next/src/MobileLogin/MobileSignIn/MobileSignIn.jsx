@@ -1,7 +1,7 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import __logo from "../../Assets/Gidan_logo.webp";
 import __logoImage from "../../Assets/MobileSignin.webp";
 import { useDispatch } from "react-redux";
@@ -14,7 +14,7 @@ const logo = typeof __logo === 'string' ? __logo : __logo?.src || __logo;
 const logoImage = typeof __logoImage === 'string' ? __logoImage : __logoImage?.src || __logoImage;
 
 const MobileSignIn = () => {
-    const navigate = useNavigate();
+    const router = useRouter();
     const [mobileNumber, setMobileNumber] = useState("");
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
@@ -46,7 +46,7 @@ const MobileSignIn = () => {
             if (response.status === 201 || response.status === 200) {
                 enqueueSnackbar(response?.data.message, { variant: "success" });
                 setMobileNumber("");
-                navigate("/mobile-verification");
+                router.push("/mobile-verification");
             }
         } catch (error) {
             dispatch(signInFail(error.message));

@@ -1,8 +1,8 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from 'react';
 import { ArrowBack } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
 import { enqueueSnackbar } from 'notistack';
 import axiosInstance from '../../../Axios/axiosInstance';
 
@@ -11,7 +11,7 @@ const WriteAReview = ({ onClose, productId }) => {
   const [reviewTitle, setReviewTitle] = useState('');
   const [comment, setComment] = useState('');
   const [recommend, setRecommend] = useState('yes');
-  const navigate = useNavigate();
+  const router = useRouter();
 
   // Close modal when clicking outside
   useEffect(() => {
@@ -63,7 +63,7 @@ const WriteAReview = ({ onClose, productId }) => {
     >
       <div className="max-w-2xl w-full border border-gray-300 shadow-lg md:rounded-md p-3  bg-white">
         {/* Back Button */}
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate(-1)}>
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push(-1)}>
           <ArrowBack className="text-bio-green" />
           <span className="text-bio-green font-medium"></span>
         </div>

@@ -1,7 +1,7 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 // ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
-import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import { useSelector } from "react-redux";
 import { isMobile } from "react-device-detect";
@@ -12,7 +12,7 @@ import { useRewardBanner } from "../../hooks/useRewardBanner";
 
 const RewardClub = () => {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   // Use TanStack Query hook for banner data
   const { data: bannerData, isLoading } = useRewardBanner();
@@ -20,13 +20,13 @@ const RewardClub = () => {
   const referafriend = () => {
     if (!isAuthenticated) {
       enqueueSnackbar("Please sign in to get a referral code", { variant: "error" });
-      navigate(
+      router.push(
         window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn",
         { replace: true }
       );
       return;
     }
-    navigate(isMobile ? "/mobilesidebar/referalmobile" : "/profile/referal");
+    router.push(isMobile ? "/mobilesidebar/referalmobile" : "/profile/referal");
   };
 
   if (isLoading) {
@@ -89,15 +89,14 @@ export default RewardClub;
 // ========== OLD CODE (Before Feb 16, 2026 - TanStack Query) - COMMENTED OUT ==========
 // import React, { useEffect, useState } from "react";
 // import plantImage from "../../../src/Assets/RewardClub.webp";
-// import { useNavigate } from "react-router-dom";
-// import { enqueueSnackbar } from "notistack";
+// // import { enqueueSnackbar } from "notistack";
 // import { useSelector } from "react-redux";
 // import { isMobile } from "react-device-detect";
 // import axios from "axios";
 //
 // const RewardClub = () => {
 //   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-//   const navigate = useNavigate();
+//   const router = useRouter();
 //   const [bannerData, setBannerData] = useState(null);
 //
 //   useEffect(() => {
@@ -117,13 +116,13 @@ export default RewardClub;
 //   const referafriend = () => {
 //     if (!isAuthenticated) {
 //       enqueueSnackbar("Please sign in to get a referral code", { variant: "error" });
-//       navigate(
+//       router.push(
 //           window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn",
 //           { replace: true }
 //       );
 //       return;
 //     }
-//     navigate(isMobile ? "/mobilesidebar/referalmobile" : "/profile/referal");
+//     router.push(isMobile ? "/mobilesidebar/referalmobile" : "/profile/referal");
 //   };
 //
 //   return (

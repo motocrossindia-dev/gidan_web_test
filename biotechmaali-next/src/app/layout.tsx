@@ -18,12 +18,72 @@ const nunitoSans = Nunito_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Biotechmaali - Plants & Gardening Store",
+  metadataBase: new URL("https://www.gidan.store"),
+  title: {
+    default: "Gidan - Plants, Seeds & Gardening Store Online India",
+    template: "%s | Gidan Plants",
+  },
   description:
-    "Shop plants, seeds, pots, gardening tools and services at Biotechmaali. Landscaping, terrace gardening, vertical gardens and more.",
+    "Buy plants, seeds, pots, soil and gardening tools online at Gidan. Expert landscaping, terrace gardening and vertical garden services across India.",
+  keywords: [
+    "buy plants online India",
+    "indoor plants",
+    "outdoor plants",
+    "pots and planters",
+    "gardening tools",
+    "seeds online",
+    "landscaping services",
+    "terrace garden",
+    "vertical garden",
+    "plant gifts",
+    "Gidan plants",
+  ],
+  authors: [{ name: "Gidan Plants", url: "https://www.gidan.store" }],
+  creator: "Gidan Plants",
+  publisher: "Gidan Plants",
+  openGraph: {
+    title: "Gidan - Plants, Seeds & Gardening Store Online India",
+    description:
+      "Buy plants, seeds, pots and gardening tools online at Gidan. Landscaping, terrace gardening and vertical garden services across India.",
+    url: "https://www.gidan.store",
+    siteName: "Gidan Plants",
+    images: [
+      {
+        url: "https://www.gidan.store/gidan-og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Gidan Plants - Online Plant Store India",
+      },
+    ],
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Gidan - Plants & Gardening Store",
+    description:
+      "Buy plants, seeds, pots and gardening tools online at Gidan. Expert garden services across India.",
+    images: ["https://www.gidan.store/gidan-og.jpg"],
+  },
+  alternates: {
+    canonical: "https://www.gidan.store",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   icons: {
     icon: "/favicon.ico",
     apple: "/logo192.ico",
+  },
+  verification: {
+    google: "your-google-site-verification-token",
   },
 };
 

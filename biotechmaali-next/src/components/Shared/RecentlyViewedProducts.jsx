@@ -1,7 +1,7 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import ProductCard from "./ProductCard";
 import axiosInstance from '../../Axios/axiosInstance';
 
@@ -12,7 +12,7 @@ import axiosInstance from '../../Axios/axiosInstance';
  */
 const RecentlyViewedProducts = () => {
   const [products, setProducts] = useState([]);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const getProducts = async () => {
     try {
@@ -32,7 +32,7 @@ const RecentlyViewedProducts = () => {
       const sub_category_slug = product?.sub_category_slug;
 
       // NEW: Use 3-segment URL pattern: /:categorySlug/:subcategorySlug/:productSlug/
-      navigate(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
+      router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
           state: {
               product_id: product.slug,
               category_slug: category_slug,

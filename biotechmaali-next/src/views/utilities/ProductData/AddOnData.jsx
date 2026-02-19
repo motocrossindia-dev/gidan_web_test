@@ -1,11 +1,11 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { Paper, Typography, } from "@mui/material";
 import { FaStar } from "react-icons/fa";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
 
@@ -19,8 +19,7 @@ const AddOnData = ({
   inCart,
 }) => {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-  const navigate = useNavigate()
-  const accessToken = useSelector(selectAccessToken);
+  const router = useRouter();const accessToken = useSelector(selectAccessToken);
   
  
   const [isHovered, setIsHovered] = useState(false);
@@ -30,7 +29,7 @@ const AddOnData = ({
   const handleAddToCart = async () => {
     // e.stopPropagation();
     if (!isAuthenticated) {
-      navigate(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+      router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
       return;
     }
 

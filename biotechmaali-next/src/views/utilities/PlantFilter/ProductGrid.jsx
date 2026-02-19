@@ -1,8 +1,8 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import ProductCard from "./ProductCard";
-import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../../Axios/axiosInstance";
 import convertToSlug from "../../../utils/slugConverter";
 
@@ -13,7 +13,7 @@ const ProductGrid = ({
                        query,
                        filtersApplied = false
                      }) => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const observer = useRef(null);
 
   const [loading, setLoading] = useState(false);
@@ -36,7 +36,7 @@ const ProductGrid = ({
       const sub_category_slug = product?.sub_category_slug;
 
       // NEW: Use 3-segment URL pattern: /:categorySlug/:subcategorySlug/:productSlug/
-      navigate(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
+      router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
           state: {
               product_id: product.slug,
               category_slug: category_slug,

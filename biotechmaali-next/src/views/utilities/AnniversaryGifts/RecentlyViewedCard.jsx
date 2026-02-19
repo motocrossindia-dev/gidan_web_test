@@ -1,12 +1,12 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 // import React, { useState } from "react";
 // import { Paper, Typography } from "@mui/material";
 // import { FaRegHeart, FaHeart } from "react-icons/fa";
 // import { MdOutlineShoppingBag } from "react-icons/md";
 // import { FiEye } from "react-icons/fi";
-// import { useNavigate } from "react-router-dom";
-// import { enqueueSnackbar } from "notistack";
+// // import { enqueueSnackbar } from "notistack";
 // import { useSelector } from "react-redux";
 // import { FaStar } from 'react-icons/fa';
 // import Verify from "../../../Services/Services/Verify";
@@ -27,7 +27,7 @@
 //   mrp
 // }) => {
 //   const [isHovered, setIsHovered] = useState(false);
-//   const navigate = useNavigate();
+//   const router = useRouter();
 //   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 //   const [isAdded, setIsAdded] = useState(false);
 //   const [isImageHovered, setIsImageHovered] = useState(false);
@@ -35,7 +35,7 @@
 //   const handleAddToWishlist = async () => {
 //     if (!isAuthenticated) {
 //       enqueueSnackbar("Please sign in to add to wishlist", { variant: "error" });
-//       navigate(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+//       router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
 //       return;
 //     }
 //
@@ -70,7 +70,7 @@
 //   const handleAddToCart = async (e) => {
 //     // e.stopPropagation();
 //     if (!isAuthenticated) {
-//       navigate(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+//       router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
 //       return;
 //     }
 //
@@ -103,7 +103,7 @@
 //
 //   const handleQuickView = (e) => {
 //       console.log("id=========",product.id);
-//       navigate(`/products/${product.slug}/`,{
+//       router.push(`/products/${product.slug}/`,{
 //           state: {
 //               product_id: product.slug,
 //           }

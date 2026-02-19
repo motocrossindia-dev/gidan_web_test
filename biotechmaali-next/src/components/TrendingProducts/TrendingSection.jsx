@@ -1,8 +1,8 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 // ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import TrendingCard from "./../Shared/ProductCard";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../redux/User/verificationSlice";
@@ -10,7 +10,7 @@ import { useHomeProducts } from "../../hooks/useHomeProducts";
 
 const TrendingSection = () => {
   const [selectedTab, setSelectedTab] = useState("");
-  const navigate = useNavigate();
+  const router = useRouter();
   const accessToken = useSelector(selectAccessToken);
   const [visibleCount, setVisibleCount] = useState(8);
 
@@ -38,7 +38,7 @@ const TrendingSection = () => {
     const category_slug = product?.category_slug;
     const sub_category_slug = product?.sub_category_slug;
 
-    navigate(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
+    router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
       state: {
         product_id: product.slug,
         category_slug: category_slug,
@@ -170,7 +170,7 @@ const TrendingSection = () => {
               selectedTab === "bestseller" ? "/bestseller/" :
               selectedTab === "latest" ? "/latest/" :
               "/trending/";
-            navigate(route);
+            router.push(route);
           }}
           className="bg-white text-bio-green-text w-[94px] h-[34px] border border-bio-green rounded mx-1 hover:bg-bio-green hover:text-white transition-colors"
         >
@@ -185,8 +185,7 @@ export default TrendingSection;
 
 // ========== OLD CODE (Before Feb 16, 2026 - TanStack Query) - COMMENTED OUT ==========
 // import React, { useState, useEffect, useCallback, useMemo } from "react";
-// import { useNavigate } from "react-router-dom";
-// import TrendingCard from "./../Shared/ProductCard";
+// // import TrendingCard from "./../Shared/ProductCard";
 // import { useSelector } from "react-redux";
 // import { selectAccessToken } from "../../redux/User/verificationSlice";
 // import axiosInstance from "../../Axios/axiosInstance";
@@ -195,7 +194,7 @@ export default TrendingSection;
 // const TrendingSection = () => {
 //   const [selectedTab, setSelectedTab] = useState("");
 //   const itemsPerSlide = 4;
-//   const navigate = useNavigate();
+//   const router = useRouter();
 //   const [productsDetails, setProductsDetails] = useState([]);
 //   const accessToken = useSelector(selectAccessToken);
 //
@@ -237,7 +236,7 @@ export default TrendingSection;
 //     const sub_category_slug = product?.sub_category_slug;
 //
 //     // All products have category, subcategory, and product slug
-//     navigate(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
+//     router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
 //       state: {
 //         product_id: product.slug,
 //         category_slug:category_slug,
@@ -368,7 +367,7 @@ export default TrendingSection;
 //                       selectedTab === "bestseller" ? "/bestseller/" :
 //                       selectedTab === "latest" ? "/latest/" :
 //                       "/trending/";
-//                     navigate(route);
+//                     router.push(route);
 //                   }}
 //                   className="bg-white text-bio-green w-[94px] h-[34px] border border-bio-green rounded mx-1"
 //           >

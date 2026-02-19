@@ -1,12 +1,13 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from 'react';
 import __plantImage from "../../../Assets/Gift/Gift3.webp";
 const _plantImage = typeof __plantImage === 'string' ? __plantImage : __plantImage?.src || __plantImage;
 const plantImage = typeof _plantImage === 'string' ? _plantImage : _plantImage?.src || _plantImage;
 import TrendingCard from '../../../components/TrendingProducts/TrendingCard';
 
-import { useNavigate } from "react-router-dom"; // Import the useNavigate hook
+// Import the useNavigate hook
 import axiosInstance from '../../../Axios/axiosInstance';
 
 
@@ -14,7 +15,7 @@ const ProductGrid = ({ results }) => {
   const [products, setProducts] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedSortOption, setSelectedSortOption] = useState('');
-  const navigate = useNavigate(); // Initialize the navigate function
+  const router = useRouter(); // Initialize the navigate function
 
   // Fetch data from API
   const getProducts = async () => {
@@ -40,7 +41,7 @@ const ProductGrid = ({ results }) => {
     const sub_category_slug = product?.sub_category_slug;
 
     // All products have category, subcategory, and product slug
-    navigate(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {       state: {
+    router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {       state: {
         product_id: product.slug,
         category_slug:category_slug,
         sub_category_slug:sub_category_slug

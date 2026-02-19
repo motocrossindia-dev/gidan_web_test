@@ -1,10 +1,10 @@
 'use client';
 
+import { useRouter, usePathname, useSearchParams, useParams } from "next/navigation";
 import React, {useState, useEffect, useRef} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {addToCart} from "../../../redux/Slice/cartSlice";
 import {addtowishlist} from "../../../redux/Slice/addtowishlistSlice";
-import {useLocation, useNavigate} from "react-router-dom";
 import {
 
     ShoppingCart,
@@ -23,7 +23,6 @@ import {isMobile} from "react-device-detect";
 import AboutTheProducts from "../ProductData/AboutTheProducts";
 import {FaStar} from "react-icons/fa6";
 import {FaStarHalfAlt} from "react-icons/fa";
-import {useParams} from "react-router-dom";
 import {enqueueSnackbar} from "notistack";
 import Verify from "../../../Services/Services/Verify";
 import axiosInstance from "../../../Axios/axiosInstance";
@@ -99,7 +98,8 @@ const productData = {
 };
 
 export default function Component() {
-    const location = useLocation();
+    const pathname = usePathname();
+  const searchParams = useSearchParams();
     const [selectedImage, setSelectedImage] = useState(0);
 
     const [selectedSize, setSelectedSize] = useState("");
@@ -116,14 +116,14 @@ export default function Component() {
     const params = useParams();
 
     // Always use 3-segment URL pattern: /:categorySlug/:subcategorySlug/:productSlug/
-    const id = location.state?.product_id || params.productSlug || params.id;
+    const id = null?.product_id || params.productSlug || params.id;
 
-    const [product_slug, setproduct_slug] = useState(location.state?.product_id || id);
-    const [scategory_slug, setcategory_slug] = useState(location.state?.category_slug || params.categorySlug);
-    const [ssubcategory_slug, setsubcategory_slug] = useState(location.state?.sub_category_slug || params.subcategorySlug);
+    const [product_slug, setproduct_slug] = useState(null?.product_id || id);
+    const [scategory_slug, setcategory_slug] = useState(null?.category_slug || params.categorySlug);
+    const [ssubcategory_slug, setsubcategory_slug] = useState(null?.sub_category_slug || params.subcategorySlug);
 
     // Track current URL for canonical tag synchronization
-    const [currentUrl, setCurrentUrl] = useState(window.location.pathname);
+    const [currentUrl, setCurrentUrl] = useState(window.pathname);
 
     const [pincode, setPincode] = useState("");
     const [error, setError] = useState("");
@@ -153,7 +153,7 @@ export default function Component() {
     // ⬆️ Scroll to top on route change or product change
     useEffect(() => {
         window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
-    }, [location.pathname, params.productSlug]);
+    }, [pathname, params.productSlug]);
 
     const handlePincodeChange = (e) => {
         const value = e.target.value;
@@ -198,7 +198,7 @@ export default function Component() {
     };
 
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const router = useRouter();
 
     const handleAddToCartSubmit = async () => {
         if (isAuthenticated || isAuthenticatedMobile) {
@@ -240,9 +240,9 @@ export default function Component() {
             enqueueSnackbar("Please sign..", {variant: "info"});
 
             if (isMobile) {
-                navigate("/mobile-signin", {replace: true});
+                router.push("/mobile-signin", {replace: true});
             } else {
-                navigate("/?modal=signIn", {replace: true});
+                router.push("/?modal=signIn", {replace: true});
             }
         }
 
@@ -278,9 +278,9 @@ export default function Component() {
                 variant: "info",
             }); // Show login message
             if (isMobile) {
-                navigate("/mobile-signin", {replace: true});
+                router.push("/mobile-signin", {replace: true});
             } else {
-                navigate("/?modal=signIn", {replace: true});
+                router.push("/?modal=signIn", {replace: true});
             }
         }
     };
@@ -306,12 +306,12 @@ export default function Component() {
 
 
                     if (window.innerWidth <= 768) {
-                        // navigate("/order-summary", { state: { resource: response.data.data } }); // Navigate to mobile checkout
-                        navigate("/checkout", {state: {ordersummary: response.data.data}}); // Navigate to regular checkout
+                        // router.push("/order-summary", { state: { resource: response.data.data } }); // Navigate to mobile checkout
+                        router.push("/checkout", {state: {ordersummary: response.data.data}}); // Navigate to regular checkout
 
 
                     } else {
-                        navigate("/checkout", {state: {ordersummary: response.data.data}}); // Navigate to regular checkout
+                        router.push("/checkout", {state: {ordersummary: response.data.data}}); // Navigate to regular checkout
                     }
                 }
 
@@ -320,11 +320,11 @@ export default function Component() {
 
                     enqueueSnackbar(error.response.data.message, {variant: "warning"});
                     if (error.response.data.message === "User profile is not updated.") {
-                        navigate('/profile')
+                        router.push('/profile')
                     }
                     if (error.response.data.message === "User address is not updated.") {
 
-                        navigate('/profile')
+                        router.push('/profile')
 
                     }
                 } else {
@@ -335,9 +335,9 @@ export default function Component() {
             // If not authenticated, redirect based on device type
             enqueueSnackbar("Please Login or Signup to Buy Our Products.", {variant: 'info'});
             if (isMobile) {
-                navigate("/mobile-signin", {replace: true});
+                router.push("/mobile-signin", {replace: true});
             } else {
-                navigate("/?modal=signIn", {replace: true});
+                router.push("/?modal=signIn", {replace: true});
             }
         }
     };
@@ -813,7 +813,7 @@ export default function Component() {
 //
 //     if (id) fetchData();
 // }, [id]);
-// ========== END OLD CODE ==========const category_slug = location.state?.category_slug || product?.category_slug;// Fallbacks if fields are missing
+// ========== END OLD CODE ==========const category_slug = null?.category_slug || product?.category_slug;// Fallbacks if fields are missing
     const metaTitle = product?.meta_title
         ? product.meta_title
         : product?.main_product_name
@@ -1299,7 +1299,7 @@ export default function Component() {
                                 <div className="w-1/2">
                                     <button aria-label="Add to cart"
                                             className="w-full border border-bio-green text-bio-green py-2 px-4 rounded-lg hover:bg-bio-green hover:text-white"
-                                            onClick={isInCart ? () => navigate('/cart') : handleAddToCartSubmit}
+                                            onClick={isInCart ? () => router.push('/cart') : handleAddToCartSubmit}
                                     >
                                         <ShoppingCart className="inline-block mr-2"/>
                                         {isInCart ? "Go to Cart" : "Add to Cart"}
@@ -1383,8 +1383,7 @@ export default function Component() {
 // import {useDispatch, useSelector} from "react-redux";
 // import {addToCart} from "../../../redux/Slice/cartSlice";
 // import {addtowishlist} from "../../../redux/Slice/addtowishlistSlice";
-// import {useLocation, useNavigate} from "react-router-dom";
-// import {
+// // import {
 //
 //     ShoppingCart,
 //     Heart,
@@ -1404,8 +1403,7 @@ export default function Component() {
 // import AboutTheProducts from "../ProductData/AboutTheProducts";
 // import {FaStar} from "react-icons/fa6";
 // import {FaStarHalfAlt} from "react-icons/fa";
-// import {useParams} from "react-router-dom";
-// import {enqueueSnackbar} from "notistack";
+// // import {enqueueSnackbar} from "notistack";
 // import Verify from "../../../Services/Services/Verify";
 // import axiosInstance from "../../../Axios/axiosInstance";
 // import { Helmet } from "react-helmet-async";
@@ -1478,7 +1476,8 @@ export default function Component() {
 // };
 //
 // export default function Component() {
-//     const location = useLocation();
+//     const pathname = usePathname();
+  const searchParams = useSearchParams();
 //     const [selectedImage, setSelectedImage] = useState(0);
 //
 //     const [selectedSize, setSelectedSize] = useState("");
@@ -1493,9 +1492,9 @@ export default function Component() {
 //     const [productDetailData, setProductDetailData] = useState([]);
 //     const [imageThumbnails, setImageThumbnails] = useState([]);
 //     const params = useParams();
-//     const id = location.state?.product_id || params.id;
-//     const [product_slug, setproduct_slug] = useState(location.state?.product_id || id);
-//     const [scategory_slug, setcategory_slug] = useState(location.state?.category_slug);
+//     const id = null?.product_id || params.id;
+//     const [product_slug, setproduct_slug] = useState(null?.product_id || id);
+//     const [scategory_slug, setcategory_slug] = useState(null?.category_slug);
 //
 //     const [pincode, setPincode] = useState("");
 //     const [error, setError] = useState("");
@@ -1525,7 +1524,7 @@ export default function Component() {
 //     // ⬆️ Scroll to top on route change
 //     useEffect(() => {
 //         window.scrollTo({top: -10, left: 0, behavior: 'auto'}); // change to 'smooth' if needed
-//     }, [location.pathname]);
+//     }, [pathname]);
 //
 //     const handlePincodeChange = (e) => {
 //         const value = e.target.value;
@@ -1570,7 +1569,7 @@ export default function Component() {
 //     };
 //
 //     const dispatch = useDispatch();
-//     const navigate = useNavigate();
+//     const router = useRouter();
 //
 //     const handleAddToCartSubmit = async () => {
 //         if (isAuthenticated || isAuthenticatedMobile) {
@@ -1634,9 +1633,9 @@ export default function Component() {
 //             enqueueSnackbar("Please sign..", {variant: "info"});
 //
 //             if (isMobile) {
-//                 navigate("/mobile-signin", {replace: true});
+//                 router.push("/mobile-signin", {replace: true});
 //             } else {
-//                 navigate("/?modal=signIn", {replace: true});
+//                 router.push("/?modal=signIn", {replace: true});
 //             }
 //         }
 //
@@ -1672,9 +1671,9 @@ export default function Component() {
 //                 variant: "info",
 //             }); // Show login message
 //             if (isMobile) {
-//                 navigate("/mobile-signin", {replace: true});
+//                 router.push("/mobile-signin", {replace: true});
 //             } else {
-//                 navigate("/?modal=signIn", {replace: true});
+//                 router.push("/?modal=signIn", {replace: true});
 //             }
 //         }
 //     };
@@ -1700,12 +1699,12 @@ export default function Component() {
 //
 //
 //                     if (window.innerWidth <= 768) {
-//                         // navigate("/order-summary", { state: { resource: response.data.data } }); // Navigate to mobile checkout
-//                         navigate("/checkout", {state: {ordersummary: response.data.data}}); // Navigate to regular checkout
+//                         // router.push("/order-summary", { state: { resource: response.data.data } }); // Navigate to mobile checkout
+//                         router.push("/checkout", {state: {ordersummary: response.data.data}}); // Navigate to regular checkout
 //
 //
 //                     } else {
-//                         navigate("/checkout", {state: {ordersummary: response.data.data}}); // Navigate to regular checkout
+//                         router.push("/checkout", {state: {ordersummary: response.data.data}}); // Navigate to regular checkout
 //                     }
 //                 }
 //
@@ -1714,11 +1713,11 @@ export default function Component() {
 //
 //                     enqueueSnackbar(error.response.data.message, {variant: "warning"});
 //                     if (error.response.data.message === "User profile is not updated.") {
-//                         navigate('/profile')
+//                         router.push('/profile')
 //                     }
 //                     if (error.response.data.message === "User address is not updated.") {
 //
-//                         navigate('/profile')
+//                         router.push('/profile')
 //
 //                     }
 //                 } else {
@@ -1729,9 +1728,9 @@ export default function Component() {
 //             // If not authenticated, redirect based on device type
 //             enqueueSnackbar("Please Login or Signup to Buy Our Products.", {variant: 'info'});
 //             if (isMobile) {
-//                 navigate("/mobile-signin", {replace: true});
+//                 router.push("/mobile-signin", {replace: true});
 //             } else {
-//                 navigate("/?modal=signIn", {replace: true});
+//                 router.push("/?modal=signIn", {replace: true});
 //             }
 //         }
 //     };
@@ -2090,7 +2089,7 @@ export default function Component() {
 //
 //     console.log("iiiidd", id,'p_slug',product_slug);
 //
-//     const category_slug = location.state?.category_slug || product.category_slug;
+//     const category_slug = null?.category_slug || product.category_slug;
 //     console.log(id,'========details');
 //     // Fallbacks if fields are missing
 //     const metaTitle = product?.meta_title
@@ -2568,7 +2567,7 @@ export default function Component() {
 //                                 <div className="w-1/2">
 //                                     <button
 //                                         className="w-full border border-bio-green text-bio-green py-2 px-4 rounded-lg hover:bg-bio-green hover:text-white"
-//                                         onClick={isInCart ? () => navigate('/cart') : handleAddToCartSubmit}
+//                                         onClick={isInCart ? () => router.push('/cart') : handleAddToCartSubmit}
 //                                     >
 //                                         <ShoppingCart className="inline-block mr-2"/>
 //                                         {isInCart ? "Go to Cart" : "Add to Cart"}

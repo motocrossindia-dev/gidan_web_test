@@ -1,10 +1,10 @@
 'use client';
 
+import Link from "next/link";
 // ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
 import __combo from "../../../src/Assets/ComboOffer/combooffer.webp";
 const _combo = typeof __combo === 'string' ? __combo : __combo?.src || __combo;
 const combo = typeof _combo === 'string' ? _combo : _combo?.src || _combo;
-import { NavLink } from "react-router-dom";
 import { useComboOffer } from "../../hooks/useComboOffer";
 
 const ComboOffer = () => {
@@ -56,12 +56,12 @@ const ComboOffer = () => {
               )}
             </p>
             <div className="pt-2">
-              <NavLink
+              <Link
                 to="/combooffer"
                 className="inline-block text-white bg-bio-green hover:bg-green-700 text-sm sm:text-base md:text-lg px-5 py-2.5 md:px-6 md:py-3 rounded-md font-medium transition-colors duration-200 shadow-sm hover:shadow-md"
               >
                 {comboData?.button_text || "Explore Combo"}
-              </NavLink>
+              </Link>
             </div>
           </div>
         </div>
@@ -75,8 +75,7 @@ export default ComboOffer;
 // ========== OLD CODE (Before Feb 16, 2026 - TanStack Query) - COMMENTED OUT ==========
 // import { useEffect, useState } from "react";
 // import combo from "../../../src/Assets/ComboOffer/combooffer.webp";
-// import { NavLink } from "react-router-dom";
-// import axios from "axios";
+// // import axios from "axios";
 //
 // const ComboOffer = () => {
 //   const [comboData, setComboData] = useState(null);
@@ -120,12 +119,12 @@ export default ComboOffer;
 //               )}
 //             </p>
 //             <div className="pt-2">
-//               <NavLink
+//               <Link
 //                 to="/combooffer"
 //                 className="inline-block text-white bg-bio-green hover:bg-green-700 text-sm sm:text-base md:text-lg px-5 py-2.5 md:px-6 md:py-3 rounded-md font-medium transition-colors duration-200 shadow-sm hover:shadow-md"
 //               >
 //                 {comboData?.button_text || "Explore Combo"}
-//               </NavLink>
+//               </Link>
 //             </div>
 //           </div>
 //         </div>

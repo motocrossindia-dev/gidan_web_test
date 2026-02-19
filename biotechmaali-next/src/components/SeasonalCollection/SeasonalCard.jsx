@@ -1,11 +1,11 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useState, useCallback, memo } from "react";
 import { Paper, Typography } from "@mui/material";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { FiEye } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import { useSelector } from "react-redux";
 import { FaStar } from 'react-icons/fa';
@@ -28,7 +28,7 @@ const SeasonalCard = ({
                           mrp,
                           ribbon
                       }) => {
-    const navigate = useNavigate();
+    const router = useRouter();
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const [isAdded, setIsAdded] = useState(false);
     const [isImageHovered, setIsImageHovered] = useState(false);
@@ -36,7 +36,7 @@ const SeasonalCard = ({
     const handleAddToWishlist = useCallback(async () => {
         if (!isAuthenticated) {
             enqueueSnackbar("Please sign in to add to wishlist", { variant: "error" });
-            navigate(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+            router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
             return;
         }
 
@@ -65,7 +65,7 @@ const SeasonalCard = ({
 
     const handleAddToCart = useCallback(async (e) => {
         if (!isAuthenticated) {
-            navigate(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+            router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
             return;
         }
 
@@ -105,7 +105,7 @@ const SeasonalCard = ({
             ? `/${category_slug}/${sub_category_slug}/${product.slug}/`
             : `/${category_slug}/${product.slug}/`;
 
-        navigate(productUrl, {
+        router.push(productUrl, {
             state: {
                 product_id: product.slug,
                 category_slug: category_slug,
@@ -369,8 +369,7 @@ export default memo(SeasonalCard, (prevProps, nextProps) => {
 // import { FaRegHeart, FaHeart } from "react-icons/fa";
 // import { MdOutlineShoppingBag } from "react-icons/md";
 // import { FiEye } from "react-icons/fi";
-// import { useNavigate } from "react-router-dom";
-// import { enqueueSnackbar } from "notistack";
+// // import { enqueueSnackbar } from "notistack";
 // import { useSelector } from "react-redux";
 // import { FaStar } from 'react-icons/fa';
 // import Verify from "../../Services/Services/Verify";
@@ -392,7 +391,7 @@ export default memo(SeasonalCard, (prevProps, nextProps) => {
 //                           mrp,
 //                           ribbon
 //                       }) => {
-//     const navigate = useNavigate();
+//     const router = useRouter();
 //     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 //     const [isAdded, setIsAdded] = useState(false);
 //     const [isImageHovered, setIsImageHovered] = useState(false);
@@ -400,7 +399,7 @@ export default memo(SeasonalCard, (prevProps, nextProps) => {
 //     const handleAddToWishlist = async () => {
 //         if (!isAuthenticated) {
 //             enqueueSnackbar("Please sign in to add to wishlist", { variant: "error" });
-//             navigate(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+//             router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
 //             return;
 //         }
 //
@@ -431,7 +430,7 @@ export default memo(SeasonalCard, (prevProps, nextProps) => {
 //
 //     const handleAddToCart = async (e) => {
 //         if (!isAuthenticated) {
-//             navigate(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+//             router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
 //             return;
 //         }
 //
@@ -469,7 +468,7 @@ export default memo(SeasonalCard, (prevProps, nextProps) => {
 //         const category_slug = product?.category_slug;
 //         const sub_category_slug = product?.sub_category_slug;
 //
-//         navigate(`/category/${category_slug}/${product.slug}/`, {       state: {
+//         router.push(`/category/${category_slug}/${product.slug}/`, {       state: {
 //                 product_id: product.slug,
 //                 category_slug:category_slug,
 //                 sub_category_slug:sub_category_slug

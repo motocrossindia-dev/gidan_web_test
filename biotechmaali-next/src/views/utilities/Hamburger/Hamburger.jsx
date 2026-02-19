@@ -1,7 +1,8 @@
 'use client';
 
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import {
   FaBars,
   FaUser,
@@ -19,7 +20,7 @@ const Hamburger = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedCategory, setExpandedCategory] = useState(null);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   // Map categories to type_choices
   const categoryToTypeMap = {
@@ -93,14 +94,14 @@ const Hamburger = () => {
     closeMenu();
 
     if (name === "GIFTS") {
-      navigate(`/gifts/`);
+      router.push(`/gifts/`);
     } else if (name === "SERVICES") {
-      navigate(`/services/`);
+      router.push(`/services/`);
     } else if (name === "OFFERS") {
-      navigate(`/offer`);
+      router.push(`/offer`);
     } else {
       // Clean URL structure
-      navigate(`/${slug}/`, {
+      router.push(`/${slug}/`, {
         state: {
           categoryId: id,
           categoryName: name,
@@ -114,7 +115,7 @@ const Hamburger = () => {
   const handleSubcategoryClick = (category, subcategory) => {
     closeMenu();
     const typeKey = categoryToTypeMap[category.name];
-    navigate(`/${category.slug}/${subcategory.slug}/`, {
+    router.push(`/${category.slug}/${subcategory.slug}/`, {
       state: {
         categoryId: category.id,
         categoryName: category.name,
@@ -318,8 +319,7 @@ const Hamburger = () => {
 export default Hamburger;
 // ================old==========
 // import React, { useState, useEffect } from "react";
-// import { Link, useNavigate } from "react-router-dom";
-// import {
+// // import {
 //   FaBars,
 //   FaUser,
 //   FaSignOutAlt,
@@ -336,7 +336,7 @@ export default Hamburger;
 //   const [isOpen, setIsOpen] = useState(false);
 //   const [categories, setCategories] = useState([]);
 //   const [loading, setLoading] = useState(true);
-//   const navigate = useNavigate();
+//   const router = useRouter();
 //
 //   // Map categories to type_choices
 //   const categoryToTypeMap = {
@@ -386,13 +386,13 @@ export default Hamburger;
 //     closeMenu();
 //
 //     if (name === "GIFTS") {
-//       navigate(`/gifts/`);
+//       router.push(`/gifts/`);
 //     } else if (name === "SERVICES") {
-//       navigate(`/services/`);
+//       router.push(`/services/`);
 //     } else if (name === "OFFERS") {
-//       navigate(`/offer`);
+//       router.push(`/offer`);
 //     } else {
-//       navigate(`/category/${slug}/`, {
+//       router.push(`/category/${slug}/`, {
 //         state: {
 //           categoryId: id,
 //           categoryName: name,

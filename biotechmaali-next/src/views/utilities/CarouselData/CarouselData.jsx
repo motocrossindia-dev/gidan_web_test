@@ -1,12 +1,12 @@
 'use client';
 
+import { useSearchParams, useParams } from "next/navigation";
 // import React, { useEffect, useState } from "react";
 // import ProductGrid from "../PlantFilter/ProductGrid";
 // import FAQSection from "../PlantFilter/FAQSection";
 // import RecentlyViewedProduct from "../PlantFilter/RecentlyViewedProduct";
 // import CheckoutStores from "./PlantFilter/CheckoutStores";
-// import { useParams } from "react-router-dom";
-// import { Helmet } from "react-helmet";
+// // import { Helmet } from "react-helmet";
 
 
 // function CarouselData() {
@@ -57,15 +57,13 @@ import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedPro
 import CheckoutStores from "../PlantFilter/CheckoutStores";
 import { Helmet } from "react-helmet-async";
 import axios from "axios";
-import {useLocation, useParams} from "react-router-dom";
-
-
 function CarouselData() {
     const [results, setResults] = useState([]);
 
-    const location = useLocation();
+    const searchParams = useSearchParams();
+  const pathname = usePathname();
 
-    const id = location.state.heroId;
+    const id = null.heroId;
     console.log(id,'-------------------------------s');
     // const { id } = useParams();
 

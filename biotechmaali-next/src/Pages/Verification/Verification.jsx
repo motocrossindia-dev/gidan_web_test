@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -7,7 +8,6 @@ import __biotech from "../../../src/Assets/Gidan_logo.webp";
 const _biotech = typeof __biotech === 'string' ? __biotech : __biotech?.src || __biotech;
 const biotech = typeof _biotech === 'string' ? _biotech : _biotech?.src || _biotech;
 import { useSnackbar } from "notistack"; // Correct import
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setVerifiedUser } from "../../redux/User/verificationSlice";
@@ -17,7 +17,7 @@ import { storenewData } from "../../redux/newUserData/newUserdataSlice";
 import Verify from "../../Services/Services/Verify";
 
 const Verification = ({ onClose, onSubmit }) => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar(); // Correct usage of useSnackbar
   const [otpDigits, setOtpDigits] = useState(["", "", "", ""]);
@@ -91,7 +91,7 @@ const Verification = ({ onClose, onSubmit }) => {
           dispatch(setUsername(user.name || user.first_name));
           localStorage.setItem("userData", JSON.stringify(user));
           onClose();
-          navigate("/");
+          router.push("/");
         }
       }
 

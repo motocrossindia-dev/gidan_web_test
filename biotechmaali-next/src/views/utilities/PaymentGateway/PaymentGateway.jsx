@@ -1,8 +1,8 @@
 'use client';
 
 
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
-import { useLocation,useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
@@ -12,14 +12,15 @@ import {Helmet} from "react-helmet";
 import { trackPurchase } from "../../../utils/ga4Ecommerce";
 
 const PaymentGateway = () => {
-  const location = useLocation();
-  const orderData = location.state.resource;
-  const order_id = location.state.order_id;
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const orderData = null.resource;
+  const order_id = null.order_id;
   const name = orderData.order.customer_name
   const email = orderData.order.email
   const phone = orderData.order.mobile
   const data = orderData
-  const navigate = useNavigate();
+  const router = useRouter();
   const [selectedMethod, setSelectedMethod] = useState("");
   const accessToken = useSelector(selectAccessToken);
   const [balance,setBalance] = useState(null)
@@ -115,7 +116,7 @@ const handlePayment = async () => {
           payment_type: 'Wallet'
         });
         
-        navigate("/successpage");
+        router.push("/successpage");
         return;
       }
 
@@ -160,7 +161,7 @@ const handlePayment = async () => {
                 shipping: orderData?.order?.delivery_charge || 0
               });
               
-              navigate("/successpage");
+              router.push("/successpage");
             } else {
               enqueueSnackbar("Payment verification failed.", { variant: "error" });
             }
@@ -295,7 +296,7 @@ const handlePayment = async () => {
           <h3 className="text-gray-900 text-lg font-medium">{option.title}</h3>
           <p className="text-gray-600 text-sm">
             {isCOD
-              ? "Cash on Delivery is currently unavailable for your location. Please choose another payment method."
+              ? "Cash on Delivery is currently unavailable for your pathname. Please choose another payment method."
               : option.description}
           </p>
         </div>

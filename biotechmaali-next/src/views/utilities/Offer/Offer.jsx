@@ -1,8 +1,8 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { ShoppingCart } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
@@ -12,7 +12,7 @@ import { selectAccessToken } from "../../../redux/User/verificationSlice"; // ad
 function Offer() {
   const [offers, setOffers] = useState([]);
   const [cartItems, setCartItems] = useState([]);
-  const navigate = useNavigate();
+  const router = useRouter();
   const dispatch = useDispatch();
 
   // ✅ Auth states
@@ -61,7 +61,7 @@ function Offer() {
       }
     } else {
       enqueueSnackbar("Please sign in", { variant: "info" });
-      navigate("/?modal=signIn", { replace: true });
+      router.push("/?modal=signIn", { replace: true });
     }
   };
 
@@ -107,7 +107,7 @@ function Offer() {
                   className="w-full border border-bio-green text-bio-green py-2 px-4 rounded-lg hover:bg-bio-green hover:text-white mt-4"
                   onClick={
                     isInCart
-                      ? () => navigate("/cart")
+                      ? () => router.push("/cart")
                       : () => handleAddToCartSubmit(offer)
                   }
                 >

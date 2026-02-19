@@ -1,13 +1,13 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 
 const Successpage = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   useEffect(() => {
     window.scrollTo(0, 0); // Scroll to top on mount
@@ -58,7 +58,7 @@ const Successpage = () => {
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.98 }}
-        onClick={() => navigate("/orders")}
+        onClick={() => router.push("/orders")}
         className="mt-10 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium shadow-md"
       >
         Go to Orders

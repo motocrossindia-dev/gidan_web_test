@@ -1,8 +1,9 @@
 'use client';
 
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Sprout, Gift, Users, History, HelpCircle } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
 import axiosInstace from "../../../Axios/axiosInstance";
 import {Helmet} from "react-helmet";
 
@@ -20,7 +21,7 @@ const GDCoins = () => {
   const [redeemCoins, setRedeemCoins] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const getGDcoinsWallet = async()=>{
     try {
@@ -36,7 +37,7 @@ const GDCoins = () => {
     try {
       const response = await axiosInstace.get(`/btcoins/btcoinsTransactions/`)
       if (response.status === 200) {
-        navigate('/profile/history',{state:{resourse:response?.data?.data , data:data}})
+        router.push('/profile/history',{state:{resourse:response?.data?.data , data:data}})
       }
 
     } catch (error) {}
@@ -209,8 +210,7 @@ export default GDCoins;
 // ==========================old================
 // import React, { useEffect, useState } from "react";
 // import { Sprout, Gift, Users, History, HelpCircle } from "lucide-react";
-// import { Link, useNavigate } from "react-router-dom";
-// import axiosInstace from "../../../Axios/axiosInstance";
+// // import axiosInstace from "../../../Axios/axiosInstance";
 // import {Helmet} from "react-helmet";
 //
 //
@@ -227,7 +227,7 @@ export default GDCoins;
 //    const [redeemCoins, setRedeemCoins] = useState("");
 //     const [loading, setLoading] = useState(false);
 //
-// const navigate = useNavigate();
+// const router = useRouter();
 //
 //   const getBTcoinsWallet = async()=>{
 //     try {
@@ -246,7 +246,7 @@ export default GDCoins;
 //     try {
 //       const response = await axiosInstace.get(`/btcoins/btcoinsTransactions/`)
 //       if (response.status === 200) {
-//         navigate('/profile/history',{state:{resourse:response?.data?.data , data:data}})
+//         router.push('/profile/history',{state:{resourse:response?.data?.data , data:data}})
 //       }
 //
 //     } catch (error) {

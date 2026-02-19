@@ -1,11 +1,11 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { ShoppingCart } from "lucide-react";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
-import { useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 import axiosInstance from "../../../Axios/axiosInstance";
 
@@ -13,7 +13,7 @@ function DealOfWeek() {
   const accessToken = useSelector(selectAccessToken);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const [deals, setDeals] = useState([]);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   // ✅ Fetch all deals directly
   const getAllDeals = async () => {
@@ -56,7 +56,7 @@ function DealOfWeek() {
           // Save selected deal
           sessionStorage.setItem("selected_deal", JSON.stringify(deal));
 
-          navigate("/checkout", {
+          router.push("/checkout", {
             state: { ordersummary, deal },
           });
         }
@@ -71,9 +71,9 @@ function DealOfWeek() {
     } else {
       enqueueSnackbar("Please Login or Signup to Buy Our Products.");
       if (isMobile) {
-        navigate("/mobile-signin", { replace: true });
+        router.push("/mobile-signin", { replace: true });
       } else {
-        navigate("/?modal=signIn", { replace: true });
+        router.push("/?modal=signIn", { replace: true });
       }
     }
   };

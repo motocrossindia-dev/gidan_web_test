@@ -1,7 +1,7 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { enqueueSnackbar } from "notistack";
 import __logo from "../../Assets/Gidan_logo.webp";
@@ -17,7 +17,7 @@ const logo = typeof __logo === 'string' ? __logo : __logo?.src || __logo;
 const logoImage = typeof __logoImage === 'string' ? __logoImage : __logoImage?.src || __logoImage;
 
 const MobileLoginPage = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
@@ -68,7 +68,7 @@ const MobileLoginPage = () => {
         dispatch(setUsername(user.name || user.first_name));
         localStorage.setItem("userData", JSON.stringify(user));
         enqueueSnackbar("Logged in successfully!", { variant: "success" });
-        navigate("/"); // Redirect to homepage after login
+        router.push("/"); // Redirect to homepage after login
       }
     } catch (error) {
       console.error("API Error: ", error); // Log error in the console
@@ -134,7 +134,7 @@ const MobileLoginPage = () => {
           </button>
         </form>
 
-        <p className="text-center text-sm text-blue-500 mt-5 cursor-pointer" onClick={() => navigate("/mobile-signin")}>
+        <p className="text-center text-sm text-blue-500 mt-5 cursor-pointer" onClick={() => router.push("/mobile-signin")}>
           Back to sign-in
         </p>
       </div>

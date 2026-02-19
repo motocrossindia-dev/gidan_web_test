@@ -1,11 +1,11 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 // ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
 import { useState } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Box } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { enqueueSnackbar } from "notistack";
-import { useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 import { useSelector } from "react-redux";
 import axiosInstance from "../../Axios/axiosInstance";
@@ -13,7 +13,7 @@ import { useShopTheLook } from "../../hooks/useShopTheLook";
 
 function ShopTheLook() {
   const [showPopup, setShowPopup] = useState(false);
-  const navigate = useNavigate();
+  const router = useRouter();
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
   // Use TanStack Query hook for shop the look data
@@ -26,9 +26,9 @@ function ShopTheLook() {
     if (!isAuthenticated) {
       enqueueSnackbar("Please Login or Signup to add products to cart.");
       if (isMobile) {
-        navigate("/mobile-signin", { replace: true });
+        router.push("/mobile-signin", { replace: true });
       } else {
-        navigate("/?modal=signIn", { replace: true });
+        router.push("/?modal=signIn", { replace: true });
       }
       return;
     }
@@ -76,9 +76,9 @@ function ShopTheLook() {
     if (!isAuthenticated) {
       enqueueSnackbar("Please Login or Signup to place order.");
       if (isMobile) {
-        navigate("/mobile-signin", { replace: true });
+        router.push("/mobile-signin", { replace: true });
       } else {
-        navigate("/?modal=signIn", { replace: true });
+        router.push("/?modal=signIn", { replace: true });
       }
       return;
     }
@@ -109,7 +109,7 @@ function ShopTheLook() {
           is_shop_the_look: true
         };
         
-        navigate("/checkout", {
+        router.push("/checkout", {
           state: {
             ordersummary: placeOrderResponse.data.data,
             combo_offer: comboOfferData
@@ -267,8 +267,7 @@ export default ShopTheLook;
 // import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Box } from "@mui/material";
 // import CloseIcon from "@mui/icons-material/Close";
 // import { enqueueSnackbar } from "notistack";
-// import { useNavigate } from "react-router-dom";
-// import { isMobile } from "react-device-detect";
+// // import { isMobile } from "react-device-detect";
 // import { useSelector } from "react-redux";
 // import axiosInstance from "../../Axios/axiosInstance";
 //
@@ -279,7 +278,7 @@ export default ShopTheLook;
 //   const [productss, setProducts] = useState([]);
 //   const [shopid, setShopid] = useState();
 //
-//   const navigate = useNavigate();
+//   const router = useRouter();
 //   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 //
 //   useEffect(() => {
@@ -319,7 +318,7 @@ export default ShopTheLook;
 //           enqueueSnackbar("Order placed successfully!", { variant: "success" });
 //
 //           // Navigate with the complete order data
-//           navigate("/checkout", {
+//           router.push("/checkout", {
 //             state: {
 //               ordersummary: response.data.data
 //             }
@@ -334,9 +333,9 @@ export default ShopTheLook;
 //     } else {
 //       enqueueSnackbar("Please Login or Signup to Buy Our Products.");
 //       if (isMobile) {
-//         navigate("/mobile-signin", { replace: true });
+//         router.push("/mobile-signin", { replace: true });
 //       } else {
-//         navigate("/?modal=signIn", { replace: true });
+//         router.push("/?modal=signIn", { replace: true });
 //       }
 //     }
 //   };

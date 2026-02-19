@@ -1,8 +1,8 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { createPortal } from "react-dom";
 
@@ -95,7 +95,7 @@ const FilterSidebar = ({
                        }) => {
   // Track if this is the very first render of the component
   const isInitialMount = useRef(true);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const [selectedFilterType, setSelectedFilterType] = useState(typeKey || "plant");
   const [userHasSelectedType, setUserHasSelectedType] = useState(false);
@@ -236,7 +236,7 @@ const FilterSidebar = ({
       const newPath = categorySlug 
         ? `/${categorySlug}/${option.slug}/`
         : `/${option.slug}/`;
-      navigate(newPath, { replace: false });
+      router.push(newPath, { replace: false });
     }
   }, [categorySlug, navigate]);
 

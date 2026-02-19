@@ -1,12 +1,12 @@
 'use client';
 
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { IconExclamationCircle } from "@tabler/icons-react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import FAQSection from "./Faq";
 import { isMobile } from "react-device-detect";
@@ -17,7 +17,7 @@ import StoreSchema from "../seo/StoreSchema";
 
 
 const Wallet = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const accessToken = useSelector(selectAccessToken);
   const [wallet,setWallet] = useState([]);
   const [amount, setAmount] = useState("");
@@ -128,9 +128,9 @@ const Wallet = () => {
 
       if (response.status=== 200) {
         if (isMobile) {
-          navigate('/mobilesidebar/wallethistory',{state:{resourse:response?.data?.data}})
+          router.push('/mobilesidebar/wallethistory',{state:{resourse:response?.data?.data}})
         }else{
-        navigate('/profile/wallethistory',{state:{resourse:response?.data?.data}})
+        router.push('/profile/wallethistory',{state:{resourse:response?.data?.data}})
         }
       
 

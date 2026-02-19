@@ -1,7 +1,3 @@
-'use client';
-
-import { Helmet } from "react-helmet-async";
-
 export default function HomepageSchema({
                                            siteUrl = "https://gidan.store",
                                        }) {
@@ -43,10 +39,9 @@ export default function HomepageSchema({
     };
 
     return (
-        <Helmet>
-            <script type="application/ld+json">
-                {JSON.stringify(schema)}
-            </script>
-        </Helmet>
+        <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
     );
 }

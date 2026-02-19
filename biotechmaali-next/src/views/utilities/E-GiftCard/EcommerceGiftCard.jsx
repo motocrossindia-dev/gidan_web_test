@@ -2,11 +2,11 @@
 
 
 
+import Link from "next/link";
 import React, { useState } from "react";
 import __GiftCardVoucher from "../../../Assets/Gift/GiftCardVoucher.webp";
 const _GiftCardVoucher = typeof __GiftCardVoucher === 'string' ? __GiftCardVoucher : __GiftCardVoucher?.src || __GiftCardVoucher;
 const GiftCardVoucher = typeof _GiftCardVoucher === 'string' ? _GiftCardVoucher : _GiftCardVoucher?.src || _GiftCardVoucher;
-import { Link } from "react-router-dom";
 import {Helmet} from "react-helmet";
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";

@@ -1,12 +1,12 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
 
 const OrderSuccess = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
       <>
@@ -37,14 +37,14 @@ const OrderSuccess = () => {
       {/* Action Buttons */}
       <div className="w-full space-y-3">
         <button 
-          onClick={() => navigate('/order-details')}
+          onClick={() => router.push('/order-details')}
           className="w-full py-3 bg-white border border-gray-300 rounded-lg font-medium"
         >
           View Order
         </button>
         
         <button 
-          onClick={() => navigate('/')}
+          onClick={() => router.push('/')}
           className="w-full py-3 bg-green-600 text-white rounded-lg font-medium"
         >
           Continue Shopping

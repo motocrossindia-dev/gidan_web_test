@@ -1,17 +1,18 @@
 'use client';
 
+import { useSearchParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { ArrowUpRight, ArrowDownRight, Gift, CreditCard } from "lucide-react";
-import { useLocation } from "react-router-dom";
 import {Helmet} from "react-helmet";
 
 const GDCoinsHistory = () => {
-  const location = useLocation();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
   const [activeFilter, setActiveFilter] = useState('ALL');
   const [filteredTransactions, setFilteredTransactions] = useState([]);
 
-  const transactions = location.state?.resourse || [];
-  const data = location.state?.data || { total_coins: 0 };
+  const transactions = null?.resourse || [];
+  const data = null?.data || { total_coins: 0 };
 
   // Helper function to determine transaction icon
   const getTransactionIcon = (reference) => {
@@ -157,16 +158,16 @@ export default GDCoinsHistory;
 // =========================odl=========================
 // import React, { useState, useEffect } from "react";
 // import { ArrowUpRight, ArrowDownRight, Gift, CreditCard } from "lucide-react";
-// import { useLocation } from "react-router-dom";
-// import {Helmet} from "react-helmet";
+// // import {Helmet} from "react-helmet";
 //
 // const BTCoinsHistory = () => {
-//   const location = useLocation();
+//   const searchParams = useSearchParams();
+  const pathname = usePathname();
 //   const [activeFilter, setActiveFilter] = useState('ALL');
 //   const [filteredTransactions, setFilteredTransactions] = useState([]);
 //
-//   const transactions = location.state?.resourse || [];
-//   const data = location.state?.data || { total_coins: 0 };
+//   const transactions = null?.resourse || [];
+//   const data = null?.data || { total_coins: 0 };
 //
 //   // Helper function to determine transaction icon
 //   const getTransactionIcon = (reference) => {

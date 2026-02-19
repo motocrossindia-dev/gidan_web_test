@@ -1,13 +1,13 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import ProgressBar from "./OrderSummary";
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema"; // Adjust the import path as needed
 
 const AddAddressPageCheckout = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [addressType, setAddressType] = useState('home');
 
   return (
@@ -64,13 +64,13 @@ const AddAddressPageCheckout = () => {
 
       <div className="p-4 space-y-3">
         <button 
-          onClick={() => navigate('/address')}
+          onClick={() => router.push('/address')}
           className="w-full py-3 border border-gray-300 rounded-lg font-medium"
         >
           Cancel
         </button>
         <button 
-          onClick={() => navigate('/address')}
+          onClick={() => router.push('/address')}
           className="w-full py-3 bg-green-600 text-white rounded-lg font-medium"
         >
           Done

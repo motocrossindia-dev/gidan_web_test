@@ -1,10 +1,10 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import {Swiper, SwiperSlide} from "swiper/react";
 import {Autoplay} from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import {useNavigate} from "react-router-dom";
 import { getMobileBannerUrl, getDesktopBannerUrl } from "../../hooks/useBannerImages";
 
 /**
@@ -23,7 +23,7 @@ import { getMobileBannerUrl, getDesktopBannerUrl } from "../../hooks/useBannerIm
  */
 
 const Banner = ({ home }) => {
-    const navigate = useNavigate();
+    const router = useRouter();
 
     return (
         <div className="w-full bg-gray-100">
@@ -87,7 +87,7 @@ const Banner = ({ home }) => {
                                     </h3>
 
                                     <button
-                                        onClick={() => navigate(`/feature`)}
+                                        onClick={() => router.push(`/feature`)}
                                         className="bg-bio-green text-white px-3 md:px-4 py-2 rounded-md w-fit mx-auto lg:mx-0 hover:bg-green-700 transition text-xs md:text-sm"
                                     >
                                         {banner.button_text}

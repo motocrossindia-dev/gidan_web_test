@@ -1,7 +1,7 @@
 'use client';
 
+import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { Heart, Link, Leaf, Sparkles, CheckCircle, Brush, Hammer, Ruler } from "lucide-react";
 import { motion } from "framer-motion";
 import { useMediaQuery } from 'react-responsive';

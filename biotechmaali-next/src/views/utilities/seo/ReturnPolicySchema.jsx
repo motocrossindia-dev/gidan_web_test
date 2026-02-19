@@ -1,7 +1,3 @@
-'use client';
-
-import { Helmet } from "react-helmet-async";
-
 export default function ReturnPolicySchema() {
     const schema = {
         "@context": "https://schema.org",
@@ -33,10 +29,9 @@ export default function ReturnPolicySchema() {
     };
 
     return (
-        <Helmet>
-            <script type="application/ld+json">
-                {JSON.stringify(schema)}
-            </script>
-        </Helmet>
+        <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
     );
 }

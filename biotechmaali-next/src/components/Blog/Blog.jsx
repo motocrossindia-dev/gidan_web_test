@@ -1,13 +1,12 @@
 'use client';
 
+import Link from "next/link";
 // ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
 import { useRef } from "react";
-import { NavLink } from "react-router-dom";
 import Verify from "../../Services/Services/Verify";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import { Link } from "react-router-dom";
 import { useBlogs } from "../../hooks/useBlogs";
 
 const Blog = () => {
@@ -47,12 +46,12 @@ const Blog = () => {
         <div className="container mx-auto px-4 md:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-6 font-sans">
             <h2 className="md:text-3xl text-xl font-bold mx-auto">Blogs</h2>
-            <NavLink
+            <Link
               to="/blogcomponent"
               className="text-white bg-bio-green md:text-xl text-xs rounded-md py-1 px-2 md:py-2 md:px-4 font-medium md:font-semibold"
             >
               View All
-            </NavLink>
+            </Link>
           </div>
 
           {isLoading ? (
@@ -148,13 +147,11 @@ export default Blog;
 
 // ========== OLD CODE (Before Feb 16, 2026 - TanStack Query) - COMMENTED OUT ==========
 // import React, { useState, useEffect, useRef } from "react";
-// import { NavLink } from "react-router-dom";
-// import Verify from "../../Services/Services/Verify";
+// // import Verify from "../../Services/Services/Verify";
 // import { Swiper, SwiperSlide } from "swiper/react";
 // import { Navigation, Autoplay } from "swiper/modules";
 // import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-// import { Link } from "react-router-dom";
-// import axiosInstance from "../../Axios/axiosInstance";
+// // import axiosInstance from "../../Axios/axiosInstance";
 //
 // const Blog = () => {
 //   const [blogs, setBlogs] = useState([]);
@@ -213,12 +210,12 @@ export default Blog;
 //         <div className="container mx-auto px-4 md:px-6 lg:px-8">
 //           <div className="flex justify-between items-center mb-6 font-sans">
 //             <h2 className="md:text-3xl text-xl font-bold mx-auto">Blogs</h2>
-//             <NavLink
+//             <Link
 //               to="/blogcomponent"
 //               className="text-white bg-bio-green md:text-xl text-xs rounded-md py-1 px-2 md:py-2 md:px-4 font-medium md:font-semibold"
 //             >
 //               View All
-//             </NavLink>
+//             </Link>
 //           </div>
 //
 //           {loading ? (
@@ -282,12 +279,12 @@ export default Blog;
 //                   ))}
 //                 </Swiper>
 //                 {/* <div className="flex justify-center mt-4">
-//                   <NavLink
+//                   <Link
 //                     to="/blogcomponent"
 //                     className="text-white bg-bio-green rounded-md py-2 px-4 font-semibold"
 //                   >
 //                     View All
-//                   </NavLink>
+//                   </Link>
 //                 </div> */}
 //                 <div className="flex justify-center mt-4">
 //                   <button

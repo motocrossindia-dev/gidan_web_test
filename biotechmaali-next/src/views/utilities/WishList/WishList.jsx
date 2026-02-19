@@ -1,8 +1,8 @@
 'use client';
 
+import { useRouter, usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import {useLocation, useNavigate} from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import axios from "axios";
@@ -22,8 +22,7 @@ const WishlistItem = ({
   handleAddToCart,
 
 }) => {
-  const navigate = useNavigate()
-  const isOutOfStock = stock_status === "Out Of Stock";
+  const router = useRouter();const isOutOfStock = stock_status === "Out Of Stock";
 
 
   return (
@@ -78,7 +77,7 @@ const WishlistItem = ({
   disabled={isOutOfStock}
   onClick={() => {
     if (product.is_cart) {
-      navigate("/cart"); // Redirect to cart if the product is already in the cart
+      router.push("/cart"); // Redirect to cart if the product is already in the cart
     } else {
       handleAddToCart(product.product_id);
     }
@@ -98,15 +97,15 @@ const WishList = () => {
   const accessToken = useSelector(selectAccessToken);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const [isAdded, setIsAdded] = useState(false);
-  const navigate = useNavigate();
-  const location = useLocation();
+  const router = useRouter();
+  const pathname = usePathname();
 
 
 
   // ⬆️ Scroll to top on route change
   useEffect(() => {
     window.scrollTo({ top: -10, left: 0, behavior: 'auto' }); // change to 'smooth' if needed
-  }, [location.pathname]);
+  }, [pathname]);
 
 
 
@@ -147,7 +146,7 @@ const WishList = () => {
 
   const handleAddToCart = async (id) => {
     if (!isAuthenticated) {
-      navigate(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+      router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
       return;
     }
 

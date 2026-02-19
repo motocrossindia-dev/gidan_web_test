@@ -1,9 +1,8 @@
 'use client';
 
 
+import Link from "next/link";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-
 const MobileSidebar = () => {
   const [isEditing, setIsEditing] = useState(false);
   const new_user_mobile = JSON.parse(localStorage.getItem("userData"))

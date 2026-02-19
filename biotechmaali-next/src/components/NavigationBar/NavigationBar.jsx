@@ -1,5 +1,7 @@
 'use client';
 
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { FaRegUser, FaRegHeart, FaChevronDown } from "react-icons/fa";
 import { MdOutlineShoppingBag } from "react-icons/md";
@@ -7,7 +9,6 @@ import { IoWalletOutline, IoSearch } from "react-icons/io5";
 import { TbCurrentLocation } from "react-icons/tb";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/Slice/userSlice";
-import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Popper, Box, Fade } from "@mui/material";
 import SignIn from "../../Pages/SignIn/Signin";
 import Verification from "../../Pages/Verification/Verification";
@@ -45,14 +46,13 @@ const NavBar = () => {
   const username = useSelector((state) => state.user.username || "Guest");
   const [userName, setUserName] = useState("Guest");
 
-  const location = useLocation();
+  const searchParams = useSearchParams();
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const modal = params.get("modal");
+    const modal = searchParams.get("modal");
     if (modal === "signIn") setIsSignInOpen(true);
     if (modal === "verification") setIsVerificationOpen(true);
     if (modal === "login") setIsLoginOpen(true);
-  }, [location]);
+  }, [searchParams]);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userData"));
@@ -62,13 +62,13 @@ const NavBar = () => {
   }, []);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleWalletClick = () => {
     if (userName === "Guest") {
       setIsWalletPopupOpen(true);
     } else {
-      navigate("/profile/Wallet");
+      router.push("/profile/Wallet");
     }
   };
 
@@ -98,7 +98,7 @@ const NavBar = () => {
     dispatch(resetVerification());
     clearLocalStorage();
     setIsLogoutDialogOpen(false);
-    navigate("/");
+    router.push("/");
   };
 
   const handleCancelLogout = () => {
@@ -110,7 +110,7 @@ const NavBar = () => {
       setAnchorEl(event.currentTarget);
       setOpenPopper(true);
     } else {
-      navigate("/WishList");
+      router.push("/WishList");
     }
   };
 
@@ -125,14 +125,14 @@ const NavBar = () => {
 
   const handleLoginSuccess = () => {
     setIsSignInOpen(false);
-    navigate("/WishList");
+    router.push("/WishList");
   };
 
   const handleCartClick = () => {
     if (username === "Guest") {
       setIsCartOpen(true);
     } else {
-      navigate("/Cart");
+      router.push("/Cart");
     }
   };
 
@@ -144,7 +144,7 @@ const NavBar = () => {
   const handleSearch = async (e) => {
     const query = e.target.value;
     setSearchTerm(query);
-    navigate(`/search?query=${encodeURIComponent(query)}`);
+    router.push(`/search?query=${encodeURIComponent(query)}`);
   };
 
   return (
@@ -382,8 +382,7 @@ export default NavBar;
 // import { TbCurrentLocation } from "react-icons/tb";
 // import { useSelector, useDispatch } from "react-redux";
 // import { logout } from "../../redux/Slice/userSlice";
-// import { Link, useNavigate, useLocation } from "react-router-dom";
-// import { Popper, Box, Fade } from "@mui/material";
+// // import { Popper, Box, Fade } from "@mui/material";
 // import SignIn from "../../Pages/SignIn/Signin";
 // import Verification from "../../Pages/Verification/Verification";
 // import Login from "../../Pages/Login/Login";
@@ -415,14 +414,15 @@ export default NavBar;
 //   const [userName, setUserName] = useState('Guest');
 //
 //
-//   const location = useLocation();
+//   const searchParams = useSearchParams();
+  const pathname = usePathname();
 //   useEffect(() => {
-//     const params = new URLSearchParams(location.search);
+//     const params = new URLSearchParams(`?${searchParams.toString()}`);
 //     const modal = params.get("modal"); // Check query parameter 'modal'
 //     if (modal === "signIn") setIsSignInOpen(true);
 //     if (modal === "verification") setIsVerificationOpen(true);
 //     if (modal === "login") setIsLoginOpen(true);
-//   }, [location]);
+//   }, [pathname]);
 //     useEffect(() => {
 //       const userData = JSON.parse(localStorage.getItem("userData"));
 //       if (userData && userData?.first_name) {
@@ -431,14 +431,14 @@ export default NavBar;
 //     }, []);
 //   // ======================
 //   const dispatch = useDispatch();
-//   const navigate = useNavigate();
+//   const router = useRouter();
 //
 //   const handleWalletClick = () => {
 //
 //     if (userName === "Guest") {
 //       setIsWalletPopupOpen(true);
 //     } else  {
-//       navigate("/profile/Wallet");
+//       router.push("/profile/Wallet");
 //     }
 //   };
 //
@@ -468,7 +468,7 @@ export default NavBar;
 //     dispatch(resetVerification());
 //     clearLocalStorage();
 //     setIsLogoutDialogOpen(false);
-//     navigate("/"); // Redirect to home after logout
+//     router.push("/"); // Redirect to home after logout
 //   };
 //
 //   const handleCancelLogout = () => {
@@ -481,7 +481,7 @@ export default NavBar;
 //       setAnchorEl(event.currentTarget);
 //       setOpenPopper(true);
 //     } else {
-//       navigate("/WishList");
+//       router.push("/WishList");
 //     }
 //   };
 //    useEffect(() => {
@@ -495,14 +495,14 @@ export default NavBar;
 //
 //   const handleLoginSuccess = () => {
 //     setIsSignInOpen(false);
-//     navigate("/WishList");
+//     router.push("/WishList");
 //   };
 //
 //   const handleCartClick = () => {
 //     if (username === "Guest") {
 //       setIsCartOpen(true);
 //     } else {
-//       navigate("/Cart");
+//       router.push("/Cart");
 //     }
 //   };
 //
@@ -517,7 +517,7 @@ export default NavBar;
 //     const query = e.target.value;
 //     setSearchTerm(query);
 //
-//     navigate(`/search?query=${encodeURIComponent(query)}`);
+//     router.push(`/search?query=${encodeURIComponent(query)}`);
 //
 //   };
 //

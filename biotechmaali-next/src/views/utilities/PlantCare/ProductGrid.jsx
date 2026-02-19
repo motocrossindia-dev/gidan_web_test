@@ -1,14 +1,14 @@
 'use client';
 
 
+import { useRouter } from "next/navigation";
 import React, { useState } from 'react';
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import { useNavigate } from 'react-router-dom';
 import TrendingCard from '../../../components/TrendingProducts/TrendingCard';
 
 
 const ProductGrid = ({searchResults ,pagination}) => {
-  const navigate = useNavigate();
+  const router = useRouter();
   
 
   const handleProductClick = (product) => {
@@ -16,7 +16,7 @@ const ProductGrid = ({searchResults ,pagination}) => {
     const sub_category_slug = product?.sub_category_slug;
 
     // All products have category, subcategory, and product slug
-    navigate(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {       state: {
+    router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {       state: {
         product_id: product.slug,
         category_slug:category_slug,
         sub_category_slug:sub_category_slug

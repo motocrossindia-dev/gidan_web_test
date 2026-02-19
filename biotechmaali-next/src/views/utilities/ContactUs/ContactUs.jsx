@@ -1,11 +1,12 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import __contactus from "../../../Assets/contactus.webp";
 const _contactus = typeof __contactus === 'string' ? __contactus : __contactus?.src || __contactus;
 const contactus = typeof _contactus === 'string' ? _contactus : _contactus?.src || _contactus;
 import { useSnackbar } from "notistack"; // Import useSnackbar hook
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+// Import useNavigate for navigation
 import axiosInstance from "../../../Axios/axiosInstance";
 import { Helmet } from "react-helmet-async";
 import CheckOutStore from "../PlantFilter/CheckoutStores";
@@ -26,7 +27,7 @@ const ContactUs = () => {
   const [loading, setLoading] = useState(true); // State to track loading status
   const [error, setError] = useState(null); // State to handle errors
   const [stores, setStores] = useState([]); // State for stores list
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const router = useRouter(); // Initialize useNavigate hook
 
   // Fetch stores from API when component mounts
   const fetchStores = async () => {
@@ -134,7 +135,7 @@ const ContactUs = () => {
     }
   };
   const handleClick = () => {
-    navigate('/franchise-enquiry');
+    router.push('/franchise-enquiry');
   };
   return (
 

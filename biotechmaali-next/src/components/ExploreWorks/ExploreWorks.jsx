@@ -1,12 +1,11 @@
 'use client';
 
 
+import Link from "next/link";
 import React from 'react';
 import __creative from '../../../src/Assets/ExploreWorks.webp';
 const _creative = typeof __creative === 'string' ? __creative : __creative?.src || __creative;
 const creative = typeof _creative === 'string' ? _creative : _creative?.src || _creative;
-import { NavLink } from 'react-router-dom';
-
 const ExploreWorks = () => {
   return (
     <div className="bg-white-100 py-2 md:py-4 lg:py-8 md:px-14">
@@ -30,13 +29,13 @@ const ExploreWorks = () => {
             <h3 className="text-md sm:text-lg md:text-5xl lg:text-3xl md:font-semibold font-normal text-white mb-2 mt-20">
               What Makes Gidan Stand Out?
             </h3>
-            <NavLink to="/ourwork">
+            <Link to="/ourwork">
               <button 
                 className="bg-bio-green text-white md:font-semibold font-normal py-1 md:py-2 px-4 md:px-6 rounded-md hover:bg-green-600 text-md md:text-base"
               >
                 Explore Now
               </button>
-            </NavLink>
+            </Link>
           </div>
         </div>
       </div>

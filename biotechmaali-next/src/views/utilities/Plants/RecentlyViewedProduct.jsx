@@ -1,8 +1,8 @@
 'use client';
 
 
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from 'react';    
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import { useSelector } from "react-redux";
@@ -12,7 +12,7 @@ import convertToSlug from "../../../utils/slugConverter";
 
 const RecentlyViewedProduct = () => {
   const [products, setProducts] = useState([]);
-  const navigate = useNavigate();
+  const router = useRouter();
   const accessToken = useSelector(selectAccessToken);
   
   
@@ -46,7 +46,7 @@ const RecentlyViewedProduct = () => {
     const category_slug = product?.category_slug;
     const sub_category_slug = product?.sub_category_slug;
 
-    navigate(`/category/${category_slug}/${product.slug}/`, {       state: {
+    router.push(`/category/${category_slug}/${product.slug}/`, {       state: {
         product_id: product.slug,
         category_slug:category_slug,
         sub_category_slug:sub_category_slug

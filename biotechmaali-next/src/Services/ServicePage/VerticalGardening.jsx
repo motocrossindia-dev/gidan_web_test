@@ -1,9 +1,9 @@
 'use client';
 
 
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from 'react';
 import { FaHeart, FaLeaf, FaMagic, FaLink, FaClipboard, FaSeedling, FaTools, FaTint, FaAward, FaClock, FaPhone } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
 import {Helmet} from "react-helmet";
 const VerticalGarden = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -49,11 +49,11 @@ const VerticalGarden = () => {
       Icon: FaTint
     }
   ];
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleConnectClick = () => {
   
-  navigate('/services'); // Replace '/connect' with your actual route
+  router.push('/services'); // Replace '/connect' with your actual route
 };
 
   return (

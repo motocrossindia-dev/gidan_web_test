@@ -1,8 +1,8 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import ProductCard from "./ProductCard";
-import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../Axios/axiosInstance";
 
 /**
@@ -16,7 +16,7 @@ const NormalProductGrid = ({
   setResults,
   query
 }) => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const observer = useRef(null);
 
   const [loading, setLoading] = useState(false);
@@ -34,7 +34,7 @@ const NormalProductGrid = ({
     const sub_category_slug = product?.sub_category_slug;
 
     // All products have category, subcategory, and product slug
-    navigate(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
+    router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
       state: {
         product_id: product.id,
         category_slug: category_slug,

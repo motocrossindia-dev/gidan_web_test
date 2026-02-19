@@ -1,7 +1,8 @@
 'use client';
 
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { IoReorderThree, IoLocationOutline, IoLogOutOutline } from "react-icons/io5";
 import { MdOutlinePerson } from "react-icons/md";
 import { CiBitcoin, CiWallet } from "react-icons/ci";
@@ -13,7 +14,7 @@ import { useSelector } from "react-redux";
 
 const SideBar = () => {
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
-  const navigate = useNavigate();
+  const router = useRouter();
   const accessToken = useSelector(selectAccessToken);
   const userName = useSelector((state) => state.user.username); // Retrieve user name from Redux
 
@@ -22,7 +23,7 @@ const SideBar = () => {
 
   const handleLogOutConfirm = () => {
     setIsLogoutDialogOpen(false);
-    navigate("/");
+    router.push("/");
   };
 
   useEffect(() => {

@@ -1,18 +1,18 @@
 'use client';
 
 
+import { usePathname } from "next/navigation";
 import React,{useEffect} from "react";
-import { Outlet, useLocation } from "react-router-dom";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import Navigation from "./components/NavigationBar/NavigationBar";
 
 const LandingPageLayout = () => {
-   const location = useLocation();
+   const pathname = usePathname();
 
    useEffect(() => {
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }); // Smooth scroll to top on route change
-    }, [location.pathname]);
+    }, [pathname]);
     
   return (
     <div className="landing-page-layout w-full min-h-screen flex flex-col overflow-x-hidden">
@@ -24,7 +24,7 @@ const LandingPageLayout = () => {
 
       
       <main className="main-content w-full overflow-x-hidden">
-        <Outlet />
+        {/* Outlet removed - use Next.js layout children */}
 
           {/* Footer */}
           <Footer />

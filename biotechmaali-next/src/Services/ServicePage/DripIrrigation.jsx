@@ -1,11 +1,11 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import React from 'react';
 import { Droplet, Settings, Sun, Zap, Leaf, Clock, Phone } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import {Helmet} from "react-helmet";
 const DripIrrigation = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
 
   const steps = [
@@ -38,7 +38,7 @@ const DripIrrigation = () => {
   const isSmallScreen = window.innerWidth < 640;
 const handleConnectClick = () => {
   
-  navigate('/services'); // Replace '/connect' with your actual route
+  router.push('/services'); // Replace '/connect' with your actual route
 };
   return (
 

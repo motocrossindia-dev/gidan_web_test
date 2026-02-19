@@ -2,8 +2,6 @@
 
 import React from 'react'
 // import { Outlet } from 'react-router'
-import { Outlet } from "react-router-dom";
-
 import Header from '../src/components/Header/Header'
 import Footer from '../src/components/Footer/Footer'
 import Navigation from '../src/components/NavigationBar/NavigationBar'
@@ -24,7 +22,7 @@ const SideBarLayout = () => {
         </div>
 
         <div className='w-screen' >
-        <Outlet/>
+        {/* Outlet removed - use Next.js layout children */}
         </div>
         </div>
     </div>

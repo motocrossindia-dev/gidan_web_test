@@ -1,6 +1,8 @@
 'use client';
 
 
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import React, { useState, useRef } from "react";
 import {
     FaFacebookF,
@@ -8,8 +10,6 @@ import {
     FaLinkedin, FaWhatsapp,
     FaYoutube,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import SignIn from "../../Pages/SignIn/Signin"; // Assuming you have a SignIn component
 import emailjs from 'emailjs-com';
@@ -18,7 +18,7 @@ import { isMobile } from "react-device-detect";
 
 const Footer = () => {
 
-    const navigate = useNavigate();
+    const router = useRouter();
     const username = useSelector((state) => state.user.username);
     const [openSection, setOpenSection] = useState(""); // State to track open sections
     const [email, setEmail] = useState("");
@@ -32,9 +32,9 @@ const Footer = () => {
             setIsSignInOpen(true);
         } else {
             if (isMobile) {
-                navigate('/mobilesidebar/walletmobile')
+                router.push('/mobilesidebar/walletmobile')
             } else {
-                navigate("/profile/Wallet");
+                router.push("/profile/Wallet");
             }
         }
     };
@@ -43,7 +43,7 @@ const Footer = () => {
         if (username === "Guest") {
             setIsSignInOpen(true);
         } else {
-            navigate("/profile/referal");
+            router.push("/profile/referal");
         }
     };
 
@@ -51,7 +51,7 @@ const Footer = () => {
         if (username === "Guest") {
             setIsSignInOpen(true);
         } else {
-            navigate("/profile/trackorder");
+            router.push("/profile/trackorder");
         }
     };
 
@@ -66,7 +66,7 @@ const Footer = () => {
 
     const handleLoginSuccess = () => {
         setIsSignInOpen(false);
-        navigate("/WishList");
+        router.push("/WishList");
     };
 
     const handleSubmit = async (e) => {
@@ -319,9 +319,7 @@ export default Footer;
 //   FaLinkedin,
 //   FaYoutube,
 // } from "react-icons/fa";
-// import { Link } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
-// import { useSelector } from "react-redux";
+// // // import { useSelector } from "react-redux";
 // import SignIn from "../../Pages/SignIn/Signin"; // Assuming you have a SignIn component
 // import emailjs from 'emailjs-com';
 // import { useRef } from "react";
@@ -330,7 +328,7 @@ export default Footer;
 //
 // const Footer = () => {
 //
-//   const navigate = useNavigate();
+//   const router = useRouter();
 //   const username = useSelector((state) => state.user.username);
 //   const [openSection, setOpenSection] = useState(""); // State to track open sections
 //   const [email, setEmail] = useState("");
@@ -345,9 +343,9 @@ export default Footer;
 //       setIsSignInOpen(true);
 //     } else {
 // if (isMobile) {
-//   navigate('/mobilesidebar/walletmobile')
+//   router.push('/mobilesidebar/walletmobile')
 // }else{
-//       navigate("/profile/Wallet");
+//       router.push("/profile/Wallet");
 //
 // }
 //     }
@@ -357,7 +355,7 @@ export default Footer;
 //       // setIsWalletPopupOpen(true);
 //       setIsSignInOpen(true);
 //     } else {
-//       navigate("/profile/referal");
+//       router.push("/profile/referal");
 //     }
 //   };
 //       const handleClickorder = () => {
@@ -365,7 +363,7 @@ export default Footer;
 //       // setIsWalletPopupOpen(true);
 //       setIsSignInOpen(true);
 //     } else {
-//       navigate("/profile/trackorder");
+//       router.push("/profile/trackorder");
 //     }
 //   };
 //   // Toggle function to manage dropdown visibility
@@ -377,7 +375,7 @@ export default Footer;
 //   };
 //     const handleLoginSuccess = () => {
 //     setIsSignInOpen(false);
-//     navigate("/WishList");
+//     router.push("/WishList");
 //   };
 //
 //   const handleSubmit = async (e) => {
