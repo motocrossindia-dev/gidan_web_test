@@ -47,7 +47,7 @@ const TrendingSection = () => {
     });
 
     window.scrollTo(0, 0);
-  }, [navigate]);
+  }, [router]);
 
   const filteredProducts = useMemo(() => {
     return productsDetails.filter((product) => {

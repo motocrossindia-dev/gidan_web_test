@@ -48,7 +48,7 @@ const SeasonalProduct = () => {
     });
 
     window.scrollTo(0, 0);
-  }, [navigate]);
+  }, [router]);
 
   const visibleProducts = useMemo(() => {
     return products.slice(0, visibleCount);

@@ -65,7 +65,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
             }
             getProducts()
         } catch (error) {}
-    }, [isAuthenticated, navigate, inWishlist, product.id, getProducts]);
+    }, [isAuthenticated, router, inWishlist, product.id, getProducts]);
 
     const handleAddToCart = useCallback(async (e) => {
         if (!isAuthenticated) {
@@ -111,7 +111,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
             console.error("Add to cart error:", error);
             enqueueSnackbar("Failed to add to cart", { variant: "error" });
         }
-    }, [isAuthenticated, navigate, inCart, product, getProducts, isAdded]);
+    }, [isAuthenticated, router, inCart, product, getProducts, isAdded]);
 
     // ========== OLD CODE (Before Feb 16, 2026) - COMMENTED OUT ==========
     // const handleQuickView = useCallback((e) => {
@@ -152,7 +152,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                 }
             });
         }, 100);
-    }, [navigate, product.category_slug, product.sub_category_slug, product.slug, product.id]);
+    }, [router, product.category_slug, product.sub_category_slug, product.slug, product.id]);
     // ========== END NEW CODE ==========
 
     return (

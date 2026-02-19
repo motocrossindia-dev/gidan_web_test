@@ -238,7 +238,7 @@ const FilterSidebar = ({
         : `/${option.slug}/`;
       router.push(newPath, { replace: false });
     }
-  }, [categorySlug, navigate]);
+  }, [categorySlug, router]);
 
   const applyFilters = useCallback(async () => {
     const params = new URLSearchParams();

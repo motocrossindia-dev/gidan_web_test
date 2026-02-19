@@ -61,7 +61,7 @@ const SeasonalCard = ({
             }
             getProducts()
         } catch (error) {}
-    }, [isAuthenticated, navigate, inWishlist, product, getProducts]);
+    }, [isAuthenticated, router, inWishlist, product, getProducts]);
 
     const handleAddToCart = useCallback(async (e) => {
         if (!isAuthenticated) {
@@ -94,7 +94,7 @@ const SeasonalCard = ({
             }
             getProducts()
         } catch (error) {}
-    }, [isAuthenticated, navigate, inCart, product, getProducts, isAdded]);
+    }, [isAuthenticated, router, inCart, product, getProducts, isAdded]);
 
     const handleQuickView = useCallback((e) => {
         const category_slug = product?.category_slug;
@@ -112,7 +112,7 @@ const SeasonalCard = ({
                 sub_category_slug: sub_category_slug
             }
         });
-    }, [navigate, product?.category_slug, product?.sub_category_slug, product?.slug]);
+    }, [router, product?.category_slug, product?.sub_category_slug, product?.slug]);
 
     return (
         <>

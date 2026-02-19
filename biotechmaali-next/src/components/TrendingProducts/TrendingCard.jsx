@@ -47,7 +47,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
             }
             getProducts()
         } catch (error) {}
-    }, [isAuthenticated, navigate, inWishlist, product.id, getProducts]);
+    }, [isAuthenticated, router, inWishlist, product.id, getProducts]);
 
     const handleAddToCart = useCallback(async (e) => {
         if (!isAuthenticated) {
@@ -80,7 +80,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
             }
             getProducts()
         } catch (error) {}
-    }, [isAuthenticated, navigate, inCart, product.id, getProducts, isAdded]);
+    }, [isAuthenticated, router, inCart, product.id, getProducts, isAdded]);
 
     const handleQuickView = useCallback((e) => {
         const category_slug = product?.category_slug;
@@ -98,7 +98,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                 sub_category_slug: sub_category_slug
             }
         });
-    }, [navigate, product.category_slug, product.sub_category_slug, product.slug, product.id]);
+    }, [router, product.category_slug, product.sub_category_slug, product.slug, product.id]);
 
     return (
         <>
