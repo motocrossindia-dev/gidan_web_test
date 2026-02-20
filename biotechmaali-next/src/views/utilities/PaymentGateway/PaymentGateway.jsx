@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 import { trackPurchase } from "../../../utils/ga4Ecommerce";
 
 const loadRazorpayScript = () =>

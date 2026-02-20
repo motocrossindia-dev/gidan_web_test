@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 // import React, { useState, useEffect } from "react";
 // import { CiLocationOn } from "react-icons/ci"; // Import the location icon
 // // import axiosInstance from "../../Axios/axiosInstance";
-// import {Helmet} from "react-helmet";
+// import {Helmet} from "react-helmet-async";
 
 // const Stores = () => {
 //   const router = useRouter();

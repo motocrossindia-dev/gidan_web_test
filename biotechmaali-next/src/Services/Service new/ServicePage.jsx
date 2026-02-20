@@ -10,7 +10,7 @@ import __service from "../../Assets/Serviceform.webp";
 const _service = typeof __service === 'string' ? __service : __service?.src || __service;
 const service = typeof _service === 'string' ? _service : _service?.src || _service;
 import axiosInstance from "../../Axios/axiosInstance";
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 import axios from "axios";
 
 const ServicesPage = () => {

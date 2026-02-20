@@ -17,7 +17,7 @@ import {
 import { storeToken } from "../../Services/Services/LocalStorageServices";
 import { setVerifiedUser } from "../../redux/User/verificationSlice";
 import { setUsername } from "../../redux/Slice/userSlice";
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 
 
 

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import React from 'react';
 import { FaHeart, FaLeaf, FaMagic, FaLink, FaClipboard, FaSeedling, FaTools, FaTint, FaAward, FaClock, FaPhone } from 'react-icons/fa';
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 const GardenMaintenance = () => {
   const router = useRouter();
 const handleConnectClick = () => {

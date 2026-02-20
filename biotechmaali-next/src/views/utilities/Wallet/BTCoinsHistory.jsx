@@ -3,7 +3,7 @@
 import { useSearchParams, usePathname } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { ArrowUpRight, ArrowDownRight, Gift, CreditCard } from "lucide-react";
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 
 const GDCoinsHistory = () => {
   const searchParams = useSearchParams();
@@ -158,7 +158,7 @@ export default GDCoinsHistory;
 // =========================odl=========================
 // import React, { useState, useEffect } from "react";
 // import { ArrowUpRight, ArrowDownRight, Gift, CreditCard } from "lucide-react";
-// // import {Helmet} from "react-helmet";
+// // import {Helmet} from "react-helmet-async";
 //
 // const BTCoinsHistory = () => {
 //   const searchParams = useSearchParams();

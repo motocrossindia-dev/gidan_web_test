@@ -5,7 +5,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Sprout, Gift, Users, History, HelpCircle } from "lucide-react";
 import axiosInstace from "../../../Axios/axiosInstance";
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 
 
 
@@ -211,7 +211,7 @@ export default GDCoins;
 // import React, { useEffect, useState } from "react";
 // import { Sprout, Gift, Users, History, HelpCircle } from "lucide-react";
 // // import axiosInstace from "../../../Axios/axiosInstance";
-// import {Helmet} from "react-helmet";
+// import {Helmet} from "react-helmet-async";
 //
 //
 //

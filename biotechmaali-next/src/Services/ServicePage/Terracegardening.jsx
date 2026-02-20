@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import React from 'react';
 import { Heart, Leaf, Sparkles, Link, PencilRuler, Plane as Plant, Shovel, Droplets, Award, Clock, Phone } from 'lucide-react';
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 const TerraceGardening = () => {
 
   const router = useRouter();

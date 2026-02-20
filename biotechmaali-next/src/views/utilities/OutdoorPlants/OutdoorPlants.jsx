@@ -10,7 +10,7 @@ import CheckoutStores from "./CheckoutStores";
 import Banner1 from "./Banner1";
 import { Card } from "@mui/material";
 import { FiFilter } from "react-icons/fi";
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
 

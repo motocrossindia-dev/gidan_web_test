@@ -112,7 +112,7 @@ export default Featured;
 // import RecentlyViewedProduct from "./RecentlyViewedProduct";
 // import CheckoutStores from "./CheckoutStores";
 // import { FiFilter } from "react-icons/fi";
-// import {Helmet} from "react-helmet";
+// import {Helmet} from "react-helmet-async";
 //
 // function Featured() {
 //   const [showMobileFilter, setShowMobileFilter] = useState(false);

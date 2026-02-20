@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import React from 'react';
 import { Droplet, Settings, Sun, Zap, Leaf, Clock, Phone } from 'lucide-react';
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 const DripIrrigation = () => {
   const router = useRouter();
 

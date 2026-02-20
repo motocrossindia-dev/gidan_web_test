@@ -6,7 +6,7 @@ import { useSearchParams, useParams, usePathname } from "next/navigation";
 // import FAQSection from "../PlantFilter/FAQSection";
 // import RecentlyViewedProduct from "../PlantFilter/RecentlyViewedProduct";
 // import CheckoutStores from "./PlantFilter/CheckoutStores";
-// // import { Helmet } from "react-helmet";
+// // import { Helmet } from "react-helmet-async";
 
 
 // function CarouselData() {

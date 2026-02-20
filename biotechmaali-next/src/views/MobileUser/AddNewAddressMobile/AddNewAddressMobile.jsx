@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { TrashIcon } from "lucide-react";
 import Verify from "../../../Services/Services/Verify";
-import { isMobile } from "react-device-detect";
 import axiosInstance from "../../../Axios/axiosInstance";
 import HomepageSchema from "../../utilities/seo/HomepageSchema";
 import StoreSchema from "../../utilities/seo/StoreSchema";
@@ -206,7 +205,7 @@ const AddressSection = () => {
         <>
                   {/* <Header />
         <Navigation/> */}
-<div className={isMobile ? "mobile-view" : "desktop-view"}>
+<div className="mobile-view">
           <Verify />
           <main className="p-4 sm:p-4">
             <div className="border p-4 sm:p-6 rounded bg-white">

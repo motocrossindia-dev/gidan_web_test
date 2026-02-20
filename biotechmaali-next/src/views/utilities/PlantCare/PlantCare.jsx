@@ -9,7 +9,7 @@ import FAQSection from "./FAQSection";
 import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
 import CheckoutStores from "./CheckoutStores";
 import { FiFilter } from "react-icons/fi";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import axiosInstance from "../../../Axios/axiosInstance";
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
@@ -174,7 +174,7 @@ export default PlantCare;
 // import CheckoutStores from "./CheckoutStores";
 // import { FiFilter } from "react-icons/fi";
 // // import  axiosInstance  from "../../../Axios/axiosInstance";
-// import {Helmet} from "react-helmet"; // Adjust the import path as necessary
+// import {Helmet} from "react-helmet-async"; // Adjust the import path as necessary
 //
 //
 // function PlantCare() {

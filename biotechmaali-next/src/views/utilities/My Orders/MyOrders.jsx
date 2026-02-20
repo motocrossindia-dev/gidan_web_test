@@ -21,7 +21,7 @@ import { enqueueSnackbar } from 'notistack';
 
 // Using your actual data structure
 import OrderModal from "./OrderModal";
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 
 const MyOrders = () => {
   const [allOrders,setAllOrders] = useState([]);
@@ -556,7 +556,7 @@ export default MyOrders;
 //
 // // Using your actual data structure
 // import OrderModal from "./OrderModal";
-// import {Helmet} from "react-helmet";
+// import {Helmet} from "react-helmet-async";
 //
 // const MyOrders = () => {
 //   const [allOrders,setAllOrders] = useState([]);

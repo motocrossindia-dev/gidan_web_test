@@ -12,6 +12,8 @@ import StoreSchema from "../../utilities/seo/StoreSchema";
 
 const EditProfile = () => {
   const router = useRouter();
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => { setIsMounted(true); }, []);
   const [profile, setProfile] = useState({
     first_name: "",
     last_name: "",
@@ -72,7 +74,7 @@ const EditProfile = () => {
     <>
               {/* <Header />
             <Navigation/> */}
-    <div className={`flex justify-center items-center min-h-screen ${isMobile ? 'bg-gray-100' : 'bg-white'}`}>
+    <div className={`flex justify-center items-center min-h-screen ${isMounted && isMobile ? 'bg-gray-100' : 'bg-white'}`}>
       <div className="w-full max-w-md bg-white p-4 shadow-md rounded-lg">
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b">

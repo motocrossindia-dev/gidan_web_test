@@ -11,7 +11,7 @@ import { setVerifiedUser } from "../../redux/User/verificationSlice";
 import { setUsername } from "../../redux/Slice/userSlice";
 import { storeToken } from "../../Services/Services/LocalStorageServices";
 import axiosInstance from "../../Axios/axiosInstance";
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 
 const logo = typeof __logo === 'string' ? __logo : __logo?.src || __logo;
 const logoImage = typeof __logoImage === 'string' ? __logoImage : __logoImage?.src || __logoImage;

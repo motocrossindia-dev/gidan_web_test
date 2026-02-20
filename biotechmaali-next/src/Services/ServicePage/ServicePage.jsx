@@ -8,7 +8,7 @@ import { useMediaQuery } from 'react-responsive';
 import Service03 from "./Service03";
 import Service04 from "./Service04";
 import axiosInstance from "../../Axios/axiosInstance";
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 // import { Users, Recycle, Paintbrush } from 'lucide-react';
 const ServicePage = () => {
 

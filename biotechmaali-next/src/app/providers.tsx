@@ -6,6 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import store, { persistor } from '@/redux/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SnackbarProvider } from 'notistack';
+import { HelmetProvider } from 'react-helmet-async';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -24,12 +25,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <SnackbarProvider maxSnack={3}>{children}</SnackbarProvider>
-        </PersistGate>
-      </Provider>
-    </QueryClientProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <SnackbarProvider maxSnack={3}>{children}</SnackbarProvider>
+          </PersistGate>
+        </Provider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 }

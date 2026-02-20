@@ -4,7 +4,7 @@
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from 'react';
 import { FaHeart, FaLeaf, FaMagic, FaLink, FaClipboard, FaSeedling, FaTools, FaTint, FaAward, FaClock, FaPhone } from 'react-icons/fa';
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 const VerticalGarden = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 

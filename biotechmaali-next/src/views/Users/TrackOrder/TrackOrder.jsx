@@ -3,7 +3,7 @@
 // import React, { useEffect, useState } from "react";
 // import useDeviceDetect from "../../../CustomHooks/useDeviceDetect";
 // import location from "../../../Assets/21bd1d1e8c39ab293b04937cb183ed2d3481b3b4 (1).gif";
-// import {Helmet} from "react-helmet";
+// import {Helmet} from "react-helmet-async";
 
 // const TrackOrder = () => {
 //   const { isDesktop } = useDeviceDetect();

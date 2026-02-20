@@ -7,7 +7,7 @@ import plantImage from "../../../Assets/Gift/Gift3.webp"; // Adjust path as nece
 import __gift34 from "../../../Assets/Gift/Gift1.webp";
 const _gift34 = typeof __gift34 === 'string' ? __gift34 : __gift34?.src || __gift34;
 const gift34 = typeof _gift34 === 'string' ? _gift34 : _gift34?.src || _gift34;
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 
 const CorporateGiftingForm = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);

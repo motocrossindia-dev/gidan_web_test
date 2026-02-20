@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { signInStart, signInFail, signInSuccess } from "../../redux/Auth/authSlice";
 import { useSnackbar } from "notistack";
 import axiosInstance from "../../Axios/axiosInstance";
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 
 const logo = typeof __logo === 'string' ? __logo : __logo?.src || __logo;
 const logoImage = typeof __logoImage === 'string' ? __logoImage : __logoImage?.src || __logoImage;
