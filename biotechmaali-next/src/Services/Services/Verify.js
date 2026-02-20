@@ -9,25 +9,21 @@ import { useSnackbar } from 'notistack';
 const Verify = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [verification, setVerification] = useState({});
-  const { access_token, refresh_token } = getToken();
   const router = useRouter();
 
-  const createToken = async () => {
+  const createToken = async (refresh_token) => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/token/refresh/`, {
         refresh: refresh_token
       });
       const data = response.data;
       setVerification(data);
-
-      // Save the new tokens to local storage
+      // Save the new tokens to local storage and reload to pick them up
       storeToken(data);
       window.location.reload();
-      // Retry verifying the new access token
-      tokenVerify(data.access);
     } catch (error) {
-      const data = error.response.data;
-      setVerification(data);
+      const data = error?.response?.data;
+      setVerification(data || {});
 
       removeToken();
       localStorage.removeItem('user');
@@ -37,33 +33,33 @@ const Verify = () => {
     }
   };
 
-  const tokenVerify = async (token) => {
+  const tokenVerify = async () => {
+    // Read tokens inside the effect so localStorage is always available (client-only)
+    const { access_token, refresh_token } = getToken();
+
+    // No token at all — guest user, nothing to verify
+    if (!access_token) return;
+
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/token/verify/`, {
-        token: token || access_token
+        token: access_token
       });
-      const data = response.data;
-      setVerification(data);
+      setVerification(response.data);
     } catch (error) {
       const data = error?.response?.data;
-      // console.error('Error verifying token ', error);
-      setVerification(data);
+      setVerification(data || {});
 
       if (data?.code === 'token_not_valid') {
-        createToken();
+        createToken(refresh_token);
       }
     }
   };
 
   useEffect(() => {
     tokenVerify();
-  }, []); // Dependency array is empty, so this runs only once when the component mounts
+  }, []); // Runs only once on mount (client-side)
 
-  if (verification?.code === 'token_not_valid') {
-    // enqueueSnackbar('Token is not valid!', { variant: 'error' });
-  }
-
-  return null; // or <></>, or any other JSX you want to render
+  return null;
 };
 
 export default Verify;
