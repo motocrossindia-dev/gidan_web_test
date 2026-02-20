@@ -7,7 +7,7 @@ type Props = { params: Promise<{ categorySlug: string; subcategorySlug: string; 
 async function isValidProduct(productSlug: string): Promise<boolean> {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/filters/product_details/?product_slug=${encodeURIComponent(productSlug)}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/product/defaultProduct/${encodeURIComponent(productSlug)}/`,
       { next: { revalidate: 3600 } }
     );
     return res.ok;
