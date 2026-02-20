@@ -305,14 +305,9 @@ export default function Component() {
                     window.dispatchEvent(new Event("cartUpdated"));
 
 
-                    if (window.innerWidth <= 768) {
-                        // router.push("/order-summary", { state: { resource: response.data.data } }); // Navigate to mobile checkout
-                        router.push("/checkout", {state: {ordersummary: response.data.data}}); // Navigate to regular checkout
-
-
-                    } else {
-                        router.push("/checkout", {state: {ordersummary: response.data.data}}); // Navigate to regular checkout
-                    }
+                    sessionStorage.setItem('checkout_ordersummary', JSON.stringify(response.data.data));
+                    sessionStorage.removeItem('checkout_combo_offer');
+                    router.push("/checkout");
                 }
 
             } catch (error) {

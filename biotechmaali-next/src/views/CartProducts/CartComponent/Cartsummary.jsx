@@ -44,7 +44,9 @@ const CartSummary = ({
       );
   
       if (response.status === 200) {
-        router.push("/checkout", { state: { ordersummary: response.data.data } });
+        sessionStorage.setItem('checkout_ordersummary', JSON.stringify(response.data.data));
+        sessionStorage.removeItem('checkout_combo_offer');
+        router.push("/checkout");
       }
     } catch (error) {
       if (error.response?.data) {

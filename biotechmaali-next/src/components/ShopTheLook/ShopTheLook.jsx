@@ -109,12 +109,9 @@ function ShopTheLook() {
           is_shop_the_look: true
         };
         
-        router.push("/checkout", {
-          state: {
-            ordersummary: placeOrderResponse.data.data,
-            combo_offer: comboOfferData
-          }
-        });
+        sessionStorage.setItem('checkout_ordersummary', JSON.stringify(placeOrderResponse.data.data));
+        sessionStorage.setItem('checkout_combo_offer', JSON.stringify(comboOfferData));
+        router.push("/checkout");
       }
     } catch (error) {
       console.error("❌ Place Order Error:", error);

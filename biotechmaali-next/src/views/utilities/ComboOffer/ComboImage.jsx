@@ -64,18 +64,10 @@ function ComboImage() {
             // also keep it in sessionStorage to survive page refresh on checkout
       if (selectedOffer) {
         sessionStorage.setItem("selected_combo_offer", JSON.stringify(selectedOffer));
+        sessionStorage.setItem("checkout_combo_offer", JSON.stringify(selectedOffer));
       }
-          if (window.innerWidth <= 768) {
-            router.push("/checkout", {         state: {
-          ordersummary,
-          combo_offer: selectedOffer, // 🟢 pass offer to checkout
-        }, }); // Navigate to mobile checkout
-          } else {
-            router.push("/checkout", {         state: {
-          ordersummary,
-          combo_offer: selectedOffer, // 🟢 pass offer to checkout
-        }, }); // Navigate to regular checkout
-          }
+          sessionStorage.setItem('checkout_ordersummary', JSON.stringify(ordersummary));
+          router.push("/checkout"); // Navigate to checkout
         }
 
       } catch (error) {

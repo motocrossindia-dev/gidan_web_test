@@ -50,13 +50,15 @@ const OrderSummary = () => {
   const pathname = usePathname();
   const [orderItem,setOrderItem] = useState([]);
   const [order, setOrder] = useState();
-  const orderData = null?.resource; 
+  const orderData = (() => {
+    try { return JSON.parse(sessionStorage.getItem('checkout_ordersummary') || 'null'); } catch { return null; }
+  })();
   useEffect(() => {
     if (orderData?.order_items) {
       setOrderItem(orderData.order_items);
       setOrder(orderData.order);
     }
-  }, [orderData]); // Runs only when orderData changes
+  }, []);  // eslint-disable-line react-hooks/exhaustive-deps // Runs only when orderData changes
   
     
   // const [quantity, setQuantity] = useState({ item1: 1, item2: 1 });

@@ -55,10 +55,9 @@ function DealOfWeek() {
 
           // Save selected deal
           sessionStorage.setItem("selected_deal", JSON.stringify(deal));
-
-          router.push("/checkout", {
-            state: { ordersummary, deal },
-          });
+          sessionStorage.setItem('checkout_ordersummary', JSON.stringify(ordersummary));
+          sessionStorage.removeItem('checkout_combo_offer');
+          router.push("/checkout");
         }
       } catch (error) {
         console.error("Error placing order:", error);

@@ -703,7 +703,7 @@ const OrderSummary = ({ selectedOption,selectedAddress,data }) => {
               discount="20%"
               savings="100.00"
             /> */}
-            {data.order_items.map((item) => (
+            {(data?.order_items || []).map((item) => (
             <OrderSummaryItem
               title={item.product_name}
               Quantity={item.quantity}
@@ -1025,16 +1025,20 @@ const CheckoutPage = () => {
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { resource } = null || {}; // Extract resource from state
-  const [orderResource,setOrderResource] = useState(resource || {});
-  const [selectedOption, setSelectedOption] = useState(null); // Lift state up
+  // Read order data saved in sessionStorage before router.push
+  const [data, setData] = useState(() => {
+    try { return JSON.parse(sessionStorage.getItem('checkout_ordersummary') || 'null'); } catch { return null; }
+  });
+  const id = data?.order?.id;
+  const [orderResource, setOrderResource] = useState({});
+  const [selectedOption, setSelectedOption] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState([]);
-  const [coupon,setCoupon] = useState()
-  const data = null?.ordersummary;
-  const id  = data?.order?.id
-  
-  // Get combo_offer from navigation state (passed from ShopTheLook)
-  const prefilledCombo = null?.combo_offer || null;
+  const [coupon, setCoupon] = useState();
+
+  // Get combo_offer saved in sessionStorage before router.push
+  const prefilledCombo = (() => {
+    try { return JSON.parse(sessionStorage.getItem('checkout_combo_offer') || 'null'); } catch { return null; }
+  })();
 
   // Initialize comboOffer state - prioritize navigation state over sessionStorage
   const [comboOffer, setComboOffer] = useState(() => {
@@ -1048,9 +1052,6 @@ const CheckoutPage = () => {
   const isCombo = !!(data?.order?.is_combo_purchase || data?.order?.is_shop_the_look || comboOffer);
 
   useEffect(() => {
-    if (resource) {
-      setOrderResource(resource);
-    }     
     console.log("✅ Checkout Data:", data);
     console.log("✅ Is Combo Purchase:", data?.order?.is_combo_purchase);
     console.log("✅ Is Shop The Look:", data?.order?.is_shop_the_look);
@@ -1061,7 +1062,7 @@ const CheckoutPage = () => {
     if (data?.order_items && data.order_items.length > 0) {
       trackBeginCheckout(data.order_items, data?.order?.grand_total);
     }
-  },[resource, data, comboOffer, prefilledCombo]);
+  },[data, comboOffer, prefilledCombo]);
 
   // Update comboOffer if prefilledCombo is provided
   useEffect(() => {
