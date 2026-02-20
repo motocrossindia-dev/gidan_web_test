@@ -125,7 +125,7 @@ const handlePayment = async () => {
   };
 
   try {
-    const response = await axiosInstance.patch(`/order/orderSummary/`, payload);
+    const response = await axiosInstance.patch(`/order/proceedToPayment/`, payload);
 
     if (response.status === 200 || response.status === 206) {
       const usedWallet = response?.data?.wallet_debited || 0;
@@ -141,11 +141,11 @@ const handlePayment = async () => {
         
         // GA4: Track purchase event for wallet payment
         trackPurchase({
-          transaction_id: order_id || response.data.order_id,
+          transaction_id: response.data.order_id,
           value: orderData?.order?.grand_total || 0,
-          items: orderData?.order_items || orderData?.items || [],
+          items: orderData?.order_items || [],
           shipping: orderData?.order?.delivery_charge || 0,
-          coupon: response.data.coupon_code
+          payment_type: 'Wallet'
         });
         
         router.push("/successpage");
@@ -187,9 +187,9 @@ const handlePayment = async () => {
               
               // GA4: Track purchase event
               trackPurchase({
-                transaction_id: order_id || response.data.order_id,
+                transaction_id: response.data.order_id,
                 value: razorpayOrder.amount / 100,
-                items: orderData?.order_items || orderData?.items || [],
+                items: orderData?.order_items || [],
                 shipping: orderData?.order?.delivery_charge || 0
               });
               
@@ -334,7 +334,7 @@ const handlePayment = async () => {
           <h3 className="text-gray-900 text-lg font-medium">{option.title}</h3>
           <p className="text-gray-600 text-sm">
             {isCOD
-              ? "Cash on Delivery is currently unavailable for your pathname. Please choose another payment method."
+              ? "Cash on Delivery is currently unavailable for your location. Please choose another payment method."
               : option.description}
           </p>
         </div>
