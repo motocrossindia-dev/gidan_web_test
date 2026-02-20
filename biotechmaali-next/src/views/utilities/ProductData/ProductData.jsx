@@ -203,8 +203,13 @@ export default function Component() {
 
     const handleAddToCartSubmit = async () => {
         if (isAuthenticated || isAuthenticatedMobile) {
+            const productId = productDetailData?.data?.product?.id;
+            if (!productId) {
+                enqueueSnackbar("Product is still loading. Please wait.", { variant: "warning" });
+                return;
+            }
             const product_data = {
-                prod_id: productDetailData?.data?.product?.id,
+                prod_id: productId,
                 quantity: quantity,
             };
 
@@ -290,10 +295,15 @@ export default function Component() {
     const handleBuyItNowSubmit = async () => {
 
         if (isAuthenticated || isAuthenticatedMobile) {
+            const productId = productDetailData?.data?.product?.id;
+            if (!productId) {
+                enqueueSnackbar("Product is still loading. Please wait.", { variant: "warning" });
+                return;
+            }
 
             const product_data = {
                 order_source: "product",
-                prod_id: productDetailData?.data?.product?.id,
+                prod_id: productId,
                 quantity: quantity,
             };
 

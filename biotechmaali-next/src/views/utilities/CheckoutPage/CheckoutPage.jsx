@@ -1137,10 +1137,10 @@ const handleSaveOrderSummary = async () => {
             ...response.data.data,
             order: {
               ...response.data.data.order,
-              grand_total: coupon.order.grand_total,
+              grand_total: Math.max(0, Number(coupon.order?.grand_total ?? coupon.new_total ?? 0)),
               coupon_applied: true,
               coupon_discount: coupon.discount_amount,
-              applied_coupon: coupon.order.applied_coupon
+              applied_coupon: coupon.order?.applied_coupon
             }
           }
         : response.data.data;
@@ -1173,8 +1173,8 @@ console.log("💰 Original Order Grand Total:", data?.order?.grand_total);
 console.log("💰 Is Combo:", isCombo);
 console.log("💰 Is Shop The Look:", data?.order?.is_shop_the_look);
 
-const backendTotal = (coupon?.success && coupon?.order?.grand_total !== undefined)
-  ? Number(coupon.order.grand_total)
+const backendTotal = (coupon?.success && (coupon?.order?.grand_total !== undefined || coupon?.new_total !== undefined))
+  ? Math.max(0, Number(coupon.order?.grand_total ?? coupon.new_total ?? 0))
   : (isCombo || data?.order?.is_shop_the_look)
     ? (comboOffer?.final_price ?? data?.order?.grand_total ?? 0)
     : (data?.order?.grand_total ?? 0);
