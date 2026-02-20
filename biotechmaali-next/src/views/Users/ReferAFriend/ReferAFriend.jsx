@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { FiShare2 } from "react-icons/fi";
-import Refer from "../../../Assets/ReferAFriend.webp"; // Ensure the image path is correct
+import __Refer from "../../../Assets/ReferAFriend.webp"; // Ensure the image path is correct
+const Refer = typeof __Refer === 'string' ? __Refer : __Refer?.src || __Refer;
 import axiosInstance from "../../../Axios/axiosInstance";
 import { Helmet } from "react-helmet-async";
 import HomepageSchema from "../../utilities/seo/HomepageSchema";
@@ -98,7 +99,7 @@ function ReferAFriend() {
         type="text"
         className="text-sm p-4 focus:outline-none text-gray-600 truncate w-full sm:flex-grow rounded-t-lg sm:rounded-tr-none sm:rounded-l-lg"
         placeholder="Referral Code"
-        value={data?.referral_code}
+        value={data?.referral_code || ""}
         readOnly
       />
       <button

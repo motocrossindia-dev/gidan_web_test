@@ -48,7 +48,7 @@ const HeroSection = ({ hero }) => {
   };
 
   return (
-<div className="relative w-full overflow-hidden bg-white mt-4">
+<div className="relative w-full overflow-hidden mt-4">
   {hero && hero.length > 0 ? (
     <div className="relative w-full">
 
@@ -60,15 +60,16 @@ const HeroSection = ({ hero }) => {
           `}
         >
 
-          {/* Maintain aspect ratio WITHOUT cropping */}
-          <div className="relative w-full" style={{ aspectRatio: '1920/600' }}>
+          {/* Full-width hero image - no crop */}
+          <div className="w-full">
             <Image
               src={`https://backend.gidan.store${banner.web_banner}`}
               alt={`Hero Banner ${index + 1}`}
-              fill
+              width={1920}
+              height={600}
               sizes="100vw"
               onClick={() => handleBannerClick()}
-              className="object-contain bg-white cursor-pointer"
+              className="w-full h-auto cursor-pointer"
               priority={index === 0}
               loading={index === 0 ? "eager" : "lazy"}
               quality={80}

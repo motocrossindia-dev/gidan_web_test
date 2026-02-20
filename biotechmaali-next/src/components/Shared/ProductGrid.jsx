@@ -10,8 +10,17 @@ const ProductGrid = ({
                        pagination = {},
                        setResults,
                        query,
-                       filtersApplied = false
+                       filtersApplied = false,
+                       categorySlug: propCategorySlug,
+                       subcategorySlug: propSubcategorySlug,
                      }) => {
+
+  // Helper: extract a plain string from a slug value that could be a string or an object
+  const toSlugString = (val) => {
+    if (!val) return undefined;
+    if (typeof val === 'string') return val;
+    return val?.slug || val?.name || undefined;
+  };
   const router = useRouter();
   const observer = useRef(null);
 
@@ -31,13 +40,19 @@ const ProductGrid = ({
   }, [pagination?.next, query, filtersApplied]);
 
   const handleProductClick = (product) => {
-      const category_slug = product?.category_slug;
-      const sub_category_slug = product?.sub_category_slug;
+      const category_slug = toSlugString(product?.category_slug) || propCategorySlug;
+      const sub_category_slug = toSlugString(product?.sub_category_slug) || propSubcategorySlug;
+      const product_slug = toSlugString(product?.slug) || product?.slug;
+
+      if (!category_slug || !sub_category_slug || !product_slug) {
+        console.warn('Missing slug fields, skipping navigation', { category_slug, sub_category_slug, product_slug });
+        return;
+      }
 
       // NEW: Use 3-segment URL pattern: /:categorySlug/:subcategorySlug/:productSlug/
-      router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
+      router.push(`/${category_slug}/${sub_category_slug}/${product_slug}/`, {
           state: {
-              product_id: product.slug,
+              product_id: product_slug,
               category_slug: category_slug,
               sub_category_slug: sub_category_slug
           }

@@ -50,7 +50,7 @@ const CheckOutStore = () => {
         Checkout Our Stores
       </h2> 
       <div className="px-4">
-      <Card classname="">
+      <Card className="">
         <div className="w-full bg-white-400 p-6 rounded-lg">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {storesToDisplay && storesToDisplay.length > 0 ? (

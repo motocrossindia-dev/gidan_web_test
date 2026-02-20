@@ -3,8 +3,7 @@
 import React from "react";
 import { FaArrowLeft, FaShareAlt } from "react-icons/fa";
 import __referafriend from "../../../Assets/ReferAFriend.webp"
-const _referafriend = typeof __referafriend === 'string' ? __referafriend : __referafriend?.src || __referafriend;
-const referafriend = typeof _referafriend === 'string' ? _referafriend : _referafriend?.src || _referafriend;
+const referafriend = typeof __referafriend === 'string' ? __referafriend : __referafriend?.src || '';
 const ReferFriendMobile = () => {
   const referralLink = "https://yourapp.com/referral";
 

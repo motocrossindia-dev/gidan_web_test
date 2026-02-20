@@ -3,7 +3,6 @@
 import React from "react";
 
 const GenericPage = ({ data }) => {
-    console.log(data,'================fafa');
     // Helper to render specific section types dynamically
     const renderSection = (section) => {
         switch (section.type) {
@@ -30,7 +29,7 @@ const GenericPage = ({ data }) => {
                     </div>
                 );
 
-            case "grid_section":
+            case "grid_section": {
                 const { gridConfig, items, title, description, titleClass } = section;
                 return (
                     <div key={section.id} className={section.containerClass}>
@@ -48,6 +47,7 @@ const GenericPage = ({ data }) => {
                         </div>
                     </div>
                 );
+            }
 
             default:
                 return null;

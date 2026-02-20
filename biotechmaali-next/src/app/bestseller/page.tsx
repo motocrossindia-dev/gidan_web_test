@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import BestSeller from '@/views/utilities/BestSeller/BestSeller';
+import PlantFilter from '@/views/utilities/PlantFilter/PlantFilter';
 
 
 export const metadata: Metadata = {
@@ -24,5 +24,5 @@ export const metadata: Metadata = {
 };
 
 export default function BestSellerPage() {
-  return <BestSeller />;
+  return <PlantFilter />;
 }

@@ -160,13 +160,13 @@ const ProfileForm = () => {
 
       <Verify />
       <div>
-        <div className="flex px-8 ">
+        <div>
           {showDeactivation ? (
             <DeactivationConfirmation
               onCancel={() => setShowDeactivation(false)}
             />
           ) : (
-            <main className="flex-1 bg-white p-8">
+            <main className="bg-white p-8">
               <div className="border p-6 rounded-md shadow-md bg-white">
                 {/* Title */}
                 <div className="flex justify-between items-center">

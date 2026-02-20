@@ -17,7 +17,7 @@ const Banner1 = () => {
         {/* Left side with plant image */}
         <div className="w-1/4 sm:w-1/4 lg:w-1/2">
           <img name=" "   
-            src={banner.image}
+            src={banner.image?.src || banner.image}
             alt="Plant banner"
             className="w-full h-auto object-cover rounded-lg sm:w-[50px] sm:h-[50px] lg:w-[400px] lg:h-[160px]"
           />

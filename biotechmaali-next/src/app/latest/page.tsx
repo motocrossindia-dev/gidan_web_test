@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Latest from '@/views/utilities/Latest/Latest';
+import PlantFilter from '@/views/utilities/PlantFilter/PlantFilter';
 
 
 export const metadata: Metadata = {
@@ -24,5 +24,5 @@ export const metadata: Metadata = {
 };
 
 export default function LatestPage() {
-  return <Latest />;
+  return <PlantFilter />;
 }
