@@ -112,7 +112,7 @@ const handleGstCheckbox = (e) => {
 
   
 const handlePayment = async () => {
-  if (!orderData?.order?.order_id || !selectedMethod) {
+  if ((!orderData?.order?.order_id && !order_id) || !selectedMethod) {
     alert("Please select a payment method.");
     return;
   }
@@ -125,7 +125,7 @@ const handlePayment = async () => {
   };
 
   try {
-    const response = await axiosInstance.patch(`/order/proceedToPayment/`, payload);
+    const response = await axiosInstance.patch(`/order/orderSummary/`, payload);
 
     if (response.status === 200 || response.status === 206) {
       const usedWallet = response?.data?.wallet_debited || 0;
