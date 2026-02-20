@@ -61,7 +61,7 @@ const Banner = ({ home }) => {
                                         {banner.subtitle}
                                     </h3>
                                     <button
-                                        onClick={() => router.push(`/feature`)}
+                                        onClick={() => router.push(`/featured`)}
                                         className="bg-bio-green text-white px-3 md:px-4 py-2 rounded-md w-fit mx-auto lg:mx-0 hover:bg-green-700 transition text-xs md:text-sm"
                                     >
                                         {banner.button_text}

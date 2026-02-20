@@ -28,18 +28,10 @@ const PaymentGateway = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
-  const [orderData, setOrderData] = useState(() => {
-    try {
-      const stored = sessionStorage.getItem('payment_order_data');
-      return stored ? JSON.parse(stored)?.resource || null : null;
-    } catch { return null; }
-  });
-  const [orderId, setOrderId] = useState(() => {
-    try {
-      const stored = sessionStorage.getItem('payment_order_data');
-      return stored ? JSON.parse(stored)?.order_id || null : null;
-    } catch { return null; }
-  });
+  // Start null — reads happen client-side in useEffect (sessionStorage is not available during SSR)
+  const [orderData, setOrderData] = useState(null);
+  const [orderId, setOrderId] = useState(null);
+  const [dataLoaded, setDataLoaded] = useState(false);
   const order_id = orderId;
   const name = orderData?.order?.customer_name || '';
   const email = orderData?.order?.email || '';
@@ -84,14 +76,28 @@ const handleGstCheckbox = (e) => {
 
 
 
+  // Read sessionStorage on client mount only
   useEffect(() => {
+    try {
+      const stored = sessionStorage.getItem('payment_order_data');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        setOrderData(parsed?.resource || null);
+        setOrderId(parsed?.order_id || null);
+      }
+    } catch {}
+    setDataLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!dataLoaded) return;
     if (!orderData) {
       console.warn("No order data received. Redirecting to checkout.");
       router.replace('/checkout');
       return;
     }
     getWalletbalance();
-  }, [orderData]);
+  }, [dataLoaded, orderData]);
 
   const paymentOptions = [
     { id: "Wallet", title: "Gidan Wallet", description: `Your current balance is ₹${balance?.balance|| 0}`, type: "radio" },

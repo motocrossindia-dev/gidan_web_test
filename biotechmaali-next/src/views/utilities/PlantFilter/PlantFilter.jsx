@@ -140,19 +140,33 @@ function PlantFilter() {
 
                 if (typeKey) {
                     queryParams.append("type", typeKey);
-                }
+                    // When typeKey is derived from categorySlug (e.g. pots→pot),
+                    // don't send category_slug too — the API 500s on both together.
+                    // For subcategory pages, still append the subcategory identifier.
+                    if (subcategoryID) {
+                        queryParams.append("subcategory_id", subcategoryID);
+                    } else if (subcategorySlug) {
+                        queryParams.append("subcategory_slug", subcategorySlug);
+                    }
+                } else {
+                    if (isSeasonalCollection || isTrending || isFeatured || isBestSeller) {
+                        // Boolean-flag pages (featured/trending/etc.) have no category slug,
+                        // so default to "plant" — the user can change type via the dropdown
+                        queryParams.append("type", "plant");
+                    }
 
-                // Priority: Use IDs from state if available, otherwise use slugs from URL
-                if (categoryId) {
-                    queryParams.append("category_id", categoryId);
-                } else if (categorySlug) {
-                    queryParams.append("category_slug", categorySlug);
-                }
+                    // Only add category/subcategory slugs when there's no derived typeKey
+                    if (categoryId) {
+                        queryParams.append("category_id", categoryId);
+                    } else if (categorySlug) {
+                        queryParams.append("category_slug", categorySlug);
+                    }
 
-                if (subcategoryID) {
-                    queryParams.append("subcategory_id", subcategoryID);
-                } else if (subcategorySlug) {
-                    queryParams.append("subcategory_slug", subcategorySlug);
+                    if (subcategoryID) {
+                        queryParams.append("subcategory_id", subcategoryID);
+                    } else if (subcategorySlug) {
+                        queryParams.append("subcategory_slug", subcategorySlug);
+                    }
                 }
 
                 // Add boolean filter flags

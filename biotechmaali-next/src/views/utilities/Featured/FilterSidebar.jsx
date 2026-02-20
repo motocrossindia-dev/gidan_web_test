@@ -256,10 +256,12 @@ const FilterSidebar = ({
       setCurrentFilterType(selectedFilterType);
     }
 
-    // Always include category context so results stay scoped to this category
+    // Include category context — but NOT both type + category_slug together
+    // (the API 500s on that combination). When typeKey is provided the type
+    // already scopes the query, so skip category_slug.
     if (categoryId) {
       params.append("category_id", categoryId);
-    } else if (categorySlug) {
+    } else if (categorySlug && !typeKey) {
       params.append("category_slug", categorySlug);
     }
 

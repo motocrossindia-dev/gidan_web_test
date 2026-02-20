@@ -1040,29 +1040,24 @@ const CheckoutPage = () => {
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  // Read order data saved in sessionStorage before router.push
-  const [data, setData] = useState(() => {
-    try { return JSON.parse(sessionStorage.getItem('checkout_ordersummary') || 'null'); } catch { return null; }
-  });
+  // Read order data client-side only (sessionStorage is not available during SSR)
+  const [data, setData] = useState(null);
+  const [comboOffer, setComboOffer] = useState(null);
+  useEffect(() => {
+    try {
+      const stored = sessionStorage.getItem('checkout_ordersummary');
+      if (stored) setData(JSON.parse(stored));
+    } catch {}
+    try {
+      const combo = sessionStorage.getItem('checkout_combo_offer') || sessionStorage.getItem('selected_combo_offer');
+      if (combo) setComboOffer(JSON.parse(combo));
+    } catch {}
+  }, []);
   const id = data?.order?.id;
   const [orderResource, setOrderResource] = useState({});
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState([]);
   const [coupon, setCoupon] = useState();
-
-  // Get combo_offer saved in sessionStorage before router.push
-  const prefilledCombo = (() => {
-    try { return JSON.parse(sessionStorage.getItem('checkout_combo_offer') || 'null'); } catch { return null; }
-  })();
-
-  // Initialize comboOffer state - prioritize navigation state over sessionStorage
-  const [comboOffer, setComboOffer] = useState(() => {
-    if (prefilledCombo) {
-      return prefilledCombo;
-    }
-    const stored = sessionStorage.getItem("selected_combo_offer");
-    return stored ? JSON.parse(stored) : null;
-  });
 
   const isCombo = !!(data?.order?.is_combo_purchase || data?.order?.is_shop_the_look || comboOffer);
 
@@ -1071,31 +1066,22 @@ const CheckoutPage = () => {
     console.log("✅ Is Combo Purchase:", data?.order?.is_combo_purchase);
     console.log("✅ Is Shop The Look:", data?.order?.is_shop_the_look);
     console.log("✅ Combo Offer:", comboOffer);
-    console.log("✅ Prefilled Combo:", prefilledCombo);
     
     // GA4: Track begin_checkout event
     if (data?.order_items && data.order_items.length > 0) {
       trackBeginCheckout(data.order_items, data?.order?.grand_total);
     }
-  },[data, comboOffer, prefilledCombo]);
-
-  // Update comboOffer if prefilledCombo is provided
-  useEffect(() => {
-    if (prefilledCombo && !comboOffer) {
-      console.log("✅ Setting combo offer from navigation state:", prefilledCombo);
-      setComboOffer(prefilledCombo);
-    }
-  }, [prefilledCombo]);
+  },[data, comboOffer]);
 
   // Clear combo if this order is not a combo or shop the look
   useEffect(() => {
     if (!data?.order?.is_combo_purchase && !data?.order?.is_shop_the_look) {
       sessionStorage.removeItem("selected_combo_offer");
-      if (!prefilledCombo) {
+      if (!comboOffer) {
         setComboOffer(null);
       }
     }
-  }, [data?.order?.is_combo_purchase, data?.order?.is_shop_the_look, prefilledCombo]);
+  }, [data?.order?.is_combo_purchase, data?.order?.is_shop_the_look]);
 
   console.log("✅ Final isCombo value:", isCombo);
   console.log("✅ Final comboOffer:", comboOffer);

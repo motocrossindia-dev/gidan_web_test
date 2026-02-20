@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import CarouselData from '@/views/utilities/CarouselData/CarouselData';
+import CarouselTypeFilter from '@/views/utilities/CarouselData/CarouselTypeFilter';
 
-type Props = { params: Promise<{ id: string; slug: string }> };
+type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const name = slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   return {
-    title: `${name} Plants | Gidan`,
-    description: `Shop ${name.toLowerCase()} plants and gardening products at Gidan. Expert quality, fast delivery across India.`,
+    title: `${name} | Gidan Plants`,
+    description: `Shop ${name.toLowerCase()} online at best prices. Wide range of premium varieties. Fast delivery & easy returns – Gidan.`,
     openGraph: {
       title: `${name} | Gidan Plants`,
       description: `Shop ${name.toLowerCase()} at Gidan, India's trusted online plant store.`,
@@ -16,9 +16,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       locale: "en_IN",
       type: "website",
     },
+    alternates: { canonical: `https://www.gidan.store/carousel/${slug}` },
   };
 }
 
-export default function CarouselPage() {
-  return <CarouselData />;
+export default function CarouselSlugPage() {
+  return <CarouselTypeFilter />;
 }
