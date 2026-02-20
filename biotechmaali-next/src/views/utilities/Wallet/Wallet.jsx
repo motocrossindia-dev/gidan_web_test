@@ -16,6 +16,19 @@ import StoreSchema from "../seo/StoreSchema";
 
 
 
+const loadRazorpayScript = () =>
+  new Promise((resolve) => {
+    if (typeof window !== 'undefined' && typeof window.Razorpay !== 'undefined') {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+
 const Wallet = () => {
   const router = useRouter();
   const accessToken = useSelector(selectAccessToken);
@@ -85,6 +98,11 @@ const Wallet = () => {
         
               
               if (options.order_id && options.amount > 0) {
+                const scriptLoaded = await loadRazorpayScript();
+                if (!scriptLoaded) {
+                  enqueueSnackbar('Failed to load payment gateway. Please try again.', { variant: 'error' });
+                  return;
+                }
                 const razorpay = new window.Razorpay(options);
                 razorpay.open();
         
@@ -128,9 +146,11 @@ const Wallet = () => {
 
       if (response.status=== 200) {
         if (isMobile) {
-          router.push('/mobilesidebar/wallethistory',{state:{resourse:response?.data?.data}})
+          sessionStorage.setItem('wallet_history_data', JSON.stringify(response?.data?.data));
+          router.push('/mobilesidebar/wallethistory')
         }else{
-        router.push('/profile/wallethistory',{state:{resourse:response?.data?.data}})
+          sessionStorage.setItem('wallet_history_data', JSON.stringify(response?.data?.data));
+          router.push('/profile/wallethistory')
         }
       
 
@@ -171,9 +191,9 @@ const Wallet = () => {
           </div>
           <div className="flex justify-between items-center">
             <div>{/* Placeholder to fill the left side */}
-            <Link onClick={getTransactions} className="text-md font-semibold text-lime-600 self-end">
+            <button onClick={getTransactions} className="text-md font-semibold text-lime-600 self-end">
               Wallet Transaction History
-            </Link>
+            </button>
             </div> 
           </div>
         </div>

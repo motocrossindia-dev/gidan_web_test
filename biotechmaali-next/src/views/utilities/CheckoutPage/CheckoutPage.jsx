@@ -743,6 +743,7 @@ const ApplyCoupon = ({ id, setCoupon }) => {
   const [coupons, setCoupons] = useState([]);
   
   const getCoupones = async () => {
+    if (!id) return;
     try {
       const response = await axiosInstance.get(`/coupon/coupons/?order_id=${id}`);
       if (response.status === 200) {
@@ -759,13 +760,21 @@ const ApplyCoupon = ({ id, setCoupon }) => {
 
   useEffect(() => {
     getCoupones();
-  }, []);
+  }, [id]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
   const applyCouponById = async (couponId) => {
+    if (!id) {
+      enqueueSnackbar("Order not found. Please restart checkout.", { variant: "error" });
+      return;
+    }
+    if (!couponId) {
+      enqueueSnackbar("Invalid coupon. Please try again.", { variant: "error" });
+      return;
+    }
     try {
       console.log("🎟️ Applying coupon ID:", couponId, "to order:", id);
       const response = await axios.post(
@@ -791,8 +800,13 @@ const ApplyCoupon = ({ id, setCoupon }) => {
         enqueueSnackbar("Coupon applied successfully!", { variant: "success" });
       }
     } catch (error) {
-      console.error("❌ Coupon application error:", error.response?.data);
-      const errorMessage = error.response?.data?.error || "Failed to apply coupon. Please try again.";
+      const responseData = error.response?.data;
+      const statusCode = error.response?.status;
+      console.error("❌ Coupon application error:", { statusCode, responseData, message: error.message });
+      const errorMessage =
+        (typeof responseData === 'object' && responseData !== null && responseData.error) ||
+        (typeof responseData === 'string' && responseData) ||
+        "Failed to apply coupon. Please try again.";
       enqueueSnackbar(errorMessage, { variant: "error" });
     }
   };
@@ -1147,9 +1161,8 @@ const handleSaveOrderSummary = async () => {
 
       console.log("📦 Final Order Data for Payment:", finalOrderData);
 
-      router.push("/paymentgateway", { 
-        state: { resource: finalOrderData, order_id: data.order.id } 
-      });
+      sessionStorage.setItem('payment_order_data', JSON.stringify({ resource: finalOrderData, order_id: data.order.id }));
+      router.push("/paymentgateway");
     }
   } catch (error) {
     console.error("Error saving order summary:", error);

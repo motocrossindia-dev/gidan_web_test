@@ -34,7 +34,7 @@ const Footer = () => {
             if (isMobile) {
                 router.push('/mobilesidebar/walletmobile')
             } else {
-                router.push("/profile/Wallet");
+                router.push("/profile/wallet");
             }
         }
     };
@@ -66,7 +66,7 @@ const Footer = () => {
 
     const handleLoginSuccess = () => {
         setIsSignInOpen(false);
-        router.push("/WishList");
+        router.push("/wishlist");
     };
 
     const handleSubmit = async (e) => {

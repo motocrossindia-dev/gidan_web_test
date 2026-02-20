@@ -68,7 +68,7 @@ const NavBar = () => {
     if (userName === "Guest") {
       setIsWalletPopupOpen(true);
     } else {
-      router.push("/profile/Wallet");
+      router.push("/profile/wallet");
     }
   };
 
@@ -110,7 +110,7 @@ const NavBar = () => {
       setAnchorEl(event.currentTarget);
       setOpenPopper(true);
     } else {
-      router.push("/WishList");
+      router.push("/wishlist");
     }
   };
 
@@ -125,14 +125,14 @@ const NavBar = () => {
 
   const handleLoginSuccess = () => {
     setIsSignInOpen(false);
-    router.push("/WishList");
+    router.push("/wishlist");
   };
 
   const handleCartClick = () => {
     if (username === "Guest") {
       setIsCartOpen(true);
     } else {
-      router.push("/Cart");
+      router.push("/cart");
     }
   };
 

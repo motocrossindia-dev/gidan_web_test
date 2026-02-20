@@ -10,9 +10,14 @@ import StoreSchema from "../seo/StoreSchema";
 const WalletHistory = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const data = null?.resourse || {};
-  const allTransactions = data.transactions || [];
-  const balance = data.balance || 0;
+  const [data] = useState(() => {
+    try {
+      const stored = sessionStorage.getItem('wallet_history_data');
+      return stored ? JSON.parse(stored) : {};
+    } catch { return {}; }
+  });
+  const [allTransactions] = useState(() => data?.transactions || []);
+  const balance = data?.balance || 0;
 
   const [activeType, setActiveType] = useState('ALL');
   const [activeStatus, setActiveStatus] = useState('ALL');

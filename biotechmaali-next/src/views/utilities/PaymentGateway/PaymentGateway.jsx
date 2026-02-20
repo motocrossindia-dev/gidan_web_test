@@ -11,16 +11,40 @@ import axiosInstance from "../../../Axios/axiosInstance";
 import {Helmet} from "react-helmet";
 import { trackPurchase } from "../../../utils/ga4Ecommerce";
 
+const loadRazorpayScript = () =>
+  new Promise((resolve) => {
+    if (typeof window !== 'undefined' && typeof window.Razorpay !== 'undefined') {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+
 const PaymentGateway = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const orderData = null.resource;
-  const order_id = null.order_id;
-  const name = orderData.order.customer_name
-  const email = orderData.order.email
-  const phone = orderData.order.mobile
-  const data = orderData
   const router = useRouter();
+  const [orderData, setOrderData] = useState(() => {
+    try {
+      const stored = sessionStorage.getItem('payment_order_data');
+      return stored ? JSON.parse(stored)?.resource || null : null;
+    } catch { return null; }
+  });
+  const [orderId, setOrderId] = useState(() => {
+    try {
+      const stored = sessionStorage.getItem('payment_order_data');
+      return stored ? JSON.parse(stored)?.order_id || null : null;
+    } catch { return null; }
+  });
+  const order_id = orderId;
+  const name = orderData?.order?.customer_name || '';
+  const email = orderData?.order?.email || '';
+  const phone = orderData?.order?.mobile || '';
+  const data = orderData;
   const [selectedMethod, setSelectedMethod] = useState("");
   const accessToken = useSelector(selectAccessToken);
   const [balance,setBalance] = useState(null)
@@ -62,9 +86,11 @@ const handleGstCheckbox = (e) => {
 
   useEffect(() => {
     if (!orderData) {
-      console.warn("No order data received. Ensure previous page is passing data correctly.");
+      console.warn("No order data received. Redirecting to checkout.");
+      router.replace('/checkout');
+      return;
     }
-    getWalletbalance()
+    getWalletbalance();
   }, [orderData]);
 
   const paymentOptions = [
@@ -80,7 +106,7 @@ const handleGstCheckbox = (e) => {
 
   
 const handlePayment = async () => {
-  if (!orderData.order?.order_id || !selectedMethod) {
+  if (!orderData?.order?.order_id || !selectedMethod) {
     alert("Please select a payment method.");
     return;
   }
@@ -109,11 +135,11 @@ const handlePayment = async () => {
         
         // GA4: Track purchase event for wallet payment
         trackPurchase({
-          transaction_id: response.data.order_id,
+          transaction_id: order_id || response.data.order_id,
           value: orderData?.order?.grand_total || 0,
-          items: orderData?.order_items || [],
+          items: orderData?.order_items || orderData?.items || [],
           shipping: orderData?.order?.delivery_charge || 0,
-          payment_type: 'Wallet'
+          coupon: response.data.coupon_code
         });
         
         router.push("/successpage");
@@ -155,9 +181,9 @@ const handlePayment = async () => {
               
               // GA4: Track purchase event
               trackPurchase({
-                transaction_id: response.data.order_id,
+                transaction_id: order_id || response.data.order_id,
                 value: razorpayOrder.amount / 100,
-                items: orderData?.order_items || [],
+                items: orderData?.order_items || orderData?.items || [],
                 shipping: orderData?.order?.delivery_charge || 0
               });
               
@@ -199,6 +225,12 @@ const handlePayment = async () => {
           },
         },
       };
+
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded) {
+        enqueueSnackbar('Failed to load payment gateway. Please try again.', { variant: 'error' });
+        return;
+      }
 
       const razorpay = new window.Razorpay(options);
       razorpay.open();
