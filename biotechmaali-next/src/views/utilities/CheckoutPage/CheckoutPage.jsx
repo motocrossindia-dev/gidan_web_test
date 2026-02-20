@@ -703,8 +703,9 @@ const OrderSummary = ({ selectedOption,selectedAddress,data }) => {
               discount="20%"
               savings="100.00"
             /> */}
-            {(data?.order_items || []).map((item) => (
+            {(data?.order_items || []).map((item, idx) => (
             <OrderSummaryItem
+              key={item.id ?? idx}
               title={item.product_name}
               Quantity={item.quantity}
               mrp={Math.round(item.mrp)}
