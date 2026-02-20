@@ -27,7 +27,10 @@ const MobileVerification = () => {
   const [otpDigits, setOtpDigits] = useState(["", "", "", ""]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const mobile = JSON.parse(localStorage.getItem("storeUserData"))?.mobile || "";
+  const [mobile] = useState(() => {
+    if (typeof window === 'undefined') return '';
+    return JSON.parse(localStorage.getItem("storeUserData"))?.mobile || "";
+  });
   const dispatch = useDispatch();
   const handleOTPChange = (index, value) => {
     if (/^\d*$/.test(value)) {

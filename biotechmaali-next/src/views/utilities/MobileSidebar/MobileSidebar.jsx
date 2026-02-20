@@ -5,9 +5,10 @@ import Link from "next/link";
 import React, { useState } from "react";
 const MobileSidebar = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const new_user_mobile = JSON.parse(localStorage.getItem("userData"))
-  
-  const [name, setName] = useState(new_user_mobile.first_name);
+  const [new_user_mobile] = useState(() =>
+    typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('userData')) : null
+  );
+  const [name, setName] = useState(() => new_user_mobile?.first_name || '');
 
   const options = [
     { label: "EditProfile", icon: "👤", link: "/mobilesidebar/editprofile" },

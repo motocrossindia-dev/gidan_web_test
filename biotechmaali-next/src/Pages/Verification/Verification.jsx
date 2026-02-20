@@ -24,7 +24,9 @@ const Verification = ({ onClose, onSubmit }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const mobile = JSON.parse(localStorage.getItem("storeUserData"))?.mobile;
+  const [mobile] = useState(() =>
+    typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('storeUserData'))?.mobile : undefined
+  );
 
   const handleOTPChange = (index, value) => {
     if (/^\d*$/.test(value)) {

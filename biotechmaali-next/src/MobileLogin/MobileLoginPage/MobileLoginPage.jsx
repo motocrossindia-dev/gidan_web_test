@@ -27,7 +27,10 @@ const MobileLoginPage = () => {
 
   const mobile = useSelector((state) => state.auth.currentUser?.mobile);
   const first_name = useSelector((state) => state.auth.currentUser?.first_name);
- const new_user_mobile = JSON.parse(localStorage.getItem("storeUserData"))
+  const [new_user_mobile] = useState(() => {
+    if (typeof window === 'undefined') return null;
+    return JSON.parse(localStorage.getItem("storeUserData"));
+  });
  
   const handleInputChange = (e) => {
     const { name, value } = e.target;

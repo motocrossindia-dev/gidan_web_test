@@ -157,7 +157,7 @@ const TrackOrder = () => {
 
   // ✅ Token handling
   const accessToken = useSelector(selectAccessToken);
-  const localToken = localStorage.getItem("token");
+  const [localToken] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('token') : null);
   const token = accessToken || localToken;
 
   useEffect(() => {

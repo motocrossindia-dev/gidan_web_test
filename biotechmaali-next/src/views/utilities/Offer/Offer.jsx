@@ -16,7 +16,7 @@ function Offer() {
   const dispatch = useDispatch();
 
   // ✅ Auth states
-  const token = localStorage.getItem("token");
+  const [token] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('token') : null);
   const accessToken = useSelector(selectAccessToken);
 
   // ✅ Fetch Offer Products

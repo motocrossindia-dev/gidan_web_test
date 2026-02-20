@@ -123,15 +123,17 @@ export default function Component() {
     const [ssubcategory_slug, setsubcategory_slug] = useState(null?.sub_category_slug || params.subcategorySlug);
 
     // Track current URL for canonical tag synchronization
-    const [currentUrl, setCurrentUrl] = useState(window.pathname);
+    const [currentUrl, setCurrentUrl] = useState(() =>
+      typeof window !== 'undefined' ? window.location.pathname : ''
+    );
 
     const [pincode, setPincode] = useState("");
     const [error, setError] = useState("");
     // ==========auth cart
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-    const isAuthenticatedMobile = !!localStorage.getItem('userData');
+    const [isAuthenticatedMobile] = useState(() => typeof window !== 'undefined' ? !!localStorage.getItem('userData') : false);
 
-    const token = localStorage.getItem("token")
+    const [token] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('token') : null);
     const accessToken = useSelector(selectAccessToken);
     const isInCart = productDetailData?.data?.product?.is_cart;
 
