@@ -14,9 +14,12 @@ const nextConfig: NextConfig = {
   // Allow .js and .jsx files (migrating from CRA)
   pageExtensions: ["ts", "tsx", "js", "jsx"],
 
-  // Turbopack root — force to this project dir, not parent CRA dir
+  // Turbopack resolve aliases (mirror of webpack aliases below)
   turbopack: {
-    root: "/Users/hawk/Biotechmaali_ecommerce_mohan/biotechmaali-next",
+    resolveAlias: {
+      "react-helmet": "./src/lib/helmet-shim.js",
+      "react-helmet-async": "./src/lib/helmet-shim.js",
+    },
   },
 
   // Image optimization domains
