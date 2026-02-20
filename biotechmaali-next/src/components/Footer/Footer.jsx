@@ -11,7 +11,7 @@ import {
     FaYoutube,
 } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import SignIn from "../../Pages/SignIn/Signin"; // Assuming you have a SignIn component
+import SignIn from "../../AuthPages/SignIn/Signin"; // Assuming you have a SignIn component
 import emailjs from 'emailjs-com';
 import { enqueueSnackbar } from "notistack";
 import { isMobile } from "react-device-detect";
@@ -320,7 +320,7 @@ export default Footer;
 //   FaYoutube,
 // } from "react-icons/fa";
 // // // import { useSelector } from "react-redux";
-// import SignIn from "../../Pages/SignIn/Signin"; // Assuming you have a SignIn component
+// import SignIn from "../../AuthPages/SignIn/Signin"; // Assuming you have a SignIn component
 // import emailjs from 'emailjs-com';
 // import { useRef } from "react";
 // import { enqueueSnackbar } from "notistack";
