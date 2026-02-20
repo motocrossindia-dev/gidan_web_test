@@ -4,26 +4,37 @@ import PlantFilter from '@/views/utilities/PlantFilter/PlantFilter';
 
 type Props = { params: Promise<{ categorySlug: string; subcategorySlug: string }> };
 
-async function isValidSubcategory(categorySlug: string, subcategorySlug: string): Promise<boolean> {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/filters/main_productsFilter/?category_slug=${encodeURIComponent(categorySlug)}&subcategory_slug=${encodeURIComponent(subcategorySlug)}&page=1&limit=1`,
-      { next: { revalidate: 3600 } }
-    );
-    if (!res.ok) return false;
-    const data = await res.json();
-    const count = data?.count ?? data?.data?.products?.length ?? 0;
-    return count > 0;
-  } catch {
-    return false;
-  }
-}
+// Valid category slugs (must also pass parent check)
+const VALID_CATEGORY_SLUGS = new Set([
+  "pots",
+  "plants",
+  "seeds",
+  "plant-care",
+]);
+
+// Valid subcategory slugs from the API
+const VALID_SUBCATEGORY_SLUGS = new Set([
+  // plants
+  "indoor-plant-26",
+  "outdoor-plant-27",
+  "flowering-plants-40",
+  // pots
+  "rotomolded-pots-28",
+  "plastic-pots-29",
+  "hanging-pots-30",
+  "table-top-pots-35",
+  "eco-planters-39",
+  // seeds
+  "vegetable-seeds-31",
+  // plant-care
+  "growing-media-36",
+  "garden-essenials-37",
+]);
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { categorySlug, subcategorySlug } = await params;
 
-  const valid = await isValidSubcategory(categorySlug, subcategorySlug);
-  if (!valid) return {};
+  if (!VALID_CATEGORY_SLUGS.has(categorySlug) || !VALID_SUBCATEGORY_SLUGS.has(subcategorySlug)) return {};
 
   const catName = categorySlug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   const subName = subcategorySlug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
@@ -45,8 +56,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function SubcategoryPage({ params }: Props) {
   const { categorySlug, subcategorySlug } = await params;
 
-  const valid = await isValidSubcategory(categorySlug, subcategorySlug);
-  if (!valid) notFound();
+  if (!VALID_CATEGORY_SLUGS.has(categorySlug) || !VALID_SUBCATEGORY_SLUGS.has(subcategorySlug)) notFound();
 
   return <PlantFilter />;
 }
