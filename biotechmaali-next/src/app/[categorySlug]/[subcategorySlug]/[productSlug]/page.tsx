@@ -1,10 +1,27 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import ProductData from '@/views/utilities/ProductData/ProductData';
 
 type Props = { params: Promise<{ categorySlug: string; subcategorySlug: string; productSlug: string }> };
 
+async function isValidProduct(productSlug: string): Promise<boolean> {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/filters/product_details/?product_slug=${encodeURIComponent(productSlug)}`,
+      { next: { revalidate: 3600 } }
+    );
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { categorySlug, subcategorySlug, productSlug } = await params;
+
+  const valid = await isValidProduct(productSlug);
+  if (!valid) return {};
+
   const productName = productSlug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   const catName = categorySlug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   return {
@@ -22,6 +39,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function ProductPage() {
+export default async function ProductPage({ params }: Props) {
+  const { productSlug } = await params;
+
+  const valid = await isValidProduct(productSlug);
+  if (!valid) notFound();
+
   return <ProductData />;
 }
