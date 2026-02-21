@@ -45,25 +45,25 @@ function ShopTheLook() {
 
       if (response.status === 200 || response.status === 201) {
         const { combo_add_info } = response.data.data;
-        
+
         if (combo_add_info.added_count > 0) {
           enqueueSnackbar(
-            `${combo_add_info.added_count} products added to cart!`, 
+            `${combo_add_info.added_count} products added to cart!`,
             { variant: "success" }
           );
         } else if (combo_add_info.already_in_cart_count > 0) {
           enqueueSnackbar(
-            "All products are already in your cart!", 
+            "All products are already in your cart!",
             { variant: "info" }
           );
         }
-        
+
         setShowPopup(false);
       }
     } catch (error) {
       console.error("❌ Add to Cart Error:", error);
       console.error("❌ Error Response:", error.response?.data);
-      
+
       if (error.response && error.response.status === 400) {
         enqueueSnackbar(error.response.data.message, { variant: "error" });
       } else {
@@ -87,8 +87,8 @@ function ShopTheLook() {
       // Place order directly using shop_the_look order source
       const placeOrderResponse = await axiosInstance.post(
         `/order/placeOrder/`,
-        { 
-          order_source: "shop_the_look",
+        {
+          order_source: "combo",
           combo_id: shopid
         }
       );
@@ -99,8 +99,6 @@ function ShopTheLook() {
       if (placeOrderResponse.status === 200) {
         setShowPopup(false);
         enqueueSnackbar("Order placed successfully!", { variant: "success" });
-        
-        // Prepare combo offer data for checkout
         const comboOfferData = {
           id: shopid,
           title: shoplookData?.title || "Shop The Look",
@@ -108,17 +106,14 @@ function ShopTheLook() {
           products: productss.map(p => p.name),
           is_shop_the_look: true
         };
-        
+
         sessionStorage.setItem('checkout_ordersummary', JSON.stringify(placeOrderResponse.data.data));
         sessionStorage.setItem('checkout_combo_offer', JSON.stringify(comboOfferData));
         router.push("/checkout");
       }
     } catch (error) {
-      console.error("❌ Place Order Error:", error);
-      console.error("❌ Error Response:", error.response?.data);
-      
       if (error.response && error.response.status === 400) {
-        enqueueSnackbar(error.response.data.message, { variant: "error" });
+        enqueueSnackbar(error.response.data.message, { variant: "info" });
       } else {
         enqueueSnackbar("Failed to place order. Please try again.", { variant: "error" });
       }

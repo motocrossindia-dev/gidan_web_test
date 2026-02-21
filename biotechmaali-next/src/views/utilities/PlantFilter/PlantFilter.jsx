@@ -75,6 +75,18 @@ function PlantFilter() {
         return typeMap[singular] || null;
     }, [categorySlug]);
 
+    // Map known category slugs to their API IDs
+    const categoryIdFromSlug = useMemo(() => {
+        if (!categorySlug) return null;
+        const slugToId = {
+            'plants': 19,
+            'pots': 20,
+            'seeds': 21,
+            'plant-care': 22,
+        };
+        return slugToId[categorySlug.toLowerCase()] || null;
+    }, [categorySlug]);
+
     // Use derivedType as the effective typeKey
     const typeKey = derivedType;
 
@@ -131,73 +143,67 @@ function PlantFilter() {
                         setResults(response.data.products || []);
                         setProducts(response.data || {});
                     }
-                } catch (error) {}
+                } catch (error) { }
                 return;
             }
 
             try {
-                let queryParams = new URLSearchParams();
+                // Build complete API params matching exact backend format
+                const queryParams = new URLSearchParams();
 
-                if (typeKey) {
-                    queryParams.append("type", typeKey);
-                    // When typeKey is derived from categorySlug (e.g. pots→pot),
-                    // don't send category_slug too — the API 500s on both together.
-                    // For subcategory pages, still append the subcategory identifier.
-                    if (subcategoryID) {
-                        queryParams.append("subcategory_id", subcategoryID);
-                    } else if (subcategorySlug) {
-                        queryParams.append("subcategory_slug", subcategorySlug);
+                // Type - use derived type or default to "plant" for boolean filter pages
+                const finalType = typeKey || (isSeasonalCollection || isTrending || isFeatured || isBestSeller ? "plant" : "");
+                queryParams.append("type", finalType);
+
+                // Subcategory ID
+                queryParams.append("subcategory_id", subcategoryID || "");
+
+                // Search
+                queryParams.append("search", "");
+
+                // Price range
+                queryParams.append("min_price", "");
+                queryParams.append("max_price", "");
+
+                // Filter IDs (all empty on initial load)
+                queryParams.append("color_id", "");
+                queryParams.append("size_id", "");
+                queryParams.append("planter_size_id", "");
+                queryParams.append("planter_id", "");
+                queryParams.append("weight_id", "");
+                queryParams.append("pot_type_id", "");
+                queryParams.append("litre_id", "");
+
+                // Boolean filter flags (use "true" or "unknown")
+                queryParams.append("is_featured", isFeatured ? "true" : "unknown");
+                queryParams.append("is_best_seller", isBestSeller ? "true" : "unknown");
+                queryParams.append("is_seasonal_collection", isSeasonalCollection ? "true" : "unknown");
+                queryParams.append("is_trending", isTrending ? "true" : "unknown");
+
+                // Ordering
+                queryParams.append("ordering", "");
+
+                // Always make the API call with complete params
+                const response = await axiosInstance.get(
+                    `/filters/main_productsFilter/?${queryParams.toString()}`
+                );
+
+                if (response.status === 200) {
+                    setResults(response.data.results || []);
+                    setProducts({
+                        count: response.data.count,
+                        next: response.data.next,
+                        previous: response.data.previous,
+                    });
+                    // API response: category_info.category_info contains { hero, sections }
+                    setCategoryData(response.data?.category_info?.category_info || null);
+
+                    // Update fetched names from API response if not in state
+                    if (!categoryName && response.data?.category_info?.category_info?.category_name) {
+                        setFetchedCategoryName(response.data.category_info.category_info.category_name);
                     }
-                } else {
-                    if (isSeasonalCollection || isTrending || isFeatured || isBestSeller) {
-                        // Boolean-flag pages (featured/trending/etc.) have no category slug,
-                        // so default to "plant" — the user can change type via the dropdown
-                        queryParams.append("type", "plant");
-                    }
-
-                    // Only add category/subcategory slugs when there's no derived typeKey
-                    if (categoryId) {
-                        queryParams.append("category_id", categoryId);
-                    } else if (categorySlug) {
-                        queryParams.append("category_slug", categorySlug);
-                    }
-
-                    if (subcategoryID) {
-                        queryParams.append("subcategory_id", subcategoryID);
-                    } else if (subcategorySlug) {
-                        queryParams.append("subcategory_slug", subcategorySlug);
-                    }
-                }
-
-                // Add boolean filter flags
-                if (isSeasonalCollection) queryParams.append("is_seasonal_collection", "true");
-                if (isTrending) queryParams.append("is_trending", "true");
-                if (isFeatured) queryParams.append("is_featured", "true");
-                if (isBestSeller) queryParams.append("is_best_seller", "true");
-
-                // Only make API call if we have at least category info or boolean filters
-                if (queryParams.toString()) {
-                    const response = await axiosInstance.get(
-                        `/filters/main_productsFilter/?${queryParams.toString()}`
-                    );
-
-                    if (response.status === 200) {
-                        setResults(response.data.results || []);
-                        setProducts({
-                            count: response.data.count,
-                            next: response.data.next,
-                            previous: response.data.previous,
-                        });
-                        // API response: category_info.category_info contains { hero, sections }
-                        setCategoryData(response.data?.category_info?.category_info || null);
-
-                        // Update fetched names from API response if not in state
-                        if (!categoryName && response.data?.category_info?.category_info?.category_name) {
-                            setFetchedCategoryName(response.data.category_info.category_info.category_name);
-                        }
-                        if (!subCategoryName && response.data?.category_info?.category_info?.subcategory_name) {
-                            setFetchedSubcategoryName(response.data.category_info.category_info.subcategory_name);
-                        }
+                    if (!subCategoryName && response.data?.category_info?.category_info?.subcategory_name) {
+                        setFetchedSubcategoryName(response.data.category_info.category_info.subcategory_name);
                     }
                 }
             } catch (error) {
@@ -206,10 +212,10 @@ function PlantFilter() {
         };
 
         // Trigger product fetch when URL params exist (either from state or URL) or boolean filters are present
-        if (categoryId || categorySlug || path.startsWith("/category/") || isSeasonalCollection || isTrending || isFeatured || isBestSeller) {
+        if (categoryId || categoryIdFromSlug || categorySlug || path.startsWith("/category/") || isSeasonalCollection || isTrending || isFeatured || isBestSeller) {
             getInitialProducts();
         }
-    }, [path, typeKey, categoryId, subcategoryID, categorySlug, subcategorySlug, isSeasonalCollection, isTrending, isFeatured, isBestSeller]);
+    }, [path, typeKey, categoryId, categoryIdFromSlug, subcategoryID, categorySlug, subcategorySlug, isSeasonalCollection, isTrending, isFeatured, isBestSeller]);
 
     // Determine the base name for Helmet tags
     const getDisplayName = () => {
@@ -228,8 +234,23 @@ function PlantFilter() {
     const displayName = getDisplayName();
 
     // Use URL params for canonical, fallback to state slugs
-    const canonicalCategorySlug = categorySlug || category_slug;
-    const canonicalSubcategorySlug = subcategorySlug || subcategory_slug;
+    // Parse from pathname to sync immediately if history.pushState was used
+    const currentPath = typeof window !== 'undefined' ? window.location.pathname : pathname;
+    const pathSegments = currentPath.split('/').filter(Boolean);
+    const isSpecialRoute = routeBasedFilters.isSeasonalCollection || routeBasedFilters.isTrending || routeBasedFilters.isFeatured || routeBasedFilters.isBestSeller;
+
+    let canonicalCategorySlug = categorySlug || category_slug;
+    let canonicalSubcategorySlug = subcategorySlug || subcategory_slug;
+
+    // Override with pathname segments for standard category routes if available
+    if (!isSpecialRoute && pathSegments.length > 0) {
+        canonicalCategorySlug = pathSegments[0];
+        if (pathSegments.length > 1) {
+            canonicalSubcategorySlug = pathSegments[1];
+        } else {
+            canonicalSubcategorySlug = null;
+        }
+    }
 
     return (
         <>
@@ -280,7 +301,7 @@ function PlantFilter() {
                 />
             )}
 
-            <div className="w-full overflow-x-hidden">
+            <div className="w-full overflow-visible">
                 <div className="container mx-auto px-4 md:px-8 max-w-full">
                     {/* Mobile Filter Button - Triggers SwipeableDrawer */}
                     <div className="md:hidden pt-4 sticky top-0 z-30 bg-gray-50/95 backdrop-blur-sm py-2 border-b border-gray-200">
@@ -294,7 +315,7 @@ function PlantFilter() {
                     </div>
 
                     {/* Desktop Horizontal Filter - Full Width */}
-                    <div className="hidden md:block mt-4 overflow-visible relative z-10">
+                    <div className="hidden md:block mt-4 overflow-visible relative z-50">
                         <FilterSidebar
                             setResults={setResults}
                             setProducts={setProducts}
@@ -305,6 +326,7 @@ function PlantFilter() {
                             subcategoryID={subcategoryID}
                             subcategorySlug={subcategorySlug}
                             categorySlug={categorySlug}
+                            categoryIdFromSlug={categoryIdFromSlug}
                             typeKey={typeKey}
                             setCategoryData={setCategoryData}
                             setCurrentFilterType={setCurrentFilterType}
@@ -312,6 +334,8 @@ function PlantFilter() {
                             isTrending={isTrending}
                             isFeatured={isFeatured}
                             isBestSeller={isBestSeller}
+                            setFetchedCategoryName={setFetchedCategoryName}
+                            setFetchedSubcategoryName={setFetchedSubcategoryName}
                         />
                     </div>
 
@@ -324,8 +348,8 @@ function PlantFilter() {
                             filtersApplied={filtersApplied}
                             categoryName={categoryName || fetchedCategoryName}
                             typeKey={typeKey}
-                            categorySlug={category_slug || categorySlug}
-                            subcategorySlug={subcategory_slug || subcategorySlug}
+                            categorySlug={canonicalCategorySlug}
+                            subcategorySlug={canonicalSubcategorySlug}
                             hasSubcategory={!!subcategoryID}
                         />
                     </div>
@@ -374,6 +398,7 @@ function PlantFilter() {
                         subcategoryID={subcategoryID}
                         subcategorySlug={subcategorySlug}
                         categorySlug={categorySlug}
+                        categoryIdFromSlug={categoryIdFromSlug}
                         typeKey={typeKey}
                         setCategoryData={setCategoryData}
                         setCurrentFilterType={setCurrentFilterType}
@@ -381,6 +406,8 @@ function PlantFilter() {
                         isTrending={isTrending}
                         isFeatured={isFeatured}
                         isBestSeller={isBestSeller}
+                        setFetchedCategoryName={setFetchedCategoryName}
+                        setFetchedSubcategoryName={setFetchedSubcategoryName}
                     />
                 </Box>
             </SwipeableDrawer>
@@ -403,8 +430,8 @@ function PlantFilter() {
                 }
                 items={results || []}
             />
-            <HomepageSchema/>
-            <StoreSchema/>
+            <HomepageSchema />
+            <StoreSchema />
         </>
     );
 }
