@@ -1,10 +1,10 @@
 'use client';
 
 import { useRouter, usePathname, useSearchParams, useParams } from "next/navigation";
-import React, {useState, useEffect, useRef} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {addToCart} from "../../../redux/Slice/cartSlice";
-import {addtowishlist} from "../../../redux/Slice/addtowishlistSlice";
+import React, { useState, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../../../redux/Slice/cartSlice";
+import { addtowishlist } from "../../../redux/Slice/addtowishlistSlice";
 import {
 
     ShoppingCart,
@@ -15,14 +15,14 @@ import {
 import ProductSeller from "./ProductSeller";
 import ProductReviews from "./ProductReviews";
 import ProductFeatured from "./ProductFeatured";
-import {FaChevronLeft, FaChevronRight} from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import AddOnProduct from "./AddOnProduct";
-import {selectAccessToken} from "../../../redux/User/verificationSlice";
-import {isMobile} from "react-device-detect";
+import { selectAccessToken } from "../../../redux/User/verificationSlice";
+import { isMobile } from "react-device-detect";
 import AboutTheProducts from "../ProductData/AboutTheProducts";
-import {FaStar} from "react-icons/fa6";
-import {FaStarHalfAlt} from "react-icons/fa";
-import {enqueueSnackbar} from "notistack";
+import { FaStar } from "react-icons/fa6";
+import { FaStarHalfAlt } from "react-icons/fa";
+import { enqueueSnackbar } from "notistack";
 import Verify from "../../../Services/Services/Verify";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { Helmet } from "react-helmet-async";
@@ -89,16 +89,16 @@ const productData = {
     description:
         "Are you a sucker for succulents? Then the Mini Jade succulent will be your dream plant! As one of the easiest houseplants to look after, the Crassula Green Mini plant boasts a lush foliage which beautifies any room. The Jade is also considered lucky as per Feng Shui for its coin-like round plump leaves. So, go ahead and bring Jade home... luck just tags along!",
     addOns: [
-        {name: "Peace Lily Plant", price: 499.0, image: productdata},
-        {name: "Snake Plant", price: 399.0, image: productdata},
-        {name: "Monstera Deliciosa", price: 599.0, image: productdata},
-        {name: "Aloe Vera", price: 299.0, image: productdata},
+        { name: "Peace Lily Plant", price: 499.0, image: productdata },
+        { name: "Snake Plant", price: 399.0, image: productdata },
+        { name: "Monstera Deliciosa", price: 599.0, image: productdata },
+        { name: "Aloe Vera", price: 299.0, image: productdata },
     ],
 };
 
 export default function Component() {
     const pathname = usePathname();
-  const searchParams = useSearchParams();
+    const searchParams = useSearchParams();
     const [selectedImage, setSelectedImage] = useState(0);
 
     const [selectedSize, setSelectedSize] = useState("");
@@ -123,7 +123,7 @@ export default function Component() {
 
     // Track current URL for canonical tag synchronization
     const [currentUrl, setCurrentUrl] = useState(() =>
-      typeof window !== 'undefined' ? window.location.pathname : ''
+        typeof window !== 'undefined' ? window.location.pathname : ''
     );
 
     const [pincode, setPincode] = useState("");
@@ -142,7 +142,7 @@ export default function Component() {
     const hasLitres = productDetailData?.data?.product_litres?.length > 0;
 
     const [zoom, setZoom] = useState(false);
-    const [position, setPosition] = useState({x: 0, y: 0});
+    const [position, setPosition] = useState({ x: 0, y: 0 });
 
     const lensSize = 120; // square lens size
     const zoomLevel = 2.5; // magnification level
@@ -153,7 +153,7 @@ export default function Component() {
 
     // ⬆️ Scroll to top on route change or product change
     useEffect(() => {
-        window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     }, [pathname, params.productSlug]);
 
     const handlePincodeChange = (e) => {
@@ -218,9 +218,9 @@ export default function Component() {
                     const response = await axiosInstance.post(`/order/cart/`, product_data);
                     if (response.status === 201) {
                         dispatch(addToCart(product_data));
-                        enqueueSnackbar("Product added to cart successfully!", {variant: "success"});
+                        enqueueSnackbar("Product added to cart successfully!", { variant: "success" });
                         window.dispatchEvent(new Event("cartUpdated"));
-                        
+
                         // GA4: Track add_to_cart event
                         trackAddToCart(productDetailData?.data?.product, quantity);
 
@@ -230,9 +230,9 @@ export default function Component() {
                         product_data,);
                     if (response.status === 201) {
                         dispatch(addToCart(product_data));
-                        enqueueSnackbar("Product added to cart successfully!", {variant: "success"});
+                        enqueueSnackbar("Product added to cart successfully!", { variant: "success" });
                         window.dispatchEvent(new Event("cartUpdated"));
-                        
+
                         // GA4: Track add_to_cart event
                         trackAddToCart(productDetailData?.data?.product, quantity);
 
@@ -240,15 +240,15 @@ export default function Component() {
                 }
 
             } catch (error) {
-                enqueueSnackbar(error.response?.data?.message || "Failed to add product to cart", {variant: "info"});
+                enqueueSnackbar(error.response?.data?.message || "Failed to add product to cart", { variant: "info" });
             }
         } else {
-            enqueueSnackbar("Please sign..", {variant: "info"});
+            enqueueSnackbar("Please sign..", { variant: "info" });
 
             if (isMobile) {
-                router.push("/mobile-signin", {replace: true});
+                router.push("/mobile-signin", { replace: true });
             } else {
-                router.push("/?modal=signIn", {replace: true});
+                router.push("/?modal=signIn", { replace: true });
             }
         }
 
@@ -263,20 +263,20 @@ export default function Component() {
             try {
                 // Send only the product_id to the API
                 const response = await axiosInstance.post(`/order/wishlist/`,
-                    {prod_id: product_id});
+                    { prod_id: product_id });
                 if (response?.status === 200) {
                     setInWishlist(response?.data?.data?.in_wishlist)
                     dispatch(addtowishlist(product_id));
                     window.dispatchEvent(new Event("wishlistUpdated"));
 
-                    enqueueSnackbar(response?.data?.message, {variant: "success"});
+                    enqueueSnackbar(response?.data?.message, { variant: "success" });
                 }
 
             } catch (error) {
 
                 enqueueSnackbar(
                     "Failed to add product to wishlist. Please try again.",
-                    {variant: "error"}
+                    { variant: "error" }
                 ); // Show error message
             }
         } else {
@@ -284,9 +284,9 @@ export default function Component() {
                 variant: "info",
             }); // Show login message
             if (isMobile) {
-                router.push("/mobile-signin", {replace: true});
+                router.push("/mobile-signin", { replace: true });
             } else {
-                router.push("/?modal=signIn", {replace: true});
+                router.push("/?modal=signIn", { replace: true });
             }
         }
     };
@@ -324,7 +324,7 @@ export default function Component() {
             } catch (error) {
                 if (error.response && error.response.status === 400) {
 
-                    enqueueSnackbar(error.response.data.message, {variant: "warning"});
+                    enqueueSnackbar(error.response.data.message, { variant: "warning" });
                     if (error.response.data.message === "User profile is not updated.") {
                         router.push('/profile')
                     }
@@ -334,29 +334,29 @@ export default function Component() {
 
                     }
                 } else {
-                    enqueueSnackbar("Failed to place order. Please try again.", {variant: "error"});
+                    enqueueSnackbar("Failed to place order. Please try again.", { variant: "error" });
                 }
             }
         } else {
             // If not authenticated, redirect based on device type
-            enqueueSnackbar("Please Login or Signup to Buy Our Products.", {variant: 'info'});
+            enqueueSnackbar("Please Login or Signup to Buy Our Products.", { variant: 'info' });
             if (isMobile) {
-                router.push("/mobile-signin", {replace: true});
+                router.push("/mobile-signin", { replace: true });
             } else {
-                router.push("/?modal=signIn", {replace: true});
+                router.push("/?modal=signIn", { replace: true });
             }
         }
     };
 
-    const CustomPrevArrow = ({className, onClick}) => (
+    const CustomPrevArrow = ({ className, onClick }) => (
         <button aria-label="Previous" className={`${className} z-10 left-0`} onClick={onClick}>
-            <ChevronLeft className="w-6 h-6 text-gray-800"/>
+            <ChevronLeft className="w-6 h-6 text-gray-800" />
         </button>
     );
 
-    const CustomNextArrow = ({className, onClick}) => (
+    const CustomNextArrow = ({ className, onClick }) => (
         <button aria-label="Next" className={`${className} z-10 right-0`} onClick={onClick}>
-            <ChevronRight className="w-6 h-6 text-gray-800"/>
+            <ChevronRight className="w-6 h-6 text-gray-800" />
         </button>
     );
 
@@ -366,8 +366,8 @@ export default function Component() {
         speed: 500,
         slidesToShow: 2,
         slidesToScroll: 2,
-        prevArrow: <CustomPrevArrow/>,
-        nextArrow: <CustomNextArrow/>,
+        prevArrow: <CustomPrevArrow />,
+        nextArrow: <CustomNextArrow />,
     };
 
 
@@ -386,7 +386,7 @@ export default function Component() {
                 setQuantity(response?.data?.new_quantity);
             }
         } catch (error) {
-            enqueueSnackbar(error?.response?.data?.message, {variant: 'info'});
+            enqueueSnackbar(error?.response?.data?.message, { variant: 'info' });
         }
     };
     const handleSizeClick = async (size, product) => {
@@ -444,7 +444,7 @@ export default function Component() {
             const response = await axiosInstance.get(
                 `/product/filterProduct/${product?.id}/`,
                 {
-                    params: {weight_id: size.id},
+                    params: { weight_id: size.id },
                 }
             );
 
@@ -465,7 +465,7 @@ export default function Component() {
             setcategory_slug(data?.data?.product?.category_slug);
             setsubcategory_slug(data?.data?.product?.sub_category_slug);
             setProductDetailData(data);
-        } catch (error) {}
+        } catch (error) { }
     };
 
     const handleLitreClick = async (litre, product) => {
@@ -480,7 +480,7 @@ export default function Component() {
             const response = await axiosInstance.get(
                 `/product/filterProduct/${product?.id}/`,
                 {
-                    params: {litre_id: litre.id},
+                    params: { litre_id: litre.id },
                 }
             );
 
@@ -502,7 +502,7 @@ export default function Component() {
             }
 
             setProductDetailData(data);
-        } catch (error) {}
+        } catch (error) { }
     };
 
 
@@ -629,19 +629,19 @@ export default function Component() {
             setProductDetailData(data);
             setSelectedImage(0);
 
-        } catch (error) {}
+        } catch (error) { }
     };
 
 
-// ========== NEW CODE (Feb 16, 2026) - Auto-select variant matching clicked product slug ==========
-// ✅ Fetch product data and auto-select variant matching the URL slug
+    // ========== NEW CODE (Feb 16, 2026) - Auto-select variant matching clicked product slug ==========
+    // ✅ Fetch product data and auto-select variant matching the URL slug
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // Use the slug from URL params to fetch the exact product variant
                 const productSlug = params.productSlug || id;
                 const response = await axiosInstance.get(`/product/defaultProduct/${productSlug}/`);
-                
+
                 if (response.status === 200) {
                     const data = response.data;
                     setProductDetailData(data);
@@ -662,7 +662,7 @@ export default function Component() {
                     setcategory_slug(data?.data?.product?.category_slug);
                     setsubcategory_slug(data?.data?.product?.sub_category_slug);
 
-                    const {size_id, planter_size_id, planter_id, color_id, litre_id, weight_id} = data.data.product;
+                    const { size_id, planter_size_id, planter_id, color_id, litre_id, weight_id } = data.data.product;
 
                     const defaultSize =
                         data.data.product_sizes.find(
@@ -725,101 +725,101 @@ export default function Component() {
                     }
 
                 }
-            } catch (error) {}
+            } catch (error) { }
         };
 
         if (id) fetchData();
     }, [id, params.productSlug]); // Added params.productSlug to dependencies
-// ========== END NEW CODE ==========
+    // ========== END NEW CODE ==========
 
-// ========== OLD CODE (Before Feb 16, 2026) - COMMENTED OUT ==========
-// useEffect(() => {
-//     const fetchData = async () => {
-//         try {
-//             const response = await axiosInstance.get(`/product/defaultProduct/${id}/`);
-//             if (response.status === 200) {
-//                 const data = response.data;
-//                 setProductDetailData(data);
-//                 setAddOnData(data?.data?.product_add_ons || []);
-//                 setImageThumbnails(data?.data?.product?.images || []);
-//
-//                 // NEW: Clean URL structure - Always 3-segment
-//                 const newUrl = `/${data?.data?.product?.category_slug}/${data?.data?.product?.sub_category_slug}/${data?.data?.product?.slug || id}/`;
-//                 window.history.replaceState(null, "", newUrl);
-//                 setCurrentUrl(newUrl); // Update state to trigger re-render
-//
-//                 setproduct_slug(data?.data?.product?.slug || id);
-//                 setcategory_slug(data?.data?.product?.category_slug);
-//                 setsubcategory_slug(data?.data?.product?.sub_category_slug);
-//
-//                 const {size_id, planter_size_id, planter_id, color_id, litre_id, weight_id} = data.data.product;
-//
-//                 const defaultSize =
-//                     data.data.product_sizes.find(
-//                         (s) => s.id === size_id || s.size === size_id
-//                     ) || data.data.product_sizes[0] || "";
-//
-//                 const defaultPlanterSize =
-//                     data.data.product_planter_sizes.find(
-//                         (s) =>
-//                             s.id === planter_size_id ||
-//                             s.size === planter_size_id?.size ||
-//                             s.name === planter_size_id?.name
-//                     ) || data.data.product_planter_sizes[0] || "";
-//
-//                 const defaultPlanter =
-//                     data.data.product_planters.find(
-//                         (s) => s.id === planter_id || s.name === planter_id?.name
-//                     ) || data.data.product_planters[0] || "";
-//
-//                 const defaultColor =
-//                     data.data.product_colors.find((c) => c.id === Number(color_id)) ||
-//                     data.data.product_colors[0] || null;
-//
-//                 const defaultLitre =
-//                     data.data.product_litres.find(
-//                         (s) => s.id === litre_id || s.name === litre_id?.name
-//                     ) || data.data.product_litres[0] || "";
-//
-//                 const defaultWeight =
-//                     data.data.product_weights.find(
-//                         (s) => s.id === weight_id || s.name === weight_id?.name
-//                     ) || data.data.product_weights[0] || "";
-//
-//                 setSelectedSize(defaultSize);
-//                 setSelectedPlanterSize(defaultPlanterSize);
-//                 setSelectedPlanter(defaultPlanter);
-//                 setSelectedColor(defaultColor);
-//                 setSelectedLitre(defaultLitre);
-//                 setSelectedGram(defaultWeight);
-//
-//                 // ✅ Trigger the same flow as manual selection to update images
-//                 if (defaultColor) {
-//                     handlePlanterColorClick(defaultColor, data.data.product);
-//                 }
-//                 if (defaultSize) {
-//                     handleSizeClick(defaultSize, data.data.product);
-//                 }
-//                 if (defaultPlanterSize) {
-//                     handlePlanterSizeClick(defaultPlanterSize, data.data.product);
-//                 }
-//                 if (defaultPlanter) {
-//                     handlePlanterClick(defaultPlanter, data.data.product);
-//                 }
-//                 if (defaultLitre) {
-//                     handleLitreClick(defaultLitre, data.data.product);
-//                 }
-//                 if (defaultWeight) {
-//                     handleWeightClick(defaultWeight, data.data.product);
-//                 }
-//
-//             }
-//         } catch (error) {}
-//     };
-//
-//     if (id) fetchData();
-// }, [id]);
-// ========== END OLD CODE ==========const category_slug = null?.category_slug || product?.category_slug;// Fallbacks if fields are missing
+    // ========== OLD CODE (Before Feb 16, 2026) - COMMENTED OUT ==========
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const response = await axiosInstance.get(`/product/defaultProduct/${id}/`);
+    //             if (response.status === 200) {
+    //                 const data = response.data;
+    //                 setProductDetailData(data);
+    //                 setAddOnData(data?.data?.product_add_ons || []);
+    //                 setImageThumbnails(data?.data?.product?.images || []);
+    //
+    //                 // NEW: Clean URL structure - Always 3-segment
+    //                 const newUrl = `/${data?.data?.product?.category_slug}/${data?.data?.product?.sub_category_slug}/${data?.data?.product?.slug || id}/`;
+    //                 window.history.replaceState(null, "", newUrl);
+    //                 setCurrentUrl(newUrl); // Update state to trigger re-render
+    //
+    //                 setproduct_slug(data?.data?.product?.slug || id);
+    //                 setcategory_slug(data?.data?.product?.category_slug);
+    //                 setsubcategory_slug(data?.data?.product?.sub_category_slug);
+    //
+    //                 const {size_id, planter_size_id, planter_id, color_id, litre_id, weight_id} = data.data.product;
+    //
+    //                 const defaultSize =
+    //                     data.data.product_sizes.find(
+    //                         (s) => s.id === size_id || s.size === size_id
+    //                     ) || data.data.product_sizes[0] || "";
+    //
+    //                 const defaultPlanterSize =
+    //                     data.data.product_planter_sizes.find(
+    //                         (s) =>
+    //                             s.id === planter_size_id ||
+    //                             s.size === planter_size_id?.size ||
+    //                             s.name === planter_size_id?.name
+    //                     ) || data.data.product_planter_sizes[0] || "";
+    //
+    //                 const defaultPlanter =
+    //                     data.data.product_planters.find(
+    //                         (s) => s.id === planter_id || s.name === planter_id?.name
+    //                     ) || data.data.product_planters[0] || "";
+    //
+    //                 const defaultColor =
+    //                     data.data.product_colors.find((c) => c.id === Number(color_id)) ||
+    //                     data.data.product_colors[0] || null;
+    //
+    //                 const defaultLitre =
+    //                     data.data.product_litres.find(
+    //                         (s) => s.id === litre_id || s.name === litre_id?.name
+    //                     ) || data.data.product_litres[0] || "";
+    //
+    //                 const defaultWeight =
+    //                     data.data.product_weights.find(
+    //                         (s) => s.id === weight_id || s.name === weight_id?.name
+    //                     ) || data.data.product_weights[0] || "";
+    //
+    //                 setSelectedSize(defaultSize);
+    //                 setSelectedPlanterSize(defaultPlanterSize);
+    //                 setSelectedPlanter(defaultPlanter);
+    //                 setSelectedColor(defaultColor);
+    //                 setSelectedLitre(defaultLitre);
+    //                 setSelectedGram(defaultWeight);
+    //
+    //                 // ✅ Trigger the same flow as manual selection to update images
+    //                 if (defaultColor) {
+    //                     handlePlanterColorClick(defaultColor, data.data.product);
+    //                 }
+    //                 if (defaultSize) {
+    //                     handleSizeClick(defaultSize, data.data.product);
+    //                 }
+    //                 if (defaultPlanterSize) {
+    //                     handlePlanterSizeClick(defaultPlanterSize, data.data.product);
+    //                 }
+    //                 if (defaultPlanter) {
+    //                     handlePlanterClick(defaultPlanter, data.data.product);
+    //                 }
+    //                 if (defaultLitre) {
+    //                     handleLitreClick(defaultLitre, data.data.product);
+    //                 }
+    //                 if (defaultWeight) {
+    //                     handleWeightClick(defaultWeight, data.data.product);
+    //                 }
+    //
+    //             }
+    //         } catch (error) {}
+    //     };
+    //
+    //     if (id) fetchData();
+    // }, [id]);
+    // ========== END OLD CODE ==========const category_slug = null?.category_slug || product?.category_slug;// Fallbacks if fields are missing
     const metaTitle = product?.meta_title
         ? product.meta_title
         : product?.main_product_name
@@ -838,7 +838,7 @@ export default function Component() {
     // Canonical URL - Use currentUrl state to ensure it always matches and triggers re-renders
     const canonicalUrl = `https://gidan.store${currentUrl}`;
 
-// OG image fallback
+    // OG image fallback
     const ogImage =
         product?.images?.[0]?.image ||
         product?.main_image ||
@@ -847,7 +847,7 @@ export default function Component() {
 
     return (
         <>
-            <Verify/>
+            <Verify />
             <Helmet>
                 {/* Basic SEO */}
                 <title>{metaTitle}</title>
@@ -886,7 +886,7 @@ export default function Component() {
                 currentPage={productDetailData?.data?.product?.main_product_name}
             />
 
-            <div className="w-full" style={{backgroundColor: "whitesmoke"}}>
+            <div className="w-full" style={{ backgroundColor: "whitesmoke" }}>
                 <div className="container mx-auto px-3 py-4 font-sans md:px-8">
                     <div className="flex flex-col md:flex-row -mx-4 relative overflow-visible">
                         <div className="md:flex-1 px-4">
@@ -904,20 +904,20 @@ export default function Component() {
                                         const x = e.clientX - rect.left;
                                         const y = e.clientY - rect.top;
 
-                                        setPosition({x, y});
+                                        setPosition({ x, y });
                                     }}
                                     ref={imageRef}
                                 >
                                     {/* MAIN IMAGE */}
                                     {(imageThumbnails[selectedImage]?.image || imageThumbnails[0]?.image) ? (
-                                    <img
-                                        src={
-                                            imageThumbnails[selectedImage]?.image ||
-                                            imageThumbnails[0]?.image
-                                        }
-                                        alt={productDetailData?.data?.product?.main_product_name || ""}
-                                        className="w-full h-[500px] md:h-[450px] object-contain"
-                                        ref={imgRef} loading="lazy" width="400" height="300" style={{ aspectRatio: '4/3' }} />
+                                        <img
+                                            src={
+                                                imageThumbnails[selectedImage]?.image ||
+                                                imageThumbnails[0]?.image
+                                            }
+                                            alt={productDetailData?.data?.product?.main_product_name || ""}
+                                            className="w-full h-[500px] md:h-[450px] object-contain"
+                                            ref={imgRef} loading="lazy" width="400" height="300" style={{ aspectRatio: '4/3' }} />
                                     ) : null}
 
                                     {/* LENS BOX (Transparent Square) */}
@@ -940,10 +940,9 @@ export default function Component() {
                                     <div
                                         className="absolute top-0 right-0 translate-x-[110%] w-[500px] h-[500px] hidden md:block border border-gray-300 rounded-lg bg-white z-50 shadow-lg"
                                         style={{
-                                            backgroundImage: `url(${
-                                                imageThumbnails[selectedImage]?.image ||
+                                            backgroundImage: `url(${imageThumbnails[selectedImage]?.image ||
                                                 imageThumbnails[0]?.image
-                                            })`,
+                                                })`,
                                             backgroundRepeat: "no-repeat",
 
                                             /* BIGGER IMAGE FOR MAGNIFICATION */
@@ -963,13 +962,13 @@ export default function Component() {
                             <div className="flex items-center justify-center gap-2 mt-6 overflow-x-auto px-2 relative">
                                 {/* Left Navigation Button */}
                                 <button
-                                        onClick={() =>
-                                            setSelectedImage((prev) =>
-                                                prev === 0 ? imageThumbnails.length - 1 : prev - 1
-                                            )
-                                        }
-                                        className="absolute left-0 z-10 text-gray-600 hover:text-gray-800 focus:outline-none bg-white rounded-full p-1 shadow-md md:relative md:bg-transparent md:shadow-none md:p-0"
-                                        aria-label="Previous image"
+                                    onClick={() =>
+                                        setSelectedImage((prev) =>
+                                            prev === 0 ? imageThumbnails.length - 1 : prev - 1
+                                        )
+                                    }
+                                    className="absolute left-0 z-10 text-gray-600 hover:text-gray-800 focus:outline-none bg-white rounded-full p-1 shadow-md md:relative md:bg-transparent md:shadow-none md:p-0"
+                                    aria-label="Previous image"
                                 >
                                     <FaChevronLeft size={24} />
                                 </button>
@@ -978,12 +977,11 @@ export default function Component() {
                                 <div className="flex gap-3 overflow-x-auto px-8 md:px-0">
                                     {imageThumbnails.map((image, i) => (
                                         <button aria-label="Button"
-                                                key={i}
-                                                onClick={() => setSelectedImage(i)}
-                                                className={`w-16 h-16 sm:w-20 sm:h-20 md:w-[90px] md:h-[90px] rounded-lg bg-gray-100 flex items-center justify-center shrink-0 ${
-                                                    selectedImage === i
-                                                        ? "ring-2 ring-indigo-300 ring-inset"
-                                                        : ""
+                                            key={i}
+                                            onClick={() => setSelectedImage(i)}
+                                            className={`w-16 h-16 sm:w-20 sm:h-20 md:w-[90px] md:h-[90px] rounded-lg bg-gray-100 flex items-center justify-center shrink-0 ${selectedImage === i
+                                                    ? "ring-2 ring-indigo-300 ring-inset"
+                                                    : ""
                                                 }`}
                                         >
                                             <img
@@ -998,13 +996,13 @@ export default function Component() {
 
                                 {/* Right Navigation Button */}
                                 <button
-                                        onClick={() =>
-                                            setSelectedImage((prev) =>
-                                                prev === imageThumbnails.length - 1 ? 0 : prev + 1
-                                            )
-                                        }
-                                        className="absolute right-0 z-10 text-gray-600 hover:text-gray-800 focus:outline-none bg-white rounded-full p-1 shadow-md md:relative md:bg-transparent md:shadow-none md:p-0"
-                                        aria-label="Next image"
+                                    onClick={() =>
+                                        setSelectedImage((prev) =>
+                                            prev === imageThumbnails.length - 1 ? 0 : prev + 1
+                                        )
+                                    }
+                                    className="absolute right-0 z-10 text-gray-600 hover:text-gray-800 focus:outline-none bg-white rounded-full p-1 shadow-md md:relative md:bg-transparent md:shadow-none md:p-0"
+                                    aria-label="Next image"
                                 >
                                     <FaChevronRight size={24} />
                                 </button>
@@ -1071,7 +1069,7 @@ export default function Component() {
                                 {productDetailData?.data?.product?.description || ""}
                             </h4>
                             <p className="text-black-600 text-sm mb-4">
-                                {Array.from({length: 5}).map((_, i) => {
+                                {Array.from({ length: 5 }).map((_, i) => {
                                     const fraction =
                                         productDetailData?.data?.product_rating?.avg_rating || 0;
                                     const filled = Math.floor(fraction);
@@ -1079,13 +1077,13 @@ export default function Component() {
                                     return (
                                         <React.Fragment key={i}>
                                             {i < filled && (
-                                                <FaStar className="inline-block text-bio-green"/>
+                                                <FaStar className="inline-block text-bio-green" />
                                             )}
                                             {i === filled && half > 0 && (
-                                                <FaStarHalfAlt className="inline-block text-bio-green"/>
+                                                <FaStarHalfAlt className="inline-block text-bio-green" />
                                             )}
                                             {i >= filled + half && (
-                                                <FaStar className="inline-block text-gray-700"/>
+                                                <FaStar className="inline-block text-gray-700" />
                                             )}
                                         </React.Fragment>
                                     );
@@ -1100,23 +1098,23 @@ export default function Component() {
 
                             <div className="flex mb-4 items-center">
                                 <div className="mr-4 flex items-center">
-    <span className="font-bold text-bio-green text-lg md:text-2xl">
-      ₹{Math.round(productDetailData?.data?.product?.selling_price || 0)}
-    </span>
+                                    <span className="font-bold text-bio-green text-lg md:text-2xl">
+                                        ₹{Math.round(productDetailData?.data?.product?.selling_price || 0)}
+                                    </span>
 
                                     {productDetailData?.data?.product?.mrp > productDetailData?.data?.product?.selling_price && (
                                         <>
-        <span className="text-gray-600 text-md md:text-xl line-through ml-2">
-          ₹{Math.round(productDetailData?.data?.product?.mrp || 0)}
-        </span>
+                                            <span className="text-gray-600 text-md md:text-xl line-through ml-2">
+                                                ₹{Math.round(productDetailData?.data?.product?.mrp || 0)}
+                                            </span>
                                             <span className="ml-2 text-red-500 font-semibold text-md md:text-lg">
-          {Math.round(
-              ((productDetailData?.data?.product?.mrp - productDetailData?.data?.product?.selling_price) /
-                  productDetailData?.data?.product?.mrp) *
-              100
-          )}
+                                                {Math.round(
+                                                    ((productDetailData?.data?.product?.mrp - productDetailData?.data?.product?.selling_price) /
+                                                        productDetailData?.data?.product?.mrp) *
+                                                    100
+                                                )}
                                                 % OFF
-        </span>
+                                            </span>
                                         </>
                                     )}
                                 </div>
@@ -1130,12 +1128,11 @@ export default function Component() {
                                         <div className="flex items-center mt-2">
                                             {productDetailData?.data?.product_weights?.map((size, idx) => (
                                                 <button aria-label="Button"
-                                                        key={size?.id || size?.size_grams || idx}
-                                                        onClick={() => handleWeightClick(size, productDetailData?.data?.product)}
-                                                        className={`${
-                                                            selectedgram?.size_grams === size?.size_grams
-                                                                ? "border-2 border-bio-green text-gray-700"
-                                                                : "border-2 border-gray-300 text-gray-700"
+                                                    key={size?.id || size?.size_grams || idx}
+                                                    onClick={() => handleWeightClick(size, productDetailData?.data?.product)}
+                                                    className={`${selectedgram?.size_grams === size?.size_grams
+                                                            ? "border-2 border-bio-green text-gray-700"
+                                                            : "border-2 border-gray-300 text-gray-700"
                                                         } py-2 px-4 rounded-lg mr-2 focus:outline-none`}
                                                 >
                                                     {size?.size_grams}
@@ -1153,12 +1150,11 @@ export default function Component() {
                                         <div className="flex items-center mt-2">
                                             {productDetailData?.data?.product_litres?.map((litre, idx) => (
                                                 <button aria-label="Button"
-                                                        key={litre?.id || litre?.name || idx}
-                                                        onClick={() => handleLitreClick(litre, productDetailData?.data?.product)}
-                                                        className={`${
-                                                            selectedLitre?.name === litre?.name
-                                                                ? "border-2 border-bio-green text-gray-700"
-                                                                : "border-2 border-gray-300 text-gray-700"
+                                                    key={litre?.id || litre?.name || idx}
+                                                    onClick={() => handleLitreClick(litre, productDetailData?.data?.product)}
+                                                    className={`${selectedLitre?.name === litre?.name
+                                                            ? "border-2 border-bio-green text-gray-700"
+                                                            : "border-2 border-gray-300 text-gray-700"
                                                         } py-2 px-4 rounded-lg mr-2 focus:outline-none`}
                                                 >
                                                     {litre?.name}
@@ -1175,12 +1171,11 @@ export default function Component() {
                                     <div className="flex items-center mt-2">
                                         {productDetailData?.data?.product_sizes?.map((size, idx) => (
                                             <button aria-label="Button"
-                                                    key={size?.id || size?.size || idx}
-                                                    onClick={() => handleSizeClick(size, productDetailData?.data?.product)}
-                                                    className={`${
-                                                        selectedSize?.size === size?.size
-                                                            ? "border-2 border-bio-green text-gray-700"
-                                                            : "border-2 border-gray-300 text-gray-700"
+                                                key={size?.id || size?.size || idx}
+                                                onClick={() => handleSizeClick(size, productDetailData?.data?.product)}
+                                                className={`${selectedSize?.size === size?.size
+                                                        ? "border-2 border-bio-green text-gray-700"
+                                                        : "border-2 border-gray-300 text-gray-700"
                                                     } py-2 px-4 rounded-lg mr-2 focus:outline-none`}
                                             >
                                                 {size?.size}
@@ -1196,12 +1191,11 @@ export default function Component() {
                                     <div className="flex items-center mt-2">
                                         {productDetailData?.data?.product_planter_sizes?.map((size, idx) => (
                                             <button aria-label="Button"
-                                                    key={size?.id || size?.size || idx}
-                                                    onClick={() => handlePlanterSizeClick(size, productDetailData?.data?.product)}
-                                                    className={`${
-                                                        selectedPlanterSize?.size === size?.size
-                                                            ? "border-2 border-bio-green text-gray-700"
-                                                            : "border-2 border-gray-300 text-gray-700"
+                                                key={size?.id || size?.size || idx}
+                                                onClick={() => handlePlanterSizeClick(size, productDetailData?.data?.product)}
+                                                className={`${selectedPlanterSize?.size === size?.size
+                                                        ? "border-2 border-bio-green text-gray-700"
+                                                        : "border-2 border-gray-300 text-gray-700"
                                                     } py-2 px-4 rounded-lg mr-2 focus:outline-none`}
                                             >
                                                 {size?.size}
@@ -1217,12 +1211,11 @@ export default function Component() {
                                     <div className="grid grid-cols-2 gap-2 mt-2 md:grid-cols-3">
                                         {productDetailData?.data?.product_planters?.map((planter, idx) => (
                                             <button aria-label="Button"
-                                                    key={planter?.id || planter?.name || idx}
-                                                    onClick={() => handlePlanterClick(planter, productDetailData?.data?.product)}
-                                                    className={`${
-                                                        selectedPlanter?.id === planter?.id
-                                                            ? "border-2 border-bio-green text-gray-700"
-                                                            : "border-2 border-gray-300 text-gray-700"
+                                                key={planter?.id || planter?.name || idx}
+                                                onClick={() => handlePlanterClick(planter, productDetailData?.data?.product)}
+                                                className={`${selectedPlanter?.id === planter?.id
+                                                        ? "border-2 border-bio-green text-gray-700"
+                                                        : "border-2 border-gray-300 text-gray-700"
                                                     } py-2 px-4 rounded-lg text-sm mr-2 focus:outline-none`}
                                             >
                                                 {planter?.name}
@@ -1239,18 +1232,17 @@ export default function Component() {
                                     <div className="flex items-center mt-2 space-x-4">
                                         {productDetailData?.data?.product_colors?.map((color, idx) => (
                                             <div key={color?.id || color?.color_code || idx}
-                                                 className="flex flex-col items-center">
+                                                className="flex flex-col items-center">
                                                 <button
-                                                        onClick={() =>
-                                                            handlePlanterColorClick(color, productDetailData?.data?.product)
-                                                        }
-                                                        className={`w-10 h-10 rounded-full mb-1 focus:outline-none ${
-                                                            selectedColor?.id === color?.id
-                                                                ? "border-2 border-bio-green text-gray-700"
-                                                                : "border-2 border-gray-300 text-gray-700"
+                                                    onClick={() =>
+                                                        handlePlanterColorClick(color, productDetailData?.data?.product)
+                                                    }
+                                                    className={`w-10 h-10 rounded-full mb-1 focus:outline-none ${selectedColor?.id === color?.id
+                                                            ? "border-2 border-bio-green text-gray-700"
+                                                            : "border-2 border-gray-300 text-gray-700"
                                                         }`}
-                                                        style={{backgroundColor: color?.color_code}}
-                                                        aria-label={`Select ${color?.name || "color"}`}
+                                                    style={{ backgroundColor: color?.color_code }}
+                                                    aria-label={`Select ${color?.name || "color"}`}
                                                 />
                                                 {/* ✅ Show color name */}
                                                 <span className="text-xs text-gray-600">{color?.color_name}</span>
@@ -1265,9 +1257,9 @@ export default function Component() {
                                 <div className="flex items-center mt-4">
                                     <button aria-label="Button"
                                         // onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                            onClick={() => handleQuantity(productDetailData?.data?.product?.id, "decrement", quantity)}
+                                        onClick={() => handleQuantity(productDetailData?.data?.product?.id, "decrement", quantity)}
 
-                                            className="border border-bio-green text-black-700 py-2 px-4 rounded-l-lg hover:bg-bio-green"
+                                        className="border border-bio-green text-black-700 py-2 px-4 rounded-l-lg hover:bg-bio-green"
                                     >
                                         -
                                     </button>
@@ -1292,10 +1284,10 @@ export default function Component() {
                                     />
                                     <button aria-label="Button"
 
-                                            onClick={() => handleQuantity(productDetailData?.data?.product?.id, "increment", quantity)}
+                                        onClick={() => handleQuantity(productDetailData?.data?.product?.id, "increment", quantity)}
 
 
-                                            className="border border-bio-green text-black-700 py-2 px-4 rounded-r-lg hover:bg-bio-green"
+                                        className="border border-bio-green text-black-700 py-2 px-4 rounded-r-lg hover:bg-bio-green"
                                     >
                                         +
                                     </button>
@@ -1304,10 +1296,10 @@ export default function Component() {
                             <div className="flex mb-8 space-x-2">
                                 <div className="w-1/2">
                                     <button aria-label="Add to cart"
-                                            className="w-full border border-bio-green text-bio-green py-2 px-4 rounded-lg hover:bg-bio-green hover:text-white"
-                                            onClick={isInCart ? () => router.push('/cart') : handleAddToCartSubmit}
+                                        className="w-full border border-bio-green text-bio-green py-2 px-4 rounded-lg hover:bg-bio-green hover:text-white"
+                                        onClick={isInCart ? () => router.push('/cart') : handleAddToCartSubmit}
                                     >
-                                        <ShoppingCart className="inline-block mr-2"/>
+                                        <ShoppingCart className="inline-block mr-2" />
                                         {isInCart ? "Go to Cart" : "Add to Cart"}
                                     </button>
 
@@ -1315,26 +1307,35 @@ export default function Component() {
 
                                 <div className="w-1/2">
                                     <button aria-label="Add to wishlist"
-                                            className="w-full border border-bio-green text-bio-green py-2 px-4 rounded-lg hover:bg-bio-green hover:text-white"
-                                            onClick={!productDetailData?.data?.product?.is_wishlist ? handleAddToWishlistSubmit : null}
+                                        className="w-full border border-bio-green text-bio-green py-2 px-4 rounded-lg hover:bg-bio-green hover:text-white"
+                                        onClick={!productDetailData?.data?.product?.is_wishlist ? handleAddToWishlistSubmit : null}
                                     >
-                                        <Heart className="inline-block mr-2"/>
+                                        <Heart className="inline-block mr-2" />
                                         Add to Wishlist
                                     </button>
                                 </div>
                             </div>
 
-                            <button
-                                className="bg-bio-green text-white py-2 px-4 rounded-lg w-full hover:bg-bio-green"
-                                onClick={handleBuyItNowSubmit}
-                            >
-                                Buy It Now
-                            </button>
+                            {productDetailData?.data?.product?.in_stock === false ? (
+                                <button
+                                    className="bg-gray-400 text-white py-2 px-4 rounded-lg w-full cursor-not-allowed"
+                                    disabled
+                                >
+                                    Out of stock
+                                </button>
+                            ) : (
+                                <button
+                                    className="bg-bio-green text-white py-2 px-4 rounded-lg w-full hover:bg-bio-green"
+                                    onClick={handleBuyItNowSubmit}
+                                >
+                                    Buy It Now
+                                </button>
+                            )}
 
                         </div>
 
                     </div>
-                    <AddOnProduct addOnData={addOnData}/>
+                    <AddOnProduct addOnData={addOnData} />
                 </div>
                 <div className="py-4 md:pr-32">
                     <div className="mt-2 flex w-full justify-center md:justify-end">
@@ -1354,14 +1355,14 @@ export default function Component() {
                     </div>
                     {error && <p className="text-red-500 text-sm mt-1 text-center md:text-right">{error}</p>}
                 </div>
-                <br/>
+                <br />
                 <div className="bg-white p-4">
-                    <AboutTheProducts productDetailData={productDetailData}/>
+                    <AboutTheProducts productDetailData={productDetailData} />
 
                 </div>
 
-                <ProductFeatured/>
-                <ProductSeller/>
+                <ProductFeatured />
+                <ProductSeller />
 
                 {productDetailData?.data?.product?.keywords && (
                     <div className="bg-white rounded-xl border border-gray-100 shadow-sm mx-0 my-4 p-4 md:p-6">
@@ -1379,8 +1380,8 @@ export default function Component() {
                     />
                 )}
             </div>
-            <HomepageSchema/>
-            <StoreSchema/>
+            <HomepageSchema />
+            <StoreSchema />
         </>
     );
 }
