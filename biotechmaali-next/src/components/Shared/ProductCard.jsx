@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import React, { useState, useCallback, memo } from "react";
 import { Paper, Typography } from "@mui/material";
 import { FaRegHeart, FaHeart, FaStar } from "react-icons/fa";
@@ -13,22 +14,21 @@ import { enqueueSnackbar } from "notistack";
 import ReactStars from "react-rating-stars-component";
 import axiosInstance from "../../Axios/axiosInstance";
 
-const StarsOnCards = ({rating,ratingNumber}) => {
-    
-  return (
-<div className="flex items-center gap-1 mb-2">
-  {[1, 2, 3, 4, 5].map((star) => (
-    <FaStar
-      key={star}
-      className={`w-4 h-4 ${
-        star <= rating ? "text-blue-950" : "text-gray-300"
-      }`}
-    />
-  ))}
-  <p className="text-xs px-1 text-gray-600">({ratingNumber})</p>
-</div>
+const StarsOnCards = ({ rating, ratingNumber }) => {
 
-  )
+    return (
+        <div className="flex items-center gap-1 mb-2">
+            {[1, 2, 3, 4, 5].map((star) => (
+                <FaStar
+                    key={star}
+                    className={`w-4 h-4 ${star <= rating ? "text-blue-950" : "text-gray-300"
+                        }`}
+                />
+            ))}
+            <p className="text-xs px-1 text-gray-600">({ratingNumber})</p>
+        </div>
+
+    )
 }
 
 const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, inCart, getProducts, ratingNumber, mrp, ribbon }) => {
@@ -64,7 +64,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                 }
             }
             getProducts()
-        } catch (error) {}
+        } catch (error) { }
     }, [isAuthenticated, router, inWishlist, product.id, getProducts]);
 
     const handleAddToCart = useCallback(async (e) => {
@@ -94,7 +94,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
             } else {
                 const payload = { main_prod_id: product.id };
                 console.log("Add to cart payload:", payload); // Debug log
-                
+
                 const response = await axiosInstance.post(
                     `/order/cart/`,
                     payload,
@@ -128,31 +128,10 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
     // }, [navigate, product.category_slug, product.sub_category_slug, product.slug, product.id]);
     // ========== END OLD CODE ==========
 
-    // ========== NEW CODE (Feb 16, 2026) - Added smooth scroll to top ==========
-    const handleQuickView = useCallback((e) => {
-        const category_slug = product?.category_slug;
-        const sub_category_slug = product?.sub_category_slug;
-
-        // All products have category, subcategory, and product slug
-        const productUrl = `/${category_slug}/${sub_category_slug}/${product.slug}/`;
-
-        // Scroll to top smoothly before navigation
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-
-        // Small delay to allow scroll animation to start
-        setTimeout(() => {
-            router.push(productUrl, {
-                state: {
-                    product_id: product.id,
-                    category_slug: category_slug,
-                    sub_category_slug: sub_category_slug
-                }
-            });
-        }, 100);
-    }, [router, product.category_slug, product.sub_category_slug, product.slug, product.id]);
+    // ========== NEW CODE (Feb 16, 2026) - Replaced with Link ==========
+    const productUrl = product?.category_slug && product?.slug
+        ? `/${product.category_slug}/${product.sub_category_slug}/${product.slug}/`
+        : "#";
     // ========== END NEW CODE ==========
 
     return (
@@ -208,43 +187,40 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                             />
 
                             <div
-                                className={`absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 transition-all duration-300 ease-in-out ${
-                                    isHovered
+                                className={`absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 transition-all duration-300 ease-in-out ${isHovered
                                         ? "opacity-100 translate-y-0 pointer-events-auto"
                                         : "opacity-0 translate-y-5 pointer-events-none"
-                                }`}
+                                    }`}
                             >
                                 <button aria-label="Add to cart"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleAddToCart();
-                                        }}
-                                        className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 cursor-pointer ${inCart ? "bg-bio-green text-white" : "bg-white hover:bg-bio-green hover:text-white"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleAddToCart();
+                                    }}
+                                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 cursor-pointer ${inCart ? "bg-bio-green text-white" : "bg-white hover:bg-bio-green hover:text-white"
                                         }`}
                                 >
                                     <MdOutlineShoppingBag className="w-4 h-4" />
                                 </button>
 
                                 <button aria-label="Add to wishlist"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleAddToWishlist();
-                                        }}
-                                        className={`w-8 h-8 rounded-full ${inWishlist ? "bg-bio-green text-white" : "bg-white hover:bg-bio-green hover:text-white"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleAddToWishlist();
+                                    }}
+                                    className={`w-8 h-8 rounded-full ${inWishlist ? "bg-bio-green text-white" : "bg-white hover:bg-bio-green hover:text-white"
                                         } flex items-center justify-center transition-colors duration-200 cursor-pointer`}
                                 >
                                     {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
                                 </button>
 
-                                <button aria-label="Quick view"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleQuickView();
-                                        }}
-                                        className="w-8 h-8 rounded-full bg-white hover:bg-bio-green hover:text-white flex items-center justify-center transition-colors duration-200 cursor-pointer"
+                                <Link aria-label="Quick view"
+                                    href={productUrl}
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="w-8 h-8 rounded-full bg-white hover:bg-bio-green hover:text-white flex items-center justify-center transition-colors duration-200 cursor-pointer"
                                 >
                                     <FiEye className="w-4 h-4" />
-                                </button>
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -261,17 +237,17 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                         <div className="flex items-center gap-2">
 
                             <span className="text-base font-semibold text-navy-blue">
-  ₹{Math.round(price)}
-</span>
+                                ₹{Math.round(price)}
+                            </span>
 
 
-                            {mrp && (mrp>price) && <span className="text-base text-gray-600 line-through">₹{mrp}</span>}
+                            {mrp && (mrp > price) && <span className="text-base text-gray-600 line-through">₹{mrp}</span>}
 
                             {/* Discount */}
-                            {mrp && price && (mrp>price) && (
+                            {mrp && price && (mrp > price) && (
                                 <span className="text-base font-semibold text-green-600 mt-1">
-      {Math.round(((mrp - price) / mrp) * 100)}% OFF
-    </span>
+                                    {Math.round(((mrp - price) / mrp) * 100)}% OFF
+                                </span>
                             )}
                         </div>
 
@@ -333,34 +309,32 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                             {/* ICONS INSIDE IMAGE AREA */}
                             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-20">
                                 <button aria-label="Add to cart"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleAddToCart();
-                                        }}
-                                        className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleAddToCart();
+                                    }}
+                                    className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
                                 >
                                     <MdOutlineShoppingBag className="w-4 h-4" />
                                 </button>
 
                                 <button aria-label="Add to wishlist"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleAddToWishlist();
-                                        }}
-                                        className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleAddToWishlist();
+                                    }}
+                                    className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
                                 >
                                     {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
                                 </button>
 
-                                <button aria-label="Quick view"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleQuickView();
-                                        }}
-                                        className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                <Link aria-label="Quick view"
+                                    href={productUrl}
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
                                 >
                                     <FiEye className="w-4 h-4" />
-                                </button>
+                                </Link>
                             </div>
                         </div>
 
@@ -393,17 +367,17 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                                 </p>
 
                                 {/* MRP */}
-                                {mrp && (mrp>price) && (
+                                {mrp && (mrp > price) && (
                                     <span className="text-base text-gray-600 line-through mt-1">
-      ₹{Math.round(mrp)}
-    </span>
+                                        ₹{Math.round(mrp)}
+                                    </span>
                                 )}
 
                                 {/* Discount */}
-                                {mrp && price && (mrp>price) && (
+                                {mrp && price && (mrp > price) && (
                                     <span className="text-sm font-semibold text-green-600 mt-1">
-      {Math.round(((mrp - price) / mrp) * 100)}% OFF
-    </span>
+                                        {Math.round(((mrp - price) / mrp) * 100)}% OFF
+                                    </span>
                                 )}
                             </div>
                             {/* Price */}
