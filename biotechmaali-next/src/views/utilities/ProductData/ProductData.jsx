@@ -980,8 +980,8 @@ export default function Component() {
                                             key={i}
                                             onClick={() => setSelectedImage(i)}
                                             className={`w-16 h-16 sm:w-20 sm:h-20 md:w-[90px] md:h-[90px] rounded-lg bg-gray-100 flex items-center justify-center shrink-0 ${selectedImage === i
-                                                    ? "ring-2 ring-indigo-300 ring-inset"
-                                                    : ""
+                                                ? "ring-2 ring-indigo-300 ring-inset"
+                                                : ""
                                                 }`}
                                         >
                                             <img
@@ -1131,8 +1131,8 @@ export default function Component() {
                                                     key={size?.id || size?.size_grams || idx}
                                                     onClick={() => handleWeightClick(size, productDetailData?.data?.product)}
                                                     className={`${selectedgram?.size_grams === size?.size_grams
-                                                            ? "border-2 border-bio-green text-gray-700"
-                                                            : "border-2 border-gray-300 text-gray-700"
+                                                        ? "border-2 border-bio-green text-gray-700"
+                                                        : "border-2 border-gray-300 text-gray-700"
                                                         } py-2 px-4 rounded-lg mr-2 focus:outline-none`}
                                                 >
                                                     {size?.size_grams}
@@ -1153,8 +1153,8 @@ export default function Component() {
                                                     key={litre?.id || litre?.name || idx}
                                                     onClick={() => handleLitreClick(litre, productDetailData?.data?.product)}
                                                     className={`${selectedLitre?.name === litre?.name
-                                                            ? "border-2 border-bio-green text-gray-700"
-                                                            : "border-2 border-gray-300 text-gray-700"
+                                                        ? "border-2 border-bio-green text-gray-700"
+                                                        : "border-2 border-gray-300 text-gray-700"
                                                         } py-2 px-4 rounded-lg mr-2 focus:outline-none`}
                                                 >
                                                     {litre?.name}
@@ -1174,8 +1174,8 @@ export default function Component() {
                                                 key={size?.id || size?.size || idx}
                                                 onClick={() => handleSizeClick(size, productDetailData?.data?.product)}
                                                 className={`${selectedSize?.size === size?.size
-                                                        ? "border-2 border-bio-green text-gray-700"
-                                                        : "border-2 border-gray-300 text-gray-700"
+                                                    ? "border-2 border-bio-green text-gray-700"
+                                                    : "border-2 border-gray-300 text-gray-700"
                                                     } py-2 px-4 rounded-lg mr-2 focus:outline-none`}
                                             >
                                                 {size?.size}
@@ -1194,8 +1194,8 @@ export default function Component() {
                                                 key={size?.id || size?.size || idx}
                                                 onClick={() => handlePlanterSizeClick(size, productDetailData?.data?.product)}
                                                 className={`${selectedPlanterSize?.size === size?.size
-                                                        ? "border-2 border-bio-green text-gray-700"
-                                                        : "border-2 border-gray-300 text-gray-700"
+                                                    ? "border-2 border-bio-green text-gray-700"
+                                                    : "border-2 border-gray-300 text-gray-700"
                                                     } py-2 px-4 rounded-lg mr-2 focus:outline-none`}
                                             >
                                                 {size?.size}
@@ -1214,8 +1214,8 @@ export default function Component() {
                                                 key={planter?.id || planter?.name || idx}
                                                 onClick={() => handlePlanterClick(planter, productDetailData?.data?.product)}
                                                 className={`${selectedPlanter?.id === planter?.id
-                                                        ? "border-2 border-bio-green text-gray-700"
-                                                        : "border-2 border-gray-300 text-gray-700"
+                                                    ? "border-2 border-bio-green text-gray-700"
+                                                    : "border-2 border-gray-300 text-gray-700"
                                                     } py-2 px-4 rounded-lg text-sm mr-2 focus:outline-none`}
                                             >
                                                 {planter?.name}
@@ -1238,8 +1238,8 @@ export default function Component() {
                                                         handlePlanterColorClick(color, productDetailData?.data?.product)
                                                     }
                                                     className={`w-10 h-10 rounded-full mb-1 focus:outline-none ${selectedColor?.id === color?.id
-                                                            ? "border-2 border-bio-green text-gray-700"
-                                                            : "border-2 border-gray-300 text-gray-700"
+                                                        ? "border-2 border-bio-green text-gray-700"
+                                                        : "border-2 border-gray-300 text-gray-700"
                                                         }`}
                                                     style={{ backgroundColor: color?.color_code }}
                                                     aria-label={`Select ${color?.name || "color"}`}
@@ -1295,13 +1295,25 @@ export default function Component() {
                             </div>
                             <div className="flex mb-8 space-x-2">
                                 <div className="w-1/2">
-                                    <button aria-label="Add to cart"
-                                        className="w-full border border-bio-green text-bio-green py-2 px-4 rounded-lg hover:bg-bio-green hover:text-white"
-                                        onClick={isInCart ? () => router.push('/cart') : handleAddToCartSubmit}
-                                    >
-                                        <ShoppingCart className="inline-block mr-2" />
-                                        {isInCart ? "Go to Cart" : "Add to Cart"}
-                                    </button>
+                                    {productDetailData?.data?.product?.in_stock === false ? (
+                                        <button
+                                            aria-label="Add to cart disabled"
+                                            className="w-full border border-gray-400 text-gray-400 bg-gray-100 py-2 px-4 rounded-lg cursor-not-allowed"
+                                            disabled
+                                        >
+                                            <ShoppingCart className="inline-block mr-2" />
+                                            Out of stock
+                                        </button>
+                                    ) : (
+                                        <button
+                                            aria-label="Add to cart"
+                                            className="w-full border border-bio-green text-bio-green py-2 px-4 rounded-lg hover:bg-bio-green hover:text-white"
+                                            onClick={isInCart ? () => router.push('/cart') : handleAddToCartSubmit}
+                                        >
+                                            <ShoppingCart className="inline-block mr-2" />
+                                            {isInCart ? "Go to Cart" : "Add to Cart"}
+                                        </button>
+                                    )}
 
                                 </div>
 
