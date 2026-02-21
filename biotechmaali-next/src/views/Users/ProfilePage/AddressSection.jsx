@@ -8,7 +8,6 @@ import { TrashIcon } from "lucide-react";
 import { useSnackbar } from "notistack";
 import Verify from "../../../Services/Services/Verify";
 import axiosInstance from "../../../Axios/axiosInstance";
-import lookup from "india-pincode-lookup";
 
 const AddressSection = () => {
   const accessToken = useSelector(selectAccessToken);
@@ -69,27 +68,49 @@ const AddressSection = () => {
   };
 
   const handleAddressChange = (index, field, value) => {
-    const updatedAddresses = [...address];
-    updatedAddresses[index] = {
-      ...updatedAddresses[index],
-      [field]: value,
-    };
+    setAddress((prev) => {
+      const updatedAddrs = [...prev];
+      updatedAddrs[index] = { ...updatedAddrs[index], [field]: value };
 
-    // Auto-fetch City and State for 6 digit PIN Code
-    if (field === "pinCode" && value.length === 6) {
-      const result = lookup.lookup(value);
-      if (result && result.length > 0) {
-        const data = result[0];
-        updatedAddresses[index].city = data.districtName || data.taluk || data.officeName;
-        const stateName = data.stateName
-          .split(" ")
-          .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-          .join(" ");
-        updatedAddresses[index].state = stateName;
+      // Immediately clear city and state if pincode is modified and not 6 digits
+      if (field === "pinCode") {
+        const pinStr = String(value).trim();
+        if (pinStr.length !== 6) {
+          updatedAddrs[index].city = "";
+          updatedAddrs[index].state = "";
+        }
+      }
+      return updatedAddrs;
+    });
+
+    if (field === "pinCode") {
+      const pinStr = String(value).trim();
+      if (pinStr.length === 6) {
+        fetch(`https://api.postalpincode.in/pincode/${pinStr}`)
+          .then((res) => res.json())
+          .then((responseData) => {
+            if (responseData && responseData[0].Status === "Success") {
+              const data = responseData[0].PostOffice[0];
+              setAddress((prev) => {
+                const newAddrs = [...prev];
+                newAddrs[index] = {
+                  ...newAddrs[index],
+                  city: data.District || data.Block || data.Name || "",
+                  state: data.State || "",
+                };
+                return newAddrs;
+              });
+            } else {
+              setAddress((prev) => {
+                const newAddrs = [...prev];
+                newAddrs[index] = { ...newAddrs[index], city: "", state: "" };
+                return newAddrs;
+              });
+            }
+          })
+          .catch((err) => console.error("Error looking up Pincode:", err));
       }
     }
-
-    setAddress(updatedAddresses);
   };
 
   const handleEdit = (index) => {
@@ -128,15 +149,15 @@ const AddressSection = () => {
     const currentAddress = address[index];
 
     const addressData = {
-      first_name: currentAddress.firstName,
-      last_name: currentAddress.lastName,
+      first_name: currentAddress.firstName || currentAddress.first_name,
+      last_name: currentAddress.lastName || currentAddress.last_name,
       address: currentAddress.address,
       city: currentAddress.city,
       state: currentAddress.state,
-      address_type: currentAddress.addressType,
-      pincode: parseInt(currentAddress.pinCode),
+      address_type: currentAddress.addressType || currentAddress.address_type,
+      pincode: parseInt(currentAddress.pinCode || currentAddress.pincode),
       phone: currentAddress.phone,
-      is_default: currentAddress.isDefault || false,
+      is_default: currentAddress.isDefault || currentAddress.is_default || false,
     };
 
     try {
@@ -281,12 +302,14 @@ const AddressSection = () => {
                       required
                     />
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       placeholder="PIN Code"
-                      value={address.pinCode || address.pincode || ""}
+                      value={address.pinCode !== undefined ? address.pinCode : (address.pincode || "")}
                       maxLength={6}
                       onChange={(e) => {
-                        const value = e.target.value.slice(0, 6);
+                        const value = e.target.value.replace(/[^0-9]/g, "").slice(0, 6);
                         handleAddressChange(index, "pinCode", value);
                       }}
                       className="p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
