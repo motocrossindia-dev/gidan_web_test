@@ -1108,15 +1108,21 @@ const CheckoutPage = () => {
   // Read order data client-side only (sessionStorage is not available during SSR)
   const [data, setData] = useState(null);
   const [comboOffer, setComboOffer] = useState(null);
+  const [dataLoaded, setDataLoaded] = useState(false);
   useEffect(() => {
     try {
       const stored = sessionStorage.getItem('checkout_ordersummary');
-      if (stored) setData(JSON.parse(stored));
+      if (stored) {
+        setData(JSON.parse(stored));
+      } else {
+        router.replace('/cart');
+      }
     } catch { }
     try {
       const combo = sessionStorage.getItem('checkout_combo_offer') || sessionStorage.getItem('selected_combo_offer');
       if (combo) setComboOffer(JSON.parse(combo));
     } catch { }
+    setDataLoaded(true);
   }, []);
   const id = data?.order?.id;
   const [orderResource, setOrderResource] = useState({});
@@ -1127,11 +1133,6 @@ const CheckoutPage = () => {
   const isCombo = !!(data?.order?.is_combo_purchase || data?.order?.is_shop_the_look || comboOffer);
 
   useEffect(() => {
-    console.log("✅ Checkout Data:", data);
-    console.log("✅ Is Combo Purchase:", data?.order?.is_combo_purchase);
-    console.log("✅ Is Shop The Look:", data?.order?.is_shop_the_look);
-    console.log("✅ Combo Offer:", comboOffer);
-
     // GA4: Track begin_checkout event
     if (data?.order_items && data.order_items.length > 0) {
       trackBeginCheckout(data.order_items, data?.order?.grand_total);
@@ -1148,17 +1149,8 @@ const CheckoutPage = () => {
     }
   }, [data?.order?.is_combo_purchase, data?.order?.is_shop_the_look]);
 
-  console.log("✅ Final isCombo value:", isCombo);
-  console.log("✅ Final comboOffer:", comboOffer);
-  console.log("✅ Coupon State:", coupon);
-  console.log("✅ Coupon Order Grand Total:", coupon?.order?.grand_total);
-
   // Log when coupon changes
   useEffect(() => {
-    if (coupon) {
-      console.log("🎟️ Coupon Updated:", coupon);
-      console.log("🎟️ New Grand Total:", coupon?.order?.grand_total);
-    }
   }, [coupon]);
 
   // ✅ Deduplicate items by product_name
@@ -1192,10 +1184,6 @@ const CheckoutPage = () => {
       if (response.data.message === "success") {
         enqueueSnackbar("Order summary saved successfully!", { variant: "success" });
 
-        // ✨✨✨ FIXED: Use coupon-updated order data if available ✨✨✨
-        console.log("📦 Order Summary Response:", response.data.data);
-        console.log("🎟️ Coupon State:", coupon);
-
         // If coupon was applied, merge the coupon data into the response
         const finalOrderData = coupon?.success
           ? {
@@ -1209,8 +1197,6 @@ const CheckoutPage = () => {
             }
           }
           : response.data.data;
-
-        console.log("📦 Final Order Data for Payment:", finalOrderData);
 
         sessionStorage.setItem('payment_order_data', JSON.stringify({ resource: finalOrderData, order_id: data.order.id }));
         router.push("/paymentgateway");
@@ -1230,31 +1216,24 @@ const CheckoutPage = () => {
 
   // Calculate backend total based on order type
   // Priority: coupon response > combo offer > original order data
-  // ✨✨✨ FIXED: Properly check if coupon is applied and use its grand_total ✨✨✨
-  console.log("💰 Calculating backendTotal...");
-  console.log("💰 Coupon Applied:", coupon?.success);
-  console.log("💰 Coupon Order Grand Total:", coupon?.order?.grand_total);
-  console.log("💰 Original Order Grand Total:", data?.order?.grand_total);
-  console.log("💰 Is Combo:", isCombo);
-  console.log("💰 Is Shop The Look:", data?.order?.is_shop_the_look);
-
   const backendTotal = (coupon?.success && (coupon?.order?.grand_total !== undefined || coupon?.new_total !== undefined))
     ? Math.max(0, Number(coupon.order?.grand_total ?? coupon.new_total ?? 0))
     : (isCombo || data?.order?.is_shop_the_look)
       ? (comboOffer?.final_price ?? data?.order?.grand_total ?? 0)
       : (data?.order?.grand_total ?? 0);
 
-  console.log("💰 Final backendTotal:", backendTotal);
-
-  // ✅ Remove delivery charge ONLY for Pickup Store
   const correctedPayableAmount =
     selectedOption?.deliveryType === "Pick Up Store"
       ? Math.max(backendTotal - deliveryCharge, 0)
       : backendTotal;
 
-  console.log("💰 Corrected Payable Amount:", correctedPayableAmount);
-
-
+  if (!dataLoaded || !data) {
+    return (
+      <div className="flex justify-center items-center min-h-[50vh]">
+        <p className="text-gray-500 font-semibold text-lg animate-pulse">Loading Checkout Details...</p>
+      </div>
+    );
+  }
 
   return (
 
