@@ -86,7 +86,7 @@ const CategoryIcons = () => {
         {/* Category Container */}
         <div
           id="category-scroll-container"
-          className="flex items-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 px-2 sm:px-4 mt-4 w-full overflow-x-auto scrollbar-hide md:flex-wrap md:justify-center pb-2"
+          className="flex items-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 px-2 sm:px-4 mt-4 w-full overflow-x-auto scrollbar-hide md:flex-wrap md:justify-center md:overflow-visible pb-2"
         >
           {publishedCategoryData.map((category, idx) => (
             <div

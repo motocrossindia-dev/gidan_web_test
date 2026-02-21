@@ -188,8 +188,8 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
 
                             <div
                                 className={`absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 transition-all duration-300 ease-in-out ${isHovered
-                                        ? "opacity-100 translate-y-0 pointer-events-auto"
-                                        : "opacity-0 translate-y-5 pointer-events-none"
+                                    ? "opacity-100 translate-y-0 pointer-events-auto"
+                                    : "opacity-0 translate-y-5 pointer-events-none"
                                     }`}
                             >
                                 <button aria-label="Add to cart"
@@ -214,13 +214,16 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                                     {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
                                 </button>
 
-                                <Link aria-label="Quick view"
-                                    href={productUrl}
-                                    onClick={(e) => e.stopPropagation()}
+                                <button aria-label="Quick view"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                        router.push(productUrl);
+                                    }}
                                     className="w-8 h-8 rounded-full bg-white hover:bg-bio-green hover:text-white flex items-center justify-center transition-colors duration-200 cursor-pointer"
                                 >
                                     <FiEye className="w-4 h-4" />
-                                </Link>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -328,13 +331,16 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                                     {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
                                 </button>
 
-                                <Link aria-label="Quick view"
-                                    href={productUrl}
-                                    onClick={(e) => e.stopPropagation()}
+                                <button aria-label="Quick view"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                        router.push(productUrl);
+                                    }}
                                     className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
                                 >
                                     <FiEye className="w-4 h-4" />
-                                </Link>
+                                </button>
                             </div>
                         </div>
 

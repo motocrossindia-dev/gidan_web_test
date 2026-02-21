@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 // ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
 import { useState, useEffect, useCallback, useMemo } from "react";
-import Link from "next/link";
 import TrendingCard from "./../Shared/ProductCard";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../redux/User/verificationSlice";
@@ -137,9 +136,9 @@ const TrendingSection = () => {
       <div className="max-w-7xl mx-auto px-3">
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:mx-10 gap-4 lg:gap-2 justify-items-center">
           {visibleProducts.map((product, index) => (
-            <Link
+            <div
               key={index}
-              href={`/${product?.category_slug}/${product?.sub_category_slug}/${product.slug}/`}
+              onClick={() => handleProductClick(product)}
               className="cursor-pointer block w-full"
             >
               <TrendingCard
@@ -157,7 +156,7 @@ const TrendingSection = () => {
                 mrp={Math.round(product?.mrp)}
                 ribbon={product.ribbon}
               />
-            </Link>
+            </div>
           ))}
         </div>
       </div>
