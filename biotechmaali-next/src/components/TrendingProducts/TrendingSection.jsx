@@ -78,7 +78,7 @@ const TrendingSection = () => {
         </div>
         {/* Product card skeletons */}
         <div className="max-w-7xl mx-auto px-3">
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 lg:mx-10 gap-4 lg:gap-2 justify-items-center">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:mx-10 gap-4 lg:gap-2 justify-items-center">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="w-full max-w-[16rem] animate-pulse">
                 <div className="bg-gray-200 rounded-2xl h-40 sm:h-48 lg:h-[260px] w-full" />
@@ -102,7 +102,7 @@ const TrendingSection = () => {
     <div className="p-4 rounded-md font-sans md:bg-white">
       <h2 className="md:text-2xl text-xl mb-4 text-center md:font-bold font-semibold">Trending Products</h2>
 
-      <div className="flex justify-center mb-8">
+      <div className="flex flex-wrap justify-center gap-y-2 mb-8">
         <button
           aria-label="Button"
           onClick={() => setSelectedTab("")}
@@ -134,7 +134,7 @@ const TrendingSection = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-3">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 lg:mx-10 gap-4 lg:gap-2 justify-items-center">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:mx-10 gap-4 lg:gap-2 justify-items-center">
           {visibleProducts.map((product, index) => (
             <div
               key={index}
@@ -167,9 +167,9 @@ const TrendingSection = () => {
           onClick={() => {
             const route =
               selectedTab === "featured" ? "/featured/" :
-              selectedTab === "bestseller" ? "/bestseller/" :
-              selectedTab === "latest" ? "/latest/" :
-              "/trending/";
+                selectedTab === "bestseller" ? "/bestseller/" :
+                  selectedTab === "latest" ? "/latest/" :
+                    "/trending/";
             router.push(route);
           }}
           className="bg-white text-bio-green-text w-[94px] h-[34px] border border-bio-green rounded mx-1 hover:bg-bio-green hover:text-white transition-colors"
