@@ -1,6 +1,19 @@
 import type { Metadata } from "next";
 import Home from '@/components/Home/Home';
 
+// Server-side fetching for LCP optimization
+async function getInitialBanners() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/promotion/banner/`, { next: { revalidate: 300 } });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data?.data?.banners || null;
+  } catch (err) {
+    console.error("Failed to fetch banners on server", err);
+    return null;
+  }
+}
+
 
 export const metadata: Metadata = {
   title: "Gidan - Plants, Seeds & Gardening Store Online India",
@@ -23,6 +36,7 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export default function HomePage() {
-  return <Home />;
+export default async function HomePage() {
+  const initialBanners = await getInitialBanners();
+  return <Home initialBanners={initialBanners} />;
 }

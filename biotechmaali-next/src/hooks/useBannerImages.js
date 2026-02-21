@@ -21,19 +21,23 @@ import axiosInstance from '../Axios/axiosInstance';
 const fetchBannerImages = async () => {
   const response = await axiosInstance.get(`/promotion/banner/`);
   const banner_images = response?.data?.data?.banners || [];
-  
+
   return {
     homeImages: banner_images.filter((img) => img.type === 'Home' && img.is_visible === true),
     heroImages: banner_images.filter((img) => img.type === 'Hero' && img.is_visible === true),
   };
 };
 
-export const useBannerImages = () => {
+export const useBannerImages = (initialData = undefined) => {
   return useQuery({
     queryKey: ['bannerImages'], // Unique key for this query
     queryFn: fetchBannerImages,
     staleTime: 5 * 60 * 1000, // Data stays fresh for 5 minutes
     cacheTime: 10 * 60 * 1000, // Cache persists for 10 minutes
+    initialData: initialData ? {
+      homeImages: initialData.filter((img) => img.type === 'Home' && img.is_visible),
+      heroImages: initialData.filter((img) => img.type === 'Hero' && img.is_visible),
+    } : undefined
   });
 };
 
