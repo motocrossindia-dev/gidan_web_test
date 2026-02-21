@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import ReactDOM from 'react-dom';
 import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
@@ -92,6 +93,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  ReactDOM.preconnect('https://backend.gidan.store', { crossOrigin: "anonymous" });
+  ReactDOM.preconnect('https://backend.gidan.store');
+
   return (
     <html lang="en">
       <body className={`${nunitoSans.variable} font-sans antialiased`}>

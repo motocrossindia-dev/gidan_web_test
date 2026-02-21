@@ -1,8 +1,8 @@
 'use client';
 
 import { useRouter } from "next/navigation";
-import {Swiper, SwiperSlide} from "swiper/react";
-import {Autoplay} from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import { getMobileBannerUrl, getDesktopBannerUrl } from "../../hooks/useBannerImages";
@@ -48,6 +48,8 @@ const Banner = ({ home }) => {
                                             loading={index === 0 ? "eager" : "lazy"}
                                             fetchPriority={index === 0 ? "high" : "low"}
                                             decoding="async"
+                                            width={800}
+                                            height={600}
                                         />
                                     </picture>
                                 </div>

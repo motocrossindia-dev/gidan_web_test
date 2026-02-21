@@ -198,9 +198,9 @@ const CheckOutStore = lazy(() => import(/* webpackChunkName: "store" */ '../../c
 const HomepageSchema = lazy(() => import(/* webpackChunkName: "schema" */ '../../views/utilities/seo/HomepageSchema'));
 const StoreSchema = lazy(() => import(/* webpackChunkName: "schema" */ '../../views/utilities/seo/StoreSchema'));
 
-const Home = () => {
+const Home = ({ initialBanners }) => {
   // ✅ Use TanStack Query hook - automatic caching, no unnecessary re-renders
-  const { data, isLoading, isError } = useBannerImages();
+  const { data, isLoading, isError } = useBannerImages(initialBanners);
 
   // Prefetch below-the-fold components when browser is idle
   useEffect(() => {
@@ -219,7 +219,7 @@ const Home = () => {
   );
 
   // Show loading state
-  if (isLoading) {
+  if (isLoading && !initialBanners) {
     return (
       <div className="flex justify-center items-center h-screen">
         <p className="text-gray-500 text-xl">Loading...</p>
