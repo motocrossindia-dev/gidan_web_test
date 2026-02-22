@@ -55,7 +55,7 @@ const WalletHistory = () => {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//profile/wallethistory"
+          href="https://www.gidan.store/profile/wallethistory"
         />
       </Helmet>
 

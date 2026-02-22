@@ -67,7 +67,7 @@ function CarouselTypeFilter() {
                 />
                 <link
                     rel="canonical"
-                    href={`https://www.gidan.store//carousel/${slug}`}
+                    href={`https://www.gidan.store/carousel/${slug}`}
                 />
             </Helmet>
 

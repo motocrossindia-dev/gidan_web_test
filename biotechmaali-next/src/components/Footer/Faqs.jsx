@@ -19,7 +19,7 @@ const FAQs = () => {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//faq"
+          href="https://www.gidan.store/faq"
         />
       </Helmet>
 

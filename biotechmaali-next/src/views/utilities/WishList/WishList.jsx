@@ -185,7 +185,7 @@ const WishList = () => {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//wishlist"
+          href="https://www.gidan.store/wishlist"
         />
       </Helmet>
 

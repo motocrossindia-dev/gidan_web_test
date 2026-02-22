@@ -176,7 +176,7 @@ const Wallet = () => {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//profile/Wallet"
+          href="https://www.gidan.store/profile/Wallet"
         />
       </Helmet>
 

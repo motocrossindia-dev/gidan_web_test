@@ -25,7 +25,7 @@ const ComboOffer = () => {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//combooffer"
+          href="https://www.gidan.store/combooffer"
         />
       </Helmet>
 

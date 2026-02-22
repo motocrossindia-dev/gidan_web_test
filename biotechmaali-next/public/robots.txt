@@ -1,5 +1,5 @@
 # Gidan Store - Robots.txt
-# https://www.gidan.store//robots.txt
+# https://www.gidan.store/robots.txt
 
 User-agent: *
 Allow: /
@@ -49,8 +49,8 @@ Allow: /*.svg
 Allow: /*.gif
 
 # Sitemap locations
-Sitemap: https://www.gidan.store//sitemap.xml
-Sitemap: https://www.gidan.store//categories-sitemap.xml
-Sitemap: https://www.gidan.store//subcategories-sitemap.xml
-Sitemap: https://www.gidan.store//products-sitemap.xml
-Sitemap: https://www.gidan.store//items-sitemap.xml
+Sitemap: https://www.gidan.store/sitemap.xml
+Sitemap: https://www.gidan.store/categories-sitemap.xml
+Sitemap: https://www.gidan.store/subcategories-sitemap.xml
+Sitemap: https://www.gidan.store/products-sitemap.xml
+Sitemap: https://www.gidan.store/items-sitemap.xml

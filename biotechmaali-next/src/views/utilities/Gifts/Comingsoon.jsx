@@ -23,7 +23,7 @@ const Comingsoon = () => {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//gifts"
+          href="https://www.gidan.store/gifts"
         />
       </Helmet>
 

@@ -34,7 +34,7 @@ function Featured() {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//feature"
+          href="https://www.gidan.store/feature"
         />
       </Helmet>
 

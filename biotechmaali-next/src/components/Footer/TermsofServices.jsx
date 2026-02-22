@@ -20,7 +20,7 @@ const TermsOfService = () => {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//terms"
+          href="https://www.gidan.store/terms"
         />
       </Helmet>
 

@@ -150,7 +150,7 @@ const ContactUs = () => {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//contact-us"
+          href="https://www.gidan.store/contact-us"
         />
       </Helmet>
 

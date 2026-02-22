@@ -46,7 +46,7 @@ const GDCoinsHistory = () => {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//profile/history"
+          href="https://www.gidan.store/profile/history"
         />
       </Helmet>
 
@@ -195,7 +195,7 @@ const pathname = usePathname();
 //
 //   <link
 //     rel="canonical"
-//     href="https://www.gidan.store//profile/history"
+//     href="https://www.gidan.store/profile/history"
 //   />
 // </Helmet>
 //

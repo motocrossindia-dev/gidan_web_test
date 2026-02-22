@@ -7,12 +7,12 @@ import Link from "next/link";
 import { useState, useEffect, useMemo } from "react";
 import { useCategories } from "../../hooks/useCategories";
 
-const CategoryIcons = () => {
+const CategoryIcons = ({ initialData }) => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const router = useRouter();
 
   // Use TanStack Query hook for categories
-  const { data: categoryData = [], isLoading } = useCategories();
+  const { data: categoryData = [], isLoading } = useCategories(initialData);
 
   // Map categories to type_choices
   const categoryToTypeMap = {

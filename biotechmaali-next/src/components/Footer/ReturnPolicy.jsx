@@ -25,7 +25,7 @@ const RefundPolicy = () => {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//return"
+          href="https://www.gidan.store/return"
         />
       </Helmet>
 
