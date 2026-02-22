@@ -29,6 +29,9 @@ Disallow: /thankyou
 Disallow: /hamburger
 Disallow: /side
 
+# Disallow Next.js internal assets
+Disallow: /_next/
+
 # Disallow admin/API endpoints
 Disallow: /api/
 Disallow: /admin/
@@ -36,17 +39,12 @@ Disallow: /admin/
 # Disallow search results (if applicable)
 Disallow: /search?*
 
-# Allow all static assets
+# Allow legitimate static assets
 Allow: /static/
 Allow: /assets/
-Allow: /*.css
-Allow: /*.js
-Allow: /*.jpg
-Allow: /*.jpeg
-Allow: /*.png
-Allow: /*.webp
-Allow: /*.svg
-Allow: /*.gif
+Allow: /images/
+Allow: /fonts/
+Allow: /favicon.ico
 
 # Sitemap locations
 Sitemap: https://www.gidan.store/sitemap.xml
