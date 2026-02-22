@@ -257,25 +257,25 @@ const Home = ({ initialBanners }) => {
       <Banner home={homeImages} />
 
       {/* Below-the-fold content - lazy load with intersection observer */}
-      <LazyLoadWrapper height="400px">
+      <LazyLoadWrapper height="600px">
         <Suspense fallback={<LoadingFallback />}>
           <TrendingSection />
         </Suspense>
       </LazyLoadWrapper>
 
-      <LazyLoadWrapper height="300px">
+      <LazyLoadWrapper height="400px">
         <Suspense fallback={<LoadingFallback />}>
           <RewardClub />
         </Suspense>
       </LazyLoadWrapper>
 
-      <LazyLoadWrapper height="400px">
+      <LazyLoadWrapper height="500px">
         <Suspense fallback={<LoadingFallback />}>
           <ShopTheLook />
         </Suspense>
       </LazyLoadWrapper>
 
-      <LazyLoadWrapper height="500px">
+      <LazyLoadWrapper height="600px">
         <Suspense fallback={<LoadingFallback />}>
           <SeasonalProduct />
         </Suspense>
@@ -287,13 +287,13 @@ const Home = ({ initialBanners }) => {
         </Suspense>
       </LazyLoadWrapper> */}
 
-      <LazyLoadWrapper height="300px">
+      <LazyLoadWrapper height="400px">
         <Suspense fallback={<LoadingFallback />}>
           <OfferReward />
         </Suspense>
       </LazyLoadWrapper>
 
-      <LazyLoadWrapper height="400px">
+      <LazyLoadWrapper height="500px">
         <Suspense fallback={<LoadingFallback />}>
           <ComboOffer />
         </Suspense>

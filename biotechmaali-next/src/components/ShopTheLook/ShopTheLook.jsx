@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 // ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
 import { useState } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Box } from "@mui/material";
@@ -150,10 +151,13 @@ function ShopTheLook() {
           onClick={() => setShowPopup(true)}
           className="w-full overflow-hidden bg-white hover:opacity-95 transition-opacity"
         >
-          <img
+          <Image
             src={`https://backend.gidan.store${shoplookData?.image}`}
             alt="Shop the Look"
+            width={1200}
+            height={407}
             loading="lazy"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
             className="w-full h-auto object-contain"
           />
         </button>
@@ -205,9 +209,11 @@ function ShopTheLook() {
                 key={product.id}
                 className="flex items-center p-2 md:p-4 border-b last:border-b-0"
               >
-                <img
+                <Image
                   src={`${process.env.NEXT_PUBLIC_API_URL}${product?.image}`}
                   alt={product?.name}
+                  width={80}
+                  height={80}
                   className="w-16 h-16 md:w-20 md:h-20 rounded-lg mr-3 md:mr-4 object-cover flex-shrink-0"
                   loading="lazy"
                 />

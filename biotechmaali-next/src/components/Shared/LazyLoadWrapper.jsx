@@ -45,7 +45,11 @@ const LazyLoadWrapper = ({
   }, [rootMargin, threshold]);
 
   return (
-    <div ref={ref} style={{ minHeight: isInView ? 'auto' : height }}>
+    <div
+      ref={ref}
+      className={`transition-opacity duration-500 ease-in-out ${isInView ? 'opacity-100' : 'opacity-0'}`}
+      style={{ minHeight: height }}
+    >
       {isInView ? (
         children
       ) : (

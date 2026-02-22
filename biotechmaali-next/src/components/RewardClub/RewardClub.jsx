@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 // ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
 import { enqueueSnackbar } from "notistack";
 import { useSelector } from "react-redux";
@@ -51,10 +52,13 @@ const RewardClub = () => {
 
         {/* LEFT: Image - 50% width, no gap */}
         <div className="bg-white flex items-center justify-center">
-          <img
+          <Image
             src={bannerData?.image || plantImage}
             alt="Rewards Club"
+            width={1200}
+            height={800}
             loading="lazy"
+            sizes="(max-width: 1024px) 100vw, 50vw"
             className="w-full h-full object-contain"
           />
         </div>

@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { FaRegUser, FaRegHeart, FaChevronDown } from "react-icons/fa";
 import { MdOutlineShoppingBag } from "react-icons/md";
@@ -148,225 +149,225 @@ const NavBar = () => {
   };
 
   return (
-      <div>
-        <nav className="w-full px-4 py-3 bg-white shadow-sm font-sans">
-          <div className="max-w-full mx-auto flex items-center justify-between sm:justify-between md:ml-10">
+    <div>
+      <nav className="w-full px-4 py-3 bg-white shadow-sm font-sans">
+        <div className="max-w-full mx-auto flex items-center justify-between sm:justify-between md:ml-10">
 
-            {/* MOBILE */}
-            <div className="sm:hidden flex justify-left items-center space-x-4">
-              <WithoutLoginHamburger />
-              <Link href="/" onClick={() => window.scrollTo({ top: -10 })}>
-                <img
-                    src={logo}
-                    alt="Gidan Logo"
-                    width="115"
-                    height="82"
-                    className="h-16 w-auto"
-                    name="Gidan"
-                />
-              </Link>
-            </div>
-
-            {/* DESKTOP */}
-            <div className="hidden sm:flex items-center">
-              <Link href="/" onClick={() => window.scrollTo({ top: -10 })}>
-                <img
-                    src={logo}
-                    alt="Gidan Logo"
-                    width="172"
-                    height="122"
-                    className="h-24 max-h-32 w-auto object-contain"
-                    name="Gidan"
-                />
-
-              </Link>
-            </div>
-
-            {/* Search bar (Desktop) */}
-            <div className="flex-1 max-w-full mx-4 px-10 hidden sm:block">
-              <div className="relative w-full">
-                <IoSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={handleSearch}
-                    placeholder="Search Products, Brands and More"
-                    className="w-[90%] pl-10 pr-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:border-blue-500"
-                />
-              </div>
-            </div>
-
-            {/* Icons */}
-            <div className="flex items-center md:space-x-6 space-x-4 md:pr-10">
-
-              <button 
-                onClick={handleWishListClick} 
-                className="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-bio-green hover:text-white"
-                aria-label="View wishlist"
-              >
-                <WishlistIconWithCount />
-              </button>
-
-              <button 
-                onClick={handleCartClick} 
-                className="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-bio-green hover:text-white"
-                aria-label="View shopping cart"
-              >
-                <CartIconWithCount />
-              </button>
-
-              <button 
-                onClick={handleWalletClick} 
-                className="hidden sm:flex w-12 h-12 items-center justify-center rounded-lg hover:bg-bio-green hover:text-white"
-                aria-label="View wallet"
-              >
-                <IoWalletOutline className="text-xl" />
-              </button>
-
-              {/* User Dropdown */}
-              <div className="relative hidden sm:flex gap-4">
-                {username === "Guest" ? (
-                    <button 
-                      className="flex items-center space-x-2 text-gray-500" 
-                      onClick={() => setIsSignInOpen(true)}
-                      aria-label="Sign in to your account"
-                    >
-                      <FaRegUser className="text-xl" />
-                      <span>Guest</span>
-                    </button>
-                ) : (
-                    <button
-                        className="flex items-center justify-between px-4 py-2 bg-bio-green text-white rounded-md w-40"
-                        onClick={toggleDropdown}
-                        aria-label="User account menu"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <FaRegUser className="text-xl" />
-                        <span>{username.slice(0, 5)}..</span>
-                      </div>
-                      <FaChevronDown />
-                    </button>
-                )}
-
-                {isDropdownOpen && (
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 bg-white rounded-lg shadow-lg w-40 z-50">
-                      <ul className="py-1">
-                        <li className="px-4 py-3 hover:bg-gray-50">
-                          <Link href="/profile" className="flex items-center">
-                            <FaRegUser className="mr-3 text-gray-600" />
-                            My Profile
-                          </Link>
-                        </li>
-
-                        <li className="px-4 py-3 hover:bg-gray-50">
-                          <Link href="/profile/trackorder" className="flex items-center">
-                            <TbCurrentLocation className="mr-3 text-gray-600" />
-                            Track Order
-                          </Link>
-                        </li>
-
-                        <li className="px-4 py-3 hover:bg-gray-50 cursor-pointer" onClick={handleLogOutClick}>
-                          <IoIosLogOut className="mr-3 text-gray-600" />
-                          Logout
-                        </li>
-                      </ul>
-                    </div>
-                )}
-              </div>
-            </div>
+          {/* MOBILE */}
+          <div className="sm:hidden flex justify-left items-center space-x-4">
+            <WithoutLoginHamburger />
+            <Link href="/" onClick={() => window.scrollTo({ top: -10 })}>
+              <Image
+                src={logo}
+                alt="Gidan Logo"
+                width={115}
+                height={82}
+                className="h-16 w-auto"
+                priority
+              />
+            </Link>
           </div>
 
-          {/* MOBILE Search */}
-          <div className="block sm:hidden mt-3">
-            <div className="relative">
+          {/* DESKTOP */}
+          <div className="hidden sm:flex items-center">
+            <Link href="/" onClick={() => window.scrollTo({ top: -10 })}>
+              <Image
+                src={logo}
+                alt="Gidan Logo"
+                width={172}
+                height={122}
+                className="h-24 max-h-32 w-auto object-contain"
+                priority
+              />
+
+            </Link>
+          </div>
+
+          {/* Search bar (Desktop) */}
+          <div className="flex-1 max-w-full mx-4 px-10 hidden sm:block">
+            <div className="relative w-full">
               <IoSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
-                  type="text"
-                  onChange={handleSearch}
-                  placeholder="Search for Products, Brands and More"
-                  className="w-full pl-10 pr-4 py-2 border text-sm border-gray-300 rounded-lg"
+                type="text"
+                value={searchTerm}
+                onChange={handleSearch}
+                placeholder="Search Products, Brands and More"
+                className="w-[90%] pl-10 pr-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:border-blue-500"
               />
             </div>
           </div>
-        </nav>
 
-        {/* Modals */}
-        {isSignInOpen && <SignIn onClose={() => setIsSignInOpen(false)} onGetOtpClick={handleGetOtpClick} onLoginSuccess={handleLoginSuccess} />}
+          {/* Icons */}
+          <div className="flex items-center md:space-x-6 space-x-4 md:pr-10">
 
-        {isVerificationOpen && <Verification onClose={() => setIsVerificationOpen(false)} onSubmit={handleVerificationSubmit} />}
+            <button
+              onClick={handleWishListClick}
+              className="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-bio-green hover:text-white"
+              aria-label="View wishlist"
+            >
+              <WishlistIconWithCount />
+            </button>
 
-        {isLoginOpen && <Login onClose={() => setIsLoginOpen(false)} />}
+            <button
+              onClick={handleCartClick}
+              className="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-bio-green hover:text-white"
+              aria-label="View shopping cart"
+            >
+              <CartIconWithCount />
+            </button>
 
-        {isWalletPopupOpen && <WalletActivation onClose={() => setIsWalletPopupOpen(false)} />}
+            <button
+              onClick={handleWalletClick}
+              className="hidden sm:flex w-12 h-12 items-center justify-center rounded-lg hover:bg-bio-green hover:text-white"
+              aria-label="View wallet"
+            >
+              <IoWalletOutline className="text-xl" />
+            </button>
 
-        {/* Wishlist Popper */}
-        <ClickAwayListener onClickAway={handleClickAway}>
-          <div>
-            <Popper open={openPopper} anchorEl={anchorEl} placement="bottom" transition style={{ zIndex: 1000 }}>
-              {({ TransitionProps }) => (
-                  <Fade {...TransitionProps}>
-                    <Box className="w-80 p-4 mt-10 shadow-lg rounded-lg bg-white border">
-                      <p className="text-center text-md">To add or view items in your wishlist, please sign in first.</p>
-                      <div className="text-center mt-4">
-                        <button 
-                          onClick={handleSignIn} 
-                          className="border border-green-500 text-green-500 px-4 py-2 rounded-md"
-                          aria-label="Sign in to view wishlist"
-                        >
-                          Sign In
-                        </button>
-                      </div>
-                    </Box>
-                  </Fade>
-              )}
-            </Popper>
-          </div>
-        </ClickAwayListener>
-
-        {/* Logout Modal */}
-        {isLogoutDialogOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-              <div className="bg-white p-6 rounded-lg shadow-lg w-96 text-center">
-                <h3 className="text-lg font-semibold mb-4">Logout</h3>
-                <img src={LogoutGif} alt="Logout" className="mx-auto w-40 mb-4" />
-                <p className="mb-6">Are you sure you want to logout?</p>
-                <div className="flex justify-around">
-                  <button 
-                    className="bg-gray-300 px-4 py-2 rounded" 
-                    onClick={handleCancelLogout}
-                    aria-label="Cancel logout"
-                  >
-                    Cancel
-                  </button>
-                  <button 
-                    className="bg-red-500 text-white px-4 py-2 rounded" 
-                    onClick={handleLogOutConfirm}
-                    aria-label="Confirm logout"
-                  >
-                    Logout
-                  </button>
-                </div>
-              </div>
-            </div>
-        )}
-
-        {/* Empty Cart Popup */}
-        {isCartOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" onClick={() => setIsCartOpen(false)}>
-              <div className="bg-white p-6 rounded-lg w-80 text-center" onClick={(e) => e.stopPropagation()}>
-                <img src={empty} alt="Empty Cart" className="mx-auto mb-4" />
-                <h2 className="text-lg font-semibold mb-4">Your cart is currently empty</h2>
-                <button 
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md" 
-                  onClick={() => setIsCartOpen(false)}
-                  aria-label="Close empty cart message and add products"
+            {/* User Dropdown */}
+            <div className="relative hidden sm:flex gap-4">
+              {username === "Guest" ? (
+                <button
+                  className="flex items-center space-x-2 text-gray-500"
+                  onClick={() => setIsSignInOpen(true)}
+                  aria-label="Sign in to your account"
                 >
-                  Add Products
+                  <FaRegUser className="text-xl" />
+                  <span>Guest</span>
                 </button>
-              </div>
+              ) : (
+                <button
+                  className="flex items-center justify-between px-4 py-2 bg-bio-green text-white rounded-md w-40"
+                  onClick={toggleDropdown}
+                  aria-label="User account menu"
+                >
+                  <div className="flex items-center space-x-2">
+                    <FaRegUser className="text-xl" />
+                    <span>{username.slice(0, 5)}..</span>
+                  </div>
+                  <FaChevronDown />
+                </button>
+              )}
+
+              {isDropdownOpen && (
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 bg-white rounded-lg shadow-lg w-40 z-50">
+                  <ul className="py-1">
+                    <li className="px-4 py-3 hover:bg-gray-50">
+                      <Link href="/profile" className="flex items-center">
+                        <FaRegUser className="mr-3 text-gray-600" />
+                        My Profile
+                      </Link>
+                    </li>
+
+                    <li className="px-4 py-3 hover:bg-gray-50">
+                      <Link href="/profile/trackorder" className="flex items-center">
+                        <TbCurrentLocation className="mr-3 text-gray-600" />
+                        Track Order
+                      </Link>
+                    </li>
+
+                    <li className="px-4 py-3 hover:bg-gray-50 cursor-pointer" onClick={handleLogOutClick}>
+                      <IoIosLogOut className="mr-3 text-gray-600" />
+                      Logout
+                    </li>
+                  </ul>
+                </div>
+              )}
             </div>
-        )}
-      </div>
+          </div>
+        </div>
+
+        {/* MOBILE Search */}
+        <div className="block sm:hidden mt-3">
+          <div className="relative">
+            <IoSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              onChange={handleSearch}
+              placeholder="Search for Products, Brands and More"
+              className="w-full pl-10 pr-4 py-2 border text-sm border-gray-300 rounded-lg"
+            />
+          </div>
+        </div>
+      </nav>
+
+      {/* Modals */}
+      {isSignInOpen && <SignIn onClose={() => setIsSignInOpen(false)} onGetOtpClick={handleGetOtpClick} onLoginSuccess={handleLoginSuccess} />}
+
+      {isVerificationOpen && <Verification onClose={() => setIsVerificationOpen(false)} onSubmit={handleVerificationSubmit} />}
+
+      {isLoginOpen && <Login onClose={() => setIsLoginOpen(false)} />}
+
+      {isWalletPopupOpen && <WalletActivation onClose={() => setIsWalletPopupOpen(false)} />}
+
+      {/* Wishlist Popper */}
+      <ClickAwayListener onClickAway={handleClickAway}>
+        <div>
+          <Popper open={openPopper} anchorEl={anchorEl} placement="bottom" transition style={{ zIndex: 1000 }}>
+            {({ TransitionProps }) => (
+              <Fade {...TransitionProps}>
+                <Box className="w-80 p-4 mt-10 shadow-lg rounded-lg bg-white border">
+                  <p className="text-center text-md">To add or view items in your wishlist, please sign in first.</p>
+                  <div className="text-center mt-4">
+                    <button
+                      onClick={handleSignIn}
+                      className="border border-green-500 text-green-500 px-4 py-2 rounded-md"
+                      aria-label="Sign in to view wishlist"
+                    >
+                      Sign In
+                    </button>
+                  </div>
+                </Box>
+              </Fade>
+            )}
+          </Popper>
+        </div>
+      </ClickAwayListener>
+
+      {/* Logout Modal */}
+      {isLogoutDialogOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96 text-center">
+            <h3 className="text-lg font-semibold mb-4">Logout</h3>
+            <Image src={LogoutGif} alt="Logout" width={160} height={160} className="mx-auto mb-4" />
+            <p className="mb-6">Are you sure you want to logout?</p>
+            <div className="flex justify-around">
+              <button
+                className="bg-gray-300 px-4 py-2 rounded"
+                onClick={handleCancelLogout}
+                aria-label="Cancel logout"
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded"
+                onClick={handleLogOutConfirm}
+                aria-label="Confirm logout"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Empty Cart Popup */}
+      {isCartOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" onClick={() => setIsCartOpen(false)}>
+          <div className="bg-white p-6 rounded-lg w-80 text-center" onClick={(e) => e.stopPropagation()}>
+            <Image src={empty} alt="Empty Cart" width={320} height={240} className="mx-auto mb-4" />
+            <h2 className="text-lg font-semibold mb-4">Your cart is currently empty</h2>
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+              onClick={() => setIsCartOpen(false)}
+              aria-label="Close empty cart message and add products"
+            >
+              Add Products
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
