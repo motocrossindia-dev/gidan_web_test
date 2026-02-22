@@ -110,7 +110,7 @@ const ProductGrid = ({
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 justify-items-center font-sans">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 justify-items-center font-sans">
           {productDetails?.map((product, index) => {
             const isLast = index === productDetails.length - 1;
             const key = product?.prod_id || product?.id || index;
@@ -146,8 +146,8 @@ const ProductGrid = ({
             onClick={() => fetchPage(prevUrl)}
             disabled={!prevUrl || loading}
             className={`px-6 py-2 rounded-md border text-sm font-medium transition-colors ${!prevUrl || loading
-                ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100 hover:text-green-700"
+              ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+              : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100 hover:text-green-700"
               }`}
           >
             Previous
@@ -157,8 +157,8 @@ const ProductGrid = ({
             onClick={() => fetchPage(nextUrl)}
             disabled={!nextUrl || loading}
             className={`px-6 py-2 rounded-md border text-sm font-medium transition-colors ${!nextUrl || loading
-                ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100 hover:text-green-700"
+              ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+              : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100 hover:text-green-700"
               }`}
           >
             Next
