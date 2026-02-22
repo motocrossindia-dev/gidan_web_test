@@ -136,7 +136,7 @@ const CategoryIcons = () => {
               >
                 <div className="bg-white border border-gray-300 shadow-xl rounded-lg p-3 sm:p-4">
                   <h3 className="text-bio-green font-bold mb-2 text-sm sm:text-base">
-                    {category.name}
+                    {category.name}w
                   </h3>
                   {category.subCategory && category.subCategory.length > 0 ? (
                     <ul className="text-gray-700 space-y-1">
