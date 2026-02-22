@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export default function FeaturedPage() {
-  return <PlantFilter />;
+import { fetchProductsByFilters } from "@/utils/serverApi";
+
+export default async function FeaturedPage() {
+  const initialResults = await fetchProductsByFilters({ is_featured: true });
+  return <PlantFilter initialResults={initialResults} />;
 }
