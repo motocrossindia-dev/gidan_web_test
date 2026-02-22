@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 // ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import SeasonalCard from "../Shared/ProductCard";
@@ -72,25 +73,36 @@ const SeasonalProduct = () => {
 
         <div className="max-w-7xl mx-auto px-3">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 justify-items-center">
-            {visibleProducts.map((product, index) => (
-              <div key={product?.id} onClick={() => handleProductClick(product)}>
-                <SeasonalCard
-                  index={index}
-                  product={product}
-                  name={product?.name}
-                  price={Math.round(product?.selling_price)}
-                  oldPrice={Math.round(product?.oldPrice)}
-                  imageUrl={product?.image || "/fallback-image.jpg"}
-                  userRating={product?.product_rating?.avg_rating || 0}
-                  ratingNumber={product?.product_rating?.num_ratings}
-                  inCart={product?.is_cart}
-                  inWishlist={product?.is_wishlist}
-                  getProducts={refetch}
-                  mrp={Math.round(product.mrp)}
-                  ribbon={product.ribbon}
-                />
-              </div>
-            ))}
+            {visibleProducts.map((product, index) => {
+              const category_slug = product?.category_slug;
+              const sub_category_slug = product?.sub_category_slug || "all";
+              const productUrl = `/${category_slug}/${sub_category_slug}/${product.slug}/`;
+
+              return (
+                <Link
+                  key={product?.id}
+                  href={productUrl}
+                  onClick={() => window.scrollTo(0, 0)}
+                  className="block w-full"
+                >
+                  <SeasonalCard
+                    index={index}
+                    product={product}
+                    name={product?.name}
+                    price={Math.round(product?.selling_price)}
+                    oldPrice={Math.round(product?.oldPrice)}
+                    imageUrl={product?.image || "/fallback-image.jpg"}
+                    userRating={product?.product_rating?.avg_rating || 0}
+                    ratingNumber={product?.product_rating?.num_ratings}
+                    inCart={product?.is_cart}
+                    inWishlist={product?.is_wishlist}
+                    getProducts={refetch}
+                    mrp={Math.round(product.mrp)}
+                    ribbon={product.ribbon}
+                  />
+                </Link>
+              );
+            })}
           </div>
         </div>
 
@@ -98,13 +110,12 @@ const SeasonalProduct = () => {
           <button aria-label="Previous" className="bg-white w-[30.24px] h-[30.24px] flex items-center justify-center rounded-full mx-1 border">
             <span className="text-bio-green"><FaAngleLeft /></span>
           </button>
-          <button
-            aria-label="View all"
-            onClick={() => router.push('/seasonal/')}
-            className="bg-bio-green text-white w-[94px] h-[34px] rounded mx-1"
+          <Link
+            href="/seasonal/"
+            className="bg-bio-green text-white w-[94px] h-[34px] rounded mx-1 flex items-center justify-center text-sm"
           >
             View All
-          </button>
+          </Link>
           <button aria-label="Next" className="bg-white w-[30.24px] h-[30.24px] flex items-center justify-center rounded-full mx-1 border">
             <span className="text-bio-green"><FaAngleRight /></span>
           </button>

@@ -13,12 +13,21 @@ export async function fetchCategoryBySlug(slug) {
     }
 }
 
-export async function fetchSubcategoryBySlug(categorySlug, subcategorySlug) {
+export async function fetchSubcategories(categorySlug) {
     try {
         const res = await fetch(`${API_URL}/category/categoryWiseSubCategory/${categorySlug}/`, { next: { revalidate: 300 } });
-        if (!res.ok) return null;
+        if (!res.ok) return [];
         const data = await res.json();
-        const subcategories = data?.data?.subCategorys || [];
+        return data?.data?.subCategorys || [];
+    } catch (err) {
+        console.error("Error fetching subcategories", err);
+        return [];
+    }
+}
+
+export async function fetchSubcategoryBySlug(categorySlug, subcategorySlug) {
+    try {
+        const subcategories = await fetchSubcategories(categorySlug);
         return subcategories.find(s => s.slug === subcategorySlug) || null;
     } catch (err) {
         console.error("Error fetching subcategory", err);
@@ -51,7 +60,7 @@ export async function fetchProductsByFilters(filters = {}) {
         const res = await fetch(url, { next: { revalidate: 300 } });
         if (!res.ok) return [];
         const data = await res.json();
-        return data?.data?.products || [];
+        return data?.results || [];
     } catch (err) {
         console.error("Error fetching products", err);
         return [];

@@ -32,25 +32,27 @@ const OfferCard = ({ title, description, buttonText, image, link }) => (
   </div>
 );
 
-const SideOfferCard = ({ title, description, image }) => (
-  <div className="bg-[#4A664A] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full">
-    <div className="flex h-full min-h-[160px] sm:min-h-[180px] md:min-h-[185px]">
-      {/* Content Section */}
-      <div className="w-1/2 p-3 sm:p-4 md:p-5 text-white flex flex-col justify-center">
-        <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold mb-1.5 md:mb-2 leading-tight">{title}</h3>
-        <p className="text-[11px] sm:text-xs md:text-sm leading-relaxed line-clamp-3 md:line-clamp-4">{description}</p>
-      </div>
-      
-      {/* Image Section */}
-      <div className="w-1/2">
-        <img 
-          src={image} 
-          alt={title} 
-          className="w-full h-full object-cover" 
-        />
+const SideOfferCard = ({ title, description, image, link }) => (
+  <Link href={link || "/filter"} className="block h-full">
+    <div className="bg-[#4A664A] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full">
+      <div className="flex h-full min-h-[160px] sm:min-h-[180px] md:min-h-[185px]">
+        {/* Content Section */}
+        <div className="w-1/2 p-3 sm:p-4 md:p-5 text-white flex flex-col justify-center">
+          <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold mb-1.5 md:mb-2 leading-tight">{title}</h3>
+          <p className="text-[11px] sm:text-xs md:text-sm leading-relaxed line-clamp-3 md:line-clamp-4">{description}</p>
+        </div>
+
+        {/* Image Section */}
+        <div className="w-1/2">
+          <img
+            src={image}
+            alt={title}
+            className="w-full h-full object-cover"
+          />
+        </div>
       </div>
     </div>
-  </div>
+  </Link>
 );
 
 const OfferReward = () => {
@@ -95,14 +97,14 @@ const OfferReward = () => {
     link:
       item.title === "Deal of the week" && id
         ? `/product/${id}`
-        : "/gifts",
+        : "/gifts/",
   }));
 
   const sideOffers = contentBlocks.slice(2, 5).map((item) => ({
     title: item.title,
     description: item.subtitle,
     image: item.image,
-    link: "/filter",
+    link: "/trending/",
   }));
 
   if (!contentBlocks.length) return null;

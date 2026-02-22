@@ -29,8 +29,10 @@ Disallow: /thankyou
 Disallow: /hamburger
 Disallow: /side
 
-# Disallow Next.js internal assets
-Disallow: /_next/
+# Allow Next.js CSS/assets for rendering, block JS chunks from indexing
+Disallow: /_next/static/chunks/
+Allow: /_next/static/css/
+Allow: /_next/static/media/
 
 # Disallow admin/API endpoints
 Disallow: /api/

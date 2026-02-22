@@ -10,6 +10,8 @@ import { FaRegHeart } from "react-icons/fa";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { FiEye } from "react-icons/fi";
 import TrendingCard from '../../../components/Shared/ProductCard';
+import { getProductUrl } from "../../../utils/urlHelper";
+
 
 
 const ProductSeller = () => {
@@ -33,22 +35,18 @@ const ProductSeller = () => {
   }, []);
 
   const handleProductClick = (product) => {
-    const category_slug = product?.category_slug;
-    const sub_category_slug = product?.sub_category_slug || "all";
-    const product_slug = product?.slug;
-
-    // Standardized 3-segment URL pattern: /:category/:subcategory/:productSlug/
-    router.push(`/${category_slug}/${sub_category_slug}/${product_slug}/`, {
+    router.push(getProductUrl(product), {
       state: {
-        product_id: product_slug,
-        category_slug: category_slug,
-        sub_category_slug: sub_category_slug
+        product_id: product?.slug,
+        category_slug: product?.category_slug,
+        sub_category_slug: product?.sub_category_slug
       }
     });
 
     // Scroll to top when navigating to new product
     window.scrollTo(0, 0);
   };
+
 
   return (
     <div className="my-8 p-4 bg-white rounded-md">

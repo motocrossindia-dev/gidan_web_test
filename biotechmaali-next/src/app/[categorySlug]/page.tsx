@@ -32,23 +32,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `${name} Plants | Gidan`,
       description: `Shop ${name.toLowerCase()} plants and accessories at Gidan, India's trusted online plant store.`,
-      url: `https://www.gidan.store/${categorySlug}`,
+      url: `https://www.gidan.store/${categorySlug}/`,
       siteName: "Gidan Plants",
       locale: "en_IN",
       type: "website",
     },
-    alternates: { canonical: `https://www.gidan.store/${categorySlug}` },
+    alternates: { canonical: `https://www.gidan.store/${categorySlug}/` },
   };
 }
 
-import { fetchCategoryBySlug, fetchProductsByFilters } from "@/utils/serverApi";
+import { fetchCategoryBySlug, fetchSubcategoryBySlug, fetchProductsByFilters, fetchSubcategories } from "@/utils/serverApi";
 
 export default async function CategoryPage({ params }: Props) {
   const { categorySlug } = await params;
 
-  // 1. Fetch category data on server
-  const category = await fetchCategoryBySlug(categorySlug);
+  // 1. Fetch category and subcategories data on server
+  const [category, subcategories] = await Promise.all([
+    fetchCategoryBySlug(categorySlug),
+    fetchSubcategories(categorySlug)
+  ]);
+
   if (!category) notFound();
+
+  // Attach subCategory to category object for PlantFilter
+  const categoryWithSubs = { ...category, subCategory: subcategories };
 
   // 2. Fetch initial products for this category
   // Map category names to internal types if necessary
@@ -67,5 +74,5 @@ export default async function CategoryPage({ params }: Props) {
     // For hydration, we pre-fetch the main list.
   });
 
-  return <PlantFilter initialResults={initialResults} initialCategoryData={category} />;
+  return <PlantFilter initialResults={initialResults} initialCategoryData={categoryWithSubs} />;
 }

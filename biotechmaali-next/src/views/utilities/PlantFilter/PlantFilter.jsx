@@ -17,6 +17,7 @@ import CategorySchema from "../seo/CategorySchema";
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
 import Breadcrumb from "../../../components/Shared/Breadcrumb";
+import Link from "next/link";
 
 const CategoryLayout = ({ data }) => {
     return (
@@ -372,6 +373,21 @@ function PlantFilter({ initialResults = [], initialCategoryData = null } = {}) {
                             setIsSearching={setIsSearching}
                         />
                     </div>
+
+                    {/* Subcategory links specifically for crawler discovery and quick navigation */}
+                    {!subcategorySlug && initialCategoryData?.subCategory && initialCategoryData.subCategory.length > 0 && (
+                        <div className="flex flex-wrap gap-3 mb-6">
+                            {initialCategoryData.subCategory.map((sub) => (
+                                <Link
+                                    key={sub.id}
+                                    href={`/${categorySlug}/${sub.slug}/`}
+                                    className="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium text-gray-700 hover:border-green-600 hover:text-green-600 transition-all shadow-sm"
+                                >
+                                    {sub.name}
+                                </Link>
+                            ))}
+                        </div>
+                    )}
 
                     {/* Product Grid */}
                     <div className={`mt-4 transition-opacity duration-300 ${isSearching ? "opacity-50 pointer-events-none" : "opacity-100"}`}>

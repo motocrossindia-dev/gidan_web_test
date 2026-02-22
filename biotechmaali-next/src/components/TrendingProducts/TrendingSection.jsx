@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 // ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
 import { useState, useEffect, useCallback, useMemo } from "react";
 import TrendingCard from "./../Shared/ProductCard";
@@ -135,47 +136,49 @@ const TrendingSection = () => {
 
       <div className="max-w-7xl mx-auto px-3">
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:mx-10 gap-4 lg:gap-2 justify-items-center">
-          {visibleProducts.map((product, index) => (
-            <div
-              key={index}
-              onClick={() => handleProductClick(product)}
-              className="cursor-pointer block w-full"
-            >
-              <TrendingCard
-                index={index}
-                name={product?.name}
-                price={Math.round(product?.selling_price)}
-                oldPrice={Math.round(product?.oldPrice)}
-                imageUrl={product?.image}
-                product={product}
-                userRating={product?.product_rating?.avg_rating}
-                ratingNumber={product?.product_rating?.num_ratings}
-                inWishlist={product?.is_wishlist}
-                inCart={product?.is_cart}
-                getProducts={refetch}
-                mrp={Math.round(product?.mrp)}
-                ribbon={product.ribbon}
-              />
-            </div>
-          ))}
+          {visibleProducts.map((product, index) => {
+            const category_slug = product?.category_slug;
+            const sub_category_slug = product?.sub_category_slug || "all";
+            return (
+              <Link
+                key={index}
+                href={`/${category_slug}/${sub_category_slug}/${product.slug}/`}
+                className="cursor-pointer block w-full"
+                onClick={() => window.scrollTo(0, 0)}
+              >
+                <TrendingCard
+                  index={index}
+                  name={product?.name}
+                  price={Math.round(product?.selling_price)}
+                  oldPrice={Math.round(product?.oldPrice)}
+                  imageUrl={product?.image}
+                  product={product}
+                  userRating={product?.product_rating?.avg_rating}
+                  ratingNumber={product?.product_rating?.num_ratings}
+                  inWishlist={product?.is_wishlist}
+                  inCart={product?.is_cart}
+                  getProducts={refetch}
+                  mrp={Math.round(product?.mrp)}
+                  ribbon={product.ribbon}
+                />
+              </Link>
+            );
+          })}
         </div>
       </div>
 
       <div className="flex justify-center mt-4">
-        <button
-          aria-label="View all"
-          onClick={() => {
-            const route =
-              selectedTab === "featured" ? "/featured/" :
-                selectedTab === "bestseller" ? "/bestseller/" :
-                  selectedTab === "latest" ? "/latest/" :
-                    "/trending/";
-            router.push(route);
-          }}
-          className="bg-white text-bio-green-text w-[94px] h-[34px] border border-bio-green rounded mx-1 hover:bg-bio-green hover:text-white transition-colors"
+        <Link
+          href={
+            selectedTab === "featured" ? "/featured/" :
+              selectedTab === "bestseller" ? "/bestseller/" :
+                selectedTab === "latest" ? "/latest/" :
+                  "/trending/"
+          }
+          className="bg-white text-bio-green-text w-fit min-w-[94px] h-[34px] px-4 border border-bio-green rounded mx-1 hover:bg-bio-green hover:text-white transition-colors flex items-center justify-center text-sm"
         >
           View All
-        </button>
+        </Link>
       </div>
     </div>
   );

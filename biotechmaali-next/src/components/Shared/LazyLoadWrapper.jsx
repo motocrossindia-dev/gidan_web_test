@@ -14,48 +14,59 @@ const LazyLoadWrapper = ({
   threshold = 0.01,
   placeholder = null,
 }) => {
-  const [isInView, setIsInView] = useState(false);
+  const [shouldRender, setShouldRender] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
+    setHasMounted(true);
+
+    // If it was already rendered by SSR, we might want to keep it
+    // But to truly lazy load on client, we need to observe.
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setIsInView(true);
-            observer.disconnect(); // Stop observing once loaded
+            setShouldRender(true);
+            observer.disconnect();
           }
         });
       },
-      {
-        rootMargin,
-        threshold,
-      }
+      { rootMargin, threshold }
     );
 
     if (ref.current) {
       observer.observe(ref.current);
     }
 
-    return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
-    };
+    return () => observer.disconnect();
   }, [rootMargin, threshold]);
+
+  // Logic: 
+  // 1. On Server (!hasMounted): Render children for SEO.
+  // 2. On Client Initial Render (!hasMounted): Render children to match server.
+  // 3. On Client Post-Mount: 
+  //    - If shouldRender is true (is in view), render children.
+  //    - If shouldRender is false (not yet in view), render children IF they were already there from SSR?
+  //      To avoid the flash, we can't hide them once they've been hydrated.
+  //      However, the current goal is to only lazy load strictly if NOT SSR'd.
+  //      Since we WANT SSR integrity, we will render children if !hasMounted.
+  //      To avoid the flash on hydration:
+
+  const effectivelyInView = shouldRender || !hasMounted;
 
   return (
     <div
       ref={ref}
-      className={`transition-opacity duration-500 ease-in-out ${isInView ? 'opacity-100' : 'opacity-0'}`}
+      className={`transition-opacity duration-700 ease-in-out ${effectivelyInView ? 'opacity-100' : 'opacity-0'}`}
       style={{ minHeight: height }}
     >
-      {isInView ? (
+      {effectivelyInView ? (
         children
       ) : (
         placeholder || (
           <div
-            className="w-full bg-gray-100 animate-pulse"
+            className="w-full bg-gray-50 animate-pulse"
             style={{ height }}
           />
         )

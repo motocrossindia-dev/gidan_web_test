@@ -38,25 +38,6 @@ const CategoryIcons = ({ initialData }) => {
     return () => document.removeEventListener('click', handleClickOutside);
   }, [openDropdown]);
 
-  const getCategorywiseProduct = (id, categoryname, slug, typeKey) => {
-    // Always navigate directly on mobile (no dropdown toggle)
-    if (categoryname === "GIFTS") {
-      router.push(`/gifts/`);
-    } else if (categoryname === "SERVICES") {
-      router.push(`/services/`);
-    } else if (categoryname === "OFFERS") {
-      router.push(`/offer/`);
-    } else {
-      router.push(`/${slug}/`, {
-        state: {
-          categoryId: id,
-          categoryName: categoryname,
-          category_slug: slug,
-          typeKey: typeKey || ''
-        }
-      });
-    }
-  };
 
   // Desktop Hover Handlers
   const handleCategoryHover = (categoryId, hasSubcategories) => {
@@ -100,17 +81,14 @@ const CategoryIcons = ({ initialData }) => {
               onMouseLeave={handleCategoryLeave}
             >
               <div className="flex flex-col items-center">
-                <div
+                <Link
+                  href={
+                    category.name === "GIFTS" ? "/gifts/" :
+                      category.name === "SERVICES" ? "/services/" :
+                        category.name === "OFFERS" ? "/offer/" :
+                          `/${category.slug}/`
+                  }
                   className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 lg:w-20 lg:h-20 xl:w-22 xl:h-22 border-2 border-gray-400 hover:border-gray-500 rounded-full flex items-center justify-center bg-white shadow-md overflow-hidden transition-all duration-200 hover:shadow-lg cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    getCategorywiseProduct(
-                      category.id,
-                      category.name,
-                      category.slug,
-                      category.typeKey || categoryToTypeMap[category.name] || ''
-                    );
-                  }}
                 >
                   <Image
                     src={`${process.env.NEXT_PUBLIC_API_URL}${category.image}`}
@@ -121,10 +99,19 @@ const CategoryIcons = ({ initialData }) => {
                     height={88}
                     sizes="(max-width: 640px) 64px, (max-width: 768px) 72px, 88px"
                   />
-                </div>
-                <h2 className="mt-2 text-center text-xs sm:text-sm md:text-base font-medium text-gray-800 max-w-[70px] xs:max-w-[80px] sm:max-w-[90px] md:max-w-[100px] lg:max-w-[110px] leading-tight">
-                  {category.name}
-                </h2>
+                </Link>
+                <Link
+                  href={
+                    category.name === "GIFTS" ? "/gifts/" :
+                      category.name === "SERVICES" ? "/services/" :
+                        category.name === "OFFERS" ? "/offer/" :
+                          `/${category.slug}/`
+                  }
+                >
+                  <h2 className="mt-2 text-center text-xs sm:text-sm md:text-base font-medium text-gray-800 max-w-[70px] xs:max-w-[80px] sm:max-w-[90px] md:max-w-[100px] lg:max-w-[110px] leading-tight hover:text-bio-green transition-colors">
+                    {category.name}
+                  </h2>
+                </Link>
               </div>
 
               {/* Dropdown - Desktop only, smart positioning to prevent overflow */}

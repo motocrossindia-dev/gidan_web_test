@@ -24,13 +24,23 @@ export function Providers({ children }: { children: React.ReactNode }) {
       })
   );
 
+  const [hasMounted, setHasMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
+          {hasMounted ? (
+            <PersistGate loading={null} persistor={persistor}>
+              <SnackbarProvider maxSnack={3}>{children}</SnackbarProvider>
+            </PersistGate>
+          ) : (
             <SnackbarProvider maxSnack={3}>{children}</SnackbarProvider>
-          </PersistGate>
+          )}
         </Provider>
       </QueryClientProvider>
     </HelmetProvider>

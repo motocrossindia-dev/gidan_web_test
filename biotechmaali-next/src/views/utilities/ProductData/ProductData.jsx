@@ -32,6 +32,9 @@ import StoreSchema from "../seo/StoreSchema";
 import { trackViewItem, trackAddToCart } from "../../../utils/ga4Ecommerce";
 import Breadcrumb from "../../../components/Shared/Breadcrumb";
 import convertToSlug from "../../../utils/slugConverter";
+import { toSlugString } from "../../../utils/urlHelper";
+
+
 
 const productdata =
     "https://firebasestorage.googleapis.com/v0/b/zpos-uk.appspot.com/o/67977213135ebb17c407e687%2F2025%2F1%2F1738430215367_scaled_Peacelilly.png?alt=media";
@@ -167,7 +170,6 @@ export default function Component({ initialProductData }) {
 
         Object.entries(variantParams).forEach(([key, value]) => {
             if (value) {
-                // If it's an object, get the id, otherwise use value
                 const idValue = (typeof value === 'object' && value !== null) ? value.id : value;
                 urlParams.set(key, idValue);
             } else {
@@ -177,34 +179,47 @@ export default function Component({ initialProductData }) {
 
         const queryString = urlParams.toString();
 
-        // Normalize the base slug from main_product_name to ensure it's the "short" version
-        // Fallback to params.productSlug if name is missing
+        // Use the main product name to derive a stable base slug (e.g., eva-planter)
         const baseSlug = newProduct?.main_product_name
             ? convertToSlug(newProduct.main_product_name)
             : params.productSlug;
 
-        const catSlug = newProduct?.category_slug || params.categorySlug;
-        const subCatSlug = newProduct?.sub_category_slug || params.subcategorySlug || "all";
+        const catSlug = toSlugString(newProduct?.category_slug) || params.categorySlug;
+        const subCatSlug = toSlugString(newProduct?.sub_category_slug) || params.subcategorySlug || "all";
 
-        const newUrl = `/${catSlug}/${subCatSlug}/${baseSlug}/${queryString ? '?' + queryString : ''}`;
+
+        const newUrl = `/${catSlug}/${subCatSlug}/${baseSlug}${queryString ? '?' + queryString : ''}`;
 
         window.history.replaceState(null, "", newUrl);
         setCurrentUrl(newUrl);
     };
 
-    // ⬆️ Scroll to top and handle URL standardization
+
+    // ⬆️ Scroll to top on navigation
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    }, [pathname]);
 
-        // If we have product data and the current slug in the path is NOT the base slug,
-        // trigger an update to clean it up. This handles landing on variant-specific URLs.
-        if (product?.main_product_name) {
-            const expectedSlug = convertToSlug(product.main_product_name);
-            if (params.productSlug !== expectedSlug) {
-                updateUrlWithParams(product);
-            }
+    // URL normalization: ensure the URL uses the main product slug
+    // This fires when product data becomes available (from SSR or fetch)
+    useEffect(() => {
+        if (!product?.main_product_name) return;
+
+        const expectedSlug = convertToSlug(product.main_product_name);
+        const currentSlug = params.productSlug;
+
+        // Only normalize if the current slug doesn't match the main product slug
+        if (currentSlug && currentSlug !== expectedSlug) {
+            const catSlug = toSlugString(product?.category_slug) || params.categorySlug;
+            const subCatSlug = toSlugString(product?.sub_category_slug) || params.subcategorySlug || "all";
+            const cleanUrl = `/${catSlug}/${subCatSlug}/${expectedSlug}`;
+            window.history.replaceState(null, "", cleanUrl);
+            setCurrentUrl(cleanUrl);
         }
-    }, [pathname, params.productSlug, product?.main_product_name]);
+    }, [product?.main_product_name]);
+
+
+
 
     const handlePincodeChange = (e) => {
         const value = e.target.value;
@@ -691,8 +706,9 @@ export default function Component({ initialProductData }) {
                         trackViewItem(data.data.product);
                     }
 
-                    // Update URL with query parameters
-                    updateUrlWithParams(data?.data?.product);
+                    // Do NOT call updateUrlWithParams here — params should only
+                    // be added when the user explicitly changes a variant.
+                    // The URL normalization useEffect handles the clean slug.
 
                     setproduct_slug(data?.data?.product?.slug || id);
                     setcategory_slug(data?.data?.product?.category_slug);
@@ -877,8 +893,13 @@ export default function Component({ initialProductData }) {
     const metaKeywords =
         product?.meta_keywords || "gardening, plants, seeds, pots, plant care";
 
-    // Canonical URL - Use currentUrl state to ensure it always matches and triggers re-renders
-    const canonicalUrl = `https://www.gidan.store/${currentUrl}`;
+    // Canonical URL - Always use the clean main product slug for crawlers
+    const cleanProductSlug = product?.main_product_name
+        ? convertToSlug(product.main_product_name)
+        : params.productSlug;
+    const cleanCatSlug = toSlugString(product?.category_slug) || params.categorySlug;
+    const cleanSubCatSlug = toSlugString(product?.sub_category_slug) || params.subcategorySlug || "all";
+    const canonicalUrl = `https://www.gidan.store/${cleanCatSlug}/${cleanSubCatSlug}/${cleanProductSlug}`;
 
     // OG image fallback
     const ogImage =

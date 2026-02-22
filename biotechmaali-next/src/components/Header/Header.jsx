@@ -1,10 +1,8 @@
 'use client';
 
-import React from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const Header = () => {
-  const router = useRouter();
 
   return (
     <header className="bg-gradient-to-r from-[#062e25] via-[#062e25] to-white font-poppins">
@@ -25,13 +23,13 @@ const Header = () => {
             <p className="font-semibold">+91 7483316150</p>
           </div>
 
-          <button
-            onClick={() => router.push("/franchise-enquiry")}
+          <Link
+            href="/franchise-enquiry"
             className="bg-bio-green text-white font-bold uppercase whitespace-nowrap rounded-lg px-2 md:py-1
-            hover:bg-green-700 transition text-[11px] md:text-[13px]"
+            hover:bg-green-700 transition text-[11px] md:text-[13px] flex items-center justify-center"
           >
             Franchise Enquiry
-          </button>
+          </Link>
         </div>
 
       </div>

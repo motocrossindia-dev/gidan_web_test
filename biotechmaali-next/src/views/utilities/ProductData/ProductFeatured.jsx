@@ -10,6 +10,8 @@ import { FaRegHeart } from "react-icons/fa";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { FiEye } from "react-icons/fi";
 import TrendingCard from '../../../components/Shared/ProductCard';
+import { getProductUrl } from "../../../utils/urlHelper";
+
 
 const ProductFeatured = () => {
   const [products, setProducts] = useState([]);
@@ -31,22 +33,18 @@ const ProductFeatured = () => {
   }, []);
 
   const handleProductClick = (product) => {
+    router.push(getProductUrl(product), {
+      state: {
+        product_id: product.id,
+        category_slug: product?.category_slug,
+        sub_category_slug: product?.sub_category_slug
+      }
+    });
 
-      const category_slug = product?.category_slug;
-      const sub_category_slug = product?.sub_category_slug;
-
-      // All products have category, subcategory, and product slug
-      router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {       state: {
-              product_id: product.id,
-              category_slug:category_slug,
-              sub_category_slug:sub_category_slug
-
-          } });
-
-      // Scroll to top when navigating to new product
-      window.scrollTo(0, 0);
-
+    // Scroll to top when navigating to new product
+    window.scrollTo(0, 0);
   };
+
 
   return (
     <div className="my-8 p-4 bg-white rounded-md">
@@ -90,13 +88,13 @@ const ProductFeatured = () => {
                       />
                     </div> */}
 
-                      <div className="relative w-full flex justify-center mb-3">
-                           <img
-                                                    className="w-full h-40 object-cover rounded-lg transition-transform duration-300 relative z-10"
-                                                    src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
-                                                    alt={product.name}
-                                                />
-                        </div>
+                    <div className="relative w-full flex justify-center mb-3">
+                      <img
+                        className="w-full h-40 object-cover rounded-lg transition-transform duration-300 relative z-10"
+                        src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
+                        alt={product.name}
+                      />
+                    </div>
 
                     {/* Action Icons */}
                     <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 transition-all duration-300 z-20 opacity-0 hover:opacity-100 hover:translate-y-0">
@@ -145,33 +143,33 @@ const ProductFeatured = () => {
 
 
                       {/* Product Name */}
-                                                  <Typography sx={{ typography: { xs: "caption", md: "subtitle2" } }} style={{ fontWeight: "bold", color: "black", fontSize: "0.9rem" }}>
-                                                      {/* {product.name.length > 12
+                      <Typography sx={{ typography: { xs: "caption", md: "subtitle2" } }} style={{ fontWeight: "bold", color: "black", fontSize: "0.9rem" }}>
+                        {/* {product.name.length > 12
                                                           ? `${product.name.slice(0, 11)}..`
                                                           : product.name} */}
-                                                          {product.name}
-                                                  </Typography>
-                      
-                                                  <div className="flex items-center gap-2">
-                                                      {/* Price */}
-                                                      <p className="text-base font-semibold text-black mt-1">
-                                                          ₹{Math.round(product?.selling_price)}
-                                                      </p>
-                      
-                                                      {/* MRP */}
-                                                      {product?.mrp && (product?.mrp>product?.selling_price) && (
-                                                          <span className="text-base text-gray-400 line-through mt-1">
+                        {product.name}
+                      </Typography>
+
+                      <div className="flex items-center gap-2">
+                        {/* Price */}
+                        <p className="text-base font-semibold text-black mt-1">
+                          ₹{Math.round(product?.selling_price)}
+                        </p>
+
+                        {/* MRP */}
+                        {product?.mrp && (product?.mrp > product?.selling_price) && (
+                          <span className="text-base text-gray-400 line-through mt-1">
                             ₹{Math.round(product?.mrp)}
                           </span>
-                                                      )}
-                      
-                                                      {/* Discount */}
-                                                      {product?.mrp && (product?.mrp>product?.selling_price) && (
-                                                          <span className="text-sm font-semibold text-green-600 mt-1">
+                        )}
+
+                        {/* Discount */}
+                        {product?.mrp && (product?.mrp > product?.selling_price) && (
+                          <span className="text-sm font-semibold text-green-600 mt-1">
                             {Math.round(((product.mrp - product.selling_price) / product.mrp) * 100)}% OFF
                           </span>
-                                                      )}
-                                                  </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </Paper>

@@ -14,6 +14,8 @@ import { enqueueSnackbar } from "notistack";
 // import img from "./img";
 import ReactStars from "react-rating-stars-component";
 import axiosInstance from "../../Axios/axiosInstance";
+import { getProductUrl } from "../../utils/urlHelper";
+
 
 const StarsOnCards = ({ rating, ratingNumber }) => {
 
@@ -130,10 +132,9 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
     // ========== END OLD CODE ==========
 
     // ========== NEW CODE (Feb 16, 2026) - Replaced with Link ==========
-    const productUrl = product?.category_slug && product?.slug
-        ? `/${product.category_slug}/${product.sub_category_slug || "all"}/${product.slug}/`
-        : "#";
+    const productUrl = getProductUrl(product);
     // ========== END NEW CODE ==========
+
 
     return (
         <>

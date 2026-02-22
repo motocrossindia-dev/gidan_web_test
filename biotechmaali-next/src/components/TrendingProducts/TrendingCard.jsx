@@ -12,6 +12,8 @@ import { enqueueSnackbar } from "notistack";
 import StarsOnCards from "./StarsOnCards";
 import ReactStars from "react-rating-stars-component";
 import axiosInstance from "../../Axios/axiosInstance";
+import { getProductUrl } from "../../utils/urlHelper";
+
 
 const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, inCart, getProducts, ratingNumber, mrp, ribbon }) => {
     const [isHovered, setIsHovered] = useState(false);
@@ -83,20 +85,14 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
     }, [isAuthenticated, router, inCart, product.id, getProducts, isAdded]);
 
     const handleQuickView = useCallback((e) => {
-        const category_slug = product?.category_slug;
-        const sub_category_slug = product?.sub_category_slug;
-
-        // Standardized 3-segment URL pattern: /:category/:subcategory/:productSlug/
-        const productUrl = `/${category_slug}/${sub_category_slug || "all"}/${product.slug}/`;
-
-        router.push(productUrl, {
+        router.push(getProductUrl(product), {
             state: {
                 product_id: product.id,
-                category_slug: category_slug,
-                sub_category_slug: sub_category_slug
+                category_slug: product?.category_slug,
+                sub_category_slug: product?.sub_category_slug
             }
         });
-    }, [router, product.category_slug, product.sub_category_slug, product.slug, product.id]);
+    }, [router, product]);
 
     return (
         <>
@@ -148,8 +144,8 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
 
                             <div
                                 className={`absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 transition-all duration-300 ease-in-out ${isHovered
-                                        ? "opacity-100 translate-y-0 pointer-events-auto"
-                                        : "opacity-0 translate-y-5 pointer-events-none"
+                                    ? "opacity-100 translate-y-0 pointer-events-auto"
+                                    : "opacity-0 translate-y-5 pointer-events-none"
                                     }`}
                             >
                                 <button aria-label="Add to cart"

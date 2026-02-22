@@ -1,18 +1,27 @@
+import convertToSlug from "../../../utils/slugConverter";
+import { toSlugString } from "../../../utils/urlHelper";
+
 export default function ProductSchema({
     product,
     images = [],
     brand = "Gidan Store",
     currency = "INR",
-    siteUrl = "https://www.gidan.store/",
+    siteUrl = "https://www.gidan.store",
     rating = 0,
     ratingCount = 0
 }) {
     if (!product) return null;
 
-    // NEW: Clean URL structure
-    const productUrl = product.sub_category_slug
-        ? `${siteUrl}/${product.category_slug}/${product.sub_category_slug}/${product.slug}`
-        : `${siteUrl}/${product.category_slug}/${product.slug}`;
+    // Use main_product_name for the clean URL that crawlers should index
+    const cleanSlug = product.main_product_name
+        ? convertToSlug(product.main_product_name)
+        : toSlugString(product.slug);
+    const catSlug = toSlugString(product.category_slug);
+    const subCatSlug = toSlugString(product.sub_category_slug);
+
+    const productUrl = subCatSlug
+        ? `${siteUrl}/${catSlug}/${subCatSlug}/${cleanSlug}`
+        : `${siteUrl}/${catSlug}/${cleanSlug}`;
 
     const schema = {
         "@context": "https://schema.org",

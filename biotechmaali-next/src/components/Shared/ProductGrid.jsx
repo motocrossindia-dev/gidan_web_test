@@ -1,9 +1,12 @@
 'use client';
 
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import ProductCard from "./ProductCard";
 import axiosInstance from "../../Axios/axiosInstance";
+import { getProductUrl, toSlugString } from "../../utils/urlHelper";
+
 
 const ProductGrid = ({
   productDetails = [],
@@ -16,12 +19,9 @@ const ProductGrid = ({
 }) => {
 
   // Helper: extract a plain string from a slug value that could be a string or an object
-  const toSlugString = (val) => {
-    if (!val) return undefined;
-    if (typeof val === 'string') return val;
-    return val?.slug || val?.name || undefined;
-  };
+  // (Moved to urlHelper.js)
   const router = useRouter();
+
   const observer = useRef(null);
 
   const [loading, setLoading] = useState(false);
@@ -45,13 +45,14 @@ const ProductGrid = ({
     }
 
     // NEW: Use 3-segment URL pattern: /:categorySlug/:subcategorySlug/:productSlug/
-    router.push(`/${category_slug}/${sub_category_slug}/${product_slug}/`, {
+    router.push(getProductUrl(product), {
       state: {
         product_id: product_slug,
         category_slug: category_slug,
         sub_category_slug: sub_category_slug
       }
     });
+
 
     // Scroll to top when navigating to product
     window.scrollTo(0, 0);
@@ -116,9 +117,11 @@ const ProductGrid = ({
             const key = product?.prod_id || product?.id || index;
 
             return (
-              <div
+              <Link
                 key={key}
-                onClick={() => handleProductClick(product)}
+                href={getProductUrl(product)}
+                onClick={() => window.scrollTo(0, 0)}
+
                 className="cursor-pointer w-full"
               >
                 <ProductCard
@@ -133,7 +136,7 @@ const ProductGrid = ({
                   inWishlist={product?.is_wishlist}
                   inCart={product?.is_cart}
                 />
-              </div>
+              </Link>
             );
           })}
         </div>

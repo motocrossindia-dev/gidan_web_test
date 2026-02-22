@@ -7,7 +7,8 @@ import { FaRegHeart, FaHeart, FaStar } from "react-icons/fa";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { FiEye } from "react-icons/fi";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
-import axios from "axios";
+import axiosInstance from "../../../Axios/axiosInstance";
+import { getProductUrl } from "../../../utils/urlHelper";
 import { enqueueSnackbar } from "notistack";
 import { useSelector } from "react-redux";
 import Verify from "../../../Services/Services/Verify";
@@ -136,20 +137,15 @@ const ProductSellerCard = ({
   };
 
   const handleQuickView = (e) => {
-    // e.stopPropagation();
-    const category_slug = product?.category_slug;
-    const sub_category_slug = product?.sub_category_slug || "all";
-    const product_slug = product?.slug;
-
-    // Standardized 3-segment URL pattern: /:category/:subcategory/:productSlug/
-    router.push(`/${category_slug}/${sub_category_slug}/${product_slug}/`, {
+    router.push(getProductUrl(product), {
       state: {
-        product_id: product_slug,
-        category_slug: category_slug,
-        sub_category_slug: sub_category_slug
+        product_id: product?.slug,
+        category_slug: product?.category_slug,
+        sub_category_slug: product?.sub_category_slug
       }
     });
   };
+
   return (
     <>
       <Verify />
@@ -209,8 +205,8 @@ const ProductSellerCard = ({
               <button
                 onClick={handleAddToWishlist}
                 className={`w-8 h-8 rounded-full ${inWishlist
-                    ? "bg-bio-green text-white"
-                    : "bg-white hover:bg-bio-green hover:text-white"
+                  ? "bg-bio-green text-white"
+                  : "bg-white hover:bg-bio-green hover:text-white"
                   } flex items-center justify-center transition-colors duration-200 cursor-pointer`}
               >
                 {inWishlist ? (

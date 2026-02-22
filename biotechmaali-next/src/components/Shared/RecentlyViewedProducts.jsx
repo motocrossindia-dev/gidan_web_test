@@ -1,9 +1,12 @@
 'use client';
 
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useState } from 'react';
 import ProductCard from "./ProductCard";
 import axiosInstance from '../../Axios/axiosInstance';
+import { getProductUrl } from "../../utils/urlHelper";
+
 
 /**
  * Reusable Recently Viewed Products Component
@@ -28,22 +31,18 @@ const RecentlyViewedProducts = () => {
   }, []);
 
   const handleProductClick = (product) => {
-    const category_slug = product?.category_slug;
-    const sub_category_slug = product?.sub_category_slug || "all";
-    const product_slug = product?.slug;
-
-    // Standardized 3-segment URL pattern: /:categorySlug/:subcategorySlug/:productSlug/
-    router.push(`/${category_slug}/${sub_category_slug}/${product_slug}/`, {
+    router.push(getProductUrl(product), {
       state: {
-        product_id: product_slug,
-        category_slug: category_slug,
-        sub_category_slug: sub_category_slug
+        product_id: product?.slug,
+        category_slug: product?.category_slug,
+        sub_category_slug: product?.sub_category_slug
       }
     });
 
     // Scroll to top when navigating to product
     window.scrollTo(0, 0);
   };
+
 
   if (products.length === 0) {
     return null; // Don't render if no products
@@ -58,9 +57,11 @@ const RecentlyViewedProducts = () => {
       {/* Product Grid - 4 columns layout matching ProductGrid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 justify-items-center font-sans">
         {products.map((product) => (
-          <div
+          <Link
             key={product?.id}
-            onClick={() => handleProductClick(product)}
+            href={getProductUrl(product)}
+            onClick={() => window.scrollTo(0, 0)}
+
             className="cursor-pointer w-full"
           >
             <ProductCard
@@ -75,7 +76,7 @@ const RecentlyViewedProducts = () => {
               mrp={Math.round(product?.mrp)}
               ribbon={product?.ribbon}
             />
-          </div>
+          </Link>
         ))}
       </div>
     </div>

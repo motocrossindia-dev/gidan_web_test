@@ -1,8 +1,11 @@
 'use client';
 
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import ProductCard from "./ProductCard";
+import { getProductUrl } from "../../utils/urlHelper";
+
 import axiosInstance from "../../Axios/axiosInstance";
 
 /**
@@ -41,7 +44,7 @@ const NormalProductGrid = ({
         sub_category_slug: sub_category_slug
       }
     });
-    
+
     // Scroll to top when navigating to product
     window.scrollTo(0, 0);
   };
@@ -142,10 +145,12 @@ const NormalProductGrid = ({
                 const key = product?.prod_id || product?.id || index;
 
                 return (
-                  <div
+                  <Link
                     key={key}
                     ref={isLast ? lastProductRef : null}
-                    onClick={() => handleProductClick(product)}
+                    href={getProductUrl(product)}
+                    onClick={() => window.scrollTo(0, 0)}
+
                     className="cursor-pointer w-full"
                   >
                     <ProductCard
@@ -160,7 +165,7 @@ const NormalProductGrid = ({
                       inWishlist={product?.is_wishlist}
                       inCart={product?.is_cart}
                     />
-                  </div>
+                  </Link>
                 );
               })}
             </div>

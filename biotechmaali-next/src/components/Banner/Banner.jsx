@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import Image from "next/image";
@@ -68,12 +69,12 @@ const Banner = ({ home }) => {
                                     <h3 className="text-sm md:text-xl lg:text-4xl font-semibold text-green-800 mb-4">
                                         {banner.subtitle}
                                     </h3>
-                                    <button
-                                        onClick={() => router.push(`/featured`)}
+                                    <Link
+                                        href="/featured"
                                         className="bg-bio-green text-white px-3 md:px-4 py-2 rounded-md w-fit mx-auto lg:mx-0 hover:bg-green-700 transition text-xs md:text-sm"
                                     >
                                         {banner.button_text}
-                                    </button>
+                                    </Link>
                                 </div>
                             </div>
                         </SwiperSlide>

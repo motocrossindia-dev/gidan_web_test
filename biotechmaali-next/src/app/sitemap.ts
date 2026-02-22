@@ -1,56 +1,149 @@
-import type { MetadataRoute } from "next";
+import { MetadataRoute } from "next";
+import slugify from "slugify";
 
-const BASE_URL = "https://www.gidan.store";
+const API_URL =
+    process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store";
+const SITE_URL = "https://www.gidan.store";
 
-// Public-facing pages (exclude auth/account/checkout private pages)
-const STATIC_ROUTES: { url: string; priority: number; changeFreq: MetadataRoute.Sitemap[0]["changeFrequency"] }[] = [
-  { url: "/", priority: 1.0, changeFreq: "daily" },
-  { url: "/bestseller", priority: 0.9, changeFreq: "daily" },
-  { url: "/latest", priority: 0.9, changeFreq: "daily" },
-  { url: "/featured", priority: 0.8, changeFreq: "weekly" },
-  { url: "/feature", priority: 0.8, changeFreq: "weekly" },
-  { url: "/dealofweek", priority: 0.9, changeFreq: "daily" },
-  { url: "/combooffer", priority: 0.8, changeFreq: "weekly" },
-  { url: "/flower", priority: 0.8, changeFreq: "weekly" },
-  { url: "/birthday", priority: 0.7, changeFreq: "weekly" },
-  { url: "/anniversary", priority: 0.7, changeFreq: "weekly" },
-  { url: "/housewarming", priority: 0.7, changeFreq: "weekly" },
-  { url: "/gifts", priority: 0.7, changeFreq: "weekly" },
-  { url: "/giftcard", priority: 0.7, changeFreq: "monthly" },
-  { url: "/corporate", priority: 0.7, changeFreq: "monthly" },
-  { url: "/seasonal", priority: 0.8, changeFreq: "weekly" },
-  { url: "/outdoor", priority: 0.7, changeFreq: "weekly" },
-  { url: "/rakshabhandan", priority: 0.7, changeFreq: "monthly" },
-  { url: "/trending", priority: 0.8, changeFreq: "daily" },
-  { url: "/stores", priority: 0.7, changeFreq: "monthly" },
-  { url: "/blogcomponent", priority: 0.8, changeFreq: "daily" },
-  { url: "/ourwork", priority: 0.6, changeFreq: "monthly" },
-  { url: "/services", priority: 0.7, changeFreq: "monthly" },
-  { url: "/services/single", priority: 0.6, changeFreq: "monthly" },
-  { url: "/services/single/Terracegardening", priority: 0.6, changeFreq: "monthly" },
-  { url: "/services/single/Verticalgarden", priority: 0.6, changeFreq: "monthly" },
-  { url: "/services/single/dripirrigation", priority: 0.6, changeFreq: "monthly" },
-  { url: "/services/single/garden", priority: 0.6, changeFreq: "monthly" },
-  { url: "/services/single/landscapingpage", priority: 0.6, changeFreq: "monthly" },
-  { url: "/franchise-enquiry", priority: 0.7, changeFreq: "monthly" },
-  { url: "/careers", priority: 0.6, changeFreq: "monthly" },
-  { url: "/about-us", priority: 0.6, changeFreq: "monthly" },
-  { url: "/contact-us", priority: 0.6, changeFreq: "monthly" },
-  { url: "/faq", priority: 0.6, changeFreq: "monthly" },
-  { url: "/search", priority: 0.5, changeFreq: "weekly" },
-  { url: "/privacy-policy", priority: 0.3, changeFreq: "yearly" },
-  { url: "/terms", priority: 0.3, changeFreq: "yearly" },
-  { url: "/shipping", priority: 0.4, changeFreq: "yearly" },
-  { url: "/return", priority: 0.4, changeFreq: "yearly" },
-];
+function convertToSlug(text: string): string {
+    if (!text) return "";
+    return slugify(text, {
+        replacement: "-",
+        remove: /[*+~.()'\"!:@]/g,
+        lower: true,
+        strict: false,
+        locale: "vi",
+        trim: true,
+    });
+}
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const today = new Date().toISOString();
+function toSlugString(val: any): string {
+    if (!val) return "";
+    if (typeof val === "string") return val;
+    return val?.slug || val?.name || "";
+}
 
-  return STATIC_ROUTES.map((route) => ({
-    url: `${BASE_URL}${route.url}`,
-    lastModified: today,
-    changeFrequency: route.changeFreq,
-    priority: route.priority,
-  }));
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+    const entries: MetadataRoute.Sitemap = [];
+
+    // Static pages
+    const staticPages = [
+        "",
+        "/about-us",
+        "/contact-us",
+        "/franchise-enquiry",
+        "/featured",
+        "/offer",
+        "/stores",
+        "/careers",
+        "/faq",
+        "/privacy-policy",
+        "/terms",
+        "/return",
+        "/shipping",
+        "/blogcomponent",
+        "/gifts",
+    ];
+
+    for (const page of staticPages) {
+        entries.push({
+            url: `${SITE_URL}${page}`,
+            lastModified: new Date(),
+            changeFrequency: page === "" ? "daily" : "monthly",
+            priority: page === "" ? 1.0 : 0.5,
+        });
+    }
+
+    try {
+        // Fetch all categories
+        const catRes = await fetch(`${API_URL}/category/`, {
+            next: { revalidate: 3600 },
+        });
+        if (catRes.ok) {
+            const catData = await catRes.json();
+            const categories = catData?.data?.categories || [];
+
+            for (const category of categories) {
+                const catSlug = toSlugString(category.slug);
+                if (!catSlug) continue;
+
+                // Add category page
+                entries.push({
+                    url: `${SITE_URL}/${catSlug}`,
+                    lastModified: new Date(),
+                    changeFrequency: "weekly",
+                    priority: 0.8,
+                });
+
+                // Fetch subcategories for this category
+                try {
+                    const subRes = await fetch(
+                        `${API_URL}/category/categoryWiseSubCategory/${catSlug}/`,
+                        { next: { revalidate: 3600 } }
+                    );
+                    if (subRes.ok) {
+                        const subData = await subRes.json();
+                        const subcategories = subData?.data?.subCategorys || [];
+
+                        for (const sub of subcategories) {
+                            const subSlug = toSlugString(sub.slug);
+                            if (!subSlug) continue;
+
+                            // Add subcategory page
+                            entries.push({
+                                url: `${SITE_URL}/${catSlug}/${subSlug}`,
+                                lastModified: new Date(),
+                                changeFrequency: "weekly",
+                                priority: 0.7,
+                            });
+                        }
+                    }
+                } catch { }
+            }
+        }
+
+        // Fetch ALL products and generate clean URLs
+        const productTypes = ["plant", "pot", "seed", "plant_care"];
+        for (const type of productTypes) {
+            try {
+                const prodRes = await fetch(
+                    `${API_URL}/filters/main_productsFilter/?type=${type}`,
+                    { next: { revalidate: 3600 } }
+                );
+                if (!prodRes.ok) continue;
+                const prodData = await prodRes.json();
+                const products = prodData?.results || [];
+
+                for (const product of products) {
+                    const catSlug = toSlugString(product.category_slug);
+                    const subCatSlug =
+                        toSlugString(product.sub_category_slug) || "all";
+
+                    // Use main_product_name for the clean slug
+                    const productSlug = product.main_product_name
+                        ? convertToSlug(product.main_product_name)
+                        : toSlugString(product.slug);
+
+                    if (!catSlug || !productSlug) continue;
+
+                    entries.push({
+                        url: `${SITE_URL}/${catSlug}/${subCatSlug}/${productSlug}`,
+                        lastModified: new Date(),
+                        changeFrequency: "weekly",
+                        priority: 0.6,
+                    });
+                }
+            } catch { }
+        }
+    } catch (err) {
+        console.error("Sitemap generation error:", err);
+    }
+
+    // Deduplicate URLs
+    const seen = new Set<string>();
+    return entries.filter((entry) => {
+        if (seen.has(entry.url)) return false;
+        seen.add(entry.url);
+        return true;
+    });
 }

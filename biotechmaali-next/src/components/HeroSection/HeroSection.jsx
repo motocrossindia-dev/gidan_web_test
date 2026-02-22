@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from "next/link";
 import convertToSlug from "../../utils/slugConverter";
 
 const HeroSection = ({ hero }) => {
@@ -23,18 +24,6 @@ const HeroSection = ({ hero }) => {
     setCurrentIndex(index);
   };
 
-  const handleBannerClick = () => {
-    const activeBanner = hero[currentIndex];
-    const slug = convertToSlug(activeBanner.category);
-
-    router.push(`/carousel/${slug}`, {
-      state: {
-        heroId: hero[currentIndex].id,
-        fullData: hero[currentIndex]
-      }
-    });
-  };
-
   const goLeft = () => {
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? hero.length - 1 : prevIndex - 1
@@ -52,33 +41,39 @@ const HeroSection = ({ hero }) => {
       {hero && hero.length > 0 ? (
         <div className="relative w-full">
 
-          {hero.map((banner, index) => (
-            <div
-              key={banner.id}
-              className={`transition-opacity duration-700 ease-in-out
-            ${index === currentIndex ? "opacity-100" : "opacity-0 absolute inset-0"}
-          `}
-            >
+          {hero.map((banner, index) => {
+            const slug = convertToSlug(banner.category);
+            const bannerUrl = `/carousel/${slug}`;
 
-              {/* Full-width hero image - no crop */}
-              <div className="w-full">
-                <Image
-                  src={`https://backend.gidan.store${banner.web_banner}`}
-                  alt={`Hero Banner ${index + 1}`}
-                  width={1920}
-                  height={600}
-                  sizes="100vw"
-                  onClick={() => handleBannerClick()}
-                  className="w-full h-auto cursor-pointer"
-                  priority={index === 0}
-                  fetchPriority={index === 0 ? "high" : "low"}
-                  loading={index === 0 ? "eager" : "lazy"}
-                  quality={85}
-                />
+            return (
+              <div
+                key={banner.id}
+                className={`transition-opacity duration-700 ease-in-out
+              ${index === currentIndex ? "opacity-100" : "opacity-0 absolute inset-0"}
+            `}
+              >
+
+                {/* Full-width hero image - no crop */}
+                <div className="w-full">
+                  <Link href={bannerUrl}>
+                    <Image
+                      src={`https://backend.gidan.store${banner.web_banner}`}
+                      alt={`Hero Banner ${index + 1}`}
+                      width={1920}
+                      height={600}
+                      sizes="100vw"
+                      className="w-full h-auto cursor-pointer"
+                      priority={index === 0}
+                      fetchPriority={index === 0 ? "high" : "low"}
+                      loading={index === 0 ? "eager" : "lazy"}
+                      quality={85}
+                    />
+                  </Link>
+                </div>
+
               </div>
-
-            </div>
-          ))}
+            );
+          })}
 
           {/* Left Arrow */}
           <button

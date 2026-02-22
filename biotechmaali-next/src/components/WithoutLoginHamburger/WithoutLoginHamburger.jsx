@@ -248,8 +248,22 @@ const WithoutLoginHamburger = () => {
                       {categories.map((category) => (
                         <div key={category.id}>
                           {/* Main Category */}
-                          <div
-                            onClick={() => handleCategoryClick(category)}
+                          <Link
+                            href={
+                              category.name === "GIFTS" ? "/gifts/" :
+                                category.name === "SERVICES" ? "/services/" :
+                                  category.name === "OFFERS" ? "/offer/" :
+                                    `/${category.slug}/`
+                            }
+                            onClick={(e) => {
+                              if (category.subcategories && category.subcategories.length > 0) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setExpandedCategory(expandedCategory === category.id ? null : category.id);
+                              } else {
+                                setIsOpen(false);
+                              }
+                            }}
                             className="flex items-center justify-between px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100"
                           >
                             <span className="text-gray-800 font-medium text-sm uppercase">
@@ -257,12 +271,11 @@ const WithoutLoginHamburger = () => {
                             </span>
                             {category.subcategories && category.subcategories.length > 0 && (
                               <FaChevronRight
-                                className={`text-gray-400 text-xs transition-transform duration-200 ${
-                                  expandedCategory === category.id ? 'rotate-90' : ''
-                                }`}
+                                className={`text-gray-400 text-xs transition-transform duration-200 ${expandedCategory === category.id ? 'rotate-90' : ''
+                                  }`}
                               />
                             )}
-                          </div>
+                          </Link>
 
                           {/* Subcategories */}
                           {expandedCategory === category.id &&
@@ -270,9 +283,10 @@ const WithoutLoginHamburger = () => {
                             category.subcategories.length > 0 && (
                               <div className="bg-gray-50 border-b border-gray-100">
                                 {category.subcategories.map((subcategory) => (
-                                  <div
+                                  <Link
                                     key={subcategory.id}
-                                    onClick={() => handleSubcategoryClick(category, subcategory)}
+                                    href={`/${category.slug}/${subcategory.slug}/`}
+                                    onClick={() => setIsOpen(false)}
                                     className="flex items-center justify-between px-8 py-2 hover:bg-white cursor-pointer transition-colors"
                                   >
                                     <span className="text-gray-600 text-sm">
@@ -283,7 +297,7 @@ const WithoutLoginHamburger = () => {
                                         {subcategory.product_count}
                                       </span>
                                     )}
-                                  </div>
+                                  </Link>
                                 ))}
                               </div>
                             )}

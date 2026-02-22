@@ -1,5 +1,3 @@
-'use client';
-
 // slugConverter.js
 import slugify from 'slugify';
 
