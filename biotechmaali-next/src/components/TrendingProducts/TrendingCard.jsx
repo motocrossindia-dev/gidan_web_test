@@ -46,7 +46,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                 }
             }
             getProducts()
-        } catch (error) {}
+        } catch (error) { }
     }, [isAuthenticated, router, inWishlist, product.id, getProducts]);
 
     const handleAddToCart = useCallback(async (e) => {
@@ -79,17 +79,15 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                 }
             }
             getProducts()
-        } catch (error) {}
+        } catch (error) { }
     }, [isAuthenticated, router, inCart, product.id, getProducts, isAdded]);
 
     const handleQuickView = useCallback((e) => {
         const category_slug = product?.category_slug;
         const sub_category_slug = product?.sub_category_slug;
 
-        // NEW: Clean URL structure
-        const productUrl = sub_category_slug
-            ? `/${category_slug}/${sub_category_slug}/${product.slug}/`
-            : `/${category_slug}/${product.slug}/`;
+        // Standardized 3-segment URL pattern: /:category/:subcategory/:productSlug/
+        const productUrl = `/${category_slug}/${sub_category_slug || "all"}/${product.slug}/`;
 
         router.push(productUrl, {
             state: {
@@ -144,45 +142,44 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                     <div className="relative w-full flex justify-center mb-2">
                         <div className="relative rounded-lg flex justify-center items-center w-full">
                             <img name=" "
-                                 className="w-40 h-43 sm:w-48 sm:h-53 lg:h-[260px] mt-4 lg:w-[226px] object-contain transition-transform duration-300 rounded-[2rem] scale-100 hover:scale-105"
-                                 src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
-                                 alt={name} loading="lazy" width="400" height="400" style={{ aspectRatio: '1/1' }} />
+                                className="w-40 h-43 sm:w-48 sm:h-53 lg:h-[260px] mt-4 lg:w-[226px] object-contain transition-transform duration-300 rounded-[2rem] scale-100 hover:scale-105"
+                                src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
+                                alt={name} loading="lazy" width="400" height="400" style={{ aspectRatio: '1/1' }} />
 
                             <div
-                                className={`absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 transition-all duration-300 ease-in-out ${
-                                    isHovered
+                                className={`absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 transition-all duration-300 ease-in-out ${isHovered
                                         ? "opacity-100 translate-y-0 pointer-events-auto"
                                         : "opacity-0 translate-y-5 pointer-events-none"
-                                }`}
+                                    }`}
                             >
                                 <button aria-label="Add to cart"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleAddToCart();
-                                        }}
-                                        className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 cursor-pointer ${inCart ? "bg-bio-green text-white" : "bg-white hover:bg-bio-green hover:text-white"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleAddToCart();
+                                    }}
+                                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 cursor-pointer ${inCart ? "bg-bio-green text-white" : "bg-white hover:bg-bio-green hover:text-white"
                                         }`}
                                 >
                                     <MdOutlineShoppingBag className="w-4 h-4" />
                                 </button>
 
                                 <button aria-label="Add to wishlist"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleAddToWishlist();
-                                        }}
-                                        className={`w-8 h-8 rounded-full ${inWishlist ? "bg-bio-green text-white" : "bg-white hover:bg-bio-green hover:text-white"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleAddToWishlist();
+                                    }}
+                                    className={`w-8 h-8 rounded-full ${inWishlist ? "bg-bio-green text-white" : "bg-white hover:bg-bio-green hover:text-white"
                                         } flex items-center justify-center transition-colors duration-200 cursor-pointer`}
                                 >
                                     {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
                                 </button>
 
                                 <button aria-label="Quick view"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleQuickView();
-                                        }}
-                                        className="w-8 h-8 rounded-full bg-white hover:bg-bio-green hover:text-white flex items-center justify-center transition-colors duration-200 cursor-pointer"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleQuickView();
+                                    }}
+                                    className="w-8 h-8 rounded-full bg-white hover:bg-bio-green hover:text-white flex items-center justify-center transition-colors duration-200 cursor-pointer"
                                 >
                                     <FiEye className="w-4 h-4" />
                                 </button>
@@ -202,17 +199,17 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                         <div className="flex items-center gap-2">
 
                             <span className="text-base font-semibold text-navy-blue">
-  ₹{Math.round(price)}
-</span>
+                                ₹{Math.round(price)}
+                            </span>
 
 
-                            {mrp && (mrp>price) && <span className="text-base text-gray-600 line-through">₹{mrp}</span>}
+                            {mrp && (mrp > price) && <span className="text-base text-gray-600 line-through">₹{mrp}</span>}
 
                             {/* Discount */}
-                            {mrp && price && (mrp>price) && (
+                            {mrp && price && (mrp > price) && (
                                 <span className="text-base font-semibold text-green-600 mt-1">
-      {Math.round(((mrp - price) / mrp) * 100)}% OFF
-    </span>
+                                    {Math.round(((mrp - price) / mrp) * 100)}% OFF
+                                </span>
                             )}
                         </div>
 
@@ -270,31 +267,31 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                             {/* ICONS INSIDE IMAGE AREA */}
                             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-20">
                                 <button aria-label="Add to cart"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleAddToCart();
-                                        }}
-                                        className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleAddToCart();
+                                    }}
+                                    className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
                                 >
                                     <MdOutlineShoppingBag className="w-4 h-4" />
                                 </button>
 
                                 <button aria-label="Add to wishlist"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleAddToWishlist();
-                                        }}
-                                        className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleAddToWishlist();
+                                    }}
+                                    className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
                                 >
                                     {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
                                 </button>
 
                                 <button aria-label="Quick view"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleQuickView();
-                                        }}
-                                        className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleQuickView();
+                                    }}
+                                    className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
                                 >
                                     <FiEye className="w-4 h-4" />
                                 </button>
@@ -333,17 +330,17 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                                 </p>
 
                                 {/* MRP */}
-                                {mrp && (mrp>price) && (
+                                {mrp && (mrp > price) && (
                                     <span className="text-base text-gray-600 line-through mt-1">
-      ₹{Math.round(mrp)}
-    </span>
+                                        ₹{Math.round(mrp)}
+                                    </span>
                                 )}
 
                                 {/* Discount */}
-                                {mrp && price && (mrp>price) && (
+                                {mrp && price && (mrp > price) && (
                                     <span className="text-sm font-semibold text-green-600 mt-1">
-      {Math.round(((mrp - price) / mrp) * 100)}% OFF
-    </span>
+                                        {Math.round(((mrp - price) / mrp) * 100)}% OFF
+                                    </span>
                                 )}
                             </div>
                             {/* Price */}

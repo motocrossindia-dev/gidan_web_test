@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from 'react';    
+import React, { useEffect, useState } from 'react';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import TrendingCard from "../../../components/TrendingProducts/TrendingCard"
 import axiosInstance from '../../../Axios/axiosInstance';
@@ -10,44 +10,45 @@ import convertToSlug from "../../../utils/slugConverter";
 const RecentlyViewedProduct = () => {
   const [products, setProducts] = useState([]);
   const router = useRouter();
-  
-  
+
+
   const getProducts = async () => {
     try {
       const response = await axiosInstance.get(
         `/product/recentlyViewed/`);
-    
+
       // Update state with the correct path to products array
       if (response.status === 200) {
-      setProducts(response?.data?.data?.products || []);
-        
+        setProducts(response?.data?.data?.products || []);
+
       }
     } catch (error) {
       console.error("Error fetching products:", error.response?.data || error.message);
       setProducts([]); // Fallback to an empty array in case of error
     }
   };
-  
+
   useEffect(() => {
-   
-      getProducts();
-    
+
+    getProducts();
+
   }, []); // Re-run if `accessToken` changes
 
   const handleProductClick = (product) => {
-
     const category_slug = product?.category_slug;
-    const sub_category_slug = product?.sub_category_slug;
+    const sub_category_slug = product?.sub_category_slug || "all";
+    const product_slug = product?.slug;
 
-    router.push(`/category/${category_slug}/${product.slug}/`, {       state: {
-        product_id: product.slug,
-        category_slug:category_slug,
-        sub_category_slug:sub_category_slug
-
-      } });
-
+    // Standardized 3-segment URL pattern: /:category/:subcategory/:productSlug/
+    router.push(`/${category_slug}/${sub_category_slug}/${product_slug}/`, {
+      state: {
+        product_id: product_slug,
+        category_slug: category_slug,
+        sub_category_slug: sub_category_slug
+      }
+    });
   };
-  
+
   return (
     <div className="w-full bg-gray-100">
       <div className="my-8 p-4 bg-grey-200 rounded-md">

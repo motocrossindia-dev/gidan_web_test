@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProductData from '@/views/utilities/ProductData/ProductData';
 
-type Props = { params: Promise<{ categorySlug: string; subcategorySlug: string; productSlug: string }> };
+type Props = {
+  params: Promise<{ categorySlug: string; subcategorySlug: string; productSlug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
 
 async function isValidProduct(productSlug: string): Promise<boolean> {
   try {
@@ -41,11 +44,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 import { fetchProductDetail } from "@/utils/serverApi";
 
-export default async function ProductPage({ params }: Props) {
+export default async function ProductPage({ params, searchParams }: Props) {
   const { productSlug } = await params;
+  const sParams = await searchParams;
 
   // Fetch full product data on server
-  const productData = await fetchProductDetail(productSlug);
+  const productData = await fetchProductDetail(productSlug, sParams);
   if (!productData) notFound();
 
   return <ProductData initialProductData={productData} />;

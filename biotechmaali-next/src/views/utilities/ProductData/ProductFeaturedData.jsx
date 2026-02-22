@@ -142,14 +142,17 @@ const ProductFeaturedCard = ({
   const handleQuickView = (e) => {
     // e.stopPropagation();
     const category_slug = product?.category_slug;
-    const sub_category_slug = product?.sub_category_slug;
+    const sub_category_slug = product?.sub_category_slug || "all";
+    const product_slug = product?.slug;
 
-    router.push(`/category/${category_slug}/${product.slug}/`, {       state: {
-        product_id: product.slug,
-        category_slug:category_slug,
-        sub_category_slug:sub_category_slug
-
-      } });
+    // Standardized 3-segment URL pattern: /:category/:subcategory/:productSlug/
+    router.push(`/${category_slug}/${sub_category_slug}/${product_slug}/`, {
+      state: {
+        product_id: product_slug,
+        category_slug: category_slug,
+        sub_category_slug: sub_category_slug
+      }
+    });
   };
 
   return (
@@ -183,7 +186,7 @@ const ProductFeaturedCard = ({
       >
         <div className="relative w-full flex flex-col items-center p-2">
           <div className="relative w-full flex justify-center mb-6">
-            <img name=" "   
+            <img name=" "
               className={`w-40 h-44 sm:w-52 sm:h-59 object-contain rounded-lg transition-transform duration-300 ${isHovered ? "scale-105" : "scale-100"
                 }`}
               src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}

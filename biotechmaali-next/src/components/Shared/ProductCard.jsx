@@ -131,7 +131,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
 
     // ========== NEW CODE (Feb 16, 2026) - Replaced with Link ==========
     const productUrl = product?.category_slug && product?.slug
-        ? `/${product.category_slug}/${product.sub_category_slug}/${product.slug}/`
+        ? `/${product.category_slug}/${product.sub_category_slug || "all"}/${product.slug}/`
         : "#";
     // ========== END NEW CODE ==========
 

@@ -36,7 +36,7 @@ const ProductGrid = ({
 
   const handleProductClick = (product) => {
     const category_slug = toSlugString(product?.category_slug) || propCategorySlug;
-    const sub_category_slug = toSlugString(product?.sub_category_slug) || propSubcategorySlug;
+    const sub_category_slug = toSlugString(product?.sub_category_slug) || propSubcategorySlug || "all";
     const product_slug = toSlugString(product?.slug) || product?.slug;
 
     if (!category_slug || !sub_category_slug || !product_slug) {

@@ -106,6 +106,7 @@ function PlantFilter({ initialResults = [], initialCategoryData = null } = {}) {
     const [results, setResults] = useState(initialResults || []);
     const [categoryData, setCategoryData] = useState(initialCategoryData || null);
     const [filtersApplied, setFiltersApplied] = useState(false);
+    const [isSearching, setIsSearching] = useState(false);
 
     // iOS Swipeable Drawer patch to prevent body bounce
     const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -126,16 +127,18 @@ function PlantFilter({ initialResults = [], initialCategoryData = null } = {}) {
         window.scrollTo(0, 0);
     }, []);
 
-    // Reset products immediately when category/path changes so stale results never show
+    // Reset products only when category Slug actually changes (fundamental context change)
     useEffect(() => {
-        setResults([]);
-        setProducts({});
-        setCategoryData(null);
+        // We only clear results if the category slug itself changes
+        // Query params or subcategory changes should use the loading overlay for smoothness
+        if (categorySlug) {
+            // Optional: you could choose NOT to clear even here if you want ultra-smooth transitions
+            // but usually a root category change justifies a fresh state.
+            // setResults([]); 
+            // setProducts({});
+        }
         setFiltersApplied(false);
-        // Do not reset resolved IDs if we have slugs, we'll re-resolve them
-        if (!categorySlug) setResolvedCategoryId(null);
-        if (!subcategorySlug) setResolvedSubcategoryId(null);
-    }, [path, categorySlug, subcategorySlug]);
+    }, [categorySlug]);
 
     // Handle slug to ID resolution
     useEffect(() => {
@@ -253,21 +256,26 @@ function PlantFilter({ initialResults = [], initialCategoryData = null } = {}) {
                 }
             } catch (error) {
                 console.error("Error fetching products:", error);
+            } finally {
+                setIsSearching(false);
             }
         };
 
         // Trigger product fetch when either we have the IDs OR it's a special boolean route
         const isSpecialRoute = routeBasedFilters.isSeasonalCollection || routeBasedFilters.isTrending || routeBasedFilters.isFeatured || routeBasedFilters.isBestSeller;
 
-        // Skip initial fetch if data was provided by server (hydration)
+        // Skip initial fetch if data was provided by server (hydration) 
+        // OR if filters have already been applied by the sidebar (to avoid overwriting filtered results)
         if (!isResolvingIds && (resolvedCategoryId || isSpecialRoute)) {
+            if (filtersApplied) return;
             if (initialResults && initialResults.length > 0 && results.length === initialResults.length) {
                 // Already have data from server, skip first fetch
                 return;
             }
+            setIsSearching(true);
             getInitialProducts();
         }
-    }, [path, typeKey, resolvedCategoryId, resolvedSubcategoryId, isResolvingIds, isSeasonalCollection, isTrending, isFeatured, isBestSeller, initialResults]);
+    }, [path, typeKey, resolvedCategoryId, resolvedSubcategoryId, isResolvingIds, isSeasonalCollection, isTrending, isFeatured, isBestSeller, initialResults, filtersApplied]);
 
     // Determine the base name for Helmet tags
     const getDisplayName = () => {
@@ -361,11 +369,12 @@ function PlantFilter({ initialResults = [], initialCategoryData = null } = {}) {
                             isBestSeller={isBestSeller}
                             setFetchedCategoryName={setFetchedCategoryName}
                             setFetchedSubcategoryName={setFetchedSubcategoryName}
+                            setIsSearching={setIsSearching}
                         />
                     </div>
 
                     {/* Product Grid */}
-                    <div className="mt-4">
+                    <div className={`mt-4 transition-opacity duration-300 ${isSearching ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
                         <ProductGrid
                             productDetails={results}
                             pagination={products}
@@ -377,6 +386,11 @@ function PlantFilter({ initialResults = [], initialCategoryData = null } = {}) {
                             subcategorySlug={canonicalSubcategorySlug}
                             hasSubcategory={!!subcategoryID}
                         />
+                        {isSearching && (
+                            <div className="flex justify-center py-8">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Additional Sections */}
@@ -433,6 +447,7 @@ function PlantFilter({ initialResults = [], initialCategoryData = null } = {}) {
                         isBestSeller={isBestSeller}
                         setFetchedCategoryName={setFetchedCategoryName}
                         setFetchedSubcategoryName={setFetchedSubcategoryName}
+                        setIsSearching={setIsSearching}
                     />
                 </Box>
             </SwipeableDrawer>

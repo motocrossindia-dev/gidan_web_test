@@ -17,7 +17,7 @@ const DropdownMenu = ({ isOpen, filter, options, selectedFilters, handleFilterSe
 
   return (
     <div
-      className="absolute top-full left-0 mt-1 w-full min-w-[16rem] bg-white border border-gray-300 rounded-lg shadow-xl max-h-80 overflow-y-auto z-[9999]"
+      className="absolute top-full left-0 mt-1 w-full min-w-[16rem] bg-white border border-gray-300 rounded-lg shadow-xl max-h-80 overflow-y-auto z-[10001]"
       onMouseDown={handleDropdownMouseDown}
     >
       <div className="p-3 space-y-1">
@@ -79,7 +79,8 @@ const FilterSidebar = ({
   isBestSeller,
   categoryIdFromSlug,
   setFetchedCategoryName,
-  setFetchedSubcategoryName
+  setFetchedSubcategoryName,
+  setIsSearching
 }) => {
   // Track if this is the very first render of the component
   const isInitialMount = useRef(true);
@@ -280,7 +281,7 @@ const FilterSidebar = ({
       'plantcare': 'plant-care'
     };
 
-    // Update URL visually if we are applying a standard category filter
+    // Update URL visually only if we are applying a standard category filter and slugs have changed
     if (selectedFilterType && !isSeasonalCollection && !isTrending && !isFeatured && !isBestSeller) {
       const categorySegment = typeToSlug[selectedFilterType] || selectedFilterType;
       let newUrl = `/${categorySegment}`;
@@ -289,11 +290,13 @@ const FilterSidebar = ({
       }
 
       if (window.location.pathname !== newUrl) {
-        window.history.pushState(null, '', newUrl);
+        // Use replaceState to avoid cluttering history if filters are tweaked rapidly
+        window.history.replaceState(null, '', newUrl);
       }
     }
 
     try {
+      if (setIsSearching) setIsSearching(true);
       const res = await axiosInstance.get(`/filters/main_productsFilter/?${params}`);
       setResults(res.data.results);
 
@@ -329,22 +332,29 @@ const FilterSidebar = ({
       }
     } catch (err) {
       console.error("Filter apply error:", err);
+    } finally {
+      if (setIsSearching) setIsSearching(false);
     }
-  }, [selectedFilterType, categoryId, categoryIdFromSlug, subcategoryID, subcategorySlug, selectedFilters, priceRange, filterData, setCurrentFilterType, setResults, setProducts, setFiltersApplied, setCategoryData, setShowMobileFilter, isSeasonalCollection, isTrending, isFeatured, isBestSeller]);
+  }, [selectedFilterType, categoryId, categoryIdFromSlug, subcategoryID, subcategorySlug, selectedFilters, priceRange, filterData, setCurrentFilterType, setResults, setProducts, setFiltersApplied, setCategoryData, setShowMobileFilter, isSeasonalCollection, isTrending, isFeatured, isBestSeller, setIsSearching]);
 
   // AUTO-APPLY: whenever selectedFilters, selectedFilterType, or priceRange changes after user interaction, apply immediately
   useEffect(() => {
     if (!userInteracted.current) return;
-    // Debounce slightly to batch rapid changes
+    // Debounce slightly to batch rapid changes - lowered to 400ms for snappier response
     const timer = setTimeout(() => {
       isInitialMount.current = false;
       applyFilters();
-    }, 500);
+    }, 400);
     return () => clearTimeout(timer);
-  }, [selectedFilters, selectedFilterType, priceRange]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [selectedFilters, selectedFilterType, priceRange, applyFilters]);
 
-  // AUTO-APPLY LOGIC for ID-based navigation
+  // AUTO-APPLY LOGIC for ID-based navigation (Legacy support)
   useEffect(() => {
+    // If we are on a slug-based route, PlantFilter tracks the initial state.
+    // If identifying as a direct interactive change, applyFilters handles it.
+    // We only trigger THIS effect for mount-time resolution when slugs are NOT present.
+    if (categorySlug || subcategorySlug) return;
+
     if (selectedFilterType && (categoryId || subcategoryID)) {
       // We call applyFilters but ensure it doesn't close the drawer immediately
       applyFilters().then(() => {
@@ -354,7 +364,7 @@ const FilterSidebar = ({
         }
       });
     }
-  }, [categoryId, subcategoryID]); // Only run for ID-based navigation; slug pages handled by PlantFilter
+  }, [categoryId, subcategoryID, categorySlug, subcategorySlug, applyFilters]); // Added slugs and applyFilters to deps for stability
 
   const resetFilters = useCallback(async () => {
     userInteracted.current = false; // prevent auto-apply from stale state

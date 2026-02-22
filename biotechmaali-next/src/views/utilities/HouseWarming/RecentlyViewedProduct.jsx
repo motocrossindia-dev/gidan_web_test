@@ -2,7 +2,7 @@
 
 
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from 'react';    
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import { useSelector } from "react-redux";
@@ -13,8 +13,8 @@ const RecentlyViewedProduct = () => {
   const [products, setProducts] = useState([]);
   const router = useRouter();
   const accessToken = useSelector(selectAccessToken);
-  
-  
+
+
   const getProducts = async () => {
     try {
       const response = await axios.get(
@@ -26,8 +26,8 @@ const RecentlyViewedProduct = () => {
           },
         }
       );
-  
-  
+
+
       // Update state with the correct path to products array
       setProducts(response?.data?.data?.products || []);
     } catch (error) {
@@ -35,27 +35,28 @@ const RecentlyViewedProduct = () => {
       setProducts([]); // Fallback to an empty array in case of error
     }
   };
-  
+
   useEffect(() => {
-   
-      getProducts();
-    
+
+    getProducts();
+
   }, []); // Re-run if `accessToken` changes
 
   const handleProductClick = (product) => {
     const category_slug = product?.category_slug;
-    const sub_category_slug = product?.sub_category_slug;
+    const sub_category_slug = product?.sub_category_slug || "all";
+    const product_slug = product?.slug;
 
-    // All products have category, subcategory, and product slug
-    router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {       state: {
-        product_id: product.slug,
-        category_slug:category_slug,
-        sub_category_slug:sub_category_slug
-
-      } });
-
+    // Standardized 3-segment URL pattern: /:category/:subcategory/:productSlug/
+    router.push(`/${category_slug}/${sub_category_slug}/${product_slug}/`, {
+      state: {
+        product_id: product_slug,
+        category_slug: category_slug,
+        sub_category_slug: sub_category_slug
+      }
+    });
   };
-  
+
   return (
     <div className="w-full bg-gray-100">
       <div className="my-8 p-4 bg-grey-200 rounded-md">

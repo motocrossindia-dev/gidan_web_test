@@ -31,6 +31,7 @@ import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
 import { trackViewItem, trackAddToCart } from "../../../utils/ga4Ecommerce";
 import Breadcrumb from "../../../components/Shared/Breadcrumb";
+import convertToSlug from "../../../utils/slugConverter";
 
 const productdata =
     "https://firebasestorage.googleapis.com/v0/b/zpos-uk.appspot.com/o/67977213135ebb17c407e687%2F2025%2F1%2F1738430215367_scaled_Peacelilly.png?alt=media";
@@ -151,10 +152,59 @@ export default function Component({ initialProductData }) {
     const imgRef = useRef(null);
     const product = productDetailData?.data?.product;
 
-    // ⬆️ Scroll to top on route change or product change
+    // Helper to update URL with variant query parameters while keeping base slug
+    const updateUrlWithParams = (newProduct) => {
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const variantParams = {
+            size_id: newProduct?.size_id,
+            color_id: newProduct?.color_id,
+            planter_id: newProduct?.planter_id,
+            planter_size_id: newProduct?.planter_size_id,
+            litre_id: newProduct?.litre_id,
+            weight_id: newProduct?.weight_id
+        };
+
+        Object.entries(variantParams).forEach(([key, value]) => {
+            if (value) {
+                // If it's an object, get the id, otherwise use value
+                const idValue = (typeof value === 'object' && value !== null) ? value.id : value;
+                urlParams.set(key, idValue);
+            } else {
+                urlParams.delete(key);
+            }
+        });
+
+        const queryString = urlParams.toString();
+
+        // Normalize the base slug from main_product_name to ensure it's the "short" version
+        // Fallback to params.productSlug if name is missing
+        const baseSlug = newProduct?.main_product_name
+            ? convertToSlug(newProduct.main_product_name)
+            : params.productSlug;
+
+        const catSlug = newProduct?.category_slug || params.categorySlug;
+        const subCatSlug = newProduct?.sub_category_slug || params.subcategorySlug || "all";
+
+        const newUrl = `/${catSlug}/${subCatSlug}/${baseSlug}/${queryString ? '?' + queryString : ''}`;
+
+        window.history.replaceState(null, "", newUrl);
+        setCurrentUrl(newUrl);
+    };
+
+    // ⬆️ Scroll to top and handle URL standardization
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-    }, [pathname, params.productSlug]);
+
+        // If we have product data and the current slug in the path is NOT the base slug,
+        // trigger an update to clean it up. This handles landing on variant-specific URLs.
+        if (product?.main_product_name) {
+            const expectedSlug = convertToSlug(product.main_product_name);
+            if (params.productSlug !== expectedSlug) {
+                updateUrlWithParams(product);
+            }
+        }
+    }, [pathname, params.productSlug, product?.main_product_name]);
 
     const handlePincodeChange = (e) => {
         const value = e.target.value;
@@ -416,10 +466,8 @@ export default function Component({ initialProductData }) {
             const data = response.data;
             const images = data?.data?.product?.images || [];
 
-            // NEW: Clean URL structure - use data from API response
-            const newUrl = `/${data?.data?.product?.category_slug}/${data?.data?.product?.sub_category_slug}/${data?.data?.product?.slug || id}/`;
-            window.history.replaceState(null, "", newUrl);
-            setCurrentUrl(newUrl); // Update state to trigger re-render
+            // Update URL with query parameters instead of changing slug
+            updateUrlWithParams(data?.data?.product);
 
             setproduct_slug(data?.data?.product?.slug || id);
             setcategory_slug(data?.data?.product?.category_slug);
@@ -456,10 +504,8 @@ export default function Component({ initialProductData }) {
                 setImageThumbnails(data?.data?.product?.images || []);
             }
 
-            // NEW: Clean URL structure - use data from API response
-            const newUrl = `/${data?.data?.product?.category_slug}/${data?.data?.product?.sub_category_slug}/${data?.data?.product?.slug || id}/`;
-            window.history.replaceState(null, "", newUrl);
-            setCurrentUrl(newUrl); // Update state to trigger re-render
+            // Update URL with query parameters
+            updateUrlWithParams(data?.data?.product);
 
             setproduct_slug(data?.data?.product?.slug || id);
             setcategory_slug(data?.data?.product?.category_slug);
@@ -488,10 +534,8 @@ export default function Component({ initialProductData }) {
 
             const data = response?.data;
 
-            // NEW: Clean URL structure - use data from API response
-            const newUrl = `/${data?.data?.product?.category_slug}/${data?.data?.product?.sub_category_slug}/${data?.data?.product?.slug || id}/`;
-            window.history.replaceState(null, "", newUrl);
-            setCurrentUrl(newUrl); // Update state to trigger re-render
+            // Update URL with query parameters
+            updateUrlWithParams(data?.data?.product);
 
             setproduct_slug(data?.data?.product?.slug || id);
             setcategory_slug(data?.data?.product?.category_slug);
@@ -533,10 +577,8 @@ export default function Component({ initialProductData }) {
             const data = response.data;
             const images = data?.data?.product?.images || [];
 
-            // NEW: Clean URL structure - use data from API response
-            const newUrl = `/${data?.data?.product?.category_slug}/${data?.data?.product?.sub_category_slug}/${data?.data?.product?.slug || id}/`;
-            window.history.replaceState(null, "", newUrl);
-            setCurrentUrl(newUrl); // Update state to trigger re-render
+            // Update URL with query parameters instead of changing slug
+            updateUrlWithParams(data?.data?.product);
 
             setproduct_slug(data?.data?.product?.slug || id);
             setcategory_slug(data?.data?.product?.category_slug);
@@ -576,10 +618,8 @@ export default function Component({ initialProductData }) {
             const data = response.data;
             const images = data?.data?.product?.images || [];
 
-            // NEW: Clean URL structure - use data from API response
-            const newUrl = `/${data?.data?.product?.category_slug}/${data?.data?.product?.sub_category_slug}/${data?.data?.product?.slug || id}/`;
-            window.history.replaceState(null, "", newUrl);
-            setCurrentUrl(newUrl); // Update state to trigger re-render
+            // Update URL with query parameters instead of changing slug
+            updateUrlWithParams(data?.data?.product);
 
             setproduct_slug(data?.data?.product?.slug || id);
             setcategory_slug(data?.data?.product?.category_slug);
@@ -617,10 +657,8 @@ export default function Component({ initialProductData }) {
             const data = response.data;
             const images = data?.data?.product?.images || [];
 
-            // NEW: Clean URL structure - use data from API response
-            const newUrl = `/${data?.data?.product?.category_slug}/${data?.data?.product?.sub_category_slug}/${data?.data?.product?.slug || id}/`;
-            window.history.replaceState(null, "", newUrl);
-            setCurrentUrl(newUrl); // Update state to trigger re-render
+            // Update URL with query parameters
+            updateUrlWithParams(data?.data?.product);
 
             setproduct_slug(data?.data?.product?.slug || id);
             setcategory_slug(data?.data?.product?.category_slug);
@@ -653,10 +691,8 @@ export default function Component({ initialProductData }) {
                         trackViewItem(data.data.product);
                     }
 
-                    // NEW: Clean URL structure - Always 3-segment
-                    const newUrl = `/${data?.data?.product?.category_slug}/${data?.data?.product?.sub_category_slug}/${data?.data?.product?.slug || id}/`;
-                    window.history.replaceState(null, "", newUrl);
-                    setCurrentUrl(newUrl); // Update state to trigger re-render
+                    // Update URL with query parameters
+                    updateUrlWithParams(data?.data?.product);
 
                     setproduct_slug(data?.data?.product?.slug || id);
                     setcategory_slug(data?.data?.product?.category_slug);

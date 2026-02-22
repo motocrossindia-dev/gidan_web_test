@@ -40,16 +40,17 @@ const RecentlyViewedProduct = () => {
 
   const handleProductClick = (product) => {
     const category_slug = product?.category_slug;
-    const sub_category_slug = product?.sub_category_slug;
+    const sub_category_slug = product?.sub_category_slug || "all";
+    const product_slug = product?.slug;
 
-    // All products have category, subcategory, and product slug
-    router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {       state: {
-        product_id: product.slug,
-        category_slug:category_slug,
-        sub_category_slug:sub_category_slug
-
-      } });
-
+    // Standardized 3-segment URL pattern: /:category/:subcategory/:productSlug/
+    router.push(`/${category_slug}/${sub_category_slug}/${product_slug}/`, {
+      state: {
+        product_id: product_slug,
+        category_slug: category_slug,
+        sub_category_slug: sub_category_slug
+      }
+    });
   };
 
   return (
@@ -84,7 +85,7 @@ const RecentlyViewedProduct = () => {
           </div>
         </div>
 
-        
+
       </div>
     </div>
   );

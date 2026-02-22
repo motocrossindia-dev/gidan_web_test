@@ -36,7 +36,7 @@ const TrendingSection = () => {
 
   const handleProductClick = useCallback((product) => {
     const category_slug = product?.category_slug;
-    const sub_category_slug = product?.sub_category_slug;
+    const sub_category_slug = product?.sub_category_slug || "all";
 
     router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
       state: {

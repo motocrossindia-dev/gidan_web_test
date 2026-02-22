@@ -20,9 +20,9 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
     const router = useRouter();
     const accessToken = useSelector(selectAccessToken);
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-    const {id, prod_id}=product;
+    const { id, prod_id } = product;
 
-    useEffect(() => {}, [product, inCart, inWishlist]);
+    useEffect(() => { }, [product, inCart, inWishlist]);
 
     const handleAddToCart = async () => {
         if (!isAuthenticated) {
@@ -31,7 +31,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
         }
 
         const isMainProduct = !!prod_id;
-        const payload = isMainProduct ? { prod_id: prod_id, quantity: 1 } : { main_prod_id: id, quantity: 1 } ;
+        const payload = isMainProduct ? { prod_id: prod_id, quantity: 1 } : { main_prod_id: id, quantity: 1 };
 
         try {
             if (inCart) {
@@ -65,7 +65,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
         }
 
         const isMainProduct = !!prod_id;
-        const payload = isMainProduct ? { prod_id: prod_id, quantity: 1 } : { main_prod_id: id, quantity: 1 } ;
+        const payload = isMainProduct ? { prod_id: prod_id, quantity: 1 } : { main_prod_id: id, quantity: 1 };
 
         try {
             if (inWishlist) {
@@ -90,15 +90,16 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
 
     const handleQuickView = () => {
         const category_slug = product?.category_slug;
-        const sub_category_slug = product?.sub_category_slug;
+        const sub_category_slug = product?.sub_category_slug || "all";
+        const product_slug = product?.slug;
 
-        router.push(`/category/${category_slug}/${product.slug}/`, {       state: {
+        router.push(`/${category_slug}/${sub_category_slug}/${product_slug}/`, {
+            state: {
                 product_id: product.id,
-                category_slug:category_slug,
-                sub_category_slug:sub_category_slug
-
-            } });
-
+                category_slug: category_slug,
+                sub_category_slug: sub_category_slug
+            }
+        });
     };
 
     return (
@@ -157,31 +158,31 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                             className={`absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 transition-all duration-300 ${isImageHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5 pointer-events-none"}`}
                         >
                             <button aria-label="Add to cart"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleAddToCart();
-                                    }}
-                                    className={`w-8 h-8 rounded-full flex items-center justify-center ${inCart ? "bg-green-600 text-white" : "bg-white hover:bg-green-600 hover:text-white"} transition-colors`}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleAddToCart();
+                                }}
+                                className={`w-8 h-8 rounded-full flex items-center justify-center ${inCart ? "bg-green-600 text-white" : "bg-white hover:bg-green-600 hover:text-white"} transition-colors`}
                             >
                                 <MdOutlineShoppingBag className="w-4 h-4" />
                             </button>
 
                             <button aria-label="Add to wishlist"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleAddToWishlist();
-                                    }}
-                                    className={`w-8 h-8 rounded-full flex items-center justify-center ${inWishlist ? "bg-green-600 text-white" : "bg-white hover:bg-green-600 hover:text-white"} transition-colors`}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleAddToWishlist();
+                                }}
+                                className={`w-8 h-8 rounded-full flex items-center justify-center ${inWishlist ? "bg-green-600 text-white" : "bg-white hover:bg-green-600 hover:text-white"} transition-colors`}
                             >
                                 {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
                             </button>
 
                             <button aria-label="Quick view"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleQuickView();
-                                    }}
-                                    className="w-8 h-8 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleQuickView();
+                                }}
+                                className="w-8 h-8 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors"
                             >
                                 <FiEye className="w-4 h-4" />
                             </button>
@@ -202,17 +203,17 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                         <div className="flex items-center gap-2">
 
                             <span className="text-base font-semibold text-navy-blue">
-  ₹{Math.round(price)}
-</span>
+                                ₹{Math.round(price)}
+                            </span>
 
 
-                            {mrp && (mrp>price) && <span className="text-base text-gray-600 line-through">₹{mrp}</span>}
+                            {mrp && (mrp > price) && <span className="text-base text-gray-600 line-through">₹{mrp}</span>}
 
                             {/* Discount */}
-                            {mrp && price && (mrp>price) && (
+                            {mrp && price && (mrp > price) && (
                                 <span className="text-base font-semibold text-green-600 mt-1">
-      {Math.round(((mrp - price) / mrp) * 100)}% OFF
-    </span>
+                                    {Math.round(((mrp - price) / mrp) * 100)}% OFF
+                                </span>
                             )}
                         </div>
 
@@ -263,22 +264,22 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                         {/* Action Buttons */}
                         <div className="flex gap-2 mb-2">
                             <button aria-label="Add to cart"
-                                    onClick={handleAddToCart}
-                                    className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                onClick={handleAddToCart}
+                                className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
                             >
                                 <MdOutlineShoppingBag className="w-4 h-4" />
                             </button>
 
                             <button aria-label="Add to wishlist"
-                                    onClick={handleAddToWishlist}
-                                    className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                onClick={handleAddToWishlist}
+                                className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
                             >
                                 {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
                             </button>
 
                             <button aria-label="Quick view"
-                                    onClick={handleQuickView}
-                                    className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                onClick={handleQuickView}
+                                className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
                             >
                                 <FiEye className="w-4 h-4" />
                             </button>
@@ -311,17 +312,17 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                                 </p>
 
                                 {/* MRP */}
-                                {mrp && (mrp>price) && (
+                                {mrp && (mrp > price) && (
                                     <span className="text-base text-gray-600 line-through mt-1">
-      ₹{Math.round(mrp)}
-    </span>
+                                        ₹{Math.round(mrp)}
+                                    </span>
                                 )}
 
                                 {/* Discount */}
-                                {mrp && price && (mrp>price) && (
+                                {mrp && price && (mrp > price) && (
                                     <span className="text-sm font-semibold text-green-600 mt-1">
-      {Math.round(((mrp - price) / mrp) * 100)}% OFF
-    </span>
+                                        {Math.round(((mrp - price) / mrp) * 100)}% OFF
+                                    </span>
                                 )}
                             </div>
 

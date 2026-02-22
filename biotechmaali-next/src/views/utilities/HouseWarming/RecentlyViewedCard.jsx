@@ -20,7 +20,7 @@ const RecentlyViewedCard = ({
   oldPrice,
   imageUrl,
   product,
-  
+
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
@@ -65,14 +65,14 @@ const RecentlyViewedCard = ({
 
     try {
       if (!isAuthenticated) {
-        if (window.innerWidth <= 640) { 
-            router.push("/mobile-signin", { replace: true });
+        if (window.innerWidth <= 640) {
+          router.push("/mobile-signin", { replace: true });
         } else {
-            router.push("/?modal=signIn", { replace: true });
+          router.push("/?modal=signIn", { replace: true });
         }
         return;
-    }
-    
+      }
+
 
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/`,
@@ -96,12 +96,12 @@ const RecentlyViewedCard = ({
 
     if (!isAuthenticated) {
       if (window.innerWidth <= 640) { // Matches Tailwind's `sm` breakpoint
-          router.push("/mobile-signin", { replace: true });
+        router.push("/mobile-signin", { replace: true });
       } else {
-          router.push("/?modal=signIn", { replace: true });
+        router.push("/?modal=signIn", { replace: true });
       }
       return;
-  }
+    }
 
     try {
       const response = await axios.post(
@@ -121,98 +121,109 @@ const RecentlyViewedCard = ({
 
   const handleQuickView = (e) => {
     e.stopPropagation();
-    router.push(`/product/${product.id}`, { state: { product } });
+    const category_slug = product?.category_slug || "all";
+    const sub_category_slug = product?.sub_category_slug || "all";
+    const product_slug = product?.slug || product?.id;
+
+    // Standardized 3-segment URL pattern: /:category/:subcategory/:productSlug/
+    router.push(`/${category_slug}/${sub_category_slug}/${product_slug}/`, {
+      state: {
+        product_id: product_slug,
+        category_slug: category_slug,
+        sub_category_slug: sub_category_slug
+      }
+    });
   };
 
   return (
     <>
       <Verify />
-    
+
       <div className="sm:hidden">
-          <Paper
-            elevation={0}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              textAlign: "center",
-              position: "relative",
-              overflow: "hidden",
-              backgroundColor: "white",
-              borderRadius: "8px",
-              border: "1px solid transparent",
-              transition: "all 0.3s ease",
-              "&:hover": {
-                boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.1)",
-                transform: "translateY(-5px)",
-                backgroundColor: "#C2FFC7",
-                border: "1px solid #e5e7eb",
-              },
-            }}
-          >
-            <div className="relative w-full flex flex-col items-center p-2">
-              <div className="relative w-full flex mb-4">
-                <img name=" "   
-                  className="w-40 h-24 sm:w-40 sm:h-36 object-contain rounded-lg transition-transform duration-300 relative z-10 mt-6"
-                  src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
-                  loading="lazy"
-                  alt={name}
-                />
+        <Paper
+          elevation={0}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center",
+            position: "relative",
+            overflow: "hidden",
+            backgroundColor: "white",
+            borderRadius: "8px",
+            border: "1px solid transparent",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.1)",
+              transform: "translateY(-5px)",
+              backgroundColor: "#C2FFC7",
+              border: "1px solid #e5e7eb",
+            },
+          }}
+        >
+          <div className="relative w-full flex flex-col items-center p-2">
+            <div className="relative w-full flex mb-4">
+              <img name=" "
+                className="w-40 h-24 sm:w-40 sm:h-36 object-contain rounded-lg transition-transform duration-300 relative z-10 mt-6"
+                src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
+                loading="lazy"
+                alt={name}
+              />
+            </div>
+
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 transition-all duration-300 z-20 opacity-0 hover:opacity-100 hover:translate-y-0">
+              <button
+                onClickCapture={handleAddToCart}
+                className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+              >
+                <MdOutlineShoppingBag className="w-4 h-4" />
+              </button>
+              <button
+                onClick={handleAddToWishlist}
+                className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+              >
+                {inWishlist ? (
+                  <FaHeart className="w-4 h-4" />
+                ) : (
+                  <FaRegHeart className="w-4 h-4" />
+                )}
+              </button>
+              <button
+                onClick={handleQuickView}
+                className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+              >
+                <FiEye className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="flex flex-col p-2 w-full text-center gap-2">
+              <div className="flex justify-center">
+                {product && (
+                  <ReactStars
+                    count={5}
+                    value={product.rating || 0} // Provide a default value for rating
+                    edit={false}
+                    size={10}
+                    activeColor="#0D2164"
+                    char={<FaStar />}
+                  />
+                )}
               </div>
 
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 transition-all duration-300 z-20 opacity-0 hover:opacity-100 hover:translate-y-0">
-                <button
-                  onClickCapture={handleAddToCart}
-                  className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
-                >
-                  <MdOutlineShoppingBag className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={handleAddToWishlist}
-                  className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
-                >
-                  {inWishlist ? (
-                    <FaHeart className="w-4 h-4" />
-                  ) : (
-                    <FaRegHeart className="w-4 h-4" />
-                  )}
-                </button>
-                <button
-                  onClick={handleQuickView}
-                  className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
-                >
-                  <FiEye className="w-4 h-4" />
-                </button>
-              </div>
-
-              <div className="flex flex-col p-2 w-full text-center gap-2">
-                <div className="flex justify-center">
-                  {product && (
-                    <ReactStars
-                      count={5}
-                      value={product.rating || 0} // Provide a default value for rating
-                      edit={false}
-                      size={10}
-                      activeColor="#0D2164"
-                      char={<FaStar />}
-                    />
-                  )}
-                </div>
-
-                <Typography sx={{ typography: { xs: "caption", md: "subtitle2" } }}>
-                  {name}
-                </Typography>
-                <div className="flex flex-col justify-center items-center mt-1">
-                  <p className="text-xs font-medium text-black">₹{price}.00</p>
-                  {oldPrice && (
-                    <p className="text-xs text-gray-400 line-through">₹{oldPrice}.00</p>
-                  )}
-                </div>
+              <Typography sx={{ typography: { xs: "caption", md: "subtitle2" } }}>
+                {name}
+              </Typography>
+              <div className="flex flex-col justify-center items-center mt-1">
+                <p className="text-xs font-medium text-black">₹{price}.00</p>
+                {oldPrice && (
+                  <p className="text-xs text-gray-400 line-through">₹{oldPrice}.00</p>
+                )}
               </div>
             </div>
-          </Paper>
-        </div>
-        <div className="hidden sm:block">
+          </div>
+        </Paper>
+      </div>
+      <div className="hidden sm:block">
         <Paper
           elevation={0}
           onMouseEnter={() => setIsHovered(true)}
@@ -245,7 +256,7 @@ const RecentlyViewedCard = ({
             onMouseLeave={() => setIsImageHovered(false)}
           >
             <div className="relative rounded-lg flex justify-center items-center w-full">
-              <img name=" "   
+              <img name=" "
                 className={`w-40 h-43 sm:w-48 sm:h-53 lg:h-[260px] object-cover mt-4 lg:w-[226px] object-contain transition-transform duration-300 rounded-[2rem] ${isImageHovered ? "scale-105" : "scale-100"
                   }`}
                 src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
@@ -255,8 +266,8 @@ const RecentlyViewedCard = ({
 
               <div
                 className={`absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 transition-all duration-300 ease-in-out ${isImageHovered
-                    ? "opacity-100 translate-y-0 pointer-events-auto"
-                    : "opacity-0 translate-y-5 pointer-events-none"
+                  ? "opacity-100 translate-y-0 pointer-events-auto"
+                  : "opacity-0 translate-y-5 pointer-events-none"
                   }`}
               >
                 <button
@@ -270,8 +281,8 @@ const RecentlyViewedCard = ({
                 <button
                   onClick={handleAddToWishlist}
                   className={`w-8 h-8 rounded-full ${inWishlist
-                      ? "bg-bio-green text-white"
-                      : "bg-white hover:bg-bio-green hover:text-white"
+                    ? "bg-bio-green text-white"
+                    : "bg-white hover:bg-bio-green hover:text-white"
                     } flex items-center justify-center transition-colors duration-200 cursor-pointer`}
                 >
                   {inWishlist ? (
@@ -308,7 +319,7 @@ const RecentlyViewedCard = ({
             </div>
           </div>
         </Paper>
-        </div>
+      </div>
     </>
   );
 };

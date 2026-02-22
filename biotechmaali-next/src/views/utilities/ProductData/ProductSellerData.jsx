@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import Verify from "../../../Services/Services/Verify";
 
 const ProductSellerCard = ({
-  
+
   name,
   price,
   oldPrice,
@@ -138,14 +138,17 @@ const ProductSellerCard = ({
   const handleQuickView = (e) => {
     // e.stopPropagation();
     const category_slug = product?.category_slug;
-    const sub_category_slug = product?.sub_category_slug;
+    const sub_category_slug = product?.sub_category_slug || "all";
+    const product_slug = product?.slug;
 
-    router.push(`/category/${category_slug}/${product.slug}/`, {       state: {
-        product_id: product.slug,
-        category_slug:category_slug,
-        sub_category_slug:sub_category_slug
-
-      } });
+    // Standardized 3-segment URL pattern: /:category/:subcategory/:productSlug/
+    router.push(`/${category_slug}/${sub_category_slug}/${product_slug}/`, {
+      state: {
+        product_id: product_slug,
+        category_slug: category_slug,
+        sub_category_slug: sub_category_slug
+      }
+    });
   };
   return (
     <>
@@ -182,7 +185,7 @@ const ProductSellerCard = ({
           onMouseLeave={() => setIsImageHovered(false)}
         >
           <div className="relative rounded-lg flex justify-center items-center w-full">
-            <img name=" "   
+            <img name=" "
               className={`w-40 h-43 sm:w-48 sm:h-53 lg:h-[260px] object-cover mt-4 lg:w-[226px] object-contain transition-transform duration-300 rounded-[2rem] 
                 ${isImageHovered ? "scale-105" : "scale-100"}
               `}
@@ -205,11 +208,10 @@ const ProductSellerCard = ({
 
               <button
                 onClick={handleAddToWishlist}
-                className={`w-8 h-8 rounded-full ${
-                  inWishlist
+                className={`w-8 h-8 rounded-full ${inWishlist
                     ? "bg-bio-green text-white"
                     : "bg-white hover:bg-bio-green hover:text-white"
-                } flex items-center justify-center transition-colors duration-200 cursor-pointer`}
+                  } flex items-center justify-center transition-colors duration-200 cursor-pointer`}
               >
                 {inWishlist ? (
                   <FaHeart className="w-4 h-4" />

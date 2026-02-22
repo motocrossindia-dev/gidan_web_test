@@ -38,57 +38,59 @@ const ProductGrid = ({ results }) => {
 
   const handleProductClick = (product) => {
     const category_slug = product?.category_slug;
-    const sub_category_slug = product?.sub_category_slug;
+    const sub_category_slug = product?.sub_category_slug || "all";
+    const product_slug = product?.slug;
 
-    // All products have category, subcategory, and product slug
-    router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {       state: {
-        product_id: product.slug,
-        category_slug:category_slug,
-        sub_category_slug:sub_category_slug
-
-      } });
+    // Standardized 3-segment URL pattern: /:category/:subcategory/:productSlug/
+    router.push(`/${category_slug}/${sub_category_slug}/${product_slug}/`, {
+      state: {
+        product_id: product_slug,
+        category_slug: category_slug,
+        sub_category_slug: sub_category_slug
+      }
+    });
   };
 
   return (
-      <div className="mt-8 p-2 bg-white rounded-md md:ml-16 relative z-10">
+    <div className="mt-8 p-2 bg-white rounded-md md:ml-16 relative z-10">
 
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xs md:text-lg text-gray-500 font-normal">
-            Showing {products.length} products
-          </h2>
-          <div className="relative mr-6 p-3">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xs md:text-lg text-gray-500 font-normal">
+          Showing {products.length} products
+        </h2>
+        <div className="relative mr-6 p-3">
 
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-3 gap-4 justify-items-center font-sans">
+        {(results?.length ? results : products).map((product, index) => (
+          <div
+            key={index}
+            onClick={() => handleProductClick(product)}
+            className="cursor-pointer"
+          >
+            <TrendingCard
+              key={index}
+              name={product.name}
+              price={Math.round(product.selling_price)}
+              mrp={Math.round(product.mrp || 0)}
+              imageUrl={product?.image || plantImage}
+              rating={product.rating}
+              product={product}
+              inCart={product.is_cart}
+              inWishlist={product.is_wishlist}
+              getProducts={getProducts}
+              ribbon={product.ribbon}
+            />
           </div>
-        </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-3 gap-4 justify-items-center font-sans">
-          {(results?.length ? results : products).map((product, index) => (
-              <div
-                  key={index}
-                  onClick={() => handleProductClick(product)}
-                  className="cursor-pointer"
-              >
-                <TrendingCard
-                    key={index}
-                    name={product.name}
-                    price={Math.round(product.selling_price)}
-                    mrp={Math.round(product.mrp || 0)}
-                    imageUrl={product?.image || plantImage}
-                    rating={product.rating}
-                    product={product}
-                    inCart={product.is_cart}
-                    inWishlist={product.is_wishlist}
-                    getProducts={getProducts}
-                    ribbon={product.ribbon}
-                />
-              </div>
-
-          ))}
-
-        </div>
-
+        ))}
 
       </div>
+
+
+    </div>
   );
 };
 

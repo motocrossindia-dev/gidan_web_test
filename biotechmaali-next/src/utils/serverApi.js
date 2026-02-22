@@ -58,9 +58,11 @@ export async function fetchProductsByFilters(filters = {}) {
     }
 }
 
-export async function fetchProductDetail(productSlug) {
+export async function fetchProductDetail(productSlug, searchParams = {}) {
     try {
-        const res = await fetch(`${API_URL}/product/defaultProduct/${encodeURIComponent(productSlug)}/`, { next: { revalidate: 3600 } });
+        const query = new URLSearchParams(searchParams).toString();
+        const url = `${API_URL}/product/defaultProduct/${encodeURIComponent(productSlug)}/${query ? '?' + query : ''}`;
+        const res = await fetch(url, { next: { revalidate: 3600 } });
         if (!res.ok) return null;
         const data = await res.json();
         return data;
