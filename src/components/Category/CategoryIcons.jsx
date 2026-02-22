@@ -122,7 +122,7 @@ const CategoryIcons = () => {
                   />
                 </div>
                 <h2 className="mt-2 text-center text-xs sm:text-sm md:text-base font-medium text-gray-800 max-w-[70px] xs:max-w-[80px] sm:max-w-[90px] md:max-w-[100px] lg:max-w-[110px] leading-tight">
-                  {category.name}gh
+                  {category.name}
                 </h2>
               </div>
 
@@ -136,7 +136,7 @@ const CategoryIcons = () => {
               >
                 <div className="bg-white border border-gray-300 shadow-xl rounded-lg p-3 sm:p-4">
                   <h3 className="text-bio-green font-bold mb-2 text-sm sm:text-base">
-                    {category.name}Ad
+                    {category.name}
                   </h3>
                   {category.subCategory && category.subCategory.length > 0 ? (
                     <ul className="text-gray-700 space-y-1">
