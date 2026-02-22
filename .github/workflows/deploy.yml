@@ -1,0 +1,40 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main  # Or 'master' depending on your default branch name
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "Starting Deployment..."
+            
+            # 1. Go to project directory
+            cd /var/www/gidan-app
+            
+            # 2. Pull latest code from GitHub
+            git pull origin main
+            
+            # 3. Install dependencies
+            npm install
+            
+            # 4. Build the application
+            npm run build
+            
+            # 5. Restart PM2
+            pm2 restart biotechmaali
+            
+            echo "Deployment Successful!"
