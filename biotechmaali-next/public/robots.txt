@@ -47,4 +47,4 @@ Allow: /fonts/
 Allow: /favicon.ico
 
 # Sitemap locations
-Sitemap: https://backend.gidan.store/sitemap.xml
+Sitemap: https://www.gidan.store/sitemap.xml

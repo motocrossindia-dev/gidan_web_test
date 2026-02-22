@@ -49,6 +49,16 @@ const nextConfig: NextConfig = {
     ];
   },
 
+  // Proxy sitemap.xml to backend
+  async rewrites() {
+    return [
+      {
+        source: "/sitemap.xml",
+        destination: "https://backend.gidan.store/sitemap.xml",
+      },
+    ];
+  },
+
   // Shim react-helmet / react-helmet-async (not compatible with React 19 / Next.js App Router)
   webpack(config) {
     const shimPath = path.resolve(
