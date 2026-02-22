@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import React, { useState, useCallback, memo } from "react";
 import { Paper, Typography } from "@mui/material";
 import { FaRegHeart, FaHeart, FaStar } from "react-icons/fa";
@@ -179,11 +180,12 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
 
                     <div className="relative w-full flex justify-center mb-2">
                         <div className="relative rounded-lg flex justify-center items-center w-full">
-                            <img
+                            <Image
                                 src={typeof imageUrl === 'string' && imageUrl ? `${process.env.NEXT_PUBLIC_API_URL}${imageUrl}` : '/placeholder-product.png'}
                                 alt={name}
                                 width={226}
                                 height={260}
+                                sizes="(max-width: 640px) 160px, (max-width: 768px) 192px, 226px"
                                 loading="lazy"
                                 className="w-40 h-43 sm:w-48 sm:h-53 lg:h-[260px] mt-4 lg:w-[226px] object-contain transition-transform duration-300 rounded-[2rem] scale-100 hover:scale-105"
                             />
@@ -303,11 +305,12 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                     <div className="relative w-full flex flex-col items-center">
                         {/* IMAGE WRAPPER */}
                         <div className="relative w-full bg-white overflow-hidden">
-                            <img
+                            <Image
                                 src={typeof imageUrl === 'string' && imageUrl ? `${process.env.NEXT_PUBLIC_API_URL}${imageUrl}` : '/placeholder-product.png'}
                                 alt={name}
                                 width={400}
-                                height={160}
+                                height={400}
+                                sizes="(max-width: 640px) 100vw, 400px"
                                 loading="lazy"
                                 className="w-full h-40 object-cover"
                             />

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
+import Image from "next/image";
 import "swiper/css";
 import "swiper/css/navigation";
 import { getMobileBannerUrl, getDesktopBannerUrl } from "../../hooks/useBannerImages";
@@ -28,30 +29,35 @@ const Banner = ({ home }) => {
                             <div className="flex flex-col lg:flex-row items-center bg-gradient-to-r from-white to-gray-200 rounded-lg shadow-sm p-4">
 
                                 {/* Image Section */}
-                                <div className="w-full lg:w-1/2 flex justify-center">
-                                    <picture>
-                                        {/* Mobile */}
-                                        <source
-                                            media="(max-width: 639px)"
-                                            srcSet={`https://backend.gidan.store${getMobileBannerUrl(banner)}`}
-                                        />
-                                        {/* Desktop */}
-                                        <source
-                                            media="(min-width: 640px)"
-                                            srcSet={`https://backend.gidan.store${getDesktopBannerUrl(banner)}`}
-                                        />
-                                        {/* Fallback */}
-                                        <img
+                                <div className="w-full lg:w-1/2 flex justify-center relative">
+                                    {/* Desktop Image */}
+                                    <div className="hidden sm:block w-full">
+                                        <Image
                                             src={`https://backend.gidan.store${getDesktopBannerUrl(banner)}`}
                                             alt={banner.title || "Gidan promotional banner"}
-                                            className="w-full h-auto max-h-[230px] sm:max-h-[350px] object-contain rounded-lg"
-                                            loading={index === 0 ? "eager" : "lazy"}
-                                            fetchPriority={index === 0 ? "high" : "low"}
-                                            decoding="async"
                                             width={800}
                                             height={600}
+                                            className="w-full h-auto max-h-[350px] object-contain rounded-lg"
+                                            priority={index === 0}
+                                            fetchPriority={index === 0 ? "high" : "low"}
+                                            loading={index === 0 ? "eager" : "lazy"}
+                                            quality={85}
                                         />
-                                    </picture>
+                                    </div>
+                                    {/* Mobile Image */}
+                                    <div className="block sm:hidden w-full">
+                                        <Image
+                                            src={`https://backend.gidan.store${getMobileBannerUrl(banner)}`}
+                                            alt={banner.title || "Gidan promotional banner"}
+                                            width={400}
+                                            height={300}
+                                            className="w-full h-auto max-h-[230px] object-contain rounded-lg"
+                                            priority={index === 0}
+                                            fetchPriority={index === 0 ? "high" : "low"}
+                                            loading={index === 0 ? "eager" : "lazy"}
+                                            quality={85}
+                                        />
+                                    </div>
                                 </div>
 
                                 {/* Text Section */}

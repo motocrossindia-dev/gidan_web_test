@@ -93,8 +93,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  ReactDOM.preconnect('https://backend.gidan.store', { crossOrigin: "anonymous" });
-  ReactDOM.preconnect('https://backend.gidan.store');
+  ReactDOM.preconnect('https://backend.gidan.store', { crossOrigin: 'anonymous' });
 
   return (
     <html lang="en">

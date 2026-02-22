@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 // ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
 import { useState, useEffect, useMemo } from "react";
@@ -111,14 +112,14 @@ const CategoryIcons = () => {
                     );
                   }}
                 >
-                  <img
+                  <Image
                     src={`${process.env.NEXT_PUBLIC_API_URL}${category.image}`}
                     alt={category.name || "Category"}
                     className="w-full h-full object-contain rounded-full"
                     loading="lazy"
-                    width="200"
-                    height="200"
-                    style={{ aspectRatio: '1/1' }}
+                    width={88}
+                    height={88}
+                    sizes="(max-width: 640px) 64px, (max-width: 768px) 72px, 88px"
                   />
                 </div>
                 <h2 className="mt-2 text-center text-xs sm:text-sm md:text-base font-medium text-gray-800 max-w-[70px] xs:max-w-[80px] sm:max-w-[90px] md:max-w-[100px] lg:max-w-[110px] leading-tight">
