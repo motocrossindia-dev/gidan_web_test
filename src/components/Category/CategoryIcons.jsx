@@ -122,7 +122,7 @@ const CategoryIcons = () => {
                   />
                 </div>
                 <h2 className="mt-2 text-center text-xs sm:text-sm md:text-base font-medium text-gray-800 max-w-[70px] xs:max-w-[80px] sm:max-w-[90px] md:max-w-[100px] lg:max-w-[110px] leading-tight">
-                  {category.name}
+                  {category.name}gh
                 </h2>
               </div>
 
