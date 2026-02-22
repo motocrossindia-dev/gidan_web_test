@@ -1,0 +1,52 @@
+# Gidan Store - Robots.txt
+# https://gidan.store/robots.txt
+
+User-agent: *
+Allow: /
+
+# Disallow account/private pages
+Disallow: /cart
+Disallow: /checkout
+Disallow: /profile/
+Disallow: /orders
+Disallow: /wishlist
+Disallow: /wallet
+Disallow: /wallethistory
+Disallow: /btcoins
+Disallow: /mobile-login
+Disallow: /mobile-signin
+Disallow: /mobile-verification
+Disallow: /mobilesidebar/
+Disallow: /add-address
+Disallow: /address
+Disallow: /history
+Disallow: /order-summary
+Disallow: /order-success
+Disallow: /payment
+Disallow: /PaymentGateway
+Disallow: /successpage
+Disallow: /thankyou
+Disallow: /hamburger
+Disallow: /side
+
+# Disallow admin/API endpoints
+Disallow: /api/
+Disallow: /admin/
+
+# Disallow search results (if applicable)
+Disallow: /search?*
+
+# Allow all static assets
+Allow: /static/
+Allow: /assets/
+Allow: /*.css
+Allow: /*.js
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.png
+Allow: /*.webp
+Allow: /*.svg
+Allow: /*.gif
+
+# Sitemap location
+Sitemap: https://www.gidan.store/sitemap.xml
