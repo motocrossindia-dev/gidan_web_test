@@ -158,11 +158,13 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                         backgroundColor: "white",
                         borderRadius: "1rem",
                         border: "1px solid transparent",
+                        zIndex: isHovered ? 10 : 1,
                         "&:hover": {
                             boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
                             transform: "translateY(-8px)",
                             backgroundColor: "#CFFFBE",
                             border: "1px solid #e5e7eb",
+                            zIndex: 10,
                         },
                     }}
                 >
@@ -279,11 +281,13 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                         borderRadius: "8px",
                         border: "1px solid transparent",
                         transition: "all 0.3s ease",
+                        zIndex: isHovered ? 10 : 1,
                         "&:hover": {
                             boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.1)",
                             transform: "translateY(-5px)",
                             backgroundColor: "#C2FFC7",
                             border: "1px solid #e5e7eb",
+                            zIndex: 10,
                         },
                     }}
                 >
