@@ -277,7 +277,7 @@ const PaymentGateway = () => {
 
         <link
           rel="canonical"
-          href="https://gidan.store/paymentgateway"
+          href="https://www.gidan.store//paymentgateway"
         />
       </Helmet>
 

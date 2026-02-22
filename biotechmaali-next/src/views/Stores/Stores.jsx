@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 //   const fetchStores = async () => {
 //     try {
 //       const response = await axiosInstance.get(`/store/store_list/`);
-      
+
 //       setStores(response?.data?.data?.stores); // Set the stores if the response is an array
 //     } catch (error) {
 //       console.error(error);
@@ -92,7 +92,7 @@ import { useRouter } from "next/navigation";
 //         )}
 //       </div>
 
-     
+
 //       {/* Request a Free Franchise Consultation Section */}
 //       <section className="text-center my-8 w-full p-6 bg-gray-100">
 //         <h2 className="text-xl font-semibold mb-4">
@@ -119,20 +119,20 @@ import { Helmet } from "react-helmet-async";
 
 const Stores = () => {
   const router = useRouter();
-  const [loading, setLoading] = useState(true); 
-  const [error, setError] = useState(null); 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [stores, setStores] = useState([]);
 
   // Fetch stores from API
   const fetchStores = async () => {
     try {
       const response = await axiosInstance.get(`/store/store_list/`);
-      setStores(response?.data?.data?.stores); 
+      setStores(response?.data?.data?.stores);
     } catch (error) {
       console.error(error);
       setError("Error fetching store data");
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -155,18 +155,18 @@ const Stores = () => {
   return (
     <>
       <Helmet>
-  <title>About Gidan | Trusted Online Shopping Store</title>
+        <title>About Gidan | Trusted Online Shopping Store</title>
 
-  <meta
-    name="description"
-    content="Learn about Gidan – our story, values & commitment to quality products and customer satisfaction."
-  />
+        <meta
+          name="description"
+          content="Learn about Gidan – our story, values & commitment to quality products and customer satisfaction."
+        />
 
-  <link
-    rel="canonical"
-    href="https://gidan.store/stores"
-  />
-</Helmet>
+        <link
+          rel="canonical"
+          href="https://www.gidan.store//stores"
+        />
+      </Helmet>
 
 
 
@@ -181,8 +181,8 @@ const Stores = () => {
               const mapLink = store.address_link
                 ? store.address_link
                 : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                    store.address
-                  )}`;
+                  store.address
+                )}`;
               return (
                 <div
                   key={index}

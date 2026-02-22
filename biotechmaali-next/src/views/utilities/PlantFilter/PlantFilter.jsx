@@ -2,7 +2,6 @@
 
 import { usePathname, useSearchParams, useParams } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
-// Material UI imports
 import { SwipeableDrawer, IconButton, Box, Typography } from "@mui/material";
 import { FiFilter } from "react-icons/fi";
 import { Close as CloseIcon } from "@mui/icons-material";
@@ -36,11 +35,7 @@ function PlantFilter() {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const path = pathname;
-
-    // Extract slugs from URL
     const { categorySlug, subcategorySlug } = useParams();
-
-    // Detect filter type based on route path
     const routeBasedFilters = {
         isSeasonalCollection: path === '/seasonal' || path === '/seasonal/',
         isTrending: path === '/trending' || path === '/trending/' || path === '/latest' || path === '/latest/',
@@ -86,8 +81,6 @@ function PlantFilter() {
         };
         return slugToId[categorySlug.toLowerCase()] || null;
     }, [categorySlug]);
-
-    // Use derivedType as the effective typeKey
     const typeKey = derivedType;
 
     // State to store fetched category/subcategory names when navigating via URL
@@ -291,7 +284,6 @@ function PlantFilter() {
     let canonicalCategorySlug = categorySlug || category_slug;
     let canonicalSubcategorySlug = subcategorySlug || subcategory_slug;
 
-    // Override with pathname segments for standard category routes if available
     if (!isSpecialRoute && pathSegments.length > 0) {
         canonicalCategorySlug = pathSegments[0];
         if (pathSegments.length > 1) {
@@ -323,8 +315,8 @@ function PlantFilter() {
                     rel="canonical"
                     href={
                         canonicalSubcategorySlug
-                            ? `https://gidan.store/${canonicalCategorySlug}/${canonicalSubcategorySlug}/`
-                            : `https://gidan.store/${canonicalCategorySlug}/`
+                            ? `https://www.gidan.store//${canonicalCategorySlug}/${canonicalSubcategorySlug}/`
+                            : `https://www.gidan.store//${canonicalCategorySlug}/`
                     }
                 />
             </Helmet>

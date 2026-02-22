@@ -4,15 +4,15 @@ export default function ReturnPolicySchema() {
         "@graph": [
             {
                 "@type": "WebPage",
-                "@id": "https://gidan.store/return-policy/#webpage",
-                "url": "https://gidan.store/return-policy/",
+                "@id": "https://www.gidan.store//return-policy/#webpage",
+                "url": "https://www.gidan.store//return-policy/",
                 "name": "Gidan Return & Replacement Policy"
             },
             {
                 "@type": "MerchantReturnPolicy",
-                "@id": "https://gidan.store/#returnpolicy",
+                "@id": "https://www.gidan.store//#returnpolicy",
                 "name": "Gidan Return & Replacement Policy",
-                "merchantReturnLink": "https://gidan.store/return-policy/",
+                "merchantReturnLink": "https://www.gidan.store//return-policy/",
                 "applicableCountry": {
                     "@type": "Country",
                     "name": "IN"
@@ -30,8 +30,8 @@ export default function ReturnPolicySchema() {
 
     return (
         <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
     );
 }

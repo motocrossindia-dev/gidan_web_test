@@ -9,14 +9,14 @@ export default function AboutUsSchema() {
             {
                 "@type": "AboutPage",
                 "name": "About Gidan Store",
-                "url": "https://gidan.store/about-us",
+                "url": "https://www.gidan.store//about-us",
                 "description": "Learn about Gidan Store, Bangalore’s trusted destination for plants, planters, and urban gardening essentials."
             },
             {
                 "@type": "Organization",
                 "name": "Gidan Store",
-                "url": "https://gidan.store",
-                "logo": `https://gidan.store/${logo}`,
+                "url": "https://www.gidan.store/",
+                "logo": `https://www.gidan.store//${logo}`,
                 "description": "Gidan Store is your trusted destination for plants, planters, and everything that makes urban gardening simple and joyful.",
                 "address": {
                     "@type": "PostalAddress",
@@ -47,8 +47,8 @@ export default function AboutUsSchema() {
 
     return (
         <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
     );
 }

@@ -8,19 +8,19 @@ export default function ContactUsSchema() {
         "@graph": [
             {
                 "@type": "ContactPage",
-                "@id": "https://gidan.store/contact-us/#contactpage",
-                "url": "https://gidan.store/contact-us/",
+                "@id": "https://www.gidan.store//contact-us/#contactpage",
+                "url": "https://www.gidan.store//contact-us/",
                 "name": "Contact Gidan Store",
                 "description": "Get in touch with Gidan Store for plants, planters, and urban gardening essentials in Bangalore."
             },
             {
                 "@type": "Organization",
-                "@id": "https://gidan.store/#organization",
+                "@id": "https://www.gidan.store//#organization",
                 "name": "Gidan Store",
-                "url": "https://gidan.store/",
+                "url": "https://www.gidan.store//",
                 "logo": {
                     "@type": "ImageObject",
-                    "url": `https://gidan.store/${logo}`
+                    "url": `https://www.gidan.store//${logo}`
                 },
                 "contactPoint": {
                     "@type": "ContactPoint",
@@ -38,7 +38,7 @@ export default function ContactUsSchema() {
             },
             {
                 "@type": "Store",
-                "@id": "https://gidan.store/#store",
+                "@id": "https://www.gidan.store//#store",
                 "name": "Gidan Store",
                 "address": {
                     "@type": "PostalAddress",
@@ -68,8 +68,8 @@ export default function ContactUsSchema() {
 
     return (
         <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
     );
 }

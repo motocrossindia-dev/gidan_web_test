@@ -85,7 +85,7 @@
 //           name="description"
 //           content="Buy plants, planters, pots & seeds online in Bangalore from Gidan. Fresh plants, garden décor and reliable doorstep delivery."
 //         />
-//         <link rel="canonical" href="https://gidan.store" />
+//         <link rel="canonical" href="https://www.gidan.store/" />
 //       </Helmet>
 // 
 //       <ResourceHints />
@@ -246,7 +246,7 @@ const Home = ({ initialBanners }) => {
           name="description"
           content="Buy plants, planters, pots & seeds online in Bangalore from Gidan. Fresh plants, garden décor and reliable doorstep delivery."
         />
-        <link rel="canonical" href="https://gidan.store" />
+        <link rel="canonical" href="https://www.gidan.store/" />
       </Helmet>
 
       <ResourceHints />

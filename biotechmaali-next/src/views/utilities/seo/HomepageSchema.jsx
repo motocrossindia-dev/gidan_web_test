@@ -1,6 +1,6 @@
 export default function HomepageSchema({
-                                           siteUrl = "https://gidan.store",
-                                       }) {
+    siteUrl = "https://www.gidan.store/",
+}) {
     const schema = {
         "@context": "https://schema.org",
         "@graph": [
@@ -40,8 +40,8 @@ export default function HomepageSchema({
 
     return (
         <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
     );
 }

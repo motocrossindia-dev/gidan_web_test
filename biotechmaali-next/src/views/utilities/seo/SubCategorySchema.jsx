@@ -1,9 +1,9 @@
 export default function SubCategorySchema({
-                                              category,
-                                              subCategory,
-                                              siteUrl = "https://gidan.store",
-                                              items = [] // [{ slug: "product-slug", category_slug: "category", sub_category_slug: "subcategory" }, ...]
-                                          }) {
+    category,
+    subCategory,
+    siteUrl = "https://www.gidan.store/",
+    items = [] // [{ slug: "product-slug", category_slug: "category", sub_category_slug: "subcategory" }, ...]
+}) {
     if (!subCategory || !category) return null;
 
     // Build proper 2-segment subcategory URL
@@ -50,7 +50,7 @@ export default function SubCategorySchema({
                 "itemListElement": items.map((item, index) => {
                     // Build proper 3-segment product URL
                     const productUrl = `${siteUrl}/${item.category_slug}/${item.sub_category_slug}/${item.slug}/`;
-                    
+
                     return {
                         "@type": "ListItem",
                         "position": index + 1,
@@ -63,8 +63,8 @@ export default function SubCategorySchema({
 
     return (
         <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
     );
 }

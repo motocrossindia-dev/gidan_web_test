@@ -7,13 +7,13 @@ export default function WebsiteSchema() {
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "Gidan Store",
-        "url": "https://gidan.store"
+        "url": "https://www.gidan.store/"
     };
 
     return (
         <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
     );
 }

@@ -138,25 +138,25 @@ const ProfileForm = () => {
     setIsEditing(false);
   };
 
-    const handleGstChange = (e) => {
+  const handleGstChange = (e) => {
     dispatch(setGst(e.target.value));
   };
 
   return (
-      <>
-        <Helmet>
-  <title>Gidan - My Profile Page</title>
-  <meta name="robots" content="noindex, nofollow" />
-  <meta
-    name="description"
-    content="Manage your Gidan account, view orders, track deliveries, and update your personal details. Access all your gardening purchases and rewards in one place."
-  />
+    <>
+      <Helmet>
+        <title>Gidan - My Profile Page</title>
+        <meta name="robots" content="noindex, nofollow" />
+        <meta
+          name="description"
+          content="Manage your Gidan account, view orders, track deliveries, and update your personal details. Access all your gardening purchases and rewards in one place."
+        />
 
-  <link
-    rel="canonical"
-    href="https://gidan.store/profile"
-  />
-</Helmet>
+        <link
+          rel="canonical"
+          href="https://www.gidan.store//profile"
+        />
+      </Helmet>
 
       <Verify />
       <div>
@@ -284,10 +284,10 @@ const ProfileForm = () => {
                         />
                         {dateOfBirth ===
                           new Date().toISOString().split("T")[0] && (
-                          <p className="text-red-500 text-sm mt-2">
-                            Valid date of birth required
-                          </p>
-                        )}
+                            <p className="text-red-500 text-sm mt-2">
+                              Valid date of birth required
+                            </p>
+                          )}
                       </label>
                     </div>
                   </div>
@@ -335,7 +335,7 @@ const ProfileForm = () => {
                         disabled={!isEditing}
                         value={gst}
                         onChange={handleGstChange} // Update state
-                        
+
                       />
                     </div>
                   </div>

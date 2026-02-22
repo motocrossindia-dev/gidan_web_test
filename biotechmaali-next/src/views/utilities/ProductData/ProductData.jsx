@@ -836,13 +836,13 @@ export default function Component() {
         product?.meta_keywords || "gardening, plants, seeds, pots, plant care";
 
     // Canonical URL - Use currentUrl state to ensure it always matches and triggers re-renders
-    const canonicalUrl = `https://gidan.store${currentUrl}`;
+    const canonicalUrl = `https://www.gidan.store/${currentUrl}`;
 
     // OG image fallback
     const ogImage =
         product?.images?.[0]?.image ||
         product?.main_image ||
-        "https://gidan.store/default-product.jpg";
+        "https://www.gidan.store//default-product.jpg";
 
 
     return (
@@ -2135,16 +2135,16 @@ export default function Component() {
 //     const canonicalUrl =
 //         (id || product_slug || product?.slug) &&
 //         (category_slug || product?.category_slug || scategory_slug)
-//             ? `https://gidan.store/category/${encodeURIComponent(
+//             ? `https://www.gidan.store//category/${encodeURIComponent(
 //                 category_slug || product?.category_slug || scategory_slug
 //             )}/${encodeURIComponent(product_slug || product?.slug || id)}/`
-//             : 'https://gidan.store';
+//             : 'https://www.gidan.store/';
 //
 // // OG image fallback
 //     const ogImage =
 //         product?.images?.[0]?.image ||
 //         product?.main_image ||
-//         "https://gidan.store/default-product.jpg";
+//         "https://www.gidan.store//default-product.jpg";
 //
 //
 //     return (

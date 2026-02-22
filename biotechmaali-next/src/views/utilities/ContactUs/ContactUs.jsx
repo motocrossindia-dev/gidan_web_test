@@ -34,8 +34,8 @@ const ContactUs = () => {
     try {
       const response = await axiosInstance.get(`/store/store_list/`);
       if (response.status === 200) {
-      setStores(response?.data?.data?.stores || []); // Set the stores if the response is an array
-        
+        setStores(response?.data?.data?.stores || []); // Set the stores if the response is an array
+
       }
     } catch (error) {
       setError("Error fetching store data");
@@ -110,7 +110,7 @@ const ContactUs = () => {
 
       if (response?.status === 201) {
         const result = await response?.data
-        
+
         enqueueSnackbar(result.message || "Form submitted successfully!", {
           variant: "success", // Success Snackbar
         });
@@ -141,18 +141,18 @@ const ContactUs = () => {
 
     <>
       <Helmet>
-  <title>Contact Gidan | Customer Support & Help</title>
+        <title>Contact Gidan | Customer Support & Help</title>
 
-  <meta
-    name="description"
-    content="Need help? Contact Gidan for orders, support & queries. We're here to assist you."
-  />
+        <meta
+          name="description"
+          content="Need help? Contact Gidan for orders, support & queries. We're here to assist you."
+        />
 
-  <link
-    rel="canonical"
-    href="https://gidan.store/contact-us"
-  />
-</Helmet>
+        <link
+          rel="canonical"
+          href="https://www.gidan.store//contact-us"
+        />
+      </Helmet>
 
 
       <div className="font-sans text-gray-800">
@@ -167,11 +167,11 @@ const ContactUs = () => {
           <div className="flex flex-col md:flex-row items-stretch w-full">
             {/* Image */}
             <div className="w-full md:w-1/2">
-              <img name=" "   
-                  src={contactus}
-                  loading="lazy"
-                  alt="Contact Illustration"
-                  className="h-full object-cover rounded"
+              <img name=" "
+                src={contactus}
+                loading="lazy"
+                alt="Contact Illustration"
+                className="h-full object-cover rounded"
               />
             </div>
             {/* Form */}
@@ -181,56 +181,56 @@ const ContactUs = () => {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   {/* Name */}
                   <input
-                      type="text"
-                      name="name"
-                      placeholder="Name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      className="p-2 border border-gray-300 rounded w-full"
+                    type="text"
+                    name="name"
+                    placeholder="Name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    className="p-2 border border-gray-300 rounded w-full"
                   />
 
                   {/* Contact Number and Email Side by Side */}
                   <div className="flex flex-col md:flex-row gap-4">
                     <div className="w-full md:w-1/2">
                       <input
-                          type="tel"
-                          name="mobile"
-                          placeholder="Contact Number"
-                          value={formData.mobile}
-                          onChange={handleChange}
-                          required
-                          className="p-2 border border-gray-300 rounded w-full"
+                        type="tel"
+                        name="mobile"
+                        placeholder="Contact Number"
+                        value={formData.mobile}
+                        onChange={handleChange}
+                        required
+                        className="p-2 border border-gray-300 rounded w-full"
                       />
                     </div>
                     <div className="w-full md:w-1/2">
                       <input
-                          type="email"
-                          name="email"
-                          placeholder="Email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          required
-                          className="p-2 border border-gray-300 rounded w-full"
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                        className="p-2 border border-gray-300 rounded w-full"
                       />
                     </div>
                   </div>
                   {/* Message */}
                   <textarea
-                      name="message"
-                      placeholder="Message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      rows="4"
-                      required
-                      className="p-2 border border-gray-300 rounded w-full"
+                    name="message"
+                    placeholder="Message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    rows="4"
+                    required
+                    className="p-2 border border-gray-300 rounded w-full"
                   />
 
                   {/* Submit Button */}
                   <button
-                      type="submit"
-                      className="bg-bio-green text-white px-16 py-2 rounded hover:bg-green-700 w-full md:w-auto"
-                      disabled={loading}
+                    type="submit"
+                    className="bg-bio-green text-white px-16 py-2 rounded hover:bg-green-700 w-full md:w-auto"
+                    disabled={loading}
                   >
                     {loading ? "Submitting..." : "Submit"}
                   </button>
@@ -264,8 +264,8 @@ const ContactUs = () => {
             Request A Free Franchise Consultation
           </h2>
           <button
-              className="bg-bio-green text-white px-4 py-2 rounded hover:bg-green-700"
-              onClick={handleClick}
+            className="bg-bio-green text-white px-4 py-2 rounded hover:bg-green-700"
+            onClick={handleClick}
           >
             Apply Now
           </button>
@@ -276,7 +276,7 @@ const ContactUs = () => {
         <CheckOutStore />
 
       </div>
-      <ContactUsSchema/>
+      <ContactUsSchema />
     </>
 
   );

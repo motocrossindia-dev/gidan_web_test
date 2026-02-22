@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import __combooffer from "../../../Assets/ComboOffer/combooffer.png";
 const _combooffer = typeof __combooffer === 'string' ? __combooffer : __combooffer?.src || __combooffer;
 const combooffer = typeof _combooffer === 'string' ? _combooffer : _combooffer?.src || _combooffer;
@@ -14,54 +14,54 @@ const ComboOffer = () => {
     window.scrollTo(0, 0); // Scroll to top on component mount
   }, []);
   return (
-      <>
+    <>
       <Helmet>
-  <title>Gidan - Combo Offers</title>
+        <title>Gidan - Combo Offers</title>
 
-  <meta
-    name="description"
-    content="Explore combo offers at Gidan and save more on plants, pots, seeds, and plant care products. Grab the best gardening deals in one place."
-  />
+        <meta
+          name="description"
+          content="Explore combo offers at Gidan and save more on plants, pots, seeds, and plant care products. Grab the best gardening deals in one place."
+        />
 
-  <link
-    rel="canonical"
-    href="https://gidan.store/combooffer"
-  />
-</Helmet>
+        <link
+          rel="canonical"
+          href="https://www.gidan.store//combooffer"
+        />
+      </Helmet>
 
-    <div>
-      {/* Combo Offer Section */}
-      <div className="container mx-auto p-6">
-        {/* Breadcrumb */}
-        <div className="text-sm text-gray-500 mb-4">
-          Home / <span className="text-blue-500">Combo Offers</span>
-        </div>
-
-        {/* Image and Heading Section */}
-        <div className="bg-gray-200  rounded-md ">
-          {/* Container for Image and Text */}
-          <div className="flex justify-between items-center">
-            {/* Heading */}
-            <h2 className="text-2xl md:text-4xl font-normal text-green-600 text-center md:px-36">
-              Explore the combo Below
-            </h2>
-            {/* Dummy Image */}
-            <img name=" "
-              src={combooffer}
-              loading="lazy"
-              alt="combo offer"
-              className="md:w-[230px] h-[200px] w-[150px] object-cover "
-            />
+      <div>
+        {/* Combo Offer Section */}
+        <div className="container mx-auto p-6">
+          {/* Breadcrumb */}
+          <div className="text-sm text-gray-500 mb-4">
+            Home / <span className="text-blue-500">Combo Offers</span>
           </div>
-        </div>
 
-        {/* Combo Image Section */}
-        <ComboImage /> 
-        <RecentlyViewedProducts/>
-        {/* <FaqAccordion /> */}
+          {/* Image and Heading Section */}
+          <div className="bg-gray-200  rounded-md ">
+            {/* Container for Image and Text */}
+            <div className="flex justify-between items-center">
+              {/* Heading */}
+              <h2 className="text-2xl md:text-4xl font-normal text-green-600 text-center md:px-36">
+                Explore the combo Below
+              </h2>
+              {/* Dummy Image */}
+              <img name=" "
+                src={combooffer}
+                loading="lazy"
+                alt="combo offer"
+                className="md:w-[230px] h-[200px] w-[150px] object-cover "
+              />
+            </div>
+          </div>
+
+          {/* Combo Image Section */}
+          <ComboImage />
+          <RecentlyViewedProducts />
+          {/* <FaqAccordion /> */}
+        </div>
       </div>
-    </div>
-      </>
+    </>
   );
 };
 
