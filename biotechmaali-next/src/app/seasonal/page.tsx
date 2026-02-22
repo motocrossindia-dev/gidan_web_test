@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export default function SeasonalPage() {
-  return <PlantFilter />;
+import { fetchProductsByFilters } from "@/utils/serverApi";
+
+export default async function SeasonalPage() {
+  const initialResults = await fetchProductsByFilters({ is_seasonal_collection: true });
+  return <PlantFilter initialResults={initialResults} />;
 }

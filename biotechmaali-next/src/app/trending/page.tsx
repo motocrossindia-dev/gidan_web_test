@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export default function TrendingPage() {
-  return <PlantFilter />;
+import { fetchProductsByFilters } from "@/utils/serverApi";
+
+export default async function TrendingPage() {
+  const initialResults = await fetchProductsByFilters({ is_trending: true });
+  return <PlantFilter initialResults={initialResults} />;
 }

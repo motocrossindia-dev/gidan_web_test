@@ -39,11 +39,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+import { fetchProductDetail } from "@/utils/serverApi";
+
 export default async function ProductPage({ params }: Props) {
   const { productSlug } = await params;
 
-  const valid = await isValidProduct(productSlug);
-  if (!valid) notFound();
+  // Fetch full product data on server
+  const productData = await fetchProductDetail(productSlug);
+  if (!productData) notFound();
 
-  return <ProductData />;
+  return <ProductData initialProductData={productData} />;
 }

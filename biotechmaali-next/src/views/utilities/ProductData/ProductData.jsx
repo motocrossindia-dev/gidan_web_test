@@ -96,7 +96,7 @@ const productData = {
     ],
 };
 
-export default function Component() {
+export default function Component({ initialProductData }) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const [selectedImage, setSelectedImage] = useState(0);
@@ -110,8 +110,8 @@ export default function Component() {
     const [addOnData, setAddOnData] = useState([]);
     const [quantity, setQuantity] = useState(1);
     const [inWishlist, setInWishlist] = useState(null)
-    const [productDetailData, setProductDetailData] = useState([]);
-    const [imageThumbnails, setImageThumbnails] = useState([]);
+    const [productDetailData, setProductDetailData] = useState(initialProductData || []);
+    const [imageThumbnails, setImageThumbnails] = useState(initialProductData?.data?.product?.images || []);
     const params = useParams();
 
     // Always use 3-segment URL pattern: /:categorySlug/:subcategorySlug/:productSlug/
@@ -728,7 +728,13 @@ export default function Component() {
             } catch (error) { }
         };
 
-        if (id) fetchData();
+        if (id) {
+            // Skip initial fetch if we already have hydrated data from the server
+            if (initialProductData && (initialProductData?.data?.product?.slug === id || initialProductData?.data?.product?.id === id)) {
+                return;
+            }
+            fetchData();
+        }
     }, [id, params.productSlug]); // Added params.productSlug to dependencies
     // ========== END NEW CODE ==========
 

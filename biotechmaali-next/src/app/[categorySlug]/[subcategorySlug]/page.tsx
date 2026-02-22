@@ -56,15 +56,37 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+import { fetchCategoryBySlug, fetchSubcategoryBySlug, fetchProductsByFilters } from "@/utils/serverApi";
+
 export default async function SubcategoryPage({ params }: Props) {
   const { categorySlug, subcategorySlug } = await params;
 
-  const validCatSlugs = await getValidCategorySlugs();
-  const validSubSlugs = await getValidSubcategorySlugs(categorySlug);
+  // 1. Fetch category and subcategory data on server
+  const [category, subcategory] = await Promise.all([
+    fetchCategoryBySlug(categorySlug),
+    fetchSubcategoryBySlug(categorySlug, subcategorySlug)
+  ]);
 
-  // Fallback: strictly validate only if backend API fetch succeeded
-  if (validCatSlugs.size > 0 && !validCatSlugs.has(categorySlug)) notFound();
-  if (validSubSlugs.size > 0 && !validSubSlugs.has(subcategorySlug)) notFound();
+  if (!category || !subcategory) notFound();
 
-  return <PlantFilter />;
+  // 2. Fetch initial products for this subcategory
+  const categoryToTypeMap: Record<string, string> = {
+    'plants': 'plant',
+    'pots': 'pot',
+    'seeds': 'seed',
+    'plant-care': 'plantcare'
+  };
+  const typeKey = categoryToTypeMap[categorySlug.toLowerCase()] || "plant";
+
+  const initialResults = await fetchProductsByFilters({
+    type: typeKey,
+    subcategory_id: subcategory.id
+  });
+
+  return (
+    <PlantFilter
+      initialResults={initialResults}
+      initialCategoryData={category}
+    />
+  );
 }

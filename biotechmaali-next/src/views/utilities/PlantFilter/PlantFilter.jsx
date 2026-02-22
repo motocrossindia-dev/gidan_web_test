@@ -30,7 +30,8 @@ const CategoryLayout = ({ data }) => {
     );
 };
 
-function PlantFilter() {
+void (0);
+function PlantFilter({ initialResults = [], initialCategoryData = null } = {}) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const path = pathname;
@@ -97,9 +98,13 @@ function PlantFilter() {
     // State for SwipeableDrawer
     const [mobileOpen, setMobileOpen] = useState(false);
 
-    const [products, setProducts] = useState({});
-    const [results, setResults] = useState([]);
-    const [categoryData, setCategoryData] = useState(null);
+    const [products, setProducts] = useState({
+        count: initialResults?.length || 0,
+        next: null,
+        previous: null,
+    });
+    const [results, setResults] = useState(initialResults || []);
+    const [categoryData, setCategoryData] = useState(initialCategoryData || null);
     const [filtersApplied, setFiltersApplied] = useState(false);
 
     // iOS Swipeable Drawer patch to prevent body bounce
@@ -253,10 +258,16 @@ function PlantFilter() {
 
         // Trigger product fetch when either we have the IDs OR it's a special boolean route
         const isSpecialRoute = routeBasedFilters.isSeasonalCollection || routeBasedFilters.isTrending || routeBasedFilters.isFeatured || routeBasedFilters.isBestSeller;
+
+        // Skip initial fetch if data was provided by server (hydration)
         if (!isResolvingIds && (resolvedCategoryId || isSpecialRoute)) {
+            if (initialResults && initialResults.length > 0 && results.length === initialResults.length) {
+                // Already have data from server, skip first fetch
+                return;
+            }
             getInitialProducts();
         }
-    }, [path, typeKey, resolvedCategoryId, resolvedSubcategoryId, isResolvingIds, isSeasonalCollection, isTrending, isFeatured, isBestSeller]);
+    }, [path, typeKey, resolvedCategoryId, resolvedSubcategoryId, isResolvingIds, isSeasonalCollection, isTrending, isFeatured, isBestSeller, initialResults]);
 
     // Determine the base name for Helmet tags
     const getDisplayName = () => {
