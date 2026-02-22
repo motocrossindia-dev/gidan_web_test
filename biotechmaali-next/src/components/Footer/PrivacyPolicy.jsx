@@ -25,7 +25,7 @@ const PrivacyPolicy = () => {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//privacy-policy"
+          href="https://www.gidan.store/privacy-policy"
         />
       </Helmet>
 

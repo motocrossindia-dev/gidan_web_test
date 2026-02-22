@@ -198,7 +198,7 @@ const CheckOutStore = lazy(() => import(/* webpackChunkName: "store" */ '../../c
 const HomepageSchema = lazy(() => import(/* webpackChunkName: "schema" */ '../../views/utilities/seo/HomepageSchema'));
 const StoreSchema = lazy(() => import(/* webpackChunkName: "schema" */ '../../views/utilities/seo/StoreSchema'));
 
-const Home = ({ initialBanners }) => {
+const Home = ({ initialBanners, initialCategories }) => {
   // ✅ Use TanStack Query hook - automatic caching, no unnecessary re-renders
   const { data, isLoading, isError } = useBannerImages(initialBanners);
 
@@ -252,7 +252,7 @@ const Home = ({ initialBanners }) => {
       <ResourceHints />
 
       {/* Critical above-the-fold content - no lazy loading */}
-      <CategoryIcons />
+      <CategoryIcons initialData={initialCategories} />
       <HeroSection hero={heroImages} />
       <Banner home={homeImages} />
 

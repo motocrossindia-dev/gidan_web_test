@@ -11,7 +11,6 @@ import ProductGrid from "../../../components/Shared/ProductGrid";
 import CheckoutStores from "./CheckoutStores";
 import axiosInstance from "../../../Axios/axiosInstance";
 import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
-import { Helmet } from "react-helmet-async";
 import GenericPage from "../Info/GenericPage";
 import SubCategorySchema from "../seo/SubCategorySchema";
 import CategorySchema from "../seo/CategorySchema";
@@ -295,32 +294,6 @@ function PlantFilter() {
 
     return (
         <>
-            <Helmet>
-                <title>
-                    {displayName
-                        ? `Buy ${displayName} Online | Best Price in Bengaluru – Gidan`
-                        : 'Buy Gardening Products Online | Best Price in Bengaluru – Gidan'}
-                </title>
-
-                <meta
-                    name="description"
-                    content={
-                        displayName
-                            ? `Shop ${displayName} online at best prices. Wide range of premium varieties and styles. Fast delivery & easy returns – Gidan.`
-                            : 'Shop gardening products online at best prices. Wide range of plants, pots, seeds, and accessories. Fast delivery & easy returns – Gidan.'
-                    }
-                />
-
-                <link
-                    rel="canonical"
-                    href={
-                        canonicalSubcategorySlug
-                            ? `https://www.gidan.store//${canonicalCategorySlug}/${canonicalSubcategorySlug}/`
-                            : `https://www.gidan.store//${canonicalCategorySlug}/`
-                    }
-                />
-            </Helmet>
-
             {/* Breadcrumb Navigation */}
             {(canonicalCategorySlug || canonicalSubcategorySlug) && (
                 <Breadcrumb

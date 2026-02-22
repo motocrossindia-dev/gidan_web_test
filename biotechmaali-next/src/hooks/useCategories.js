@@ -42,7 +42,7 @@ const fetchSubCategory = async (categorySlug) => {
 const fetchCategories = async () => {
   const response = await axiosInstance.get(`/category/`);
   const categories = response?.data?.data?.categories;
-  
+
   if (categories?.length > 0) {
     const updatedCategories = await Promise.all(
       categories.map(async (category) => {
@@ -56,16 +56,17 @@ const fetchCategories = async () => {
     );
     return updatedCategories;
   }
-  
+
   return [];
 };
 
-export const useCategories = () => {
+export const useCategories = (initialData = undefined) => {
   return useQuery({
     queryKey: ['categories'],
     queryFn: fetchCategories,
     staleTime: 10 * 60 * 1000, // Data stays fresh for 10 minutes (categories don't change often)
     cacheTime: 30 * 60 * 1000, // Cache persists for 30 minutes
+    initialData: initialData,
     enabled: true,
   });
 };

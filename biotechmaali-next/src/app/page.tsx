@@ -14,6 +14,34 @@ async function getInitialBanners() {
   }
 }
 
+// Pre-fetch categories for SEO/Crawlability
+async function getInitialCategories() {
+  try {
+    // 1. Fetch main categories
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category/`, { next: { revalidate: 300 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    const categories = data?.data?.categories || [];
+
+    // 2. Fetch subcategories for each category to hydrate the full tree
+    const categoriesWithSubs = await Promise.all(
+      categories.map(async (cat: any) => {
+        try {
+          const subRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category/categoryWiseSubCategory/${cat.slug}/`, { next: { revalidate: 300 } });
+          const subData = await subRes.json();
+          return { ...cat, subCategory: subData?.data?.subCategorys || [] };
+        } catch (e) {
+          return { ...cat, subCategory: [] };
+        }
+      })
+    );
+    return categoriesWithSubs;
+  } catch (err) {
+    console.error("Failed to fetch categories on server", err);
+    return [];
+  }
+}
+
 
 export const metadata: Metadata = {
   title: "Gidan - Plants, Seeds & Gardening Store Online India",
@@ -37,6 +65,10 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const initialBanners = await getInitialBanners();
-  return <Home initialBanners={initialBanners} />;
+  const [initialBanners, initialCategories] = await Promise.all([
+    getInitialBanners(),
+    getInitialCategories()
+  ]);
+
+  return <Home initialBanners={initialBanners} initialCategories={initialCategories} />;
 }

@@ -25,7 +25,7 @@ const Successpage = () => {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//successpage"
+          href="https://www.gidan.store/successpage"
         />
       </Helmet>
 

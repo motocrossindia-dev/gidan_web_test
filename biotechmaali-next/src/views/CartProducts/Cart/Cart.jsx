@@ -105,7 +105,7 @@ const Cart = () => {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//Cart"
+          href="https://www.gidan.store/Cart"
         />
       </Helmet>
 

@@ -14,7 +14,7 @@ const AboutUs = () => {
                     name="description"
                     content="GIDAN is India’s destination for curated garden products. Built by Biotech Maali, we provide plants, planters, and gardening education for Indian homes."
                 />
-                <link rel="canonical" href="https://www.gidan.store//about-us" />
+                <link rel="canonical" href="https://www.gidan.store/about-us" />
             </Helmet>
 
             <div className="font-sans text-gray-800">

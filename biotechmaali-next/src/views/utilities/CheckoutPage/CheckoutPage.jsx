@@ -1248,7 +1248,7 @@ const CheckoutPage = () => {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//checkout"
+          href="https://www.gidan.store/checkout"
         />
       </Helmet>
 

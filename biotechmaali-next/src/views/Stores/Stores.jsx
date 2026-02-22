@@ -164,7 +164,7 @@ const Stores = () => {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//stores"
+          href="https://www.gidan.store/stores"
         />
       </Helmet>
 

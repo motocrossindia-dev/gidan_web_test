@@ -24,7 +24,7 @@ const ShippingPolicy = () => {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//shipping"
+          href="https://www.gidan.store/shipping"
         />
       </Helmet>
 

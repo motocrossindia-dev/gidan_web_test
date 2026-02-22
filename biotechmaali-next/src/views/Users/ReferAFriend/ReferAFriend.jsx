@@ -64,7 +64,7 @@ function ReferAFriend() {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//profile/referal"
+          href="https://www.gidan.store/profile/referal"
         />
       </Helmet>
 

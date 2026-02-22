@@ -203,7 +203,7 @@ const TrackOrder = () => {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//profile/trackorder"
+          href="https://www.gidan.store/profile/trackorder"
         />
       </Helmet>
 

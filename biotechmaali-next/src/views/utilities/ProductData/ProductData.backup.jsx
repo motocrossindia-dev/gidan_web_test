@@ -853,7 +853,7 @@ export default function Component() {
     const ogImage =
         product?.images?.[0]?.image ||
         product?.main_image ||
-        "https://www.gidan.store//default-product.jpg";
+        "https://www.gidan.store/default-product.jpg";
 
 
     return (
@@ -2104,7 +2104,7 @@ export default function Component() {
 //     const canonicalUrl =
 //         (id || product_slug || product?.slug) &&
 //         (category_slug || product?.category_slug || scategory_slug)
-//             ? `https://www.gidan.store//category/${encodeURIComponent(
+//             ? `https://www.gidan.store/category/${encodeURIComponent(
 //                 category_slug || product?.category_slug || scategory_slug
 //             )}/${encodeURIComponent(product_slug || product?.slug || id)}/`
 //             : 'https://www.gidan.store/';
@@ -2113,7 +2113,7 @@ export default function Component() {
 //     const ogImage =
 //         product?.images?.[0]?.image ||
 //         product?.main_image ||
-//         "https://www.gidan.store//default-product.jpg";
+//         "https://www.gidan.store/default-product.jpg";
 //
 //
 //     return (

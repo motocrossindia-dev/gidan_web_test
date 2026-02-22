@@ -154,7 +154,7 @@ const ProfileForm = () => {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//profile"
+          href="https://www.gidan.store/profile"
         />
       </Helmet>
 

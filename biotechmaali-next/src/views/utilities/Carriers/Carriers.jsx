@@ -51,7 +51,7 @@ const Carriers = () => {
 
         <link
           rel="canonical"
-          href="https://www.gidan.store//careers"
+          href="https://www.gidan.store/careers"
         />
       </Helmet>
 
