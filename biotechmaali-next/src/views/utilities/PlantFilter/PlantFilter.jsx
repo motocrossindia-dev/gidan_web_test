@@ -94,6 +94,11 @@ function PlantFilter() {
     const [fetchedCategoryName, setFetchedCategoryName] = useState(null);
     const [fetchedSubcategoryName, setFetchedSubcategoryName] = useState(null);
 
+    // Resolved IDs from slugs (for direct URL access)
+    const [resolvedCategoryId, setResolvedCategoryId] = useState(categoryId || categoryIdFromSlug);
+    const [resolvedSubcategoryId, setResolvedSubcategoryId] = useState(subcategoryID || null);
+    const [isResolvingIds, setIsResolvingIds] = useState(false);
+
     // State to track the currently selected Type from the Sidebar
     const [currentFilterType, setCurrentFilterType] = useState(typeKey || null);
 
@@ -130,7 +135,50 @@ function PlantFilter() {
         setProducts({});
         setCategoryData(null);
         setFiltersApplied(false);
+        // Do not reset resolved IDs if we have slugs, we'll re-resolve them
+        if (!categorySlug) setResolvedCategoryId(null);
+        if (!subcategorySlug) setResolvedSubcategoryId(null);
     }, [path, categorySlug, subcategorySlug]);
+
+    // Handle slug to ID resolution
+    useEffect(() => {
+        const resolveSlugs = async () => {
+            if (!categorySlug) return;
+
+            setIsResolvingIds(true);
+            try {
+                // 1. Resolve Category ID if not already known
+                let currentCatId = resolvedCategoryId;
+                if (!currentCatId) {
+                    const catRes = await axiosInstance.get('/category/');
+                    const categories = catRes.data?.data?.categories || [];
+                    const foundCat = categories.find(c => c.slug === categorySlug);
+                    if (foundCat) {
+                        currentCatId = foundCat.id;
+                        setResolvedCategoryId(foundCat.id);
+                        setFetchedCategoryName(foundCat.name);
+                    }
+                }
+
+                // 2. Resolve Subcategory ID if slug exists
+                if (subcategorySlug && currentCatId) {
+                    const subRes = await axiosInstance.get(`/category/categoryWiseSubCategory/${categorySlug}/`);
+                    const subcategories = subRes.data?.data?.subCategorys || [];
+                    const foundSub = subcategories.find(s => s.slug === subcategorySlug);
+                    if (foundSub) {
+                        setResolvedSubcategoryId(foundSub.id);
+                        setFetchedSubcategoryName(foundSub.name);
+                    }
+                }
+            } catch (err) {
+                console.error("Error resolving slugs to IDs:", err);
+            } finally {
+                setIsResolvingIds(false);
+            }
+        };
+
+        resolveSlugs();
+    }, [categorySlug, subcategorySlug]);
 
     useEffect(() => {
         const getInitialProducts = async () => {
@@ -155,8 +203,8 @@ function PlantFilter() {
                 const finalType = typeKey || (isSeasonalCollection || isTrending || isFeatured || isBestSeller ? "plant" : "");
                 queryParams.append("type", finalType);
 
-                // Subcategory ID
-                queryParams.append("subcategory_id", subcategoryID || "");
+                // Subcategory ID - use resolved ID
+                queryParams.append("subcategory_id", resolvedSubcategoryId || "");
 
                 // Search
                 queryParams.append("search", "");
@@ -211,11 +259,12 @@ function PlantFilter() {
             }
         };
 
-        // Trigger product fetch when URL params exist (either from state or URL) or boolean filters are present
-        if (categoryId || categoryIdFromSlug || categorySlug || path.startsWith("/category/") || isSeasonalCollection || isTrending || isFeatured || isBestSeller) {
+        // Trigger product fetch when either we have the IDs OR it's a special boolean route
+        const isSpecialRoute = routeBasedFilters.isSeasonalCollection || routeBasedFilters.isTrending || routeBasedFilters.isFeatured || routeBasedFilters.isBestSeller;
+        if (!isResolvingIds && (resolvedCategoryId || isSpecialRoute)) {
             getInitialProducts();
         }
-    }, [path, typeKey, categoryId, categoryIdFromSlug, subcategoryID, categorySlug, subcategorySlug, isSeasonalCollection, isTrending, isFeatured, isBestSeller]);
+    }, [path, typeKey, resolvedCategoryId, resolvedSubcategoryId, isResolvingIds, isSeasonalCollection, isTrending, isFeatured, isBestSeller]);
 
     // Determine the base name for Helmet tags
     const getDisplayName = () => {
@@ -320,13 +369,13 @@ function PlantFilter() {
                             setResults={setResults}
                             setProducts={setProducts}
                             setFiltersApplied={setFiltersApplied}
-                            categoryId={categoryId}
+                            categoryId={resolvedCategoryId}
                             category={categoryName || fetchedCategoryName}
                             subcategory={subCategoryName || fetchedSubcategoryName}
-                            subcategoryID={subcategoryID}
+                            subcategoryID={resolvedSubcategoryId}
                             subcategorySlug={subcategorySlug}
                             categorySlug={categorySlug}
-                            categoryIdFromSlug={categoryIdFromSlug}
+                            categoryIdFromSlug={resolvedCategoryId}
                             typeKey={typeKey}
                             setCategoryData={setCategoryData}
                             setCurrentFilterType={setCurrentFilterType}
@@ -392,13 +441,13 @@ function PlantFilter() {
                         setProducts={setProducts}
                         setFiltersApplied={setFiltersApplied}
                         setShowMobileFilter={setMobileOpen}
-                        categoryId={categoryId}
+                        categoryId={resolvedCategoryId}
                         category={categoryName || fetchedCategoryName}
                         subcategory={subCategoryName || fetchedSubcategoryName}
-                        subcategoryID={subcategoryID}
+                        subcategoryID={resolvedSubcategoryId}
                         subcategorySlug={subcategorySlug}
                         categorySlug={categorySlug}
-                        categoryIdFromSlug={categoryIdFromSlug}
+                        categoryIdFromSlug={resolvedCategoryId}
                         typeKey={typeKey}
                         setCategoryData={setCategoryData}
                         setCurrentFilterType={setCurrentFilterType}
