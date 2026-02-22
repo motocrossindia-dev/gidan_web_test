@@ -1,9 +1,9 @@
 export default function CategorySchema({
-                                           categoryName,
-                                           categorySlug,
-                                           items = [] // [{ slug: "product-slug", category_slug: "category", sub_category_slug: "subcategory" }, ...]
-                                       }) {
-    const baseUrl = "https://gidan.store";
+    categoryName,
+    categorySlug,
+    items = [] // [{ slug: "product-slug", category_slug: "category", sub_category_slug: "subcategory" }, ...]
+}) {
+    const baseUrl = "https://www.gidan.store/";
 
     const schema = {
         "@context": "https://schema.org",
@@ -42,7 +42,7 @@ export default function CategorySchema({
                     const productUrl = item.sub_category_slug
                         ? `${baseUrl}/${item.category_slug}/${item.sub_category_slug}/${item.slug}/`
                         : `${baseUrl}/${item.category_slug}/${item.slug}/`;
-                    
+
                     return {
                         "@type": "ListItem",
                         "position": index + 1,
@@ -55,8 +55,8 @@ export default function CategorySchema({
 
     return (
         <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
     );
 }

@@ -19,29 +19,29 @@
  */
 export const standardizeUrl = (path, addTrailingSlash = true) => {
     if (!path) return '/';
-    
+
     let cleanPath = path;
-    
+
     // Remove leading slash if present (we'll add it back)
     cleanPath = cleanPath.replace(/^\/+/, '');
-    
+
     // Remove trailing slashes
     cleanPath = cleanPath.replace(/\/+$/, '');
-    
+
     // Convert to lowercase
     cleanPath = cleanPath.toLowerCase();
-    
+
     // Replace multiple slashes with single slash
     cleanPath = cleanPath.replace(/\/+/g, '/');
-    
+
     // Add leading slash
     cleanPath = '/' + cleanPath;
-    
+
     // Add trailing slash if requested and path is not root
     if (addTrailingSlash && cleanPath !== '/') {
         cleanPath += '/';
     }
-    
+
     return cleanPath;
 };
 
@@ -58,15 +58,15 @@ export const buildProductUrl = (categorySlug, subcategorySlug, productSlug) => {
         console.warn('buildProductUrl: Missing required slugs', { categorySlug, subcategorySlug, productSlug });
         return '/';
     }
-    
+
     const parts = [categorySlug];
-    
+
     if (subcategorySlug) {
         parts.push(subcategorySlug);
     }
-    
+
     parts.push(productSlug);
-    
+
     // Join with slashes and standardize
     const path = parts.join('/');
     return standardizeUrl(path, true);
@@ -84,13 +84,13 @@ export const buildCategoryUrl = (categorySlug, subcategorySlug = null) => {
         console.warn('buildCategoryUrl: Missing category slug');
         return '/';
     }
-    
+
     const parts = [categorySlug];
-    
+
     if (subcategorySlug) {
         parts.push(subcategorySlug);
     }
-    
+
     const path = parts.join('/');
     return standardizeUrl(path, true);
 };
@@ -103,7 +103,7 @@ export const buildCategoryUrl = (categorySlug, subcategorySlug = null) => {
  */
 export const normalizeSlug = (slug) => {
     if (!slug) return '';
-    
+
     return slug
         .toLowerCase()
         .trim()
@@ -121,31 +121,31 @@ export const normalizeSlug = (slug) => {
  */
 export const validateUrl = (url) => {
     const issues = [];
-    
+
     if (!url) {
         return { isValid: false, issues: ['URL is empty'] };
     }
-    
+
     // Check for uppercase letters
     if (url !== url.toLowerCase()) {
         issues.push('URL contains uppercase letters');
     }
-    
+
     // Check for spaces
     if (url.includes(' ')) {
         issues.push('URL contains spaces');
     }
-    
+
     // Check for multiple consecutive slashes
     if (/\/\/+/.test(url)) {
         issues.push('URL contains multiple consecutive slashes');
     }
-    
+
     // Check for special characters (except hyphens and slashes)
     if (/[^a-z0-9\-\/]/.test(url)) {
         issues.push('URL contains special characters');
     }
-    
+
     return {
         isValid: issues.length === 0,
         issues
@@ -163,13 +163,13 @@ export const validateUrl = (url) => {
  */
 export const redirectToStandardUrl = (currentPath, navigate, state = null) => {
     const standardPath = standardizeUrl(currentPath, true);
-    
+
     if (currentPath !== standardPath) {
         console.log('Redirecting to standard URL:', { from: currentPath, to: standardPath });
         navigate(standardPath, { replace: true, state });
         return true;
     }
-    
+
     return false;
 };
 
@@ -177,10 +177,10 @@ export const redirectToStandardUrl = (currentPath, navigate, state = null) => {
  * Gets the canonical URL for a page
  * 
  * @param {string} path - The page path
- * @param {string} baseUrl - Base URL (default: https://gidan.store)
+ * @param {string} baseUrl - Base URL (default: https://www.gidan.store/)
  * @returns {string} - Full canonical URL
  */
-export const getCanonicalUrl = (path, baseUrl = 'https://gidan.store') => {
+export const getCanonicalUrl = (path, baseUrl = 'https://www.gidan.store/') => {
     const standardPath = standardizeUrl(path, false); // No trailing slash for canonical
     return `${baseUrl}${standardPath}`;
 };
@@ -214,7 +214,7 @@ export const matchesPattern = (path, pattern) => {
     const patternRegex = pattern
         .replace(/:[^/]+/g, '[^/]+')  // Replace :param with regex
         .replace(/\//g, '\\/');        // Escape slashes
-    
+
     return new RegExp(`^${patternRegex}$`).test(path);
 };
 

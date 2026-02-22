@@ -10,7 +10,7 @@
 //   const [orderId, setOrderId] = useState("");
 //   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  
+
 //   useEffect(() => {
 //     window.scrollTo(0, 0); // Scroll to the top
 //   }, []);
@@ -41,7 +41,7 @@
 //               className="w-80 h-80 object-contain"
 //             />
 //           </div>
-          
+
 
 //           {/* Form Section */}
 //           <form onSubmit={handleSubmit} className="space-y-6">
@@ -193,19 +193,19 @@ const TrackOrder = () => {
 
   return (
     <>
-     <Helmet>
-  <title>Gidan - Track Order Page</title>
-  <meta name="robots" content="noindex, nofollow" />
-  <meta
-    name="description"
-    content="Track your Gidan order easily and stay updated on delivery status. Enter your details to view real-time order tracking and updates."
-  />
+      <Helmet>
+        <title>Gidan - Track Order Page</title>
+        <meta name="robots" content="noindex, nofollow" />
+        <meta
+          name="description"
+          content="Track your Gidan order easily and stay updated on delivery status. Enter your details to view real-time order tracking and updates."
+        />
 
-  <link
-    rel="canonical"
-    href="https://gidan.store/profile/trackorder"
-  />
-</Helmet>
+        <link
+          rel="canonical"
+          href="https://www.gidan.store//profile/trackorder"
+        />
+      </Helmet>
 
 
       <div className="flex justify-center items-center min-h-screen mx-10 bg-white font-sans">
@@ -283,11 +283,10 @@ const TrackOrder = () => {
                 trackingUpdates.map((update, index) => (
                   <div key={index} className="text-center w-1/4">
                     <div
-                      className={`font-semibold ${
-                        index === trackingUpdates.length - 1
+                      className={`font-semibold ${index === trackingUpdates.length - 1
                           ? "text-green-600"
                           : "text-gray-400"
-                      }`}
+                        }`}
                     >
                       {update.status}
                     </div>

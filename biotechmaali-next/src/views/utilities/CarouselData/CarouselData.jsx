@@ -11,9 +11,9 @@ import { useSearchParams, useParams, usePathname } from "next/navigation";
 
 // function CarouselData() {
 //     const { id } = useParams();
-    
 
-    
+
+
 //     const [results, setResults] = useState([]);
 
 
@@ -23,13 +23,13 @@ import { useSearchParams, useParams, usePathname } from "next/navigation";
 //                 <title>Gidan - Carousel</title>
 //             </Helmet>
 //             <div className="container mx-auto  min-h-screen">
-               
+
 //                 {/* Product Grid */}
 //                 <div className="px-4 mt-4">
 //                     <ProductGrid
 //                         productDetails={results}
 //                         setResults={setResults}
-                    
+
 //                     />
 //                 </div>
 
@@ -40,7 +40,7 @@ import { useSearchParams, useParams, usePathname } from "next/navigation";
 //                     <CheckoutStores />
 //                 </div>
 
-             
+
 //             </div>
 //         </>
 //     );
@@ -61,10 +61,10 @@ function CarouselData() {
     const [results, setResults] = useState([]);
 
     const searchParams = useSearchParams();
-  const pathname = usePathname();
+    const pathname = usePathname();
 
     const id = null.heroId;
-    console.log(id,'-------------------------------s');
+    console.log(id, '-------------------------------s');
     // const { id } = useParams();
 
     useEffect(() => {
@@ -73,7 +73,7 @@ function CarouselData() {
 
     const fetchCarouselProducts = async () => {
         try {
-            
+
             const res = await axios.get(
                 `https://backend.gidan.store/promotion/banner/${id}/`
             );
@@ -82,24 +82,24 @@ function CarouselData() {
             setResults(res?.data?.data?.products_list || []);
         } catch (error) {
             console.error("Carousel API Error:", error);
-        } 
+        }
     };
 
     return (
         <>
             <Helmet>
-  <title>Gidan - Carousel</title>
+                <title>Gidan - Carousel</title>
 
-  <meta
-    name="description"
-    content="Explore featured plants, pots, seeds, and plant care products at Gidan. Discover curated collections and highlights for smarter gardening."
-  />
+                <meta
+                    name="description"
+                    content="Explore featured plants, pots, seeds, and plant care products at Gidan. Discover curated collections and highlights for smarter gardening."
+                />
 
-  <link
-    rel="canonical"
-    href={`https://gidan.store/carousel/${id}`}
-  />
-</Helmet>
+                <link
+                    rel="canonical"
+                    href={`https://www.gidan.store//carousel/${id}`}
+                />
+            </Helmet>
 
 
             <div className="container mx-auto min-h-screen">
@@ -108,7 +108,7 @@ function CarouselData() {
                     <ProductGrid
                         productDetails={results}
                         setResults={setResults}
-                    
+
                     />
                 </div>
 

@@ -22,7 +22,7 @@ const WishlistItem = ({
   handleAddToCart,
 
 }) => {
-  const router = useRouter();const isOutOfStock = stock_status === "Out Of Stock";
+  const router = useRouter(); const isOutOfStock = stock_status === "Out Of Stock";
 
 
   return (
@@ -43,7 +43,7 @@ const WishlistItem = ({
             e.target.onerror = null;
           }} 
         {/* /> */}
-        <img name=" "   
+        <img name=" "
           className="w-40 h-24 sm:w-40 sm:h-36 object-contain rounded-lg transition-transform duration-300 mt-6"
           src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
           loading="lazy"
@@ -71,20 +71,19 @@ const WishlistItem = ({
 
       {/* <Link to="/cart" className="mt-auto"> */}
       <button
-  className={`w-full py-2 rounded text-xs sm:text-sm font-medium text-white transition ${
-    isOutOfStock ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
-  }`}
-  disabled={isOutOfStock}
-  onClick={() => {
-    if (product.is_cart) {
-      router.push("/cart"); // Redirect to cart if the product is already in the cart
-    } else {
-      handleAddToCart(product.product_id);
-    }
-  }}
->
-  {product.is_cart ? "Go to Cart" : "Add to Bag"}
-</button>
+        className={`w-full py-2 rounded text-xs sm:text-sm font-medium text-white transition ${isOutOfStock ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
+          }`}
+        disabled={isOutOfStock}
+        onClick={() => {
+          if (product.is_cart) {
+            router.push("/cart"); // Redirect to cart if the product is already in the cart
+          } else {
+            handleAddToCart(product.product_id);
+          }
+        }}
+      >
+        {product.is_cart ? "Go to Cart" : "Add to Bag"}
+      </button>
 
 
       {/* </Link> */}
@@ -118,12 +117,12 @@ const WishList = () => {
       }));
       setWishlistItems(itemsWithOldPrices);
     } catch (error) {
-      enqueueSnackbar(error.response?.data?.message || "Failed to fetch wishlist items", { 
-        variant: "error" 
+      enqueueSnackbar(error.response?.data?.message || "Failed to fetch wishlist items", {
+        variant: "error"
       });
     }
   };
-  
+
   useEffect(() => {
     getWishlistItems();
   }, [accessToken]);
@@ -158,7 +157,7 @@ const WishList = () => {
       );
 
       if (response.status === 201) {
-        
+
         enqueueSnackbar("Added to cart", { variant: "success" });
         setIsAdded(!isAdded);
         getWishlistItems()
@@ -175,20 +174,20 @@ const WishList = () => {
     }
   };
   return (
-      <>
-        <Helmet>
-  <title>Gidan - WishList</title>
-  <meta name="robots" content="noindex, nofollow" />
-  <meta
-    name="description"
-    content="View and manage your Gidan wishlist. Save your favorite plants, pots, seeds, and gardening products to buy later and never miss out on your favorite items."
-  />
+    <>
+      <Helmet>
+        <title>Gidan - WishList</title>
+        <meta name="robots" content="noindex, nofollow" />
+        <meta
+          name="description"
+          content="View and manage your Gidan wishlist. Save your favorite plants, pots, seeds, and gardening products to buy later and never miss out on your favorite items."
+        />
 
-  <link
-    rel="canonical"
-    href="https://gidan.store/wishlist"
-  />
-</Helmet>
+        <link
+          rel="canonical"
+          href="https://www.gidan.store//wishlist"
+        />
+      </Helmet>
 
       <Verify />
       <div className="container mx-auto md:p-4 sm:p-0 bg-gray-50">

@@ -12,28 +12,28 @@ function FranchiseEnquires() {
     window.scrollTo(0, 0); // Scroll to the top
   }, []);
   return (
-      <>
-          <Helmet>
-  <title>Gidan - Franchise Enquires</title>
+    <>
+      <Helmet>
+        <title>Gidan - Franchise Enquires</title>
 
-  <meta
-    name="description"
-    content="Partner with Gidan through franchise opportunities. Submit your franchise enquiry and join our growing gardening and plant retail brand."
-  />
+        <meta
+          name="description"
+          content="Partner with Gidan through franchise opportunities. Submit your franchise enquiry and join our growing gardening and plant retail brand."
+        />
 
-  <link
-    rel="canonical"
-    href="https://gidan.store/franchise-enquiry"
-  />
-</Helmet>
+        <link
+          rel="canonical"
+          href="https://www.gidan.store//franchise-enquiry"
+        />
+      </Helmet>
 
-          <div className="space-y-10 bg-gray-100 mt-10 px-4 md:px-0 mb-2">
-              <HeroSection />
-              <FranchiseForm />
-              <WhyWeRockSection />
-              <StoreLocations />
-          </div>
-      </>
+      <div className="space-y-10 bg-gray-100 mt-10 px-4 md:px-0 mb-2">
+        <HeroSection />
+        <FranchiseForm />
+        <WhyWeRockSection />
+        <StoreLocations />
+      </div>
+    </>
 
   );
 }

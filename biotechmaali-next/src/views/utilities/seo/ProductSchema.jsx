@@ -1,12 +1,12 @@
 export default function ProductSchema({
-                                          product,
-                                          images = [],
-                                          brand = "Gidan Store",
-                                          currency = "INR",
-                                          siteUrl = "https://gidan.store",
-                                          rating = 0,
-                                          ratingCount = 0
-                                      }) {
+    product,
+    images = [],
+    brand = "Gidan Store",
+    currency = "INR",
+    siteUrl = "https://www.gidan.store/",
+    rating = 0,
+    ratingCount = 0
+}) {
     if (!product) return null;
 
     // NEW: Clean URL structure
@@ -122,8 +122,8 @@ export default function ProductSchema({
 
     return (
         <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
     );
 }

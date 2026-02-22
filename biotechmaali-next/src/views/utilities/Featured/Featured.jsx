@@ -23,83 +23,83 @@ function Featured() {
   };
 
   return (
-      <>
-        <Helmet>
-  <title>Gidan - Featured</title>
+    <>
+      <Helmet>
+        <title>Gidan - Featured</title>
 
-  <meta
-    name="description"
-    content="Discover featured plants, pots, seeds, and plant care essentials at Gidan. Shop our handpicked gardening products for healthier, smarter gardening."
-  />
+        <meta
+          name="description"
+          content="Discover featured plants, pots, seeds, and plant care essentials at Gidan. Shop our handpicked gardening products for healthier, smarter gardening."
+        />
 
-  <link
-    rel="canonical"
-    href="https://gidan.store/feature"
-  />
-</Helmet>
+        <link
+          rel="canonical"
+          href="https://www.gidan.store//feature"
+        />
+      </Helmet>
 
-        <div className="container mx-auto pt-6  min-h-screen">
-          {/* Mobile View Button */}
-          <div className="md:hidden px-4 pt-4">
-            <button
-                className="bg-white text-black w-full rounded-lg flex items-center justify-center gap-2 p-3 shadow-sm hover:shadow-md transition-shadow"
-                onClick={toggleMobileFilter}
-            >
-              <FiFilter size={20} />
-              <span className="font-medium">Filter sss</span>
-            </button>
-          </div>
-
-          {/* --- CHANGE: Desktop Horizontal Filter - Full Width --- */}
-          {/* This is the main container for the horizontal filter bar */}
-          <div className="hidden md:block mt-4 overflow-visible relative z-10">
-            <FilterSidebar
-                setResults={setResults}
-                setShowMobileFilter={setShowMobileFilter} // Pass this to close mobile filter on apply
-            />
-          </div>
-
-          {/* --- CHANGE: Product Grid now takes up the full width below the filter --- */}
-          <div className="px-4 mt-4">
-            <ProductGrid results={results} />
-          </div>
-
-          {/* Additional Sections */}
-          <div className="px-4 md:px-8 mt-8">
-            <RecentlyViewedProducts />
-            {/* <FAQSection /> */}
-            <CheckoutStores />
-          </div>
-
-          {/* --- Mobile Filter Sidebar Overlay (No changes needed here) --- */}
-          {showMobileFilter && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 z-50 md:hidden">
-                <div className="absolute top-0 right-0 w-3/4 max-w-xs bg-white h-full shadow-lg z-50 overflow-y-auto">
-                  {/* Close Button */}
-                  <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between z-10">
-                    <h3 className="text-lg font-semibold text-gray-800">Filters</h3>
-                    <button
-                        className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition-colors"
-                        onClick={toggleMobileFilter}
-                    >
-                      ✕
-                    </button>
-                  </div>
-
-                  {/* Mobile Filter Content */}
-                  <div className="p-4">
-                    <FilterSidebar
-                        setResults={setResults}
-                        setShowMobileFilter={setShowMobileFilter} // Pass this to close the overlay on apply
-                    />
-                  </div>
-                </div>
-              </div>
-          )}
+      <div className="container mx-auto pt-6  min-h-screen">
+        {/* Mobile View Button */}
+        <div className="md:hidden px-4 pt-4">
+          <button
+            className="bg-white text-black w-full rounded-lg flex items-center justify-center gap-2 p-3 shadow-sm hover:shadow-md transition-shadow"
+            onClick={toggleMobileFilter}
+          >
+            <FiFilter size={20} />
+            <span className="font-medium">Filter sss</span>
+          </button>
         </div>
-        <HomepageSchema/>
-        <StoreSchema/>
-      </>
+
+        {/* --- CHANGE: Desktop Horizontal Filter - Full Width --- */}
+        {/* This is the main container for the horizontal filter bar */}
+        <div className="hidden md:block mt-4 overflow-visible relative z-10">
+          <FilterSidebar
+            setResults={setResults}
+            setShowMobileFilter={setShowMobileFilter} // Pass this to close mobile filter on apply
+          />
+        </div>
+
+        {/* --- CHANGE: Product Grid now takes up the full width below the filter --- */}
+        <div className="px-4 mt-4">
+          <ProductGrid results={results} />
+        </div>
+
+        {/* Additional Sections */}
+        <div className="px-4 md:px-8 mt-8">
+          <RecentlyViewedProducts />
+          {/* <FAQSection /> */}
+          <CheckoutStores />
+        </div>
+
+        {/* --- Mobile Filter Sidebar Overlay (No changes needed here) --- */}
+        {showMobileFilter && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 md:hidden">
+            <div className="absolute top-0 right-0 w-3/4 max-w-xs bg-white h-full shadow-lg z-50 overflow-y-auto">
+              {/* Close Button */}
+              <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between z-10">
+                <h3 className="text-lg font-semibold text-gray-800">Filters</h3>
+                <button
+                  className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition-colors"
+                  onClick={toggleMobileFilter}
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Mobile Filter Content */}
+              <div className="p-4">
+                <FilterSidebar
+                  setResults={setResults}
+                  setShowMobileFilter={setShowMobileFilter} // Pass this to close the overlay on apply
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      <HomepageSchema />
+      <StoreSchema />
+    </>
   );
 }
 
