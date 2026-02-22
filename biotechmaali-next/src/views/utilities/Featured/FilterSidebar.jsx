@@ -500,7 +500,7 @@ const FilterSidebar = ({
             .map(([filter, options]) => (
               <div
                 key={filter}
-                className="relative w-full md:w-48 md:flex-shrink-0 z-50"
+                className={`relative w-full md:w-48 md:flex-shrink-0 ${openFilters[filter] ? "z-[100]" : "z-50"}`}
                 ref={(el) => (dropdownContainerRefs.current[filter] = el)}
               >
                 <label className="block text-xs font-medium text-gray-600 mb-1 capitalize">
