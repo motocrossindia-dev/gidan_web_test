@@ -4,20 +4,26 @@ import PlantFilter from '@/views/utilities/PlantFilter/PlantFilter';
 
 type Props = { params: Promise<{ categorySlug: string }> };
 
-// Only these slugs are valid category routes.
-// The backend API ignores invalid category_slug and returns all products,
-// so we MUST use a strict allowlist — no API fallback.
-const VALID_CATEGORY_SLUGS = new Set([
-  "pots",
-  "plants",
-  "seeds",
-  "plant-care",
-]);
+// Fetch valid category slugs from the backend
+async function getValidCategorySlugs(): Promise<Set<string>> {
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store";
+    const res = await fetch(`${apiUrl}/category/`, { next: { revalidate: 300 } });
+    if (!res.ok) return new Set();
+    const data = await res.json();
+    const categories = data?.data?.categories || [];
+    return new Set(categories.map((c: any) => c.slug));
+  } catch (err) {
+    console.error("Error fetching category slugs", err);
+    return new Set();
+  }
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { categorySlug } = await params;
 
-  if (!VALID_CATEGORY_SLUGS.has(categorySlug)) return {};
+  const validSlugs = await getValidCategorySlugs();
+  if (validSlugs.size > 0 && !validSlugs.has(categorySlug)) return {};
 
   const name = categorySlug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   return {
@@ -38,7 +44,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CategoryPage({ params }: Props) {
   const { categorySlug } = await params;
 
-  if (!VALID_CATEGORY_SLUGS.has(categorySlug)) notFound();
+  const validSlugs = await getValidCategorySlugs();
+  // Fallback: if the API successfully fetched categories and the target isn't one, 404.
+  if (validSlugs.size > 0 && !validSlugs.has(categorySlug)) notFound();
 
   return <PlantFilter />;
 }

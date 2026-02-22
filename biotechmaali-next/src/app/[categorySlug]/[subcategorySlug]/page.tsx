@@ -4,37 +4,40 @@ import PlantFilter from '@/views/utilities/PlantFilter/PlantFilter';
 
 type Props = { params: Promise<{ categorySlug: string; subcategorySlug: string }> };
 
-// Valid category slugs (must also pass parent check)
-const VALID_CATEGORY_SLUGS = new Set([
-  "pots",
-  "plants",
-  "seeds",
-  "plant-care",
-]);
+// Fetch valid category slugs
+async function getValidCategorySlugs(): Promise<Set<string>> {
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store";
+    const res = await fetch(`${apiUrl}/category/`, { next: { revalidate: 300 } });
+    if (!res.ok) return new Set();
+    const data = await res.json();
+    return new Set(data?.data?.categories?.map((c: any) => c.slug) || []);
+  } catch (err) {
+    return new Set();
+  }
+}
 
-// Valid subcategory slugs from the API
-const VALID_SUBCATEGORY_SLUGS = new Set([
-  // plants
-  "indoor-plant-26",
-  "outdoor-plant-27",
-  "flowering-plants-40",
-  // pots
-  "rotomolded-pots-28",
-  "plastic-pots-29",
-  "hanging-pots-30",
-  "table-top-pots-35",
-  "eco-planters-39",
-  // seeds
-  "vegetable-seeds-31",
-  // plant-care
-  "growing-media-36",
-  "garden-essenials-37",
-]);
+// Fetch valid subcategory slugs for a given category
+async function getValidSubcategorySlugs(categorySlug: string): Promise<Set<string>> {
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store";
+    const res = await fetch(`${apiUrl}/category/categoryWiseSubCategory/${categorySlug}/`, { next: { revalidate: 300 } });
+    if (!res.ok) return new Set();
+    const data = await res.json();
+    return new Set(data?.data?.subCategorys?.map((sc: any) => sc.slug) || []);
+  } catch (err) {
+    return new Set();
+  }
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { categorySlug, subcategorySlug } = await params;
 
-  if (!VALID_CATEGORY_SLUGS.has(categorySlug) || !VALID_SUBCATEGORY_SLUGS.has(subcategorySlug)) return {};
+  const validCatSlugs = await getValidCategorySlugs();
+  const validSubSlugs = await getValidSubcategorySlugs(categorySlug);
+
+  if (validCatSlugs.size > 0 && !validCatSlugs.has(categorySlug)) return {};
+  if (validSubSlugs.size > 0 && !validSubSlugs.has(subcategorySlug)) return {};
 
   const catName = categorySlug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   const subName = subcategorySlug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
@@ -56,7 +59,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function SubcategoryPage({ params }: Props) {
   const { categorySlug, subcategorySlug } = await params;
 
-  if (!VALID_CATEGORY_SLUGS.has(categorySlug) || !VALID_SUBCATEGORY_SLUGS.has(subcategorySlug)) notFound();
+  const validCatSlugs = await getValidCategorySlugs();
+  const validSubSlugs = await getValidSubcategorySlugs(categorySlug);
+
+  // Fallback: strictly validate only if backend API fetch succeeded
+  if (validCatSlugs.size > 0 && !validCatSlugs.has(categorySlug)) notFound();
+  if (validSubSlugs.size > 0 && !validSubSlugs.has(subcategorySlug)) notFound();
 
   return <PlantFilter />;
 }
