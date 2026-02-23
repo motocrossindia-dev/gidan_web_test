@@ -11,7 +11,6 @@ import ScrollToTop from "@/components/ScrollToTop";
 import GoogleAnalytics from "@/GoogleAnalytics/GoogleAnalytics";
 import OrganizationSchema from "@/views/utilities/seo/OrganizationSchema";
 import Verify from "@/Services/Services/Verify";
-import TawkToWidget from "@/tawkto/tawkto";
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito-sans",
   subsets: ["latin"],
@@ -104,16 +103,19 @@ export default function RootLayout({
           <OrganizationSchema />
           <Verify />
           <ScrollToTop />
-          <script type="text/javascript">
-            var Tawk_API=Tawk_API||{ }, Tawk_LoadStart=new Date();
-            (function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-            s1.async=true;
-            s1.src='https://embed.tawk.to/699cc6abfaf0a71c36d94cbd/1ji66g3s9';
-            s1.charset='UTF-8';
-            s1.setAttribute('crossorigin','*');
-            s0.parentNode.insertBefore(s1,s0); })();
-          </script>
+          <Script id="tawk-to" strategy="afterInteractive">
+            {`
+              var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+              (function(){
+                var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+                s1.async=true;
+                s1.src='https://embed.tawk.to/699cc6abfaf0a71c36d94cbd/1ji66g3s9';
+                s1.charset='UTF-8';
+                s1.setAttribute('crossorigin','*');
+                s0.parentNode.insertBefore(s1,s0);
+              })();
+            `}
+          </Script>
           <div className="landing-page-layout w-full min-h-screen flex flex-col overflow-x-hidden">
             {/* Sticky Header */}
             <div className="sticky top-0 left-0 w-full z-[10000]">
