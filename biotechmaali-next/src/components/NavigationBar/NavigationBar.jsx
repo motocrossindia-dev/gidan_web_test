@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { FaRegUser, FaRegHeart, FaChevronDown } from "react-icons/fa";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { IoWalletOutline, IoSearch } from "react-icons/io5";
@@ -32,6 +32,17 @@ import ClickAwayListener from "@mui/material/ClickAwayListener";
 import CartIconWithCount from "../Cart/cartcount";
 import WishlistIconWithCount from "../../views/utilities/WishList/wishlistcount";
 
+const NavigationModalParams = ({ setIsSignInOpen, setIsVerificationOpen, setIsLoginOpen }) => {
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const modal = searchParams.get("modal");
+    if (modal === "signIn") setIsSignInOpen(true);
+    if (modal === "verification") setIsVerificationOpen(true);
+    if (modal === "login") setIsLoginOpen(true);
+  }, [searchParams, setIsSignInOpen, setIsVerificationOpen, setIsLoginOpen]);
+  return null;
+};
+
 const NavBar = () => {
   const [isSignInOpen, setIsSignInOpen] = useState(false);
   const [isVerificationOpen, setIsVerificationOpen] = useState(false);
@@ -47,13 +58,11 @@ const NavBar = () => {
   const username = useSelector((state) => state.user.username || "Guest");
   const [userName, setUserName] = useState("Guest");
 
-  const searchParams = useSearchParams();
+  const [isMounted, setIsMounted] = useState(false);
+
   useEffect(() => {
-    const modal = searchParams.get("modal");
-    if (modal === "signIn") setIsSignInOpen(true);
-    if (modal === "verification") setIsVerificationOpen(true);
-    if (modal === "login") setIsLoginOpen(true);
-  }, [searchParams]);
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userData"));
@@ -148,6 +157,8 @@ const NavBar = () => {
     router.push(`/search?query=${encodeURIComponent(query)}`);
   };
 
+  const displayUsername = isMounted ? username : "Guest";
+
   return (
     <div>
       <nav className="w-full px-4 py-3 bg-white shadow-sm font-sans">
@@ -226,7 +237,7 @@ const NavBar = () => {
 
             {/* User Dropdown */}
             <div className="relative hidden sm:flex gap-4">
-              {username === "Guest" ? (
+              {displayUsername === "Guest" ? (
                 <button
                   className="flex items-center space-x-2 text-gray-500"
                   onClick={() => setIsSignInOpen(true)}
@@ -243,7 +254,7 @@ const NavBar = () => {
                 >
                   <div className="flex items-center space-x-2">
                     <FaRegUser className="text-xl" />
-                    <span>{username.slice(0, 5)}..</span>
+                    <span>{displayUsername.slice(0, 5)}..</span>
                   </div>
                   <FaChevronDown />
                 </button>
@@ -292,6 +303,14 @@ const NavBar = () => {
       </nav>
 
       {/* Modals */}
+      <Suspense fallback={null}>
+        <NavigationModalParams
+          setIsSignInOpen={setIsSignInOpen}
+          setIsVerificationOpen={setIsVerificationOpen}
+          setIsLoginOpen={setIsLoginOpen}
+        />
+      </Suspense>
+
       {isSignInOpen && <SignIn onClose={() => setIsSignInOpen(false)} onGetOtpClick={handleGetOtpClick} onLoginSuccess={handleLoginSuccess} />}
 
       {isVerificationOpen && <Verification onClose={() => setIsVerificationOpen(false)} onSubmit={handleVerificationSubmit} />}
