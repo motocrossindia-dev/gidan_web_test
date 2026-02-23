@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PlantFilter from '@/views/utilities/PlantFilter/PlantFilter';
+import { Suspense } from "react";
 
 type Props = { params: Promise<{ categorySlug: string }> };
 
@@ -41,24 +42,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-import { fetchCategoryBySlug, fetchSubcategoryBySlug, fetchProductsByFilters, fetchSubcategories } from "@/utils/serverApi";
+import { fetchCategoryBySlug, fetchSubcategoryBySlug, fetchProductsByFilters, fetchSubcategories, fetchFilters } from "@/utils/serverApi";
 
 export default async function CategoryPage({ params }: Props) {
   const { categorySlug } = await params;
 
-  // 1. Fetch category and subcategories data on server
-  const [category, subcategories] = await Promise.all([
-    fetchCategoryBySlug(categorySlug),
-    fetchSubcategories(categorySlug)
-  ]);
-
-  if (!category) notFound();
-
-  // Attach subCategory to category object for PlantFilter
-  const categoryWithSubs = { ...category, subCategory: subcategories };
-
-  // 2. Fetch initial products for this category
-  // Map category names to internal types if necessary
+  // 1. Fetch category, subcategories, and filters data on server in parallel
   const categoryToTypeMap: Record<string, string> = {
     'plants': 'plant',
     'pots': 'pot',
@@ -67,12 +56,29 @@ export default async function CategoryPage({ params }: Props) {
   };
   const typeKey = categoryToTypeMap[categorySlug.toLowerCase()] || "plant";
 
+  const [category, subcategories, filters] = await Promise.all([
+    fetchCategoryBySlug(categorySlug),
+    fetchSubcategories(categorySlug),
+    fetchFilters(typeKey)
+  ]);
+
+  if (!category) notFound();
+
+  // Attach subCategory to category object for PlantFilter
+  const categoryWithSubs = { ...category, subCategory: subcategories };
+
+  // 2. Fetch initial products for this category using the already derived typeKey
   const initialResults = await fetchProductsByFilters({
     type: typeKey,
-    // Note: API seems to use case-sensitive names or IDs in some places, 
-    // but PlantFilter usually waits for ID resolution. 
-    // For hydration, we pre-fetch the main list.
   });
 
-  return <PlantFilter initialResults={initialResults} initialCategoryData={categoryWithSubs} />;
+  return (
+    <Suspense fallback={<div className="flex justify-center p-8">Loading products...</div>}>
+      <PlantFilter
+        initialResults={initialResults}
+        initialCategoryData={categoryWithSubs}
+        initialFilterData={filters}
+      />
+    </Suspense>
+  );
 }

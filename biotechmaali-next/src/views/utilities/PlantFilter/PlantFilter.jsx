@@ -32,7 +32,7 @@ const CategoryLayout = ({ data }) => {
 };
 
 void (0);
-function PlantFilter({ initialResults = [], initialCategoryData = null } = {}) {
+function PlantFilter({ initialResults = [], initialCategoryData = null, initialFilterData = null } = {}) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const path = pathname;
@@ -89,8 +89,13 @@ function PlantFilter({ initialResults = [], initialCategoryData = null } = {}) {
     const [fetchedSubcategoryName, setFetchedSubcategoryName] = useState(null);
 
     // Resolved IDs from slugs (for direct URL access)
-    const [resolvedCategoryId, setResolvedCategoryId] = useState(categoryId || categoryIdFromSlug);
-    const [resolvedSubcategoryId, setResolvedSubcategoryId] = useState(subcategoryID || null);
+    // Initialize from initialCategoryData if available to avoid waterfalls
+    const [resolvedCategoryId, setResolvedCategoryId] = useState(
+        categoryId || categoryIdFromSlug || initialCategoryData?.id || null
+    );
+    const [resolvedSubcategoryId, setResolvedSubcategoryId] = useState(
+        subcategoryID || initialCategoryData?.subCategoryId || null
+    );
     const [isResolvingIds, setIsResolvingIds] = useState(false);
 
     // State to track the currently selected Type from the Sidebar
@@ -146,11 +151,13 @@ function PlantFilter({ initialResults = [], initialCategoryData = null } = {}) {
         const resolveSlugs = async () => {
             if (!categorySlug) return;
 
-            setIsResolvingIds(true);
-            try {
-                // 1. Resolve Category ID if not already known
-                let currentCatId = resolvedCategoryId;
-                if (!currentCatId) {
+            // If we already have the ID from hardcoded map or initialCategoryData, skip resolving category
+            let currentCatId = resolvedCategoryId;
+
+            // Only fetch if we really don't have the ID
+            if (!currentCatId) {
+                setIsResolvingIds(true);
+                try {
                     const catRes = await axiosInstance.get('/category/');
                     const categories = catRes.data?.data?.categories || [];
                     const foundCat = categories.find(c => c.slug === categorySlug);
@@ -159,10 +166,17 @@ function PlantFilter({ initialResults = [], initialCategoryData = null } = {}) {
                         setResolvedCategoryId(foundCat.id);
                         setFetchedCategoryName(foundCat.name);
                     }
+                } catch (err) {
+                    console.error("Error resolving category slug:", err);
+                } finally {
+                    setIsResolvingIds(false);
                 }
+            }
 
-                // 2. Resolve Subcategory ID if slug exists
-                if (subcategorySlug && currentCatId) {
+            // 2. Resolve Subcategory ID if slug exists and not already resolved
+            if (subcategorySlug && !resolvedSubcategoryId && currentCatId) {
+                setIsResolvingIds(true);
+                try {
                     const subRes = await axiosInstance.get(`/category/categoryWiseSubCategory/${categorySlug}/`);
                     const subcategories = subRes.data?.data?.subCategorys || [];
                     const foundSub = subcategories.find(s => s.slug === subcategorySlug);
@@ -170,16 +184,16 @@ function PlantFilter({ initialResults = [], initialCategoryData = null } = {}) {
                         setResolvedSubcategoryId(foundSub.id);
                         setFetchedSubcategoryName(foundSub.name);
                     }
+                } catch (err) {
+                    console.error("Error resolving subcategory slug:", err);
+                } finally {
+                    setIsResolvingIds(false);
                 }
-            } catch (err) {
-                console.error("Error resolving slugs to IDs:", err);
-            } finally {
-                setIsResolvingIds(false);
             }
         };
 
         resolveSlugs();
-    }, [categorySlug, subcategorySlug]);
+    }, [categorySlug, subcategorySlug, resolvedCategoryId, resolvedSubcategoryId]);
 
     useEffect(() => {
         const getInitialProducts = async () => {
@@ -371,23 +385,10 @@ function PlantFilter({ initialResults = [], initialCategoryData = null } = {}) {
                             setFetchedCategoryName={setFetchedCategoryName}
                             setFetchedSubcategoryName={setFetchedSubcategoryName}
                             setIsSearching={setIsSearching}
+                            initialFilterData={initialFilterData}
                         />
                     </div>
 
-                    {/* Subcategory links specifically for crawler discovery and quick navigation */}
-                    {!subcategorySlug && initialCategoryData?.subCategory && initialCategoryData.subCategory.length > 0 && (
-                        <div className="flex flex-wrap gap-3 mb-6">
-                            {initialCategoryData.subCategory.map((sub) => (
-                                <Link
-                                    key={sub.id}
-                                    href={`/${categorySlug}/${sub.slug}/`}
-                                    className="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium text-gray-700 hover:border-green-600 hover:text-green-600 transition-all shadow-sm"
-                                >
-                                    {sub.name}
-                                </Link>
-                            ))}
-                        </div>
-                    )}
 
                     {/* Product Grid */}
                     <div className={`mt-4 transition-opacity duration-300 ${isSearching ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
@@ -464,6 +465,7 @@ function PlantFilter({ initialResults = [], initialCategoryData = null } = {}) {
                         setFetchedCategoryName={setFetchedCategoryName}
                         setFetchedSubcategoryName={setFetchedSubcategoryName}
                         setIsSearching={setIsSearching}
+                        initialFilterData={initialFilterData}
                     />
                 </Box>
             </SwipeableDrawer>

@@ -80,7 +80,8 @@ const FilterSidebar = ({
   categoryIdFromSlug,
   setFetchedCategoryName,
   setFetchedSubcategoryName,
-  setIsSearching
+  setIsSearching,
+  initialFilterData = null
 }) => {
   // Track if this is the very first render of the component
   const isInitialMount = useRef(true);
@@ -94,8 +95,8 @@ const FilterSidebar = ({
   const [openFilters, setOpenFilters] = useState({});
   const [selectedFilters, setSelectedFilters] = useState({});
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
-  const [filterData, setFilterData] = useState({});
-  const [availableTypes, setAvailableTypes] = useState([]);
+  const [filterData, setFilterData] = useState(initialFilterData || {});
+  const [availableTypes, setAvailableTypes] = useState(initialFilterData?.available_types || []);
 
   const dropdownButtonRefs = useRef({});
   const dropdownContainerRefs = useRef({});
@@ -163,6 +164,15 @@ const FilterSidebar = ({
 
   // Fetch filters
   useEffect(() => {
+    // If we have initialFilterData and its type matches our selected type, skip the first fetch
+    if (initialFilterData && filterData.available_types && selectedFilterType) {
+      // Simple heuristic: if we already have data for this type, don't re-fetch immediately on mount
+      // However, we want to allow re-fetching if the type changes later.
+      if (isInitialMount.current && availableTypes.includes(selectedFilterType)) {
+        return;
+      }
+    }
+
     axiosInstance
       .get(`${API_URL}?type=${selectedFilterType}`)
       .then((res) => {

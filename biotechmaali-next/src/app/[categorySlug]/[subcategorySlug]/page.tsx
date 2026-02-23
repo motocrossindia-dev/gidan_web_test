@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PlantFilter from '@/views/utilities/PlantFilter/PlantFilter';
+import { Suspense } from "react";
 
 type Props = { params: Promise<{ categorySlug: string; subcategorySlug: string }> };
 
@@ -56,20 +57,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-import { fetchCategoryBySlug, fetchSubcategoryBySlug, fetchProductsByFilters } from "@/utils/serverApi";
+import { fetchCategoryBySlug, fetchSubcategoryBySlug, fetchProductsByFilters, fetchSubcategories, fetchFilters } from "@/utils/serverApi";
 
 export default async function SubcategoryPage({ params }: Props) {
   const { categorySlug, subcategorySlug } = await params;
 
-  // 1. Fetch category and subcategory data on server
-  const [category, subcategory] = await Promise.all([
-    fetchCategoryBySlug(categorySlug),
-    fetchSubcategoryBySlug(categorySlug, subcategorySlug)
-  ]);
-
-  if (!category || !subcategory) notFound();
-
-  // 2. Fetch initial products for this subcategory
+  // 1. Fetch category, subcategory, subcategories list, and filters data on server
   const categoryToTypeMap: Record<string, string> = {
     'plants': 'plant',
     'pots': 'pot',
@@ -78,15 +71,34 @@ export default async function SubcategoryPage({ params }: Props) {
   };
   const typeKey = categoryToTypeMap[categorySlug.toLowerCase()] || "plant";
 
+  const [category, subcategory, subcategoriesList, filters] = await Promise.all([
+    fetchCategoryBySlug(categorySlug),
+    fetchSubcategoryBySlug(categorySlug, subcategorySlug),
+    fetchSubcategories(categorySlug),
+    fetchFilters(typeKey)
+  ]);
+
+  if (!category || !subcategory) notFound();
+
+  // Attach subcategories for the filter sidebar and crawlers
+  const categoryWithSubs = {
+    ...category,
+    subCategory: subcategoriesList,
+    subCategoryId: subcategory.id
+  };
+
   const initialResults = await fetchProductsByFilters({
     type: typeKey,
     subcategory_id: subcategory.id
   });
 
   return (
-    <PlantFilter
-      initialResults={initialResults}
-      initialCategoryData={category}
-    />
+    <Suspense fallback={<div className="flex justify-center p-8">Loading products...</div>}>
+      <PlantFilter
+        initialResults={initialResults}
+        initialCategoryData={categoryWithSubs}
+        initialFilterData={filters}
+      />
+    </Suspense>
   );
 }

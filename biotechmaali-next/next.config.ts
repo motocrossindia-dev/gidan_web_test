@@ -24,6 +24,7 @@ const nextConfig: NextConfig = {
 
   // Image optimization domains
   images: {
+    unoptimized: true,
     qualities: [75, 80],
     remotePatterns: [
       {

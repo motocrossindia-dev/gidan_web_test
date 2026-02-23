@@ -1,6 +1,6 @@
 'use client';
 
-import { useSearchParams, useParams, usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
 // import React, { useEffect, useState } from "react";
 // import ProductGrid from "../PlantFilter/ProductGrid";
 // import FAQSection from "../PlantFilter/FAQSection";
@@ -60,8 +60,7 @@ import axios from "axios";
 function CarouselData() {
     const [results, setResults] = useState([]);
 
-    const searchParams = useSearchParams();
-    const pathname = usePathname();
+
 
     const id = null.heroId;
     console.log(id, '-------------------------------s');
