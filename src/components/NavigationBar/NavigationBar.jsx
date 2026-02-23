@@ -162,7 +162,7 @@ const NavBar = () => {
   return (
     <div>
       <nav className="w-full px-4 py-3 bg-white shadow-sm font-sans">
-        <div className="max-w-full mx-auto flex items-center justify-between sm:justify-between md:ml-10">
+        <div className="max-w-full mx-auto flex items-center justify-between sm:justify-between px-4 md:px-8">
 
           {/* MOBILE */}
           <div className="sm:hidden flex justify-left items-center space-x-4">
@@ -195,7 +195,7 @@ const NavBar = () => {
           </div>
 
           {/* Search bar (Desktop) */}
-          <div className="flex-1 max-w-full mx-4 px-10 hidden sm:block">
+          <div className="flex-1 max-w-full mx-4 hidden sm:block">
             <div className="relative w-full">
               <IoSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
@@ -203,13 +203,13 @@ const NavBar = () => {
                 value={searchTerm}
                 onChange={handleSearch}
                 placeholder="Search Products, Brands and More"
-                className="w-[90%] pl-10 pr-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:border-blue-500"
+                className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:border-blue-500"
               />
             </div>
           </div>
 
           {/* Icons */}
-          <div className="flex items-center md:space-x-6 space-x-4 md:pr-10">
+          <div className="flex items-center md:space-x-6 space-x-4">
 
             <button
               onClick={handleWishListClick}

@@ -7,7 +7,7 @@ const Header = () => {
   return (
     <header className="bg-gradient-to-r from-[#062e25] via-[#062e25] to-white font-poppins">
 
-      <div className="container px-6 py-2 flex flex-row items-center justify-between gap-2 m-auto">
+      <div className="max-w-full px-4 md:px-8 py-2 flex flex-row items-center justify-between gap-2 m-auto">
 
         <div>
           <p className="text-white text-[11px] px-3 md:text-[13px]">

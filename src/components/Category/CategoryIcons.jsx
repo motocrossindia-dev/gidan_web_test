@@ -54,7 +54,7 @@ const CategoryIcons = ({ initialData }) => {
 
   if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-5 relative z-10">
+      <div className="max-w-full mx-auto px-4 md:px-8 relative z-10">
         <div className="flex items-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 px-2 sm:px-4 mt-4 w-full pb-2">
           <div className="text-center py-4 text-gray-500">Loading categories...</div>
         </div>
@@ -64,7 +64,7 @@ const CategoryIcons = ({ initialData }) => {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-5 relative z-10">
+      <div className="max-w-full mx-auto px-4 md:px-8 relative z-10">
         {/* Category Container */}
         <div
           id="category-scroll-container"
