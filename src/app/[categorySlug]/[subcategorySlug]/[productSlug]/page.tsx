@@ -27,21 +27,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const productName = productSlug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   const catName = categorySlug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-  const canonicalUrl = `https://www.gidan.store/${categorySlug}/${subcategorySlug}/${productSlug}/`;
+  // Canonical is always the base product URL — no ?variant= query param.
+  // This prevents duplicate content from variant-specific URLs being indexed separately.
+  const canonicalPath = `/${categorySlug}/${subcategorySlug}/${productSlug}/`;
   return {
     title: `Buy ${productName} Online | Gidan Plants`,
     description: `Buy ${productName} online at Gidan. Best quality ${catName.toLowerCase()} plants with expert care guides, fast delivery and easy returns across India.`,
     openGraph: {
       title: `Buy ${productName} Online | Gidan Plants`,
       description: `Buy ${productName} online at Gidan - India's trusted plant store. Expert care, fast delivery.`,
-      url: canonicalUrl,
+      url: canonicalPath,
       siteName: "Gidan Plants",
       locale: "en_IN",
       type: "website",
     },
-    // Canonical always points to the base product URL (no ?variant=) to prevent
-    // duplicate content issues while keeping variant pages accessible.
-    alternates: { canonical: canonicalUrl },
+    alternates: { canonical: canonicalPath },
   };
 
 

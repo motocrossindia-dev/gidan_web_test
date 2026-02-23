@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     title: "Gidan - Plants, Seeds & Gardening Store Online India",
     description:
       "Buy plants, seeds, pots and gardening tools online at Gidan. Landscaping, terrace gardening and vertical garden services across India.",
-    url: "https://www.gidan.store",
+    url: "/",
     siteName: "Gidan Plants",
     images: [
       {
@@ -67,8 +67,9 @@ export const metadata: Metadata = {
     images: ["https://www.gidan.store/gidan-og.jpg"],
   },
   alternates: {
-    canonical: "https://www.gidan.store",
+    canonical: "/",
   },
+
   robots: {
     index: true,
     follow: true,

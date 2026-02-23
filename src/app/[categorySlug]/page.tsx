@@ -33,12 +33,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `${name} Plants | Gidan`,
       description: `Shop ${name.toLowerCase()} plants and accessories at Gidan, India's trusted online plant store.`,
-      url: `https://www.gidan.store/${categorySlug}/`,
+      url: `/${categorySlug}/`,
       siteName: "Gidan Plants",
       locale: "en_IN",
       type: "website",
     },
-    alternates: { canonical: `https://www.gidan.store/${categorySlug}/` },
+    alternates: { canonical: `/${categorySlug}/` },
   };
 }
 
