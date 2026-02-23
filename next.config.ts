@@ -2,6 +2,10 @@ import type { NextConfig } from "next";
 import path from "path";
 
 const nextConfig: NextConfig = {
+  // Enforce trailing slashes on all URLs (301 redirect for non-slash URLs).
+  // This is the correct way — using custom redirects caused infinite redirect loops.
+  trailingSlash: true,
+
   // Map CRA env vars to Next.js NEXT_PUBLIC_ equivalents
   env: {
     REACT_APP_API_URL: process.env.NEXT_PUBLIC_API_URL,
@@ -25,7 +29,7 @@ const nextConfig: NextConfig = {
   // Image optimization domains
   images: {
     unoptimized: true,
-    qualities: [75, 80],
+    qualities: [75, 80, 85],
     remotePatterns: [
       {
         protocol: "https",
@@ -39,16 +43,17 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/category/:id",
-        destination: "/:id",
+        destination: "/:id/",
         permanent: true,
       },
       {
         source: "/category/subcategory/:id/:subcategory",
-        destination: "/:id/:subcategory",
+        destination: "/:id/:subcategory/",
         permanent: true,
       },
     ];
   },
+
 
   // Rewrites (backend sitemap proxy removed — using local sitemap.ts with clean URLs)
   async rewrites() {
@@ -74,5 +79,6 @@ const nextConfig: NextConfig = {
     "@mui/system",
   ],
 };
+
 
 export default nextConfig;

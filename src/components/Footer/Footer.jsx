@@ -104,23 +104,22 @@ const Footer = () => {
                     </h3>
                     <ul
                         className={`space-y-2 transition-all duration-300 md:block ${openSection === "quick-links" ? "block" : "hidden"
-                        }`}
+                            }`}
                     >
                         <li className="hover:text-green-500 ">
                             <Link href="/">Home</Link>
                         </li>
-
                         <li className="hover:text-green-500">
-                            <Link href="/careers">Careers</Link>
+                            <Link href="/careers/">Careers</Link>
                         </li>
                         <li className="hover:text-green-500">
-                            <Link href="/blogcomponent">Blogs</Link>
+                            <Link href="/blogcomponent/">Blogs</Link>
                         </li>
                         <li className="hover:text-green-500">
-                            <Link href="/stores">Our Stores</Link>
+                            <Link href="/stores/">Our Stores</Link>
                         </li>
                         <li className="hover:text-green-500">
-                            <Link href="/franchise-enquiry">Franchise Enquiry</Link>
+                            <Link href="/franchise-enquiry/">Franchise Enquiry</Link>
                         </li>
                     </ul>
                 </div>
@@ -135,19 +134,19 @@ const Footer = () => {
                     </h3>
                     <ul
                         className={`space-y-2 transition-all duration-300 md:block ${openSection === "more-info" ? "block" : "hidden"
-                        }`}
+                            }`}
                     >
                         <li className="hover:text-green-500">
-                            <Link href="/contact-us">Contact Us</Link>
+                            <Link href="/contact-us/">Contact Us</Link>
                         </li>
                         <li className="hover:text-green-500">
-                            <Link href="/about-us">About Us</Link>
+                            <Link href="/about-us/">About Us</Link>
                         </li>
                         <li className="hover:text-green-500" onClick={handleClickorder}>
-                            <Link href="/profile/trackorder">Track Order</Link>
+                            <Link href="/profile/trackorder/">Track Order</Link>
                         </li>
                         <li className="hover:text-green-500">
-                            <Link href="/faq">FAQs</Link>
+                            <Link href="/faq/">FAQs</Link>
                         </li>
                     </ul>
                 </div>
@@ -162,19 +161,19 @@ const Footer = () => {
                     </h3>
                     <ul
                         className={`space-y-2 transition-all duration-300 md:block ${openSection === "policies" ? "block" : "hidden"
-                        }`}
+                            }`}
                     >
                         <li className="hover:text-green-500 ">
-                            <Link href="/terms">Terms and Conditions</Link>
+                            <Link href="/terms/">Terms and Conditions</Link>
                         </li>
                         <li className="hover:text-green-500 ">
-                            <Link href="/privacy-policy">Privacy Policy</Link>
+                            <Link href="/privacy-policy/">Privacy Policy</Link>
                         </li>
                         <li className="hover:text-green-500 ">
-                            <Link href="/shipping">Shipping Policy</Link>
+                            <Link href="/shipping/">Shipping Policy</Link>
                         </li>
                         <li className="hover:text-green-500 ">
-                            <Link href="/return">Return Policy</Link>
+                            <Link href="/return/">Return Policy</Link>
                         </li>
                     </ul>
                 </div>
@@ -189,7 +188,7 @@ const Footer = () => {
                     </h3>
                     <ul
                         className={`space-y-2 transition-all duration-300 md:block ${openSection === "offers-rewards" ? "block" : "hidden"
-                        }`}
+                            }`}
                     >
                         <li className="hover:text-green-500" onClick={handleWalletClick}>
                             <Link href="">Wallet</Link>
@@ -232,9 +231,8 @@ const Footer = () => {
                         />
                         <button
                             type="submit"
-                            className={`px-1 m-2 rounded-md py-1 text-xs ${
-                                subscribed ? 'bg-gray-400' : 'bg-bio-green text-white'
-                            }`}
+                            className={`px-1 m-2 rounded-md py-1 text-xs ${subscribed ? 'bg-gray-400' : 'bg-bio-green text-white'
+                                }`}
                             disabled={subscribed}
                         >
                             {subscribed ? 'Subscribed' : 'Subscribe'}

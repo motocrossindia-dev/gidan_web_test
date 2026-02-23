@@ -61,5 +61,6 @@ export const getProductUrl = (product) => {
     const variantId = product.id || product.variant_id;
     const variantSuffix = variantId ? `?variant=${variantId}` : "";
 
-    return `/${category_slug}/${sub_category_slug}/${product_slug}${variantSuffix}`;
+    return `/${category_slug}/${sub_category_slug}/${product_slug}/${variantSuffix}`;
+
 };
