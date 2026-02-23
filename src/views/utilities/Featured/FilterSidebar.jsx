@@ -243,13 +243,27 @@ const FilterSidebar = ({
     const params = new URLSearchParams();
 
     params.append("type", selectedFilterType || "");
-    params.append("category_id", categoryId || categoryIdFromSlug || "");
+    // Determine if we should send category/subcategory ID
+    // If the selected type doesn't match the route's typeKey, we clear them to avoid backend conflicts
+    const isTypeMismatch = typeKey && selectedFilterType &&
+      selectedFilterType.toLowerCase() !== typeKey.toLowerCase();
 
-    // Subcategory ID
+    let finalCategoryId = categoryId || categoryIdFromSlug || "";
     let finalSubcategoryId = subcategoryID || "";
-    let finalSubcategorySlug = subcategorySlug || "";
+    let finalSubcategorySlug = subcategorySlug || ""; // Initialize finalSubcategorySlug here
 
-    if ("subcategories" in selectedFilters) {
+    if (isTypeMismatch) {
+      finalCategoryId = "";
+      finalSubcategoryId = "";
+      finalSubcategorySlug = ""; // Clear slug on type mismatch
+    }
+
+    params.append("category_id", finalCategoryId);
+
+    // Subcategory ID and Slug resolution
+    // If there's a type mismatch, finalSubcategoryId is already cleared.
+    // Otherwise, we check for selectedFilters.subcategories.
+    if (!isTypeMismatch && "subcategories" in selectedFilters) {
       finalSubcategoryId = selectedFilters.subcategories || "";
       if (finalSubcategoryId) {
         const selectedSubcat = filterData.subcategories?.find(s => s.id === finalSubcategoryId);
@@ -308,6 +322,14 @@ const FilterSidebar = ({
 
     try {
       if (setIsSearching) setIsSearching(true);
+
+      // Clear old metadata if we're jumping types to prevent stale header info
+      if (isTypeMismatch) {
+        if (setFetchedCategoryName) setFetchedCategoryName(null);
+        if (setFetchedSubcategoryName) setFetchedSubcategoryName(null);
+        if (setCategoryData) setCategoryData(null);
+      }
+
       const res = await axiosInstance.get(`/filters/main_productsFilter/?${params}&page_size=100`);
       setResults(res.data.results);
 
@@ -391,9 +413,20 @@ const FilterSidebar = ({
     try {
       const params = new URLSearchParams();
 
+      const isTypeMismatch = typeKey && selectedFilterType &&
+        selectedFilterType.toLowerCase() !== typeKey.toLowerCase();
+
+      let finalCategoryId = categoryId || categoryIdFromSlug || "";
+      let finalSubcategoryId = subcategoryID || "";
+
+      if (isTypeMismatch) {
+        finalCategoryId = "";
+        finalSubcategoryId = "";
+      }
+
       params.append("type", selectedFilterType || "");
-      params.append("category_id", categoryId || categoryIdFromSlug || "");
-      params.append("subcategory_id", subcategoryID || "");
+      params.append("category_id", finalCategoryId);
+      params.append("subcategory_id", finalSubcategoryId);
       params.append("search", "");
       params.append("min_price", "");
       params.append("max_price", "");
