@@ -1,0 +1,52 @@
+# Gidan Store - Robots.txt
+# https://www.gidan.store/robots.txt
+
+User-agent: *
+Allow: /
+
+# Disallow account/private pages
+Disallow: /cart
+Disallow: /checkout
+Disallow: /profile/
+Disallow: /orders
+Disallow: /wishlist
+Disallow: /wallet
+Disallow: /wallethistory
+Disallow: /btcoins
+Disallow: /mobile-login
+Disallow: /mobile-signin
+Disallow: /mobile-verification
+Disallow: /mobilesidebar/
+Disallow: /add-address
+Disallow: /address
+Disallow: /history
+Disallow: /order-summary
+Disallow: /order-success
+Disallow: /payment
+Disallow: /PaymentGateway
+Disallow: /successpage
+Disallow: /thankyou
+Disallow: /hamburger
+Disallow: /side
+
+# Allow Next.js CSS/assets for rendering, block JS chunks from indexing
+Disallow: /_next/static/chunks/
+Allow: /_next/static/css/
+Allow: /_next/static/media/
+
+# Disallow admin/API endpoints
+Disallow: /api/
+Disallow: /admin/
+
+# Disallow search results (if applicable)
+Disallow: /search?*
+
+# Allow legitimate static assets
+Allow: /static/
+Allow: /assets/
+Allow: /images/
+Allow: /fonts/
+Allow: /favicon.ico
+
+# Sitemap locations
+Sitemap: https://www.gidan.store/sitemap.xml
