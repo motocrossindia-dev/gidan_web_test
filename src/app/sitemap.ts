@@ -1,27 +1,9 @@
 import { MetadataRoute } from "next";
-import slugify from "slugify";
+import { getProductUrl, toSlugString } from "../utils/urlHelper";
 
 const API_URL =
     process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store";
 const SITE_URL = "https://www.gidan.store";
-
-function convertToSlug(text: string): string {
-    if (!text) return "";
-    return slugify(text, {
-        replacement: "-",
-        remove: /[*+~.()'\"!:@]/g,
-        lower: true,
-        strict: false,
-        locale: "vi",
-        trim: true,
-    });
-}
-
-function toSlugString(val: any): string {
-    if (!val) return "";
-    if (typeof val === "string") return val;
-    return val?.slug || val?.name || "";
-}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const entries: MetadataRoute.Sitemap = [];
@@ -43,6 +25,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         "/shipping",
         "/blogcomponent",
         "/gifts",
+        "/seasonal",
+        "/combo",
+        "/shop-the-look",
     ];
 
     for (const page of staticPages) {
@@ -102,38 +87,44 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             }
         }
 
-        // Fetch ALL products and generate clean URLs
-        const productTypes = ["plant", "pot", "seed", "plant_care"];
-        for (const type of productTypes) {
-            try {
-                const prodRes = await fetch(
-                    `${API_URL}/filters/main_productsFilter/?type=${type}`,
-                    { next: { revalidate: 3600 } }
-                );
-                if (!prodRes.ok) continue;
-                const prodData = await prodRes.json();
-                const products = prodData?.results || [];
+        // Helper to fetch all products across pages (No type filter to ensure we get 100% of products)
+        async function fetchAllProducts() {
+            let allProds: any[] = [];
+            // Start with the base URL. Note: Backend ignores page_size=100 and defaults to 10.
+            let currentUrl = `${API_URL}/filters/main_productsFilter/`;
 
-                for (const product of products) {
-                    const catSlug = toSlugString(product.category_slug);
-                    const subCatSlug =
-                        toSlugString(product.sub_category_slug) || "all";
+            while (currentUrl) {
+                try {
+                    const res = await fetch(currentUrl, { next: { revalidate: 3600 } });
+                    if (!res.ok) break;
+                    const data = await res.json();
+                    const results = data?.results || data?.products || [];
+                    allProds = [...allProds, ...results];
 
-                    // Use main_product_name for the clean slug
-                    const productSlug = product.main_product_name
-                        ? convertToSlug(product.main_product_name)
-                        : toSlugString(product.slug);
+                    // The 'next' field is an absolute URL from the backend
+                    currentUrl = data?.next || null;
 
-                    if (!catSlug || !productSlug) continue;
-
-                    entries.push({
-                        url: `${SITE_URL}/${catSlug}/${subCatSlug}/${productSlug}`,
-                        lastModified: new Date(),
-                        changeFrequency: "weekly",
-                        priority: 0.6,
-                    });
+                    // Safety break
+                    if (allProds.length > 5000) break;
+                } catch (err) {
+                    console.error("Error fetching products for sitemap:", err);
+                    break;
                 }
-            } catch { }
+            }
+            return allProds;
+        }
+
+        const products = await fetchAllProducts();
+        for (const product of products) {
+            const productRelativeUrl = getProductUrl(product);
+            if (productRelativeUrl === "/" || !productRelativeUrl) continue;
+
+            entries.push({
+                url: `${SITE_URL}${productRelativeUrl}`,
+                lastModified: new Date(),
+                changeFrequency: "weekly",
+                priority: 0.6,
+            });
         }
     } catch (err) {
         console.error("Sitemap generation error:", err);
@@ -141,9 +132,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Deduplicate URLs
     const seen = new Set<string>();
-    return entries.filter((entry) => {
+    const finalEntries = entries.filter((entry) => {
         if (seen.has(entry.url)) return false;
         seen.add(entry.url);
         return true;
     });
+    return finalEntries;
 }

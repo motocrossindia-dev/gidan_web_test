@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Paper, Typography } from "@mui/material";
@@ -54,7 +55,12 @@ const ProductSeller = () => {
       <div className="max-w-7xl mx-auto px-3">
         <div className="grid gap-4 justify-items-center font-sans grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
           {products.map((product) => (
-            <div key={product.id} onClick={() => handleProductClick(product)} className="w-full sm:max-w-xs">
+            <Link
+              key={product.id}
+              href={getProductUrl(product)}
+              onClick={() => window.scrollTo(0, 0)}
+              className="w-full sm:max-w-xs cursor-pointer block"
+            >
 
               {/* Small Screens */}
               <div className="sm:hidden">
@@ -188,7 +194,7 @@ const ProductSeller = () => {
                 />
               </div>
 
-            </div>
+            </Link>
           ))}
         </div>
       </div>

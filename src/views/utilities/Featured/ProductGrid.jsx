@@ -9,6 +9,9 @@ import TrendingCard from '../../../components/TrendingProducts/TrendingCard';
 
 // Import the useNavigate hook
 import axiosInstance from '../../../Axios/axiosInstance';
+import { getProductUrl } from '../../../utils/urlHelper';
+import Link from 'next/link';
+
 
 
 const ProductGrid = ({ results }) => {
@@ -37,19 +40,9 @@ const ProductGrid = ({ results }) => {
   // Sorting function
 
   const handleProductClick = (product) => {
-    const category_slug = product?.category_slug;
-    const sub_category_slug = product?.sub_category_slug || "all";
-    const product_slug = product?.slug;
-
-    // Standardized 3-segment URL pattern: /:category/:subcategory/:productSlug/
-    router.push(`/${category_slug}/${sub_category_slug}/${product_slug}/`, {
-      state: {
-        product_id: product_slug,
-        category_slug: category_slug,
-        sub_category_slug: sub_category_slug
-      }
-    });
+    router.push(getProductUrl(product));
   };
+
 
   return (
     <div className="mt-8 p-2 bg-white rounded-md md:ml-16 relative z-10">
@@ -65,10 +58,10 @@ const ProductGrid = ({ results }) => {
 
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-3 gap-4 justify-items-center font-sans">
         {(results?.length ? results : products).map((product, index) => (
-          <div
+          <Link
             key={index}
-            onClick={() => handleProductClick(product)}
-            className="cursor-pointer"
+            href={getProductUrl(product)}
+            className="cursor-pointer block w-full"
           >
             <TrendingCard
               key={index}
@@ -83,9 +76,9 @@ const ProductGrid = ({ results }) => {
               getProducts={getProducts}
               ribbon={product.ribbon}
             />
-          </div>
-
+          </Link>
         ))}
+
 
       </div>
 

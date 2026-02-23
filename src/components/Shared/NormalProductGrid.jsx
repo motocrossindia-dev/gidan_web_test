@@ -33,21 +33,18 @@ const NormalProductGrid = ({
   }, [pagination?.next, query]);
 
   const handleProductClick = (product) => {
-    const category_slug = product?.category_slug;
-    const sub_category_slug = product?.sub_category_slug;
-
-    // All products have category, subcategory, and product slug
-    router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
+    router.push(getProductUrl(product), {
       state: {
-        product_id: product.id,
-        category_slug: category_slug,
-        sub_category_slug: sub_category_slug
+        product_id: product?.slug,
+        category_slug: product?.category_slug,
+        sub_category_slug: product?.sub_category_slug
       }
     });
 
-    // Scroll to top when navigating to product
+    // Scroll to top when navigating to new product
     window.scrollTo(0, 0);
   };
+
 
   // Fetch next page and append results
   const fetchNextPage = useCallback(async () => {

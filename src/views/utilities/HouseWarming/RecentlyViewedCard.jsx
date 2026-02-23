@@ -12,6 +12,8 @@ import { useSelector } from "react-redux";
 import { FaStar } from 'react-icons/fa';
 import Verify from "../../../Services/Services/Verify";
 import ReactStars from "react-rating-stars-component";
+import { getProductUrl } from "../../../utils/urlHelper";
+
 
 const RecentlyViewedCard = ({
   productId,
@@ -120,20 +122,10 @@ const RecentlyViewedCard = ({
   };
 
   const handleQuickView = (e) => {
-    e.stopPropagation();
-    const category_slug = product?.category_slug || "all";
-    const sub_category_slug = product?.sub_category_slug || "all";
-    const product_slug = product?.slug || product?.id;
-
-    // Standardized 3-segment URL pattern: /:category/:subcategory/:productSlug/
-    router.push(`/${category_slug}/${sub_category_slug}/${product_slug}/`, {
-      state: {
-        product_id: product_slug,
-        category_slug: category_slug,
-        sub_category_slug: sub_category_slug
-      }
-    });
+    router.push(getProductUrl(product));
   };
+
+
 
   return (
     <>

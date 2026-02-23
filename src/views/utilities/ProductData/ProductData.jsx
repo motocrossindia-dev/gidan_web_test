@@ -171,9 +171,10 @@ export default function Component({ initialProductData }) {
         const queryString = urlParams.toString();
 
         // Use the main product name to derive a stable base slug (e.g., eva-planter)
-        const baseSlug = newProduct?.main_product_name
-            ? convertToSlug(newProduct.main_product_name)
+        const baseSlug = (newProduct?.main_product_name || newProduct?.name)
+            ? convertToSlug(newProduct.main_product_name || newProduct.name)
             : params.productSlug;
+
 
         const catSlug = toSlugString(newProduct?.category_slug) || params.categorySlug;
         const subCatSlug = toSlugString(newProduct?.sub_category_slug) || params.subcategorySlug || "all";
@@ -194,9 +195,9 @@ export default function Component({ initialProductData }) {
     // URL normalization: ensure the URL uses the main product slug
     // This fires when product data becomes available (from SSR or fetch)
     useEffect(() => {
-        if (!product?.main_product_name) return;
+        if (!product?.main_product_name && !product?.name) return;
 
-        const expectedSlug = convertToSlug(product.main_product_name);
+        const expectedSlug = convertToSlug(product.main_product_name || product.name);
         const currentSlug = params.productSlug;
 
         // Only normalize if the current slug doesn't match the main product slug
@@ -207,7 +208,8 @@ export default function Component({ initialProductData }) {
             window.history.replaceState(null, "", cleanUrl);
             setCurrentUrl(cleanUrl);
         }
-    }, [product?.main_product_name]);
+    }, [product?.main_product_name, product?.name]);
+
 
 
 

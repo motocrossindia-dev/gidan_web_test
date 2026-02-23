@@ -11,6 +11,8 @@ import { enqueueSnackbar } from "notistack";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import Verify from "../../../Services/Services/Verify";
+import { getProductUrl } from "../../../utils/urlHelper";
+
 
 const ProductFeaturedCard = ({
 
@@ -140,20 +142,9 @@ const ProductFeaturedCard = ({
   };
 
   const handleQuickView = (e) => {
-    // e.stopPropagation();
-    const category_slug = product?.category_slug;
-    const sub_category_slug = product?.sub_category_slug || "all";
-    const product_slug = product?.slug;
-
-    // Standardized 3-segment URL pattern: /:category/:subcategory/:productSlug/
-    router.push(`/${category_slug}/${sub_category_slug}/${product_slug}/`, {
-      state: {
-        product_id: product_slug,
-        category_slug: category_slug,
-        sub_category_slug: sub_category_slug
-      }
-    });
+    router.push(getProductUrl(product));
   };
+
 
   return (
     <>

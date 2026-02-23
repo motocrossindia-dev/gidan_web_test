@@ -1,5 +1,5 @@
 import convertToSlug from "../../../utils/slugConverter";
-import { toSlugString } from "../../../utils/urlHelper";
+import { toSlugString, getProductUrl } from "../../../utils/urlHelper";
 
 export default function ProductSchema({
     product,
@@ -12,16 +12,9 @@ export default function ProductSchema({
 }) {
     if (!product) return null;
 
-    // Use main_product_name for the clean URL that crawlers should index
-    const cleanSlug = product.main_product_name
-        ? convertToSlug(product.main_product_name)
-        : toSlugString(product.slug);
-    const catSlug = toSlugString(product.category_slug);
-    const subCatSlug = toSlugString(product.sub_category_slug);
-
-    const productUrl = subCatSlug
-        ? `${siteUrl}/${catSlug}/${subCatSlug}/${cleanSlug}`
-        : `${siteUrl}/${catSlug}/${cleanSlug}`;
+    // Use getProductUrl which now handles stable slug conversion and includes variant ID
+    const relativeProductUrl = getProductUrl(product);
+    const productUrl = `${siteUrl}${relativeProductUrl}`;
 
     const schema = {
         "@context": "https://schema.org",

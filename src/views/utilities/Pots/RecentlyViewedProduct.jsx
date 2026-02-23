@@ -2,49 +2,44 @@
 
 
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from 'react';    
+import React, { useEffect, useState } from 'react';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import TrendingCard from "../../../components/TrendingProducts/TrendingCard"
 import axiosInstance from '../../../Axios/axiosInstance';
+import { getProductUrl } from "../../../utils/urlHelper";
+import Link from "next/link";
+
 
 const RecentlyViewedProduct = () => {
   const [products, setProducts] = useState([]);
   const router = useRouter();
-  
-  
+
+
   const getProducts = async () => {
     try {
       const response = await axiosInstance.get(`/product/recentlyViewed/`);
-  
+
       if (response.status === 200) {
-      setProducts(response?.data?.data?.products || []);
-        
-      }  
+        setProducts(response?.data?.data?.products || []);
+
+      }
     } catch (error) {
       console.error("Error fetching products:", error.response?.data || error.message);
       setProducts([]); // Fallback to an empty array in case of error
     }
   };
-  
+
   useEffect(() => {
-   
-      getProducts();
-    
+
+    getProducts();
+
   }, []); // Re-run if `accessToken` changes
 
   const handleProductClick = (product) => {
-    const category_slug = product?.category_slug;
-    const sub_category_slug = product?.sub_category_slug;
-
-    // All products have category, subcategory, and product slug
-    router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {       state: {
-        product_id: product.slug,
-        category_slug:category_slug,
-        sub_category_slug:sub_category_slug
-
-      } });
+    router.push(getProductUrl(product));
   };
-  
+
+
   return (
     <div className="w-full bg-gray-100">
       <div className="my-8 p-4 bg-grey-200 rounded-md">
@@ -56,7 +51,7 @@ const RecentlyViewedProduct = () => {
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 lg:mx-10 gap-4 lg:gap-2 justify-items-center">
             {products.length > 0 ? (
               products.map((product) => (
-                <div key={product?.id} onClick={() => handleProductClick(product)}>
+                <Link key={product?.id} href={getProductUrl(product)} className="block w-full">
                   <TrendingCard
                     product={product}
                     name={product?.name}
@@ -69,8 +64,9 @@ const RecentlyViewedProduct = () => {
                     getProducts={getProducts}
                     mrp={Math.round(product?.mrp)}
                   />
-                </div>
+                </Link>
               ))
+
             ) : (
               <p className="text-center col-span-4">No products found.</p>
             )}

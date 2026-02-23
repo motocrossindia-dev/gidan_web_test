@@ -9,6 +9,7 @@ import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../redux/User/verificationSlice";
 import { useHomeProducts } from "../../hooks/useHomeProducts";
+import { getProductUrl } from "../../utils/urlHelper";
 
 const SeasonalProduct = () => {
   const [visibleCount, setVisibleCount] = useState(8);
@@ -74,9 +75,7 @@ const SeasonalProduct = () => {
         <div className="max-w-7xl mx-auto px-3">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 justify-items-center">
             {visibleProducts.map((product, index) => {
-              const category_slug = product?.category_slug;
-              const sub_category_slug = product?.sub_category_slug || "all";
-              const productUrl = `/${category_slug}/${sub_category_slug}/${product.slug}/`;
+              const productUrl = getProductUrl(product);
 
               return (
                 <Link

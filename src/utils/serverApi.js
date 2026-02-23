@@ -66,8 +66,7 @@ export async function fetchProductsByFilters(filters = {}) {
         });
 
         const url = `${API_URL}/filters/main_productsFilter/?${queryParams.toString()}&page_size=100&limit=100&page=1`;
-        // Use cache: 'no-store' to ensure we bypass any stale cached responses during this fix
-        const res = await fetch(url, { cache: 'no-store' });
+        const res = await fetch(url, { next: { revalidate: 300 } });
         if (!res.ok) return { results: [], count: 0, next: null, previous: null };
         const data = await res.json();
 

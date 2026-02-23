@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Paper, Typography } from "@mui/material";
@@ -53,7 +54,12 @@ const ProductFeatured = () => {
         <div className="grid gap-4 justify-items-center font-sans grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4">
 
           {products.map((product, index) => (
-            <div key={index} onClick={() => handleProductClick(product)} className="cursor-pointer">
+            <Link
+              key={index}
+              href={getProductUrl(product)}
+              onClick={() => window.scrollTo(0, 0)}
+              className="cursor-pointer block"
+            >
 
               {/* Mobile View */}
               <div className="sm:hidden">
@@ -187,7 +193,7 @@ const ProductFeatured = () => {
                   inCart={product.inCart}
                 />
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 

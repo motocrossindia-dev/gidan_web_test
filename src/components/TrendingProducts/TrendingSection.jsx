@@ -8,6 +8,7 @@ import TrendingCard from "../Shared/ProductCard";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../redux/User/verificationSlice";
 import { useHomeProducts } from "../../hooks/useHomeProducts";
+import { getProductUrl } from "../../utils/urlHelper";
 
 const TrendingSection = () => {
   const [selectedTab, setSelectedTab] = useState("");
@@ -35,20 +36,21 @@ const TrendingSection = () => {
     };
   }, []);
 
-  const handleProductClick = useCallback((product) => {
-    const category_slug = product?.category_slug;
-    const sub_category_slug = product?.sub_category_slug || "all";
+  //   const handleProductClick = useCallback((product) => {
+  //     const category_slug = product?.category_slug;
+  //     const sub_category_slug = product?.sub_category_slug || "all";
+  // 
+  //     router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
+  //       state: {
+  //         product_id: product.slug,
+  //         category_slug: category_slug,
+  //         sub_category_slug: sub_category_slug
+  //       }
+  //     });
+  // 
+  //     window.scrollTo(0, 0);
+  //   }, [router]);
 
-    router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
-      state: {
-        product_id: product.slug,
-        category_slug: category_slug,
-        sub_category_slug: sub_category_slug
-      }
-    });
-
-    window.scrollTo(0, 0);
-  }, [router]);
 
   const filteredProducts = useMemo(() => {
     return productsDetails.filter((product) => {
@@ -142,7 +144,7 @@ const TrendingSection = () => {
             return (
               <Link
                 key={index}
-                href={`/${category_slug}/${sub_category_slug}/${product.slug}/`}
+                href={getProductUrl(product)}
                 className="cursor-pointer block w-full"
                 onClick={() => window.scrollTo(0, 0)}
               >

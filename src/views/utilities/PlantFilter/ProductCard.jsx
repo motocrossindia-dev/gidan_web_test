@@ -13,6 +13,8 @@ import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import StarsOnCards from "../../../components/TrendingProducts/StarsOnCards";
 import ReactStars from "react-rating-stars-component";
 import Verify from "../../../Services/Services/Verify";
+import { getProductUrl } from "../../../utils/urlHelper";
+
 
 const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, inCart, ratingNumber, mrp, ribbon }) => {
     const [isHovered, setIsHovered] = useState(false);
@@ -89,18 +91,9 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
     };
 
     const handleQuickView = () => {
-        const category_slug = product?.category_slug;
-        const sub_category_slug = product?.sub_category_slug || "all";
-        const product_slug = product?.slug;
-
-        router.push(`/${category_slug}/${sub_category_slug}/${product_slug}/`, {
-            state: {
-                product_id: product.id,
-                category_slug: category_slug,
-                sub_category_slug: sub_category_slug
-            }
-        });
+        router.push(getProductUrl(product));
     };
+
 
     return (
         <>

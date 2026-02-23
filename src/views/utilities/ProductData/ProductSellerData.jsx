@@ -12,9 +12,10 @@ import { getProductUrl } from "../../../utils/urlHelper";
 import { enqueueSnackbar } from "notistack";
 import { useSelector } from "react-redux";
 import Verify from "../../../Services/Services/Verify";
+import Link from "next/link";
+import axios from "axios";
 
 const ProductSellerCard = ({
-
   name,
   price,
   oldPrice,
@@ -34,7 +35,6 @@ const ProductSellerCard = ({
   const fetchWishlistStatus = async () => {
     try {
       if (!product || !accessToken) {
-        console.warn("Missing product ID or access token");
         return;
       }
 
@@ -49,7 +49,8 @@ const ProductSellerCard = ({
       );
 
       const wishlistIds = response.data.main_product_ids || [];
-      setInWishlist(wishlistIds.includes(product));
+      const productId = product.id || product;
+      setInWishlist(wishlistIds.includes(productId));
     } catch (error) {
       console.error("Error fetching wishlist status:", error);
     }
@@ -61,7 +62,10 @@ const ProductSellerCard = ({
     }
   }, [product, isAuthenticated, accessToken]);
 
-  const handleAddToWishlist = async () => {
+  const handleAddToWishlist = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     if (!isAuthenticated) {
       enqueueSnackbar("Please sign in to add to wishlist", { variant: "error" });
       router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
@@ -69,82 +73,76 @@ const ProductSellerCard = ({
     }
 
     try {
-
+      const productId = product.id || product;
       if (inWishlist) {
         const response = await axios.delete(
-          `${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/?main_product_id=${product}/`,
+          `${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/?main_product_id=${productId}/`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 201) {
           enqueueSnackbar("Product Removed from wishlist", { variant: "success" });
-
         }
       } else {
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/`,
-          { main_prod_id: product },
+          { main_prod_id: productId },
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 201) {
           enqueueSnackbar("Added to wishlist", { variant: "success" });
-
         }
       }
-      getProducts()
+      if (getProducts) getProducts();
+      fetchWishlistStatus();
     } catch (error) {
       console.error("Error adding to wishlist:", error);
     }
   };
 
   const handleAddToCart = async (e) => {
-    // e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
+
     if (!isAuthenticated) {
       router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
       return;
     }
 
     try {
-
+      const productId = product.id || product;
       if (inCart) {
         const response = await axios.delete(
-          `${process.env.NEXT_PUBLIC_API_URL}/order/cart/?main_product_id=${product}/`,
+          `${process.env.NEXT_PUBLIC_API_URL}/order/cart/?main_product_id=${productId}/`,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
-            // data: { main_prod_id: product.id }, // <-- Pass data inside `data`
           }
         );
 
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 201) {
           enqueueSnackbar("Product Removed from cart", { variant: "success" });
           setIsAdded(!isAdded);
+          window.dispatchEvent(new Event("cartUpdated"));
         }
       } else {
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/order/cart/`,
-          { main_prod_id: product },
+          { main_prod_id: productId },
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
 
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 201) {
           enqueueSnackbar("Added to cart", { variant: "success" });
           setIsAdded(!isAdded);
+          window.dispatchEvent(new Event("cartUpdated"));
         }
       }
-      getProducts()
+      if (getProducts) getProducts();
     } catch (error) {
       console.error("Error adding item to cart:", error);
     }
   };
 
-  const handleQuickView = (e) => {
-    router.push(getProductUrl(product), {
-      state: {
-        product_id: product?.slug,
-        category_slug: product?.category_slug,
-        sub_category_slug: product?.sub_category_slug
-      }
-    });
-  };
+  const prodUrl = getProductUrl(product);
 
   return (
     <>
@@ -175,73 +173,74 @@ const ProductSellerCard = ({
           },
         }}
       >
-        <div
-          className="relative w-full flex justify-center mb-2"
-          onMouseEnter={() => setIsImageHovered(true)}
-          onMouseLeave={() => setIsImageHovered(false)}
-        >
-          <div className="relative rounded-lg flex justify-center items-center w-full">
-            <img name=" "
-              className={`w-40 h-43 sm:w-48 sm:h-53 lg:h-[260px] object-cover mt-4 lg:w-[226px] object-contain transition-transform duration-300 rounded-[2rem] 
-                ${isImageHovered ? "scale-105" : "scale-100"}
-              `}
-              src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
-              loading="lazy"
-              alt={name}
-            />
+        <Link href={prodUrl} className="w-full flex flex-col items-center">
+          <div
+            className="relative w-full flex justify-center mb-2"
+            onMouseEnter={() => setIsImageHovered(true)}
+            onMouseLeave={() => setIsImageHovered(false)}
+          >
+            <div className="relative rounded-lg flex justify-center items-center w-full">
+              <img name=" "
+                className={`w-40 h-43 sm:w-48 sm:h-53 lg:h-[260px] object-cover mt-4 lg:w-[226px] object-contain transition-transform duration-300 rounded-[2rem] 
+                  ${isImageHovered ? "scale-105" : "scale-100"}
+                `}
+                src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
+                loading="lazy"
+                alt={name}
+              />
 
-            <div
-              className={`absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 transition-all duration-300 ease-in-out
-                ${isImageHovered ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-5 pointer-events-none"}`}
-            >
-              <button
-                onClickCapture={handleAddToCart}
-                className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 cursor-pointer
-                  ${isAdded ? "bg-bio-green text-white" : "bg-white hover:bg-bio-green hover:text-white"}`}
+              <div
+                className={`absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 transition-all duration-300 ease-in-out
+                  ${isImageHovered ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-5 pointer-events-none"}`}
               >
-                <MdOutlineShoppingBag className="w-4 h-4" />
-              </button>
+                <button
+                  onClick={handleAddToCart}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 cursor-pointer
+                    ${isAdded || inCart ? "bg-bio-green text-white" : "bg-white hover:bg-bio-green hover:text-white"}`}
+                >
+                  <MdOutlineShoppingBag className="w-4 h-4" />
+                </button>
 
-              <button
-                onClick={handleAddToWishlist}
-                className={`w-8 h-8 rounded-full ${inWishlist
-                  ? "bg-bio-green text-white"
-                  : "bg-white hover:bg-bio-green hover:text-white"
-                  } flex items-center justify-center transition-colors duration-200 cursor-pointer`}
-              >
-                {inWishlist ? (
-                  <FaHeart className="w-4 h-4" />
-                ) : (
-                  <FaRegHeart className="w-4 h-4" />
-                )}
-              </button>
+                <button
+                  onClick={handleAddToWishlist}
+                  className={`w-8 h-8 rounded-full ${inWishlist
+                    ? "bg-bio-green text-white"
+                    : "bg-white hover:bg-bio-green hover:text-white"
+                    } flex items-center justify-center transition-colors duration-200 cursor-pointer`}
+                >
+                  {inWishlist ? (
+                    <FaHeart className="w-4 h-4" />
+                  ) : (
+                    <FaRegHeart className="w-4 h-4" />
+                  )}
+                </button>
 
-              <button
-                onClick={handleQuickView}
-                className="w-8 h-8 rounded-full bg-white hover:bg-bio-green hover:text-white flex items-center justify-center transition-colors duration-200 cursor-pointer"
-              >
-                <FiEye className="w-4 h-4" />
-              </button>
+                <div
+                  className="w-8 h-8 rounded-full bg-white hover:bg-bio-green hover:text-white flex items-center justify-center transition-colors duration-200 cursor-pointer"
+                >
+                  <FiEye className="w-4 h-4" />
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="w-full flex flex-col items-center mt-5">
-          <div className="flex gap-1 mb-2">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <FaStar key={star} className="w-4 h-4 text-navy-blue" />
-            ))}
+          <div className="w-full flex flex-col items-center mt-5">
+            <div className="flex gap-1 mb-2">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <FaStar key={star} className="w-4 h-4 text-navy-blue" />
+              ))}
+            </div>
+
+            <h3 className="text-sm font-medium mb-2">{name}</h3>
+
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold text-navy-blue">₹{Math.round(price)}.00</span>
+              {oldPrice && (
+                <span className="text-xs text-gray-400 line-through">₹{Math.round(oldPrice)}.00</span>
+              )}
+            </div>
           </div>
-
-          <h3 className="text-sm font-medium mb-2">{name}</h3>
-
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-navy-blue">₹{Math.round(price)}.00</span>
-            {oldPrice && (
-              <span className="text-xs text-gray-400 line-through">₹{Math.round(oldPrice)}.00</span>
-            )}
-          </div>
-        </div>
+        </Link>
       </Paper>
     </>
   );
