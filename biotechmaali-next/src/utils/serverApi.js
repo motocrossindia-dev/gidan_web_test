@@ -56,7 +56,7 @@ export async function fetchProductsByFilters(filters = {}) {
             queryParams.append(key, value);
         });
 
-        const url = `${API_URL}/filters/main_productsFilter/?${queryParams.toString()}`;
+        const url = `${API_URL}/filters/main_productsFilter/?${queryParams.toString()}&page_size=24`;
         const res = await fetch(url, { next: { revalidate: 300 } });
         if (!res.ok) return [];
         const data = await res.json();

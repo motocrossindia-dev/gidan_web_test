@@ -307,7 +307,7 @@ const FilterSidebar = ({
 
     try {
       if (setIsSearching) setIsSearching(true);
-      const res = await axiosInstance.get(`/filters/main_productsFilter/?${params}`);
+      const res = await axiosInstance.get(`/filters/main_productsFilter/?${params}&page_size=24`);
       setResults(res.data.results);
 
       // Update pagination so ProductGrid shows correct count
@@ -409,7 +409,7 @@ const FilterSidebar = ({
       params.append("is_trending", isTrending ? "true" : "unknown");
       params.append("ordering", "");
 
-      const res = await axiosInstance.get(`/filters/main_productsFilter/?${params}`);
+      const res = await axiosInstance.get(`/filters/main_productsFilter/?${params}&page_size=24`);
       if (setResults) setResults(res.data.results || []);
       if (setProducts) {
         setProducts({

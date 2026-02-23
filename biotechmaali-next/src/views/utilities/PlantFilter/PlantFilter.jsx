@@ -248,7 +248,7 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
 
                 // Always make the API call with complete params
                 const response = await axiosInstance.get(
-                    `/filters/main_productsFilter/?${queryParams.toString()}`
+                    `/filters/main_productsFilter/?${queryParams.toString()}&page_size=24`
                 );
 
                 if (response.status === 200) {
