@@ -1,7 +1,7 @@
 'use client';
 
 import React from "react";
-import AddOnData from "../../utilities/ProductData/AddOnData";
+import AddOnData from "./AddOnData";
 
 const AddOnProduct = ({ addOnData }) => {
   return (

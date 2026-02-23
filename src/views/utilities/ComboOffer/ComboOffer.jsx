@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import __combooffer from "../../../Assets/ComboOffer/combooffer.png";
 const _combooffer = typeof __combooffer === 'string' ? __combooffer : __combooffer?.src || __combooffer;
 const combooffer = typeof _combooffer === 'string' ? _combooffer : _combooffer?.src || _combooffer;
-import ComboImage from '../../../views/utilities/ComboOffer/ComboImage.jsx';
+import ComboImage from './ComboImage.jsx';
 import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
 import { Helmet } from "react-helmet-async";
 

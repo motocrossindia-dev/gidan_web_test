@@ -6,7 +6,7 @@ import Image from "next/image";
 import { enqueueSnackbar } from "notistack";
 import { useSelector } from "react-redux";
 import { isMobile } from "react-device-detect";
-import __plantImage from "../../../src/Assets/RewardClub.webp";
+import __plantImage from "../../Assets/RewardClub.webp";
 const _plantImage = typeof __plantImage === 'string' ? __plantImage : __plantImage?.src || __plantImage;
 const plantImage = typeof _plantImage === 'string' ? _plantImage : _plantImage?.src || _plantImage;
 import { useRewardBanner } from "../../hooks/useRewardBanner";

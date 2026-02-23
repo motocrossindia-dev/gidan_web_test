@@ -9,14 +9,14 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // Default to localStorage for web
 
-import userReducer from "../redux/Slice/userSlice";
-import authReducer from "../redux/Auth/authSlice";
-import verificationReducer from "../redux/User/verificationSlice";
-import cartReducer from "../redux/Slice/cartSlice";
-import buyitnowSlicereducer from "../redux/Slice/buyitnowSlice";
-import wishlistSlicereducer from "../redux/Slice/addtowishlistSlice";
-import { tokenMiddleware } from "../redux/middleWare/tokenMiddleWare";
-import newUserdataSlice from "../redux/newUserData/newUserdataSlice";
+import userReducer from "./Slice/userSlice";
+import authReducer from "./Auth/authSlice";
+import verificationReducer from "./User/verificationSlice";
+import cartReducer from "./Slice/cartSlice";
+import buyitnowSlicereducer from "./Slice/buyitnowSlice";
+import wishlistSlicereducer from "./Slice/addtowishlistSlice";
+import { tokenMiddleware } from "./middleWare/tokenMiddleWare";
+import newUserdataSlice from "./newUserData/newUserdataSlice";
 
 // Persistence configuration
 const persistConfig = {

@@ -2,7 +2,7 @@
 
 
 import axios from "axios";
-import store from "../../src/redux/store";
+import store from "../redux/store";
 import { selectAccessToken } from "../redux/User/verificationSlice";
 import { removeToken } from "../Services/Services/LocalStorageServices";
 import { logout } from "../redux/Slice/userSlice";

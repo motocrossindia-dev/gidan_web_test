@@ -19,7 +19,7 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import AddOnProduct from "./AddOnProduct";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { isMobile } from "react-device-detect";
-import AboutTheProducts from "../ProductData/AboutTheProducts";
+import AboutTheProducts from "./AboutTheProducts";
 import { FaStar } from "react-icons/fa6";
 import { FaStarHalfAlt } from "react-icons/fa";
 import { enqueueSnackbar } from "notistack";

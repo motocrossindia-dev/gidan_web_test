@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 // ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
-import __combo from "../../../src/Assets/ComboOffer/combooffer.webp";
+import __combo from "../../Assets/ComboOffer/combooffer.webp";
 const _combo = typeof __combo === 'string' ? __combo : __combo?.src || __combo;
 const combo = typeof _combo === 'string' ? _combo : _combo?.src || _combo;
 import { useComboOffer } from "../../hooks/useComboOffer";
