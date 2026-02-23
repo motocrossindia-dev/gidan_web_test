@@ -3,7 +3,7 @@ name: Deploy to VPS
 on:
   push:
     branches:
-      - next-krish
+      - main
 
 jobs:
   deploy:
@@ -27,8 +27,8 @@ jobs:
             
             # 2. Pull latest code using the Token URL
             # This is required because you are a Collaborator, not the Owner
-            # git pull https://${{ secrets.GH_TOKEN }}@github.com/motocrossindia-dev/Gidan_Web_Nextjs.git next-krish
-            git pull https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/motocrossindia-dev/Gidan_Web_Nextjs.git next-krish
+            # git pull https://${{ secrets.GH_TOKEN }}@github.com/motocrossindia-dev/Gidan_Web_Nextjs.git main
+            git pull https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/motocrossindia-dev/Gidan_Web_Nextjs.git main
             
             # 3. Install dependencies
             npm install
