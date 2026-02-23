@@ -39,31 +39,50 @@ export async function fetchProductsByFilters(filters = {}) {
     try {
         const queryParams = new URLSearchParams();
 
-        // Default filters
+        // Default filters - Include ALL parameters matching FilterSidebar.jsx to ensure consistent backend behavior
         const defaults = {
             type: filters.type || "plant",
+            category_id: filters.category_id || "",
             subcategory_id: filters.subcategory_id || "",
             search: filters.search || "",
             min_price: filters.min_price || "",
             max_price: filters.max_price || "",
+            color_id: filters.color_id || "",
+            size_id: filters.size_id || "",
+            planter_size_id: filters.planter_size_id || "",
+            planter_id: filters.planter_id || "",
+            weight_id: filters.weight_id || "",
+            pot_type_id: filters.pot_type_id || "",
+            litre_id: filters.litre_id || "",
             is_featured: filters.is_featured ? "true" : "unknown",
             is_best_seller: filters.is_best_seller ? "true" : "unknown",
             is_seasonal_collection: filters.is_seasonal_collection ? "true" : "unknown",
-            is_trending: filters.is_trending ? "true" : "unknown"
+            is_trending: filters.is_trending ? "true" : "unknown",
+            ordering: filters.ordering || ""
         };
 
         Object.entries(defaults).forEach(([key, value]) => {
             queryParams.append(key, value);
         });
 
-        const url = `${API_URL}/filters/main_productsFilter/?${queryParams.toString()}&page_size=24`;
-        const res = await fetch(url, { next: { revalidate: 300 } });
-        if (!res.ok) return [];
+        const url = `${API_URL}/filters/main_productsFilter/?${queryParams.toString()}&page_size=100&limit=100&page=1`;
+        // Use cache: 'no-store' to ensure we bypass any stale cached responses during this fix
+        const res = await fetch(url, { cache: 'no-store' });
+        if (!res.ok) return { results: [], count: 0, next: null, previous: null };
         const data = await res.json();
-        return data?.results || [];
+
+        // Normalize the response to ensure consistency with PlantFilter/ProductGrid expectations
+        // Backend sometimes returns results, sometimes products. We ensure it's always an object.
+        return {
+            results: data?.results || data?.products || [],
+            count: data?.count || (data?.results || data?.products || []).length,
+            next: data?.next || null,
+            previous: data?.previous || null,
+            category_info: data?.category_info // Preserve extra metadata if present
+        };
     } catch (err) {
         console.error("Error fetching products", err);
-        return [];
+        return { results: [], count: 0, next: null, previous: null };
     }
 }
 

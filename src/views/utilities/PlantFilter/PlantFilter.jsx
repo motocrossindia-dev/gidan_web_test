@@ -32,6 +32,12 @@ const CategoryLayout = ({ data }) => {
 };
 
 void (0);
+/**
+ * @param {object} props
+ * @param {any[] | {results: any[], count: number, next: string | null, previous: string | null}} props.initialResults
+ * @param {object} [props.initialCategoryData]
+ * @param {object} [props.initialFilterData]
+ */
 function PlantFilter({ initialResults = [], initialCategoryData = null, initialFilterData = null } = {}) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -104,13 +110,22 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
     // State for SwipeableDrawer
     const [mobileOpen, setMobileOpen] = useState(false);
 
+    // Normalize initialResults: could be an array (legacy) or an object (new)
+    const normalizedInitialResults = useMemo(() => {
+        if (!initialResults) return { results: [], count: 0, next: null, previous: null };
+        if (Array.isArray(initialResults)) {
+            return { results: initialResults, count: initialResults.length, next: null, previous: null };
+        }
+        return initialResults;
+    }, [initialResults]);
+
     const [products, setProducts] = useState({
-        count: initialResults?.length || 0,
-        next: null,
-        previous: null,
+        count: normalizedInitialResults.count || 0,
+        next: normalizedInitialResults.next || null,
+        previous: normalizedInitialResults.previous || null,
     });
-    const [results, setResults] = useState(initialResults || []);
-    const [categoryData, setCategoryData] = useState(initialCategoryData || null);
+    const [results, setResults] = useState(normalizedInitialResults.results || []);
+    const [categoryData, setCategoryData] = useState(initialCategoryData || normalizedInitialResults.category_info?.category_info || null);
     const [filtersApplied, setFiltersApplied] = useState(false);
     const [isSearching, setIsSearching] = useState(false);
 
@@ -217,18 +232,17 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
                 // Type - use derived type or default to "plant" for boolean filter pages
                 const finalType = typeKey || (isSeasonalCollection || isTrending || isFeatured || isBestSeller ? "plant" : "");
                 queryParams.append("type", finalType);
-
+                // Category ID
+                queryParams.append("category_id", resolvedCategoryId || "");
                 // Subcategory ID - use resolved ID
                 queryParams.append("subcategory_id", resolvedSubcategoryId || "");
 
                 // Search
                 queryParams.append("search", "");
-
-                // Price range
                 queryParams.append("min_price", "");
                 queryParams.append("max_price", "");
 
-                // Filter IDs (all empty on initial load)
+                // Filter IDs (all empty on initial load) - Include ALL parameters matching FilterSidebar.jsx
                 queryParams.append("color_id", "");
                 queryParams.append("size_id", "");
                 queryParams.append("planter_size_id", "");
@@ -246,9 +260,9 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
                 // Ordering
                 queryParams.append("ordering", "");
 
-                // Always make the API call with complete params
+                // Always make the API call with complete params and redundant limit/page for backend consistency
                 const response = await axiosInstance.get(
-                    `/filters/main_productsFilter/?${queryParams.toString()}&page_size=24`
+                    `/filters/main_productsFilter/?${queryParams}&page_size=100&limit=100&page=1`
                 );
 
                 if (response.status === 200) {
@@ -283,14 +297,19 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
         // OR if filters have already been applied by the sidebar (to avoid overwriting filtered results)
         if (!isResolvingIds && (resolvedCategoryId || isSpecialRoute)) {
             if (filtersApplied) return;
-            if (initialResults && initialResults.length > 0 && results.length === initialResults.length) {
+
+            // Check if we already have robust data from server
+            const hasInitialData = normalizedInitialResults.results && normalizedInitialResults.results.length > 0;
+            const isMatchingData = results.length === normalizedInitialResults.results.length;
+
+            if (hasInitialData && isMatchingData) {
                 // Already have data from server, skip first fetch
                 return;
             }
             setIsSearching(true);
             getInitialProducts();
         }
-    }, [path, typeKey, resolvedCategoryId, resolvedSubcategoryId, isResolvingIds, isSeasonalCollection, isTrending, isFeatured, isBestSeller, initialResults, filtersApplied]);
+    }, [path, typeKey, resolvedCategoryId, resolvedSubcategoryId, isResolvingIds, isSeasonalCollection, isTrending, isFeatured, isBestSeller, normalizedInitialResults, filtersApplied, results.length]);
 
     // Determine the base name for Helmet tags
     const getDisplayName = () => {

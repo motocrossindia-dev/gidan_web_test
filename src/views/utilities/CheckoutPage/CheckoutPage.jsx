@@ -1100,9 +1100,6 @@ const CheckoutPage = () => {
 
   const accessToken = useSelector(selectAccessToken);
   const router = useRouter();
-
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
   // Read order data client-side only (sessionStorage is not available during SSR)
   const [data, setData] = useState(null);
   const [comboOffer, setComboOffer] = useState(null);

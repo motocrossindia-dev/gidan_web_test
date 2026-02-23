@@ -243,6 +243,7 @@ const FilterSidebar = ({
     const params = new URLSearchParams();
 
     params.append("type", selectedFilterType || "");
+    params.append("category_id", categoryId || categoryIdFromSlug || "");
 
     // Subcategory ID
     let finalSubcategoryId = subcategoryID || "";
@@ -307,7 +308,7 @@ const FilterSidebar = ({
 
     try {
       if (setIsSearching) setIsSearching(true);
-      const res = await axiosInstance.get(`/filters/main_productsFilter/?${params}&page_size=24`);
+      const res = await axiosInstance.get(`/filters/main_productsFilter/?${params}&page_size=100`);
       setResults(res.data.results);
 
       // Update pagination so ProductGrid shows correct count
@@ -409,7 +410,7 @@ const FilterSidebar = ({
       params.append("is_trending", isTrending ? "true" : "unknown");
       params.append("ordering", "");
 
-      const res = await axiosInstance.get(`/filters/main_productsFilter/?${params}&page_size=24`);
+      const res = await axiosInstance.get(`/filters/main_productsFilter/?${params}&page_size=100`);
       if (setResults) setResults(res.data.results || []);
       if (setProducts) {
         setProducts({

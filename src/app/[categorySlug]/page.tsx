@@ -68,14 +68,15 @@ export default async function CategoryPage({ params }: Props) {
   const categoryWithSubs = { ...category, subCategory: subcategories };
 
   // 2. Fetch initial products for this category using the already derived typeKey
-  const initialResults = await fetchProductsByFilters({
+  const initialData = await fetchProductsByFilters({
     type: typeKey,
+    category_id: category.id,
   });
 
   return (
     <Suspense fallback={<div className="flex justify-center p-8">Loading products...</div>}>
       <PlantFilter
-        initialResults={initialResults}
+        initialResults={initialData}
         initialCategoryData={categoryWithSubs}
         initialFilterData={filters}
       />

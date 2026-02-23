@@ -154,27 +154,19 @@ export default function Component({ initialProductData }) {
     const imgRef = useRef(null);
     const product = productDetailData?.data?.product;
 
-    // Helper to update URL with variant query parameters while keeping base slug
+    // Helper to update URL with variant query parameter while keeping base slug
     const updateUrlWithParams = (newProduct) => {
         const urlParams = new URLSearchParams(window.location.search);
 
-        const variantParams = {
-            size_id: newProduct?.size_id,
-            color_id: newProduct?.color_id,
-            planter_id: newProduct?.planter_id,
-            planter_size_id: newProduct?.planter_size_id,
-            litre_id: newProduct?.litre_id,
-            weight_id: newProduct?.weight_id
-        };
+        // Clear old variant parameters and use only the single variant ID
+        const oldParams = ['size_id', 'color_id', 'planter_id', 'planter_size_id', 'litre_id', 'weight_id'];
+        oldParams.forEach(param => urlParams.delete(param));
 
-        Object.entries(variantParams).forEach(([key, value]) => {
-            if (value) {
-                const idValue = (typeof value === 'object' && value !== null) ? value.id : value;
-                urlParams.set(key, idValue);
-            } else {
-                urlParams.delete(key);
-            }
-        });
+        if (newProduct?.id) {
+            urlParams.set('variant', newProduct.id);
+        } else {
+            urlParams.delete('variant');
+        }
 
         const queryString = urlParams.toString();
 
@@ -692,7 +684,8 @@ export default function Component({ initialProductData }) {
             try {
                 // Use the slug from URL params to fetch the exact product variant
                 const productSlug = params.productSlug || id;
-                const response = await axiosInstance.get(`/product/defaultProduct/${productSlug}/`);
+                const queryParams = new URLSearchParams(window.location.search).toString();
+                const response = await axiosInstance.get(`/product/defaultProduct/${productSlug}/${queryParams ? '?' + queryParams : ''}`);
 
                 if (response.status === 200) {
                     const data = response.data;

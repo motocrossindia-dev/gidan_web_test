@@ -30,6 +30,9 @@ export const getProductUrl = (product) => {
         return "/";
     }
 
-    return `/${category_slug}/${sub_category_slug}/${product_slug}`;
+    // Add variant parameter if product ID exists
+    const variantSuffix = product.id ? `?variant=${product.id}` : "";
+
+    return `/${category_slug}/${sub_category_slug}/${product_slug}${variantSuffix}`;
 
 };

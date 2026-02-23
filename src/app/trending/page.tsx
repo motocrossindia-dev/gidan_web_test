@@ -27,14 +27,14 @@ export const metadata: Metadata = {
 import { fetchProductsByFilters, fetchFilters } from "@/utils/serverApi";
 
 export default async function TrendingPage() {
-  const [initialResults, filters] = await Promise.all([
+  const [initialData, filters] = await Promise.all([
     fetchProductsByFilters({ is_trending: true }),
     fetchFilters("plant")
   ]);
 
   return (
     <Suspense fallback={<div className="flex justify-center p-8">Loading products...</div>}>
-      <PlantFilter initialResults={initialResults} initialFilterData={filters} />
+      <PlantFilter initialResults={initialData} initialFilterData={filters} />
     </Suspense>
   );
 }

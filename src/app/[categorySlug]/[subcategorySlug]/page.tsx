@@ -87,7 +87,7 @@ export default async function SubcategoryPage({ params }: Props) {
     subCategoryId: subcategory.id
   };
 
-  const initialResults = await fetchProductsByFilters({
+  const initialData = await fetchProductsByFilters({
     type: typeKey,
     subcategory_id: subcategory.id
   });
@@ -95,7 +95,7 @@ export default async function SubcategoryPage({ params }: Props) {
   return (
     <Suspense fallback={<div className="flex justify-center p-8">Loading products...</div>}>
       <PlantFilter
-        initialResults={initialResults}
+        initialResults={initialData}
         initialCategoryData={categoryWithSubs}
         initialFilterData={filters}
       />
