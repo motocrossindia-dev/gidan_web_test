@@ -24,9 +24,16 @@ const EmptyCart = ({ onClose }) => {
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div ref={modalRef} className="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
-        <img name=" "   
+    <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] flex items-center justify-center z-50">
+      <div ref={modalRef} className="bg-white p-6 rounded-lg shadow-lg w-80 text-center relative">
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-2 text-gray-500 hover:text-black text-xl"
+          aria-label="Close modal"
+        >
+          ✕
+        </button>
+        <img name=" "
           src={empty} // Replace with your image URL
           alt="Empty Cart"
           className="mx-auto mb-4"

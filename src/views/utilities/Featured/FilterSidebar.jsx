@@ -17,7 +17,7 @@ const DropdownMenu = ({ isOpen, filter, options, selectedFilters, handleFilterSe
 
   return (
     <div
-      className="absolute top-full left-0 mt-1 w-full min-w-[16rem] bg-white border border-gray-300 rounded-lg shadow-xl max-h-80 overflow-y-auto z-[10001]"
+      className="absolute top-full left-0 mt-1 w-full min-w-[16rem] bg-white border border-gray-300 rounded-lg shadow-xl max-h-80 overflow-y-auto z-[100]"
       onMouseDown={handleDropdownMouseDown}
     >
       <div className="p-3 space-y-1">
@@ -494,7 +494,7 @@ const FilterSidebar = ({
   }, [selectedFilterType]);
 
   return (
-    <div className="w-full bg-white shadow-sm border-b border-gray-300 relative z-40">
+    <div className="w-full bg-white shadow-sm border-b border-gray-300 relative z-30">
       <div className="px-6 py-4 border-b border-gray-300">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-800">

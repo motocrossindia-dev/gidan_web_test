@@ -27,7 +27,7 @@ const Cart = ({ onClose }) => {
 
     function handleClickOutside(event) {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
-        onClose(); 
+        onClose();
       }
     }
 
@@ -39,12 +39,19 @@ const Cart = ({ onClose }) => {
 
   return (
     <>
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div ref={modalRef} className="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
+      <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] flex items-center justify-center z-[11000]">
+        <div ref={modalRef} className="bg-white p-6 rounded-lg shadow-lg w-80 text-center relative">
+          <button
+            onClick={onClose}
+            className="absolute top-2 right-2 text-gray-500 hover:text-black text-xl"
+            aria-label="Close modal"
+          >
+            ✕
+          </button>
           {cartItems.length > 0 ? (
             cartItems.map((product) => (
               <div key={product.id} className="mb-4">
-                <img name=" "   
+                <img name=" "
                   className="w-40 h-24 sm:w-40 sm:h-36 object-contain rounded-lg transition-transform duration-300 mt-6"
                   src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
                   alt={product.name}

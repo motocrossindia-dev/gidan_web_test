@@ -277,9 +277,9 @@ const NavBar = () => {
                       </Link>
                     </li>
 
-                    <li className="px-4 py-3 hover:bg-gray-50 cursor-pointer" onClick={handleLogOutClick}>
-                      <IoIosLogOut className="mr-3 text-gray-600" />
-                      Logout
+                    <li className="px-4 py-3 hover:bg-gray-50 cursor-pointer flex items-center gap-3" onClick={handleLogOutClick}>
+                      <IoIosLogOut className="text-gray-600 text-lg flex-shrink-0" />
+                      <span className="text-gray-700">Logout</span>
                     </li>
                   </ul>
                 </div>
@@ -322,7 +322,7 @@ const NavBar = () => {
       {/* Wishlist Popper */}
       <ClickAwayListener onClickAway={handleClickAway}>
         <div>
-          <Popper open={openPopper} anchorEl={anchorEl} placement="bottom" transition style={{ zIndex: 1000 }}>
+          <Popper open={openPopper} anchorEl={anchorEl} placement="bottom" transition style={{ zIndex: 11000 }}>
             {({ TransitionProps }) => (
               <Fade {...TransitionProps}>
                 <Box className="w-80 p-4 mt-10 shadow-lg rounded-lg bg-white border">
@@ -345,7 +345,7 @@ const NavBar = () => {
 
       {/* Logout Modal */}
       {isLogoutDialogOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)] z-[11000]">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96 text-center">
             <h3 className="text-lg font-semibold mb-4">Logout</h3>
             <Image src={LogoutGif} alt="Logout" width={160} height={160} className="mx-auto mb-4" />
@@ -372,7 +372,7 @@ const NavBar = () => {
 
       {/* Empty Cart Popup */}
       {isCartOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" onClick={() => setIsCartOpen(false)}>
+        <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)] z-[11000]" onClick={() => setIsCartOpen(false)}>
           <div className="bg-white p-6 rounded-lg w-80 text-center" onClick={(e) => e.stopPropagation()}>
             <Image src={empty} alt="Empty Cart" width={320} height={240} className="mx-auto mb-4" />
             <h2 className="text-lg font-semibold mb-4">Your cart is currently empty</h2>

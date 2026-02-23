@@ -100,77 +100,77 @@ const Login = ({ onClose }) => {
 
   return (
     <>
-    <Verify/>
-    <div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 font-sans"
-      onClick={onClose}
-    >
+      <Verify />
       <div
-        className="bg-white p-6 rounded-lg shadow-lg w-[350px] h-[auto]"
-        onClick={(e) => e.stopPropagation()}
+        className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)] z-[11000] font-sans"
+        onClick={onClose}
       >
-        <div className="relative mb-4">
-          <img name="Gidan Logo"
-            src={biotech}
-            alt="Gidan Logo"
-            width="129"
-            height="82"
-            className="mx-auto w-[129px] h-[82px]"
-            loading="lazy"
-          />
-          <button
-            onClick={onClose}
-            className="absolute top-0 right-0 text-gray-500 hover:text-gray-700"
-          >
-            <FontAwesomeIcon icon={faTimes} />
-          </button>
+        <div
+          className="bg-white p-6 rounded-lg shadow-lg w-[350px] h-[auto]"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="relative mb-4">
+            <img name="Gidan Logo"
+              src={biotech}
+              alt="Gidan Logo"
+              width="129"
+              height="82"
+              className="mx-auto w-[129px] h-[82px]"
+              loading="lazy"
+            />
+            <button
+              onClick={onClose}
+              className="absolute top-0 right-0 text-gray-500 hover:text-gray-700"
+            >
+              <FontAwesomeIcon icon={faTimes} />
+            </button>
+          </div>
+          <h2 className="text-center text-xl font-semibold text-gray-700 mb-4">
+            Enter your details
+          </h2>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Enter Your Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Enter Name"
+                required
+              />
+            </div>
+            <div className="mb-6">
+              <label
+                htmlFor="referral"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Enter Referral Code (optional)
+              </label>
+              <input
+                type="text"
+                name="referral_code"
+                value={formData.referral_code}
+                onChange={handleInputChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="000000"
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
+            >
+              Login
+            </button>
+          </form>
         </div>
-        <h2 className="text-center text-xl font-semibold text-gray-700 mb-4">
-          Enter your details
-        </h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Enter Your Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="Enter Name"
-              required
-            />
-          </div>
-          <div className="mb-6">
-            <label
-              htmlFor="referral"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Enter Referral Code (optional)
-            </label>
-            <input
-              type="text"
-              name="referral_code"
-              value={formData.referral_code}
-              onChange={handleInputChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              placeholder="000000"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
-          >
-            Login
-          </button>
-        </form>
       </div>
-    </div>
     </>
   );
 

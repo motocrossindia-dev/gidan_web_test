@@ -73,7 +73,7 @@ function Featured() {
 
         {/* --- Mobile Filter Sidebar Overlay (No changes needed here) --- */}
         {showMobileFilter && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 md:hidden">
+          <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] z-50 md:hidden">
             <div className="absolute top-0 right-0 w-3/4 max-w-xs bg-white h-full shadow-lg z-50 overflow-y-auto">
               {/* Close Button */}
               <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between z-10">

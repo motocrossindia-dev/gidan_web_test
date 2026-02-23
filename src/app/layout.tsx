@@ -107,7 +107,7 @@ export default function RootLayout({
           <TawkToWidget />
           <div className="landing-page-layout w-full min-h-screen flex flex-col overflow-x-hidden">
             {/* Sticky Header */}
-            <div className="sticky top-0 left-0 w-full z-50">
+            <div className="sticky top-0 left-0 w-full z-[10000]">
               <Header />
               <NavBar />
             </div>

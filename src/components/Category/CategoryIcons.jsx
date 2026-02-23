@@ -54,8 +54,8 @@ const CategoryIcons = ({ initialData }) => {
 
   if (isLoading) {
     return (
-      <div className="max-w-full mx-auto px-4 md:px-8 relative z-10">
-        <div className="flex items-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 px-2 sm:px-4 mt-4 w-full pb-2">
+      <div className="max-w-full mx-auto px-4 md:px-8 pt-4 md:pt-6 pb-0 relative z-10">
+        <div className="flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 px-2 sm:px-4 mt-6 w-full pb-0">
           <div className="text-center py-4 text-gray-500">Loading categories...</div>
         </div>
       </div>
@@ -64,11 +64,11 @@ const CategoryIcons = ({ initialData }) => {
 
   return (
     <>
-      <div className="max-w-full mx-auto px-4 md:px-8 relative z-10">
+      <div className="max-w-full mx-auto px-4 md:px-8 pt-4 md:pt-6 pb-0 relative z-10">
         {/* Category Container */}
         <div
           id="category-scroll-container"
-          className="flex items-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 px-2 sm:px-4 mt-4 w-full overflow-x-auto scrollbar-hide md:flex-wrap md:justify-center md:overflow-visible pb-2"
+          className="flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 px-2 sm:px-4 mt-6 w-full overflow-x-auto scrollbar-hide md:flex-wrap md:justify-evenly md:overflow-visible pb-0"
         >
           {publishedCategoryData.map((category, idx) => (
             <div

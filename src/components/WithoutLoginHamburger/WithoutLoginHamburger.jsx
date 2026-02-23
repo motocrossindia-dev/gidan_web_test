@@ -192,7 +192,7 @@ const WithoutLoginHamburger = () => {
         {/* Sidebar Menu */}
         {isOpen && (
           <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-50 flex"
+            className="fixed inset-0 bg-[rgba(0,0,0,0.5)] z-50 flex"
             onClick={() => setIsOpen(false)}
           >
             <div
@@ -407,7 +407,7 @@ const WithoutLoginHamburger = () => {
 
         {/* Logout Confirmation Dialog */}
         {isLogoutDialogOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[1100]">
+          <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)] z-[1100]">
             <div className="bg-white p-6 rounded-lg shadow-lg text-center md:w-96 w-80">
               <h3 className="text-lg font-semibold mb-4">Logout</h3>
               <div className="mb-4">

@@ -64,12 +64,12 @@ const SignIn = ({ onClose, onGetOtpClick }) => {
 
       dispatch(signInSuccess(response.data));
       localStorage.setItem("storeUserData", JSON.stringify(response.data));
-//data is send to backend
+      //data is send to backend
 
-//this is response
+      //this is response
       if (response.status === 201 || response.status === 200) {
 
-        
+
         // Store mobile number in localStorage
         // localStorage.setItem("userMobile", formData.mobile);
         enqueueSnackbar(response?.data.message, { variant: "success" });
@@ -89,7 +89,7 @@ const SignIn = ({ onClose, onGetOtpClick }) => {
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+      className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)] z-[11000]"
       onClick={onClose} // Close modal when clicking outside the content
     >
       <div
@@ -97,7 +97,7 @@ const SignIn = ({ onClose, onGetOtpClick }) => {
         onClick={handleContentClick} // Prevent closing when clicking inside the content
       >
         <div className="relative mb-4">
-          <img name=" "   
+          <img name=" "
             src={biotech}
             alt="Gidan Logo"
             width="129"
@@ -121,17 +121,17 @@ const SignIn = ({ onClose, onGetOtpClick }) => {
           >
             Enter Your Mobile Number
           </label>
-<input
-  type="text" // No arrows
-  inputMode="numeric" // Opens number keyboard on mobile
-  pattern="[0-9]*" // Optional: allows only digits
-  id="mobile"
-  name="mobile"
-  value={formData.mobile}
-  onChange={handleChange}
-  placeholder="+91 9876543210"
-  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-/>
+          <input
+            type="text" // No arrows
+            inputMode="numeric" // Opens number keyboard on mobile
+            pattern="[0-9]*" // Optional: allows only digits
+            id="mobile"
+            name="mobile"
+            value={formData.mobile}
+            onChange={handleChange}
+            placeholder="+91 9876543210"
+            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
 
         </div>
         {error && <p className="text-red-500 text-xs mb-4">{error}</p>}
