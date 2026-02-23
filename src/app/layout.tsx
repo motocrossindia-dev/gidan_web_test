@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Suspense } from "react"; // 1. Added Suspense import
+import ReactDOM from 'react-dom';
 import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
@@ -93,14 +93,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // 2. Removed: ReactDOM.preconnect(...) - This is invalid in Next.js Server Components
+  ReactDOM.preconnect('https://backend.gidan.store', { crossOrigin: 'anonymous' });
 
   return (
     <html lang="en">
-      {/* 3. Added standard <head> block for preconnect */}
-      <head>
-        <link rel="preconnect" href="https://backend.gidan.store" crossOrigin="anonymous" />
-      </head>
       <body className={`${nunitoSans.variable} font-sans antialiased`}>
         <Providers>
           <GoogleAnalytics />
@@ -116,10 +112,7 @@ export default function RootLayout({
             </div>
             {/* Main Content */}
             <main className="main-content w-full">
-              {/* 4. Wrapped children in Suspense to prevent useSearchParams errors */}
-              <Suspense fallback={<div>Loading...</div>}>
-                {children}
-              </Suspense>
+              {children}
               <Footer />
             </main>
           </div>

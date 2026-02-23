@@ -1,7 +1,6 @@
 import Link from 'next/link';
-import { Suspense } from 'react';
 
-function NotFoundContent() {
+export default function NotFound() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
       <h1 className="text-4xl font-bold text-gray-800">404</h1>
@@ -13,13 +12,5 @@ function NotFoundContent() {
         Go Home
       </Link>
     </div>
-  );
-}
-
-export default function NotFound() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <NotFoundContent />
-    </Suspense>
   );
 }
