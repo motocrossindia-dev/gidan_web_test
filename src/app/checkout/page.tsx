@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import CheckoutPage from '@/views/utilities/CheckoutPage/CheckoutPage';
+import CheckoutClient from './CheckoutClient';
 
 
 export const metadata: Metadata = {
@@ -24,5 +24,5 @@ export const metadata: Metadata = {
 };
 
 export default function CheckoutPageRoute() {
-  return <CheckoutPage />;
+  return <CheckoutClient />;
 }

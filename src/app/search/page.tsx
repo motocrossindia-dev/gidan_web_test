@@ -23,6 +23,12 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+import React, { Suspense } from 'react';
+
 export default function SearchPage() {
-  return <PlantCare />;
+  return (
+    <Suspense fallback={<div>Loading search...</div>}>
+      <PlantCare />
+    </Suspense>
+  );
 }

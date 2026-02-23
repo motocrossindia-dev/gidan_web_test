@@ -1,7 +1,7 @@
 'use client';
 
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import React, { useState,useEffect } from 'react';
+import { useRouter, usePathname } from "next/navigation";
+import React, { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import axios from 'axios';
@@ -9,7 +9,7 @@ import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
 // Progress Bar Component
 const ProgressBar = ({ currentStep }) => {
-  
+
   return (
     <div className="flex items-center mb-6 border-b pb-4">
       <button onClick={() => window.history.back()} className="mr-4">
@@ -30,11 +30,11 @@ const ProgressBar = ({ currentStep }) => {
           </span>
         </div>
         <div className="w-full bg-gray-200 h-1 rounded-full">
-          <div 
+          <div
             className="h-full bg-blue-600 rounded-full transition-all duration-300"
-            style={{ 
-              width: currentStep === 'address' ? '33%' : 
-                     currentStep === 'order' ? '66%' : '100%' 
+            style={{
+              width: currentStep === 'address' ? '33%' :
+                currentStep === 'order' ? '66%' : '100%'
             }}
           ></div>
         </div>
@@ -46,9 +46,8 @@ const ProgressBar = ({ currentStep }) => {
 // Order Summary Page
 const OrderSummary = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const pathname = usePathname();
-  const [orderItem,setOrderItem] = useState([]);
+  const [orderItem, setOrderItem] = useState([]);
   const [order, setOrder] = useState();
   const orderData = (() => {
     try { return JSON.parse(sessionStorage.getItem('checkout_ordersummary') || 'null'); } catch { return null; }
@@ -59,8 +58,8 @@ const OrderSummary = () => {
       setOrder(orderData.order);
     }
   }, []);  // eslint-disable-line react-hooks/exhaustive-deps // Runs only when orderData changes
-  
-    
+
+
   // const [quantity, setQuantity] = useState({ item1: 1, item2: 1 });
   const [address, setAddresses] = useState('');
   const accessToken = useSelector(selectAccessToken);
@@ -83,52 +82,52 @@ const OrderSummary = () => {
         setAddresses(defaultAddress);
         // setSelectedAddress(defaultAddress.id)
       }
-            
+
     } catch (error) {
       console.error("Error fetching default address:", error);
     }
   };
 
-   useEffect(() => {
-      fetchDefaultAddress();
-    }, [accessToken]);
+  useEffect(() => {
+    fetchDefaultAddress();
+  }, [accessToken]);
 
-    const deliveryOptions = [
-      { id: "standard", label: "Standard", price: "₹000.00" },
-      { id: "express", label: "Express Way", price: "₹000.00" },
-    ];
-    const [selectedOption, setSelectedOption] = useState("standard");
+  const deliveryOptions = [
+    { id: "standard", label: "Standard", price: "₹000.00" },
+    { id: "express", label: "Express Way", price: "₹000.00" },
+  ];
+  const [selectedOption, setSelectedOption] = useState("standard");
 
-    const handleSaveOrderSummary = async () =>{
-      const data={
-        order_id:orderData.order.id,
-        delivery_option:selectedOption,
-        address_id:address.id
-      }
-      try {
-        const response = await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/order/orderSummary/`,
-          data,{
-            headers: { Authorization: `Bearer ${accessToken}` },
-          })
-          if (response.data.message === 'success') {            
-            router.push('/payment', { state: { resource: response.data.data } });
-          }
-      } catch (error) {
-        console.error("Error fetching default address:", error);
-      }
+  const handleSaveOrderSummary = async () => {
+    const data = {
+      order_id: orderData.order.id,
+      delivery_option: selectedOption,
+      address_id: address.id
     }
+    try {
+      const response = await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/order/orderSummary/`,
+        data, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
+      if (response.data.message === 'success') {
+        router.push('/payment', { state: { resource: response.data.data } });
+      }
+    } catch (error) {
+      console.error("Error fetching default address:", error);
+    }
+  }
 
   return (
 
-      <><div className="max-w-md mx-auto bg-white min-h-screen">
+    <><div className="max-w-md mx-auto bg-white min-h-screen">
       <div className="p-4">
         <ProgressBar currentStep="order" />
-        
+
         {/* Delivery Address */}
         <div className="border-b pb-4 mb-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Order Summary</h2>
-            <button 
+            <button
               onClick={() => router.push('/address')}
               className="text-sm text-green-600"
             >
@@ -146,7 +145,7 @@ const OrderSummary = () => {
         <div className="space-y-4 mb-6">
           {orderItem.map((item, idx) => (
             <div key={item.id ?? idx} className="flex items-center space-x-4">
-              <img name=" "   
+              <img name=" "
                 src={`https://backend.gidan.store${item.image}`}
                 loading="lazy"
                 alt="Product"
@@ -166,7 +165,7 @@ const OrderSummary = () => {
               </div>
               <button className="text-red-500 text-sm">Remove</button>
             </div>
-         ))} 
+          ))}
         </div>
 
         {/* Add More Products Button */}
@@ -178,17 +177,17 @@ const OrderSummary = () => {
         <div className="mb-6">
           <h3 className="font-medium mb-3">Choose Delivery Option</h3>
           <div className="space-y-2">
-          {deliveryOptions.map((option) => (
-            <div key={option.id} className="flex items-center space-x-2">
-<input
+            {deliveryOptions.map((option) => (
+              <div key={option.id} className="flex items-center space-x-2">
+                <input
                   type="radio"
                   name="delivery-option"
                   value={option.id}
                   onChange={() => setSelectedOption(option.id)}
                   className="w-5 h-5"
                 />              <label htmlFor="express">{option.label} ( {option.price}.00 )</label>
-            </div>
-          ))}
+              </div>
+            ))}
 
             {/* <div className="flex items-center space-x-2">
               <input type="radio" name="delivery" id="regular" className="text-green-600" />
@@ -201,9 +200,9 @@ const OrderSummary = () => {
         <div className="mb-6">
           <h3 className="font-medium mb-3 ">Apply Coupon</h3>
           <div className="flex space-x-2">
-            <input 
-              type="text" 
-              placeholder="Discount code" 
+            <input
+              type="text"
+              placeholder="Discount code"
               className="flex-1 border rounded px-3 py-2"
             />
             <button className="px-4 py-2 bg-green-600 text-white rounded">Apply</button>
@@ -215,12 +214,12 @@ const OrderSummary = () => {
           <h3 className="font-medium mb-3 text-gray-500">Price Details</h3>
           <div className="space-y-2">
             <div className="flex justify-between">
-              <span className="text-gray-500">Price ({orderItem?.length||0} items)</span>
+              <span className="text-gray-500">Price ({orderItem?.length || 0} items)</span>
               <span>₹{order?.total_price}.00</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-500">Discount</span>
-              <span className="text-green-500">-₹{order?.total_discount||0}.00</span>
+              <span className="text-green-500">-₹{order?.total_discount || 0}.00</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Delivery Charges</span>
@@ -232,7 +231,7 @@ const OrderSummary = () => {
             </div>
             <div className="flex justify-between font-medium pt-2 border-t">
               <span>Total Amount</span>
-              <span>₹{order?.grand_total||0}.00</span>
+              <span>₹{order?.grand_total || 0}.00</span>
             </div>
           </div>
         </div>
@@ -243,9 +242,9 @@ const OrderSummary = () => {
         </button>
       </div>
     </div>
-        <HomepageSchema/>
-        <StoreSchema/>
-      </>
+      <HomepageSchema />
+      <StoreSchema />
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import BTcoins from '@/views/utilities/Wallet/BTcoins';
+import BTcoinsClient from './BTcoinsClient';
 
 
 export const metadata: Metadata = {
@@ -24,5 +24,5 @@ export const metadata: Metadata = {
 };
 
 export default function BTcoinsPage() {
-  return <BTcoins />;
+  return <BTcoinsClient />;
 }

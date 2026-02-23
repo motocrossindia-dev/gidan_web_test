@@ -1,7 +1,7 @@
 'use client';
 
 
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState, useMemo } from "react";
 import { Tag } from 'lucide-react';
 import { CheckCircle } from 'lucide-react';
@@ -697,8 +697,6 @@ const OrderSummary = ({ selectedOption, selectedAddress, data }) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   // const [orderSummary, setOrderSummary] = useState([]);
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
   const orderData = null?.resource;
 
   const toggleDropdown = () => setIsOpen(!isOpen);

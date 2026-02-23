@@ -1,6 +1,5 @@
 'use client';
 
-import { useSearchParams, usePathname } from "next/navigation";
 import React, { useEffect, useState } from 'react';
 import { ArrowUpRight, ArrowDownRight, Gift, CreditCard } from "lucide-react";
 import { Helmet } from "react-helmet-async";
@@ -8,8 +7,6 @@ import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
 
 const WalletHistory = () => {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
   const [data] = useState(() => {
     try {
       const stored = sessionStorage.getItem('wallet_history_data');
@@ -82,8 +79,8 @@ const WalletHistory = () => {
                   key={status}
                   onClick={() => setActiveStatus(status)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeStatus === status
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                 >
                   {status}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import PlantFilter from '@/views/utilities/PlantFilter/PlantFilter';
+import { Suspense } from "react";
 
 
 export const metadata: Metadata = {
@@ -23,9 +24,17 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-import { fetchProductsByFilters } from "@/utils/serverApi";
+import { fetchProductsByFilters, fetchFilters } from "@/utils/serverApi";
 
 export default async function SeasonalPage() {
-  const initialResults = await fetchProductsByFilters({ is_seasonal_collection: true });
-  return <PlantFilter initialResults={initialResults} />;
+  const [initialResults, filters] = await Promise.all([
+    fetchProductsByFilters({ is_seasonal_collection: true }),
+    fetchFilters("plant")
+  ]);
+
+  return (
+    <Suspense fallback={<div className="flex justify-center p-8">Loading products...</div>}>
+      <PlantFilter initialResults={initialResults} initialFilterData={filters} />
+    </Suspense>
+  );
 }

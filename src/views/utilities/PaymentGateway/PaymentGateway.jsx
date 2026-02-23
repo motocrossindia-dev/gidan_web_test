@@ -1,7 +1,7 @@
 'use client';
 
 
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -25,7 +25,6 @@ const loadRazorpayScript = () =>
   });
 
 const PaymentGateway = () => {
-  const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
   // Start null — reads happen client-side in useEffect (sessionStorage is not available during SSR)

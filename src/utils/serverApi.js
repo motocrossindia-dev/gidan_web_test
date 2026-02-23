@@ -56,7 +56,7 @@ export async function fetchProductsByFilters(filters = {}) {
             queryParams.append(key, value);
         });
 
-        const url = `${API_URL}/filters/main_productsFilter/?${queryParams.toString()}`;
+        const url = `${API_URL}/filters/main_productsFilter/?${queryParams.toString()}&page_size=24`;
         const res = await fetch(url, { next: { revalidate: 300 } });
         if (!res.ok) return [];
         const data = await res.json();
@@ -77,6 +77,17 @@ export async function fetchProductDetail(productSlug, searchParams = {}) {
         return data;
     } catch (err) {
         console.error("Error fetching product detail", err);
+        return null;
+    }
+}
+export async function fetchFilters(type) {
+    try {
+        const res = await fetch(`${API_URL}/filters/filters_n/?type=${type}`, { next: { revalidate: 300 } });
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data?.filters || null;
+    } catch (err) {
+        console.error("Error fetching filters", err);
         return null;
     }
 }

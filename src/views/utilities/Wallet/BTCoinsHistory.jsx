@@ -1,13 +1,9 @@
 'use client';
 
-import { useSearchParams, usePathname } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { ArrowUpRight, ArrowDownRight, Gift, CreditCard } from "lucide-react";
-import { Helmet } from "react-helmet-async";
 
 const GDCoinsHistory = () => {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
   const [activeFilter, setActiveFilter] = useState('ALL');
   const [filteredTransactions, setFilteredTransactions] = useState([]);
 
@@ -36,20 +32,6 @@ const GDCoinsHistory = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Gidan - GD Coins History</title>
-        <meta name="robots" content="noindex, nofollow" />
-        <meta
-          name="description"
-          content="Check your Gidan GD Coins history to track all earned and spent coins. Stay updated on your rewards and enjoy a seamless gardening shopping experience."
-        />
-
-        <link
-          rel="canonical"
-          href="https://www.gidan.store/profile/history"
-        />
-      </Helmet>
-
       <div className="flex justify-center sm:justify-start px-4 sm:px-6 bg-gray-100 min-h-screen w-full">
         <div className="w-full sm:w-full md:w-4/5 lg:w-full xl:w-full h-auto bg-white shadow-lg p-4 sm:p-6 rounded-lg">
           {/* Header */}
@@ -66,8 +48,8 @@ const GDCoinsHistory = () => {
             <button aria-label="Toggle filters"
               onClick={() => setActiveFilter('ALL')}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeFilter === 'ALL'
-                  ? 'bg-green-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-green-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
             >
               All
@@ -75,8 +57,8 @@ const GDCoinsHistory = () => {
             <button aria-label="Toggle filters"
               onClick={() => setActiveFilter('EARN')}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeFilter === 'EARN'
-                  ? 'bg-green-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-green-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
             >
               Earned
@@ -84,8 +66,8 @@ const GDCoinsHistory = () => {
             <button aria-label="Toggle filters"
               onClick={() => setActiveFilter('SPENT')}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeFilter === 'SPENT'
-                  ? 'bg-green-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-green-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
             >
               Spent
@@ -156,7 +138,7 @@ export default GDCoinsHistory;
 //
 // const BTCoinsHistory = () => {
 //   const searchParams = useSearchParams();
-const pathname = usePathname();
+//   const pathname = usePathname();
 //   const [activeFilter, setActiveFilter] = useState('ALL');
 //   const [filteredTransactions, setFilteredTransactions] = useState([]);
 //

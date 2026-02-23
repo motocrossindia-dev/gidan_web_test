@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter, usePathname, useSearchParams, useParams } from "next/navigation";
+import { useRouter, usePathname, useParams } from "next/navigation";
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../../redux/Slice/cartSlice";
@@ -102,7 +102,6 @@ const productData = {
 
 export default function Component({ initialProductData }) {
     const pathname = usePathname();
-    const searchParams = useSearchParams();
     const [selectedImage, setSelectedImage] = useState(0);
 
     const [selectedSize, setSelectedSize] = useState("");
