@@ -1119,12 +1119,12 @@ export default function Component({ initialProductData }) {
                         </div>
 
                         <div className="md:flex-1 px-4 font-sans mt-8">
-                            <h2 className="text-xl md:text-3xl font-bold mb-2">
+                            <h1 className="text-xl md:text-3xl font-bold mb-2">
                                 {productDetailData?.data?.product?.main_product_name || ""}
-                            </h2>
-                            <h4 className="text-md md:text-lg font-sans mb-4 whitespace-pre-line">
+                            </h1>
+                            <p className="text-md md:text-lg font-sans mb-4 whitespace-pre-line text-black">
                                 {productDetailData?.data?.product?.description || ""}
-                            </h4>
+                            </p>
                             <p className="text-black-600 text-sm mb-4">
                                 {Array.from({ length: 5 }).map((_, i) => {
                                     const fraction =

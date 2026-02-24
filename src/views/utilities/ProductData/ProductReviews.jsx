@@ -11,7 +11,7 @@ function RatingsAndReviews({ product_Rating, total_Rating, productId }) {
     num_ratings = 0,
     stars_given = [],
   } = product_Rating || {};
-  
+
   const totalReviewsIncludingAll = stars_given.reduce(
     (sum, item) => sum + item.count,
     0
@@ -21,7 +21,7 @@ function RatingsAndReviews({ product_Rating, total_Rating, productId }) {
   const Pagination = ({
     totalPages = 10,
     currentPage = 1,
-    onPageChange = () => {},
+    onPageChange = () => { },
   }) => {
     const getPageNumbers = () => {
       const pages = [];
@@ -51,11 +51,10 @@ function RatingsAndReviews({ product_Rating, total_Rating, productId }) {
         {getPageNumbers().map((page, index) => (
           <button
             key={index}
-            className={`w-8 h-8 flex items-center justify-center rounded border transition-colors ${
-              page === currentPage
+            className={`w-8 h-8 flex items-center justify-center rounded border transition-colors ${page === currentPage
                 ? "bg-blue-500 text-white border-blue-500"
                 : "border-gray-300 hover:bg-gray-50"
-            } ${page === "..." ? "cursor-default hover:bg-white" : ""}`}
+              } ${page === "..." ? "cursor-default hover:bg-white" : ""}`}
             onClick={() => (page !== "..." ? onPageChange(page) : null)}
           >
             {page}
@@ -76,7 +75,7 @@ function RatingsAndReviews({ product_Rating, total_Rating, productId }) {
     return Array.from({ length: 5 }).map((_, i) => {
       const filled = Math.floor(rating);
       const half = rating - filled;
-      
+
       if (i < filled) {
         return <FaStar key={i} className="text-blue-900 w-5 h-5" />;
       }
@@ -91,8 +90,8 @@ function RatingsAndReviews({ product_Rating, total_Rating, productId }) {
     <div className="max-w-full mx-auto p-4 bg-gray-50 px-4 md:px-20 md:mt-10">
       {/* Header Section */}
       <div className="flex flex-col justify-between mb-6 gap-4 md:flex-row md:items-center">
-        <h2 className="text-2xl md:text-3xl  text-gray-800">
-          Ratings 
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
+          Ratings
         </h2>
         <button
           onClick={() => setIsModalOpen(true)}
@@ -134,20 +133,19 @@ function RatingsAndReviews({ product_Rating, total_Rating, productId }) {
                         </span>
                         <FaStar className="text-blue-900 w-4 h-4" />
                       </div>
-                      
+
                       <div className="flex-1 bg-gray-300 rounded-full h-3">
                         <div
                           className="bg-green-500 h-3 rounded-full transition-all duration-500"
                           style={{
-                            width: `${
-                              totalReviewsIncludingAll > 0
+                            width: `${totalReviewsIncludingAll > 0
                                 ? (item.count / totalReviewsIncludingAll) * 100
                                 : 0
-                            }%`,
+                              }%`,
                           }}
                         />
                       </div>
-                      
+
                       <div className="w-12 text-sm font-medium text-gray-700 text-right">
                         {item.count}
                       </div>
