@@ -21,6 +21,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            set -e
             echo "Starting Deployment..."
 
             cd /var/www/gidan-app
@@ -29,6 +30,10 @@ jobs:
             BRANCH=${{ github.ref_name }}
 
             echo "Deploying branch: $BRANCH"
+
+            # Discard any local changes (like package-lock.json from previous npm install)
+            git reset --hard HEAD
+            git clean -fd
 
             git pull https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/motocrossindia-dev/Gidan_Web_Nextjs.git $BRANCH
 
