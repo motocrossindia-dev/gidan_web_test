@@ -33,7 +33,6 @@ const nextConfig: NextConfig = {
 
   // Image optimization domains
   images: {
-    unoptimized: true,
     qualities: [75, 80, 85],
     remotePatterns: [
       {
@@ -97,11 +96,14 @@ const nextConfig: NextConfig = {
   ],
 
   // JS Minification & Production Cleanup
+  productionBrowserSourceMaps: false,
+
   compiler: {
     // Remove console logs in production for smaller bundles and cleaner logs
-    removeConsole: process.env.NODE_ENV === "production",
+    removeConsole: process.env.NODE_ENV === "production"
+      ? { exclude: ["error", "warn"] }
+      : false,
   },
-
 };
 
 

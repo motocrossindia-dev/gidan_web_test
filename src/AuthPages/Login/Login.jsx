@@ -2,8 +2,7 @@
 
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux"; // Import the action
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FaTimes } from "react-icons/fa";
 import __biotech from "../../Assets/Gidan_logo.webp"; // Adjust the path to your logo image
 import { signInSuccess } from "../../redux/Auth/authSlice"; // Import the action to update the user state
 import { enqueueSnackbar } from "notistack";
@@ -122,7 +121,7 @@ const Login = ({ onClose }) => {
               onClick={onClose}
               className="absolute top-0 right-0 text-gray-500 hover:text-gray-700"
             >
-              <FontAwesomeIcon icon={faTimes} />
+              <FaTimes />
             </button>
           </div>
           <h2 className="text-center text-xl font-semibold text-gray-700 mb-4">

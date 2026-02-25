@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FaTimes } from "react-icons/fa";
 import __biotech from "../../Assets/Gidan_logo.webp"; // Adjust the path to your logo image
 import { useSnackbar } from "notistack";
 import axios from "axios";
@@ -108,7 +107,7 @@ const SignIn = ({ onClose, onGetOtpClick }) => {
             onClick={onClose}
             className="absolute top-0 right-0 text-gray-500 hover:text-gray-700"
           >
-            <FontAwesomeIcon icon={faTimes} />
+            <FaTimes />
           </button>
         </div>
         <h2 className="text-center text-lg font-semibold mb-4">

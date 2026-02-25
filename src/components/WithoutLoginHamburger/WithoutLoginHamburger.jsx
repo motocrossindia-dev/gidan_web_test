@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/Slice/userSlice";
 import axiosInstance from "../../Axios/axiosInstance";
-import __LogoutGif from "../../Assets/logout.gif";
+import __LogoutGif from "../../Assets/logout_anim.webp";
 const _LogoutGif = typeof __LogoutGif === 'string' ? __LogoutGif : __LogoutGif?.src || __LogoutGif;
 const LogoutGif = typeof _LogoutGif === 'string' ? _LogoutGif : _LogoutGif?.src || _LogoutGif;
 import {

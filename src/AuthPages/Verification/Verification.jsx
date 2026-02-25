@@ -2,8 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FaTimes } from "react-icons/fa";
 import __biotech from "../../Assets/Gidan_logo.webp";
 const _biotech = typeof __biotech === 'string' ? __biotech : __biotech?.src || __biotech;
 const biotech = typeof _biotech === 'string' ? _biotech : _biotech?.src || _biotech;
@@ -179,7 +178,7 @@ const Verification = ({ onClose, onSubmit }) => {
               onClick={onClose}
               className="absolute top-0 right-0 text-gray-500 hover:text-gray-700"
             >
-              <FontAwesomeIcon icon={faTimes} size="lg" />
+              <FaTimes size={20} />
             </button>
           </div>
           <h2 className="text-center text-lg font-semibold mb-6">

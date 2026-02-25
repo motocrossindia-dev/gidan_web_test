@@ -1,7 +1,39 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
-import ReactPlayer from "react-player"; // react-player v3 removed /lazy subpath
+/**
+ * Lightweight video renderer — replaces react-player to avoid pulling in
+ * dashjs (931 KB) and hls.js (496 KB) as transitive dependencies.
+ */
+const getYouTubeId = (url) => {
+  if (!url) return null;
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|shorts\/))([^?&#]+)/);
+  return m ? m[1] : null;
+};
+
+const LightVideo = ({ url }) => {
+  if (!url) return <p className="text-gray-400 text-center py-8">No video available</p>;
+  const ytId = getYouTubeId(url);
+  if (ytId) {
+    return (
+      <iframe
+        src={`https://www.youtube-nocookie.com/embed/${ytId}`}
+        title="Product video"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        className="w-full aspect-video rounded-lg"
+        loading="lazy"
+      />
+    );
+  }
+  // Direct MP4 / WebM URL
+  return (
+    <video controls className="w-full rounded-lg" preload="metadata">
+      <source src={url} />
+      Your browser does not support the video tag.
+    </video>
+  );
+};
 
 const AboutProduct = ({ productDetailData }) => {
   const [activeTab, setActiveTab] = useState("about"); // 'about', 'box', or 'video'
@@ -38,7 +70,7 @@ const AboutProduct = ({ productDetailData }) => {
       case "video":
         return (
           <div className="rounded-lg overflow-hidden">
-            <ReactPlayer url={video} controls width="100%" />
+            <LightVideo url={video} />
           </div>
         );
       default:

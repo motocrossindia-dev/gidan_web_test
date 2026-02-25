@@ -8,6 +8,8 @@ import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import TrendingCard from "../../../components/TrendingProducts/TrendingCard"
+import { getProductUrl } from "../../../utils/urlHelper";
+import Link from "next/link";
 
 const RecentlyViewedProduct = () => {
   const [products, setProducts] = useState([]);
@@ -43,18 +45,7 @@ const RecentlyViewedProduct = () => {
   }, []); // Re-run if `accessToken` changes
 
   const handleProductClick = (product) => {
-    const category_slug = product?.category_slug;
-    const sub_category_slug = product?.sub_category_slug || "all";
-    const product_slug = product?.slug;
-
-    // Standardized 3-segment URL pattern: /:category/:subcategory/:productSlug/
-    router.push(`/${category_slug}/${sub_category_slug}/${product_slug}/`, {
-      state: {
-        product_id: product_slug,
-        category_slug: category_slug,
-        sub_category_slug: sub_category_slug
-      }
-    });
+    router.push(getProductUrl(product));
   };
 
   return (
@@ -68,7 +59,7 @@ const RecentlyViewedProduct = () => {
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 lg:mx-10 gap-4 lg:gap-2 justify-items-center">
             {products.length > 0 ? (
               products.map((product) => (
-                <div key={product?.id} onClick={() => handleProductClick(product)}>
+                <Link key={product?.id} href={getProductUrl(product)} className="block w-full">
                   <TrendingCard
                     product={product}
                     name={product?.name}
@@ -81,7 +72,7 @@ const RecentlyViewedProduct = () => {
                     getProducts={getProducts}
                     mrp={Math.round(product?.mrp)}
                   />
-                </div>
+                </Link>
               ))
             ) : (
               <p className="text-center col-span-4">No products found.</p>

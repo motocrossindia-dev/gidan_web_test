@@ -1,23 +1,27 @@
+import { getProductUrl } from "../../../utils/urlHelper";
+
 export default function CategorySchema({
     categoryName,
     categorySlug,
     items = [] // [{ slug: "product-slug", category_slug: "category", sub_category_slug: "subcategory" }, ...]
 }) {
     const baseUrl = "https://www.gidan.store/";
+    const siteUrl = "https://www.gidan.store";
 
     const schema = {
         "@context": "https://schema.org",
         "@graph": [
             {
                 "@type": "CollectionPage",
-                "@id": `${baseUrl}/${categorySlug}/#collectionpage`,
-                "url": `${baseUrl}/${categorySlug}/`,
+                "@id": `${baseUrl}${categorySlug}/#collectionpage`,
+                "url": `${baseUrl}${categorySlug}/`,
                 "name": categoryName,
-                "description": `Explore a curated collection of ${categoryName} from Gidan Store.`
+                "description": `Explore a curated collection of ${categoryName} from Gidan Store.`,
+                "image": items[0]?.main_image || (items[0]?.images && items[0]?.images[0]) || ""
             },
             {
                 "@type": "BreadcrumbList",
-                "@id": `${baseUrl}/${categorySlug}/#breadcrumb`,
+                "@id": `${baseUrl}${categorySlug}/#breadcrumb`,
                 "itemListElement": [
                     {
                         "@type": "ListItem",
@@ -29,7 +33,7 @@ export default function CategorySchema({
                         "@type": "ListItem",
                         "position": 2,
                         "name": categoryName,
-                        "item": `${baseUrl}/${categorySlug}/`
+                        "item": `${baseUrl}${categorySlug}/`
                     }
                 ]
             },
@@ -38,15 +42,17 @@ export default function CategorySchema({
                 "name": `${categoryName} Collection`,
                 "numberOfItems": items.length,
                 "itemListElement": items.map((item, index) => {
-                    // Build proper 3-segment product URL
-                    const productUrl = item.sub_category_slug
-                        ? `${baseUrl}/${item.category_slug}/${item.sub_category_slug}/${item.slug}/`
-                        : `${baseUrl}/${item.category_slug}/${item.slug}/`;
+                    const productUrl = `${siteUrl}${getProductUrl(item, false)}`;
 
                     return {
                         "@type": "ListItem",
                         "position": index + 1,
-                        "url": productUrl
+                        "item": {
+                            "@type": "Product",
+                            "name": item.main_product_name || item.name || "Product",
+                            "image": item.main_image || (item.images && item.images[0]) || "",
+                            "url": productUrl
+                        }
                     };
                 })
             }

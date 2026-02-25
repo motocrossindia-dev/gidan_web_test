@@ -18,10 +18,18 @@ export const convertToSlug = (text) => {
  */
 export const toSlugString = (val) => {
     if (!val) return "";
-    if (typeof val === 'string') return convertToSlug(val);
 
-    // Handle nested objects from backend (e.g., category: { name: "..." } or category: "name")
-    const rawVal = val?.slug || val?.name || (typeof val === 'string' ? val : "");
+    // Defensive check: If the input is a string that looks like it has a query param or hash, strip it
+    // Example: "okra-seeds?variant=370" -> "okra-seeds"
+    let rawVal = "";
+    if (typeof val === 'string') {
+        rawVal = val.split(/[?#]/)[0];
+    } else {
+        // Handle nested objects from backend (e.g., category: { name: "..." } or category: "name")
+        const extracted = val?.slug || val?.name || "";
+        rawVal = typeof extracted === 'string' ? extracted.split(/[?#]/)[0] : "";
+    }
+
     return convertToSlug(rawVal);
 };
 
@@ -51,8 +59,6 @@ export const getProductUrl = (product, includeVariant = false) => {
         toSlugString(product.name) ||
         toSlugString(product.slug);
 
-
-
     if (!category_slug || !product_slug) {
         // Fallback for incomplete data to prevent broken links
         return "/";
@@ -63,5 +69,4 @@ export const getProductUrl = (product, includeVariant = false) => {
     const variantSuffix = (includeVariant && variantId) ? `?variant=${variantId}` : "";
 
     return `/${category_slug}/${sub_category_slug}/${product_slug}/${variantSuffix}`;
-
 };

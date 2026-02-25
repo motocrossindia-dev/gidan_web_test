@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { IconExclamationCircle } from "@tabler/icons-react";
+import { FiAlertCircle } from "react-icons/fi";
 import axios from "axios";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { useSelector } from "react-redux";
@@ -246,7 +246,7 @@ const Wallet = () => {
                 <span>Gidan Rewards</span>
                 <span className="flex items-center">
                   25% Utilization On Cart Value
-                  <IconExclamationCircle className="ml-1" />
+                  <FiAlertCircle className="ml-1" />
                 </span>
               </div>
               <span className="text-green-600 font-semibold mt-2 sm:mt-0">₹500</span>
@@ -256,7 +256,7 @@ const Wallet = () => {
                 <span>Refund & Gift Credits</span>
                 <span className="flex items-center">
                   100% Utilization
-                  <IconExclamationCircle className="ml-1" />
+                  <FiAlertCircle className="ml-1" />
                 </span>
               </div>
               <span className="text-green-600 font-semibold mt-2 sm:mt-0">₹0</span>

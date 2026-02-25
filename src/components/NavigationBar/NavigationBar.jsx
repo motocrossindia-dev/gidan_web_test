@@ -23,7 +23,7 @@ const _empty = typeof __empty === 'string' ? __empty : __empty?.src || __empty;
 const empty = typeof _empty === 'string' ? _empty : _empty?.src || _empty;
 import { IoIosLogOut } from "react-icons/io";
 import WithoutLoginHamburger from "../WithoutLoginHamburger/WithoutLoginHamburger";
-import __LogoutGif from "../../Assets/logout.webp";
+import __LogoutGif from "../../Assets/logout_anim.webp";
 const _LogoutGif = typeof __LogoutGif === 'string' ? __LogoutGif : __LogoutGif?.src || __LogoutGif;
 const LogoutGif = typeof _LogoutGif === 'string' ? _LogoutGif : _LogoutGif?.src || _LogoutGif;
 import { resetVerification } from "../../redux/User/verificationSlice";
