@@ -1,6 +1,6 @@
 export default function ProductSchema({
     product,
-    siteUrl,
+    siteUrl = "https://www.gidan.store",
     currency = "INR",
     brandName = "Gidan Store"
 }) {
@@ -8,8 +8,13 @@ export default function ProductSchema({
 
     /* -----------------------------
        Safe URL Generation
+       Pattern: /:category/:subcategory/:productSlug/
     ------------------------------ */
-    const safeProductUrl = `${siteUrl}/category/${product?.category_slug}/${product?.slug}/`;
+    const catSlug = product?.category_slug || "all";
+    const subCatSlug = product?.sub_category_slug || "all";
+    const prodSlug = product?.slug || "";
+
+    const safeProductUrl = `${siteUrl}/${catSlug}/${subCatSlug}/${prodSlug}/`;
 
     const breadcrumbItems = [
         {
@@ -26,7 +31,7 @@ export default function ProductSchema({
             "@type": "ListItem",
             position: breadcrumbItems.length + 1,
             name: product?.category_name || "Category",
-            item: `${siteUrl}/category/${product.category_slug}/`
+            item: `${siteUrl}/${catSlug}/all/`
         });
     }
 
@@ -36,7 +41,7 @@ export default function ProductSchema({
             "@type": "ListItem",
             position: breadcrumbItems.length + 1,
             name: product?.sub_category_name || "Sub Category",
-            item: `${siteUrl}/category/${product.category_slug}/${product.sub_category_slug}/`
+            item: `${siteUrl}/${catSlug}/${subCatSlug}/`
         });
     }
 
