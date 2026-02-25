@@ -30,9 +30,10 @@ export const toSlugString = (val) => {
  * Pattern: /:category/:subcategory/:productSlug/?variant=ID
  * 
  * @param {Object} product - Product data object
+ * @param {boolean} [includeVariant=false] - Whether to include the ?variant= query parameter
  * @returns {string} - Formatted URL
  */
-export const getProductUrl = (product) => {
+export const getProductUrl = (product, includeVariant = false) => {
     if (!product) return "/";
 
     // 1. Extract Category Slug
@@ -57,9 +58,9 @@ export const getProductUrl = (product) => {
         return "/";
     }
 
-    // Always include variant ID for consistency and state preservation
+    // Conditionally include variant ID for consistency and state preservation
     const variantId = product.id || product.variant_id;
-    const variantSuffix = variantId ? `?variant=${variantId}` : "";
+    const variantSuffix = (includeVariant && variantId) ? `?variant=${variantId}` : "";
 
     return `/${category_slug}/${sub_category_slug}/${product_slug}/${variantSuffix}`;
 

@@ -1,3 +1,5 @@
+import { getProductUrl } from "../../../utils/urlHelper";
+
 export default function ProductSchema({
     product,
     siteUrl = "https://www.gidan.store",
@@ -9,15 +11,9 @@ export default function ProductSchema({
 }) {
     if (!product) return null;
 
-    /* -----------------------------
-       Safe URL Generation
-       Pattern: /:category/:subcategory/:productSlug/
-    ------------------------------ */
+    const safeProductUrl = `${siteUrl}${getProductUrl(product, false)}`;
     const catSlug = product?.category_slug || "all";
     const subCatSlug = product?.sub_category_slug || "all";
-    const prodSlug = product?.slug || "";
-
-    const safeProductUrl = `${siteUrl}/${catSlug}/${subCatSlug}/${prodSlug}/`;
 
     const breadcrumbItems = [
         {

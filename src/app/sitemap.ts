@@ -116,7 +116,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
         const products = await fetchAllProducts();
         for (const product of products) {
-            const productRelativeUrl = getProductUrl(product);
+            const productRelativeUrl = getProductUrl(product, false);
             if (productRelativeUrl === "/" || !productRelativeUrl) continue;
 
             entries.push({

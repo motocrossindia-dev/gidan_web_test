@@ -34,8 +34,7 @@ import WriteAReview from "./WriteAReview";
 // import FaqAccordion from "./ProductFaq";
 import { trackViewItem, trackAddToCart } from "../../../utils/ga4Ecommerce";
 import Breadcrumb from "../../../components/Shared/Breadcrumb";
-import convertToSlug from "../../../utils/slugConverter";
-import { toSlugString } from "../../../utils/urlHelper";
+import { toSlugString, getProductUrl, convertToSlug } from "../../../utils/urlHelper";
 
 
 
@@ -982,12 +981,9 @@ export default function ProductData({ initialProductData }) {
         product?.meta_keywords || "gardening, plants, seeds, pots, plant care";
 
     // Canonical URL - Always use the clean main product slug for crawlers
-    const cleanProductSlug = product?.main_product_name
-        ? convertToSlug(product.main_product_name)
-        : params.productSlug;
-    const cleanCatSlug = toSlugString(product?.category_slug) || params.categorySlug;
-    const cleanSubCatSlug = toSlugString(product?.sub_category_slug) || params.subcategorySlug || "all";
-    const canonicalUrl = `https://www.gidan.store/${cleanCatSlug}/${cleanSubCatSlug}/${cleanProductSlug}`;
+    const safeBaseUrl = "https://www.gidan.store";
+    const relativeCleanUrl = getProductUrl(product, false);
+    const canonicalUrl = `${safeBaseUrl}${relativeCleanUrl}`;
 
     // OG image fallback
     const ogImage =
