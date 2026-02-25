@@ -36,9 +36,10 @@ const LightVideo = ({ url }) => {
 };
 
 const AboutProduct = ({ productDetailData }) => {
+  const hasInitialData = productDetailData && (productDetailData.data || productDetailData.product || productDetailData.id);
   const [activeTab, setActiveTab] = useState("about"); // 'about', 'box', or 'video'
-  const [video, setVideo] = useState("");
-  const [productData, setProductData] = useState({});
+  const [video, setVideo] = useState(hasInitialData ? (productDetailData?.data?.product?.vedio_link || productDetailData?.product?.vedio_link || "") : "");
+  const [productData, setProductData] = useState(hasInitialData ? productDetailData : {});
 
   useEffect(() => {
     // Check if it's a valid data object, not just an empty array

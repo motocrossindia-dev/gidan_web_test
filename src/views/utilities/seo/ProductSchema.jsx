@@ -7,7 +7,8 @@ export default function ProductSchema({
     brandName = "Gidan Store",
     rating = 0,
     ratingCount = 0,
-    reviews = []
+    reviews = [],
+    images: passedImages = []
 }) {
     if (!product) return null;
 
@@ -67,9 +68,10 @@ export default function ProductSchema({
     /* -----------------------------
        Clean Image Array (CRITICAL FIX)
     ------------------------------ */
+    const sourceImages = passedImages.length ? passedImages : (product?.images || []);
     const images =
-        product?.images?.length
-            ? product.images
+        sourceImages.length
+            ? sourceImages
                 .map((img) =>
                     typeof img === "string"
                         ? img
