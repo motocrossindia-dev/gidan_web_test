@@ -10,14 +10,6 @@ export default function ProductSchema({
        Safe URL Generation
     ------------------------------ */
     const safeProductUrl = `${siteUrl}/category/${product?.category_slug}/${product?.slug}/`;
-    const breadcrumbItems = [
-        {
-            "@type": "ListItem",
-            position: 1,
-            name: "Home",
-            item: siteUrl
-        }
-    ];
 
     // Add category safely
     if (product?.category_slug) {
