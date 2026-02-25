@@ -110,11 +110,6 @@
     "permanent": true
   },
   {
-    "source": "/franchise-enquiry",
-    "destination": "/franchise-enquiry/",
-    "permanent": true
-  },
-  {
     "source": "/plant-care/garden-essenials-37/",
     "destination": "/plant-care/garden-essenials/",
     "permanent": true
@@ -762,11 +757,6 @@
   {
     "source": "/pots/table-top-pots-35/verona-eco-planter-set-of-5-315/",
     "destination": "/pots/table-top-pots/verona-eco-planter-set-of-5",
-    "permanent": true
-  },
-  {
-    "source": "/return",
-    "destination": "/return/",
     "permanent": true
   },
   {

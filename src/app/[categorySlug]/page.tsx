@@ -76,14 +76,20 @@ export default async function CategoryPage({ params }: Props) {
     category_id: category.id,
   });
 
+  // Extract SEO content — passed into PlantFilter as initialSEOData so it's SSR on first paint
+  // and reactive when client-side subcategory filter changes
+  const initialSEOData = (initialData as any)?.category_info?.category_info || null;
+
   return (
     <>
       <Suspense fallback={<div className="flex justify-center p-8">Loading products...</div>}>
+        {/* @ts-ignore */}
         <PlantFilter
           initialResults={initialData}
           initialCategoryData={categoryWithSubs}
           initialFilterData={filters}
           categorySlug={categorySlug}
+          initialSEOData={initialSEOData}
         />
       </Suspense>
 

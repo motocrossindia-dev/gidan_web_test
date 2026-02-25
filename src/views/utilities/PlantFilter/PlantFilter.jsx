@@ -25,6 +25,7 @@ import axiosInstance from "../../../Axios/axiosInstance";
  * @param {string} [props.categorySlug]
  * @param {string} [props.subcategorySlug]
  * @param {string} [props.subcategoryName]
+ * @param {object} [props.initialSEOData] SEO content pre-fetched server-side (hero/sections for category, title/subtitle/description for subcategory)
  */
 function PlantFilter({
     initialResults = [],
@@ -32,7 +33,8 @@ function PlantFilter({
     initialFilterData = null,
     categorySlug: propCategorySlug = null,
     subcategorySlug: propSubcategorySlug = null,
-    subcategoryName: propSubcategoryName = null
+    subcategoryName: propSubcategoryName = null,
+    initialSEOData = null,
 } = {}) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -128,6 +130,10 @@ function PlantFilter({
     const [filtersApplied, setFiltersApplied] = useState(false);
     const [isSearching, setIsSearching] = useState(false);
 
+    // SEO state — initialised from server-fetched data, updates reactively on subcategory filter changes
+    const [seoData, setSeoData] = useState(initialSEOData || null);
+    const [isSubcategorySEO, setIsSubcategorySEO] = useState(!!propSubcategorySlug);
+
     // iOS Swipeable Drawer patch to prevent body bounce
     const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
@@ -155,6 +161,8 @@ function PlantFilter({
             setFiltersApplied(false);
         }
     }, [effectiveCategorySlug]);
+
+    // (SEO sync is now handled directly by FilterSidebar via setSeoData prop)
 
     // Handle slug to ID resolution
     useEffect(() => {
@@ -250,7 +258,26 @@ function PlantFilter({
                         next: response.data.next,
                         previous: response.data.previous,
                     });
-                    setCategoryData(response.data?.category_info?.category_info || null);
+                    const newCategoryInfo = response.data?.category_info?.category_info || null;
+                    setCategoryData(newCategoryInfo);
+
+                    // Update SEO data reactively when subcategory filter changes
+                    if (newCategoryInfo) {
+                        const hasSubcategory = !!newCategoryInfo.subcategory_name;
+                        setIsSubcategorySEO(hasSubcategory);
+                        if (hasSubcategory) {
+                            // Subcategory selected — build SEO from sub_category_info style
+                            setSeoData({
+                                title: newCategoryInfo.subcategory_name,
+                                subtitle: newCategoryInfo.subtitle || `${newCategoryInfo.subcategory_name} - Buy Online in India from Gidan.store`,
+                                description: newCategoryInfo.intro_text || newCategoryInfo.description || "",
+                            });
+                        } else {
+                            // Back to category level — use hero+sections format
+                            setSeoData(newCategoryInfo);
+                            setIsSubcategorySEO(false);
+                        }
+                    }
 
                     if (!categoryName && response.data?.category_info?.category_info?.category_name) {
                         setFetchedCategoryName(response.data.category_info.category_info.category_name);
@@ -366,6 +393,9 @@ function PlantFilter({
                             setFetchedSubcategoryName={setFetchedSubcategoryName}
                             setIsSearching={setIsSearching}
                             initialFilterData={initialFilterData}
+                            setSeoData={setSeoData}
+                            setIsSubcategorySEO={setIsSubcategorySEO}
+                            subcategoryList={initialCategoryData?.subCategory || []}
                         />
                     </div>
 
@@ -388,15 +418,19 @@ function PlantFilter({
                         )}
                     </div>
 
-                    <div className="mt-12 mb-8">
-                        <CategoryStaticSEO
-                            categorySlug={effectiveCategorySlug}
-                            isSubcategory={!!effectiveSubcategorySlug}
-                            subcategoryName={fetchedSubcategoryName || subCategoryName || propSubcategoryName}
-                            subcategorySlug={effectiveSubcategorySlug}
-                            categoryDataFromAPI={categoryData}
-                        />
-                    </div>
+                    {/* Reactive SEO block — SSR on first load, updates on subcategory filter change */}
+                    {seoData && !isSearching && (
+                        <div className="mt-12 mb-4">
+                            <CategoryStaticSEO
+                                categorySlug={effectiveCategorySlug}
+                                subcategorySlug={effectiveSubcategorySlug}
+                                subcategoryName={fetchedSubcategoryName || propSubcategoryName}
+                                isSubcategory={isSubcategorySEO}
+                                categoryDataFromAPI={seoData}
+                            />
+                        </div>
+                    )}
+
                 </div>
             </div>
 
@@ -448,6 +482,9 @@ function PlantFilter({
                         setFetchedSubcategoryName={setFetchedSubcategoryName}
                         setIsSearching={setIsSearching}
                         initialFilterData={initialFilterData}
+                        setSeoData={setSeoData}
+                        setIsSubcategorySEO={setIsSubcategorySEO}
+                        subcategoryList={initialCategoryData?.subCategory || []}
                     />
                 </Box>
             </SwipeableDrawer>

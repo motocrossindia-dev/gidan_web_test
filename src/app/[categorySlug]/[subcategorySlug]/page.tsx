@@ -95,9 +95,19 @@ export default async function SubcategoryPage({ params }: Props) {
     subcategory_id: subcategory.id
   });
 
+  // Backend returns sub_category_info.{ title, subtitle, description } on each subcategory object
+  // Passed as initialSEOData to PlantFilter for SSR first paint + reactive client-side updates
+  const subInfo = (subcategory as any).sub_category_info;
+  const initialSEOData = {
+    title: subInfo?.title || subcategory.name,
+    subtitle: subInfo?.subtitle || `${subcategory.name} - Buy Online in India from Gidan.store`,
+    description: subInfo?.description || "",
+  };
+
   return (
     <>
       <Suspense fallback={<div className="flex justify-center p-8">Loading products...</div>}>
+        {/* @ts-ignore */}
         <PlantFilter
           initialResults={initialData}
           initialCategoryData={categoryWithSubs}
@@ -105,6 +115,7 @@ export default async function SubcategoryPage({ params }: Props) {
           categorySlug={categorySlug}
           subcategorySlug={subcategorySlug}
           subcategoryName={subcategory.name}
+          initialSEOData={initialSEOData}
         />
       </Suspense>
 

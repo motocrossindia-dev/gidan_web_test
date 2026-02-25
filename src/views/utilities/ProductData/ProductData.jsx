@@ -27,7 +27,7 @@ import Verify from "../../../Services/Services/Verify";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { Helmet } from "react-helmet-async";
 import ProductSchema from "../seo/ProductSchema";
-import HomepageSchema from "../seo/HomepageSchema";
+// HomepageSchema intentionally not used on product pages (wrong canonical entity)
 import StoreSchema from "../seo/StoreSchema";
 import WriteAReview from "./WriteAReview";
 // import FaqAccordion from "./ProductFaq";
@@ -1568,7 +1568,7 @@ export default function ProductData({ initialProductData }) {
                     productId={productDetailData?.data?.product?.id}
                 />
             )}
-            <HomepageSchema />
+            {/* HomepageSchema removed — product pages must NOT inject homepage WebSite/WebPage schema */}
             <StoreSchema />
         </>
     );

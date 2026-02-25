@@ -81,7 +81,11 @@ const FilterSidebar = ({
   setFetchedCategoryName,
   setFetchedSubcategoryName,
   setIsSearching,
-  initialFilterData = null
+  initialFilterData = null,
+  // SEO update props
+  setSeoData,
+  setIsSubcategorySEO,
+  subcategoryList = [],  // full subcategory objects with sub_category_info from server
 }) => {
   // Track if this is the very first render of the component
   const isInitialMount = useRef(true);
@@ -324,6 +328,8 @@ const FilterSidebar = ({
       if (finalSubcategorySlug) {
         newUrl += `/${finalSubcategorySlug}`;
       }
+      // Ensure trailing slash to match trailingSlash: true in next.config.ts
+      if (!newUrl.endsWith('/')) newUrl += '/';
 
       if (window.location.pathname !== newUrl) {
         // Use replaceState to avoid cluttering history if filters are tweaked rapidly
@@ -362,6 +368,35 @@ const FilterSidebar = ({
       if (setCategoryData) {
         setCategoryData(catInfo);
       }
+
+      // Update SEO directly from same API call — no extra requests
+      if (setSeoData) {
+        if (finalSubcategoryId && subcategoryList.length > 0) {
+          // Subcategory selected — look up sub_category_info from server-fetched list
+          const matchedSub = subcategoryList.find(s => s.id === finalSubcategoryId);
+          if (matchedSub?.sub_category_info) {
+            const info = matchedSub.sub_category_info;
+            setSeoData({
+              title: info.title || matchedSub.name,
+              subtitle: info.subtitle || `${matchedSub.name} - Buy Online in India from Gidan.store`,
+              description: info.description || "",
+            });
+            if (setIsSubcategorySEO) setIsSubcategorySEO(true);
+          } else if (matchedSub) {
+            setSeoData({
+              title: matchedSub.name,
+              subtitle: `${matchedSub.name} - Buy Online in India from Gidan.store`,
+              description: "",
+            });
+            if (setIsSubcategorySEO) setIsSubcategorySEO(true);
+          }
+        } else if (catInfo && (catInfo.hero || catInfo.sections)) {
+          // Category-level — use hero+sections SEO from API response
+          setSeoData(catInfo);
+          if (setIsSubcategorySEO) setIsSubcategorySEO(false);
+        }
+      }
+
       if (setFetchedCategoryName && catInfo?.category_name) {
         setFetchedCategoryName(catInfo.category_name);
       }
