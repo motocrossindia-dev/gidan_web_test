@@ -9,6 +9,7 @@ import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { Helmet } from "react-helmet-async";
+import { trackViewCart, trackRemoveFromCart } from "../../../utils/ga4Ecommerce";
 
 const Cart = () => {
   const accessToken = useSelector(selectAccessToken);
@@ -27,7 +28,11 @@ const Cart = () => {
         });
 
         if (response.data?.message === "success") {
-          setProducts(response.data.data.cart);
+          const cartItems = response.data.data.cart;
+          setProducts(cartItems);
+
+          // GA4: Track view_cart event
+          trackViewCart(cartItems);
         }
       } catch (err) {
         console.error("Error fetching cart items:", err.message);
@@ -77,6 +82,10 @@ const Cart = () => {
 
       if (response.status === 200) {
         enqueueSnackbar("Product removed from cart!", { variant: "success" });
+
+        // GA4: Track remove_from_cart event
+        const removedProduct = products.find((p) => p.id === id);
+        if (removedProduct) trackRemoveFromCart(removedProduct, removedProduct.quantity || 1);
       }
       setProducts((prev) => prev.filter((product) => product.id !== id));
       window.dispatchEvent(new Event("cartUpdated"));

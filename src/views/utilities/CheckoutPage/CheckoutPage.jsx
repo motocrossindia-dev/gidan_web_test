@@ -12,7 +12,7 @@ import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { Helmet } from "react-helmet-async";
-import { trackBeginCheckout, trackAddPaymentInfo } from "../../../utils/ga4Ecommerce";
+import { trackBeginCheckout, trackAddPaymentInfo, trackAddShippingInfo } from "../../../utils/ga4Ecommerce";
 
 
 
@@ -1178,6 +1178,13 @@ const CheckoutPage = () => {
 
       if (response.data.message === "success") {
         enqueueSnackbar("Order summary saved successfully!", { variant: "success" });
+
+        // GA4: Track add_shipping_info event
+        trackAddShippingInfo(
+          data.order_items,
+          selectedOption?.deliveryType || 'Standard',
+          data?.order?.grand_total
+        );
 
         // If coupon was applied, merge the coupon data into the response
         const finalOrderData = coupon?.success

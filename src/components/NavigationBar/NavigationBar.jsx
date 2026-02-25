@@ -31,6 +31,7 @@ import { clearLocalStorage } from "../../Services/Services/LocalStorageServices"
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import CartIconWithCount from "../Cart/cartcount";
 import WishlistIconWithCount from "../../views/utilities/WishList/wishlistcount";
+import { trackSearch } from "../../utils/ga4Ecommerce";
 
 const NavigationModalParams = ({ setIsSignInOpen, setIsVerificationOpen, setIsLoginOpen }) => {
   const searchParams = useSearchParams();
@@ -155,6 +156,11 @@ const NavBar = () => {
     const query = e.target.value;
     setSearchTerm(query);
     router.push(`/search?query=${encodeURIComponent(query)}`);
+
+    // GA4: Track search event (only for meaningful queries)
+    if (query.trim().length >= 3) {
+      trackSearch(query.trim());
+    }
   };
 
   const displayUsername = isMounted ? username : "Guest";

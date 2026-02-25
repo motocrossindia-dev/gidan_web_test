@@ -8,11 +8,30 @@
  * https://developers.google.com/analytics/devguides/collection/ga4/ecommerce
  */
 
+const isDev = process.env.NODE_ENV !== 'production';
+
+/**
+ * SSR guard — returns true only when running in the browser
+ */
+const isBrowser = () => typeof window !== 'undefined';
+
 /**
  * Initialize dataLayer if it doesn't exist
  */
 const initDataLayer = () => {
+    if (!isBrowser()) return false;
     window.dataLayer = window.dataLayer || [];
+    return true;
+};
+
+/**
+ * Helper: call gtag() directly so events reach GA4 even without GTM
+ */
+const gtagEvent = (eventName, params) => {
+    if (!isBrowser()) return;
+    if (typeof window.gtag === 'function') {
+        window.gtag('event', eventName, params);
+    }
 };
 
 /**
@@ -25,8 +44,8 @@ const initDataLayer = () => {
  */
 const formatGA4Item = (product, quantity = 1, index = null) => {
     const item = {
-        item_id: product.id || product.product_id || '',
-        item_name: product.name || product.main_product_name || '',
+        item_id: String(product.id || product.product_id || ''),
+        item_name: product.name || product.main_product_name || product.product_name || '',
         price: parseFloat(product.selling_price || product.price || 0),
         quantity: parseInt(quantity) || 1,
     };
@@ -44,7 +63,7 @@ const formatGA4Item = (product, quantity = 1, index = null) => {
         item.item_variant = product.sku;
     }
 
-    if (product.mrp) {
+    if (product.mrp && product.selling_price) {
         item.discount = parseFloat(product.mrp - product.selling_price);
     }
 
@@ -74,23 +93,20 @@ const calculateValue = (items) => {
  * @param {object} product - Product object
  */
 export const trackViewItem = (product) => {
-    if (!product) return;
-
-    initDataLayer();
+    if (!product || !initDataLayer()) return;
 
     const item = formatGA4Item(product);
+    const params = {
+        currency: 'INR',
+        value: item.price,
+        items: [item]
+    };
 
     window.dataLayer.push({ ecommerce: null }); // Clear previous ecommerce object
-    window.dataLayer.push({
-        event: 'view_item',
-        ecommerce: {
-            currency: 'INR',
-            value: item.price,
-            items: [item]
-        }
-    });
+    window.dataLayer.push({ event: 'view_item', ecommerce: params });
+    gtagEvent('view_item', params);
 
-    console.log('GA4: view_item tracked', { product: product.name });
+    if (isDev) console.log('GA4: view_item tracked', { product: item.item_name });
 };
 
 /**
@@ -101,23 +117,20 @@ export const trackViewItem = (product) => {
  * @param {string} listName - Name of the list (e.g., "Search Results", "Category: Plants")
  */
 export const trackViewItemList = (products, listName = 'Product List') => {
-    if (!products || products.length === 0) return;
-
-    initDataLayer();
+    if (!products || products.length === 0 || !initDataLayer()) return;
 
     const items = products.map((product, index) => formatGA4Item(product, 1, index));
+    const params = {
+        currency: 'INR',
+        item_list_name: listName,
+        items: items.slice(0, 10) // GA4 recommends max 10 items
+    };
 
     window.dataLayer.push({ ecommerce: null });
-    window.dataLayer.push({
-        event: 'view_item_list',
-        ecommerce: {
-            currency: 'INR',
-            item_list_name: listName,
-            items: items.slice(0, 10) // GA4 recommends max 10 items
-        }
-    });
+    window.dataLayer.push({ event: 'view_item_list', ecommerce: params });
+    gtagEvent('view_item_list', params);
 
-    console.log('GA4: view_item_list tracked', { listName, count: items.length });
+    if (isDev) console.log('GA4: view_item_list tracked', { listName, count: items.length });
 };
 
 /**
@@ -129,23 +142,20 @@ export const trackViewItemList = (products, listName = 'Product List') => {
  * @param {number} index - Position in the list
  */
 export const trackSelectItem = (product, listName = 'Product List', index = 0) => {
-    if (!product) return;
-
-    initDataLayer();
+    if (!product || !initDataLayer()) return;
 
     const item = formatGA4Item(product, 1, index);
+    const params = {
+        currency: 'INR',
+        item_list_name: listName,
+        items: [item]
+    };
 
     window.dataLayer.push({ ecommerce: null });
-    window.dataLayer.push({
-        event: 'select_item',
-        ecommerce: {
-            currency: 'INR',
-            item_list_name: listName,
-            items: [item]
-        }
-    });
+    window.dataLayer.push({ event: 'select_item', ecommerce: params });
+    gtagEvent('select_item', params);
 
-    console.log('GA4: select_item tracked', { product: product.name, listName });
+    if (isDev) console.log('GA4: select_item tracked', { product: item.item_name, listName });
 };
 
 /**
@@ -156,23 +166,20 @@ export const trackSelectItem = (product, listName = 'Product List', index = 0) =
  * @param {number} quantity - Quantity added
  */
 export const trackAddToCart = (product, quantity = 1) => {
-    if (!product) return;
-
-    initDataLayer();
+    if (!product || !initDataLayer()) return;
 
     const item = formatGA4Item(product, quantity);
+    const params = {
+        currency: 'INR',
+        value: item.price * item.quantity,
+        items: [item]
+    };
 
     window.dataLayer.push({ ecommerce: null });
-    window.dataLayer.push({
-        event: 'add_to_cart',
-        ecommerce: {
-            currency: 'INR',
-            value: item.price * item.quantity,
-            items: [item]
-        }
-    });
+    window.dataLayer.push({ event: 'add_to_cart', ecommerce: params });
+    gtagEvent('add_to_cart', params);
 
-    console.log('GA4: add_to_cart tracked', { product: product.name, quantity });
+    if (isDev) console.log('GA4: add_to_cart tracked', { product: item.item_name, quantity });
 };
 
 /**
@@ -183,23 +190,20 @@ export const trackAddToCart = (product, quantity = 1) => {
  * @param {number} quantity - Quantity removed
  */
 export const trackRemoveFromCart = (product, quantity = 1) => {
-    if (!product) return;
-
-    initDataLayer();
+    if (!product || !initDataLayer()) return;
 
     const item = formatGA4Item(product, quantity);
+    const params = {
+        currency: 'INR',
+        value: item.price * item.quantity,
+        items: [item]
+    };
 
     window.dataLayer.push({ ecommerce: null });
-    window.dataLayer.push({
-        event: 'remove_from_cart',
-        ecommerce: {
-            currency: 'INR',
-            value: item.price * item.quantity,
-            items: [item]
-        }
-    });
+    window.dataLayer.push({ event: 'remove_from_cart', ecommerce: params });
+    gtagEvent('remove_from_cart', params);
 
-    console.log('GA4: remove_from_cart tracked', { product: product.name, quantity });
+    if (isDev) console.log('GA4: remove_from_cart tracked', { product: item.item_name, quantity });
 };
 
 /**
@@ -209,24 +213,21 @@ export const trackRemoveFromCart = (product, quantity = 1) => {
  * @param {array} cartItems - Array of cart items
  */
 export const trackViewCart = (cartItems) => {
-    if (!cartItems || cartItems.length === 0) return;
-
-    initDataLayer();
+    if (!cartItems || cartItems.length === 0 || !initDataLayer()) return;
 
     const items = cartItems.map(item => formatGA4Item(item.product || item, item.quantity || 1));
     const value = calculateValue(items);
+    const params = {
+        currency: 'INR',
+        value: value,
+        items: items
+    };
 
     window.dataLayer.push({ ecommerce: null });
-    window.dataLayer.push({
-        event: 'view_cart',
-        ecommerce: {
-            currency: 'INR',
-            value: value,
-            items: items
-        }
-    });
+    window.dataLayer.push({ event: 'view_cart', ecommerce: params });
+    gtagEvent('view_cart', params);
 
-    console.log('GA4: view_cart tracked', { itemCount: items.length, value });
+    if (isDev) console.log('GA4: view_cart tracked', { itemCount: items.length, value });
 };
 
 /**
@@ -237,24 +238,21 @@ export const trackViewCart = (cartItems) => {
  * @param {number} totalValue - Total cart value (optional, will be calculated if not provided)
  */
 export const trackBeginCheckout = (cartItems, totalValue = null) => {
-    if (!cartItems || cartItems.length === 0) return;
-
-    initDataLayer();
+    if (!cartItems || cartItems.length === 0 || !initDataLayer()) return;
 
     const items = cartItems.map(item => formatGA4Item(item.product || item, item.quantity || 1));
     const value = totalValue || calculateValue(items);
+    const params = {
+        currency: 'INR',
+        value: value,
+        items: items
+    };
 
     window.dataLayer.push({ ecommerce: null });
-    window.dataLayer.push({
-        event: 'begin_checkout',
-        ecommerce: {
-            currency: 'INR',
-            value: value,
-            items: items
-        }
-    });
+    window.dataLayer.push({ event: 'begin_checkout', ecommerce: params });
+    gtagEvent('begin_checkout', params);
 
-    console.log('GA4: begin_checkout tracked', { itemCount: items.length, value });
+    if (isDev) console.log('GA4: begin_checkout tracked', { itemCount: items.length, value });
 };
 
 /**
@@ -266,25 +264,22 @@ export const trackBeginCheckout = (cartItems, totalValue = null) => {
  * @param {number} totalValue - Total value
  */
 export const trackAddShippingInfo = (cartItems, shippingTier = 'Standard', totalValue = null) => {
-    if (!cartItems || cartItems.length === 0) return;
-
-    initDataLayer();
+    if (!cartItems || cartItems.length === 0 || !initDataLayer()) return;
 
     const items = cartItems.map(item => formatGA4Item(item.product || item, item.quantity || 1));
     const value = totalValue || calculateValue(items);
+    const params = {
+        currency: 'INR',
+        value: value,
+        shipping_tier: shippingTier,
+        items: items
+    };
 
     window.dataLayer.push({ ecommerce: null });
-    window.dataLayer.push({
-        event: 'add_shipping_info',
-        ecommerce: {
-            currency: 'INR',
-            value: value,
-            shipping_tier: shippingTier,
-            items: items
-        }
-    });
+    window.dataLayer.push({ event: 'add_shipping_info', ecommerce: params });
+    gtagEvent('add_shipping_info', params);
 
-    console.log('GA4: add_shipping_info tracked', { shippingTier, value });
+    if (isDev) console.log('GA4: add_shipping_info tracked', { shippingTier, value });
 };
 
 /**
@@ -296,25 +291,22 @@ export const trackAddShippingInfo = (cartItems, shippingTier = 'Standard', total
  * @param {number} totalValue - Total value
  */
 export const trackAddPaymentInfo = (cartItems, paymentType = 'Unknown', totalValue = null) => {
-    if (!cartItems || cartItems.length === 0) return;
-
-    initDataLayer();
+    if (!cartItems || cartItems.length === 0 || !initDataLayer()) return;
 
     const items = cartItems.map(item => formatGA4Item(item.product || item, item.quantity || 1));
     const value = totalValue || calculateValue(items);
+    const params = {
+        currency: 'INR',
+        value: value,
+        payment_type: paymentType,
+        items: items
+    };
 
     window.dataLayer.push({ ecommerce: null });
-    window.dataLayer.push({
-        event: 'add_payment_info',
-        ecommerce: {
-            currency: 'INR',
-            value: value,
-            payment_type: paymentType,
-            items: items
-        }
-    });
+    window.dataLayer.push({ event: 'add_payment_info', ecommerce: params });
+    gtagEvent('add_payment_info', params);
 
-    console.log('GA4: add_payment_info tracked', { paymentType, value });
+    if (isDev) console.log('GA4: add_payment_info tracked', { paymentType, value });
 };
 
 /**
@@ -330,46 +322,34 @@ export const trackAddPaymentInfo = (cartItems, paymentType = 'Unknown', totalVal
  * @param {array} orderData.items - Array of order items
  */
 export const trackPurchase = (orderData) => {
-    if (!orderData || !orderData.transaction_id || !orderData.items) {
-        console.error('GA4: Invalid purchase data', orderData);
+    if (!orderData || !orderData.transaction_id || !orderData.items || !initDataLayer()) {
+        if (isDev) console.error('GA4: Invalid purchase data', orderData);
         return;
     }
 
-    initDataLayer();
-
-    const items = orderData.items.map(item => 
+    const items = orderData.items.map(item =>
         formatGA4Item(item.product || item, item.quantity || 1)
     );
 
-    const purchaseEvent = {
-        event: 'purchase',
-        ecommerce: {
-            currency: 'INR',
-            transaction_id: orderData.transaction_id,
-            value: parseFloat(orderData.value || calculateValue(items)),
-            items: items
-        }
+    const params = {
+        currency: 'INR',
+        transaction_id: String(orderData.transaction_id),
+        value: parseFloat(orderData.value || calculateValue(items)),
+        items: items
     };
 
     // Optional fields
-    if (orderData.tax) {
-        purchaseEvent.ecommerce.tax = parseFloat(orderData.tax);
-    }
-
-    if (orderData.shipping) {
-        purchaseEvent.ecommerce.shipping = parseFloat(orderData.shipping);
-    }
-
-    if (orderData.coupon) {
-        purchaseEvent.ecommerce.coupon = orderData.coupon;
-    }
+    if (orderData.tax) params.tax = parseFloat(orderData.tax);
+    if (orderData.shipping) params.shipping = parseFloat(orderData.shipping);
+    if (orderData.coupon) params.coupon = orderData.coupon;
 
     window.dataLayer.push({ ecommerce: null });
-    window.dataLayer.push(purchaseEvent);
+    window.dataLayer.push({ event: 'purchase', ecommerce: params });
+    gtagEvent('purchase', params);
 
-    console.log('GA4: purchase tracked', { 
-        transaction_id: orderData.transaction_id, 
-        value: purchaseEvent.ecommerce.value 
+    if (isDev) console.log('GA4: purchase tracked', {
+        transaction_id: orderData.transaction_id,
+        value: params.value
     });
 };
 
@@ -382,32 +362,26 @@ export const trackPurchase = (orderData) => {
  * @param {array} items - Items being refunded (optional, all items if not provided)
  */
 export const trackRefund = (transactionId, value = null, items = null) => {
-    if (!transactionId) return;
+    if (!transactionId || !initDataLayer()) return;
 
-    initDataLayer();
-
-    const refundEvent = {
-        event: 'refund',
-        ecommerce: {
-            currency: 'INR',
-            transaction_id: transactionId
-        }
+    const params = {
+        currency: 'INR',
+        transaction_id: String(transactionId)
     };
 
-    if (value) {
-        refundEvent.ecommerce.value = parseFloat(value);
-    }
+    if (value) params.value = parseFloat(value);
 
     if (items) {
-        refundEvent.ecommerce.items = items.map(item => 
+        params.items = items.map(item =>
             formatGA4Item(item.product || item, item.quantity || 1)
         );
     }
 
     window.dataLayer.push({ ecommerce: null });
-    window.dataLayer.push(refundEvent);
+    window.dataLayer.push({ event: 'refund', ecommerce: params });
+    gtagEvent('refund', params);
 
-    console.log('GA4: refund tracked', { transaction_id: transactionId });
+    if (isDev) console.log('GA4: refund tracked', { transaction_id: transactionId });
 };
 
 /**
@@ -417,23 +391,20 @@ export const trackRefund = (transactionId, value = null, items = null) => {
  * @param {object} product - Product object
  */
 export const trackAddToWishlist = (product) => {
-    if (!product) return;
-
-    initDataLayer();
+    if (!product || !initDataLayer()) return;
 
     const item = formatGA4Item(product);
+    const params = {
+        currency: 'INR',
+        value: item.price,
+        items: [item]
+    };
 
     window.dataLayer.push({ ecommerce: null });
-    window.dataLayer.push({
-        event: 'add_to_wishlist',
-        ecommerce: {
-            currency: 'INR',
-            value: item.price,
-            items: [item]
-        }
-    });
+    window.dataLayer.push({ event: 'add_to_wishlist', ecommerce: params });
+    gtagEvent('add_to_wishlist', params);
 
-    console.log('GA4: add_to_wishlist tracked', { product: product.name });
+    if (isDev) console.log('GA4: add_to_wishlist tracked', { product: item.item_name });
 };
 
 /**
@@ -443,16 +414,14 @@ export const trackAddToWishlist = (product) => {
  * @param {string} searchTerm - Search query
  */
 export const trackSearch = (searchTerm) => {
-    if (!searchTerm) return;
+    if (!searchTerm || !initDataLayer()) return;
 
-    initDataLayer();
+    const params = { search_term: searchTerm };
 
-    window.dataLayer.push({
-        event: 'search',
-        search_term: searchTerm
-    });
+    window.dataLayer.push({ event: 'search', ...params });
+    gtagEvent('search', params);
 
-    console.log('GA4: search tracked', { searchTerm });
+    if (isDev) console.log('GA4: search tracked', { searchTerm });
 };
 
 /**
@@ -463,16 +432,12 @@ export const trackSearch = (searchTerm) => {
  * @param {object} eventParams - Event parameters
  */
 export const trackCustomEvent = (eventName, eventParams = {}) => {
-    if (!eventName) return;
+    if (!eventName || !initDataLayer()) return;
 
-    initDataLayer();
+    window.dataLayer.push({ event: eventName, ...eventParams });
+    gtagEvent(eventName, eventParams);
 
-    window.dataLayer.push({
-        event: eventName,
-        ...eventParams
-    });
-
-    console.log('GA4: custom event tracked', { eventName, eventParams });
+    if (isDev) console.log('GA4: custom event tracked', { eventName, eventParams });
 };
 
 export default {

@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useCallback, useState } from "react";
 import ProductCard from "./ProductCard";
 import axiosInstance from "../../Axios/axiosInstance";
 import { getProductUrl, toSlugString } from "../../utils/urlHelper";
+import { trackViewItemList, trackSelectItem } from "../../utils/ga4Ecommerce";
 
 
 const ProductGrid = ({
@@ -34,6 +35,18 @@ const ProductGrid = ({
     setPrevUrl(pagination?.previous || null);
   }, [pagination?.next, pagination?.previous, query]);
 
+  // GA4: Track view_item_list when products are shown
+  const listName = [propCategorySlug, propSubcategorySlug].filter(Boolean).join(' > ') || 'Product List';
+  const prevProductIdsRef = useRef('');
+  useEffect(() => {
+    if (!productDetails || productDetails.length === 0) return;
+    // Only fire when product list actually changes (avoid duplicate fires)
+    const productIds = productDetails.map(p => p.id || p.prod_id).join(',');
+    if (productIds === prevProductIdsRef.current) return;
+    prevProductIdsRef.current = productIds;
+    trackViewItemList(productDetails, listName);
+  }, [productDetails, listName]);
+
   const handleProductClick = (product) => {
     const category_slug = toSlugString(product?.category_slug) || propCategorySlug;
     const sub_category_slug = toSlugString(product?.sub_category_slug) || propSubcategorySlug || "all";
@@ -43,6 +56,10 @@ const ProductGrid = ({
       console.warn('Missing slug fields, skipping navigation', { category_slug, sub_category_slug, product_slug });
       return;
     }
+
+    // GA4: Track select_item when a product is clicked
+    const productIndex = productDetails.findIndex(p => (p.id || p.prod_id) === (product.id || product.prod_id));
+    trackSelectItem(product, listName, productIndex >= 0 ? productIndex : 0);
 
     // NEW: Use 3-segment URL pattern: /:categorySlug/:subcategorySlug/:productSlug/
     router.push(getProductUrl(product), {

@@ -9,7 +9,7 @@ import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { Helmet } from "react-helmet-async";
-import { trackPurchase } from "../../../utils/ga4Ecommerce";
+import { trackPurchase, trackAddPaymentInfo } from "../../../utils/ga4Ecommerce";
 
 const loadRazorpayScript = () =>
   new Promise((resolve) => {
@@ -124,6 +124,13 @@ const PaymentGateway = () => {
     };
 
     try {
+      // GA4: Track add_payment_info event
+      trackAddPaymentInfo(
+        orderData?.order_items || [],
+        selectedMethod,
+        orderData?.order?.grand_total
+      );
+
       const response = await axiosInstance.patch(`/order/proceedToPayment/`, payload);
 
       if (response.status === 200 || response.status === 206) {

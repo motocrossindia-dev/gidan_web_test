@@ -31,7 +31,7 @@ import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
 import WriteAReview from "./WriteAReview";
 // import FaqAccordion from "./ProductFaq";
-import { trackViewItem, trackAddToCart } from "../../../utils/ga4Ecommerce";
+import { trackViewItem, trackAddToCart, trackAddToWishlist } from "../../../utils/ga4Ecommerce";
 import Breadcrumb from "../../../components/Shared/Breadcrumb";
 import { toSlugString, getProductUrl, convertToSlug } from "../../../utils/urlHelper";
 
@@ -405,6 +405,11 @@ export default function ProductData({ initialProductData }) {
                     setInWishlist(response?.data?.data?.in_wishlist)
                     dispatch(addtowishlist(product_id));
                     window.dispatchEvent(new Event("wishlistUpdated"));
+
+                    // GA4: Track add_to_wishlist event
+                    if (response?.data?.data?.in_wishlist) {
+                        trackAddToWishlist(productDetailData?.data?.product);
+                    }
 
                     enqueueSnackbar(response?.data?.message, { variant: "success" });
                 }
