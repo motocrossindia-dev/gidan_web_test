@@ -25,7 +25,6 @@ import { FaStarHalfAlt, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { enqueueSnackbar } from "notistack";
 import Verify from "../../../Services/Services/Verify";
 import axiosInstance from "../../../Axios/axiosInstance";
-import { Helmet } from "react-helmet-async";
 import ProductSchema from "../seo/ProductSchema";
 // HomepageSchema intentionally not used on product pages (wrong canonical entity)
 import StoreSchema from "../seo/StoreSchema";
@@ -971,59 +970,11 @@ export default function ProductData({ initialProductData }) {
     //
     //     if (id) fetchData();
     // }, [id]);
-    // ========== END OLD CODE ==========const category_slug = null?.category_slug || product?.category_slug;// Fallbacks if fields are missing
-    const metaTitle = product?.meta_title
-        ? product.meta_title
-        : product?.main_product_name
-            ? `Buy ${product.main_product_name} Online | Best Price - Gidan`
-            : 'Buy Gardening Products Online | Best Price - Gidan';
-
-    const metaDescription = product?.meta_description
-        ? product.meta_description
-        : product?.main_product_name
-            ? `Buy ${product.main_product_name} online at Gidan. ✔ Premium quality ✔ Healthy & well-packed ✔ Trusted gardening brand. Fast delivery & easy returns.`
-            : 'Buy gardening products online at Gidan. ✔ Premium quality ✔ Trusted brand ✔ Fast delivery & easy returns.';
-
-    const metaKeywords =
-        product?.meta_keywords || "gardening, plants, seeds, pots, plant care";
-
-    // Canonical URL - Always use the clean main product slug for crawlers
-    const safeBaseUrl = "https://www.gidan.store";
-    const relativeCleanUrl = getProductUrl(product, false);
-    const canonicalUrl = `${safeBaseUrl}${relativeCleanUrl}`;
-
-    // OG image fallback
-    const ogImage =
-        product?.images?.[0]?.image ||
-        product?.main_image ||
-        "https://www.gidan.store/default-product.jpg";
-
+    // ========== END OLD CODE ==========
 
     return (
         <>
             <Verify />
-            <Helmet>
-                {/* Basic SEO */}
-                <title>{metaTitle}</title>
-                <meta name="description" content={metaDescription} />
-                <meta name="keywords" content={metaKeywords} />
-                <link rel="canonical" href={canonicalUrl} />
-
-                {/* Open Graph */}
-                <meta property="og:title" content={metaTitle} />
-                <meta property="og:description" content={metaDescription} />
-                <meta property="og:image" content={ogImage} />
-                <meta property="og:url" content={canonicalUrl} />
-                <meta property="og:type" content="product" />
-                <meta property="og:site_name" content="Gidan" />
-                <meta property="og:locale" content="en_IN" />
-
-                {/* Twitter Card */}
-                <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content={metaTitle} />
-                <meta name="twitter:description" content={metaDescription} />
-                <meta name="twitter:image" content={ogImage} />
-            </Helmet>
 
             {/* Breadcrumb Navigation */}
             <Breadcrumb

@@ -35,12 +35,12 @@ const PaymentPage = () => {
       )
       if (response.data.status === "created") {
         const options = {
-          key: "rzp_test_zu1D9WznwNYRVG",
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
           amount: data.grand_total * 100,
           currency: "INR",
           name: "Bio-tech Maali",
-          description: "Test Transaction",
-          image: "https://your-logo-url.com",
+          description: "Transaction",
+          image: "/Gidan_logo.webp",
           order_id: response.data.id, // Pass the order_id from API response
           handler: async (paymentResponse) => {
 

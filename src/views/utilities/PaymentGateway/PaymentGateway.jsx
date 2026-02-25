@@ -164,7 +164,7 @@ const PaymentGateway = () => {
 
         // ✅ CASE 2: Partial Wallet + Razorpay Required
         const options = {
-          key: "rzp_live_RH46LqJqM4UlmU",
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
           amount: razorpayOrder.amount || 0,
           currency: "INR",
           name: "Bio-tech Maali",

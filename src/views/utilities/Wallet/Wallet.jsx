@@ -60,7 +60,7 @@ const Wallet = () => {
 
 
         const options = {
-          key: "rzp_live_RH46LqJqM4UlmU",
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
           amount: response?.data?.order?.amount || 0,  // Ensure amount is set
           currency: "INR",
           name: "Bio-tech Maali",

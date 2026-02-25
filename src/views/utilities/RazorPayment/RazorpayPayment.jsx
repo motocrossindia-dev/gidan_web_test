@@ -5,12 +5,12 @@ import React from "react";
 const RazorpayPayment = () => {
   const handlePayment = async () => {
     const options = {
-      key: "rzp_test_zu1D9WznwNYRVG", // Replace with your Razorpay key
-      amount: 50000, 
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      amount: 50000,
       currency: "INR",
       name: "Bio-tech Maali",
-      description: "Test Transaction",
-      image: "https://your-logo-url.com",
+      description: "Transaction",
+      image: "/Gidan_logo.webp",
       handler: function (response) {
         alert(`Payment Successful! Payment ID: ${response.razorpay_key}_id}`);
       },
@@ -30,8 +30,8 @@ const RazorpayPayment = () => {
 
   return (
     <div>
-         <button onClick={handlePayment} className="bg-bio-green text-white px-4 py-2 rounded">
-         Proceed To Payment
+      <button onClick={handlePayment} className="bg-bio-green text-white px-4 py-2 rounded">
+        Proceed To Payment
       </button>
     </div>
   );
