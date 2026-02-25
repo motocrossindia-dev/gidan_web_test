@@ -8,10 +8,6 @@ import { Close as CloseIcon } from "@mui/icons-material";
 
 import FilterSidebar from "../Featured/FilterSidebar";
 import ProductGrid from "../../../components/Shared/ProductGrid";
-import CheckoutStores from "./CheckoutStores";
-import axiosInstance from "../../../Axios/axiosInstance";
-import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
-import GenericPage from "../Info/GenericPage";
 import SubCategorySchema from "../seo/SubCategorySchema";
 import CategorySchema from "../seo/CategorySchema";
 import HomepageSchema from "../seo/HomepageSchema";
@@ -19,17 +15,7 @@ import StoreSchema from "../seo/StoreSchema";
 import Breadcrumb from "../../../components/Shared/Breadcrumb";
 import Link from "next/link";
 
-const CategoryLayout = ({ data }) => {
-    return (
-        <div className="space-y-12">
-            <>
-                <RecentlyViewedProducts />
-                {data && data.hero && <GenericPage data={data} />}
-                <CheckoutStores />
-            </>
-        </div>
-    );
-};
+// CategoryLayout removed for SSR at page level. profit.
 
 void (0);
 /**
@@ -311,18 +297,36 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
         }
     }, [path, typeKey, resolvedCategoryId, resolvedSubcategoryId, isResolvingIds, isSeasonalCollection, isTrending, isFeatured, isBestSeller, normalizedInitialResults, filtersApplied, results.length]);
 
-    // Determine the base name for Helmet tags
+    // Determine the base name for SEO and Headers
     const getDisplayName = () => {
-        if (isSeasonalCollection) return "Seasonal Collections";
-        if (isTrending) return "Trending Products";
-        if (isFeatured) return "Featured Products";
-        if (isBestSeller) return "Best Sellers";
-        if (currentFilterType) return currentFilterType;
-        if (subCategoryName) return subCategoryName;
-        if (fetchedSubcategoryName) return fetchedSubcategoryName;
-        if (categoryName) return categoryName;
-        if (fetchedCategoryName) return fetchedCategoryName;
-        return "Gardening Products";
+        // Priority 1: Meta/SEO title from API if available (highest relevance)
+        if (categoryData?.meta_title) return categoryData.meta_title;
+        if (categoryData?.seo_title) return categoryData.seo_title;
+
+        const suffix = "Online in India";
+
+        if (isSeasonalCollection) return `Fresh Seasonal Collections - Buy Plants ${suffix}`;
+        if (isTrending) return `Trending Gardening Products - Shop ${suffix}`;
+        if (isFeatured) return `Featured Garden Products ${suffix}`;
+        if (isBestSeller) return `Best Selling Plants & Pots ${suffix}`;
+
+        if (currentFilterType) return `Buy ${currentFilterType}s ${suffix}`;
+
+        // Subcategory Page Title
+        if (subCategoryName || fetchedSubcategoryName) {
+            const sName = subCategoryName || fetchedSubcategoryName;
+            const cName = categoryName || fetchedCategoryName || "";
+            // e.g., "Buy Flowering Plants Online in India"
+            return `Buy ${sName} ${cName} ${suffix}`.replace(/\s+/g, ' ').trim();
+        }
+
+        // Category Page Title
+        if (categoryName || fetchedCategoryName) {
+            const cName = categoryName || fetchedCategoryName;
+            return `Buy ${cName} ${suffix}`;
+        }
+
+        return `Best Gardening Products ${suffix}`;
     };
 
     const displayName = getDisplayName();
@@ -370,6 +374,8 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
 
             <div className="w-full overflow-visible">
                 <div className="container mx-auto px-4 md:px-8 max-w-full">
+                    {/* H1 and H2 link removed as per user request */}
+
                     {/* Mobile Filter Button - Triggers SwipeableDrawer */}
                     <div className="md:hidden pt-4 sticky top-0 z-30 bg-gray-50/95 backdrop-blur-sm py-2 border-b border-gray-200">
                         <button
@@ -427,11 +433,6 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
                                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
                             </div>
                         )}
-                    </div>
-
-                    {/* Additional Sections */}
-                    <div className="mt-12 mb-8">
-                        <CategoryLayout data={categoryData} />
                     </div>
                 </div>
             </div>

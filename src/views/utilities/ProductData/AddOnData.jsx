@@ -86,10 +86,12 @@ const AddOnData = ({
         />
       </div>
 
-      <div className="flex gap-1 mb-2">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <FaStar key={star} className="w-4 h-4 text-navy-blue" />
-        ))}
+      <div className="flex flex-col items-center gap-1 mb-2 w-full px-2">
+        <div className="flex gap-1 mb-2">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <FaStar key={star} className="w-4 h-4 text-navy-blue" />
+          ))}
+        </div>
       </div>
 
       <h3 className="text-sm font-medium mb-2">{name}</h3>
@@ -181,10 +183,12 @@ const AddOnData = ({
             />
 
             <div className="flex flex-col p-2 w-full text-center gap-2">
-              <div className="flex justify-center">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <FaStar key={star} className="w-3 h-3 text-navy-blue" />
-                ))}
+              <div className="flex flex-col items-center gap-1">
+                <div className="flex gap-1 mb-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <FaStar key={star} className="w-4 h-4 text-navy-blue" />
+                  ))}
+                </div>
               </div>
 
               <Typography sx={{ typography: { xs: "caption", md: "subtitle2" } }}>

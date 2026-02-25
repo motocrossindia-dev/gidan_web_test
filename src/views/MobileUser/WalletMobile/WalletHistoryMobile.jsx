@@ -23,7 +23,7 @@ const WalletHistory = () => {
     <div className="max-w-md mx-auto min-h-screen bg-gray-100">
       {/* Header */}
       <div className="flex items-center justify-between p-4 bg-white shadow-md">
-        <button onClick={() => router.push(-1)}>
+        <button onClick={() => router.back()}>
           <FaArrowLeft className="text-gray-700 text-xl" />
         </button>
         <h1 className="text-lg font-semibold">Wallet History</h1>

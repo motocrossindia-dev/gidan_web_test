@@ -5,15 +5,62 @@ import { Star } from "lucide-react";
 import { FaStarHalfAlt, FaStar } from "react-icons/fa";
 import WriteAReview from "./WriteAReview";
 
-function RatingsAndReviews({ product_Rating, total_Rating, productId }) {
-  const {
-    avg_rating = 0,
-    num_ratings = 0,
-    stars_given = [],
-  } = product_Rating || {};
+function RatingsAndReviews({ product_Rating, total_Rating, productId, onWriteReview }) {
+  const reviews = total_Rating || [];
+
+  // Debug log to see actual data structure arriving at the component
+  console.log("RatingsAndReviews Props:", {
+    hasRating: !!product_Rating,
+    ratingKeys: product_Rating ? Object.keys(product_Rating) : [],
+    reviewsCount: reviews.length,
+    productId
+  });
+  if (product_Rating) console.log("product_Rating detail:", product_Rating);
+
+  // Handle case where product_Rating is passed but empty/zero
+  const hasValidRatingSummary = product_Rating && (Number(product_Rating.num_ratings) > 0 || Number(product_Rating.avg_rating) > 0);
+
+  const num_ratings = hasValidRatingSummary ? Number(product_Rating.num_ratings) : reviews.length;
+
+  // Robust average calculation
+  let avg_rating = 0;
+  if (hasValidRatingSummary) {
+    avg_rating = Number(product_Rating.avg_rating) || 0;
+  } else if (reviews.length > 0) {
+    const total = reviews.reduce((acc, curr) => acc + (Number(curr.latest_rating) || Number(curr.product_rating) || 0), 0);
+    avg_rating = total / reviews.length;
+  }
+
+  // Robust stars_given breakdown
+  let stars_given = [];
+  const starLevels = [5, 4, 3, 2, 1];
+
+  if (hasValidRatingSummary && product_Rating.stars_given && product_Rating.stars_given.length > 0) {
+    // Start with all levels at zero
+    const countsMap = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+
+    // Fill from API data
+    product_Rating.stars_given.forEach(item => {
+      const star = Math.round(item.stars || item.rounded_rating);
+      if (star >= 1 && star <= 5) {
+        countsMap[star] = Number(item.count) || 0;
+      }
+    });
+
+    stars_given = starLevels.map(star => ({
+      stars: star,
+      count: countsMap[star]
+    }));
+  } else {
+    // Calculate from reviews list
+    stars_given = starLevels.map(star => ({
+      stars: star,
+      count: reviews.filter(r => Math.round(Number(r.latest_rating) || Number(r.product_rating) || 0) === star).length
+    }));
+  }
 
   const totalReviewsIncludingAll = stars_given.reduce(
-    (sum, item) => sum + item.count,
+    (sum, item) => sum + (Number(item.count) || 0),
     0
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -52,8 +99,8 @@ function RatingsAndReviews({ product_Rating, total_Rating, productId }) {
           <button
             key={index}
             className={`w-8 h-8 flex items-center justify-center rounded border transition-colors ${page === currentPage
-                ? "bg-blue-500 text-white border-blue-500"
-                : "border-gray-300 hover:bg-gray-50"
+              ? "bg-blue-500 text-white border-blue-500"
+              : "border-gray-300 hover:bg-gray-50"
               } ${page === "..." ? "cursor-default hover:bg-white" : ""}`}
             onClick={() => (page !== "..." ? onPageChange(page) : null)}
           >
@@ -87,14 +134,14 @@ function RatingsAndReviews({ product_Rating, total_Rating, productId }) {
   };
 
   return (
-    <div className="max-w-full mx-auto p-4 bg-gray-50 px-4 md:px-20 md:mt-10">
+    <div id="reviews" className="max-w-full mx-auto p-4 bg-gray-50 px-4 md:px-20 md:mt-10">
       {/* Header Section */}
       <div className="flex flex-col justify-between mb-6 gap-4 md:flex-row md:items-center">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
           Ratings
         </h2>
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={onWriteReview || (() => setIsModalOpen(true))}
           className="bg-white border-2 text-green-700 font-medium border-green-600 rounded-lg px-6 py-3 hover:bg-green-50 transition-colors"
         >
           Write a Review
@@ -124,12 +171,11 @@ function RatingsAndReviews({ product_Rating, total_Rating, productId }) {
             {stars_given.length > 0 ? (
               <div className="space-y-3">
                 {stars_given
-                  .sort((a, b) => b.stars - a.stars)
-                  .map((item) => (
-                    <div key={item.stars} className="flex items-center gap-3">
+                  .map((item, index) => (
+                    <div key={index} className="flex items-center gap-3">
                       <div className="flex items-center gap-1 w-16">
                         <span className="text-sm font-medium text-gray-700">
-                          {item.stars}
+                          {Math.round(item.stars || item.rounded_rating)}
                         </span>
                         <FaStar className="text-blue-900 w-4 h-4" />
                       </div>
@@ -139,8 +185,8 @@ function RatingsAndReviews({ product_Rating, total_Rating, productId }) {
                           className="bg-green-500 h-3 rounded-full transition-all duration-500"
                           style={{
                             width: `${totalReviewsIncludingAll > 0
-                                ? (item.count / totalReviewsIncludingAll) * 100
-                                : 0
+                              ? (item.count / totalReviewsIncludingAll) * 100
+                              : 0
                               }%`,
                           }}
                         />
@@ -163,7 +209,54 @@ function RatingsAndReviews({ product_Rating, total_Rating, productId }) {
         </div>
       </div>
 
-      {/* Reviews List would go here */}
+      {/* Reviews List */}
+      <div className="mt-8">
+        <h3 className="text-xl font-bold text-gray-800 mb-6">User Reviews</h3>
+        {total_Rating && total_Rating.length > 0 ? (
+          <div className="space-y-6">
+            {total_Rating.map((review, index) => (
+              <div key={index} className="bg-white rounded-lg shadow-sm p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="flex">
+                        {renderStars(review.latest_rating || review.product_rating || 0)}
+                      </div>
+                      {review.review_title && (
+                        <span className="font-bold text-gray-800 ml-2">
+                          {review.review_title}
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      by <span className="font-medium text-gray-700">{review.user_name || "Verified Customer"}</span>
+                      {(review.date_created || review.created_at) && ` • ${review.date_created || new Date(review.created_at).toLocaleDateString()}`}
+                    </div>
+                  </div>
+                </div>
+                <p className="text-gray-700 leading-relaxed">
+                  {review.product_review}
+                </p>
+              </div>
+            ))}
+            {/* Pagination placeholder - can be linked to actual total_Rating length if desired */}
+            {total_Rating.length > 5 && (
+              <Pagination
+                totalPages={Math.ceil(total_Rating.length / 5)}
+                currentPage={1}
+                onPageChange={(page) => console.log("Page change:", page)}
+              />
+            )}
+          </div>
+        ) : (
+          <div className="text-center py-12 bg-white rounded-lg border-2 border-dashed border-gray-200">
+            <Star className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+            <p className="text-lg font-medium text-gray-600">No reviews yet for this product</p>
+            <p className="text-sm text-gray-400">Be the first to share your experience!</p>
+          </div>
+        )}
+      </div>
+
       {/* Modal */}
       {isModalOpen && (
         <WriteAReview

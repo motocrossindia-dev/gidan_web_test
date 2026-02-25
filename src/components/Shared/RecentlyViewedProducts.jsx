@@ -13,7 +13,7 @@ import { getProductUrl } from "../../utils/urlHelper";
  * Displays a grid of recently viewed products
  * Uses the reusable ProductCard component
  */
-const RecentlyViewedProducts = () => {
+const RecentlyViewedProducts = ({ title = "Recently Viewed" }) => {
   const [products, setProducts] = useState([]);
   const router = useRouter();
 
@@ -50,12 +50,12 @@ const RecentlyViewedProducts = () => {
 
   return (
     <div className="mt-8 p-2 bg-white rounded-md md:ml-16 relative z-10">
-      <h2 className="text-base font-semibold text-black mb-4">
-        Recently Viewed
+      <h2 className="md:text-2xl text-xl mb-4 text-left font-sans font-bold">
+        {title}
       </h2>
 
       {/* Product Grid - 4 columns layout matching ProductGrid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 justify-items-center font-sans">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 justify-items-center font-sans">
         {products.map((product) => (
           <Link
             key={product?.id}

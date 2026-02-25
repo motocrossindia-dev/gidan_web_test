@@ -9,9 +9,11 @@ const AboutProduct = ({ productDetailData }) => {
   const [productData, setProductData] = useState({});
 
   useEffect(() => {
-    if (productDetailData) {
+    // Check if it's a valid data object, not just an empty array
+    const hasData = productDetailData && (productDetailData.data || productDetailData.product || productDetailData.id);
+    if (hasData) {
       setProductData(productDetailData);
-      setVideo(productDetailData?.data?.product?.vedio_link || "");
+      setVideo(productDetailData?.data?.product?.vedio_link || productDetailData?.product?.vedio_link || "");
     }
   }, [productDetailData]);
 
@@ -20,17 +22,17 @@ const AboutProduct = ({ productDetailData }) => {
       case "about":
         return (
           <div>
-          <div className="text-gray-600 leading-7 justify-center text-between md:text-md whitespace-pre-line">
-            {productData?.data?.product?.short_description || ""}
-          </div>
+            <div className="text-gray-600 leading-7 justify-center text-between md:text-md whitespace-pre-line">
+              {productData?.data?.product?.short_description || productData?.product?.short_description || productData?.short_description || ""}
+            </div>
           </div>
         );
       case "box":
         return (
           <div>
-          <div className="text-gray-600 leading-7 justify-center text-between whitespace-pre-line">
-            {productData?.data?.product?.whats_included || ""}
-          </div>
+            <div className="text-gray-600 leading-7 justify-center text-between whitespace-pre-line">
+              {productData?.data?.product?.whats_included || productData?.product?.whats_included || productData?.whats_included || ""}
+            </div>
           </div>
         );
       case "video":

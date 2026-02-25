@@ -8,7 +8,7 @@ const AddOnProduct = ({ addOnData }) => {
     <div className="flex justify-center w-full rounded-md mt-4">
       <div className="w-full">
         <h2 className="md:text-2xl text-xl mb-4 text-center md:font-bold font-semibold">Plant Parents Also Picked</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 justify-items-center font-sans">
+        <div className="grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3 gap-4 md:gap-6 justify-items-center font-sans">
           {addOnData.map((product, index) => (
             <AddOnData
               key={index}
@@ -19,7 +19,7 @@ const AddOnProduct = ({ addOnData }) => {
               rating={product.rating}
               isNewArrival={product.isNewArrival}
               product={product}
-              inCart = {product.is_cart}
+              inCart={product.is_cart}
             />
           ))}
         </div>

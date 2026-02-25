@@ -1,0 +1,802 @@
+[
+  {
+    "source": "/category/plants/indoor-plant-26/poinsettia-pink/",
+    "destination": "/plants/indoor-plant/poinsettia-pink?variant=1304",
+    "permanent": true
+  },
+  {
+    "source": "/category/plants/indoor-plant-26/xanadu/",
+    "destination": "/plants/indoor-plant/xanadu?variant=1258",
+    "permanent": true
+  },
+  {
+    "source": "/category/subcategory/indoor-plant/",
+    "destination": "/plants/indoor-plant/",
+    "permanent": true
+  },
+  {
+    "source": "/category/subcategory/flower-seeds/",
+    "destination": "/seeds/flower-seeds/",
+    "permanent": true
+  },
+  {
+    "source": "/productdata/1331",
+    "destination": "/plant-care/growing-media/gidan-vermicompost?variant=1331",
+    "permanent": true
+  },
+  {
+    "source": "/productdata/1280",
+    "destination": "/plants/indoor-plant/dwarf-tree-fern?variant=1280",
+    "permanent": true
+  },
+  {
+    "source": "/productdata/1239",
+    "destination": "/plants/outdoor-plant/yesterday-today-tomorrow?variant=1239",
+    "permanent": true
+  },
+  {
+    "source": "/productdata/863",
+    "destination": "/pots/rotomolded-pots/havana-planter?variant=863",
+    "permanent": true
+  },
+  {
+    "source": "/productdata/1138",
+    "destination": "/plant-care/growing-media/gidan-potting-soil-mix?variant=1138",
+    "permanent": true
+  },
+  {
+    "source": "/productdata/1035",
+    "destination": "/pots/table-top-pots/siena-eco-planter-set-of-5?variant=1035",
+    "permanent": true
+  },
+  {
+    "source": "/productdata/816",
+    "destination": "/pots/rotomolded-pots/rosa-short-planter?variant=816",
+    "permanent": true
+  },
+  {
+    "source": "/productdata/1294",
+    "destination": "/plants/flowering-plants/gerbera-daisy-peach?variant=1294",
+    "permanent": true
+  },
+  {
+    "source": "/productdata/1236",
+    "destination": "/plants/indoor-plant/jade-plant?variant=1236",
+    "permanent": true
+  },
+  {
+    "source": "/productdata/1290",
+    "destination": "/plants/flowering-plants/dianthus-pink?variant=1290",
+    "permanent": true
+  },
+  {
+    "source": "/productdata/1301",
+    "destination": "/plants/flowering-plants/impatiens-pink?variant=1301",
+    "permanent": true
+  },
+  {
+    "source": "/productdata/1311",
+    "destination": "/plants/indoor-plant/syngonium?variant=1311",
+    "permanent": true
+  },
+  {
+    "source": "/category/seeds/",
+    "destination": "/seeds/",
+    "permanent": true
+  },
+  {
+    "source": "/category/plant-care/",
+    "destination": "/plant-care/",
+    "permanent": true
+  },
+  {
+    "source": "/category/plants/",
+    "destination": "/plants/",
+    "permanent": true
+  },
+  {
+    "source": "/about-us",
+    "destination": "/about-us/",
+    "permanent": true
+  },
+  {
+    "source": "/careers",
+    "destination": "/careers/",
+    "permanent": true
+  },
+  {
+    "source": "/contact-us",
+    "destination": "/contact-us/",
+    "permanent": true
+  },
+  {
+    "source": "/franchise-enquiry",
+    "destination": "/franchise-enquiry/",
+    "permanent": true
+  },
+  {
+    "source": "/plant-care/garden-essenials-37/",
+    "destination": "/plant-care/garden-essenials/",
+    "permanent": true
+  },
+  {
+    "source": "/plant-care/garden-essenials-37/drizzle-watering-can-cream-351/",
+    "destination": "/plant-care/garden-essenials/drizzle-watering-can-cream?variant=1123",
+    "permanent": true
+  },
+  {
+    "source": "/plant-care/garden-essenials-37/drizzle-watering-can-mocca-352/",
+    "destination": "/plant-care/garden-essenials/drizzle-watering-can-mocca?variant=1124",
+    "permanent": true
+  },
+  {
+    "source": "/plant-care/garden-essenials-37/ripple-watering-can-red-350/",
+    "destination": "/plant-care/garden-essenials/ripple-watering-can-red?variant=1122",
+    "permanent": true
+  },
+  {
+    "source": "/plant-care/garden-essenials-37/ripples-watering-can-349/",
+    "destination": "/plant-care/garden-essenials/ripples-watering-can?variant=1121",
+    "permanent": true
+  },
+  {
+    "source": "/plant-care/growing-media-36/",
+    "destination": "/plant-care/growing-media/",
+    "permanent": true
+  },
+  {
+    "source": "/plant-care/growing-media-36/gidan-potting-soil-mix-364/",
+    "destination": "/plant-care/growing-media/gidan-potting-soil-mix?variant=1138",
+    "permanent": true
+  },
+  {
+    "source": "/plant-care/growing-media-36/gidan-vermicompost-544/",
+    "destination": "/plant-care/growing-media/gidan-vermicompost?variant=1331",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/",
+    "destination": "/plants/flowering-plants/",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/african-violet-540/",
+    "destination": "/plants/flowering-plants/african-violet-pink?variant=1313",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/african-violet-pink-527/",
+    "destination": "/plants/flowering-plants/african-violet-pink?variant=1313",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/button-rose-dark-pink-487/",
+    "destination": "/plants/flowering-plants/button-rose-dark-pink?variant=1274",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/button-rose-pink-501/",
+    "destination": "/plants/flowering-plants/button-rose-pink?variant=1287",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/button-rose-red-488/",
+    "destination": "/plants/flowering-plants/button-rose-red?variant=1275",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/dianthus-pink-504/",
+    "destination": "/plants/flowering-plants/dianthus-pink?variant=1290",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/dianthus-pink-dual-505/",
+    "destination": "/plants/flowering-plants/dianthus-pink-dual?variant=1291",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/gardenia-485/",
+    "destination": "/plants/flowering-plants/gardenia?variant=1272",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/gazania-506/",
+    "destination": "/plants/flowering-plants/gazania?variant=1292",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/geranium-pink-469/",
+    "destination": "/plants/flowering-plants/geranium-pink?variant=1255",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/geranium-red-468/",
+    "destination": "/plants/flowering-plants/geranium-red?variant=1254",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/gerbera-daisy-507/",
+    "destination": "/plants/flowering-plants/gerbera-daisy?variant=1293",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/gerbera-daisy-peach-508/",
+    "destination": "/plants/flowering-plants/gerbera-daisy-peach?variant=1294",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/globe-amaranth-531/",
+    "destination": "/plants/flowering-plants/globe-amaranth?variant=1317",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/hibiscus-dual-511/",
+    "destination": "/plants/flowering-plants/hibiscus-dual?variant=1297",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/hibiscus-red-470/",
+    "destination": "/plants/flowering-plants/hibiscus-red?variant=1256",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/hibiscus-white-472/",
+    "destination": "/plants/flowering-plants/hibiscus-white?variant=1257",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/impatiens-pink-515/",
+    "destination": "/plants/flowering-plants/impatiens-pink?variant=1301",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/ixora-orange-484/",
+    "destination": "/plants/flowering-plants/ixora-orange?variant=1271",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/kalanchoe-peach-512/",
+    "destination": "/plants/flowering-plants/kalanchoe-peach?variant=1298",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/kalanchoe-pink-513/",
+    "destination": "/plants/flowering-plants/kalanchoe-pink?variant=1299",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/mexican-heather-503/",
+    "destination": "/plants/flowering-plants/mexican-heather?variant=1289",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/pentas-red-494/",
+    "destination": "/plants/flowering-plants/pentas-red?variant=1281",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/periwinkle-pink-514/",
+    "destination": "/plants/flowering-plants/periwinkle-pink?variant=1300",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/rain-lily-pink-478/",
+    "destination": "/plants/flowering-plants/rain-lily-pink?variant=1263",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/shooting-star-521/",
+    "destination": "/plants/flowering-plants/shooting-star?variant=1307",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/texas-sage-496/",
+    "destination": "/plants/flowering-plants/texas-sage?variant=1283",
+    "permanent": true
+  },
+  {
+    "source": "/plants/flowering-plants-40/wax-begonia-pink-538/",
+    "destination": "/plants/indoor-plant/wax-begonia-red?variant=1308",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/",
+    "destination": "/plants/indoor-plant/",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/aglaonema-pink-498/",
+    "destination": "/plants/indoor-plant/aglaonema-pink?variant=1285",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/aglaonema-snow-white-481/",
+    "destination": "/plants/indoor-plant/aglaonema-snow-white?variant=1266",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/anthurium-red-445/",
+    "destination": "/plants/indoor-plant/anthurium-red/?variant=445",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/birds-nest-fern-454/",
+    "destination": "/plants/indoor-plant/birds-nest-fern?variant=1241",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/boston-fern-455/",
+    "destination": "/plants/indoor-plant/boston-fern?variant=1242",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/ceylon-beauty-489/",
+    "destination": "/plants/indoor-plant/ceylon-beauty?variant=1276",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/cobra-fern-490/",
+    "destination": "/plants/indoor-plant/cobra-fern?variant=1277",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/croton-502/",
+    "destination": "/plants/indoor-plant/croton?variant=1288",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/dracaena-limelight-491/",
+    "destination": "/plants/indoor-plant/dracaena-limelight?variant=1278",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/dumb-cane-456/",
+    "destination": "/plants/indoor-plant/dumb-cane?variant=1243",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/dwarf-areca-palm-492/",
+    "destination": "/plants/indoor-plant/dwarf-areca-palm?variant=1279",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/dwarf-tree-fern-493/",
+    "destination": "/plants/indoor-plant/dwarf-tree-fern?variant=1280",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/golden-dwarf-snake-plant-529/",
+    "destination": "/plants/indoor-plant/golden-dwarf-snake-plant?variant=1315",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/golden-pothos-509/",
+    "destination": "/plants/indoor-plant/golden-pothos?variant=1295",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/jade-plant-449/",
+    "destination": "/plants/indoor-plant/jade-plant?variant=1236",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/orchid-white-446/",
+    "destination": "/plants/indoor-plant/orchid-white?variant=1233",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/peace-lily-447/",
+    "destination": "/plants/indoor-plant/peace-lily?variant=1234",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/peperomia-516/",
+    "destination": "/plants/indoor-plant/peperomia?variant=1302",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/peperomia-obtusifolia-465/",
+    "destination": "/plants/indoor-plant/peperomia-obtusifolia?variant=1251",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/philodendron-red-474/",
+    "destination": "/plants/indoor-plant/philodendron-red?variant=1259",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/pink-syngonium-526/",
+    "destination": "/plants/indoor-plant/pink-syngonium?variant=1312",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/poinsettia-pink-518/",
+    "destination": "/plants/indoor-plant/poinsettia-pink?variant=1304",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/poinsettia-red-519/",
+    "destination": "/plants/indoor-plant/poinsettia-red?variant=1305",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/poinsettia-white-520/",
+    "destination": "/plants/indoor-plant/poinsettia-white?variant=1306",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/purple-shamrock-497/",
+    "destination": "/plants/indoor-plant/purple-shamrock?variant=1284",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/rex-begonia-495/",
+    "destination": "/plants/indoor-plant/rex-begonia?variant=1282",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/rubber-plant-523/",
+    "destination": "/plants/indoor-plant/rubber-plant?variant=1309",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/snake-plant-477/",
+    "destination": "/plants/indoor-plant/snake-plant?variant=1262",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/syngonium-525/",
+    "destination": "/plants/indoor-plant/syngonium?variant=1311",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/syngonium-green-476/",
+    "destination": "/plants/indoor-plant/syngonium-green?variant=1261",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/umbrella-tree-schefflera-467/",
+    "destination": "/plants/indoor-plant/umbrella-tree-schefflera?variant=1253",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/watermelon-peperomia-517/",
+    "destination": "/plants/indoor-plant/watermelon-peperomia?variant=1303",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/wax-begonia-480/",
+    "destination": "/plants/indoor-plant/rex-begonia?variant=1282",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/wax-begonia-red-522/",
+    "destination": "/plants/indoor-plant/wax-begonia-red?variant=1308",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/xanadu-473/",
+    "destination": "/plants/indoor-plant/xanadu?variant=1258",
+    "permanent": true
+  },
+  {
+    "source": "/plants/indoor-plant-26/zz-plant-475/",
+    "destination": "/plants/indoor-plant/zz-plant?variant=1260",
+    "permanent": true
+  },
+  {
+    "source": "/plants/outdoor-plant-27/",
+    "destination": "/plants/outdoor-plant/",
+    "permanent": true
+  },
+  {
+    "source": "/plants/outdoor-plant-27/bougainvillea-orange-461/",
+    "destination": "/plants/outdoor-plant/bougainvillea-orange?variant=1247",
+    "permanent": true
+  },
+  {
+    "source": "/plants/outdoor-plant-27/bougainvillea-peach-462/",
+    "destination": "/plants/outdoor-plant/bougainvillea-peach?variant=1248",
+    "permanent": true
+  },
+  {
+    "source": "/plants/outdoor-plant-27/bougainvillea-white-460/",
+    "destination": "/plants/outdoor-plant/bougainvillea-white?variant=1246",
+    "permanent": true
+  },
+  {
+    "source": "/plants/outdoor-plant-27/bush-daisy-450/",
+    "destination": "/plants/outdoor-plant/bush-daisy?variant=1237",
+    "permanent": true
+  },
+  {
+    "source": "/plants/outdoor-plant-27/christmas-tree-457/",
+    "destination": "/plants/outdoor-plant/christmas-tree?variant=1244",
+    "permanent": true
+  },
+  {
+    "source": "/plants/outdoor-plant-27/clitoria-463/",
+    "destination": "/plants/outdoor-plant/clitoria?variant=1249",
+    "permanent": true
+  },
+  {
+    "source": "/plants/outdoor-plant-27/hibiscus-pink-458/",
+    "destination": "/plants/outdoor-plant/hibiscus-pink?variant=1245",
+    "permanent": true
+  },
+  {
+    "source": "/plants/outdoor-plant-27/japanese-jasmine-464/",
+    "destination": "/plants/outdoor-plant/japanese-jasmine?variant=1250",
+    "permanent": true
+  },
+  {
+    "source": "/plants/outdoor-plant-27/outdoor-fern-453/",
+    "destination": "/plants/outdoor-plant/outdoor-fern?variant=1240",
+    "permanent": true
+  },
+  {
+    "source": "/plants/outdoor-plant-27/rose-plant-red-451/",
+    "destination": "/plants/outdoor-plant/rose-plant-red?variant=1238",
+    "permanent": true
+  },
+  {
+    "source": "/plants/outdoor-plant-27/yesterday-today-tomorrow-452/",
+    "destination": "/plants/outdoor-plant/yesterday-today-tomorrow?variant=1239",
+    "permanent": true
+  },
+  {
+    "source": "/pots/eco-planters-39/",
+    "destination": "/pots/eco-planters/",
+    "permanent": true
+  },
+  {
+    "source": "/pots/eco-planters-39/verona-eco-planter-545/",
+    "destination": "/pots/eco-planters/verona-eco-planter?variant=1333",
+    "permanent": true
+  },
+  {
+    "source": "/pots/eco-planters-39/verona-wheels-planter-288/",
+    "destination": "/pots/eco-planters/verona-wheels-planter?variant=850",
+    "permanent": true
+  },
+  {
+    "source": "/pots/hanging-pots-30/",
+    "destination": "/pots/hanging-pots",
+    "permanent": true
+  },
+  {
+    "source": "/pots/hanging-pots-30/bello-hook-pot-set-of-5pcs-302/",
+    "destination": "/pots/hanging-pots/bello-hook-pot-set-of-5pcs?variant=935",
+    "permanent": true
+  },
+  {
+    "source": "/pots/hanging-pots-30/capri-hanging-pot-set-5pcs-298/",
+    "destination": "/pots/hanging-pots/capri-hanging-pot-set-5pcs?variant=916",
+    "permanent": true
+  },
+  {
+    "source": "/pots/hanging-pots-30/victoria-hanging-basket-set-5pcs-299/",
+    "destination": "/pots/hanging-pots/victoria-hanging-basket-set-5pcs?variant=921",
+    "permanent": true
+  },
+  {
+    "source": "/pots/plastic-pots-29/",
+    "destination": "/pots/plastic-pots",
+    "permanent": true
+  },
+  {
+    "source": "/pots/plastic-pots-29/evergreen-pot-366/",
+    "destination": "/pots/plastic-pots/evergreen-pot?variant=1143",
+    "permanent": true
+  },
+  {
+    "source": "/pots/plastic-pots-29/harshdeep-valencia-eco-pot-set-of-2-319/",
+    "destination": "/pots/plastic-pots/harshdeep-valencia-eco-pot-set-of-2?variant=1013",
+    "permanent": true
+  },
+  {
+    "source": "/pots/plastic-pots-29/nursery-pot-365/",
+    "destination": "/pots/plastic-pots/nursery-pot?variant=1139",
+    "permanent": true
+  },
+  {
+    "source": "/pots/plastic-pots-29/valencia-wheels-planter-345/",
+    "destination": "/pots/plastic-pots/valencia-wheels-planter?variant=1094",
+    "permanent": true
+  },
+  {
+    "source": "/pots/plastic-pots-29/window-planter-331/",
+    "destination": "/pots/plastic-pots/window-planter?variant=1080",
+    "permanent": true
+  },
+  {
+    "source": "/pots/rotomolded-pots-28/",
+    "destination": "/pots/rotomolded-pots",
+    "permanent": true
+  },
+  {
+    "source": "/pots/rotomolded-pots-28/albero-planter-328/",
+    "destination": "/pots/rotomolded-pots/albero-planter?variant=1060",
+    "permanent": true
+  },
+  {
+    "source": "/pots/rotomolded-pots-28/barca-round-planter-292/",
+    "destination": "/pots/rotomolded-pots/barca-round-planter?variant=876",
+    "permanent": true
+  },
+  {
+    "source": "/pots/rotomolded-pots-28/eva-planter-277/",
+    "destination": "/pots/rotomolded-pots/eva-planter?variant=774",
+    "permanent": true
+  },
+  {
+    "source": "/pots/rotomolded-pots-28/gema-planter-278/",
+    "destination": "/pots/rotomolded-pots/gema-planter?variant=786",
+    "permanent": true
+  },
+  {
+    "source": "/pots/rotomolded-pots-28/havana-planter-290/",
+    "destination": "/pots/rotomolded-pots/havana-planter?variant=863",
+    "permanent": true
+  },
+  {
+    "source": "/pots/rotomolded-pots-28/lara-short-planter-279/",
+    "destination": "/pots/rotomolded-pots/lara-short-planter?variant=798",
+    "permanent": true
+  },
+  {
+    "source": "/pots/rotomolded-pots-28/lara-square-planter-281/",
+    "destination": "/pots/rotomolded-pots/lara-square-planter?variant=804",
+    "permanent": true
+  },
+  {
+    "source": "/pots/rotomolded-pots-28/lara-tall-planter-285/",
+    "destination": "/pots/rotomolded-pots/lara-tall-planter?variant=837",
+    "permanent": true
+  },
+  {
+    "source": "/pots/rotomolded-pots-28/milano-planter-297/",
+    "destination": "/pots/rotomolded-pots/milano-planter?variant=912",
+    "permanent": true
+  },
+  {
+    "source": "/pots/rotomolded-pots-28/milano-wheels-planter-300/",
+    "destination": "/pots/rotomolded-pots/milano-wheels-planter?variant=925",
+    "permanent": true
+  },
+  {
+    "source": "/pots/rotomolded-pots-28/quebec-planter-291/",
+    "destination": "/pots/rotomolded-pots/quebec-planter?variant=872",
+    "permanent": true
+  },
+  {
+    "source": "/pots/rotomolded-pots-28/quebec-rectangle-planter-296/",
+    "destination": "/pots/rotomolded-pots/quebec-rectangle-planter?variant=910",
+    "permanent": true
+  },
+  {
+    "source": "/pots/rotomolded-pots-28/rosa-short-planter-282/",
+    "destination": "/pots/rotomolded-pots/rosa-short-planter?variant=816",
+    "permanent": true
+  },
+  {
+    "source": "/pots/rotomolded-pots-28/rosa-tall-planter-283/",
+    "destination": "/pots/rotomolded-pots/rosa-tall-planter?variant=819",
+    "permanent": true
+  },
+  {
+    "source": "/pots/rotomolded-pots-28/stella-planter-284/",
+    "destination": "/pots/rotomolded-pots/stella-planter?variant=828",
+    "permanent": true
+  },
+  {
+    "source": "/pots/rotomolded-pots-28/tokyo-bowl-planter-301/",
+    "destination": "/pots/rotomolded-pots/tokyo-bowl-planter?variant=933",
+    "permanent": true
+  },
+  {
+    "source": "/pots/rotomolded-pots-28/tokyo-high-planter-293/",
+    "destination": "/pots/rotomolded-pots/tokyo-high-planter?variant=888",
+    "permanent": true
+  },
+  {
+    "source": "/pots/rotomolded-pots-28/tokyo-short-planter-294/",
+    "destination": "/pots/rotomolded-pots/tokyo-short-planter?variant=900",
+    "permanent": true
+  },
+  {
+    "source": "/pots/table-top-pots-35/",
+    "destination": "/pots/table-top-pots",
+    "permanent": true
+  },
+  {
+    "source": "/pots/table-top-pots-35/atlantis-big-set-of-2-322/",
+    "destination": "/pots/table-top-pots/atlantis-big-set-of-2?variant=1031",
+    "permanent": true
+  },
+  {
+    "source": "/pots/table-top-pots-35/atlantis-small-set-of-5-321/",
+    "destination": "/pots/table-top-pots/atlantis-small-set-of-5?variant=1027",
+    "permanent": true
+  },
+  {
+    "source": "/pots/table-top-pots-35/bello-round-set-of-2-307/",
+    "destination": "/pots/table-top-pots/bello-round-set-of-2?variant=946",
+    "permanent": true
+  },
+  {
+    "source": "/pots/table-top-pots-35/bello-square-planter-329/",
+    "destination": "/pots/table-top-pots/bello-square-planter?variant=1069",
+    "permanent": true
+  },
+  {
+    "source": "/pots/table-top-pots-35/ibiza-eco-pot-set-of-5-320/",
+    "destination": "/pots/table-top-pots/ibiza-eco-pot-set-of-5?variant=1023",
+    "permanent": true
+  },
+  {
+    "source": "/pots/table-top-pots-35/lagos-pot-set-of-5-325/",
+    "destination": "/pots/table-top-pots/lagos-pot-set-of-5?variant=1053",
+    "permanent": true
+  },
+  {
+    "source": "/pots/table-top-pots-35/siena-eco-planter-set-of-5-323/",
+    "destination": "/pots/table-top-pots/siena-eco-planter-set-of-5?variant=1035",
+    "permanent": true
+  },
+  {
+    "source": "/pots/table-top-pots-35/siena-eco-set-of-2-324/",
+    "destination": "/pots/table-top-pots/siena-eco-set-of-2?variant=1045",
+    "permanent": true
+  },
+  {
+    "source": "/pots/table-top-pots-35/valencia-eco-planter-set-of-5-318/",
+    "destination": "/pots/table-top-pots/valencia-eco-planter-set-of-5?variant=1003",
+    "permanent": true
+  },
+  {
+    "source": "/pots/table-top-pots-35/verona-diamond-planter-330/",
+    "destination": "/pots/table-top-pots/verona-diamond-planter?variant=1077",
+    "permanent": true
+  },
+  {
+    "source": "/pots/table-top-pots-35/verona-eco-planter-set-of-5-315/",
+    "destination": "/pots/table-top-pots/verona-eco-planter-set-of-5?variant=971",
+    "permanent": true
+  },
+  {
+    "source": "/return",
+    "destination": "/return/",
+    "permanent": true
+  },
+  {
+    "source": "/seeds/vegetable-seeds-31/",
+    "destination": "/seeds/vegetable-seeds/",
+    "permanent": true
+  },
+  {
+    "source": "/seeds/vegetable-seeds-31/capsicum-seeds-368/",
+    "destination": "/seeds/vegetable-seeds/capsicum-seeds?variant=1154",
+    "permanent": true
+  },
+  {
+    "source": "/seeds/vegetable-seeds-31/chilli-seeds-369/",
+    "destination": "/seeds/vegetable-seeds/chilli-seeds?variant=1155",
+    "permanent": true
+  },
+  {
+    "source": "/seeds/vegetable-seeds-31/okra-seeds-370/",
+    "destination": "/seeds/vegetable-seeds/okra-seeds?variant=1156",
+    "permanent": true
+  },
+  {
+    "source": "/productdata/1311/",
+    "destination": "/plants/indoor-plant/syngonium?variant=1311",
+    "permanent": true
+  },
+  {
+    "source": "/offers/",
+    "destination": "/offer/",
+    "permanent": true
+  }
+]

@@ -30,7 +30,8 @@ Disallow: /hamburger
 Disallow: /side
 
 # Allow Next.js CSS/assets for rendering, block JS chunks from indexing
-Disallow: /_next/static/chunks/
+# Allow Next.js chunks for proper rendering
+Allow: /_next/static/chunks/
 Allow: /_next/static/css/
 Allow: /_next/static/media/
 

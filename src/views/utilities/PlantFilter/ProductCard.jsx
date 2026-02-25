@@ -187,12 +187,12 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                         <div className="flex gap-1 mb-2">
                             <StarsOnCards rating={userRating} ratingNumber={ratingNumber} />
                         </div>
-                        <h3
+                        <h2
                             className="text-base sm:text-lg font-bold text-black mb-2 truncate max-w-full"
                             title={name}
                         >
                             {name}
-                        </h3>
+                        </h2>
                         <div className="flex items-center gap-2">
 
                             <span className="text-base font-semibold text-navy-blue">
@@ -293,10 +293,9 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                             </div>
 
                             {/* Product Name */}
-                            <Typography variant="caption" className="mt-1" style={{ fontWeight: "bold", color: "black", fontSize: "0.9rem" }}>
-                                {/*{name?.length > 12 ? `${name.slice(0, 11)}..` : name}*/}
+                            <h2 className="mt-1 font-bold text-black text-[0.9rem] leading-tight">
                                 {name}
-                            </Typography>
+                            </h2>
 
                             <div className="flex items-center gap-2">
                                 {/* Price */}

@@ -98,9 +98,13 @@ export async function fetchProductDetail(productSlug, searchParams = {}) {
         return null;
     }
 }
-export async function fetchFilters(type) {
+export async function fetchFilters(type, categoryId = null) {
     try {
-        const res = await fetch(`${API_URL}/filters/filters_n/?type=${type}`, { next: { revalidate: 300 } });
+        let url = `${API_URL}/filters/filters_n/?type=${type}`;
+        if (categoryId) {
+            url += `&category_id=${categoryId}`;
+        }
+        const res = await fetch(url, { next: { revalidate: 300 } });
         if (!res.ok) return null;
         const data = await res.json();
         return data?.filters || null;

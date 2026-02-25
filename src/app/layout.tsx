@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import ReactDOM from 'react-dom';
 import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
@@ -88,6 +88,13 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -110,9 +117,7 @@ export default function RootLayout({
                 var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
                 s1.async=true;
                 s1.src='https://embed.tawk.to/699cc6abfaf0a71c36d94cbd/1ji66g3s9';
-                s1.charset='UTF-8';
-                s1.setAttribute('crossorigin','*');
-                s0.parentNode.insertBefore(s1,s0);
+                s1.charset='UTF-8';s0.parentNode.insertBefore(s1,s0);
               })();
             `}
           </Script>

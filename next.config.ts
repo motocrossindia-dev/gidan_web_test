@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 import path from "path";
+import redirectsData from "./src/lib/redirects.json";
+import goneData from "./src/lib/gone.json";
 
 const nextConfig: NextConfig = {
   // Enforce trailing slashes on all URLs (301 redirect for non-slash URLs).
@@ -17,6 +19,9 @@ const nextConfig: NextConfig = {
 
   // Allow .js and .jsx files (migrating from CRA)
   pageExtensions: ["ts", "tsx", "js", "jsx"],
+
+  // Explicitly enable compression
+  compress: true,
 
   // Turbopack resolve aliases (mirror of webpack aliases below)
   turbopack: {
@@ -41,6 +46,12 @@ const nextConfig: NextConfig = {
   // Backward compatibility redirects for old CRA routes
   async redirects() {
     return [
+      ...goneData.map((source) => ({
+        source,
+        destination: "/api/gone",
+        permanent: false,
+      })),
+      ...redirectsData,
       {
         source: "/category/:id",
         destination: "/:id/",
@@ -61,13 +72,19 @@ const nextConfig: NextConfig = {
   },
 
   // Shim react-helmet / react-helmet-async (not compatible with React 19 / Next.js App Router)
-  webpack(config) {
+  webpack(config, { dev, isServer }) {
     const shimPath = path.resolve(
       __dirname,
       "src/lib/helmet-shim.js"
     );
     config.resolve.alias["react-helmet"] = shimPath;
     config.resolve.alias["react-helmet-async"] = shimPath;
+
+    // Advanced: Minify server-side output in production
+    if (!dev) {
+      config.optimization.minimize = true;
+    }
+
     return config;
   },
 
@@ -78,6 +95,13 @@ const nextConfig: NextConfig = {
     "@mui/lab",
     "@mui/system",
   ],
+
+  // JS Minification & Production Cleanup
+  compiler: {
+    // Remove console logs in production for smaller bundles and cleaner logs
+    removeConsole: process.env.NODE_ENV === "production",
+  },
+
 };
 
 

@@ -28,11 +28,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const name = categorySlug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   return {
-    title: `${name} Plants | Gidan`,
-    description: `Shop ${name.toLowerCase()} plants, pots and gardening products at Gidan. Wide variety, great prices and fast delivery across India.`,
+    title: `Buy ${name} Online India | Best Collection | Gidan`,
+    description: `Shop the best ${name.toLowerCase()} for your home and garden at Gidan. Wide variety of ${name.toLowerCase()} available online with fast delivery across India.`,
     openGraph: {
-      title: `${name} Plants | Gidan`,
-      description: `Shop ${name.toLowerCase()} plants and accessories at Gidan, India's trusted online plant store.`,
+      title: `Buy ${name} Online India | Gidan`,
+      description: `Browse our extensive collection of ${name.toLowerCase()} at Gidan. Quality products, competitive prices, and fast shipping in India.`,
       url: `/${categorySlug}/`,
       siteName: "Gidan Plants",
       locale: "en_IN",
@@ -43,6 +43,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 import { fetchCategoryBySlug, fetchSubcategoryBySlug, fetchProductsByFilters, fetchSubcategories, fetchFilters } from "@/utils/serverApi";
+import CategoryStaticSEO from "@/views/utilities/Info/CategoryStaticSEO";
+import RecentlyViewedProducts from "@/components/Shared/RecentlyViewedProducts";
+import CheckoutStores from "@/views/utilities/PlantFilter/CheckoutStores";
 
 export default async function CategoryPage({ params }: Props) {
   const { categorySlug } = await params;
@@ -59,7 +62,7 @@ export default async function CategoryPage({ params }: Props) {
   const [category, subcategories, filters] = await Promise.all([
     fetchCategoryBySlug(categorySlug),
     fetchSubcategories(categorySlug),
-    fetchFilters(typeKey)
+    fetchFilters(typeKey, (await fetchCategoryBySlug(categorySlug))?.id)
   ]);
 
   if (!category) notFound();
@@ -74,12 +77,25 @@ export default async function CategoryPage({ params }: Props) {
   });
 
   return (
-    <Suspense fallback={<div className="flex justify-center p-8">Loading products...</div>}>
-      <PlantFilter
-        initialResults={initialData}
-        initialCategoryData={categoryWithSubs}
-        initialFilterData={filters}
-      />
-    </Suspense>
+    <>
+      <Suspense fallback={<div className="flex justify-center p-8">Loading products...</div>}>
+        <PlantFilter
+          initialResults={initialData}
+          initialCategoryData={categoryWithSubs}
+          initialFilterData={filters}
+        />
+      </Suspense>
+
+      <div className="space-y-12 mt-12 mb-8">
+        <RecentlyViewedProducts />
+        <CategoryStaticSEO
+          categorySlug={categorySlug}
+          isSubcategory={false}
+          subcategoryName={null}
+          subcategorySlug={null}
+        />
+        <CheckoutStores />
+      </div>
+    </>
   );
 }

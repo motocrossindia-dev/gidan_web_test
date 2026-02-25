@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import ProductSeller from "./ProductSeller";
 import ProductReviews from "./ProductReviews";
+import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
 import ProductFeatured from "./ProductFeatured";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import AddOnProduct from "./AddOnProduct";
@@ -29,6 +30,8 @@ import { Helmet } from "react-helmet-async";
 import ProductSchema from "../seo/ProductSchema";
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
+import WriteAReview from "./WriteAReview";
+// import FaqAccordion from "./ProductFaq";
 import { trackViewItem, trackAddToCart } from "../../../utils/ga4Ecommerce";
 import Breadcrumb from "../../../components/Shared/Breadcrumb";
 import convertToSlug from "../../../utils/slugConverter";
@@ -100,7 +103,7 @@ const productData = {
     ],
 };
 
-export default function Component({ initialProductData }) {
+export default function ProductData({ initialProductData }) {
     const pathname = usePathname();
     const [selectedImage, setSelectedImage] = useState(0);
 
@@ -137,6 +140,11 @@ export default function Component({ initialProductData }) {
 
     const [token] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('token') : null);
     const accessToken = useSelector(selectAccessToken);
+
+    // Robust access to rating and review data which might be at top level or nested under .data
+    const ratingData = productDetailData?.data?.product_rating || productDetailData?.product_rating || productDetailData?.data?.product?.product_rating;
+    const reviewData = productDetailData?.data?.product_reviews || productDetailData?.product_reviews || productDetailData?.data?.product?.product_reviews || [];
+
     const isInCart = productDetailData?.data?.product?.is_cart;
 
     const [optionType, setOptionType] = useState(null);
@@ -146,6 +154,79 @@ export default function Component({ initialProductData }) {
 
     const [zoom, setZoom] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
+    const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+    const [isCheckingPurchase, setIsCheckingPurchase] = useState(false);
+
+    const handleWriteReviewClick = async () => {
+        if (!isAuthenticated) {
+            enqueueSnackbar("Please sign in to write a review.", { variant: "info" });
+            router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+            return;
+        }
+
+        const currentProduct = productDetailData?.data?.product;
+        if (!currentProduct?.id) {
+            enqueueSnackbar("Error: Product information is missing", { variant: "error" });
+            return;
+        }
+
+        setIsCheckingPurchase(true);
+        try {
+            const response = await axiosInstance.get(`/order/orderHistory/`);
+            const allOrders = response?.data?.data?.orders || [];
+
+            let hasPurchased = false;
+            // 1. Check order summaries first (fastest)
+            for (const order of allOrders) {
+                const summary = order?.product_details;
+                if (summary?.id === currentProduct.id ||
+                    summary?.product_id === currentProduct.id ||
+                    summary?.product_name?.toLowerCase() === (currentProduct.main_product_name || currentProduct.name || "").toLowerCase()) {
+                    hasPurchased = true;
+                    break;
+                }
+            }
+
+            // 2. If not found, check detail items for the last 10 orders (more thorough)
+            if (!hasPurchased && allOrders.length > 0) {
+                const recentOrders = allOrders.slice(0, 10);
+                for (const order of recentOrders) {
+                    try {
+                        const itemsResponse = await axiosInstance.get(`/order/orderHistoryItems/${order?.id}`);
+                        const items = itemsResponse?.data?.data?.order_items || [];
+                        const found = items.some(item =>
+                            item.product_id === currentProduct.id ||
+                            item.product_name?.toLowerCase().includes((currentProduct.main_product_name || currentProduct.name || "").toLowerCase())
+                        );
+                        if (found) {
+                            hasPurchased = true;
+                            break;
+                        }
+                    } catch (e) {
+                        console.error("Error checking order items:", e);
+                    }
+                }
+            }
+
+            if (hasPurchased) {
+                setIsReviewModalOpen(true);
+            } else {
+                enqueueSnackbar("You must purchase this product before writing a review.", { variant: "warning" });
+            }
+        } catch (error) {
+            console.error("Error checking purchase history:", error);
+            enqueueSnackbar("Failed to verify purchase history. Please try again.", { variant: "error" });
+        } finally {
+            setIsCheckingPurchase(false);
+        }
+    };
+
+    const handleViewReviewClick = () => {
+        const reviewSection = document.getElementById('reviews');
+        if (reviewSection) {
+            reviewSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
 
     const lensSize = 120; // square lens size
     const zoomLevel = 2.5; // magnification level
@@ -774,13 +855,26 @@ export default function Component({ initialProductData }) {
             } catch (error) { }
         };
 
-        if (id) {
-            // Skip initial fetch if we already have hydrated data from the server
-            if (initialProductData && (initialProductData?.data?.product?.slug === id || initialProductData?.data?.product?.id === id)) {
-                return;
-            }
-            fetchData();
+        // Clear state if the ID changes to prevent stale data display ONLY if the slugs don't match
+        const currentSlugInState = productDetailData?.data?.product?.slug || productDetailData?.product?.slug;
+        const currentIdInState = productDetailData?.data?.product?.id || productDetailData?.product?.id;
+
+        if (currentSlugInState !== id && currentIdInState !== id) {
+            // If it's a completely different product, we can clear. 
+            // But for variants of the same product, we might want to keep some info.
+            // We'll only clear if it's truly a different ID/slug.
+            setProductDetailData([]);
+            setImageThumbnails([]);
         }
+
+        // Skip initial fetch if we already have hydrated data from the server that includes product info
+        const currentSlug = productDetailData?.data?.product?.slug || productDetailData?.product?.slug;
+        const currentId = productDetailData?.data?.product?.id || productDetailData?.product?.id;
+
+        if ((currentSlug === id || currentId === id) && (ratingData || reviewData)) {
+            return;
+        }
+        fetchData();
     }, [id, params.productSlug]); // Added params.productSlug to dependencies
     // ========== END NEW CODE ==========
 
@@ -1120,37 +1214,56 @@ export default function Component({ initialProductData }) {
 
                         <div className="md:flex-1 px-4 font-sans mt-8">
                             <h1 className="text-xl md:text-3xl font-bold mb-2">
-                                {productDetailData?.data?.product?.main_product_name || ""}
+                                {productDetailData?.data?.product?.main_product_name ? `Buy ${productDetailData.data.product.main_product_name} Online in India` : ""}
                             </h1>
                             <p className="text-md md:text-lg font-sans mb-4 whitespace-pre-line text-black">
                                 {productDetailData?.data?.product?.description || ""}
                             </p>
-                            <p className="text-black-600 text-sm mb-4">
-                                {Array.from({ length: 5 }).map((_, i) => {
-                                    const fraction =
-                                        productDetailData?.data?.product_rating?.avg_rating || 0;
-                                    const filled = Math.floor(fraction);
-                                    const half = fraction - filled;
-                                    return (
-                                        <React.Fragment key={i}>
-                                            {i < filled && (
-                                                <FaStar className="inline-block text-bio-green" />
-                                            )}
-                                            {i === filled && half > 0 && (
-                                                <FaStarHalfAlt className="inline-block text-bio-green" />
-                                            )}
-                                            {i >= filled + half && (
-                                                <FaStar className="inline-block text-gray-700" />
-                                            )}
-                                        </React.Fragment>
-                                    );
-                                })}
-                            </p>
+                            <div className="flex items-center gap-4 mb-4">
+                                <p className="text-black-600 text-sm">
+                                    {Array.from({ length: 5 }).map((_, i) => {
+                                        const fraction =
+                                            ratingData?.avg_rating || 0;
+                                        const filled = Math.floor(fraction);
+                                        const half = fraction - filled;
+                                        return (
+                                            <React.Fragment key={i}>
+                                                {i < filled && (
+                                                    <FaStar className="inline-block text-bio-green" />
+                                                )}
+                                                {i === filled && half > 0 && (
+                                                    <FaStarHalfAlt className="inline-block text-bio-green" />
+                                                )}
+                                                {i >= filled + half && (
+                                                    <FaStar className="inline-block text-gray-700" />
+                                                )}
+                                            </React.Fragment>
+                                        );
+                                    })}
+                                    <span className="ml-2">({ratingData?.num_ratings || 0} {ratingData?.num_ratings === 1 ? 'review' : 'reviews'})</span>
+                                </p>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={handleViewReviewClick}
+                                        className="text-sm text-blue-600 hover:text-blue-800 hover:underline cursor-pointer bg-transparent border-none p-0"
+                                    >
+                                        View reviews
+                                    </button>
+                                    <span className="text-sm text-gray-400">|</span>
+                                    <button
+                                        onClick={handleWriteReviewClick}
+                                        disabled={isCheckingPurchase}
+                                        className="text-sm text-blue-600 hover:text-blue-800 hover:underline cursor-pointer bg-transparent border-none p-0"
+                                    >
+                                        {isCheckingPurchase ? "Checking..." : (productDetailData?.data?.product_rating?.num_ratings === 0 ? "Be the first to review" : "Write a review")}
+                                    </button>
+                                </div>
+                            </div>
                             <ProductSchema
                                 product={productDetailData?.data?.product}
                                 images={imageThumbnails}
-                                rating={productDetailData?.data?.product_rating?.avg_rating || 0}
-                                ratingCount={productDetailData?.data?.product_rating?.num_ratings || 0}
+                                rating={ratingData?.avg_rating || 0}
+                                ratingCount={ratingData?.num_ratings || 0}
                             />
 
                             <div className="flex mb-4 items-center">
@@ -1310,7 +1423,7 @@ export default function Component({ initialProductData }) {
                             )}
 
                             <div className="mb-4">
-                                <span className=" font-bold text-black-700">Quantity:</span>
+                                <span className="font-bold text-black-700 text-base mb-2">Quantity:</span>
                                 <div className="flex items-center mt-4">
                                     <button aria-label="Button"
                                         // onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -1402,53 +1515,65 @@ export default function Component({ initialProductData }) {
                             )}
 
                         </div>
-
                     </div>
                     <AddOnProduct addOnData={addOnData} />
-                </div>
-                <div className="py-4 md:pr-32">
-                    <div className="mt-2 flex w-full justify-center md:justify-end">
-                        <input
-                            type="text"
-                            placeholder="Enter Pin Code"
-                            value={pincode}
-                            onChange={handlePincodeChange}
-                            className="px-4 py-2 border border-gray-300 rounded-l outline-none"
-                        />
-                        <button
-                            className="px-8 py-2 bg-bio-green text-white rounded-r hover:bg-green-700"
-                            onClick={handleCheck}
-                        >
-                            Check
-                        </button>
+                    <div className="py-4 md:pr-32">
+                        <div className="mt-2 flex w-full justify-center md:justify-end">
+                            <input
+                                type="text"
+                                placeholder="Enter Pin Code"
+                                value={pincode}
+                                onChange={handlePincodeChange}
+                                className="px-4 py-2 border border-gray-300 rounded-l outline-none"
+                            />
+                            <button
+                                className="px-8 py-2 bg-bio-green text-white rounded-r hover:bg-green-700"
+                                onClick={handleCheck}
+                            >
+                                Check
+                            </button>
+                        </div>
+                        {error && <p className="text-red-500 text-sm mt-1 text-center md:text-right">{error}</p>}
                     </div>
-                    {error && <p className="text-red-500 text-sm mt-1 text-center md:text-right">{error}</p>}
                 </div>
-                <br />
-                <div className="bg-white p-4">
-                    <AboutTheProducts productDetailData={productDetailData} />
-
-                </div>
-
-                <ProductFeatured />
-                <ProductSeller />
-
-                {productDetailData?.data?.product?.keywords && (
-                    <div className="bg-white rounded-xl border border-gray-100 shadow-sm mx-0 my-4 p-4 md:p-6">
-                        <p className="text-gray-600 text-sm leading-relaxed">
-                            {productDetailData.data.product.keywords}
-                        </p>
-                    </div>
-                )}
-
-                {productDetailData?.data?.product_rating && (
-                    <ProductReviews
-                        product_Rating={productDetailData?.data?.product_rating}
-                        total_Rating={productDetailData?.data?.product_reviews}
-                        productId={id}
-                    />
-                )}
             </div>
+
+            <div className="bg-white p-4">
+                <AboutTheProducts productDetailData={productDetailData} />
+            </div>
+
+            {/* Product Reviews Section */}
+            {(productDetailData?.data?.product || productDetailData?.product) && (
+                <ProductReviews
+                    product_Rating={ratingData}
+                    total_Rating={reviewData}
+                    productId={productDetailData?.data?.product?.id || productDetailData?.product?.id}
+                    onWriteReview={handleWriteReviewClick}
+                />
+            )}
+
+            <ProductFeatured />
+            <ProductSeller />
+            <RecentlyViewedProducts title="People also bought" />
+            {/* <FaqAccordion /> */}
+
+            {productDetailData?.data?.product?.keywords && (
+                <div className="bg-white rounded-xl border border-gray-100 shadow-sm mx-0 my-4 p-4 md:p-6">
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                        {productDetailData.data.product.keywords}
+                    </p>
+                </div>
+            )}
+
+            {isReviewModalOpen && (
+                <WriteAReview
+                    onClose={() => {
+                        setIsReviewModalOpen(false);
+                    }}
+                    productDetailData={productDetailData}
+                    productId={productDetailData?.data?.product?.id}
+                />
+            )}
             <HomepageSchema />
             <StoreSchema />
         </>

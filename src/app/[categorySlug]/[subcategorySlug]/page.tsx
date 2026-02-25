@@ -43,11 +43,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const catName = categorySlug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   const subName = subcategorySlug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   return {
-    title: `${subName} - ${catName} | Gidan`,
-    description: `Buy ${subName.toLowerCase()} in ${catName.toLowerCase()} category at Gidan. Browse our collection of plants, pots and garden accessories.`,
+    title: `Buy ${subName} ${catName} Online India | Gidan`,
+    description: `Shop the best ${subName.toLowerCase()} ${catName.toLowerCase()} online at Gidan. Quality gardening products with fast delivery across India.`,
     openGraph: {
-      title: `${subName} - ${catName} | Gidan`,
-      description: `Shop ${subName.toLowerCase()} ${catName.toLowerCase()} at Gidan Plants India.`,
+      title: `Buy ${subName} ${catName} Online India | Gidan`,
+      description: `Browse our collection of ${subName.toLowerCase()} ${catName.toLowerCase()} at Gidan. Premium selection for your home and garden.`,
       url: `/${categorySlug}/${subcategorySlug}/`,
       siteName: "Gidan Plants",
       locale: "en_IN",
@@ -58,6 +58,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 import { fetchCategoryBySlug, fetchSubcategoryBySlug, fetchProductsByFilters, fetchSubcategories, fetchFilters } from "@/utils/serverApi";
+import CategoryStaticSEO from "@/views/utilities/Info/CategoryStaticSEO";
+import RecentlyViewedProducts from "@/components/Shared/RecentlyViewedProducts";
+import CheckoutStores from "@/views/utilities/PlantFilter/CheckoutStores";
 
 export default async function SubcategoryPage({ params }: Props) {
   const { categorySlug, subcategorySlug } = await params;
@@ -75,7 +78,7 @@ export default async function SubcategoryPage({ params }: Props) {
     fetchCategoryBySlug(categorySlug),
     fetchSubcategoryBySlug(categorySlug, subcategorySlug),
     fetchSubcategories(categorySlug),
-    fetchFilters(typeKey)
+    fetchFilters(typeKey, (await fetchCategoryBySlug(categorySlug))?.id)
   ]);
 
   if (!category || !subcategory) notFound();
@@ -93,12 +96,25 @@ export default async function SubcategoryPage({ params }: Props) {
   });
 
   return (
-    <Suspense fallback={<div className="flex justify-center p-8">Loading products...</div>}>
-      <PlantFilter
-        initialResults={initialData}
-        initialCategoryData={categoryWithSubs}
-        initialFilterData={filters}
-      />
-    </Suspense>
+    <>
+      <Suspense fallback={<div className="flex justify-center p-8">Loading products...</div>}>
+        <PlantFilter
+          initialResults={initialData}
+          initialCategoryData={categoryWithSubs}
+          initialFilterData={filters}
+        />
+      </Suspense>
+
+      <div className="space-y-12 mt-12 mb-8">
+        <RecentlyViewedProducts />
+        <CategoryStaticSEO
+          categorySlug={categorySlug}
+          subcategoryName={subcategory.name}
+          subcategorySlug={subcategorySlug}
+          isSubcategory={true}
+        />
+        <CheckoutStores />
+      </div>
+    </>
   );
 }

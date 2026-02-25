@@ -98,6 +98,20 @@ const FilterSidebar = ({
   const [filterData, setFilterData] = useState(initialFilterData || {});
   const [availableTypes, setAvailableTypes] = useState(initialFilterData?.available_types || []);
 
+  // Sync with initialFilterData and categoryId when props change during navigation
+  useEffect(() => {
+    if (initialFilterData) {
+      setFilterData(initialFilterData);
+      setAvailableTypes(initialFilterData.available_types || []);
+
+      // If the selected type is in the new available types, keep it, otherwise update it
+      if (initialFilterData.available_types && !initialFilterData.available_types.includes(selectedFilterType)) {
+        const newType = initialFilterData.available_types[0] || "plant";
+        setSelectedFilterType(newType);
+      }
+    }
+  }, [initialFilterData, categoryId]);
+
   const dropdownButtonRefs = useRef({});
   const dropdownContainerRefs = useRef({});
 
@@ -162,31 +176,28 @@ const FilterSidebar = ({
     }
   }, [category, categorySlug, availableTypes, userHasSelectedType, typeKey]);
 
-  // Fetch filters
+  // Always re-fetch when type OR categoryId changes, unless we just synced from initialFilterData
+  // and it matches the current request intent.
   useEffect(() => {
-    // If we have initialFilterData and its type matches our selected type, skip the first fetch
-    if (initialFilterData && filterData.available_types && selectedFilterType) {
-      // Simple heuristic: if we already have data for this type, don't re-fetch immediately on mount
-      // However, we want to allow re-fetching if the type changes later.
-      if (isInitialMount.current && availableTypes.includes(selectedFilterType)) {
-        return;
-      }
-    }
-
-    axiosInstance
-      .get(`${API_URL}?type=${selectedFilterType}`)
-      .then((res) => {
+    const fetchData = async () => {
+      try {
+        const res = await axiosInstance.get(`${API_URL}?type=${selectedFilterType}${categoryId ? `&category_id=${categoryId}` : ''}`);
         const filters = res.data?.filters || {};
         setFilterData(filters);
         setAvailableTypes(filters.available_types || []);
 
-        // Clear all selected filters when Type changes (except keep the Type itself)
+        // Clear all selected filters when Type or Category changes
+        // But if it's the mount and we're just syncing, maybe don't clear if subcategory matches
         setSelectedFilters({});
         setPriceRange({ min: "", max: "" });
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error(err);
-      });
+      }
+    };
+
+    if (!isInitialMount.current || !initialFilterData) {
+      fetchData();
+    }
   }, [selectedFilterType, categoryId]);
 
   // Preselect subcategory from URL
@@ -514,7 +525,7 @@ const FilterSidebar = ({
                 isInitialMount.current = false;
                 applyFilters();
               }}
-              className="px-6 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-md font-medium"
+              className="px-6 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-md font-medium md:hidden"
             >
               Apply Filters
             </button>
@@ -526,7 +537,7 @@ const FilterSidebar = ({
         <div className="flex flex-col md:flex-row md:gap-4 flex-wrap pb-4 space-y-4 md:space-y-0">
           {/* Type Selector */}
           <div className="w-full md:w-48 md:flex-shrink-0 z-50">
-            <label className="block text-xs font-medium text-gray-600 mb-1">Type</label>
+            <h3 className="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Type</h3>
             <select
               className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
               value={selectedFilterType}
@@ -557,9 +568,9 @@ const FilterSidebar = ({
                 className={`relative w-full md:w-48 md:flex-shrink-0 ${openFilters[filter] ? "z-[100]" : "z-50"}`}
                 ref={(el) => (dropdownContainerRefs.current[filter] = el)}
               >
-                <label className="block text-xs font-medium text-gray-600 mb-1 capitalize">
+                <h3 className="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1 capitalize">
                   {filter.replace("_", " ")}
-                </label>
+                </h3>
                 <button aria-label="Toggle filters"
                   ref={(el) => (dropdownButtonRefs.current[filter] = el)}
                   onClick={() => {
@@ -593,7 +604,7 @@ const FilterSidebar = ({
           {/* Price Range */}
           {filterData.price && (
             <div className="w-full md:w-64 md:flex-shrink-0">
-              <label className="block text-xs font-medium text-gray-600 mb-1">Price Range</label>
+              <h3 className="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Price Range</h3>
               <div className="flex items-center gap-2">
                 <input
                   type="number"
