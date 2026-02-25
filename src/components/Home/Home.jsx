@@ -195,8 +195,8 @@ const ComboOffer = lazy(() => import(/* webpackChunkName: "combo-offer" */ '../C
 const Blog = lazy(() => import(/* webpackChunkName: "blog" */ '../Blog/Blog'));
 const VideoSection = lazy(() => import(/* webpackChunkName: "video" */ '../VideoSection/VideoSection'));
 const CheckOutStore = lazy(() => import(/* webpackChunkName: "store" */ '../Store/CheckOutStore'));
-const HomepageSchema = lazy(() => import(/* webpackChunkName: "schema" */ '../../views/utilities/seo/HomepageSchema'));
-const StoreSchema = lazy(() => import(/* webpackChunkName: "schema" */ '../../views/utilities/seo/StoreSchema'));
+import HomepageSchema from '../../views/utilities/seo/HomepageSchema';
+import StoreSchema from '../../views/utilities/seo/StoreSchema';
 
 const Home = ({ initialBanners, initialCategories }) => {
   // ✅ Use TanStack Query hook - automatic caching, no unnecessary re-renders
@@ -318,10 +318,8 @@ const Home = ({ initialBanners, initialCategories }) => {
       </LazyLoadWrapper>
 
       {/* Schema components - load at the end */}
-      <Suspense fallback={null}>
-        <HomepageSchema />
-        <StoreSchema />
-      </Suspense>
+      <HomepageSchema />
+      <StoreSchema />
     </div>
   );
 };

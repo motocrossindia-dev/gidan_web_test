@@ -507,7 +507,6 @@ function PlantFilter({
                 }
                 items={results || []}
             />
-            <HomepageSchema />
             <StoreSchema />
         </>
     );
