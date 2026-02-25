@@ -23,8 +23,7 @@ export default function ProductSchema({
                 "@type": "Product",
                 "@id": `${productUrl}#product`,
                 "name": product.main_product_name,
-                "url": product.main_image,
-                // "image": images.length ? images : [product.main_image],
+                "image": product.main_image,
                 "description": product.meta_description || product.description,
                 "sku": product.sku || product.id,
                 "brand": {

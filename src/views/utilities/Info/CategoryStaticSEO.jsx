@@ -212,7 +212,15 @@ const CategoryStaticSEO = ({ categorySlug, subcategoryName, isSubcategory, subca
 
     // Priority 1: Backend API data (real-time)
     // Priority 2: Hardcoded category SEO
-    const currentData = categoryDataFromAPI || seoData.find(d => d.category === categorySlug?.toLowerCase());
+    const hardcodedData = seoData.find(d => d.category === categorySlug?.toLowerCase());
+
+    // Merge API data over hardcoded data for dynamic fields to ensure structure is preserved
+    const currentData = hardcodedData ? {
+        ...hardcodedData,
+        page_title: categoryDataFromAPI?.category_name || hardcodedData.page_title,
+        subtitle: categoryDataFromAPI?.subtitle || hardcodedData.subtitle,
+        intro_text: categoryDataFromAPI?.intro_text || hardcodedData.intro_text,
+    } : categoryDataFromAPI;
 
     // If it's a subcategory page, show a simplified SEO block and RETURN
     if (isSubcategory) {
@@ -255,42 +263,52 @@ const CategoryStaticSEO = ({ categorySlug, subcategoryName, isSubcategory, subca
             <div className="container mx-auto max-w-full">
                 {/* Hero Section */}
                 <div className="text-center mb-12">
-                    <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{categoryDataFromAPI?.category_name || currentData.page_title}</h1>
-                    <p className="text-xl text-green-600 font-medium">{categoryDataFromAPI?.subtitle || currentData.subtitle}</p>
+                    <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{currentData.category_name || currentData.page_title}</h1>
+                    <p className="text-xl text-green-600 font-medium">{currentData.subtitle}</p>
                 </div>
 
                 {/* Intro Text */}
-                <div className="mb-10 text-center max-w-5xl mx-auto">
-                    <p className="leading-relaxed text-lg">{currentData.intro_text}</p>
-                </div>
+                {currentData.intro_text && (
+                    <div className="mb-10 text-center max-w-5xl mx-auto">
+                        <p className="leading-relaxed text-lg">{currentData.intro_text}</p>
+                    </div>
+                )}
 
                 {/* Section 1 */}
-                <div className="mb-12">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-3 border-l-4 border-green-500 pl-4">{currentData.section_1.title}</h2>
-                    <p className="leading-relaxed">{currentData.section_1.description}</p>
-                </div>
+                {currentData.section_1?.title && (
+                    <div className="mb-12">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-3 border-l-4 border-green-500 pl-4">{currentData.section_1.title}</h2>
+                        <p className="leading-relaxed">{currentData.section_1.description}</p>
+                    </div>
+                )}
 
                 {/* Feature Cards Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-                    {currentData.feature_cards.map((card, index) => (
-                        <div key={index} className="bg-gray-50 p-6 rounded-xl border border-gray-100 hover:shadow-md transition-shadow">
-                            <h3 className="text-xl font-bold text-green-700 mb-3">{card.title}</h3>
-                            <p className="text-gray-600 leading-relaxed text-sm">{card.description}</p>
-                        </div>
-                    ))}
-                </div>
+                {currentData.feature_cards?.length > 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                        {currentData.feature_cards.map((card, index) => (
+                            <div key={index} className="bg-gray-50 p-6 rounded-xl border border-gray-100 hover:shadow-md transition-shadow">
+                                <h3 className="text-xl font-bold text-green-700 mb-3">{card.title}</h3>
+                                <p className="text-gray-600 leading-relaxed text-sm">{card.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                )}
 
                 {/* Section 2 */}
-                <div className="mb-12">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-3 border-l-4 border-green-500 pl-4">{currentData.section_2.title}</h2>
-                    <p className="leading-relaxed">{currentData.section_2.description}</p>
-                </div>
+                {currentData.section_2?.title && (
+                    <div className="mb-12">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-3 border-l-4 border-green-500 pl-4">{currentData.section_2.title}</h2>
+                        <p className="leading-relaxed">{currentData.section_2.description}</p>
+                    </div>
+                )}
 
                 {/* CTA Box */}
-                <div className="bg-green-50 p-8 rounded-2xl border border-green-100">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-3">{currentData.cta_box.title}</h2>
-                    <p className="leading-relaxed text-gray-800">{currentData.cta_box.description}</p>
-                </div>
+                {currentData.cta_box?.title && (
+                    <div className="bg-green-50 p-8 rounded-2xl border border-green-100">
+                        <h2 className="text-2xl font-bold text-gray-900 mb-3">{currentData.cta_box.title}</h2>
+                        <p className="leading-relaxed text-gray-800">{currentData.cta_box.description}</p>
+                    </div>
+                )}
             </div>
         </div>
     );
