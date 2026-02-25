@@ -83,6 +83,7 @@ export default async function CategoryPage({ params }: Props) {
           initialResults={initialData}
           initialCategoryData={categoryWithSubs}
           initialFilterData={filters}
+          categorySlug={categorySlug}
         />
       </Suspense>
 

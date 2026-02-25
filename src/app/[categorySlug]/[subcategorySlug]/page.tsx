@@ -102,6 +102,9 @@ export default async function SubcategoryPage({ params }: Props) {
           initialResults={initialData}
           initialCategoryData={categoryWithSubs}
           initialFilterData={filters}
+          categorySlug={categorySlug}
+          subcategorySlug={subcategorySlug}
+          subcategoryName={subcategory.name}
         />
       </Suspense>
 

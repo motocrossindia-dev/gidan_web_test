@@ -1,19 +1,55 @@
-// src/views/utilities/seo/ProductSchema.jsx
-
 export default function ProductSchema({
     product,
     siteUrl,
-    productUrl,
     currency = "INR",
-    brand = "Gidan Store",
-    rating = 0,
-    ratingCount = 0
+    brandName = "Gidan Store"
 }) {
     if (!product) return null;
 
-    /* --------------------------
-       1️⃣ Availability Mapping
-    --------------------------- */
+    /* -----------------------------
+       Safe URL Generation
+    ------------------------------ */
+    const safeProductUrl = `${siteUrl}/category/${product?.category_slug}/${product?.slug}/`;
+    const breadcrumbItems = [
+        {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: siteUrl
+        }
+    ];
+
+    // Add category safely
+    if (product?.category_slug) {
+        breadcrumbItems.push({
+            "@type": "ListItem",
+            position: breadcrumbItems.length + 1,
+            name: product?.category_name || "Category",
+            item: `${siteUrl}/category/${product.category_slug}/`
+        });
+    }
+
+    // Add sub-category safely
+    if (product?.sub_category_slug) {
+        breadcrumbItems.push({
+            "@type": "ListItem",
+            position: breadcrumbItems.length + 1,
+            name: product?.sub_category_name || "Sub Category",
+            item: `${siteUrl}/category/${product.category_slug}/${product.sub_category_slug}/`
+        });
+    }
+
+    // Add product page
+    breadcrumbItems.push({
+        "@type": "ListItem",
+        position: breadcrumbItems.length + 1,
+        name: product?.main_product_name || "Product",
+        item: safeProductUrl
+    });
+
+    /* -----------------------------
+       Availability Mapping
+    ------------------------------ */
     const availabilityMap = {
         in_stock: "InStock",
         out_of_stock: "OutOfStock",
@@ -23,55 +59,70 @@ export default function ProductSchema({
     const availability =
         availabilityMap[product?.stock_word?.toLowerCase()] || "InStock";
 
-    /* --------------------------
-       2️⃣ Image Fix (IMPORTANT)
-       Convert ImageObjects → URLs
-    --------------------------- */
+    /* -----------------------------
+       Clean Image Array (CRITICAL FIX)
+    ------------------------------ */
     const images =
         product?.images?.length
-            ? product.images.map((img) =>
-                typeof img === "string"
-                    ? img
-                    : img?.url || img?.image || ""
-            ).filter(Boolean)
+            ? product.images
+                .map((img) =>
+                    typeof img === "string"
+                        ? img
+                        : img?.url || img?.image || ""
+                )
+                .filter(Boolean)
             : product?.main_image
                 ? [product.main_image]
                 : [];
 
-    /* --------------------------
-       3️⃣ Schema Object
-    --------------------------- */
+    /* -----------------------------
+       Schema Object
+    ------------------------------ */
     const schema = {
         "@context": "https://schema.org/",
         "@graph": [
             {
                 "@type": "Product",
-                "@id": `${productUrl}#product`,
+                "@id": `${safeProductUrl}#product`,
+                url: safeProductUrl,
                 name: product?.main_product_name || "",
-                image: images,
                 description:
                     product?.meta_description || product?.description || "",
+                image: images,
                 sku: product?.sku || String(product?.id || ""),
+                mpn: product?.mpn || undefined,
+                gtin13: product?.gtin || undefined,
+
                 brand: {
                     "@type": "Brand",
-                    name: brand
+                    name: brandName
                 },
+
                 category:
                     product?.sub_category_name
                         ? `${product.category_name} > ${product.sub_category_name}`
                         : product?.category_name || "",
+
                 offers: {
                     "@type": "Offer",
-                    url: productUrl,
+                    url: safeProductUrl,
                     priceCurrency: currency,
                     price: String(product?.selling_price || 0),
                     priceValidUntil: "2026-12-31",
                     availability: `https://schema.org/${availability}`,
                     itemCondition: "https://schema.org/NewCondition",
+
                     seller: {
                         "@type": "Organization",
-                        name: brand
+                        name: brandName
                     },
+
+                    priceSpecification: {
+                        "@type": "UnitPriceSpecification",
+                        price: String(product?.selling_price || 0),
+                        priceCurrency: currency
+                    },
+
                     shippingDetails: {
                         "@type": "OfferShippingDetails",
                         shippingDestination: {
@@ -99,6 +150,7 @@ export default function ProductSchema({
                             currency: currency
                         }
                     },
+
                     hasMerchantReturnPolicy: {
                         "@type": "MerchantReturnPolicy",
                         returnPolicyCategory:
@@ -109,19 +161,21 @@ export default function ProductSchema({
                         returnFees: "https://schema.org/FreeReturn"
                     }
                 },
-                ...(rating > 0 && {
+
+                ...(product?.average_rating > 0 && {
                     aggregateRating: {
                         "@type": "AggregateRating",
-                        ratingValue: String(rating),
-                        reviewCount: String(ratingCount || 1),
+                        ratingValue: String(product.average_rating),
+                        reviewCount: String(product.total_reviews || 1),
                         bestRating: "5",
                         worstRating: "1"
                     }
                 })
             },
+
             {
                 "@type": "BreadcrumbList",
-                "@id": `${productUrl}#breadcrumb`,
+                "@id": `${safeProductUrl}#breadcrumb`,
                 itemListElement: [
                     {
                         "@type": "ListItem",
@@ -133,7 +187,7 @@ export default function ProductSchema({
                         "@type": "ListItem",
                         position: 2,
                         name: product?.category_name || "",
-                        item: `${siteUrl}/${product?.category_slug || ""}/`
+                        item: `${siteUrl}/category/${product?.category_slug}/`
                     },
                     ...(product?.sub_category_slug
                         ? [
@@ -141,7 +195,7 @@ export default function ProductSchema({
                                 "@type": "ListItem",
                                 position: 3,
                                 name: product?.sub_category_name || "",
-                                item: `${siteUrl}/${product?.category_slug}/${product?.sub_category_slug}/`
+                                item: `${siteUrl}/category/${product?.category_slug}/${product?.sub_category_slug}/`
                             }
                         ]
                         : []),
@@ -149,7 +203,7 @@ export default function ProductSchema({
                         "@type": "ListItem",
                         position: product?.sub_category_slug ? 4 : 3,
                         name: product?.main_product_name || "",
-                        item: productUrl
+                        item: safeProductUrl
                     }
                 ]
             }

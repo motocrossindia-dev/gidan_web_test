@@ -15,17 +15,25 @@ import StoreSchema from "../seo/StoreSchema";
 import Breadcrumb from "../../../components/Shared/Breadcrumb";
 import Link from "next/link";
 import CategoryStaticSEO from "../Info/CategoryStaticSEO";
+import axiosInstance from "../../../Axios/axiosInstance";
 
-// CategoryLayout removed for SSR at page level. profit.
-
-void (0);
 /**
  * @param {object} props
  * @param {any[] | {results: any[], count: number, next: string | null, previous: string | null}} props.initialResults
  * @param {object} [props.initialCategoryData]
  * @param {object} [props.initialFilterData]
+ * @param {string} [props.categorySlug]
+ * @param {string} [props.subcategorySlug]
+ * @param {string} [props.subcategoryName]
  */
-function PlantFilter({ initialResults = [], initialCategoryData = null, initialFilterData = null } = {}) {
+function PlantFilter({
+    initialResults = [],
+    initialCategoryData = null,
+    initialFilterData = null,
+    categorySlug: propCategorySlug = null,
+    subcategorySlug: propSubcategorySlug = null,
+    subcategoryName: propSubcategoryName = null
+} = {}) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const path = pathname;
@@ -54,27 +62,31 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
     const { categoryId, categoryName, subCategory, subcategoryID, category_slug } = stateData;
     const { name: subCategoryName, subcategory_slug } = subCategory || {};
 
+    // Use props for SSR stability, fall back to client-side hooks
+    const effectiveCategorySlug = propCategorySlug || categorySlug;
+    const effectiveSubcategorySlug = propSubcategorySlug || subcategorySlug;
+
     // Derive the product type from the categorySlug so initial API calls include `type`
     // e.g. pots→pot, plants→plant, seeds→seed, plant-care→plantcare
     const derivedType = useMemo(() => {
-        if (!categorySlug) return null;
-        const slug = categorySlug.toLowerCase().replace(/-/g, '');
+        if (!effectiveCategorySlug) return null;
+        const slug = effectiveCategorySlug.toLowerCase().replace(/-/g, '');
         const singular = slug.endsWith('s') ? slug.slice(0, -1) : slug;
         const typeMap = { pot: 'pot', plant: 'plant', seed: 'seed', plantcare: 'plantcare' };
         return typeMap[singular] || null;
-    }, [categorySlug]);
+    }, [effectiveCategorySlug]);
 
     // Map known category slugs to their API IDs
     const categoryIdFromSlug = useMemo(() => {
-        if (!categorySlug) return null;
+        if (!effectiveCategorySlug) return null;
         const slugToId = {
             'plants': 19,
             'pots': 20,
             'seeds': 21,
             'plant-care': 22,
         };
-        return slugToId[categorySlug.toLowerCase()] || null;
-    }, [categorySlug]);
+        return slugToId[effectiveCategorySlug.toLowerCase()] || null;
+    }, [effectiveCategorySlug]);
     const typeKey = derivedType;
 
     // State to store fetched category/subcategory names when navigating via URL
@@ -132,37 +144,31 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
     };
 
     useEffect(() => {
-        window.scrollTo(0, 0);
+        if (typeof window !== 'undefined') {
+            window.scrollTo(0, 0);
+        }
     }, []);
 
     // Reset products only when category Slug actually changes (fundamental context change)
     useEffect(() => {
-        // We only clear results if the category slug itself changes
-        // Query params or subcategory changes should use the loading overlay for smoothness
-        if (categorySlug) {
-            // Optional: you could choose NOT to clear even here if you want ultra-smooth transitions
-            // but usually a root category change justifies a fresh state.
-            // setResults([]); 
-            // setProducts({});
+        if (effectiveCategorySlug) {
+            setFiltersApplied(false);
         }
-        setFiltersApplied(false);
-    }, [categorySlug]);
+    }, [effectiveCategorySlug]);
 
     // Handle slug to ID resolution
     useEffect(() => {
         const resolveSlugs = async () => {
-            if (!categorySlug) return;
+            if (!effectiveCategorySlug) return;
 
-            // If we already have the ID from hardcoded map or initialCategoryData, skip resolving category
             let currentCatId = resolvedCategoryId;
 
-            // Only fetch if we really don't have the ID
             if (!currentCatId) {
                 setIsResolvingIds(true);
                 try {
                     const catRes = await axiosInstance.get('/category/');
                     const categories = catRes.data?.data?.categories || [];
-                    const foundCat = categories.find(c => c.slug === categorySlug);
+                    const foundCat = categories.find(c => c.slug === effectiveCategorySlug);
                     if (foundCat) {
                         currentCatId = foundCat.id;
                         setResolvedCategoryId(foundCat.id);
@@ -175,13 +181,12 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
                 }
             }
 
-            // 2. Resolve Subcategory ID if slug exists and not already resolved
-            if (subcategorySlug && !resolvedSubcategoryId && currentCatId) {
+            if (effectiveSubcategorySlug && !resolvedSubcategoryId && currentCatId) {
                 setIsResolvingIds(true);
                 try {
-                    const subRes = await axiosInstance.get(`/category/categoryWiseSubCategory/${categorySlug}/`);
+                    const subRes = await axiosInstance.get(`/category/categoryWiseSubCategory/${effectiveCategorySlug}/`);
                     const subcategories = subRes.data?.data?.subCategorys || [];
-                    const foundSub = subcategories.find(s => s.slug === subcategorySlug);
+                    const foundSub = subcategories.find(s => s.slug === effectiveSubcategorySlug);
                     if (foundSub) {
                         setResolvedSubcategoryId(foundSub.id);
                         setFetchedSubcategoryName(foundSub.name);
@@ -195,7 +200,7 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
         };
 
         resolveSlugs();
-    }, [categorySlug, subcategorySlug, resolvedCategoryId, resolvedSubcategoryId]);
+    }, [effectiveCategorySlug, effectiveSubcategorySlug, resolvedCategoryId, resolvedSubcategoryId]);
 
     useEffect(() => {
         const getInitialProducts = async () => {
@@ -213,23 +218,14 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
             }
 
             try {
-                // Build complete API params matching exact backend format
                 const queryParams = new URLSearchParams();
-
-                // Type - use derived type or default to "plant" for boolean filter pages
                 const finalType = typeKey || (isSeasonalCollection || isTrending || isFeatured || isBestSeller ? "plant" : "");
                 queryParams.append("type", finalType);
-                // Category ID
                 queryParams.append("category_id", resolvedCategoryId || "");
-                // Subcategory ID - use resolved ID
                 queryParams.append("subcategory_id", resolvedSubcategoryId || "");
-
-                // Search
                 queryParams.append("search", "");
                 queryParams.append("min_price", "");
                 queryParams.append("max_price", "");
-
-                // Filter IDs (all empty on initial load) - Include ALL parameters matching FilterSidebar.jsx
                 queryParams.append("color_id", "");
                 queryParams.append("size_id", "");
                 queryParams.append("planter_size_id", "");
@@ -237,17 +233,12 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
                 queryParams.append("weight_id", "");
                 queryParams.append("pot_type_id", "");
                 queryParams.append("litre_id", "");
-
-                // Boolean filter flags (use "true" or "unknown")
                 queryParams.append("is_featured", isFeatured ? "true" : "unknown");
                 queryParams.append("is_best_seller", isBestSeller ? "true" : "unknown");
                 queryParams.append("is_seasonal_collection", isSeasonalCollection ? "true" : "unknown");
                 queryParams.append("is_trending", isTrending ? "true" : "unknown");
-
-                // Ordering
                 queryParams.append("ordering", "");
 
-                // Always make the API call with complete params and redundant limit/page for backend consistency
                 const response = await axiosInstance.get(
                     `/filters/main_productsFilter/?${queryParams}&page_size=100&limit=100&page=1`
                 );
@@ -259,10 +250,8 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
                         next: response.data.next,
                         previous: response.data.previous,
                     });
-                    // API response: category_info.category_info contains { hero, sections }
                     setCategoryData(response.data?.category_info?.category_info || null);
 
-                    // Update fetched names from API response if not in state
                     if (!categoryName && response.data?.category_info?.category_info?.category_name) {
                         setFetchedCategoryName(response.data.category_info.category_info.category_name);
                     }
@@ -277,20 +266,14 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
             }
         };
 
-        // Trigger product fetch when either we have the IDs OR it's a special boolean route
         const isSpecialRoute = routeBasedFilters.isSeasonalCollection || routeBasedFilters.isTrending || routeBasedFilters.isFeatured || routeBasedFilters.isBestSeller;
 
-        // Skip initial fetch if data was provided by server (hydration) 
-        // OR if filters have already been applied by the sidebar (to avoid overwriting filtered results)
         if (!isResolvingIds && (resolvedCategoryId || isSpecialRoute)) {
             if (filtersApplied) return;
-
-            // Check if we already have robust data from server
             const hasInitialData = normalizedInitialResults.results && normalizedInitialResults.results.length > 0;
             const isMatchingData = results.length === normalizedInitialResults.results.length;
 
             if (hasInitialData && isMatchingData) {
-                // Already have data from server, skip first fetch
                 return;
             }
             setIsSearching(true);
@@ -298,48 +281,34 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
         }
     }, [path, typeKey, resolvedCategoryId, resolvedSubcategoryId, isResolvingIds, isSeasonalCollection, isTrending, isFeatured, isBestSeller, normalizedInitialResults, filtersApplied, results.length]);
 
-    // Determine the base name for SEO and Headers
     const getDisplayName = () => {
-        // Priority 1: Meta/SEO title from API if available (highest relevance)
         if (categoryData?.meta_title) return categoryData.meta_title;
         if (categoryData?.seo_title) return categoryData.seo_title;
-
         const suffix = "Online in India";
-
         if (isSeasonalCollection) return `Fresh Seasonal Collections - Buy Plants ${suffix}`;
         if (isTrending) return `Trending Gardening Products - Shop ${suffix}`;
         if (isFeatured) return `Featured Garden Products ${suffix}`;
         if (isBestSeller) return `Best Selling Plants & Pots ${suffix}`;
-
         if (currentFilterType) return `Buy ${currentFilterType}s ${suffix}`;
-
-        // Subcategory Page Title
         if (subCategoryName || fetchedSubcategoryName) {
             const sName = subCategoryName || fetchedSubcategoryName;
             const cName = categoryName || fetchedCategoryName || "";
-            // e.g., "Buy Flowering Plants Online in India"
             return `Buy ${sName} ${cName} ${suffix}`.replace(/\s+/g, ' ').trim();
         }
-
-        // Category Page Title
         if (categoryName || fetchedCategoryName) {
             const cName = categoryName || fetchedCategoryName;
             return `Buy ${cName} ${suffix}`;
         }
-
         return `Best Gardening Products ${suffix}`;
     };
 
     const displayName = getDisplayName();
-
-    // Use URL params for canonical, fallback to state slugs
-    // Parse from pathname to sync immediately if history.pushState was used
     const currentPath = typeof window !== 'undefined' ? window.location.pathname : pathname;
     const pathSegments = currentPath.split('/').filter(Boolean);
     const isSpecialRoute = routeBasedFilters.isSeasonalCollection || routeBasedFilters.isTrending || routeBasedFilters.isFeatured || routeBasedFilters.isBestSeller;
 
-    let canonicalCategorySlug = categorySlug || category_slug;
-    let canonicalSubcategorySlug = subcategorySlug || subcategory_slug;
+    let canonicalCategorySlug = effectiveCategorySlug || category_slug;
+    let canonicalSubcategorySlug = effectiveSubcategorySlug || subcategory_slug;
 
     if (!isSpecialRoute && pathSegments.length > 0) {
         canonicalCategorySlug = pathSegments[0];
@@ -352,7 +321,6 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
 
     return (
         <>
-            {/* Breadcrumb Navigation */}
             {(canonicalCategorySlug || canonicalSubcategorySlug) && (
                 <Breadcrumb
                     items={
@@ -375,20 +343,6 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
 
             <div className="w-full overflow-visible">
                 <div className="container mx-auto px-4 md:px-8 max-w-full">
-                    {/* H1 and H2 link removed as per user request */}
-
-                    {/* Mobile Filter Button - Triggers SwipeableDrawer */}
-                    <div className="md:hidden pt-4 sticky top-0 z-30 bg-gray-50/95 backdrop-blur-sm py-2 border-b border-gray-200">
-                        <button
-                            onClick={toggleDrawer(true)}
-                            className="bg-white text-black w-full rounded-lg flex items-center justify-center gap-2 p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-200"
-                        >
-                            <FiFilter size={20} />
-                            <span className="font-medium">Filter Products</span>
-                        </button>
-                    </div>
-
-                    {/* Desktop Horizontal Filter - Full Width */}
                     <div className="hidden md:block mt-4 overflow-visible relative z-50">
                         <FilterSidebar
                             setResults={setResults}
@@ -398,8 +352,8 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
                             category={categoryName || fetchedCategoryName}
                             subcategory={subCategoryName || fetchedSubcategoryName}
                             subcategoryID={resolvedSubcategoryId}
-                            subcategorySlug={subcategorySlug}
-                            categorySlug={categorySlug}
+                            subcategorySlug={effectiveSubcategorySlug}
+                            categorySlug={effectiveCategorySlug}
                             categoryIdFromSlug={resolvedCategoryId}
                             typeKey={typeKey}
                             setCategoryData={setCategoryData}
@@ -415,8 +369,6 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
                         />
                     </div>
 
-
-                    {/* Product Grid */}
                     <div className={`mt-4 transition-opacity duration-300 ${isSearching ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
                         <ProductGrid
                             productDetails={results}
@@ -427,7 +379,7 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
                             typeKey={typeKey}
                             categorySlug={canonicalCategorySlug}
                             subcategorySlug={canonicalSubcategorySlug}
-                            hasSubcategory={!!subcategoryID}
+                            hasSubcategory={!!resolvedSubcategoryId}
                         />
                         {isSearching && (
                             <div className="flex justify-center py-8">
@@ -436,20 +388,18 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
                         )}
                     </div>
 
-                    {/* SSR SEO Component - Receives real-time categoryData updates */}
                     <div className="mt-12 mb-8">
                         <CategoryStaticSEO
-                            categorySlug={categorySlug}
-                            isSubcategory={!!subcategorySlug}
-                            subcategoryName={fetchedSubcategoryName || subCategoryName}
-                            subcategorySlug={subcategorySlug}
+                            categorySlug={effectiveCategorySlug}
+                            isSubcategory={!!effectiveSubcategorySlug}
+                            subcategoryName={fetchedSubcategoryName || subCategoryName || propSubcategoryName}
+                            subcategorySlug={effectiveSubcategorySlug}
                             categoryDataFromAPI={categoryData}
                         />
                     </div>
                 </div>
             </div>
 
-            {/* MUI Swipeable Drawer for Mobile */}
             <SwipeableDrawer
                 anchor="right"
                 open={mobileOpen}
@@ -484,8 +434,8 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
                         category={categoryName || fetchedCategoryName}
                         subcategory={subCategoryName || fetchedSubcategoryName}
                         subcategoryID={resolvedSubcategoryId}
-                        subcategorySlug={subcategorySlug}
-                        categorySlug={categorySlug}
+                        subcategorySlug={effectiveSubcategorySlug}
+                        categorySlug={effectiveCategorySlug}
                         categoryIdFromSlug={resolvedCategoryId}
                         typeKey={typeKey}
                         setCategoryData={setCategoryData}
