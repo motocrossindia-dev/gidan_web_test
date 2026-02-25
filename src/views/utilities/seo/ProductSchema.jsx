@@ -11,6 +11,15 @@ export default function ProductSchema({
     ------------------------------ */
     const safeProductUrl = `${siteUrl}/category/${product?.category_slug}/${product?.slug}/`;
 
+    const breadcrumbItems = [
+        {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: siteUrl
+        }
+    ];
+
     // Add category safely
     if (product?.category_slug) {
         breadcrumbItems.push({
@@ -168,36 +177,7 @@ export default function ProductSchema({
             {
                 "@type": "BreadcrumbList",
                 "@id": `${safeProductUrl}#breadcrumb`,
-                itemListElement: [
-                    {
-                        "@type": "ListItem",
-                        position: 1,
-                        name: "Home",
-                        item: siteUrl
-                    },
-                    {
-                        "@type": "ListItem",
-                        position: 2,
-                        name: product?.category_name || "",
-                        item: `${siteUrl}/category/${product?.category_slug}/`
-                    },
-                    ...(product?.sub_category_slug
-                        ? [
-                            {
-                                "@type": "ListItem",
-                                position: 3,
-                                name: product?.sub_category_name || "",
-                                item: `${siteUrl}/category/${product?.category_slug}/${product?.sub_category_slug}/`
-                            }
-                        ]
-                        : []),
-                    {
-                        "@type": "ListItem",
-                        position: product?.sub_category_slug ? 4 : 3,
-                        name: product?.main_product_name || "",
-                        item: safeProductUrl
-                    }
-                ]
+                itemListElement: breadcrumbItems
             }
         ]
     };
