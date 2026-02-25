@@ -11,7 +11,9 @@ export default function ProductSchema({
 }) {
     if (!product) return null;
 
-    // 🔹 Safe availability mapping
+    /* --------------------------
+       1️⃣ Availability Mapping
+    --------------------------- */
     const availabilityMap = {
         in_stock: "InStock",
         out_of_stock: "OutOfStock",
@@ -21,15 +23,24 @@ export default function ProductSchema({
     const availability =
         availabilityMap[product?.stock_word?.toLowerCase()] || "InStock";
 
-    // 🔹 Safe images
+    /* --------------------------
+       2️⃣ Image Fix (IMPORTANT)
+       Convert ImageObjects → URLs
+    --------------------------- */
     const images =
         product?.images?.length
-            ? product.images
+            ? product.images.map((img) =>
+                typeof img === "string"
+                    ? img
+                    : img?.url || img?.image || ""
+            ).filter(Boolean)
             : product?.main_image
                 ? [product.main_image]
                 : [];
 
-    // 🔹 Schema Object
+    /* --------------------------
+       3️⃣ Schema Object
+    --------------------------- */
     const schema = {
         "@context": "https://schema.org/",
         "@graph": [
