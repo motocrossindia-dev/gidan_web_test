@@ -1264,6 +1264,7 @@ export default function ProductData({ initialProductData }) {
                                 images={imageThumbnails}
                                 rating={ratingData?.avg_rating || 0}
                                 ratingCount={ratingData?.num_ratings || 0}
+                                reviews={reviewData}
                             />
 
                             <div className="flex mb-4 items-center">

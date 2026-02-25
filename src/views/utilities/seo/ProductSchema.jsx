@@ -2,7 +2,10 @@ export default function ProductSchema({
     product,
     siteUrl = "https://www.gidan.store",
     currency = "INR",
-    brandName = "Gidan Store"
+    brandName = "Gidan Store",
+    rating = 0,
+    ratingCount = 0,
+    reviews = []
 }) {
     if (!product) return null;
 
@@ -168,14 +171,31 @@ export default function ProductSchema({
                     }
                 },
 
-                ...(product?.average_rating > 0 && {
+                ...((rating > 0 || product?.average_rating > 0) && {
                     aggregateRating: {
                         "@type": "AggregateRating",
-                        ratingValue: String(product.average_rating),
-                        reviewCount: String(product.total_reviews || 1),
+                        ratingValue: String(rating || product.average_rating),
+                        reviewCount: String(ratingCount || product.total_reviews || (reviews.length > 0 ? reviews.length : 1)),
                         bestRating: "5",
                         worstRating: "1"
                     }
+                }),
+
+                ...(reviews?.length > 0 && {
+                    review: reviews.slice(0, 5).map(rev => ({
+                        "@type": "Review",
+                        "reviewRating": {
+                            "@type": "Rating",
+                            "ratingValue": String(rev.latest_rating || rev.product_rating || 5),
+                            "bestRating": "5"
+                        },
+                        "author": {
+                            "@type": "Person",
+                            "name": rev.user_name || "Verified Customer"
+                        },
+                        "datePublished": rev.date_created || new Date().toISOString().split('T')[0],
+                        "reviewBody": rev.product_review || ""
+                    }))
                 })
             },
 
