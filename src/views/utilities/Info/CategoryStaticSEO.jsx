@@ -222,20 +222,26 @@ const CategoryStaticSEO = ({ categorySlug, subcategoryName, isSubcategory, subca
         intro_text: categoryDataFromAPI?.intro_text || hardcodedData.intro_text,
     } : categoryDataFromAPI;
 
-    // If it's a subcategory page, show a simplified SEO block and RETURN
-    if (isSubcategory) {
+    // If it's a subcategory page OR the API data indicates a subcategory view, show the specific content block
+    const effectiveSubcategoryName = subcategoryName || categoryDataFromAPI?.subcategory_name;
+    const effectiveSubcategorySlug = subSlug || categoryDataFromAPI?.subcategory_slug;
+    const isSubView = isSubcategory || !!categoryDataFromAPI?.subcategory_name;
+
+    if (isSubView) {
         // Try to find specific subcategory data by slug or matching title
         const subData = subcategoryData.find(s =>
-            (subSlug && s.slug === subSlug.toLowerCase()) ||
-            (subcategoryName && s.title.toLowerCase() === subcategoryName.toLowerCase())
+            (effectiveSubcategorySlug && s.slug === effectiveSubcategorySlug.toLowerCase()) ||
+            (effectiveSubcategoryName && s.title.toLowerCase() === effectiveSubcategoryName.toLowerCase())
         );
 
         // Derive title and subtitle from API if available, else use hardcoded/computed
-        const displayTitle = categoryDataFromAPI?.subcategory_name || subData?.title || subcategoryName ||
-            (subSlug ? subSlug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : '');
+        const displayTitle = categoryDataFromAPI?.subcategory_name || subData?.title || effectiveSubcategoryName ||
+            (effectiveSubcategorySlug ? effectiveSubcategorySlug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : '');
 
         const displaySubtitle = categoryDataFromAPI?.subtitle || subData?.subtitle ||
             `${displayTitle} - Buy Plants Online in India from Gidan.store`;
+
+        const displayDescription = categoryDataFromAPI?.intro_text || subData?.description || "";
 
         return (
             <div className="bg-white py-12 px-4 md:px-16 font-sans text-gray-700 border-t border-gray-100">
@@ -248,7 +254,7 @@ const CategoryStaticSEO = ({ categorySlug, subcategoryName, isSubcategory, subca
                             {displaySubtitle}
                         </p>
                         <p className="leading-relaxed text-lg max-w-5xl mx-auto text-gray-600">
-                            {subData?.description || categoryDataFromAPI?.intro_text || ""}
+                            {displayDescription}
                         </p>
                     </div>
                 </div>
