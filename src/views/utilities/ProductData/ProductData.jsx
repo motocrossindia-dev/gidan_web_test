@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import ProductSeller from "./ProductSeller";
 import ProductReviews from "./ProductReviews";
-import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
+import PeopleAlsoBought from "../../../components/Shared/PeopleAlsoBought";
 import ProductFeatured from "./ProductFeatured";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import AddOnProduct from "./AddOnProduct";
@@ -1552,18 +1552,11 @@ export default function ProductData({ initialProductData }) {
                 />
             )}
 
+            <PeopleAlsoBought title="People also bought" />
             <ProductFeatured />
             <ProductSeller />
-            <RecentlyViewedProducts title="People also bought" />
             {/* <FaqAccordion /> */}
 
-            {productDetailData?.data?.product?.keywords && (
-                <div className="bg-white rounded-xl border border-gray-100 shadow-sm mx-0 my-4 p-4 md:p-6">
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                        {productDetailData.data.product.keywords}
-                    </p>
-                </div>
-            )}
 
             {isReviewModalOpen && (
                 <WriteAReview
