@@ -1,18 +1,4 @@
 'use client';
-
-/**
- * ============================================
- * CUSTOM HOOK: useHomeProducts - Created: Feb 16, 2026
- * ============================================
- * Purpose: Fetch home products using TanStack Query
- * Used by: TrendingSection, SeasonalProduct
- * Benefits:
- * - Automatic caching (shared between components)
- * - No unnecessary re-renders
- * - Single API call for multiple components
- * ============================================
- */
-
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '../Axios/axiosInstance';
 

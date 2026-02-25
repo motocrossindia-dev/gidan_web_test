@@ -11,7 +11,6 @@ const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
-// Add access token to all requests
 axiosInstance.interceptors.request.use(
   (config) => {
     const state = store.getState();
