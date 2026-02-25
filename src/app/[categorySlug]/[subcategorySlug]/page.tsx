@@ -107,12 +107,6 @@ export default async function SubcategoryPage({ params }: Props) {
 
       <div className="space-y-12 mt-12 mb-8">
         <RecentlyViewedProducts />
-        <CategoryStaticSEO
-          categorySlug={categorySlug}
-          subcategoryName={subcategory.name}
-          subcategorySlug={subcategorySlug}
-          isSubcategory={true}
-        />
         <CheckoutStores />
       </div>
     </>

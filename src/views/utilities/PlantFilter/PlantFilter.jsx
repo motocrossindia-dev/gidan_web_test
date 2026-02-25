@@ -14,6 +14,7 @@ import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
 import Breadcrumb from "../../../components/Shared/Breadcrumb";
 import Link from "next/link";
+import CategoryStaticSEO from "../Info/CategoryStaticSEO";
 
 // CategoryLayout removed for SSR at page level. profit.
 
@@ -433,6 +434,17 @@ function PlantFilter({ initialResults = [], initialCategoryData = null, initialF
                                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
                             </div>
                         )}
+                    </div>
+
+                    {/* SSR SEO Component - Receives real-time categoryData updates */}
+                    <div className="mt-12 mb-8">
+                        <CategoryStaticSEO
+                            categorySlug={categorySlug}
+                            isSubcategory={!!subcategorySlug}
+                            subcategoryName={fetchedSubcategoryName || subCategoryName}
+                            subcategorySlug={subcategorySlug}
+                            categoryDataFromAPI={categoryData}
+                        />
                     </div>
                 </div>
             </div>

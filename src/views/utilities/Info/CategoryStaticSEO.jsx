@@ -1,82 +1,84 @@
 import React from "react";
 
-const CategoryStaticSEO = ({ categorySlug, subcategoryName, isSubcategory, subcategorySlug: subSlug }) => {
+const CategoryStaticSEO = ({ categorySlug, subcategoryName, isSubcategory, subcategorySlug: subSlug, categoryDataFromAPI }) => {
     // subSlug is now passed as a prop from server component
+    // categoryDataFromAPI allows real-time updates when filters change
 
     const subcategoryData = [
         {
             "slug": "indoor-plant",
             "title": "Indoor Plant",
-            "subtitle": "Buy Plants Online in India from Gidan.store",
+            "subtitle": "Indoor Plant - Buy Plants Online in India from Gidan.store",
             "description": "Indoor plants are perfect for homes and offices as they enhance interior décor and promote a healthier environment. These plants thrive in low to moderate light and require minimal care. Popular indoor plants include Money Plant, Snake Plant, Peace Lily, Areca Palm, and ZZ Plant. Indoor plants are ideal for living rooms, bedrooms, and workspaces."
         },
         {
             "slug": "outdoor-plant",
             "title": "Outdoor Plant",
-            "subtitle": "Buy Plants Online in India from Gidan.store",
+            "subtitle": "Outdoor Plant - Buy Plants Online in India from Gidan.store",
             "description": "Outdoor plants are suitable for gardens, balconies, terraces, and open spaces. They add freshness, natural beauty, and greenery to your surroundings. At Gidan.store, you can explore a wide range of outdoor plants including decorative plants, shrubs, and garden greens that grow well in Indian weather conditions and are easy to maintain."
         },
         {
             "slug": "flowering-plants",
             "title": "Flowering Plants",
-            "subtitle": "Buy Plants Online in India from Gidan.store",
+            "subtitle": "Flowering Plants - Buy Plants Online in India from Gidan.store",
             "description": "Flowering plants bring color, fragrance, and vibrancy to any space. Whether planted in gardens, balconies, or pots, flowering plants create a lively and cheerful environment. Our collection includes seasonal and perennial flowering plants that bloom beautifully with proper care and sunlight."
         },
         {
             "slug": "vegetable-seeds",
             "title": "Vegetable Seeds",
-            "subtitle": "Buy Seeds Online in India from Gidan.store",
+            "subtitle": "Vegetable Seeds - Buy Seeds Online in India from Gidan.store",
             "description": "Vegetable seeds are perfect for growing fresh, healthy, and chemical-free vegetables at home. Whether you have a small balcony or a backyard garden, our vegetable seeds are suitable for various growing spaces. Common options include seeds for leafy greens, root vegetables, and seasonal vegetables that are easy to grow and maintain."
         },
         {
             "slug": "flower-seeds",
             "title": "Flower Seeds",
-            "subtitle": "Buy Seeds Online in India from Gidan.store",
+            "subtitle": "Flower Seeds - Buy Seeds Online in India from Gidan.store",
             "description": "Flower seeds add beauty, color, and freshness to your garden or home. From seasonal blooms to long-lasting flowering plants, our flower seeds are ideal for gardens, balconies, and pots. With proper care and sunlight, these seeds grow into vibrant flowers that enhance the overall appearance of your space."
         },
         {
             "slug": "rotomolded-pots",
             "title": "Rotomolded Pots",
-            "subtitle": "Buy Plant Pots Online in India from Gidan.store",
+            "subtitle": "Rotomolded Pots - Buy Plant Pots Online in India from Gidan.store",
             "description": "Rotomolded pots are known for their premium finish, durability, and weather resistance. These pots are lightweight yet strong, making them ideal for both indoor and outdoor use. With their modern designs and long-lasting quality, rotomolded pots are perfect for enhancing gardens, balconies, and living spaces."
         },
         {
             "slug": "plastic-pots",
             "title": "Plastic Pots",
-            "subtitle": "Buy Plant Pots Online in India from Gidan.store",
+            "subtitle": "Plastic Pots - Buy Plant Pots Online in India from Gidan.store",
             "description": "Plastic pots are affordable, lightweight, and easy to maintain. They are suitable for everyday gardening needs and are available in various sizes, shapes, and colors. Plastic pots are ideal for beginners and are perfect for both indoor and outdoor plants."
         },
         {
             "slug": "hanging-pots",
             "title": "Hanging Pots",
-            "subtitle": "Buy Plant Pots Online in India from Gidan.store",
+            "subtitle": "Hanging Pots - Buy Plant Pots Online in India from Gidan.store",
             "description": "Hanging pots are a great way to save space while adding greenery to your home. Ideal for balconies, windows, and indoor corners, hanging pots are perfect for trailing and decorative plants. They help create a fresh and stylish look without occupying floor space."
         },
         {
             "slug": "table-top-pots",
             "title": "Table Top Pots",
-            "subtitle": "Buy Plant Pots Online in India from Gidan.store",
+            "subtitle": "Table Top Pots - Buy Plant Pots Online in India from Gidan.store",
             "description": "Table top pots are compact and decorative, making them ideal for desks, shelves, coffee tables, and workspaces. These pots are perfect for small indoor plants and succulents, adding a touch of greenery to your interiors."
         },
         {
             "slug": "eco-planters",
             "title": "Eco Planters",
-            "subtitle": "Buy Plant Pots Online in India from Gidan.store",
+            "subtitle": "Eco Planters - Buy Plant Pots Online in India from Gidan.store",
             "description": "Eco planters are made from sustainable and environmentally friendly materials. They are designed for eco-conscious gardeners who want to reduce their environmental impact while maintaining style and functionality. Eco planters are perfect for homes that value sustainability and natural living."
         },
         {
             "slug": "garden-essenials",
             "title": "Garden Essentials",
-            "subtitle": "Buy Plant Care Products Online in India from Gidan.store",
+            "subtitle": "Garden Essentials - Buy Plant Care Products Online in India from Gidan.store",
             "description": "Garden essentials include the basic tools and products required for everyday plant maintenance. These products help with watering, pruning, feeding, and protecting plants. Whether you are a beginner or an experienced gardener, our garden essentials make plant care simple, efficient, and enjoyable."
         },
         {
             "slug": "growing-media",
             "title": "Growing Media",
-            "subtitle": "Buy Plant Care Products Online in India from Gidan.store",
+            "subtitle": "Growing Media - Buy Plant Care Products Online in India from Gidan.store",
             "description": "Growing media play a crucial role in plant health by providing proper aeration, drainage, and nutrients. At Gidan.store, you can find high-quality growing media suitable for different plants and purposes. These are ideal for seed starting, potting, and improving soil structure for better root development."
         }
     ];
+    // ... rest of seoData ... (keep existing hardcoded seoData)
     const seoData = [
         {
             "category": "plants",
@@ -208,7 +210,9 @@ const CategoryStaticSEO = ({ categorySlug, subcategoryName, isSubcategory, subca
         }
     ];
 
-    const currentData = seoData.find(d => d.category === categorySlug?.toLowerCase());
+    // Priority 1: Backend API data (real-time)
+    // Priority 2: Hardcoded category SEO
+    const currentData = categoryDataFromAPI || seoData.find(d => d.category === categorySlug?.toLowerCase());
 
     // If it's a subcategory page, show a simplified SEO block and RETURN
     if (isSubcategory) {
@@ -218,40 +222,25 @@ const CategoryStaticSEO = ({ categorySlug, subcategoryName, isSubcategory, subca
             (subcategoryName && s.title.toLowerCase() === subcategoryName.toLowerCase())
         );
 
-        if (subData) {
-            return (
-                <div className="bg-white py-12 px-4 md:px-16 font-sans text-gray-700 border-t border-gray-100">
-                    <div className="container mx-auto max-w-full">
-                        <div className="text-center mb-8">
-                            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 uppercase tracking-tight">
-                                {subData.title}
-                            </h1>
-                            <p className="text-xl text-green-600 font-medium mb-6">
-                                {subData.subtitle}
-                            </p>
-                            <p className="leading-relaxed text-lg max-w-5xl mx-auto text-gray-600">
-                                {subData.description}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
+        // Derive title and subtitle from API if available, else use hardcoded/computed
+        const displayTitle = categoryDataFromAPI?.subcategory_name || subData?.title || subcategoryName ||
+            (subSlug ? subSlug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : '');
 
-        // Fallback if specific data not found but it is a subcategory
-        const displaySubName = subcategoryName ||
-            (subSlug ? subSlug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : '') ||
-            (categorySlug ? categorySlug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : '');
+        const displaySubtitle = categoryDataFromAPI?.subtitle || subData?.subtitle ||
+            `${displayTitle} - Buy Plants Online in India from Gidan.store`;
 
         return (
             <div className="bg-white py-12 px-4 md:px-16 font-sans text-gray-700 border-t border-gray-100">
                 <div className="container mx-auto max-w-full">
                     <div className="text-center mb-8">
                         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 uppercase tracking-tight">
-                            {displaySubName}
+                            {displayTitle}
                         </h1>
-                        <p className="text-xl text-green-600 font-medium">
-                            Buy {displaySubName} Online in India from Gidan.store
+                        <p className="text-xl text-green-600 font-medium mb-6">
+                            {displaySubtitle}
+                        </p>
+                        <p className="leading-relaxed text-lg max-w-5xl mx-auto text-gray-600">
+                            {subData?.description || categoryDataFromAPI?.intro_text || ""}
                         </p>
                     </div>
                 </div>
@@ -266,8 +255,8 @@ const CategoryStaticSEO = ({ categorySlug, subcategoryName, isSubcategory, subca
             <div className="container mx-auto max-w-full">
                 {/* Hero Section */}
                 <div className="text-center mb-12">
-                    <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{currentData.page_title}</h1>
-                    <p className="text-xl text-green-600 font-medium">{currentData.subtitle}</p>
+                    <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{categoryDataFromAPI?.category_name || currentData.page_title}</h1>
+                    <p className="text-xl text-green-600 font-medium">{categoryDataFromAPI?.subtitle || currentData.subtitle}</p>
                 </div>
 
                 {/* Intro Text */}

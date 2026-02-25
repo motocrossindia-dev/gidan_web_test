@@ -88,12 +88,6 @@ export default async function CategoryPage({ params }: Props) {
 
       <div className="space-y-12 mt-12 mb-8">
         <RecentlyViewedProducts />
-        <CategoryStaticSEO
-          categorySlug={categorySlug}
-          isSubcategory={false}
-          subcategoryName={null}
-          subcategorySlug={null}
-        />
         <CheckoutStores />
       </div>
     </>
