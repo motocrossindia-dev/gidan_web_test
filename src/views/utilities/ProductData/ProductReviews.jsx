@@ -8,17 +8,11 @@ import WriteAReview from "./WriteAReview";
 function RatingsAndReviews({ product_Rating, total_Rating, productId, onWriteReview }) {
   const reviews = total_Rating || [];
 
-  // Debug log to see actual data structure arriving at the component
-  console.log("RatingsAndReviews Props:", {
-    hasRating: !!product_Rating,
-    ratingKeys: product_Rating ? Object.keys(product_Rating) : [],
-    reviewsCount: reviews.length,
-    productId
-  });
-  if (product_Rating) console.log("product_Rating detail:", product_Rating);
-
-  // Handle case where product_Rating is passed but empty/zero
-  const hasValidRatingSummary = product_Rating && (Number(product_Rating.num_ratings) > 0 || Number(product_Rating.avg_rating) > 0);
+  // Handle case where product_Rating might be missing or empty
+  const hasValidRatingSummary = product_Rating && (
+    (product_Rating.num_ratings && Number(product_Rating.num_ratings) > 0) ||
+    (product_Rating.avg_rating && Number(product_Rating.avg_rating) > 0)
+  );
 
   const num_ratings = hasValidRatingSummary ? Number(product_Rating.num_ratings) : reviews.length;
 
@@ -152,7 +146,7 @@ function RatingsAndReviews({ product_Rating, total_Rating, productId, onWriteRev
       <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
         <div className="flex flex-col md:flex-row gap-8">
           {/* Overall Rating */}
-          <div className="w-[9-rem]">
+          <div className="w-[9rem]">
             <div className="text-center md:text-left">
               <div className="text-3xl  text-gray-900 mb-2">
                 {avg_rating.toFixed(1)}

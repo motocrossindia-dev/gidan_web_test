@@ -95,21 +95,6 @@
     "permanent": true
   },
   {
-    "source": "/about-us",
-    "destination": "/about-us/",
-    "permanent": true
-  },
-  {
-    "source": "/careers",
-    "destination": "/careers/",
-    "permanent": true
-  },
-  {
-    "source": "/contact-us",
-    "destination": "/contact-us/",
-    "permanent": true
-  },
-  {
     "source": "/plant-care/garden-essenials-37/",
     "destination": "/plant-care/garden-essenials/",
     "permanent": true

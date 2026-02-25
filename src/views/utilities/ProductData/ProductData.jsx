@@ -140,7 +140,8 @@ export default function ProductData({ initialProductData }) {
     const accessToken = useSelector(selectAccessToken);
 
     // Robust access to rating and review data which might be at top level or nested under .data
-    const ratingData = productDetailData?.data?.product_rating || productDetailData?.product_rating || productDetailData?.data?.product?.product_rating;
+    // SSR data from fetchProductDetail returns the whole response object { message, data: { ... } }
+    const ratingData = productDetailData?.data?.product_rating || productDetailData?.product_rating || productDetailData?.data?.product?.product_rating || { avg_rating: 0, num_ratings: 0, stars_given: [] };
     const reviewData = productDetailData?.data?.product_reviews || productDetailData?.product_reviews || productDetailData?.data?.product?.product_reviews || [];
 
     const isInCart = productDetailData?.data?.product?.is_cart;
@@ -537,12 +538,11 @@ export default function ProductData({ initialProductData }) {
 
             setSelectedSize(size);
 
-            // Make API call to filter products by size
-            const response = await axiosInstance.get(`/product/filterProduct/${product?.id}/`,
+            // Make API call to the unified endpoint
+            const res = await axiosInstance.get(`/product/defaultProduct/${params.productSlug}/`,
                 {
                     params: {
                         size_id: size.id,
-
                     },
                 }
             );
@@ -555,7 +555,7 @@ export default function ProductData({ initialProductData }) {
             }
 
             // Handle the API response
-            const data = response.data;
+            const data = res.data;
             const images = data?.data?.product?.images || [];
 
             // Update URL with query parameters instead of changing slug
@@ -580,9 +580,9 @@ export default function ProductData({ initialProductData }) {
                 prev?.size_grams === size?.size_grams ? null : size
             );
 
-            // Make API call
-            const response = await axiosInstance.get(
-                `/product/filterProduct/${product?.id}/`,
+            // Make API call to the unified endpoint
+            const res = await axiosInstance.get(
+                `/product/defaultProduct/${params.productSlug}/`,
                 {
                     params: { weight_id: size.id },
                 }
@@ -590,7 +590,7 @@ export default function ProductData({ initialProductData }) {
 
             // Ensure data exists before updating state
 
-            const data = response?.data;
+            const data = res?.data;
 
             if (data?.data?.product?.images) {
                 setImageThumbnails(data?.data?.product?.images || []);
@@ -614,9 +614,9 @@ export default function ProductData({ initialProductData }) {
                 prev?.name === litre?.name ? null : litre
             );
 
-            // Make API call
-            const response = await axiosInstance.get(
-                `/product/filterProduct/${product?.id}/`,
+            // Make API call to the unified endpoint
+            const res = await axiosInstance.get(
+                `/product/defaultProduct/${params.productSlug}/`,
                 {
                     params: { litre_id: litre.id },
                 }
@@ -624,7 +624,7 @@ export default function ProductData({ initialProductData }) {
 
             // Ensure data exists before updating state
 
-            const data = response?.data;
+            const data = res?.data;
 
             // Update URL with query parameters
             updateUrlWithParams(data?.data?.product);
@@ -647,15 +647,13 @@ export default function ProductData({ initialProductData }) {
             // Set the selected size
             setSelectedPlanterSize(size);
 
-            // Make API call to filter products by size
-            const response = await axiosInstance.get(
-                `/product/filterProduct/${product.id}/`,
+            // Make API call to the unified endpoint
+            const res = await axiosInstance.get(
+                `/product/defaultProduct/${params.productSlug}/`,
                 {
                     params: {
                         planter_size_id: size.id,
                         size_id: product.size_id,
-                        // planter_id: product.planter_id,
-                        // product_colors_id: product.color_id,
                     },
                 }
             );
@@ -666,7 +664,7 @@ export default function ProductData({ initialProductData }) {
                 setSelectedPlanterSize(size); // Select the new size
             }
             // Handle the API response
-            const data = response.data;
+            const data = res.data;
             const images = data?.data?.product?.images || [];
 
             // Update URL with query parameters instead of changing slug
@@ -693,21 +691,20 @@ export default function ProductData({ initialProductData }) {
             } else {
                 setSelectedPlanter(planter); // Select the new planter
             }
-            // Make API call to filter products by size
-            const response = await axiosInstance.get(
-                `/product/filterProduct/${product.id}/`,
+            // Make API call to the unified endpoint
+            const res = await axiosInstance.get(
+                `/product/defaultProduct/${params.productSlug}/`,
                 {
                     params: {
                         planter_id: planter.id,
                         planter_size_id: product.planter_size_id,
                         size_id: product.size_id,
-                        // product_colors_id: product.color_id,
                     },
                 }
             );
 
             // Handle the API response
-            const data = response.data;
+            const data = res.data;
             const images = data?.data?.product?.images || [];
 
             // Update URL with query parameters instead of changing slug
@@ -733,9 +730,9 @@ export default function ProductData({ initialProductData }) {
 
             setSelectedColor(color);
 
-            // ✅ Make API call to filter by new color
-            const response = await axiosInstance.get(
-                `/product/filterProduct/${product.id}/`,
+            // ✅ Make API call to the unified endpoint
+            const res = await axiosInstance.get(
+                `/product/defaultProduct/${params.productSlug}/`,
                 {
                     params: {
                         color_id: color.id,
@@ -746,7 +743,7 @@ export default function ProductData({ initialProductData }) {
                 }
             );
 
-            const data = response.data;
+            const data = res.data;
             const images = data?.data?.product?.images || [];
 
             // Update URL with query parameters
@@ -774,7 +771,7 @@ export default function ProductData({ initialProductData }) {
                 const response = await axiosInstance.get(`/product/defaultProduct/${productSlug}/${queryParams ? '?' + queryParams : ''}`);
 
                 if (response.status === 200) {
-                    const data = response.data;
+                    const data = res.data;
                     setProductDetailData(data);
                     setAddOnData(data?.data?.product_add_ons || []);
                     setImageThumbnails(data?.data?.product?.images || []);
@@ -858,23 +855,29 @@ export default function ProductData({ initialProductData }) {
             } catch (error) { }
         };
 
-        // Clear state if the ID changes to prevent stale data display ONLY if the slugs don't match
-        const currentSlugInState = productDetailData?.data?.product?.slug || productDetailData?.product?.slug;
+        // Clear state if the ID changes to prevent stale data display ONLY if the products are truly different
+        // We use the product ID as a more stable identifier than the slug which can vary for same product
         const currentIdInState = productDetailData?.data?.product?.id || productDetailData?.product?.id;
 
-        if (currentSlugInState !== id && currentIdInState !== id) {
-            // If it's a completely different product, we can clear. 
-            // But for variants of the same product, we might want to keep some info.
-            // We'll only clear if it's truly a different ID/slug.
-            setProductDetailData([]);
-            setImageThumbnails([]);
+        // Only clear if we have a mismatch and it's NOT the initial render (initialProductData exists)
+        if (currentIdInState && id && currentIdInState.toString() !== id.toString() && params.productSlug !== (productDetailData?.data?.product?.slug || productDetailData?.product?.slug)) {
+            // Only clear if it's truly a different product, not just a variant of the same base slug
+            // But be careful: id could be a slug or a numeric ID.
+            if (isNaN(id) && id !== params.productSlug) {
+                setProductDetailData([]);
+                setImageThumbnails([]);
+            }
         }
 
         // Skip initial fetch if we already have hydrated data from the server that includes product info
         const currentSlug = productDetailData?.data?.product?.slug || productDetailData?.product?.slug;
         const currentId = productDetailData?.data?.product?.id || productDetailData?.product?.id;
 
-        if ((currentSlug === id || currentId === id) && (ratingData || reviewData)) {
+        // Extract hydrated rating/review info similarly to how it's done in the render method
+        const hasHydratedRatings = !!(productDetailData?.data?.product_rating || productDetailData?.product_rating || productDetailData?.data?.product?.product_rating);
+        const hasHydratedReviews = (productDetailData?.data?.product_reviews?.length > 0 || productDetailData?.product_reviews?.length > 0 || productDetailData?.data?.product?.product_reviews?.length > 0);
+
+        if ((currentSlug === id || currentId === id) && (hasHydratedRatings || hasHydratedReviews)) {
             return;
         }
         fetchData();
@@ -1219,6 +1222,11 @@ export default function ProductData({ initialProductData }) {
                             <p className="text-md md:text-lg font-sans mb-4 whitespace-pre-line text-black">
                                 {productDetailData?.data?.product?.description || ""}
                             </p>
+                            {productDetailData?.data?.product?.whats_included && (
+                                <p className="text-sm text-gray-600 mb-4 italic">
+                                    <span className="font-bold">What's included:</span> {productDetailData.data.product.whats_included}
+                                </p>
+                            )}
                             <div className="flex items-center gap-4 mb-4">
                                 <p className="text-black-600 text-sm">
                                     {Array.from({ length: 5 }).map((_, i) => {
