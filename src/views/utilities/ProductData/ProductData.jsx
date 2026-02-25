@@ -1539,6 +1539,12 @@ export default function ProductData({ initialProductData }) {
                 </div>
             </div>
 
+            {/* People also bought — full width, directly below buy section */}
+            <div className="bg-white pt-4">
+                <PeopleAlsoBought title="People also bought" />
+            </div>
+
+            {/* Product description / About */}
             <div className="bg-white p-4">
                 <AboutTheProducts productDetailData={productDetailData} />
             </div>
@@ -1553,7 +1559,6 @@ export default function ProductData({ initialProductData }) {
                 />
             )}
 
-            <PeopleAlsoBought title="People also bought" />
             <ProductFeatured />
             <ProductSeller />
             {/* <FaqAccordion /> */}
