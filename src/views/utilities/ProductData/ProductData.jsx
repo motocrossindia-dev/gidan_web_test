@@ -1214,7 +1214,7 @@ export default function ProductData({ initialProductData }) {
 
                         <div className="md:flex-1 px-4 font-sans mt-8">
                             <h1 className="text-xl md:text-3xl font-bold mb-2">
-                                {productDetailData?.data?.product?.main_product_name ? `Buy ${productDetailData.data.product.main_product_name} Online in India` : ""}
+                                {productDetailData?.data?.product?.main_product_name ? `Buy ${productDetailData.data.product.main_product_name}` : ""}
                             </h1>
                             <p className="text-md md:text-lg font-sans mb-4 whitespace-pre-line text-black">
                                 {productDetailData?.data?.product?.description || ""}
