@@ -9,17 +9,10 @@ export default function HomepageSchema({
                 "@id": `${siteUrl}/#website`,
                 "url": siteUrl,
                 "name": "Gidan Store",
-                "description": "Bangalore's trusted destination for plants, planters, and urban gardening essentials.",
-                "publisher": {
-                    "@id": `${siteUrl}/#organization`
-                },
                 "potentialAction": {
                     "@type": "SearchAction",
-                    "target": {
-                        "@type": "EntryPoint",
-                        "urlTemplate": `${siteUrl}/search?q={search_term_string}`
-                    },
-                    "query-input": "required name=search_term_string"
+                    "target": `${siteUrl}search?&q={query}`,
+                    "query": "required"
                 }
             },
             {

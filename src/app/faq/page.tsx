@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Faqs from '@/components/Footer/Faqs';
+import FAQSchema from '@/views/utilities/seo/FAQSchema';
 
 
 export const metadata: Metadata = {
@@ -24,5 +25,10 @@ export const metadata: Metadata = {
 };
 
 export default function FaqPage() {
-  return <Faqs />;
+  return (
+    <>
+      <FAQSchema />
+      <Faqs />
+    </>
+  );
 }
