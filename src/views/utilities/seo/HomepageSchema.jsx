@@ -7,47 +7,35 @@ export default function HomepageSchema({ siteUrl = "https://www.gidan.store" }) 
             "@id": `${cleanSiteUrl}/#website`,
             "url": cleanSiteUrl,
             "name": "Gidan Store",
-            "description": "India's trusted destination for plants and gardening essentials.",
-            "potentialAction": [{
+            "publisher": { "@id": `${cleanSiteUrl}/#organization` },
+            "potentialAction": {
                 "@type": "SearchAction",
                 "target": {
                     "@type": "EntryPoint",
-                    "urlTemplate": `${cleanSiteUrl}/search?&q={query}`
+                    "urlTemplate": `${cleanSiteUrl}/search?q={search_term_string}`
                 },
-                "query-input": "required name=query"
-            }]
+                "query-input": "required name=search_term_string"
+            }
         },
         {
             "@type": "WebPage",
             "@id": `${cleanSiteUrl}/#webpage`,
             "url": cleanSiteUrl,
-            "name": "Gidan - Plants, Seeds & Gardening Store Online India",
+            "name": "Home - Gidan Store",
             "isPartOf": { "@id": `${cleanSiteUrl}/#website` },
             "about": { "@id": `${cleanSiteUrl}/#organization` },
             "description": "Buy plants, seeds, pots, soil and gardening tools online at Gidan. Expert landscaping, terrace gardening and vertical garden services across India."
         },
         {
-            "@type": ["Organization", "https://schema.org/Organization"],
+            "@type": "Organization",
             "@id": `${cleanSiteUrl}/#organization`,
             "name": "Gidan Plants",
             "url": cleanSiteUrl,
             "logo": {
                 "@type": "ImageObject",
-                "@id": `${cleanSiteUrl}/#logo`,
                 "url": `${cleanSiteUrl}/logo192.ico`,
-                "contentUrl": `${cleanSiteUrl}/logo192.ico`,
                 "width": "192",
-                "height": "192",
-                "caption": "Gidan Plants"
-            },
-            "image": { "@id": `${cleanSiteUrl}/#logo` },
-            "description": "Gidan is India's trusted destination for plants, planters, seeds and urban gardening essentials with expert landscaping services.",
-            "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "Bangalore",
-                "addressRegion": "Karnataka",
-                "postalCode": "560001",
-                "addressCountry": "IN"
+                "height": "192"
             },
             "sameAs": [
                 "https://www.facebook.com/thegidanstore/",
@@ -62,6 +50,7 @@ export default function HomepageSchema({ siteUrl = "https://www.gidan.store" }) 
             "@id": `${cleanSiteUrl}/#store`,
             "name": "Gidan Store",
             "parentOrganization": { "@id": `${cleanSiteUrl}/#organization` },
+            "url": cleanSiteUrl,
             "image": `${cleanSiteUrl}/logo192.ico`,
             "address": {
                 "@type": "PostalAddress",

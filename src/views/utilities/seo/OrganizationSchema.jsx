@@ -24,8 +24,7 @@ const schema = {
   ],
 };
 
-export default function OrganizationSchema({ isHomepage = false }) {
-  if (isHomepage) return null; // Suppress on homepage as it has a better one
+export default function OrganizationSchema() {
   return (
     <script
       type="application/ld+json"

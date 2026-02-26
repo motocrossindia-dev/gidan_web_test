@@ -10,11 +10,6 @@ import Footer from "@/components/Footer/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import GoogleAnalytics from "@/GoogleAnalytics/GoogleAnalytics";
 import OrganizationSchema from "@/views/utilities/seo/OrganizationSchema";
-import { usePathname } from 'next/navigation';
-
-// Create a client-side wrapper or use a simpler check if possible.
-// Actually, since this is a server component by default, we can't use usePathname.
-// But we can just have the OrganizationSchema component itself check or be passed a prop.
 import Verify from "@/Services/Services/Verify";
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito-sans",
@@ -129,7 +124,7 @@ export default function RootLayout({
         </noscript>
         <Providers>
           <GoogleAnalytics />
-          <OrganizationSchema isHomepage={true} />
+          <OrganizationSchema />
           <Verify />
           <ScrollToTop />
           <Script id="tawk-to" strategy="afterInteractive">
