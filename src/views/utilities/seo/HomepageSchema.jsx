@@ -1,81 +1,86 @@
-export default function HomepageSchema({
-    siteUrl = "https://www.gidan.store/",
-}) {
-    const cleanSiteUrl = siteUrl.replace(/\/$/, "");
+export default function HomepageSchema({ siteUrl = "https://www.gidan.store" }) {
+    const cleanSiteUrl = siteUrl.endsWith('/') ? siteUrl.slice(0, -1) : siteUrl;
 
-    const websiteSchema = {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "@id": `${cleanSiteUrl}/#website`,
-        "url": cleanSiteUrl,
-        "name": "Gidan Store",
-        "potentialAction": {
-            "@type": "SearchAction",
-            "target": `${cleanSiteUrl}/search?&q={query}`,
-            "query": "required"
+    const graph = [
+        {
+            "@type": "WebSite",
+            "@id": `${cleanSiteUrl}/#website`,
+            "url": cleanSiteUrl,
+            "name": "Gidan Store",
+            "description": "India's trusted destination for plants and gardening essentials.",
+            "potentialAction": [{
+                "@type": "SearchAction",
+                "target": {
+                    "@type": "EntryPoint",
+                    "urlTemplate": `${cleanSiteUrl}/search?&q={query}`
+                },
+                "query-input": "required name=query"
+            }]
+        },
+        {
+            "@type": "WebPage",
+            "@id": `${cleanSiteUrl}/#webpage`,
+            "url": cleanSiteUrl,
+            "name": "Gidan - Plants, Seeds & Gardening Store Online India",
+            "isPartOf": { "@id": `${cleanSiteUrl}/#website` },
+            "about": { "@id": `${cleanSiteUrl}/#organization` },
+            "description": "Buy plants, seeds, pots, soil and gardening tools online at Gidan. Expert landscaping, terrace gardening and vertical garden services across India."
+        },
+        {
+            "@type": ["Organization", "https://schema.org/Organization"],
+            "@id": `${cleanSiteUrl}/#organization`,
+            "name": "Gidan Plants",
+            "url": cleanSiteUrl,
+            "logo": {
+                "@type": "ImageObject",
+                "@id": `${cleanSiteUrl}/#logo`,
+                "url": `${cleanSiteUrl}/logo192.ico`,
+                "contentUrl": `${cleanSiteUrl}/logo192.ico`,
+                "width": "192",
+                "height": "192",
+                "caption": "Gidan Plants"
+            },
+            "image": { "@id": `${cleanSiteUrl}/#logo` },
+            "description": "Gidan is India's trusted destination for plants, planters, seeds and urban gardening essentials with expert landscaping services.",
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Bangalore",
+                "addressRegion": "Karnataka",
+                "postalCode": "560001",
+                "addressCountry": "IN"
+            },
+            "sameAs": [
+                "https://www.facebook.com/thegidanstore/",
+                "https://www.instagram.com/thegidanstore/",
+                "https://www.linkedin.com/company/thegidanstore/",
+                "https://www.youtube.com/@thegidanstore/",
+                "https://whatsapp.com/channel/0029Vac6g6TB4hdL2NqaEc1f/"
+            ]
+        },
+        {
+            "@type": "Store",
+            "@id": `${cleanSiteUrl}/#store`,
+            "name": "Gidan Store",
+            "parentOrganization": { "@id": `${cleanSiteUrl}/#organization` },
+            "image": `${cleanSiteUrl}/logo192.ico`,
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Bangalore",
+                "addressRegion": "Karnataka",
+                "addressCountry": "IN"
+            }
         }
-    };
-
-    const webpageSchema = {
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        "@id": `${cleanSiteUrl}/#webpage`,
-        "url": cleanSiteUrl,
-        "name": "Home - Gidan Store",
-        "isPartOf": {
-            "@id": `${cleanSiteUrl}/#website`
-        },
-        "about": {
-            "@id": `${cleanSiteUrl}/#organization`
-        },
-        "description": "Explore Gidan Store's collection of plants, planters, and gardening essentials for your urban garden."
-    };
-
-    const organizationSchema = {
-        "@context": {
-            "@vocab": "https://schema.org/",
-            "gs1": "https://ref.gs1.org/voc/",
-            "unece": "https://vocabulary.uncefact.org/"
-        },
-        "@type": [
-            "Organization",
-            "gs1:Organization",
-            "unece:TradeParty"
-        ],
-        "@id": `${cleanSiteUrl}/#organization`,
-        "name": "Gidan Store",
-        "url": cleanSiteUrl,
-        "logo": `${cleanSiteUrl}/logo192.ico`,
-        "description": "Bangalore's trusted destination for plants, planters, and urban gardening essentials.",
-        "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Bangalore",
-            "addressRegion": "Karnataka",
-            "postalCode": "560001",
-            "addressCountry": "IN"
-        },
-        "sameAs": [
-            "https://www.facebook.com/thegidanstore/",
-            "https://www.instagram.com/thegidanstore/",
-            "https://www.linkedin.com/company/thegidanstore/",
-            "https://www.youtube.com/@thegidanstore/"
-        ]
-    };
+    ];
 
     return (
-        <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(webpageSchema) }}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-            />
-        </>
+        <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@graph": graph
+                })
+            }}
+        />
     );
 }

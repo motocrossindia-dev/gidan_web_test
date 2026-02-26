@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Home from '@/components/Home/Home';
+import HomepageSchema from '@/views/utilities/seo/HomepageSchema';
 
 // Server-side fetching for LCP optimization
 async function getInitialBanners() {
@@ -70,5 +71,10 @@ export default async function HomePage() {
     getInitialCategories()
   ]);
 
-  return <Home initialBanners={initialBanners} initialCategories={initialCategories} />;
+  return (
+    <>
+      <Home initialBanners={initialBanners} initialCategories={initialCategories} />
+      <HomepageSchema />
+    </>
+  );
 }
