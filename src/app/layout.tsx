@@ -9,8 +9,12 @@ import NavBar from "@/components/NavigationBar/NavigationBar";
 import Footer from "@/components/Footer/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import GoogleAnalytics from "@/GoogleAnalytics/GoogleAnalytics";
-import OrganizationSchema from "@/views/utilities/seo/OrganizationSchema";
+
+import HomepageSchema from "@/views/utilities/seo/HomepageSchema";
+import Head from "next/head";
 import Verify from "@/Services/Services/Verify";
+import Home from '@/components/Home/Home';
+
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito-sans",
   subsets: ["latin"],
@@ -122,9 +126,12 @@ export default function RootLayout({
             style={{ display: 'none', visibility: 'hidden' }}
           />
         </noscript>
+        <Head>
+          <HomepageSchema />
+        </Head>
         <Providers>
           <GoogleAnalytics />
-          <OrganizationSchema />
+
           <Verify />
           <ScrollToTop />
           <Script id="tawk-to" strategy="afterInteractive">
@@ -141,7 +148,6 @@ export default function RootLayout({
           <div className="landing-page-layout w-full min-h-screen flex flex-col overflow-x-hidden">
             {/* Sticky Header */}
             <div className="sticky top-0 left-0 w-full z-[10000]">
-              <Header />
               <NavBar />
             </div>
             {/* Main Content */}
