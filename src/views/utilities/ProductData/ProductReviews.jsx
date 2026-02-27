@@ -113,7 +113,7 @@ const RatingsAndReviews = ({ product_Rating, total_Rating, productId, onWriteRev
               onClick={onWriteReview || (() => setIsModalOpen(true))}
               className="w-full bg-white border border-gray-300 shadow-sm rounded-lg py-2 text-sm font-medium hover:bg-gray-50 transition-all text-gray-800"
             >
-              Write a customer review
+              {productDetailData?.data?.product?.is_review ? 'Edit your review' : 'Write a customer review'}
             </button>
           </div>
         </div>

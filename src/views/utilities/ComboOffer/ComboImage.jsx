@@ -8,84 +8,92 @@ import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
 import { isMobile } from "react-device-detect";
 import axiosInstance from "../../../Axios/axiosInstance";
+import ProductCard from "../PlantFilter/ProductCard";
+import Verify from "../../../Services/Services/Verify";
 
 function ComboImage() {
   const accessToken = useSelector(selectAccessToken);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const [comboOffers, setComboOffers] = useState([])
-  const router = useRouter();const getAllcombos = async () => {
+  const router = useRouter(); 
+  
+  const getAllcombos = async () => {
     try {
-
-      if (accessToken) {
-        const response = await axiosInstance.get(`/combo/combo-offers/`)
-        if (response.status === 200) {
-          setComboOffers(response.data.data.combo_offers)
-        }
-      } else {
-        const response = await axiosInstance.get(`/combo/combo-offers/`)
-        if (response.status === 200) {
-          setComboOffers(response.data.data.combo_offers)
-        }
+      const response = await axiosInstance.get(`/combo/combo-offers/`);
+      if (response.status === 200) {
+        // Combine both combo_offers and shop_the_look
+        const allCombos = [
+          ...(response.data.data.combo_offers || []),
+          ...(response.data.data.shop_the_look || [])
+        ];
+        setComboOffers(allCombos);
       }
-
     } catch (error) {
       console.log(error);
-
     }
-  }
+  };
   useEffect(() => {
     getAllcombos()
   }, [])
 
 
   const handleBuyItNowSubmit = async (id) => {
-
-    if (isAuthenticated) {
-    
-
-      const product_data = {
-        order_source: "combo",
-        combo_id: id,
-        // quantity: quantity,
-      };
-
-      try {
-        const response = await axiosInstance.post(`/order/placeOrder/`,
-          product_data);
-
-
-        if (response.status === 200) {
-          // enqueueSnackbar("Order placed successfully!", { variant: "success" });
-
-          const ordersummary = response?.data?.data;
-          // 🟢 get the full offer object by id
-      const selectedOffer = comboOffers.find((o) => o.id === id) || null;
-
-            // also keep it in sessionStorage to survive page refresh on checkout
-      if (selectedOffer) {
-        sessionStorage.setItem("selected_combo_offer", JSON.stringify(selectedOffer));
-        sessionStorage.setItem("checkout_combo_offer", JSON.stringify(selectedOffer));
-      }
-          sessionStorage.setItem('checkout_ordersummary', JSON.stringify(ordersummary));
-          router.push("/checkout"); // Navigate to checkout
-        }
-
-      } catch (error) {
-        console.error("Error placing order:", error);
-        if (error.response && error.response.status === 400) {
-          enqueueSnackbar(error.response.data?.message, { variant: "error" });
-        } else {
-          enqueueSnackbar("Failed to place order. Please try again.", { variant: "error" });
-        }
-      }
-    } else {
-      // If not authenticated, redirect based on device type
+    if (!isAuthenticated) {
       enqueueSnackbar("Please Login or Signup to Buy Our Products.");
       if (isMobile) {
         router.push("/mobile-signin", { replace: true });
       } else {
         router.push("/?modal=signIn", { replace: true });
       }
+      return;
+    }
+
+    const product_data = {
+      order_source: "combo",
+      combo_id: id,
+      quantity: 1
+    };
+
+    try {
+      const response = await axiosInstance.post(`/order/placeOrder/`, product_data, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.status === 200) {
+        const ordersummary = response?.data?.data;
+        const selectedOffer = comboOffers.find((o) => o.id === id) || null;
+
+        if (selectedOffer) {
+          sessionStorage.setItem("selected_combo_offer", JSON.stringify(selectedOffer));
+          sessionStorage.setItem("checkout_combo_offer", JSON.stringify(selectedOffer));
+        }
+        sessionStorage.setItem('checkout_ordersummary', JSON.stringify(ordersummary));
+        router.push("/checkout");
+      }
+    } catch (error) {
+      console.error("Error placing order:", error);
+      
+      let errorMessage = "Failed to place order. Please try again.";
+      
+      if (error.response) {
+        const status = error.response.status;
+        const serverMsg = error.response.data?.message || error.response.data?.error;
+        
+        if (status === 400) {
+          errorMessage = serverMsg || "Invalid order data. Please check your selection.";
+        } else if (status === 401) {
+          errorMessage = "Please login again to continue.";
+        } else if (status === 500) {
+          errorMessage = "Server error. Please try again later.";
+        } else if (serverMsg) {
+          errorMessage = serverMsg;
+        }
+      }
+      
+      enqueueSnackbar(errorMessage, { variant: "error" });
     }
   };
 
@@ -95,39 +103,40 @@ function ComboImage() {
       <p className="text-gray-600 mb-8 md:text-xl">
         Indoor flowering plants bring vibrant colors and natural beauty into your home. From elegant peace lilies to cheerful ferns, these plants add a touch of joy and fragrance to any space. Discover the enchanting world of indoor flowering plants and create a blooming oasis indoors.
       </p>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 justify-items-center">
         {comboOffers?.map((offer, index) => (
-          <div key={index} className="bg-white rounded-lg overflow-hidden shadow-md">
-            <img name=" "   
-              src={`${process.env.NEXT_PUBLIC_API_URL}${offer?.image}`} // Use the imageUrl from the offer object
-              loading="lazy"
-              alt={offer?.name}
-              width={300}
-              height={200}
-              className="w-full h-48 object-cover"
+          <div key={offer.id || index} className="w-full flex flex-col items-center">
+            <ProductCard
+              name={offer?.title}
+              price={Math.round(offer?.final_price)}
+              imageUrl={offer?.image}
+              userRating={0}
+              ratingNumber={0}
+              product={{ 
+                ...offer, 
+                id: offer.id, 
+                name: offer.title, 
+                slug: `combo-${offer.id}`,
+                selling_price: offer.final_price,
+                mrp: offer.total_price
+              }}
+              mrp={offer?.total_price > offer?.final_price ? Math.round(offer?.total_price) : null}
+              ribbon={offer?.is_shop_the_look ? "SHOP THE LOOK" : "COMBO"}
+              inWishlist={false}
+              inCart={false}
             />
-            <div className="">
-              <div className="bg-pink-100   p-6 md:p-6 text-start flex flex-col items-start">
-                <h3 className="text-xl font-semibold mb-2">{offer?.title}</h3>
-                <div className="mb-4">
-                  <span className="text-gray-600 text-md mb-4">Price : {Math.round(offer?.final_price)}</span>
-                </div>
-                <div className="mb-4">
-                  <span className="text-gray-600 text-md mb-4 line-through">Price : {Math.round(offer?.total_price)}</span>
-                </div>
-                <p className="text-gray-600 text-md mb-3">{offer?.description}</p>
-              </div>
-            </div>
             <button
-              className="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-300 flex items-center justify-center"
+              className="w-full bg-[#15803D] text-white py-2 px-4 rounded-b-xl hover:bg-[#15803D]/90 transition duration-300 flex items-center justify-center -mt-2 relative z-10 font-bold shadow-md"
               onClick={() => handleBuyItNowSubmit(offer?.id)}
             >
-              <ShoppingCart className="inline-block mr-2" />
+              <ShoppingCart className="inline-block mr-2 w-4 h-4" />
               Buy It Now
             </button>
           </div>
         ))}
       </div>
+      <Verify />
+
     </div>
   );
 }

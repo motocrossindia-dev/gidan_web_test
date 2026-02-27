@@ -7,7 +7,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { addToCart } from "../../../redux/Slice/cartSlice";
-import { selectAccessToken } from "../../../redux/User/verificationSlice"; // adjust import
+import { selectAccessToken } from "../../../redux/User/verificationSlice";
+import ProductCard from "../PlantFilter/ProductCard";
+import Verify from "../../../Services/Services/Verify";
+import { getProductUrl } from "../../../utils/urlHelper";
 
 function Offer() {
   const [offers, setOffers] = useState([]);
@@ -35,35 +38,31 @@ function Offer() {
     getOfferProducts();
   }, []);
 
-  // ✅ Add to Cart handler
-  const handleAddToCartSubmit = async (offer) => {
-    // 🔑 Check auth using token or accessToken
-    if (token || accessToken) {
-      const product_data = {
-        main_prod_id: offer.id,
-        quantity: 1,
-      };
-
-      try {
-        const response = await axiosInstance.post(`/order/cart/`, product_data);
-
-        if (response.status === 201) {
-          dispatch(addToCart(product_data));
-          enqueueSnackbar("Product added to cart successfully!", { variant: "success" });
-          window.dispatchEvent(new Event("cartUpdated"));
-          setCartItems((prev) => [...prev, offer.id]);
-        }
-      } catch (error) {
-        enqueueSnackbar(
-          error.response?.data?.message || "Failed to add product to cart",
-          { variant: "info" }
-        );
-      }
-    } else {
-      enqueueSnackbar("Please sign in", { variant: "info" });
-      router.push("/?modal=signIn", { replace: true });
-    }
+  const handleAddToCartSubmit = (offer) => {
+    // This is now handled internally by ProductCard
+    // but we can keep it as a fallback or if we need custom logic
   };
+
+  const [wishlistUpdated, setWishlistUpdated] = useState(0);
+  const [cartUpdated, setCartUpdated] = useState(0);
+
+  useEffect(() => {
+    const handleWishlistUpdate = () => setWishlistUpdated(prev => prev + 1);
+    const handleCartUpdate = () => setCartUpdated(prev => prev + 1);
+
+    window.addEventListener('wishlistUpdated', handleWishlistUpdate);
+    window.addEventListener('cartUpdated', handleCartUpdate);
+
+    return () => {
+      window.removeEventListener('wishlistUpdated', handleWishlistUpdate);
+      window.removeEventListener('cartUpdated', handleCartUpdate);
+    };
+  }, []);
+
+  // Re-fetch or refresh states when wishlist/cart changes
+  useEffect(() => {
+    getOfferProducts();
+  }, [wishlistUpdated, cartUpdated]);
 
   return (
     <div className="container mx-auto md:px-4 px-0 py-8">
@@ -72,53 +71,30 @@ function Offer() {
         Don’t miss out on these exclusive offers!
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {offers?.map((offer, index) => {
-          const originalPrice = Math.round(offer?.mrp || 0);
-          const finalPrice = Math.round(offer?.selling_price || 0);
-          const discount = originalPrice
-            ? Math.round(((originalPrice - finalPrice) / originalPrice) * 100)
-            : 0;
-
-          const isInCart = cartItems.includes(offer.id);
-
-          return (
-            <div key={index} className="bg-white rounded-lg overflow-hidden shadow-md">
-              {offer?.image && (
-                <img
-                  src={`${process.env.NEXT_PUBLIC_API_URL}${offer.image}`}
-                  alt={offer?.name}
-                  className="w-full h-48 object-cover"
-                  loading="lazy"
-                />
-              )}
-              <div className="p-6 text-start flex flex-col items-start">
-                <h3 className="text-xl font-semibold mb-2">{offer?.name}</h3>
-
-                <div className="mb-2">
-                  <span className="text-green-600 text-lg font-bold">₹{finalPrice}</span>
-                </div>
-                <div className="mb-2">
-                  <span className="text-gray-600 line-through">₹{originalPrice}</span>
-                </div>
-
-                {/* ✅ Add to Cart Button */}
-                <button
-                  className="w-full border border-bio-green text-bio-green py-2 px-4 rounded-lg hover:bg-bio-green hover:text-white mt-4"
-                  onClick={
-                    isInCart
-                      ? () => router.push("/cart")
-                      : () => handleAddToCartSubmit(offer)
-                  }
-                >
-                  <ShoppingCart className="inline-block mr-2" />
-                  {isInCart ? "Go to Cart" : "Add to Cart"}
-                </button>
-              </div>
-            </div>
-          );
-        })}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 justify-items-center">
+        {offers?.map((offer, index) => (
+          <div
+            key={`offer-${offer.id}-${index}`}
+            className="w-full cursor-pointer"
+            onClick={() => router.push(getProductUrl(offer))}
+          >
+            <ProductCard
+              name={offer?.name}
+              price={Math.round(offer?.selling_price)}
+              imageUrl={offer?.image}
+              userRating={offer?.product_rating?.avg_rating || 0}
+              ratingNumber={offer?.product_rating?.num_ratings || 0}
+              product={offer}
+              mrp={Math.round(offer?.mrp)}
+              ribbon={offer?.ribbon || "OFFER"}
+              inWishlist={offer?.is_wishlist}
+              inCart={offer?.is_cart}
+            />
+          </div>
+        ))}
       </div>
+      <Verify />
+
     </div>
   );
 }

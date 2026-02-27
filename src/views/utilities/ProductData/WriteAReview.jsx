@@ -14,6 +14,11 @@ const WriteAReview = ({ onClose, productId, productDetailData, isInline = false 
   const [reviewTitle, setReviewTitle] = useState('');
   const [comment, setComment] = useState('');
   const [recommend, setRecommend] = useState('yes');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionError, setSubmissionError] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isLoadingExisting, setIsLoadingExisting] = useState(true);
+  const [hasExistingReview, setHasExistingReview] = useState(false);
   const router = useRouter();
 
   // Close modal when clicking outside (only if not inline)
@@ -28,8 +33,46 @@ const WriteAReview = ({ onClose, productId, productDetailData, isInline = false 
     return () => window.removeEventListener('click', handleOutsideClick);
   }, [onClose, isInline]);
 
+  // Fetch existing review if it exists
+  useEffect(() => {
+    const fetchExistingReview = async () => {
+      if (!productId) {
+        setIsLoadingExisting(false);
+        return;
+      }
+      
+      try {
+        const response = await axiosInstance.get(`/product/ratingAndReviews/${productId}/`);
+        const reviewData = response.data?.data || response.data;
+        
+        // Check for user's existing review in different possible response structures
+        const userReview = reviewData?.user_review || 
+                          reviewData?.current_user_review ||
+                          reviewData?.reviews?.find(review => review.is_current_user) ||
+                          (reviewData?.has_user_review ? reviewData : null);
+
+        if (userReview && (userReview.product_rating || userReview.rating)) {
+          setRating(Number(userReview.product_rating || userReview.rating) || 0);
+          setReviewTitle(userReview.review_title || userReview.title || '');
+          setComment(userReview.product_review || userReview.comment || userReview.review || '');
+          setRecommend(userReview.recommend === true || userReview.recommend === 'true' ? 'yes' : 'no');
+          setIsEditing(true);
+          setHasExistingReview(true);
+        }
+      } catch (error) {
+        console.error("Error fetching existing review:", error);
+        // If there's an error, assume no existing review
+      } finally {
+        setIsLoadingExisting(false);
+      }
+    };
+    fetchExistingReview();
+  }, [productId]);
+
   // Submit review function
   const handleSubmit = async () => {
+    setSubmissionError(null);
+    setIsSubmitting(true);
     if (!productId || isNaN(productId)) {
       enqueueSnackbar('Invalid product ID. Please refresh the page.', { variant: 'error' });
       return;
@@ -57,17 +100,55 @@ const WriteAReview = ({ onClose, productId, productDetailData, isInline = false 
           },
         }
       );
-      if (response.status === 200) {
-        enqueueSnackbar('Review submitted successfully!');
+      if (response.status === 200 || response.status === 201) {
+        const successMessage = hasExistingReview ? 'Review updated successfully!' : 'Review submitted successfully!';
+        enqueueSnackbar(successMessage, { variant: 'success' });
+        if (onSuccess) onSuccess();
         onClose();
       }
 
     } catch (error) {
       console.error('Error submitting review:', error);
-      const errorMsg = error.response?.data?.message || 'Failed to submit review. Please try again or login.';
-      enqueueSnackbar(errorMsg, { variant: 'error' });
+
+      let errorMsg = 'Failed to submit review. ';
+
+      if (error.response) {
+        const status = error.response.status;
+        const serverMsg = error.response.data?.message || error.response.data?.error;
+
+        if (status === 500) {
+          errorMsg = "Internal Server Error (500): We're having trouble on our end. Please try again in a few minutes.";
+        } else if (status === 401 || status === 403) {
+          errorMsg = "Authentication Error: Please sign in again to submit a review.";
+        } else if (status === 400) {
+          errorMsg = serverMsg || "Invalid submission. Please check your review details.";
+        } else if (serverMsg) {
+          errorMsg = serverMsg;
+        }
+      } else if (error.request) {
+        errorMsg = "Network Error: Please check your internet connection.";
+      }
+
+      setSubmissionError(errorMsg);
+      enqueueSnackbar(errorMsg, {
+        variant: 'error',
+        autoHideDuration: 6000
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  if (isLoadingExisting) {
+    return (
+      <div className={isInline ? "w-full p-4 border rounded-xl mt-4" : "fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 font-sans"}>
+        <div className={isInline ? "" : "bg-white p-6 rounded-lg shadow-xl w-11/12 max-w-md text-center"}>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading your review...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -97,13 +178,26 @@ const WriteAReview = ({ onClose, productId, productDetailData, isInline = false 
           <button onClick={onClose} className="hover:bg-gray-100 p-1 rounded-full transition-colors">
             <ArrowBack className="text-gray-700" />
           </button>
-          <h2 className="text-xl font-bold text-gray-800">Write a Review</h2>
+          <h2 className="text-xl font-bold text-gray-800">
+            {isEditing ? 'Edit your review' : 'Write a Review'}
+          </h2>
         </div>
 
 
 
+        {/* Show existing review notice */}
+        {hasExistingReview && (
+          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-blue-800 text-sm font-medium">
+              ✓ You have already reviewed this product. You can edit your review below.
+            </p>
+          </div>
+        )}
+
         <div className="mt-6">
-          <p className="font-semibold text-gray-700 mb-2">Please give rating*</p>
+          <p className="font-semibold text-gray-700 mb-2">
+            {hasExistingReview ? 'Update your rating*' : 'Please give rating*'}
+          </p>
           <div className="flex space-x-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <span
@@ -119,7 +213,7 @@ const WriteAReview = ({ onClose, productId, productDetailData, isInline = false 
 
         <div className="mt-4">
           <label className="font-semibold text-gray-700 block mb-2" htmlFor="review-title">
-            Review Title*
+            {hasExistingReview ? 'Update Review Title*' : 'Review Title*'}
           </label>
           <input
             id="review-title"
@@ -134,7 +228,7 @@ const WriteAReview = ({ onClose, productId, productDetailData, isInline = false 
 
         <div className="mt-4">
           <label className="font-semibold text-gray-700 block mb-2" htmlFor="comment">
-            Comment*
+            {hasExistingReview ? 'Update Comment*' : 'Comment*'}
           </label>
           <textarea
             id="comment"
@@ -148,7 +242,9 @@ const WriteAReview = ({ onClose, productId, productDetailData, isInline = false 
         </div>
 
         <div className="mt-6">
-          <p className="font-semibold text-gray-700 mb-2">Will you recommend this product?*</p>
+          <p className="font-semibold text-gray-700 mb-2">
+            {hasExistingReview ? 'Update recommendation*' : 'Will you recommend this product?*'}
+          </p>
           <div className="flex items-center gap-6">
             <label className="flex items-center gap-2 cursor-pointer group">
               <input
@@ -173,22 +269,35 @@ const WriteAReview = ({ onClose, productId, productDetailData, isInline = false 
               <span className={`font-medium ${recommend === 'no' ? 'text-red-600' : 'text-gray-500 group-hover:text-gray-700'}`}>No</span>
             </label>
           </div>
-        </div>
 
-        <div className="mt-8 flex gap-4">
-          <button
-            onClick={onClose}
-            className="flex-1 border border-gray-200 text-gray-600 font-bold py-3 rounded-xl hover:bg-gray-50 transition-all"
-          >
-            CANCEL
-          </button>
-          <button
-            onClick={handleSubmit}
-            disabled={rating === 0 || !reviewTitle || !comment}
-            className="flex-1 bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-green-100 transition-all"
-          >
-            SUBMIT
-          </button>
+          {submissionError && (
+            <div className="mt-4 p-3 bg-red-50 border border-red-100 rounded-xl flex items-center gap-2 text-red-600 text-sm animate-pulse">
+              <span className="font-bold">Error:</span> {submissionError}
+            </div>
+          )}
+
+          <div className="mt-8 flex gap-4">
+            <button
+              onClick={onClose}
+              className="flex-1 border border-gray-200 text-gray-600 font-bold py-3 rounded-xl hover:bg-gray-50 transition-all"
+            >
+              CANCEL
+            </button>
+            <button
+              onClick={handleSubmit}
+              disabled={rating === 0 || !reviewTitle || !comment || isSubmitting}
+              className="flex-1 bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-green-100 transition-all flex items-center justify-center gap-2"
+            >
+              {isSubmitting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  SUBMITTING...
+                </>
+              ) : (
+                hasExistingReview ? 'UPDATE REVIEW' : 'SUBMIT REVIEW'
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>

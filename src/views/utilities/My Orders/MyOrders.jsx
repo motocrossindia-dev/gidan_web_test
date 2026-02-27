@@ -91,7 +91,7 @@ const MyOrders = () => {
   }, []);
 
   const handleOrderClick = (order) => {
-    router.push(`/orders/${order.id}`);
+    router.push(`/orders/postsummary/${order.order_id}`);
   };
 
 

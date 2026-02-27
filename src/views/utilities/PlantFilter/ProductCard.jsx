@@ -193,20 +193,22 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                         >
                             {name}
                         </h2>
-                        <div className="flex items-center gap-2">
-
-                            <span className="text-base font-semibold text-navy-blue">
-                                ₹{Math.round(price)}
-                            </span>
-
-
-                            {mrp && (mrp > price) && <span className="text-base text-gray-600 line-through">₹{mrp}</span>}
-
-                            {/* Discount */}
-                            {mrp && price && (mrp > price) && (
-                                <span className="text-base font-semibold text-green-600 mt-1">
-                                    {Math.round(((mrp - price) / mrp) * 100)}% OFF
+                        <div className="flex flex-col items-center gap-0.5">
+                            <div className="flex items-center gap-2">
+                                <span className="text-xl font-bold text-[#15803D]">
+                                    ₹{Math.round(price)}
                                 </span>
+                                {mrp && (mrp > price) && (
+                                    <span className="text-sm text-gray-400 line-through mt-0.5">
+                                        ₹{Math.round(mrp)}
+                                    </span>
+                                )}
+                            </div>
+
+                            {mrp && price && (mrp > price) && (
+                                <div className="bg-green-100 text-[#15803D] text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 border border-green-200">
+                                    SAVE ₹{Math.round(mrp - price)} ({Math.round(((mrp - price) / mrp) * 100)}% OFF)
+                                </div>
                             )}
                         </div>
 
@@ -297,22 +299,19 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                                 {name}
                             </h2>
 
-                            <div className="flex items-center gap-2">
-                                {/* Price */}
-                                <p className="text-base font-semibold text-black mt-1">
-                                    ₹{Math.round(price)}
-                                </p>
-
-                                {/* MRP */}
-                                {mrp && (mrp > price) && (
-                                    <span className="text-base text-gray-600 line-through mt-1">
-                                        ₹{Math.round(mrp)}
+                            <div className="flex flex-col items-center gap-0.5 mt-1">
+                                <div className="flex items-center gap-1.5">
+                                    <span className="text-lg font-bold text-[#15803D]">
+                                        ₹{Math.round(price)}
                                     </span>
-                                )}
-
-                                {/* Discount */}
+                                    {mrp && (mrp > price) && (
+                                        <span className="text-[11px] text-gray-400 line-through">
+                                            ₹{Math.round(mrp)}
+                                        </span>
+                                    )}
+                                </div>
                                 {mrp && price && (mrp > price) && (
-                                    <span className="text-sm font-semibold text-green-600 mt-1">
+                                    <span className="text-[10px] font-bold text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-100">
                                         {Math.round(((mrp - price) / mrp) * 100)}% OFF
                                     </span>
                                 )}

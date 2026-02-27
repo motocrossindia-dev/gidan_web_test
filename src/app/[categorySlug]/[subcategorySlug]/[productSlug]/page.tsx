@@ -27,7 +27,8 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   }
 
   const product = productData.data.product;
-  const productName = product.main_product_name || product.name || productSlug;
+  const slugName = product.slug ? product.slug.split('-').map((w: any) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : productSlug;
+  const productName = product.name || slugName;
   const description = product.meta_description || product.description || `Buy ${productName} online at Gidan Plants.`;
   const title = product.meta_title || `Buy ${productName} Online | Gidan Plants`;
 

@@ -88,7 +88,7 @@ export async function fetchProductsByFilters(filters = {}) {
 export async function fetchProductDetail(productSlug, searchParams = {}) {
     try {
         const query = new URLSearchParams(searchParams).toString();
-        const url = `${API_URL}/product/defaultProduct/${encodeURIComponent(productSlug)}/${query ? '?' + query : ''}`;
+        const url = `${API_URL}/product/product_detail_view/${encodeURIComponent(productSlug)}/${query ? '?' + query : ''}`;
         const res = await fetch(url, { next: { revalidate: 3600 } });
         if (!res.ok) return null;
         const data = await res.json();

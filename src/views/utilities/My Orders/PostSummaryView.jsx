@@ -26,21 +26,21 @@ import { motion } from "framer-motion";
 import WriteAReview from '../ProductData/WriteAReview';
 import { getProductUrl } from '../../../utils/urlHelper';
 
-const OrderDetailsView = () => {
+const PostSummaryView = () => {
     const router = useRouter();
-    const { id } = useParams(); // This can be numeric ID or string order_id
-    const [orderData, setOrderData] = useState(null);
-    const [extraOrderDetails, setExtraOrderDetails] = useState(null);
-    const [orderHistory, setOrderHistory] = useState(null);
+    const { id } = useParams(); // This will be the order_id string like BMO... or numeric id
+    const [orderData, setOrderData] = useState(null); // From orderHistoryItems
+    const [extraOrderDetails, setExtraOrderDetails] = useState(null); // From /order/{id}/
+    const [orderHistory, setOrderHistory] = useState(null); // From orderHistory list
     const [loading, setLoading] = useState(true);
     const [activeReviewProductId, setActiveReviewProductId] = useState(null);
 
-    const fetchOrderDetails = async () => {
+    const fetchAllOrderDetails = async () => {
         setLoading(true);
         try {
-            // 1. Fetch from orderHistory to get numeric ID and context
+            // 1. Fetch from orderHistory to get numeric ID if "id" is order_id string
             let numericId = id;
-            const historyResponse = await axiosInstance.get(`/order/orderHistory/`);
+            const historyResponse = await axiosInstance.get('/order/orderHistory/');
             if (historyResponse.status === 200) {
                 const orders = historyResponse.data.data.orders;
                 const currentOrder = orders.find(o => o.id.toString() === id.toString() || o.order_id === id);
@@ -50,13 +50,13 @@ const OrderDetailsView = () => {
                 }
             }
 
-            // 2. Fetch tracking and items (existing API)
-            const response = await axiosInstance.get(`/order/orderHistoryItems/${numericId}`);
-            if (response.status === 200) {
-                setOrderData(response.data.data);
+            // 2. Fetch items and basic tracking
+            const itemsResponse = await axiosInstance.get(`/order/orderHistoryItems/${numericId}`);
+            if (itemsResponse.status === 200) {
+                setOrderData(itemsResponse.data.data);
             }
 
-            // 3. Fetch from the specific order API (new API)
+            // 3. Fetch specific details from the new API provided
             const extraResponse = await axiosInstance.get(`/order/${numericId}/`);
             if (extraResponse.status === 200) {
                 setExtraOrderDetails(extraResponse.data.data);
@@ -72,7 +72,7 @@ const OrderDetailsView = () => {
 
     useEffect(() => {
         if (id) {
-            fetchOrderDetails();
+            fetchAllOrderDetails();
         }
     }, [id]);
 
@@ -113,7 +113,7 @@ const OrderDetailsView = () => {
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <div className="flex flex-col items-center">
                     <div className="w-12 h-12 border-4 border-[#5A8A1A] border-t-transparent rounded-full animate-spin mb-4"></div>
-                    <p className="text-gray-600 font-medium">Loading order details...</p>
+                    <p className="text-gray-600 font-medium">Loading your order summary...</p>
                 </div>
             </div>
         );
@@ -154,7 +154,7 @@ const OrderDetailsView = () => {
     return (
         <div className="min-h-screen bg-white pb-20">
             <Helmet>
-                <title>Order Details | Gidan</title>
+                <title>Order Summary | Gidan</title>
             </Helmet>
 
             {/* Top Navigation */}
@@ -164,13 +164,13 @@ const OrderDetailsView = () => {
                     <ChevronRight className="w-3 h-3" />
                     <button onClick={() => router.push('/orders')} className="hover:underline">Your Orders</button>
                     <ChevronRight className="w-3 h-3" />
-                    <span className="text-[#4A7515] font-medium">Order Details</span>
+                    <span className="text-[#4A7515] font-medium">Order Summary</span>
                 </div>
             </div>
 
             <div className="max-w-6xl mx-auto px-4 py-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                    <h1 className="text-3xl font-bold text-gray-900">Order Details</h1>
+                    <h1 className="text-3xl font-bold text-gray-900">Order Summary</h1>
                     <div className="flex items-center gap-4 text-sm">
                         <p className="text-gray-700">Ordered on {formatDate(orderDate)}</p>
                         <span className="text-gray-300">|</span>
@@ -185,11 +185,9 @@ const OrderDetailsView = () => {
                         <div>
                             <h3 className="text-sm font-bold text-gray-900 mb-2">Shipping Address</h3>
                             <div className="text-sm text-gray-700">
-                                <p className="font-bold">
-                                    {extraOrderDetails?.delivery_address?.first_name} {extraOrderDetails?.delivery_address?.last_name || extraOrderDetails?.customer_name}
-                                </p>
-                                <p>{extraOrderDetails?.delivery_address?.address || extraOrderDetails?.order?.address || orderHistory?.address}</p>
-                                <p>{extraOrderDetails?.delivery_address?.city || orderHistory?.city}, {extraOrderDetails?.delivery_address?.state || orderHistory?.state} {extraOrderDetails?.delivery_address?.pincode || orderHistory?.pincode}</p>
+                                <p className="font-bold">{extraOrderDetails?.delivery_address?.first_name} {extraOrderDetails?.delivery_address?.last_name || extraOrderDetails?.customer_name}</p>
+                                <p>{extraOrderDetails?.delivery_address?.address || extraOrderDetails?.order?.address}</p>
+                                <p>{extraOrderDetails?.delivery_address?.city}, {extraOrderDetails?.delivery_address?.state} {extraOrderDetails?.delivery_address?.pincode}</p>
                                 <p>India</p>
                             </div>
                         </div>
@@ -199,7 +197,7 @@ const OrderDetailsView = () => {
                             <h3 className="text-sm font-bold text-gray-900 mb-2">Payment Method</h3>
                             <div className="text-sm text-gray-700 flex items-center gap-2">
                                 <CreditCard className="w-4 h-4 text-gray-400" />
-                                <span>{extraOrderDetails?.payment_method || orderHistory?.payment_method || 'Online Payment'}</span>
+                                <span>{extraOrderDetails?.payment_method || 'Online Payment'}</span>
                             </div>
                             {extraOrderDetails?.transfer_details?.method && (
                                 <p className="text-xs text-gray-500 mt-1 ml-6 uppercase">{extraOrderDetails.transfer_details.method} • {extraOrderDetails.transfer_details.bank || 'Captured'}</p>
@@ -220,7 +218,7 @@ const OrderDetailsView = () => {
                                         {finalShipping === 0 ? '₹0.00' : `₹${finalShipping}`}
                                     </span>
                                 </div>
-                                {(totalDiscount) > 0 && (
+                                {totalDiscount > 0 && (
                                     <div className="flex justify-between text-green-700">
                                         <span>Discount:</span>
                                         <span>-₹{totalDiscount}</span>
@@ -274,7 +272,8 @@ const OrderDetailsView = () => {
 
                                 return (
                                     <div key={step} className="flex flex-col items-center relative z-10 bg-white px-2">
-                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 ${isActive ? 'bg-green-500 border-green-100 text-white' : 'bg-white border-gray-200 text-gray-300'}`}>
+                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 ${isActive ? 'bg-green-500 border-green-100 text-white' : 'bg-white border-gray-200 text-gray-300'
+                                            }`}>
                                             {isActive ? <CheckCircle2 className="w-4 h-4" /> : <div className="w-2 h-2 rounded-full bg-gray-300"></div>}
                                         </div>
                                         <div className="absolute top-10 whitespace-nowrap text-center">
@@ -415,4 +414,4 @@ const OrderDetailsView = () => {
     );
 };
 
-export default OrderDetailsView;
+export default PostSummaryView;

@@ -115,6 +115,7 @@ export default function ProductData({ initialProductData }) {
     const [inWishlist, setInWishlist] = useState(null)
     const [productDetailData, setProductDetailData] = useState(initialProductData || []);
     const [imageThumbnails, setImageThumbnails] = useState(initialProductData?.data?.product?.images || []);
+    const [mainProductId, setMainProductId] = useState(initialProductData?.data?.product?.id || null);
     const params = useParams();
 
     // Always use 3-segment URL pattern: /:categorySlug/:subcategorySlug/:productSlug/
@@ -173,22 +174,24 @@ export default function ProductData({ initialProductData }) {
             const response = await axiosInstance.get(`/order/orderHistory/`);
             const allOrders = response?.data?.data?.orders || [];
 
-            let hasPurchased = false;
+            let purchaseRecord = null;
             // 1. Check order summaries first (fastest)
             for (const order of allOrders) {
                 const summary = order?.product_details;
-                if (summary?.id === currentProduct.id ||
+                if ((summary?.id === currentProduct.id ||
                     summary?.product_id === currentProduct.id ||
-                    summary?.product_name?.toLowerCase() === (currentProduct.main_product_name || currentProduct.name || "").toLowerCase()) {
-                    hasPurchased = true;
+                    summary?.product_name?.toLowerCase() === (currentProduct.main_product_name || currentProduct.name || "").toLowerCase()) &&
+                    order.status === 'DELIVERED') {
+                    purchaseRecord = order;
                     break;
                 }
             }
 
             // 2. If not found, check detail items for the last 10 orders (more thorough)
-            if (!hasPurchased && allOrders.length > 0) {
+            if (!purchaseRecord && allOrders.length > 0) {
                 const recentOrders = allOrders.slice(0, 10);
                 for (const order of recentOrders) {
+                    if (order.status !== 'DELIVERED') continue;
                     try {
                         const itemsResponse = await axiosInstance.get(`/order/orderHistoryItems/${order?.id}`);
                         const items = itemsResponse?.data?.data?.order_items || [];
@@ -197,7 +200,7 @@ export default function ProductData({ initialProductData }) {
                             item.product_name?.toLowerCase().includes((currentProduct.main_product_name || currentProduct.name || "").toLowerCase())
                         );
                         if (found) {
-                            hasPurchased = true;
+                            purchaseRecord = order;
                             break;
                         }
                     } catch (e) {
@@ -206,10 +209,19 @@ export default function ProductData({ initialProductData }) {
                 }
             }
 
-            if (hasPurchased) {
+            if (purchaseRecord) {
                 setIsReviewModalOpen(true);
             } else {
-                enqueueSnackbar("You must purchase this product before writing a review.", { variant: "warning" });
+                const hasAnyPurchase = allOrders.some(order =>
+                    order?.product_details?.id === currentProduct.id ||
+                    order?.product_details?.product_id === currentProduct.id
+                );
+
+                if (hasAnyPurchase) {
+                    enqueueSnackbar("You can only write a review once the product is delivered.", { variant: "warning" });
+                } else {
+                    enqueueSnackbar("You must purchase this product before writing a review.", { variant: "warning" });
+                }
             }
         } catch (error) {
             console.error("Error checking purchase history:", error);
@@ -249,17 +261,13 @@ export default function ProductData({ initialProductData }) {
 
         const queryString = urlParams.toString();
 
-        // Use the main product name to derive a stable base slug (e.g., eva-planter)
-        const baseSlug = (newProduct?.main_product_name || newProduct?.name)
-            ? convertToSlug(newProduct.main_product_name || newProduct.name)
-            : params.productSlug;
-
-
+        // Always use the primary slug field for a clean, stable URL
+        const baseSlug = toSlugString(newProduct?.slug) || params.productSlug;
         const catSlug = toSlugString(newProduct?.category_slug) || params.categorySlug;
         const subCatSlug = toSlugString(newProduct?.sub_category_slug) || params.subcategorySlug || "all";
 
-
-        const newUrl = `/${catSlug}/${subCatSlug}/${baseSlug}${queryString ? '?' + queryString : ''}`;
+        // Construct clean URL - NO trailing slash before query params as requested
+        const newUrl = `/${catSlug}/${subCatSlug}/${baseSlug}${queryString ? '?' + queryString : '/'}`;
 
         window.history.replaceState(null, "", newUrl);
         setCurrentUrl(newUrl);
@@ -283,23 +291,26 @@ export default function ProductData({ initialProductData }) {
         }
     }, [isReviewModalOpen]);
 
-    // URL normalization: ensure the URL uses the main product slug
+    // URL normalization: ensure the URL uses the primary product slug
     // This fires when product data becomes available (from SSR or fetch)
     useEffect(() => {
-        if (!product?.main_product_name && !product?.name) return;
+        if (!product) return;
 
-        const expectedSlug = convertToSlug(product.main_product_name || product.name);
+        const expectedSlug = toSlugString(product.slug);
         const currentSlug = params.productSlug;
 
-        // Only normalize if the current slug doesn't match the main product slug
-        if (currentSlug && currentSlug !== expectedSlug) {
-            const catSlug = toSlugString(product?.category_slug) || params.categorySlug;
-            const subCatSlug = toSlugString(product?.sub_category_slug) || params.subcategorySlug || "all";
-            const cleanUrl = `/${catSlug}/${subCatSlug}/${expectedSlug}`;
+        if (expectedSlug && currentSlug !== expectedSlug) {
+            const catSlug = toSlugString(product.category_slug) || params.categorySlug;
+            const subCatSlug = toSlugString(product.sub_category_slug) || params.subcategorySlug || "all";
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const queryString = urlParams.toString();
+            const cleanUrl = `/${catSlug}/${subCatSlug}/${expectedSlug}${queryString ? '?' + queryString : '/'}`;
+
             window.history.replaceState(null, "", cleanUrl);
             setCurrentUrl(cleanUrl);
         }
-    }, [product?.main_product_name, product?.name]);
+    }, [product?.id, product?.slug]);
 
 
 
@@ -550,7 +561,8 @@ export default function ProductData({ initialProductData }) {
             setSelectedSize(size);
 
             // Make API call to the unified endpoint
-            const res = await axiosInstance.get(`/product/filterProduct/${product.id}/`,
+            // Use the unified product_detail_view endpoint for filtering
+            const res = await axiosInstance.get(`/product/product_detail_view/${params.productSlug}/`,
                 {
                     params: {
                         size_id: size.id,
@@ -593,7 +605,7 @@ export default function ProductData({ initialProductData }) {
 
             // Make API call to the unified endpoint
             const res = await axiosInstance.get(
-                `/product/filterProduct/${product.id}/`,
+                `/product/product_detail_view/${params.productSlug}/`,
                 {
                     params: { weight_id: size.id },
                 }
@@ -627,7 +639,7 @@ export default function ProductData({ initialProductData }) {
 
             // Make API call to the unified endpoint
             const res = await axiosInstance.get(
-                `/product/filterProduct/${product.id}/`,
+                `/product/product_detail_view/${params.productSlug}/`,
                 {
                     params: { litre_id: litre.id },
                 }
@@ -660,7 +672,7 @@ export default function ProductData({ initialProductData }) {
 
             // Make API call to the unified endpoint
             const res = await axiosInstance.get(
-                `/product/filterProduct/${product.id}/`,
+                `/product/product_detail_view/${params.productSlug}/`,
                 {
                     params: {
                         planter_size_id: size.id,
@@ -704,7 +716,7 @@ export default function ProductData({ initialProductData }) {
             }
             // Make API call to the unified endpoint
             const res = await axiosInstance.get(
-                `/product/filterProduct/${product.id}/`,
+                `/product/product_detail_view/${params.productSlug}/`,
                 {
                     params: {
                         planter_id: planter.id,
@@ -743,7 +755,7 @@ export default function ProductData({ initialProductData }) {
 
             // ✅ Make API call to the unified endpoint
             const res = await axiosInstance.get(
-                `/product/filterProduct/${product.id}/`,
+                `/product/product_detail_view/${params.productSlug}/`,
                 {
                     params: {
                         color_id: color.id,
@@ -779,7 +791,7 @@ export default function ProductData({ initialProductData }) {
                 // Use the slug from URL params to fetch the exact product variant
                 const productSlug = params.productSlug || id;
                 const queryParams = new URLSearchParams(window.location.search).toString();
-                const response = await axiosInstance.get(`/product/defaultProduct/${productSlug}/${queryParams ? '?' + queryParams : ''}`);
+                const response = await axiosInstance.get(`/product/product_detail_view/${productSlug}/${queryParams ? '?' + queryParams : ''}`);
 
                 if (response.status === 200) {
                     const data = response.data;
@@ -845,25 +857,6 @@ export default function ProductData({ initialProductData }) {
                     const mainId = data?.data?.product?.id;
                     if (mainId) setMainProductId(mainId);
 
-                    // 🔥 Immediately fetch all images for the active variant via filterProduct
-                    // defaultProduct only returns 1 image; filterProduct returns all variant images
-                    try {
-                        const filterParams = {};
-                        if (color_id) filterParams.color_id = color_id;
-                        if (planter_size_id) filterParams.planter_size_id = planter_size_id;
-                        if (planter_id) filterParams.planter_id = planter_id;
-                        if (size_id) filterParams.size_id = size_id;
-                        if (litre_id) filterParams.litre_id = litre_id;
-                        if (weight_id) filterParams.weight_id = weight_id;
-
-                        if (mainId && Object.keys(filterParams).length > 0) {
-                            const filterRes = await axiosInstance.get(`/product/filterProduct/${mainId}/`, { params: filterParams });
-                            if (filterRes?.data?.data?.product?.images?.length) {
-                                setImageThumbnails(filterRes.data.data.product.images);
-                            }
-                        }
-                    } catch (e) { /* keep existing images if filterProduct fails */ }
-
                 }
             } catch (error) { }
         };
@@ -897,36 +890,7 @@ export default function ProductData({ initialProductData }) {
     }, [id, params.productSlug]); // Added params.productSlug to dependencies
     // ========== END NEW CODE ==========
 
-    // ========== SSR IMAGE FIX ==========
-    // When initialProductData comes from SSR, the defaultProduct API only returns 1 image.
-    // This effect runs once on mount to fetch all variant images from filterProduct.
-    useEffect(() => {
-        const fetchInitialVariantImages = async () => {
-            const product = initialProductData?.data?.product;
-            if (!product?.id) return;
-
-            const { id: prodId, color_id, planter_size_id, planter_id, size_id, litre_id, weight_id } = product;
-            const filterParams = {};
-            if (color_id) filterParams.color_id = color_id;
-            if (planter_size_id) filterParams.planter_size_id = planter_size_id;
-            if (planter_id) filterParams.planter_id = planter_id;
-            if (size_id) filterParams.size_id = size_id;
-            if (litre_id) filterParams.litre_id = litre_id;
-            if (weight_id) filterParams.weight_id = weight_id;
-
-            if (Object.keys(filterParams).length === 0) return;
-
-            try {
-                const res = await axiosInstance.get(`/product/filterProduct/${prodId}/`, { params: filterParams });
-                if (res?.data?.data?.product?.images?.length) {
-                    setImageThumbnails(res.data.data.product.images);
-                }
-                setMainProductId(prodId);
-            } catch (e) { /* ignore */ }
-        };
-        fetchInitialVariantImages();
-    }, []); // run once on mount
-    // ========== END SSR IMAGE FIX ==========
+    // ========== END SSR IMAGE FIX (No longer needed with product_detail_view) ==========
 
     // ========== OLD CODE (Before Feb 16, 2026) - COMMENTED OUT ==========
     // useEffect(() => {
@@ -1033,7 +997,12 @@ export default function ProductData({ initialProductData }) {
                         path: `/${scategory_slug}/${ssubcategory_slug}/`
                     }
                 ]}
-                currentPage={productDetailData?.data?.product?.main_product_name}
+                currentPage={
+                    productDetailData?.data?.product?.name ||
+                    (productDetailData?.data?.product?.slug
+                        ? productDetailData.data.product.slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+                        : "")
+                }
             />
 
             <div className="w-full" style={{ backgroundColor: "whitesmoke" }}>
@@ -1224,7 +1193,11 @@ export default function ProductData({ initialProductData }) {
 
                         <div className="md:flex-1 px-4 font-sans mt-8">
                             <h1 className="text-xl md:text-3xl font-bold mb-2">
-                                {productDetailData?.data?.product?.main_product_name ? `Buy ${productDetailData.data.product.main_product_name}` : ""}
+                                {(() => {
+                                    const p = productDetailData?.data?.product;
+                                    const cleanName = p?.name || (p?.slug ? p.slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') : "");
+                                    return cleanName ? `Buy ${cleanName}` : "";
+                                })()}
                             </h1>
                             <p className="text-md md:text-lg font-sans mb-4 whitespace-pre-line text-black">
                                 {productDetailData?.data?.product?.description || ""}
@@ -1270,7 +1243,7 @@ export default function ProductData({ initialProductData }) {
                                         disabled={isCheckingPurchase}
                                         className="text-sm text-blue-600 hover:text-blue-800 hover:underline cursor-pointer bg-transparent border-none p-0"
                                     >
-                                        {isCheckingPurchase ? "Checking..." : (productDetailData?.data?.product_rating?.num_ratings === 0 ? "Be the first to review" : "Write a review")}
+                                        {isCheckingPurchase ? "Checking..." : (productDetailData?.data?.product?.is_review ? "Edit your review" : (productDetailData?.data?.product_rating?.num_ratings === 0 ? "Be the first to review" : "Write a review"))}
                                     </button>
                                 </div>
                             </div>
