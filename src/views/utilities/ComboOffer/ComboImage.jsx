@@ -10,6 +10,7 @@ import { isMobile } from "react-device-detect";
 import axiosInstance from "../../../Axios/axiosInstance";
 import ProductCard from "../PlantFilter/ProductCard";
 import Verify from "../../../Services/Services/Verify";
+import ModernComboCard from "./ModernComboCard";
 
 function ComboImage() {
   const accessToken = useSelector(selectAccessToken);
@@ -105,33 +106,12 @@ function ComboImage() {
       </p>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 justify-items-center">
         {comboOffers?.map((offer, index) => (
-          <div key={offer.id || index} className="w-full flex flex-col items-center">
-            <ProductCard
-              name={offer?.title}
-              price={Math.round(offer?.final_price)}
-              imageUrl={offer?.image}
-              userRating={0}
-              ratingNumber={0}
-              product={{ 
-                ...offer, 
-                id: offer.id, 
-                name: offer.title, 
-                slug: `combo-${offer.id}`,
-                selling_price: offer.final_price,
-                mrp: offer.total_price
-              }}
-              mrp={offer?.total_price > offer?.final_price ? Math.round(offer?.total_price) : null}
-              ribbon={offer?.is_shop_the_look ? "SHOP THE LOOK" : "COMBO"}
-              inWishlist={false}
-              inCart={false}
-            />
-            <button
-              className="w-full bg-[#15803D] text-white py-2 px-4 rounded-b-xl hover:bg-[#15803D]/90 transition duration-300 flex items-center justify-center -mt-2 relative z-10 font-bold shadow-md"
-              onClick={() => handleBuyItNowSubmit(offer?.id)}
-            >
-              <ShoppingCart className="inline-block mr-2 w-4 h-4" />
-              Buy It Now
-            </button>
+          <div 
+            key={offer.id || index} 
+            className="w-full cursor-pointer group" 
+            onClick={() => handleBuyItNowSubmit(offer?.id)}
+          >
+            <ModernComboCard offer={offer} />
           </div>
         ))}
       </div>

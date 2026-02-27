@@ -85,7 +85,7 @@ function Offer() {
               userRating={offer?.product_rating?.avg_rating || 0}
               ratingNumber={offer?.product_rating?.num_ratings || 0}
               product={offer}
-              mrp={Math.round(offer?.mrp)}
+              mrp={offer?.mrp && offer?.mrp > offer?.selling_price ? Math.round(offer?.mrp) : null}
               ribbon={offer?.ribbon || "OFFER"}
               inWishlist={offer?.is_wishlist}
               inCart={offer?.is_cart}

@@ -105,7 +105,8 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                     elevation={0}
                     sx={{
                         width: { xs: "80%", sm: "14rem", lg: "16rem" },
-                        height: "25rem",
+                        height: "auto",
+                        minHeight: "25rem",
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
