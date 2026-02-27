@@ -13,9 +13,7 @@ import GoogleAnalytics from "@/GoogleAnalytics/GoogleAnalytics";
 
 
 import Verify from "@/Services/Services/Verify";
-import OrganizationSchema from "@/views/utilities/seo/OrganizationSchema";
-import StoreSchema from "@/views/utilities/seo/StoreSchema";
-import WebsiteSchema from "@/views/utilities/seo/WebsiteSchema";
+import GlobalIdentitySchema from "@/views/utilities/seo/GlobalIdentitySchema";
 import Home from '@/components/Home/Home';
 
 const nunitoSans = Nunito_Sans({
@@ -129,9 +127,7 @@ export default function RootLayout({
             style={{ display: 'none', visibility: 'hidden' }}
           />
         </noscript>
-        <OrganizationSchema />
-        <StoreSchema />
-        <WebsiteSchema />
+        <GlobalIdentitySchema />
         <Providers>
           <GoogleAnalytics />
 
