@@ -311,7 +311,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                                 alt={name}
                                 width={400}
                                 height={400}
-                                sizes="(max-width: 640px) 100vw, 400px"
+                                sizes="(max-width: 640px) 50vw, 400px"
                                 loading="lazy"
                                 className="w-full h-40 object-cover"
                             />
