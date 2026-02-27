@@ -34,6 +34,8 @@ const nextConfig: NextConfig = {
   // Image optimization domains
   images: {
     qualities: [75, 80, 85],
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 3600,
     remotePatterns: [
       {
         protocol: "https",

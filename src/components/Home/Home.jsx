@@ -186,16 +186,21 @@ import HeroSection from '../HeroSection/HeroSection';
 import Banner from '../Banner/Banner';
 
 // Below-the-fold components - lazy load with code splitting for better performance
-import TrendingSection from '../TrendingProducts/TrendingSection';
+const TrendingSection = lazy(() => import(/* webpackChunkName: "trending" */ '../TrendingProducts/TrendingSection'));
 const RewardClub = lazy(() => import(/* webpackChunkName: "reward-club" */ '../RewardClub/RewardClub'));
 const ShopTheLook = lazy(() => import(/* webpackChunkName: "shop-look" */ '../ShopTheLook/ShopTheLook'));
-import SeasonalProduct from '../SeasonalCollection/SeasonalProduct';
+const SeasonalProduct = lazy(() => import(/* webpackChunkName: "seasonal" */ '../SeasonalCollection/SeasonalProduct'));
 const OfferReward = lazy(() => import(/* webpackChunkName: "offer-reward" */ '../OfferReward/OfferReward'));
 const ComboOffer = lazy(() => import(/* webpackChunkName: "combo-offer" */ '../ComboOffer/ComboOffer'));
 const Blog = lazy(() => import(/* webpackChunkName: "blog" */ '../Blog/Blog'));
 const VideoSection = lazy(() => import(/* webpackChunkName: "video" */ '../VideoSection/VideoSection'));
 const CheckOutStore = lazy(() => import(/* webpackChunkName: "store" */ '../Store/CheckOutStore'));
 const Services = lazy(() => import(/* webpackChunkName: "services" */ '../../Services/ServiceHome/Services'));
+
+// Defined outside component to prevent recreation on every render
+const LoadingFallback = () => (
+  <div className="w-full h-32 bg-gray-100 animate-pulse rounded" />
+);
 
 const Home = ({ initialBanners, initialCategories, initialTrendingProducts }) => {
   // ✅ Use TanStack Query hook - automatic caching, no unnecessary re-renders
@@ -212,10 +217,7 @@ const Home = ({ initialBanners, initialCategories, initialTrendingProducts }) =>
     }
   }, []);
 
-  // Loading fallback component
-  const LoadingFallback = () => (
-    <div className="w-full h-32 bg-gray-100 animate-pulse rounded" />
-  );
+  // Loading fallback moved outside component - see above
 
   // Show loading state
   if (isLoading && !initialBanners) {
@@ -255,24 +257,32 @@ const Home = ({ initialBanners, initialCategories, initialTrendingProducts }) =>
       <HeroSection hero={heroImages} />
       <Banner home={homeImages} />
 
-      {/* Trending Section - hydrated with SSR data, rendered immediately */}
-      <TrendingSection initialData={initialTrendingProducts} />
+      {/* Trending Section - lazy loaded below the fold */}
+      <LazyLoadWrapper height="400px">
+        <Suspense fallback={<LoadingFallback />}>
+          <TrendingSection initialData={initialTrendingProducts} />
+        </Suspense>
+      </LazyLoadWrapper>
 
       {/* Below-the-fold content - lazy load with intersection observer */}
-      <LazyLoadWrapper height="400px">
+      <LazyLoadWrapper height="300px">
         <Suspense fallback={<LoadingFallback />}>
           <RewardClub />
         </Suspense>
       </LazyLoadWrapper>
 
-      <LazyLoadWrapper height="500px">
+      <LazyLoadWrapper height="400px">
         <Suspense fallback={<LoadingFallback />}>
           <ShopTheLook />
         </Suspense>
       </LazyLoadWrapper>
 
-      {/* Seasonal Section - shared data from SSR */}
-      <SeasonalProduct initialData={initialTrendingProducts} />
+      {/* Seasonal Section - lazy loaded */}
+      <LazyLoadWrapper height="400px">
+        <Suspense fallback={<LoadingFallback />}>
+          <SeasonalProduct initialData={initialTrendingProducts} />
+        </Suspense>
+      </LazyLoadWrapper>
 
       <LazyLoadWrapper height="400px">
         <Suspense fallback={<LoadingFallback />}>

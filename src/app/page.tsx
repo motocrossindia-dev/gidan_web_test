@@ -86,8 +86,26 @@ export default async function HomePage() {
     getInitialTrendingProducts()
   ]);
 
+  // Generate preload link for LCP banner image server-side
+  // This tells the browser to fetch the image immediately from HTML, before JS runs
+  const firstHomeBanner = initialBanners?.find(
+    (b: any) => b.type === 'Home' && b.is_visible
+  );
+  const lcpBannerPath = firstHomeBanner?.mobile_banner || firstHomeBanner?.web_banner;
+  const lcpPreloadUrl = lcpBannerPath
+    ? `/_next/image?url=${encodeURIComponent(`https://backend.gidan.store${lcpBannerPath}`)}&w=828&q=75`
+    : null;
+
   return (
     <>
+      {lcpPreloadUrl && (
+        <link
+          rel="preload"
+          as="image"
+          href={lcpPreloadUrl}
+          fetchPriority="high"
+        />
+      )}
       <GlobalIdentitySchema />
       <HomepageSchema />
       <Home
@@ -95,7 +113,6 @@ export default async function HomePage() {
         initialCategories={initialCategories}
         initialTrendingProducts={initialTrendingProducts}
       />
-
     </>
   );
 }
