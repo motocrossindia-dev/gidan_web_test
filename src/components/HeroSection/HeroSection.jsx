@@ -37,7 +37,7 @@ const HeroSection = ({ hero }) => {
   };
 
   return (
-    <div className="relative w-full overflow-hidden mt-4 min-h-[200px] sm:min-h-[400px] aspect-[1920/600]">
+    <div className="relative w-full overflow-hidden mt-4 min-h-[120px] sm:min-h-[350px]">
       {hero && hero.length > 0 ? (
         <div className="relative w-full h-full">
 
@@ -61,12 +61,12 @@ const HeroSection = ({ hero }) => {
                       alt={`Hero Banner ${index + 1}`}
                       width={1920}
                       height={600}
-                      sizes="100vw"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1200px) 90vw, 1920px"
                       className="w-full h-auto cursor-pointer"
                       priority={index === 0}
                       fetchPriority={index === 0 ? "high" : "low"}
                       loading={index === 0 ? "eager" : "lazy"}
-                      quality={85}
+                      quality={75}
                     />
                   </Link>
                 </div>

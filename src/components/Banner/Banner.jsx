@@ -22,7 +22,7 @@ const Banner = ({ home }) => {
                         delay: 3000,
                         disableOnInteraction: false,
                     }}
-                    className="w-full min-h-[300px] sm:min-h-[400px]"
+                    className="w-full sm:min-h-[380px]"
                 >
                     {home.map((banner, index) => (
                         <SwiperSlide key={banner.id || index}>
@@ -41,7 +41,8 @@ const Banner = ({ home }) => {
                                             priority={index === 0}
                                             fetchPriority={index === 0 ? "high" : "low"}
                                             loading={index === 0 ? "eager" : "lazy"}
-                                            quality={85}
+                                            quality={75}
+                                            sizes="(max-width: 1024px) 100vw, 800px"
                                         />
                                     </div>
                                     {/* Mobile Image */}
@@ -55,7 +56,8 @@ const Banner = ({ home }) => {
                                             priority={index === 0}
                                             fetchPriority={index === 0 ? "high" : "low"}
                                             loading={index === 0 ? "eager" : "lazy"}
-                                            quality={85}
+                                            quality={75}
+                                            sizes="(max-width: 640px) 100vw, 400px"
                                         />
                                     </div>
                                 </div>
