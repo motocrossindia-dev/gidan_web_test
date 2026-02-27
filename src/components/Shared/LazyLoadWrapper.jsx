@@ -59,7 +59,7 @@ const LazyLoadWrapper = ({
     <div
       ref={ref}
       className={`transition-opacity duration-700 ease-in-out ${effectivelyInView ? 'opacity-100' : 'opacity-0'}`}
-      style={{ minHeight: height }}
+      style={effectivelyInView ? undefined : { minHeight: height }}
     >
       {effectivelyInView ? (
         children
