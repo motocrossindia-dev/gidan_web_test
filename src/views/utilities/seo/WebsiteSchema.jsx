@@ -1,13 +1,19 @@
-// src/seo/WebsiteSchema.jsx
-import __logo from "../../../Assets/FranchiseEnquires/franchiseenquires_gidan.webp";
-const _logo = typeof __logo === 'string' ? __logo : __logo?.src || __logo;
-const logo = typeof _logo === 'string' ? _logo : _logo?.src || _logo;
 export default function WebsiteSchema() {
     const schema = {
         "@context": "https://schema.org",
         "@type": "WebSite",
+        "@id": "https://www.gidan.store/#website",
         "name": "Gidan Store",
-        "url": "https://www.gidan.store/"
+        "url": "https://www.gidan.store/",
+        "publisher": { "@id": "https://www.gidan.store/#organization" },
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://www.gidan.store/search?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+        }
     };
 
     return (
