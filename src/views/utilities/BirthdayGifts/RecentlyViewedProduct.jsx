@@ -2,7 +2,7 @@
 
 
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from 'react';    
+import React, { useEffect, useState } from 'react';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import TrendingCard from "../../../components/TrendingProducts/TrendingCard"
 import axiosInstance from '../../../Axios/axiosInstance';
@@ -11,48 +11,50 @@ import convertToSlug from "../../../utils/slugConverter";
 const RecentlyViewedProduct = () => {
   const [products, setProducts] = useState([]);
   const router = useRouter();
-  
-  
+
+
   const getProducts = async () => {
     try {
       const response = await axiosInstance.get(`/product/recentlyViewed/`);
-  
-     if (response.status === 200) {
-      setProducts(response?.data?.data?.products || []);
-      
-     }  
-      
+
+      if (response.status === 200) {
+        setProducts(response?.data?.data?.products || []);
+
+      }
+
     } catch (error) {
       console.error("Error fetching products:", error.response?.data || error.message);
       setProducts([]);
     }
   };
-  
+
   useEffect(() => {
-   
-      getProducts();
-    
-  }, []); 
+
+    getProducts();
+
+  }, []);
 
   const handleProductClick = (product) => {
     const category_slug = product?.category_slug;
     const sub_category_slug = product?.sub_category_slug;
 
     // All products have category, subcategory, and product slug
-    router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {       state: {
+    router.push(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
+      state: {
         product_id: product.slug,
-        category_slug:category_slug,
-        sub_category_slug:sub_category_slug
+        category_slug: category_slug,
+        sub_category_slug: sub_category_slug
 
-      } });
+      }
+    });
 
 
   };
-  
+
   return (
     <div className="w-full bg-gray-100">
       <div className="my-8 p-4 bg-grey-200 rounded-md">
-        <h2 className="md:text-2xl text-xl mb-4 text-center md:font-bold font-semibold">
+        <h2 className="md:text-2xl text-xl font-semibold text-center mb-4">
           Recently Viewed
         </h2>
 

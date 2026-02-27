@@ -9,9 +9,42 @@ import { Helmet } from "react-helmet-async";
 const Successpage = () => {
   const router = useRouter();
 
+  const [countdown, setCountdown] = React.useState(5);
+  const [isAuthorized, setIsAuthorized] = React.useState(false);
+
   useEffect(() => {
+    // Check if user reached here via a successful payment
+    const successFlag = sessionStorage.getItem('recent_payment_success');
+
+    if (!successFlag) {
+      // Not authorized to view success page directly
+      router.replace("/");
+      return;
+    }
+
+    // Is authorized!
+    setIsAuthorized(true);
+
     window.scrollTo(0, 0); // Scroll to top on mount
-  }, []);
+
+    const timer = setInterval(() => {
+      setCountdown((prev) => prev - 1);
+    }, 1000);
+
+    const redirect = setTimeout(() => {
+      sessionStorage.removeItem('recent_payment_success');
+      router.push("/orders");
+    }, 5000);
+
+    return () => {
+      clearInterval(timer);
+      clearTimeout(redirect);
+    };
+  }, [router]);
+
+  if (!isAuthorized) {
+    return null; // Don't render anything while checking authorization or redirecting
+  }
 
   return (
     <>
@@ -55,13 +88,26 @@ const Successpage = () => {
         >
           Thank you! Your payment has been successfully processed. Your order is Processing.
         </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="mt-6 text-sm text-gray-500 font-medium"
+        >
+          Redirecting to orders in <span className="text-green-600 font-bold">{countdown}</span> seconds...
+        </motion.div>
+
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.98 }}
-          onClick={() => router.push("/orders")}
-          className="mt-10 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium shadow-md"
+          onClick={() => {
+            sessionStorage.removeItem('recent_payment_success');
+            router.push("/orders");
+          }}
+          className="mt-10 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium shadow-md transition-all"
         >
-          Go to Orders
+          Go to Orders Now
         </motion.button>
       </div>
     </>

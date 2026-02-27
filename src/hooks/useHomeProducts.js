@@ -15,12 +15,13 @@ const fetchHomeProducts = async (accessToken) => {
   return response?.data?.data?.products || [];
 };
 
-export const useHomeProducts = (accessToken) => {
+export const useHomeProducts = (accessToken, initialData = undefined) => {
   return useQuery({
-    queryKey: ['homeProducts', accessToken], // Unique key includes auth state
+    queryKey: ['homeProducts', accessToken || 'guest'], // Unique key includes auth state
     queryFn: () => fetchHomeProducts(accessToken),
     staleTime: 5 * 60 * 1000, // Data stays fresh for 5 minutes
     cacheTime: 10 * 60 * 1000, // Cache persists for 10 minutes
     enabled: true, // Always fetch
+    initialData: initialData,
   });
 };

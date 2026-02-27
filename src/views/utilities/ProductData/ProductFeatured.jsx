@@ -49,7 +49,7 @@ const ProductFeatured = () => {
 
   return (
     <div className="my-8 p-4 bg-white rounded-md">
-      <h2 className="md:text-2xl text-xl mb-4 text-left font-sans font-bold">Shop Our Featured Collection</h2>
+      <h2 className="md:text-2xl text-xl mb-4 text-center font-sans font-bold">Shop Our Featured Collection</h2>
       <div className="max-w-7xl mx-auto px-3">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 justify-items-center font-sans">
 

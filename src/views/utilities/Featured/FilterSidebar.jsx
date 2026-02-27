@@ -258,31 +258,32 @@ const FilterSidebar = ({
     const params = new URLSearchParams();
 
     params.append("type", selectedFilterType || "");
-    // Determine if we should send category/subcategory ID
-    // If the selected type doesn't match the route's typeKey, we clear them to avoid backend conflicts
+    // When the user switches the Type dropdown, the route's typeKey (from the URL) and the
+    // selected type will differ — we call this a "type mismatch".
+    // On a type mismatch we clear the ROUTE-derived category/sub IDs to avoid backend conflicts,
+    // but we still respect any subcategory the user explicitly picks from the new type's list.
     const isTypeMismatch = typeKey && selectedFilterType &&
       selectedFilterType.toLowerCase() !== typeKey.toLowerCase();
 
-    let finalCategoryId = categoryId || categoryIdFromSlug || "";
-    let finalSubcategoryId = subcategoryID || "";
-    let finalSubcategorySlug = subcategorySlug || ""; // Initialize finalSubcategorySlug here
-
-    if (isTypeMismatch) {
-      finalCategoryId = "";
-      finalSubcategoryId = "";
-      finalSubcategorySlug = ""; // Clear slug on type mismatch
-    }
+    // Start from route-derived IDs; clear them on type switch so the old category isn't sent
+    let finalCategoryId = isTypeMismatch ? "" : (categoryId || categoryIdFromSlug || "");
+    // Start with route subcategory only when types match; user selection overrides below
+    let finalSubcategoryId = isTypeMismatch ? "" : (subcategoryID || "");
+    let finalSubcategorySlug = isTypeMismatch ? "" : (subcategorySlug || "");
 
     params.append("category_id", finalCategoryId);
 
-    // Subcategory ID and Slug resolution
-    // If there's a type mismatch, finalSubcategoryId is already cleared.
-    // Otherwise, we check for selectedFilters.subcategories.
-    if (!isTypeMismatch && "subcategories" in selectedFilters) {
+    // Always apply user-selected subcategory regardless of type mismatch.
+    // filterData.subcategories holds the live list for the currently selected type,
+    // so a lookup here works even when the route subcategoryList is for a different type.
+    if ("subcategories" in selectedFilters) {
       finalSubcategoryId = selectedFilters.subcategories || "";
       if (finalSubcategoryId) {
-        const selectedSubcat = filterData.subcategories?.find(s => s.id === finalSubcategoryId);
-        finalSubcategorySlug = selectedSubcat ? (selectedSubcat.slug || selectedSubcat.subcategory_slug || selectedSubcat.name?.toLowerCase().replace(/\s+/g, '-')) : "";
+        // Look up in the live filter data (works for switched types)
+        const selectedSubcat = filterData.subcategories?.find(s => s.id == finalSubcategoryId);
+        finalSubcategorySlug = selectedSubcat
+          ? (selectedSubcat.slug || selectedSubcat.subcategory_slug || selectedSubcat.name?.toLowerCase().replace(/\s+/g, '-'))
+          : "";
       } else {
         finalSubcategorySlug = "";
       }
@@ -321,9 +322,12 @@ const FilterSidebar = ({
       'plantcare': 'plant-care'
     };
 
+    // categorySegment is the URL-friendly category slug for the selected type
+    // (e.g. "pots" for type "pot"). Hoisted so it's reachable by the SEO fetch later.
+    const categorySegment = typeToSlug[selectedFilterType] || selectedFilterType;
+
     // Update URL visually only if we are applying a standard category filter and slugs have changed
     if (selectedFilterType && !isSeasonalCollection && !isTrending && !isFeatured && !isBestSeller) {
-      const categorySegment = typeToSlug[selectedFilterType] || selectedFilterType;
       let newUrl = `/${categorySegment}`;
       if (finalSubcategorySlug) {
         newUrl += `/${finalSubcategorySlug}`;
@@ -371,28 +375,60 @@ const FilterSidebar = ({
 
       // Update SEO directly from same API call — no extra requests
       if (setSeoData) {
-        if (finalSubcategoryId && subcategoryList.length > 0) {
-          // Subcategory selected — look up sub_category_info from server-fetched list
-          const matchedSub = subcategoryList.find(s => s.id === finalSubcategoryId);
-          if (matchedSub?.sub_category_info) {
-            const info = matchedSub.sub_category_info;
-            setSeoData({
-              title: info.title || matchedSub.name,
-              subtitle: info.subtitle || `${matchedSub.name} - Buy Online in India from Gidan.store`,
-              description: info.description || "",
-            });
+        if (finalSubcategoryId) {
+          // Subcategory selected.
+          // Priority: subcategoryList (SSR list for route type) → filterData live list (for switched types)
+          // Use loose equality (==) to handle string vs number type mismatches.
+          const matchedSub =
+            subcategoryList.find(s => s.id == finalSubcategoryId) ||
+            filterData.subcategories?.find(s => s.id == finalSubcategoryId);
+
+          // Helper: build SEO object from a subcategory record (sub_category_info or catInfo)
+          const buildSubSeoData = (name, info = {}) => ({
+            ...info,
+            title: info.title || name,
+            subtitle: info.subtitle || `${name} - Buy Online in India from Gidan.store`,
+            description: info.description || info.intro_text || info.content || "",
+            sections: info.sections || [],
+          });
+
+          if (matchedSub?.sub_category_info?.description || matchedSub?.sub_category_info?.sections?.length) {
+            // sub_category_info has rich content — use it directly
+            setSeoData(buildSubSeoData(matchedSub.name, matchedSub.sub_category_info));
             if (setIsSubcategorySEO) setIsSubcategorySEO(true);
-          } else if (matchedSub) {
-            setSeoData({
-              title: matchedSub.name,
-              subtitle: `${matchedSub.name} - Buy Online in India from Gidan.store`,
-              description: "",
-            });
+          } else if (catInfo?.subcategory_name && (catInfo?.description || catInfo?.intro_text || catInfo?.sections?.length)) {
+            // Products API returned subcategory info with content — use it
+            setSeoData(buildSubSeoData(catInfo.subcategory_name, catInfo));
             if (setIsSubcategorySEO) setIsSubcategorySEO(true);
+          } else {
+            // Neither source has the description — fetch from the subcategory listing API
+            // (same endpoint the SSR path uses, guaranteed to have sub_category_info)
+            const subName = matchedSub?.name || catInfo?.subcategory_name || "";
+            // Set title/subtitle immediately so the UI isn't blank while fetching
+            setSeoData(buildSubSeoData(subName, matchedSub?.sub_category_info || {}));
+            if (setIsSubcategorySEO) setIsSubcategorySEO(true);
+
+            if (finalSubcategorySlug && categorySegment) {
+              // Fire-and-forget: fetch rich SEO then update once resolved
+              axiosInstance
+                .get(`/category/categoryWiseSubCategory/${categorySegment}/`)
+                .then(subRes => {
+                  const subcats = subRes.data?.data?.subCategorys || [];
+                  const found = subcats.find(s =>
+                    s.slug === finalSubcategorySlug ||
+                    s.id == finalSubcategoryId
+                  );
+                  if (found) {
+                    setSeoData(buildSubSeoData(found.name, found.sub_category_info || {}));
+                    if (setFetchedSubcategoryName) setFetchedSubcategoryName(found.name);
+                  }
+                })
+                .catch(() => {/* Silently ignore — we already set a fallback above */ });
+            }
           }
-        } else if (catInfo && (catInfo.hero || catInfo.sections)) {
-          // Category-level — use hero+sections SEO from API response
-          setSeoData(catInfo);
+        } else {
+          // No subcategory — revert to category-level SEO from API response
+          if (catInfo) setSeoData(catInfo);
           if (setIsSubcategorySEO) setIsSubcategorySEO(false);
         }
       }

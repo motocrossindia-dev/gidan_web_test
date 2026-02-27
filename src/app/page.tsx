@@ -44,6 +44,20 @@ async function getInitialCategories() {
 }
 
 
+// Pre-fetch Trending Products for better SEO/Hydration
+async function getInitialTrendingProducts() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/product/homeProducts/`, { next: { revalidate: 300 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data?.data?.products || [];
+  } catch (err) {
+    console.error("Failed to fetch trending products on server", err);
+    return [];
+  }
+}
+
+
 export const metadata: Metadata = {
   title: "Gidan - Plants, Seeds & Gardening Store Online India",
   description: "Buy plants, seeds, pots, soil and gardening tools online at Gidan. Expert landscaping, terrace gardening and vertical garden services across India.",
@@ -66,14 +80,19 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [initialBanners, initialCategories] = await Promise.all([
+  const [initialBanners, initialCategories, initialTrendingProducts] = await Promise.all([
     getInitialBanners(),
-    getInitialCategories()
+    getInitialCategories(),
+    getInitialTrendingProducts()
   ]);
 
   return (
     <>
-      <Home initialBanners={initialBanners} initialCategories={initialCategories} />
+      <Home
+        initialBanners={initialBanners}
+        initialCategories={initialCategories}
+        initialTrendingProducts={initialTrendingProducts}
+      />
 
     </>
   );

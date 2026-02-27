@@ -538,7 +538,7 @@ export default function ProductData({ initialProductData }) {
             setSelectedSize(size);
 
             // Make API call to the unified endpoint
-            const res = await axiosInstance.get(`/product/defaultProduct/${params.productSlug}/`,
+            const res = await axiosInstance.get(`/product/filterProduct/${product.id}/`,
                 {
                     params: {
                         size_id: size.id,
@@ -581,7 +581,7 @@ export default function ProductData({ initialProductData }) {
 
             // Make API call to the unified endpoint
             const res = await axiosInstance.get(
-                `/product/defaultProduct/${params.productSlug}/`,
+                `/product/filterProduct/${product.id}/`,
                 {
                     params: { weight_id: size.id },
                 }
@@ -615,7 +615,7 @@ export default function ProductData({ initialProductData }) {
 
             // Make API call to the unified endpoint
             const res = await axiosInstance.get(
-                `/product/defaultProduct/${params.productSlug}/`,
+                `/product/filterProduct/${product.id}/`,
                 {
                     params: { litre_id: litre.id },
                 }
@@ -648,7 +648,7 @@ export default function ProductData({ initialProductData }) {
 
             // Make API call to the unified endpoint
             const res = await axiosInstance.get(
-                `/product/defaultProduct/${params.productSlug}/`,
+                `/product/filterProduct/${product.id}/`,
                 {
                     params: {
                         planter_size_id: size.id,
@@ -692,7 +692,7 @@ export default function ProductData({ initialProductData }) {
             }
             // Make API call to the unified endpoint
             const res = await axiosInstance.get(
-                `/product/defaultProduct/${params.productSlug}/`,
+                `/product/filterProduct/${product.id}/`,
                 {
                     params: {
                         planter_id: planter.id,
@@ -731,7 +731,7 @@ export default function ProductData({ initialProductData }) {
 
             // ✅ Make API call to the unified endpoint
             const res = await axiosInstance.get(
-                `/product/defaultProduct/${params.productSlug}/`,
+                `/product/filterProduct/${product.id}/`,
                 {
                     params: {
                         color_id: color.id,
@@ -770,7 +770,7 @@ export default function ProductData({ initialProductData }) {
                 const response = await axiosInstance.get(`/product/defaultProduct/${productSlug}/${queryParams ? '?' + queryParams : ''}`);
 
                 if (response.status === 200) {
-                    const data = res.data;
+                    const data = response.data;
                     setProductDetailData(data);
                     setAddOnData(data?.data?.product_add_ons || []);
                     setImageThumbnails(data?.data?.product?.images || []);
@@ -829,26 +829,28 @@ export default function ProductData({ initialProductData }) {
                     setSelectedLitre(defaultLitre);
                     setSelectedGram(defaultWeight);
 
-                    // ✅ Trigger the same flow as manual selection to update images
-                    // This ensures the variant matching the clicked product slug is displayed
-                    if (defaultColor) {
-                        handlePlanterColorClick(defaultColor, data.data.product);
-                    }
-                    if (defaultSize) {
-                        handleSizeClick(defaultSize, data.data.product);
-                    }
-                    if (defaultPlanterSize) {
-                        handlePlanterSizeClick(defaultPlanterSize, data.data.product);
-                    }
-                    if (defaultPlanter) {
-                        handlePlanterClick(defaultPlanter, data.data.product);
-                    }
-                    if (defaultLitre) {
-                        handleLitreClick(defaultLitre, data.data.product);
-                    }
-                    if (defaultWeight) {
-                        handleWeightClick(defaultWeight, data.data.product);
-                    }
+                    // Store the main product ID for use in filterProduct calls
+                    const mainId = data?.data?.product?.id;
+                    if (mainId) setMainProductId(mainId);
+
+                    // 🔥 Immediately fetch all images for the active variant via filterProduct
+                    // defaultProduct only returns 1 image; filterProduct returns all variant images
+                    try {
+                        const filterParams = {};
+                        if (color_id) filterParams.color_id = color_id;
+                        if (planter_size_id) filterParams.planter_size_id = planter_size_id;
+                        if (planter_id) filterParams.planter_id = planter_id;
+                        if (size_id) filterParams.size_id = size_id;
+                        if (litre_id) filterParams.litre_id = litre_id;
+                        if (weight_id) filterParams.weight_id = weight_id;
+
+                        if (mainId && Object.keys(filterParams).length > 0) {
+                            const filterRes = await axiosInstance.get(`/product/filterProduct/${mainId}/`, { params: filterParams });
+                            if (filterRes?.data?.data?.product?.images?.length) {
+                                setImageThumbnails(filterRes.data.data.product.images);
+                            }
+                        }
+                    } catch (e) { /* keep existing images if filterProduct fails */ }
 
                 }
             } catch (error) { }
@@ -882,6 +884,37 @@ export default function ProductData({ initialProductData }) {
         fetchData();
     }, [id, params.productSlug]); // Added params.productSlug to dependencies
     // ========== END NEW CODE ==========
+
+    // ========== SSR IMAGE FIX ==========
+    // When initialProductData comes from SSR, the defaultProduct API only returns 1 image.
+    // This effect runs once on mount to fetch all variant images from filterProduct.
+    useEffect(() => {
+        const fetchInitialVariantImages = async () => {
+            const product = initialProductData?.data?.product;
+            if (!product?.id) return;
+
+            const { id: prodId, color_id, planter_size_id, planter_id, size_id, litre_id, weight_id } = product;
+            const filterParams = {};
+            if (color_id) filterParams.color_id = color_id;
+            if (planter_size_id) filterParams.planter_size_id = planter_size_id;
+            if (planter_id) filterParams.planter_id = planter_id;
+            if (size_id) filterParams.size_id = size_id;
+            if (litre_id) filterParams.litre_id = litre_id;
+            if (weight_id) filterParams.weight_id = weight_id;
+
+            if (Object.keys(filterParams).length === 0) return;
+
+            try {
+                const res = await axiosInstance.get(`/product/filterProduct/${prodId}/`, { params: filterParams });
+                if (res?.data?.data?.product?.images?.length) {
+                    setImageThumbnails(res.data.data.product.images);
+                }
+                setMainProductId(prodId);
+            } catch (e) { /* ignore */ }
+        };
+        fetchInitialVariantImages();
+    }, []); // run once on mount
+    // ========== END SSR IMAGE FIX ==========
 
     // ========== OLD CODE (Before Feb 16, 2026) - COMMENTED OUT ==========
     // useEffect(() => {
@@ -1014,11 +1047,15 @@ export default function ProductData({ initialProductData }) {
                                     ref={imageRef}
                                 >
                                     {/* MAIN IMAGE */}
-                                    {(imageThumbnails[selectedImage]?.image || imageThumbnails[0]?.image) ? (
+                                    {imageThumbnails.length > 0 ? (
                                         <img
                                             src={
-                                                imageThumbnails[selectedImage]?.image ||
-                                                imageThumbnails[0]?.image
+                                                (() => {
+                                                    const img = imageThumbnails[selectedImage] || imageThumbnails[0];
+                                                    const path = img?.image || img?.url || "";
+                                                    if (!path) return "";
+                                                    return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store"}${path}`;
+                                                })()
                                             }
                                             alt={productDetailData?.data?.product?.main_product_name || ""}
                                             className="w-full h-[500px] md:h-[450px] object-contain"
@@ -1045,9 +1082,12 @@ export default function ProductData({ initialProductData }) {
                                     <div
                                         className="absolute top-0 right-0 translate-x-[110%] w-[500px] h-[500px] hidden md:block border border-gray-300 rounded-lg bg-white z-50 shadow-lg"
                                         style={{
-                                            backgroundImage: `url(${imageThumbnails[selectedImage]?.image ||
-                                                imageThumbnails[0]?.image
-                                                })`,
+                                            backgroundImage: `url(${(() => {
+                                                const img = imageThumbnails[selectedImage] || imageThumbnails[0];
+                                                const path = img?.image || img?.url || "";
+                                                if (!path) return "";
+                                                return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store"}${path}`;
+                                            })()})`,
                                             backgroundRepeat: "no-repeat",
 
                                             /* BIGGER IMAGE FOR MAGNIFICATION */
@@ -1090,7 +1130,11 @@ export default function ProductData({ initialProductData }) {
                                                 }`}
                                         >
                                             <img
-                                                src={image.image}
+                                                src={(() => {
+                                                    const path = image?.image || image?.url || "";
+                                                    if (!path) return "";
+                                                    return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store"}${path}`;
+                                                })()}
                                                 loading="lazy"
                                                 alt={`${productData.name} ${i + 1}`}
                                                 className="w-full h-full object-cover rounded" width="400" height="300" style={{ aspectRatio: '4/3' }}
@@ -1382,45 +1426,61 @@ export default function ProductData({ initialProductData }) {
                                 </div>
                             )}
 
-                            <div className="mb-4">
-                                <span className="font-bold text-black-700 text-base mb-2">Quantity:</span>
-                                <div className="flex items-center mt-4">
-                                    <button aria-label="Button"
-                                        // onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                        onClick={() => handleQuantity(productDetailData?.data?.product?.id, "decrement", quantity)}
+                            <div className="mb-6 flex flex-wrap items-end gap-6 overflow-hidden">
+                                <div className="flex flex-col">
+                                    <span className="font-bold text-black-700 text-base mb-2">Quantity:</span>
+                                    <div className="flex items-center">
+                                        <button aria-label="Button"
+                                            onClick={() => handleQuantity(productDetailData?.data?.product?.id, "decrement", quantity)}
+                                            className="border border-bio-green text-black-700 py-2 px-4 rounded-l-lg hover:bg-bio-green"
+                                        >
+                                            -
+                                        </button>
 
-                                        className="border border-bio-green text-black-700 py-2 px-4 rounded-l-lg hover:bg-bio-green"
-                                    >
-                                        -
-                                    </button>
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            className="w-20 text-center border border-bio-green bg-gray-200 text-black py-2 px-4
+                                             [-moz-appearance:textfield]
+                                             [appearance:textfield]
+                                             [&::-webkit-inner-spin-button]:appearance-none
+                                             [&::-webkit-outer-spin-button]:appearance-none"
+                                            value={quantity}
+                                            onChange={(e) => setQuantity(Number(e.target.value))}
+                                            onBlur={() =>
+                                                handleQuantity(
+                                                    productDetailData?.data?.product?.id,
+                                                    "direct",
+                                                    quantity
+                                                )
+                                            }
+                                        />
+                                        <button aria-label="Button"
+                                            onClick={() => handleQuantity(productDetailData?.data?.product?.id, "increment", quantity)}
+                                            className="border border-bio-green text-black-700 py-2 px-4 rounded-r-lg hover:bg-bio-green"
+                                        >
+                                            +
+                                        </button>
+                                    </div>
+                                </div>
 
-                                    <input
-                                        type="number"
-                                        min="1"
-                                        className="w-20 text-center border border-bio-green bg-gray-200 text-black py-2 px-4
-                                         [-moz-appearance:textfield]
-                                         [appearance:textfield]
-                                         [&::-webkit-inner-spin-button]:appearance-none
-                                         [&::-webkit-outer-spin-button]:appearance-none"
-                                        value={quantity}
-                                        onChange={(e) => setQuantity(Number(e.target.value))}
-                                        onBlur={() =>
-                                            handleQuantity(
-                                                productDetailData?.data?.product?.id,
-                                                "direct",
-                                                quantity
-                                            )
-                                        }
-                                    />
-                                    <button aria-label="Button"
-
-                                        onClick={() => handleQuantity(productDetailData?.data?.product?.id, "increment", quantity)}
-
-
-                                        className="border border-bio-green text-black-700 py-2 px-4 rounded-r-lg hover:bg-bio-green"
-                                    >
-                                        +
-                                    </button>
+                                <div className="flex-grow max-w-sm">
+                                    <div className="flex w-full items-stretch">
+                                        <input
+                                            type="text"
+                                            placeholder="Enter Pin Code"
+                                            value={pincode}
+                                            onChange={handlePincodeChange}
+                                            className="flex-grow px-4 py-2 border border-gray-300 rounded-l outline-none focus:border-bio-green min-w-0"
+                                        />
+                                        <button
+                                            className="px-6 py-2 bg-bio-green text-white rounded-r hover:bg-green-700 whitespace-nowrap"
+                                            onClick={handleCheck}
+                                        >
+                                            Check
+                                        </button>
+                                    </div>
+                                    {error && <p className="text-red-500 text-xs mt-1 absolute">{error}</p>}
                                 </div>
                             </div>
                             <div className="flex mb-8 space-x-2">
@@ -1477,36 +1537,31 @@ export default function ProductData({ initialProductData }) {
                         </div>
                     </div>
                     <AddOnProduct addOnData={addOnData} />
-                    <div className="py-4 md:pr-32">
-                        <div className="mt-2 flex w-full justify-center md:justify-end">
-                            <input
-                                type="text"
-                                placeholder="Enter Pin Code"
-                                value={pincode}
-                                onChange={handlePincodeChange}
-                                className="px-4 py-2 border border-gray-300 rounded-l outline-none"
-                            />
-                            <button
-                                className="px-8 py-2 bg-bio-green text-white rounded-r hover:bg-green-700"
-                                onClick={handleCheck}
-                            >
-                                Check
-                            </button>
-                        </div>
-                        {error && <p className="text-red-500 text-sm mt-1 text-center md:text-right">{error}</p>}
-                    </div>
+
                 </div>
             </div>
 
             {/* People also bought — full width, directly below buy section */}
             <div className="bg-white pt-4">
-                <PeopleAlsoBought title="People also bought" />
+                <PeopleAlsoBought title="People Also Bought" />
             </div>
 
             {/* Product description / About */}
             <div className="bg-white p-4">
                 <AboutTheProducts productDetailData={productDetailData} />
             </div>
+
+            {/* Write a Review Section (Inline) */}
+            {isReviewModalOpen && (
+                <div className="bg-white px-4 md:px-20">
+                    <WriteAReview
+                        isInline={true}
+                        onClose={() => setIsReviewModalOpen(false)}
+                        productDetailData={productDetailData}
+                        productId={productDetailData?.data?.product?.id || productDetailData?.product?.id}
+                    />
+                </div>
+            )}
 
             {/* Product Reviews Section */}
             {(productDetailData?.data?.product || productDetailData?.product) && (
@@ -1515,6 +1570,7 @@ export default function ProductData({ initialProductData }) {
                     total_Rating={reviewData}
                     productId={productDetailData?.data?.product?.id || productDetailData?.product?.id}
                     onWriteReview={handleWriteReviewClick}
+                    productDetailData={productDetailData}
                 />
             )}
 
@@ -1522,17 +1578,6 @@ export default function ProductData({ initialProductData }) {
             <ProductSeller />
             {/* <FaqAccordion /> */}
 
-
-            {isReviewModalOpen && (
-                <WriteAReview
-                    onClose={() => {
-                        setIsReviewModalOpen(false);
-                    }}
-                    productDetailData={productDetailData}
-                    productId={productDetailData?.data?.product?.id}
-                />
-            )}
-            {/* HomepageSchema removed — product pages must NOT inject homepage WebSite/WebPage schema */}
             <StoreSchema />
         </>
     );

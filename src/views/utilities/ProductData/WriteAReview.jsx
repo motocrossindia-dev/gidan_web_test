@@ -6,14 +6,26 @@ import { ArrowBack } from '@mui/icons-material';
 import { enqueueSnackbar } from 'notistack';
 import axiosInstance from '../../../Axios/axiosInstance';
 
-const WriteAReview = ({ onClose, productId, productDetailData }) => {
-  const product = productDetailData?.data?.product;
-  const imageThumbnails = productDetailData?.data?.image_thumbnails || [];
-  const productImage = imageThumbnails[0]?.image || "https://via.placeholder.com/80";
-  const productName = product?.main_product_name || product?.name || "Product";
+const WriteAReview = ({ onClose, productId, productDetailData, isInline = false }) => {
+  const product = productDetailData?.data?.product || productDetailData?.product || productDetailData;
+  const imageThumbnails = productDetailData?.data?.image_thumbnails || productDetailData?.images || [];
+
+  // Get image URL and handle prefixing
+  let productImage = "https://via.placeholder.com/80";
+  const rawImage = imageThumbnails[0]?.image || productDetailData?.image || product?.image;
+
+  if (rawImage) {
+    if (rawImage.startsWith('http')) {
+      productImage = rawImage;
+    } else {
+      productImage = `${process.env.NEXT_PUBLIC_API_URL || 'https://backend.gidan.store'}${rawImage}`;
+    }
+  }
+
+  const productName = product?.main_product_name || product?.name || product?.product_name || "Product";
 
   // Extract variant details if available (e.g. size/weight/color)
-  const variantDetails = [
+  const variantDetails = productDetailData?.variant_details || [
     productDetailData?.data?.product_weights?.find(w => w.isSelected)?.size_grams,
     productDetailData?.data?.product_sizes?.find(s => s.isSelected)?.size,
     productDetailData?.data?.product_colors?.find(c => c.isSelected)?.color_name
@@ -25,8 +37,9 @@ const WriteAReview = ({ onClose, productId, productDetailData }) => {
   const [recommend, setRecommend] = useState('yes');
   const router = useRouter();
 
-  // Close modal when clicking outside
+  // Close modal when clicking outside (only if not inline)
   useEffect(() => {
+    if (isInline) return;
     const handleOutsideClick = (event) => {
       if (event.target.id === 'modal-overlay') {
         onClose();
@@ -34,7 +47,7 @@ const WriteAReview = ({ onClose, productId, productDetailData }) => {
     };
     window.addEventListener('click', handleOutsideClick);
     return () => window.removeEventListener('click', handleOutsideClick);
-  }, [onClose]);
+  }, [onClose, isInline]);
 
   // Submit review function
   const handleSubmit = async () => {
@@ -77,10 +90,10 @@ const WriteAReview = ({ onClose, productId, productDetailData }) => {
     }
   };
 
-  if (!productDetailData || !product) {
+  if (!product) {
     return (
-      <div id="modal-overlay" className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 font-sans">
-        <div className="bg-white p-6 rounded-lg shadow-xl w-11/12 max-w-md text-center">
+      <div className={isInline ? "w-full p-4 border rounded-xl mt-4" : "fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 font-sans"}>
+        <div className={isInline ? "" : "bg-white p-6 rounded-lg shadow-xl w-11/12 max-w-md text-center"}>
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading product information...</p>
           <button onClick={onClose} className="mt-4 text-green-700 font-medium">Cancel</button>
@@ -89,9 +102,17 @@ const WriteAReview = ({ onClose, productId, productDetailData }) => {
     );
   }
 
+  const containerClasses = isInline
+    ? "w-full bg-white border border-gray-100 rounded-2xl p-6 mt-4 shadow-sm"
+    : "bg-white p-6 rounded-lg shadow-xl w-11/12 max-w-md overflow-y-auto max-h-[90vh]";
+
+  const wrapperClasses = isInline
+    ? "font-sans"
+    : "fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 font-sans";
+
   return (
-    <div id="modal-overlay" className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 font-sans">
-      <div className="bg-white p-6 rounded-lg shadow-xl w-11/12 max-w-md overflow-y-auto max-h-[90vh]">
+    <div id={isInline ? "" : "modal-overlay"} className={wrapperClasses}>
+      <div className={containerClasses}>
         {/* Header with back button */}
         <div className="flex items-center gap-2 mb-4">
           <button onClick={onClose} className="hover:bg-gray-100 p-1 rounded-full transition-colors">
@@ -105,22 +126,25 @@ const WriteAReview = ({ onClose, productId, productDetailData }) => {
             src={productImage}
             loading="lazy"
             alt={productName}
-            className="w-20 h-20 rounded object-cover"
+            className="w-20 h-20 rounded-lg object-contain bg-gray-50 border p-1"
+            onError={(e) => {
+              e.target.src = "https://via.placeholder.com/80";
+            }}
           />
           <div>
-            <h3 className="text-lg font-medium">{productName}</h3>
+            <h3 className="text-lg font-medium text-gray-900">{productName}</h3>
             {variantDetails && <p className="text-gray-500 text-sm">{variantDetails}</p>}
           </div>
         </div>
 
-        <div className="mt-2">
-          <p className="font-medium ">Please give rating*</p>
-          <div className="flex space-x-1">
+        <div className="mt-6">
+          <p className="font-semibold text-gray-700 mb-2">Please give rating*</p>
+          <div className="flex space-x-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <span
                 key={star}
                 onClick={() => setRating(star)}
-                className={`cursor-pointer text-3xl ${rating >= star ? 'text-yellow-400' : 'text-gray-400'}`}
+                className={`cursor-pointer text-4xl transition-all ${rating >= star ? 'text-yellow-400 scale-110' : 'text-gray-300 hover:text-gray-400'}`}
               >
                 ★
               </span>
@@ -128,74 +152,75 @@ const WriteAReview = ({ onClose, productId, productDetailData }) => {
           </div>
         </div>
 
-        <div className="mt-2">
-          <label className="font-medium block " htmlFor="review-title">
+        <div className="mt-4">
+          <label className="font-semibold text-gray-700 block mb-2" htmlFor="review-title">
             Review Title*
           </label>
           <input
             id="review-title"
             type="text"
             maxLength="50"
-            className="w-full border border-gray-300 rounded-md p-2"
-            placeholder="Max 50 Characters"
+            className="w-full border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-green-500 outline-none transition-all"
+            placeholder="Summarize your experience (max 50 chars)"
             value={reviewTitle}
             onChange={(e) => setReviewTitle(e.target.value)}
           />
         </div>
 
         <div className="mt-4">
-          <label className="font-medium block " htmlFor="comment">
+          <label className="font-semibold text-gray-700 block mb-2" htmlFor="comment">
             Comment*
           </label>
           <textarea
             id="comment"
             maxLength="300"
             rows="4"
-            className="w-full border border-gray-300 rounded-md p-2"
-            placeholder="Max 300 Characters"
+            className="w-full border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-green-500 outline-none transition-all"
+            placeholder="Tell us what you liked or disliked (max 300 chars)"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
           ></textarea>
         </div>
 
-        <div className="mt-4">
-          <p className="font-medium mb-2">Will you recommend this product?*</p>
-          <div className="flex items-center gap-4">
-            <label className="flex items-center gap-1">
+        <div className="mt-6">
+          <p className="font-semibold text-gray-700 mb-2">Will you recommend this product?*</p>
+          <div className="flex items-center gap-6">
+            <label className="flex items-center gap-2 cursor-pointer group">
               <input
                 type="radio"
                 name="recommend"
                 value="yes"
                 checked={recommend === 'yes'}
                 onChange={() => setRecommend('yes')}
-                className="accent-bio-green"
+                className="w-4 h-4 accent-green-600"
               />
-              <span className="text-bio-green font-medium">YES</span>
+              <span className={`font-medium ${recommend === 'yes' ? 'text-green-600' : 'text-gray-500 group-hover:text-gray-700'}`}>YES</span>
             </label>
-            <label className="flex items-center gap-1">
+            <label className="flex items-center gap-2 cursor-pointer group">
               <input
                 type="radio"
                 name="recommend"
                 value="no"
                 checked={recommend === 'no'}
                 onChange={() => setRecommend('no')}
-                className="accent-gray-600"
+                className="w-4 h-4 accent-red-600"
               />
-              <span className="text-gray-600 font-medium">No</span>
+              <span className={`font-medium ${recommend === 'no' ? 'text-red-600' : 'text-gray-500 group-hover:text-gray-700'}`}>No</span>
             </label>
           </div>
         </div>
 
-        <div className="mt-6 flex justify-between">
+        <div className="mt-8 flex gap-4">
           <button
             onClick={onClose}
-            className="border border-bio-green text-bio-green font-medium px-8 py-2 rounded-md hover:bg-green-50"
+            className="flex-1 border border-gray-200 text-gray-600 font-bold py-3 rounded-xl hover:bg-gray-50 transition-all"
           >
             CANCEL
           </button>
           <button
             onClick={handleSubmit}
-            className="bg-bio-green text-white font-medium px-8 py-2 rounded-md hover:bg-green-700"
+            disabled={rating === 0 || !reviewTitle || !comment}
+            className="flex-1 bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-green-100 transition-all"
           >
             SUBMIT
           </button>

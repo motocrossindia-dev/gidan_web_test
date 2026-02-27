@@ -11,13 +11,13 @@ import { selectAccessToken } from "../../redux/User/verificationSlice";
 import { useHomeProducts } from "../../hooks/useHomeProducts";
 import { getProductUrl } from "../../utils/urlHelper";
 
-const SeasonalProduct = () => {
+const SeasonalProduct = ({ initialData }) => {
   const [visibleCount, setVisibleCount] = useState(8);
   const router = useRouter();
   const accessToken = useSelector(selectAccessToken);
 
   // Use TanStack Query hook - shared cache with Home.jsx and TrendingSection.jsx
-  const { data: allProducts = [], isLoading, refetch } = useHomeProducts(accessToken);
+  const { data: allProducts = [], isLoading, refetch } = useHomeProducts(accessToken, initialData);
 
   // Filter seasonal products
   const products = useMemo(() => {

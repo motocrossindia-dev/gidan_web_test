@@ -168,7 +168,7 @@ const Cart = () => {
             <h2 className="text-2xl font-semibold text-gray-700 mb-4">Your cart is empty</h2>
             <button
               className="bg-lime-500 text-white py-2 px-4 rounded hover:bg-green-600"
-              onClick={() => router.push("/shop")}
+              onClick={() => router.push("/")}
             >
               Continue Shopping
             </button>

@@ -266,11 +266,13 @@ function PlantFilter({
                         const hasSubcategory = !!newCategoryInfo.subcategory_name;
                         setIsSubcategorySEO(hasSubcategory);
                         if (hasSubcategory) {
-                            // Subcategory selected — build SEO from sub_category_info style
+                            // Subcategory — spread ALL fields so sections/intro_text are preserved
                             setSeoData({
+                                ...newCategoryInfo,
                                 title: newCategoryInfo.subcategory_name,
                                 subtitle: newCategoryInfo.subtitle || `${newCategoryInfo.subcategory_name} - Buy Online in India from Gidan.store`,
-                                description: newCategoryInfo.intro_text || newCategoryInfo.description || "",
+                                description: newCategoryInfo.intro_text || newCategoryInfo.description || newCategoryInfo.content || "",
+                                sections: newCategoryInfo.sections || [],
                             });
                         } else {
                             // Back to category level — use hero+sections format
@@ -427,6 +429,7 @@ function PlantFilter({
                                 subcategoryName={fetchedSubcategoryName || propSubcategoryName}
                                 isSubcategory={isSubcategorySEO}
                                 categoryDataFromAPI={seoData}
+                                key={isSubcategorySEO ? (fetchedSubcategoryName || effectiveSubcategorySlug || 'sub') : (effectiveCategorySlug || 'cat')}
                             />
                         </div>
                     )}

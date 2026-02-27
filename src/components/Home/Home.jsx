@@ -186,17 +186,18 @@ import HeroSection from '../HeroSection/HeroSection';
 import Banner from '../Banner/Banner';
 
 // Below-the-fold components - lazy load with code splitting for better performance
-const TrendingSection = lazy(() => import(/* webpackChunkName: "trending" */ '../TrendingProducts/TrendingSection'));
+import TrendingSection from '../TrendingProducts/TrendingSection';
 const RewardClub = lazy(() => import(/* webpackChunkName: "reward-club" */ '../RewardClub/RewardClub'));
 const ShopTheLook = lazy(() => import(/* webpackChunkName: "shop-look" */ '../ShopTheLook/ShopTheLook'));
-const SeasonalProduct = lazy(() => import(/* webpackChunkName: "seasonal" */ '../SeasonalCollection/SeasonalProduct'));
+import SeasonalProduct from '../SeasonalCollection/SeasonalProduct';
 const OfferReward = lazy(() => import(/* webpackChunkName: "offer-reward" */ '../OfferReward/OfferReward'));
 const ComboOffer = lazy(() => import(/* webpackChunkName: "combo-offer" */ '../ComboOffer/ComboOffer'));
 const Blog = lazy(() => import(/* webpackChunkName: "blog" */ '../Blog/Blog'));
 const VideoSection = lazy(() => import(/* webpackChunkName: "video" */ '../VideoSection/VideoSection'));
 const CheckOutStore = lazy(() => import(/* webpackChunkName: "store" */ '../Store/CheckOutStore'));
+const Services = lazy(() => import(/* webpackChunkName: "services" */ '../../Services/ServiceHome/Services'));
 
-const Home = ({ initialBanners, initialCategories }) => {
+const Home = ({ initialBanners, initialCategories, initialTrendingProducts }) => {
   // ✅ Use TanStack Query hook - automatic caching, no unnecessary re-renders
   const { data, isLoading, isError } = useBannerImages(initialBanners);
 
@@ -204,7 +205,7 @@ const Home = ({ initialBanners, initialCategories }) => {
   useEffect(() => {
     if ('requestIdleCallback' in window) {
       requestIdleCallback(() => {
-        import(/* webpackChunkName: "trending" */ '../TrendingProducts/TrendingSection');
+        // TrendingSection removed from prefetch because it's now essential/SSR'd
         import(/* webpackChunkName: "reward-club" */ '../RewardClub/RewardClub');
         import(/* webpackChunkName: "seasonal" */ '../SeasonalCollection/SeasonalProduct');
       });
@@ -254,13 +255,10 @@ const Home = ({ initialBanners, initialCategories }) => {
       <HeroSection hero={heroImages} />
       <Banner home={homeImages} />
 
-      {/* Below-the-fold content - lazy load with intersection observer */}
-      <LazyLoadWrapper height="600px">
-        <Suspense fallback={<LoadingFallback />}>
-          <TrendingSection />
-        </Suspense>
-      </LazyLoadWrapper>
+      {/* Trending Section - hydrated with SSR data, rendered immediately */}
+      <TrendingSection initialData={initialTrendingProducts} />
 
+      {/* Below-the-fold content - lazy load with intersection observer */}
       <LazyLoadWrapper height="400px">
         <Suspense fallback={<LoadingFallback />}>
           <RewardClub />
@@ -273,17 +271,14 @@ const Home = ({ initialBanners, initialCategories }) => {
         </Suspense>
       </LazyLoadWrapper>
 
-      <LazyLoadWrapper height="600px">
-        <Suspense fallback={<LoadingFallback />}>
-          <SeasonalProduct />
-        </Suspense>
-      </LazyLoadWrapper>
+      {/* Seasonal Section - shared data from SSR */}
+      <SeasonalProduct initialData={initialTrendingProducts} />
 
-      {/* <LazyLoadWrapper height="400px">
+      <LazyLoadWrapper height="400px">
         <Suspense fallback={<LoadingFallback />}>
           <Services />
         </Suspense>
-      </LazyLoadWrapper> */}
+      </LazyLoadWrapper>
 
       <LazyLoadWrapper height="400px">
         <Suspense fallback={<LoadingFallback />}>

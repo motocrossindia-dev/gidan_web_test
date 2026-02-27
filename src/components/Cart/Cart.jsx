@@ -1,10 +1,4 @@
 'use client';
-
-
-
-
-
-
 import React, { useEffect, useRef, useState } from "react";
 import Verify from "../../Services/Services/Verify";
 

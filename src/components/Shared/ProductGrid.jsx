@@ -19,8 +19,6 @@ const ProductGrid = ({
   subcategorySlug: propSubcategorySlug,
 }) => {
 
-  // Helper: extract a plain string from a slug value that could be a string or an object
-  // (Moved to urlHelper.js)
   const router = useRouter();
 
   const observer = useRef(null);
@@ -28,11 +26,15 @@ const ProductGrid = ({
   const [loading, setLoading] = useState(false);
   const [nextUrl, setNextUrl] = useState(pagination?.next || null);
   const [prevUrl, setPrevUrl] = useState(pagination?.previous || null);
+  // Track current page offset for the "Showing X–Y of Z" display
+  const [pageOffset, setPageOffset] = useState(0);
 
-  // Keep nextUrl/prevUrl synced when parent gives new pagination
+  // Keep nextUrl/prevUrl synced when parent gives new pagination (filter change resets page)
   useEffect(() => {
     setNextUrl(pagination?.next || null);
     setPrevUrl(pagination?.previous || null);
+    // Reset offset to 0 when filter/category changes (new pagination object)
+    setPageOffset(0);
   }, [pagination?.next, pagination?.previous, query]);
 
   // GA4: Track view_item_list when products are shown
@@ -76,7 +78,7 @@ const ProductGrid = ({
   };
 
   // Fetch specific page and replace results
-  const fetchPage = useCallback(async (url) => {
+  const fetchPage = useCallback(async (url, direction = 'next') => {
     if (!url || loading) {
       return;
     }
@@ -90,6 +92,12 @@ const ProductGrid = ({
         const newProducts = res.data?.results || res.data?.products || [];
 
         if (Array.isArray(newProducts)) {
+          // Update offset: move forward or backward by current batch size
+          setPageOffset((prev) =>
+            direction === 'next'
+              ? prev + productDetails.length
+              : Math.max(0, prev - newProducts.length)
+          );
           setResults(newProducts);
           setNextUrl(res.data.next || null);
           setPrevUrl(res.data.previous || null);
@@ -103,14 +111,19 @@ const ProductGrid = ({
     } finally {
       setLoading(false);
     }
-  }, [loading, setResults]);
+  }, [loading, setResults, productDetails.length]);
+
+  // Compute "Showing X–Y of Z" display string
+  const showingFrom = productDetails?.length > 0 ? pageOffset + 1 : 0;
+  const showingTo = pageOffset + (productDetails?.length ?? 0);
+  const totalCount = pagination?.count ?? productDetails?.length ?? 0;
 
   return (
     <div className="mt-8 p-2 bg-white rounded-md md:ml-16 relative z-10">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xs md:text-lg text-gray-500 font-normal">
           {productDetails?.length > 0
-            ? `Showing ${productDetails?.length} of ${pagination?.count ?? productDetails?.length} products`
+            ? `Showing ${showingFrom}–${showingTo} of ${totalCount} products`
             : "No products found"}
         </h2>
         {filtersApplied && productDetails?.length > 0 && (
@@ -163,7 +176,7 @@ const ProductGrid = ({
       {!loading && productDetails?.length > 0 && (nextUrl || prevUrl) && (
         <div className="flex justify-center items-center gap-4 mt-8 mb-4">
           <button
-            onClick={() => fetchPage(prevUrl)}
+            onClick={() => fetchPage(prevUrl, 'prev')}
             disabled={!prevUrl || loading}
             className={`px-6 py-2 rounded-md border text-sm font-medium transition-colors ${!prevUrl || loading
               ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
@@ -174,7 +187,7 @@ const ProductGrid = ({
           </button>
 
           <button
-            onClick={() => fetchPage(nextUrl)}
+            onClick={() => fetchPage(nextUrl, 'next')}
             disabled={!nextUrl || loading}
             className={`px-6 py-2 rounded-md border text-sm font-medium transition-colors ${!nextUrl || loading
               ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"

@@ -37,7 +37,7 @@ function ReferAFriend() {
     const referralCode = data?.referral_code || "No Referral Code"; // Default if empty
     const text = `Hey! I invite you to join Gidan. Use my referral code:
 : ${referralCode}`;
-    const url = `https://biotechmaali.com/`;
+    const url = `https://www.gidan.store/`;
 
     if (navigator.share) {
       navigator.share({
@@ -117,7 +117,7 @@ function ReferAFriend() {
               <h3 className="text-lg font-medium mb-4">How do I Refer a Friend?</h3>
               <ol className="list-decimal pl-5 text-gray-600 space-y-2 text-sm sm:text-base">
                 <li>
-                  Go to BiotechMaali.com and select the items you want to purchase. When you're ready to checkout, click 'Proceed To Pay'.
+                  Go to www.gidan.store and select the items you want to purchase. When you're ready to checkout, click 'Proceed To Pay'.
                 </li>
                 <li>Select the 'Pay By Gift Card' option.</li>
                 <li>Enter your 16-digit gift card number.</li>
@@ -146,7 +146,7 @@ function ReferAFriend() {
                   Gidan Cards ("GSCs" or "Gift Cards") are issued by Qwikcilver Solutions Pvt. Ltd. authorized by the RBI.
                 </li>
                 <li>
-                  Redeemable only on www.BiotechMaali.com or its mobile platforms.
+                  Redeemable only on www.gidan.store or its mobile platforms.
                 </li>
                 <li>
                   Purchase via Credit/Debit Cards or Net Banking only.

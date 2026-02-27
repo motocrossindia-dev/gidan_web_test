@@ -37,7 +37,7 @@ const PeopleAlsoBought = ({ title = "People also bought" }) => {
 
     return (
         <div className="my-8 p-4 bg-white rounded-md">
-            <h2 className="md:text-2xl text-xl mb-4 text-left font-sans font-bold">{title}</h2>
+            <h2 className="md:text-2xl text-xl mb-4 text-center font-sans font-bold">{title}</h2>
             <div className="max-w-7xl mx-auto px-3">
                 <div className="grid gap-4 justify-items-center font-sans grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
                     {products.slice(0, 4).map((product) => (

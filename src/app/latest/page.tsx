@@ -28,7 +28,7 @@ import { fetchProductsByFilters, fetchFilters } from "@/utils/serverApi";
 
 export default async function LatestPage() {
   const [initialData, filters] = await Promise.all([
-    fetchProductsByFilters({ type: "plant" }),
+    fetchProductsByFilters({ is_trending: true }),
     fetchFilters("plant")
   ]);
 

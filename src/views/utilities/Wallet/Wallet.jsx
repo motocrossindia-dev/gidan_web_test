@@ -276,10 +276,10 @@ const Wallet = () => {
             <li>
               Go to{" "}
               <a
-                href="https://biotechmaali.com"
+                href="https://www.gidan.store"
                 className="text-blue-500 hover:underline"
               >
-                biotechmaali.com
+                www.gidan.store
               </a>{" "}
               and select the items you want to purchase. When you're ready to
               checkout, click "Proceed to Pay."
@@ -314,10 +314,10 @@ const Wallet = () => {
              </li>
              <li>
                The Gift Cards can be redeemed online against Sellers listed on  
-               www.BiotechMaali.com or the Gidan Mobile App or Biotech
+               www.gidan.store or the Gidan Mobile App or Biotech
                Maali me (Platform) only.
              </li>             <li>
-               Gift Cards can be purchased only on www.BiotechMaali.com or
+               Gift Cards can be purchased only on www.gidan.store or
                Gidan Mobile App using the following payment modes: Credit
                Card, Debit Card, and Net Banking.
              </li>

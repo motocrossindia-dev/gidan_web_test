@@ -2,7 +2,7 @@
 
 
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from 'react';    
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import { useSelector } from "react-redux";
@@ -14,8 +14,8 @@ const RecentlyViewedProduct = () => {
   const [products, setProducts] = useState([]);
   const router = useRouter();
   const accessToken = useSelector(selectAccessToken);
-  
-  
+
+
   const getProducts = async () => {
     try {
       const response = await axios.get(
@@ -27,18 +27,18 @@ const RecentlyViewedProduct = () => {
           },
         }
       );
-    
+
       setProducts(response?.data?.data?.products || []);
     } catch (error) {
       console.error("Error fetching products:", error.response?.data || error.message);
       setProducts([]); // Fallback to an empty array in case of error
     }
   };
-  
+
   useEffect(() => {
-   
-      getProducts();
-    
+
+    getProducts();
+
   }, []); // Re-run if `accessToken` changes
 
   const handleProductClick = (product) => {
@@ -46,19 +46,21 @@ const RecentlyViewedProduct = () => {
     const category_slug = product?.category_slug;
     const sub_category_slug = product?.sub_category_slug;
 
-    router.push(`/category/${category_slug}/${product.slug}/`, {       state: {
+    router.push(`/category/${category_slug}/${product.slug}/`, {
+      state: {
         product_id: product.slug,
-        category_slug:category_slug,
-        sub_category_slug:sub_category_slug
+        category_slug: category_slug,
+        sub_category_slug: sub_category_slug
 
-      } });
+      }
+    });
 
   };
-  
+
   return (
     <div className="w-full bg-gray-100">
       <div className="my-8 p-4 bg-grey-200 rounded-md">
-        <h2 className="md:text-2xl text-xl mb-4 text-center md:font-bold font-semibold">
+        <h2 className="md:text-2xl text-xl font-semibold text-center mb-4">
           Recently Viewed
         </h2>
 

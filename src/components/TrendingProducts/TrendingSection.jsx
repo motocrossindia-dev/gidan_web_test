@@ -10,14 +10,14 @@ import { selectAccessToken } from "../../redux/User/verificationSlice";
 import { useHomeProducts } from "../../hooks/useHomeProducts";
 import { getProductUrl } from "../../utils/urlHelper";
 
-const TrendingSection = () => {
+const TrendingSection = ({ initialData }) => {
   const [selectedTab, setSelectedTab] = useState("");
   const router = useRouter();
   const accessToken = useSelector(selectAccessToken);
   const [visibleCount, setVisibleCount] = useState(8);
 
   // Use TanStack Query hook - shared cache with Home.jsx and SeasonalProduct.jsx
-  const { data: productsDetails = [], isLoading, refetch } = useHomeProducts(accessToken);
+  const { data: productsDetails = [], isLoading, refetch } = useHomeProducts(accessToken, initialData);
 
   useEffect(() => {
     const updateVisibleCount = () => {
@@ -57,11 +57,13 @@ const TrendingSection = () => {
       if (selectedTab === "featured") {
         return product.is_featured;
       } else if (selectedTab === "latest") {
-        return product.is_trending;
+        // "Latest" tab → newest / trending products
+        return product.is_trending || product.is_latest;
       } else if (selectedTab === "bestseller") {
         return product.is_best_seller;
       }
-      return true;
+      // "All" tab: show trending products by default (this is the "Trending Products" section)
+      return product.is_trending || product.is_featured || product.is_best_seller;
     });
   }, [productsDetails, selectedTab]);
 

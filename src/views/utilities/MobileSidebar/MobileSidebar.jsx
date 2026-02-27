@@ -2,7 +2,7 @@
 
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   MdPerson,
   MdLocationOn,
@@ -17,10 +17,21 @@ import {
 
 const MobileSidebar = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [new_user_mobile] = useState(() =>
-    typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('userData')) : null
-  );
-  const [name, setName] = useState(() => new_user_mobile?.first_name || '');
+  const [name, setName] = useState('');
+
+  useEffect(() => {
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      try {
+        const parsedData = JSON.parse(userData);
+        if (parsedData?.first_name) {
+          setName(parsedData.first_name);
+        }
+      } catch (e) {
+        console.error("Error parsing userData from localStorage", e);
+      }
+    }
+  }, []);
 
   const options = [
     { label: "Edit Profile", icon: <MdPerson />, link: "/mobilesidebar/editprofile" },

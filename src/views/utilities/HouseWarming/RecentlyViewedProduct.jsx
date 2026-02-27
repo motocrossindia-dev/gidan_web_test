@@ -50,7 +50,7 @@ const RecentlyViewedProduct = () => {
   return (
     <div className="w-full bg-gray-100">
       <div className="my-8 p-4 bg-grey-200 rounded-md">
-        <h2 className="md:text-2xl text-xl mb-4 text-center md:font-bold font-semibold">
+        <h2 className="md:text-2xl text-xl font-semibold text-center mb-4">
           Recently Viewed
         </h2>
 

@@ -16,271 +16,227 @@ import { trackBeginCheckout, trackAddPaymentInfo, trackAddShippingInfo } from ".
 
 
 
-const DeliveryAddress = ({ setSelectedAddress }) => {
+const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOption, setIsAddNewOpen, isAddNewOpen }) => {
   const accessToken = useSelector(selectAccessToken);
-  const [isOpen, setIsOpen] = useState(true); // Toggles visibility of the section
-  const [address, setAddresses] = useState([]);
+  const [isOpen, setIsOpen] = useState(true);
+  const [addresses, setAddresses] = useState([]);
+  const [selectedDelType, setSelectedDelType] = useState("");
+  const [stores, setStores] = useState([]);
+  const [selectedStoreId, setSelectedStoreId] = useState(null);
+  const [showAllAddresses, setShowAllAddresses] = useState(false);
+
+  const deliveryOptions = [
+    { id: "Door Delivery", label: "Door Delivery" },
+    { id: "Pick Up Store", label: "Pickup From Store" }
+  ];
 
   useEffect(() => {
-    fetchDefaultAddress();
-  }, [accessToken]);
+    fetchAllAddresses();
+    getStoreList();
+  }, [accessToken, selectedAddress]);
 
-  const fetchDefaultAddress = async () => {
+  const fetchAllAddresses = async () => {
     try {
-      const response = await axiosInstance.get(
-        `/account/address/`);
-      const defaultAddress = response.data.data.address.find(
-        (addr) => addr.is_default
-      );
-      if (defaultAddress) {
-        setAddresses([defaultAddress]);
-        setSelectedAddress(defaultAddress.id)
-      }
+      const response = await axiosInstance.get(`/account/address/`);
+      const allAddresses = response.data.data.address || [];
+      setAddresses(allAddresses);
 
+      const defaultAddress = allAddresses.find((addr) => addr.is_default) || allAddresses[0];
+      if (defaultAddress && !selectedAddress) {
+        setSelectedAddress(defaultAddress.id);
+      }
     } catch (error) {
-      console.error("Error fetching default address:", error);
+      console.error("Error fetching addresses:", error);
     }
   };
 
-  const handleEdit = (index) => {
-    setAddresses(
-      address.map((address, i) =>
-        i === index ? { ...address, isEditing: true } : address
-      )
-    );
-  };
+  const selectedAddrObj = addresses.find(a => a.id === selectedAddress);
 
-  const handleCancelEdit = (index) => {
-    setAddresses(
-      address.map((address, i) =>
-        i === index ? { ...address, isEditing: false } : address
-      )
-    );
-  };
-
-  const handleSaveEdit = (index) => {
-    setAddresses(
-      address.map((address, i) =>
-        i === index ? { ...address, isEditing: false } : address
-      )
-    );
-  };
-
-  const handleAddressChange = (index, field, value) => {
-    setAddresses((prev) => {
-      const updatedAddrs = [...prev];
-      updatedAddrs[index] = { ...updatedAddrs[index], [field]: value };
-
-      if (field === "pinCode") {
-        const pinStr = String(value).trim();
-        if (pinStr.length !== 6) {
-          updatedAddrs[index].city = "";
-          updatedAddrs[index].state = "";
-        }
+  const getStoreList = async () => {
+    try {
+      const response = await axiosInstance.get('/store/store_list/');
+      if (response.status === 200) {
+        setStores(response?.data?.data?.stores || []);
       }
-      return updatedAddrs;
-    });
-
-    if (field === "pinCode") {
-      const pinStr = String(value).trim();
-      if (pinStr.length === 6) {
-        fetch(`https://api.postalpincode.in/pincode/${pinStr}`)
-          .then((res) => res.json())
-          .then((responseData) => {
-            if (responseData && responseData[0].Status === "Success") {
-              const data = responseData[0].PostOffice[0];
-              setAddresses((prev) =>
-                prev.map((addr, i) =>
-                  i === index
-                    ? {
-                      ...addr,
-                      city: data.District || data.Block || data.Name || "",
-                      state: data.State || "",
-                    }
-                    : addr
-                )
-              );
-            } else {
-              setAddresses((prev) =>
-                prev.map((addr, i) =>
-                  i === index ? { ...addr, city: "", state: "" } : addr
-                )
-              );
-            }
-          })
-          .catch((err) => console.error("Error looking up Pincode:", err));
-      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
+  const handleOptionChange = (optionId) => {
+    setSelectedDelType(optionId);
+    setSelectedOption({ deliveryType: optionId, storeId: null });
+  };
+
+  const handleStoreSelect = (storeId) => {
+    setSelectedStoreId(storeId);
+    setSelectedOption({ deliveryType: selectedDelType, storeId });
+  };
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
   return (
     <div className="bg-gray-100 p-4 font-sans">
       <div
-        className="bg-gradient-to-r from-blue-900 to-blue-500 text-white p-4 rounded-md cursor-pointer flex justify-between items-center"
+        className="bg-gradient-to-r from-green-500 to-green-900 text-white p-4 rounded-md cursor-pointer flex justify-between items-center"
         onClick={toggleDropdown}
       >
-        <h2 className="font-bold flex items-center">
-          <span className="bg-white text-blue-900 px-2 py-1 rounded-full mr-2">
-            1
+        <h2 className="font-bold flex items-center text-sm md:text-base">
+          <span className="bg-white text-blue-900 w-6 h-6 flex items-center justify-center rounded-full mr-2 text-xs">
+            2
           </span>
-          Delivery Address
+          Delivery Details
         </h2>
       </div>
 
       {isOpen && (
-        <div className="bg-white p-4 shadow-md rounded-md mt-2">
-          <h3 className="text-lg font-bold mb-4 text-bio-green">Address</h3>
-          {address.map((address, index) => (
-            <div key={index} className="p-4 mb-4 border rounded-lg shadow-md">
-              {address.isEditing ? (
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="font-bold">Edit Address</span>
-                    <button
-                      className="text-red-500 hover:text-red-700 font-semibold"
-                      onClick={() => handleCancelEdit(index)}
-                    >
-                      Cancel
-                    </button>
+        <div className="bg-white p-4 shadow-md rounded-md mt-2 space-y-6">
+          <section>
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-sm font-bold text-gray-700 border-b pb-1">1. Delivery Address</h3>
+              <div className="flex gap-4">
+                <button
+                  onClick={() => {
+                    setIsAddNewOpen(true);
+                    setTimeout(() => {
+                      document.getElementById('add-new-address-section')?.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                  }}
+                  className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-bold border border-green-200 hover:bg-green-200 transition-colors"
+                >
+                  + Add Address
+                </button>
+                {addresses.length > 1 && (
+                  <button
+                    onClick={() => setShowAllAddresses(!showAllAddresses)}
+                    className="text-xs font-bold text-blue-600 hover:text-blue-800"
+                  >
+                    {showAllAddresses ? "Show Selected Only" : "Change Address"}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {!showAllAddresses && selectedAddrObj ? (
+              <div className="p-4 border border-bio-green bg-green-50 rounded-lg shadow-sm relative animate-in fade-in duration-300">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-bold text-gray-800 text-sm">{`${selectedAddrObj.first_name} ${selectedAddrObj.last_name}`}</span>
+                    {selectedAddrObj.address_type && (
+                      <span className="px-2 py-0.5 bg-gray-200 text-gray-600 text-[9px] rounded uppercase font-bold tracking-wider">
+                        {selectedAddrObj.address_type}
+                      </span>
+                    )}
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <input
-                      type="text"
-                      placeholder="First Name"
-                      value={address.firstName || address.first_name || ""}
-                      onChange={(e) =>
-                        handleAddressChange(index, "firstName", e.target.value)
-                      }
-                      className="p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Last Name"
-                      value={address.lastName || address.last_name || ""}
-                      onChange={(e) =>
-                        handleAddressChange(index, "lastName", e.target.value)
-                      }
-                      className="p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Apartment, Suite, etc. (Optional)"
-                      value={address.address || ""}
-                      onChange={(e) =>
-                        handleAddressChange(index, "address", e.target.value)
-                      }
-                      className="p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                    <input
-                      type="text"
-                      placeholder="City (Auto-filled by PIN Code)"
-                      value={address.city || ""}
-                      onChange={(e) =>
-                        handleAddressChange(index, "city", e.target.value)
-                      }
-                      className="p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-100 cursor-not-allowed"
-                      readOnly
-                      required
-                    />
-                    <input
-                      type="text"
-                      placeholder="State (Auto-filled by PIN Code)"
-                      value={address.state || ""}
-                      onChange={(e) =>
-                        handleAddressChange(index, "state", e.target.value)
-                      }
-                      className="p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-100 cursor-not-allowed"
-                      readOnly
-                      required
-                    />
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      placeholder="PIN Code"
-                      value={address.pinCode !== undefined ? address.pinCode : (address.pincode || "")}
-                      maxLength={6}
-                      onChange={(e) => {
-                        const value = e.target.value.replace(/[^0-9]/g, "").slice(0, 6);
-                        handleAddressChange(index, "pinCode", value);
-                      }}
-                      className="p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                    <input
-                      type="tel"
-                      placeholder="Phone"
-                      value={address.phone || ""}
-                      onChange={(e) =>
-                        handleAddressChange(index, "phone", e.target.value)
-                      }
-                      className="p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 col-span-2"
-                    />
-                  </div>
-                  <div className="mt-4">
-                    <label className="block font-semibold">Address Type</label>
-                    <div className="flex space-x-4 mt-2">
-                      <label>
-                        <input
-                          type="checkbox"
-                          checked={address.isHome || false}
-                          onChange={(e) =>
-                            handleAddressChange(index, "isHome", e.target.checked)
-                          }
-                          className="mr-2"
-                        />
-                        Home (All day Delivery)
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          checked={address.isWork || false}
-                          onChange={(e) =>
-                            handleAddressChange(index, "isWork", e.target.checked)
-                          }
-                          className="mr-2"
-                        />
-                        Work (9am - 6pm)
-                      </label>
+                  <p className="text-xs text-gray-600 line-clamp-2">{selectedAddrObj.address}</p>
+                  <p className="text-xs text-gray-600">{selectedAddrObj.city}, {selectedAddrObj.state} - {selectedAddrObj.pincode}</p>
+                  <p className="text-xs text-gray-700 font-medium mt-1"> {selectedAddrObj.phone}</p>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in slide-in-from-top-2 duration-300">
+                {addresses.map((addr, index) => (
+                  <div
+                    key={addr.id || index}
+                    onClick={() => {
+                      setSelectedAddress(addr.id);
+                      setShowAllAddresses(false);
+                    }}
+                    className={`p-4 border rounded-lg shadow-sm cursor-pointer relative transition-all hover:shadow-md ${selectedAddress === addr.id
+                      ? 'border-bio-green bg-green-50 ring-2 ring-bio-green ring-opacity-20'
+                      : 'border-gray-200'
+                      }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`mt-1 h-5 w-5 rounded-full border-2 flex items-center justify-center ${selectedAddress === addr.id ? 'border-bio-green' : 'border-gray-300'
+                        }`}>
+                        {selectedAddress === addr.id && <div className="h-2.5 w-2.5 rounded-full bg-bio-green"></div>}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-bold text-gray-800 text-sm">{`${addr.first_name} ${addr.last_name}`}</span>
+                          {addr.address_type && (
+                            <span className="px-2 py-0.5 bg-gray-200 text-gray-600 text-[9px] rounded uppercase font-bold tracking-wider">
+                              {addr.address_type}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-600 line-clamp-2">{addr.address}</p>
+                        <p className="text-xs text-gray-600">{addr.city}, {addr.state} - {addr.pincode}</p>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex space-x-4 mt-4">
-                    <button
-                      className="bg-bio-green text-white font-semibold py-2 px-4 rounded hover:bg-green-500"
-                      onClick={() => handleSaveEdit(index)}
-                    >
-                      Save
-                    </button>
-                    <button
-                      className="border border-bio-green text-bio-green font-semibold py-2 px-4 rounded hover:bg-green-100"
-                      onClick={() => handleCancelEdit(index)}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="font-bold">{`${address.first_name} ${address.last_name}`}</span>
-                    <button
-                      className="text-bio-green font-semibold"
-                      onClick={() => handleEdit(index)}
-                    >
-                      Edit
-                    </button>
-                  </div>
-                  <p>{address.address}</p>
-                  <p>{address.city}</p>
-                  <p className="text-sm">{address.state},{address.pincode}</p>
+                ))}
 
+                <div
+                  onClick={() => {
+                    setIsAddNewOpen(true);
+                    setTimeout(() => {
+                      document.getElementById('add-new-address-section')?.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                  }}
+                  className="p-4 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-500 hover:border-bio-green hover:text-bio-green transition-all cursor-pointer bg-gray-50 hover:bg-white min-h-[80px]"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="bg-gray-200 w-6 h-6 flex items-center justify-center rounded-full text-sm font-bold">+</span>
+                    <span className="font-semibold text-xs text-center leading-tight">Add New<br />Address</span>
+                  </div>
                 </div>
-              )}
+              </div>
+            )}
+
+            {/* Inline Add New Address Form */}
+            {isAddNewOpen && (
+              <div className="mt-6 border-t pt-6 animate-in fade-in slide-in-from-top-4 duration-500">
+                <AddNewAddress isOpen={isAddNewOpen} setIsOpen={setIsAddNewOpen} />
+              </div>
+            )}
+          </section>
+
+          <section className="bg-gray-50 p-4 rounded-lg">
+            <h3 className="text-sm font-bold text-gray-700 mb-3 border-b pb-2">2. Choose Delivery Method</h3>
+            <div className="flex flex-col md:flex-row gap-4">
+              {deliveryOptions.map((option) => (
+                <div
+                  key={option.id}
+                  onClick={() => handleOptionChange(option.id)}
+                  className={`flex-1 p-3 border rounded-lg cursor-pointer flex items-center justify-between transition-all ${selectedDelType === option.id
+                    ? 'border-bio-green bg-white shadow-sm ring-1 ring-bio-green'
+                    : 'border-gray-200 bg-white hover:border-bio-green'
+                    }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <div className={`h-4 w-4 rounded-full border-2 flex items-center justify-center ${selectedDelType === option.id ? 'border-bio-green' : 'border-gray-300'
+                      }`}>
+                      {selectedDelType === option.id && <div className="h-2 w-2 rounded-full bg-bio-green"></div>}
+                    </div>
+                    <span className="text-sm font-medium text-gray-800">{option.label}</span>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
 
+            {selectedDelType === 'Pick Up Store' && (
+              <div className="mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                <label className="block mb-2 text-xs font-bold text-gray-600 uppercase">Select pickup store</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto custom-scroll pr-2">
+                  {stores.map((store) => (
+                    <div
+                      key={store.id}
+                      onClick={() => handleStoreSelect(store.id)}
+                      className={`p-3 rounded-lg cursor-pointer border transition-all ${selectedStoreId === store.id
+                        ? 'bg-blue-50 border-blue-500 ring-1 ring-blue-500'
+                        : 'bg-white border-gray-200 hover:border-blue-300'
+                        }`}
+                    >
+                      <p className="font-bold text-gray-800 text-xs">{store.pathname}</p>
+                      <p className="text-[10px] text-gray-500 mt-1 line-clamp-2">{store.address}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </section>
         </div>
       )}
     </div>
@@ -289,10 +245,8 @@ const DeliveryAddress = ({ setSelectedAddress }) => {
 
 
 
-
-const AddNewAddress = () => {
+const AddNewAddress = ({ isOpen, setIsOpen }) => {
   const accessToken = useSelector(selectAccessToken);
-  const [isOpen, setIsOpen] = useState(false);
   const [newAddress, setNewAddress] = useState({
     firstName: "",
     lastName: "",
@@ -369,7 +323,6 @@ const AddNewAddress = () => {
       );
 
       if (response.data.message === "success") {
-
         setIsOpen(false);
         setNewAddress({
           firstName: "",
@@ -382,6 +335,8 @@ const AddNewAddress = () => {
           addressType: "",
           isDefault: false,
         });
+        enqueueSnackbar("Address added successfully!", { variant: "success" });
+        window.location.reload();
       }
     } catch (error) {
       console.error("Error saving address:", error);
@@ -389,143 +344,123 @@ const AddNewAddress = () => {
   };
 
   return (
-    <div className="bg-gray-100 p-4 mt-4">
-      {/* Add New Address Header */}
-      <div
-        className="bg-gradient-to-r from-blue-900 to-blue-500 text-white p-4 rounded-md cursor-pointer flex justify-between items-center"
-        onClick={toggleDropdown}
-      >
-        <h2 className="font-bold flex items-center">
-          <span className="bg-white text-blue-900 px-2 py-1 rounded-full mr-2">
-            +
-          </span>
-          Add New Address
-        </h2>
-        <span className="text-white font-bold">{isOpen ? "" : ""}</span>
-      </div>
-
-      {/* Dropdown Content */}
-      {isOpen && (
-        <div className="bg-white p-4 shadow-md rounded-md mt-2">
-          <h3 className="text-bio-green font-bold mb-2">Add New Address</h3>
-          <form className="space-y-4">
-            <div className="flex space-x-2">
-              <input
-                type="text"
-                placeholder="First name"
-                value={newAddress.firstName}
-                onChange={(e) => handleAddressChange("firstName", e.target.value)}
-                className="border p-2 rounded w-1/2"
-                required
-              />
-              <input
-                type="text"
-                placeholder="Last name"
-                value={newAddress.lastName}
-                onChange={(e) => handleAddressChange("lastName", e.target.value)}
-                className="border p-2 rounded w-1/2"
-                required
-              />
-            </div>
+    <div id="add-new-address-section">
+      <div className="bg-white">
+        <h3 className="text-bio-green font-bold mb-2">Add New Address</h3>
+        <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSaveNewAddress(); }}>
+          <div className="flex space-x-2">
             <input
               type="text"
-              placeholder="Apartment, suite, etc. (optional)"
-              value={newAddress.address}
-              onChange={(e) => handleAddressChange("address", e.target.value)}
-              className="border p-2 rounded w-full"
+              placeholder="First name"
+              value={newAddress.firstName}
+              onChange={(e) => handleAddressChange("firstName", e.target.value)}
+              className="border p-2 rounded w-1/2"
               required
             />
-            <div className="flex space-x-2">
-              <input
-                type="text"
-                placeholder="City (Auto-filled)"
-                value={newAddress.city || ""}
-                onChange={(e) => handleAddressChange("city", e.target.value)}
-                className="border p-2 rounded w-1/3 bg-gray-100 cursor-not-allowed"
-                readOnly
-                required
-              />
-              <input
-                type="text"
-                placeholder="State (Auto-filled)"
-                value={newAddress.state || ""}
-                onChange={(e) => handleAddressChange("state", e.target.value)}
-                className="border p-2 rounded w-1/3 bg-gray-100 cursor-not-allowed"
-                readOnly
-                required
-              />
-              <input
-                type="text"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                placeholder="PIN Code"
-                value={newAddress.pinCode}
-                maxLength={6}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/[^0-9]/g, "").slice(0, 6);
-                  handleAddressChange("pinCode", value);
-                }}
-                className="border p-2 rounded w-1/3"
-                required
-              />
-            </div>
             <input
-              type="tel"
-              placeholder="Phone"
-              value={newAddress.phone}
-              maxLength={10}
-              inputMode="numeric"
-              pattern="[0-9]*"
-              onChange={(e) => {
-                const value = e.target.value.slice(0, 10);
-                handleAddressChange("phone", e.target.value, value);
-              }}
-              className="border p-2 rounded w-full"
+              type="text"
+              placeholder="Last name"
+              value={newAddress.lastName}
+              onChange={(e) => handleAddressChange("lastName", e.target.value)}
+              className="border p-2 rounded w-1/2"
               required
             />
-            <div className="flex space-x-4 items-center">
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="addressType"
-                  checked={newAddress.addressType === "Home"}
-                  onChange={() => handleAddressChange("addressType", "Home")}
-                  className="mr-2"
-                  required
-                />
-                Home (All day Delivery)
-              </label>
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="addressType"
-                  checked={newAddress.addressType === "Work"}
-                  onChange={() => handleAddressChange("addressType", "Work")}
-                  className="mr-2"
-                />
-                Work (9am - 6pm)
-              </label>
-            </div>
-            {/* Buttons */}
-            <div className="flex space-x-2 mt-2">
-              <button
-                type="button"
-                className="bg-bio-green text-white px-4 py-2 rounded"
-                onClick={handleSaveNewAddress}
-              >
-                Save
-              </button>
-              <button
-                type="button"
-                onClick={toggleDropdown}
-                className="border border-bio-green px-4 py-2 rounded text-bio-green"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
+          </div>
+          <input
+            type="text"
+            placeholder="Apartment, suite, etc. (optional)"
+            value={newAddress.address}
+            onChange={(e) => handleAddressChange("address", e.target.value)}
+            className="border p-2 rounded w-full"
+            required
+          />
+          <div className="flex space-x-2">
+            <input
+              type="text"
+              placeholder="City (Auto-filled)"
+              value={newAddress.city || ""}
+              readOnly
+              className="border p-2 rounded w-1/3 bg-gray-100 cursor-not-allowed"
+            />
+            <input
+              type="text"
+              placeholder="State (Auto-filled)"
+              value={newAddress.state || ""}
+              readOnly
+              className="border p-2 rounded w-1/3 bg-gray-100 cursor-not-allowed"
+            />
+            <input
+              type="text"
+              placeholder="PIN Code"
+              value={newAddress.pinCode}
+              maxLength={6}
+              onChange={(e) => handleAddressChange("pinCode", e.target.value.replace(/\D/g, ""))}
+              className="border p-2 rounded w-1/3"
+              required
+            />
+          </div>
+          <input
+            type="tel"
+            placeholder="Phone"
+            value={newAddress.phone}
+            maxLength={10}
+            onChange={(e) => handleAddressChange("phone", e.target.value.replace(/\D/g, ""))}
+            className="border p-2 rounded w-full"
+            required
+          />
+          <div className="flex space-x-4 items-center">
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="addressType"
+                checked={newAddress.addressType === "Home"}
+                onChange={() => handleAddressChange("addressType", "Home")}
+                className="mr-2"
+                required
+              />
+              Home
+            </label>
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="addressType"
+                checked={newAddress.addressType === "Work"}
+                onChange={() => handleAddressChange("addressType", "Work")}
+                className="mr-2"
+              />
+              Work
+            </label>
+          </div>
+
+          <div className="flex items-center gap-2 py-2">
+            <input
+              type="checkbox"
+              id="saveToProfile"
+              checked={newAddress.isDefault}
+              onChange={(e) => handleAddressChange("isDefault", e.target.checked)}
+              className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <label htmlFor="saveToProfile" className="text-xs text-gray-600 font-medium cursor-pointer">
+              Save in profile (Set as default)
+            </label>
+          </div>
+          <div className="flex space-x-2 mt-4">
+            <button
+              type="submit"
+              className="bg-blue-900 text-white px-6 py-2 rounded-md font-bold hover:bg-blue-800"
+            >
+              Save Address
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="border border-gray-300 px-6 py-2 rounded-md hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
@@ -573,116 +508,7 @@ const OrderSummaryItem = ({ title, Quantity, mrp, sales_price, total, image }) =
 
 
 
-const DeliveryOptions = ({ setSelectedOption }) => {
 
-  const [isOpen, setIsOpen] = useState(true); // OPEN by default
-  const [selected, setSelected] = useState("Door Delivery"); // DEFAULT
-
-  const [stores, setStores] = useState([]);
-  const [selectedStoreId, setSelectedStoreId] = useState(null);
-
-  const deliveryOptions = [
-    // { id: "standard", label: "Standard", price: "₹000.00" },
-    // { id: "express", label: "Express Way", price: "₹000.00" },
-    { id: "Door Delivery", label: "Door Delivery" },
-    { id: "Pick Up Store", label: "Pickup From Store" }
-
-  ];
-
-  const getStoreList = async () => {
-    try {
-      const response = await axiosInstance.get('/store/store_list/');
-      if (response.status === 200) {
-        setStores(response?.data?.data?.stores);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getStoreList();
-  }, []);
-
-
-  useEffect(() => {
-    setSelectedOption({
-      deliveryType: "Door Delivery",
-      storeId: null,
-    });
-  }, []);
-
-  // const toggleDropdown = () => setIsOpen(!isOpen);
-
-  const toggleDropdown = () => setIsOpen((prev) => !prev);
-
-
-  const handleOptionChange = (optionId) => {
-    setSelected(optionId);
-    setSelectedOption({ deliveryType: optionId, storeId: null }); // clear store ID initially
-  };
-
-  const handleStoreSelect = (storeId) => {
-    setSelectedStoreId(storeId);
-    setSelectedOption({ deliveryType: selected, storeId }); // pass both values to parent
-  };
-
-  return (
-    <div className="bg-gray-100 p-4 mt-4">
-      <div
-        className="bg-gradient-to-r from-blue-900 to-blue-500 text-white p-4 rounded-md cursor-pointer flex justify-between items-center"
-        onClick={toggleDropdown}
-      >
-        <h2 className="font-bold flex items-center">
-          <span className="bg-white text-blue-900 px-2 py-1 rounded-full mr-2">2</span>
-          Choose Delivery Option
-        </h2>
-      </div>
-
-      {isOpen && (
-        <div className="bg-white p-4 shadow-md rounded-md mt-2 space-y-4">
-          {deliveryOptions.map((option) => (
-            <div key={option.id} className="flex items-center justify-between border-b pb-2">
-              <div className="flex items-center">
-                <input
-                  type="radio"
-                  name="delivery-option"
-                  value={option.id}
-                  checked={selected === option.id}
-                  onChange={() => handleOptionChange(option.id)}
-                  className="w-5 h-5"
-                />
-                <label className="ml-2 text-gray-800">{option.label}</label>
-              </div>
-              {option.price && <span className="text-gray-600">{option.price}</span>}
-            </div>
-          ))}
-
-          {selected === 'Pick Up Store' && (
-            <div className="mt-4">
-              <label className="block mb-2 font-medium text-gray-700">Select a Store</label>
-              <div className="max-h-48 overflow-y-auto border rounded-md p-2 custom-scroll">
-                {stores.map((store, index) => (
-                  <div
-                    key={store.id}
-                    onClick={() => handleStoreSelect(store.id)}
-                    className={`p-3 rounded cursor-pointer border mb-2 transition ${selectedStoreId === store.id
-                      ? 'bg-blue-100 border-blue-500'
-                      : 'hover:bg-gray-100 border-gray-200'
-                      }`}
-                  >
-                    <p className="font-semibold text-gray-800">{store.pathname}</p>
-                    <p className="text-sm text-gray-500">{store.address}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-};
 
 
 
@@ -703,7 +529,7 @@ const OrderSummary = ({ selectedOption, selectedAddress, data }) => {
 
   // const handleSaveOrderSummary = async () => {
   //   if (!data?.order?.id || !selectedAddress || !selectedOption) {
-  //     enqueueSnackbar("Please fill in all the required details!", { variant: "warning" });
+  //     enqueueSnackbar("Please fill in all the required details!", {variant: "warning" });
   //     return;
   //   }
 
@@ -719,15 +545,15 @@ const OrderSummary = ({ selectedOption, selectedAddress, data }) => {
   //       `${process.env.NEXT_PUBLIC_API_URL}/order/orderSummary/`,
   //       orderSummaryData,
   //       {
-  //         headers: { Authorization: `Bearer ${accessToken}` },
+  //         headers: {Authorization: `Bearer ${accessToken}` },
   //       }
   //     );
 
   //     if (response.data.message === "success") {
-  //       enqueueSnackbar("Order summary saved successfully!", { variant: "success" });
+  //       enqueueSnackbar("Order summary saved successfully!", {variant: "success" });
 
-  //       router.push("/paymentgateway", { 
-  //         state: { resource: response.data.data, order_id: data.order.id } 
+  //       router.push("/paymentgateway", {
+  //         state: {resource: response.data.data, order_id: data.order.id }
   //       });
   //     }
   //   } catch (error) {
@@ -736,19 +562,19 @@ const OrderSummary = ({ selectedOption, selectedAddress, data }) => {
   //     // Show a detailed error message
   //     enqueueSnackbar(
   //       error.response?.data?.message || "Failed to save order summary. Please try again.",
-  //       { variant: "error" }
+  //       {variant: "error" }
   //     );
   //   }
   // };
 
   return (
     <div className="bg-gray-100 p-4 mt-4">
-      <div className="bg-gradient-to-r from-blue-900 to-blue-500 text-white p-4 rounded-md cursor-pointer flex justify-between items-center"
+      <div className="bg-gradient-to-r from-green-500 to-green-900 text-white p-4 rounded-md cursor-pointer flex justify-between items-center"
         onClick={toggleDropdown}
       >
-        <h2 className="font-bold flex items-center">
-          <span className="bg-white text-blue-900 px-2 py-1 rounded-full mr-2">
-            4
+        <h2 className="font-bold flex items-center text-sm md:text-base">
+          <span className="bg-white text-blue-900 w-6 h-6 flex items-center justify-center rounded-full mr-2 text-xs">
+            1
           </span>
           Order Summary
         </h2>
@@ -902,12 +728,14 @@ const ApplyCoupon = ({ id, setCoupon }) => {
   return (
     <div className="bg-gray-100 p-4 mt-4">
       <div
-        className="bg-gradient-to-r from-blue-900 to-blue-500 text-white p-4 rounded-md cursor-pointer flex justify-between items-center"
+        className="bg-gradient-to-r from-green-500 to-green-900 text-white p-4 rounded-md cursor-pointer flex justify-between items-center"
         onClick={toggleDropdown}
       >
-        <h2 className="font-bold flex items-center text-sm sm:text-base">
-          <span className="bg-white text-blue-900 px-2 py-1 rounded-full mr-2 text-xs sm:text-sm">3</span>
-          Apply Coupon
+        <h2 className="font-bold flex items-center text-sm md:text-base">
+          <span className="bg-white text-blue-900 w-6 h-6 flex items-center justify-center rounded-full mr-2 text-xs">
+            3
+          </span>
+          Apply Coupon Code
         </h2>
         <span className="text-white font-bold text-xl sm:text-2xl">{isOpen ? "−" : "+"}</span>
       </div>
@@ -990,7 +818,7 @@ const ApplyCoupon = ({ id, setCoupon }) => {
 
 
 
-// import { useState } from "react";
+// import {useState} from "react";
 
 const PaymentMethods = () => {
   const [selectedMethod, setSelectedMethod] = useState('wallet');
@@ -1124,6 +952,7 @@ const CheckoutPage = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState([]);
   const [coupon, setCoupon] = useState();
+  const [isAddNewOpen, setIsAddNewOpen] = useState(false);
 
   const isCombo = !!(data?.order?.is_combo_purchase || data?.order?.is_shop_the_look || comboOffer);
 
@@ -1258,24 +1087,24 @@ const CheckoutPage = () => {
         {/* Left Side - Steps */}
         <div className="w-full lg:w-3/4">
           <div className="space-y-4">
-            {/* Delivery Address Dropdown */}
-            <DeliveryAddress setSelectedAddress={setSelectedAddress} />
-
-            {/* Add New Address Dropdown */}
-            <AddNewAddress />
-
-            {/* Choose Delivery Option */}
-            <DeliveryOptions setSelectedOption={setSelectedOption} />
-
-            {/* Apply Coupon */}
-            <ApplyCoupon id={id} setCoupon={setCoupon} />
-
             {/* Order Summary */}
             <OrderSummary
               selectedOption={selectedOption}
               selectedAddress={selectedAddress}
               data={data}
             />
+
+            {/* Delivery Details (Address + Options) */}
+            <DeliveryAddress
+              setSelectedAddress={setSelectedAddress}
+              selectedAddress={selectedAddress}
+              setSelectedOption={setSelectedOption}
+              setIsAddNewOpen={setIsAddNewOpen}
+              isAddNewOpen={isAddNewOpen}
+            />
+
+            {/* Apply Coupon */}
+            <ApplyCoupon id={id} setCoupon={setCoupon} />
           </div>
         </div>
 

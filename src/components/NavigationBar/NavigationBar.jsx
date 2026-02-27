@@ -57,26 +57,17 @@ const NavBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const username = useSelector((state) => state.user.username || "Guest");
-  const [userName, setUserName] = useState("Guest");
-
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    if (userData?.first_name) {
-      setUserName(userData.first_name);
-    }
-  }, []);
-
   const dispatch = useDispatch();
   const router = useRouter();
 
   const handleWalletClick = () => {
-    if (userName === "Guest") {
+    if (username === "Guest") {
       setIsWalletPopupOpen(true);
     } else {
       router.push("/profile/wallet");
@@ -242,55 +233,57 @@ const NavBar = () => {
             </button>
 
             {/* User Dropdown */}
-            <div className="relative hidden sm:flex gap-4">
-              {displayUsername === "Guest" ? (
-                <button
-                  className="flex items-center space-x-2 text-gray-500"
-                  onClick={() => setIsSignInOpen(true)}
-                  aria-label="Sign in to your account"
-                >
-                  <FaRegUser className="text-xl" />
-                  <span>Guest</span>
-                </button>
-              ) : (
-                <button
-                  className="flex items-center justify-between px-4 py-2 bg-bio-green text-white rounded-md w-40"
-                  onClick={toggleDropdown}
-                  aria-label="User account menu"
-                >
-                  <div className="flex items-center space-x-2">
+            <ClickAwayListener onClickAway={() => setIsDropdownOpen(false)}>
+              <div className="relative hidden sm:flex gap-4">
+                {displayUsername === "Guest" ? (
+                  <button
+                    className="flex items-center space-x-2 text-gray-500"
+                    onClick={() => setIsSignInOpen(true)}
+                    aria-label="Sign in to your account"
+                  >
                     <FaRegUser className="text-xl" />
-                    <span>{displayUsername.slice(0, 5)}..</span>
+                    <span>Guest</span>
+                  </button>
+                ) : (
+                  <button
+                    className="flex items-center justify-between px-4 py-2 bg-bio-green text-white rounded-md w-40"
+                    onClick={toggleDropdown}
+                    aria-label="User account menu"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <FaRegUser className="text-xl" />
+                      <span>{displayUsername.slice(0, 5)}..</span>
+                    </div>
+                    <FaChevronDown />
+                  </button>
+                )}
+
+                {isDropdownOpen && (
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 bg-white rounded-lg shadow-lg w-40 z-50">
+                    <ul className="py-1">
+                      <li className="px-4 py-3 hover:bg-gray-50" onClick={() => setIsDropdownOpen(false)}>
+                        <Link href="/profile" className="flex items-center">
+                          <FaRegUser className="mr-3 text-gray-600" />
+                          My Profile
+                        </Link>
+                      </li>
+
+                      <li className="px-4 py-3 hover:bg-gray-50" onClick={() => setIsDropdownOpen(false)}>
+                        <Link href="/profile/trackorder" className="flex items-center">
+                          <TbCurrentLocation className="mr-3 text-gray-600" />
+                          Track Order
+                        </Link>
+                      </li>
+
+                      <li className="px-4 py-3 hover:bg-gray-50 cursor-pointer flex items-center gap-3" onClick={handleLogOutClick}>
+                        <IoIosLogOut className="text-gray-600 text-lg flex-shrink-0" />
+                        <span className="text-gray-700">Logout</span>
+                      </li>
+                    </ul>
                   </div>
-                  <FaChevronDown />
-                </button>
-              )}
-
-              {isDropdownOpen && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 bg-white rounded-lg shadow-lg w-40 z-50">
-                  <ul className="py-1">
-                    <li className="px-4 py-3 hover:bg-gray-50">
-                      <Link href="/profile" className="flex items-center">
-                        <FaRegUser className="mr-3 text-gray-600" />
-                        My Profile
-                      </Link>
-                    </li>
-
-                    <li className="px-4 py-3 hover:bg-gray-50">
-                      <Link href="/profile/trackorder" className="flex items-center">
-                        <TbCurrentLocation className="mr-3 text-gray-600" />
-                        Track Order
-                      </Link>
-                    </li>
-
-                    <li className="px-4 py-3 hover:bg-gray-50 cursor-pointer flex items-center gap-3" onClick={handleLogOutClick}>
-                      <IoIosLogOut className="text-gray-600 text-lg flex-shrink-0" />
-                      <span className="text-gray-700">Logout</span>
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            </ClickAwayListener>
           </div>
         </div>
 

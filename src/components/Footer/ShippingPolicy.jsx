@@ -85,7 +85,7 @@ const ShippingPolicy = () => {
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <Mail className="w-4 h-4 text-green-600" />
-                    <span><strong>Email Us:</strong> support@biotechmaali.com</span>
+                    <span><strong>Email Us:</strong> support@www.gidan.store</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <MessageCircle className="w-4 h-4 text-green-600" />

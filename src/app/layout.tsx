@@ -108,7 +108,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${nunitoSans.variable} font-sans antialiased`}>
+      <body className={`${nunitoSans.variable} font-sans antialiased`} suppressHydrationWarning>
         {/* Google Tag Manager */}
         <Script id="gtm-script" strategy="afterInteractive">
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

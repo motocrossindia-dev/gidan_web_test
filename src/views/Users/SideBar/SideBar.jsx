@@ -14,9 +14,15 @@ import { useSelector } from "react-redux";
 
 const SideBar = () => {
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
   const router = useRouter();
   const accessToken = useSelector(selectAccessToken);
   const userName = useSelector((state) => state.user.username); // Retrieve user name from Redux
+
+  useEffect(() => {
+    setHasMounted(true);
+    window.scrollTo(0, 0);
+  }, [accessToken]);
 
   const handleLogoutClick = () => setIsLogoutDialogOpen(true);
   const handleCancelLogout = () => setIsLogoutDialogOpen(false);
@@ -26,10 +32,6 @@ const SideBar = () => {
     router.push("/");
   };
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [accessToken]);
-
   return (
     <div className="bg-gray-100 hidden md:block shadow-lg"> {/* Sidebar container */}
       <div className="w-[270px] h-screen font-sans flex flex-col">
@@ -37,11 +39,15 @@ const SideBar = () => {
         {/* Header Section */}
         <div className="h-[80px] px-4 bg-white flex items-center space-x-3 border-b shadow-sm">
           <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center">
-            <span className="text-2xl font-semibold text-white">{userName?.charAt(0).toUpperCase()}</span>
+            <span className="text-2xl font-semibold text-white">
+              {hasMounted ? userName?.charAt(0).toUpperCase() : ""}
+            </span>
           </div>
           <div>
             <div className="text-sm text-gray-500">Hello,</div>
-            <div className="text-md font-bold text-gray-900">{userName}</div>
+            <div className="text-md font-bold text-gray-900">
+              {hasMounted ? userName : ""}
+            </div>
           </div>
         </div>
 

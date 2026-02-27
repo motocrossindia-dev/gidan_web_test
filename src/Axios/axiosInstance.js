@@ -23,8 +23,6 @@ axiosInstance.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
-
-// Simple 401 handler (optional logout)
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -32,7 +30,7 @@ axiosInstance.interceptors.response.use(
       console.warn("Unauthorized! Logging out...");
       removeToken();
       store.dispatch(logout());
-      window.location.href = "/"; // Optional: redirect to home/login
+      window.location.href = "/";
     }
 
     return Promise.reject(error);
