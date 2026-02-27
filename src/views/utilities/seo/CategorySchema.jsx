@@ -51,7 +51,20 @@ export default function CategorySchema({
                             "@type": "Product",
                             "name": item.main_product_name || item.name || "Product",
                             "image": item.main_image || (item.images && item.images[0]) || "",
-                            "url": productUrl
+                            "url": productUrl,
+                            "offers": {
+                                "@type": "Offer",
+                                "price": String(item.selling_price || 0),
+                                "priceCurrency": "INR",
+                                "availability": item.stock_word?.toLowerCase() === "out_of_stock" ? "https://schema.org/OutOfStock" : "https://schema.org/InStock"
+                            },
+                            ...((item.average_rating > 0) && {
+                                "aggregateRating": {
+                                    "@type": "AggregateRating",
+                                    "ratingValue": String(item.average_rating),
+                                    "reviewCount": String(item.total_reviews || 1)
+                                }
+                            })
                         }
                     };
                 })
