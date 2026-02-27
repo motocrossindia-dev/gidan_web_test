@@ -81,14 +81,45 @@ export default function CollectionSchema({ category, subcategory, products = [],
         })
     };
 
-    // Output all 3 connected schemas
+    // Organization logic
+    const organization = {
+        "@type": "Organization",
+        "@id": `${siteUrl}/#organization`,
+        "name": "Gidan Plants",
+        "url": siteUrl,
+        "logo": {
+            "@type": "ImageObject",
+            "@id": `${siteUrl}/#logo`,
+            "url": `${siteUrl}/logo.webp`,
+            "width": "192",
+            "height": "192",
+            "caption": "Gidan Plants"
+        },
+        "description": "Gidan is India's trusted destination for plants, planters, seeds and urban gardening essentials with expert landscaping services.",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Bangalore",
+            "addressRegion": "Karnataka",
+            "postalCode": "560001",
+            "addressCountry": "IN"
+        },
+        "sameAs": [
+            "https://www.facebook.com/thegidanstore/",
+            "https://www.instagram.com/thegidanstore/",
+            "https://www.linkedin.com/company/thegidanstore/",
+            "https://www.youtube.com/@thegidanstore/",
+            "https://whatsapp.com/channel/0029Vac6g6TB4hdL2NqaEc1f/"
+        ]
+    };
+
+    // Output all connected schemas
     return (
         <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
                 __html: JSON.stringify({
                     "@context": "https://schema.org",
-                    "@graph": [collectionPage, breadcrumbList, itemList]
+                    "@graph": [collectionPage, breadcrumbList, itemList, organization]
                 })
             }}
         />
