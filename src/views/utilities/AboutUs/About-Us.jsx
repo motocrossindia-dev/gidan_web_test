@@ -6,6 +6,7 @@ import { Helmet } from "react-helmet-async";
 import AboutUsSchema from "../seo/AboutUsSchema";
 
 const AboutUs = () => {
+    const _aboutUsImg = typeof aboutUsImg === 'string' ? aboutUsImg : aboutUsImg?.src || aboutUsImg;
     return (
         <>
             <Helmet>
@@ -57,7 +58,7 @@ const AboutUs = () => {
                             {/* Image */}
                             <div className="w-full md:w-1/2 flex justify-center">
                                 <img
-                                    src={aboutUsImg}
+                                    src={_aboutUsImg}
                                     loading="lazy"
                                     alt="About GIDAN Illustration"
                                     className="w-full h-auto max-h-[500px] object-cover rounded-xl shadow-lg border border-gray-100"
