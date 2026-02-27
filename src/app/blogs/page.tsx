@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import BlogComponent from '@/views/utilities/Blog/BlogComponent';
+import BlogList from '@/views/Blog/BlogList';
 
 
 export const metadata: Metadata = {
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Blog | Plant Care and Gardening Guides | Gidan",
     description: "Expert plant care articles, gardening how-tos and seasonal tips on the Gidan blog.",
-    url: "https://www.gidan.store/blogcomponent",
+    url: "https://www.gidan.store/blogs",
     siteName: "Gidan Plants",
     images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
@@ -19,10 +19,10 @@ export const metadata: Metadata = {
     title: "Blog | Plant Care and Gardening Guides | Gidan",
     description: "Expert plant care articles, gardening how-tos and seasonal tips on the Gidan blog.",
   },
-  alternates: { canonical: "https://www.gidan.store/blogcomponent" },
+  alternates: { canonical: "https://www.gidan.store/blogs" },
   robots: { index: true, follow: true },
 };
 
 export default function BlogPage() {
-  return <BlogComponent />;
+  return <BlogList />;
 }

@@ -15,9 +15,9 @@ const Blog = () => {
   // Use TanStack Query hook for blogs data
   const { data: blogs = [], isLoading } = useBlogs();
 
-  const Blogcard = ({ image, title, heading }) => {
+  const Blogcard = ({ image, title, heading, slug }) => {
     return (
-      <div className="w-full max-w-[500px] mx-auto h-auto rounded-lg overflow-hidden font-sans flex flex-col items-center">
+      <Link href={`/blogs/${slug}`} className="block w-full max-w-[500px] mx-auto h-auto rounded-lg overflow-hidden font-sans flex flex-col items-center cursor-pointer hover:shadow-lg transition-shadow">
         <div className="w-full aspect-[800/665] bg-gray-100 rounded-lg overflow-hidden">
           <img
             src={`${process.env.NEXT_PUBLIC_API_URL}${image}`}
@@ -35,7 +35,7 @@ const Blog = () => {
           <h3 className="text-gray-500 text-xs md:text-lg mt-1 max-w-[90%]">{title}</h3>
           <p className="text-gray-700 text-sm md:text-2xl font-bold">{heading}</p>
         </div>
-      </div>
+      </Link>
     );
   };
 
@@ -47,7 +47,7 @@ const Blog = () => {
           <div className="flex justify-between items-center mb-6 font-sans">
             <h2 className="md:text-3xl text-xl font-bold mx-auto">Blogs</h2>
             <Link
-              href="/blogcomponent"
+              href="/blogs"
               className="text-white bg-bio-green md:text-xl text-xs rounded-md py-1 px-2 md:py-2 md:px-4 font-medium md:font-semibold"
             >
               View All
@@ -80,6 +80,7 @@ const Blog = () => {
                         image={blog.image}
                         title={blog.title}
                         heading={blog.summary}
+                        slug={blog.slug}
                       />
                     </SwiperSlide>
                   ))}
@@ -110,6 +111,7 @@ const Blog = () => {
                         image={blog.image}
                         title={blog.title}
                         heading={blog.summary}
+                        slug={blog.slug}
                       />
                     </SwiperSlide>
                   ))}
@@ -125,7 +127,7 @@ const Blog = () => {
                     aria-label="View all blogs"
                     className="bg-bio-green text-white w-[94px] h-[34px] rounded mx-1"
                   >
-                    <Link href="/blogcomponent">View All</Link>
+                    <Link href="/blogs">View All</Link>
                   </button>
                   <button
                     aria-label="Next"

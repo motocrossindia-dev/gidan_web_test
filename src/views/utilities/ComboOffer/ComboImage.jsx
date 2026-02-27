@@ -20,17 +20,14 @@ function ComboImage() {
   
   const getAllcombos = async () => {
     try {
-      const response = await axiosInstance.get(`/combo/combo-offers/`);
+      const response = await axiosInstance.get(`/combo/combo_offers_list/`);
       if (response.status === 200) {
-        // Combine both combo_offers and shop_the_look
-        const allCombos = [
-          ...(response.data.data.combo_offers || []),
-          ...(response.data.data.shop_the_look || [])
-        ];
-        setComboOffers(allCombos);
+        const data = response.data.data?.combo_offers || [];
+        setComboOffers(data);
       }
     } catch (error) {
       console.log(error);
+      setComboOffers([]);
     }
   };
   useEffect(() => {
