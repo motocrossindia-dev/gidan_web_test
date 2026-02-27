@@ -13,7 +13,7 @@ import GoogleAnalytics from "@/GoogleAnalytics/GoogleAnalytics";
 
 
 import Verify from "@/Services/Services/Verify";
-import GlobalIdentitySchema from "@/views/utilities/seo/GlobalIdentitySchema";
+
 import Home from '@/components/Home/Home';
 
 const nunitoSans = Nunito_Sans({
@@ -127,7 +127,7 @@ export default function RootLayout({
             style={{ display: 'none', visibility: 'hidden' }}
           />
         </noscript>
-        <GlobalIdentitySchema />
+
         <Providers>
           <GoogleAnalytics />
 

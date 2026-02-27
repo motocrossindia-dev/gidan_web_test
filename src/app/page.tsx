@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Home from '@/components/Home/Home';
 import HomepageSchema from "@/views/utilities/seo/HomepageSchema";
-
+import GlobalIdentitySchema from "@/views/utilities/seo/GlobalIdentitySchema";
 // Server-side fetching for LCP optimization
 async function getInitialBanners() {
   try {
@@ -88,6 +88,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <GlobalIdentitySchema />
       <HomepageSchema />
       <Home
         initialBanners={initialBanners}
