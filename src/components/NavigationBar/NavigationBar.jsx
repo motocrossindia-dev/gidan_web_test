@@ -11,10 +11,12 @@ import { TbCurrentLocation } from "react-icons/tb";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/Slice/userSlice";
 import { Popper, Box, Fade } from "@mui/material";
-import SignIn from "../../AuthPages/SignIn/Signin";
-import Verification from "../../AuthPages/Verification/Verification";
-import Login from "../../AuthPages/Login/Login";
-import WalletActivation from "../WalletActivation/WalletActivation";
+import dynamic from "next/dynamic";
+
+const SignIn = dynamic(() => import("../../AuthPages/SignIn/Signin"), { ssr: false });
+const Verification = dynamic(() => import("../../AuthPages/Verification/Verification"), { ssr: false });
+const Login = dynamic(() => import("../../AuthPages/Login/Login"), { ssr: false });
+const WalletActivation = dynamic(() => import("../WalletActivation/WalletActivation"), { ssr: false });
 import __logo from "../../Assets/Gidan_logo.webp";
 const _logo = typeof __logo === 'string' ? __logo : __logo?.src || __logo;
 const logo = typeof _logo === 'string' ? _logo : _logo?.src || _logo;

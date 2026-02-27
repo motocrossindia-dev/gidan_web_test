@@ -1,25 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import ReactDOM from 'react-dom';
 import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
 import { Providers } from "./providers";
-import Header from "@/components/Header/Header";
 import NavBar from "@/components/NavigationBar/NavigationBar";
 import Footer from "@/components/Footer/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import GoogleAnalytics from "@/GoogleAnalytics/GoogleAnalytics";
 
-
-
 import Verify from "@/Services/Services/Verify";
-
-import Home from '@/components/Home/Home';
 
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito-sans",
   subsets: ["latin"],
   weight: ["300", "400", "600", "700", "800"],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -103,13 +98,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  ReactDOM.preconnect('https://backend.gidan.store', { crossOrigin: 'anonymous' });
-
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://backend.gidan.store" crossOrigin="anonymous" />
+      </head>
       <body className={`${nunitoSans.variable} font-sans antialiased`} suppressHydrationWarning>
         {/* Google Tag Manager */}
-        <Script id="gtm-script" strategy="afterInteractive">
+        <Script id="gtm-script" strategy="lazyOnload">
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
           new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
           j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=

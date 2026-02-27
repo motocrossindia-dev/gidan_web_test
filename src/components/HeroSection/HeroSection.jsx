@@ -37,9 +37,9 @@ const HeroSection = ({ hero }) => {
   };
 
   return (
-    <div className="relative w-full overflow-hidden mt-4">
+    <div className="relative w-full overflow-hidden mt-4 min-h-[200px] sm:min-h-[400px] aspect-[1920/600]">
       {hero && hero.length > 0 ? (
-        <div className="relative w-full">
+        <div className="relative w-full h-full">
 
           {hero.map((banner, index) => {
             const slug = convertToSlug(banner.category);

@@ -6,7 +6,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import Image from "next/image";
 import "swiper/css";
-import "swiper/css/navigation";
 import { getMobileBannerUrl, getDesktopBannerUrl } from "../../hooks/useBannerImages";
 
 const Banner = ({ home }) => {
@@ -23,7 +22,7 @@ const Banner = ({ home }) => {
                         delay: 3000,
                         disableOnInteraction: false,
                     }}
-                    className="w-full"
+                    className="w-full min-h-[300px] sm:min-h-[400px]"
                 >
                     {home.map((banner, index) => (
                         <SwiperSlide key={banner.id || index}>
