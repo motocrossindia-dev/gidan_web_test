@@ -56,7 +56,6 @@ export default function CollectionSchema({ category, subcategory, products = [],
         "@id": `${collectionUrl}#webpage`,
         "url": collectionUrl,
         "name": collectionName,
-        "isPartOf": { "@id": `${siteUrl}/#website` },
         "breadcrumb": { "@id": `${siteUrl}/#breadcrumb` }
     };
 
