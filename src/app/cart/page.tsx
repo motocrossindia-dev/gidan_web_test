@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description: "Review the plants and products in your shopping cart at Gidan.",
   },
   alternates: { canonical: "https://www.gidan.store/cart" },
-  robots: { index: true, follow: true },
+  robots: { index: false, follow: false },
 };
 
 export default function CartPage() {

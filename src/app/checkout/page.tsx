@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description: "Complete your purchase at Gidan. Secure checkout powered by Razorpay.",
   },
   alternates: { canonical: "https://www.gidan.store/checkout" },
-  robots: { index: true, follow: true },
+  robots: { index: false, follow: false },
 };
 
 export default function CheckoutPageRoute() {

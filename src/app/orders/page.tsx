@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description: "Shop and explore orders at Gidan, India trusted online plant and gardening store.",
   },
   alternates: { canonical: "https://www.gidan.store/orders" },
-  robots: { index: true, follow: true },
+  robots: { index: false, follow: false },
 };
 
 export default function OrdersPage() {
