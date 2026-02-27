@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 // ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
 import { useMemo } from "react";
 import Card from "@mui/material/Card";
@@ -70,46 +71,36 @@ const CheckOutStore = () => {
           <div className="w-full bg-white-400 p-6 rounded-lg">
             <div className="grid grid-cols-1 md:grid-cols-3 md:gap-12 gap-6">
               {storesToDisplay && storesToDisplay.length > 0 ? (
-                storesToDisplay.map((store, index) => {
-                  const mapLink = store.address_link
-                    ? store.address_link
-                    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                        store.address
-                      )}`;
+                storesToDisplay.map((store, index) => (
+                  <Link
+                    key={index}
+                    href={`/stores/${store.slug}`}
+                    className="p-4 border-2 border-bio-green mb-2 rounded-md md:shadow-md bg-white w-full md:w-auto cursor-pointer hover:shadow-lg hover:scale-[1.02] transition-transform"
+                  >
+                    {store.image && (
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_API_URL}${store.image}`}
+                        alt={store.location}
+                        className="w-full h-40 object-cover rounded-md mb-3"
+                        loading="lazy"
+                      />
+                    )}
 
-                  return (
-                    <div
-                      key={index}
-                      onClick={() => window.open(mapLink, "_blank")}
-                      className="p-4 border-2 border-bio-green mb-2 rounded-md md:shadow-md bg-white w-full md:w-auto cursor-pointer hover:shadow-lg hover:scale-[1.02] transition-transform"
-                    >
-                      {/* Store Image */}
-                      {store.image && (
-                        <img
-                          src={`${process.env.NEXT_PUBLIC_API_URL}${store.image}`}
-                          alt={store.location}
-                          className="w-full h-40 object-cover rounded-md mb-3"
-                          loading="lazy"
-                        />
-                      )}
+                    <h3 className="text-lg md:text-xl font-semibold mb-2">
+                      {store.location}
+                    </h3>
 
-                      {/* Store Details */}
-                      <h3 className="text-lg md:text-xl font-semibold mb-2">
-                        {store.location}
-                      </h3>
-
-                      <p className="text-sm md:text-md mb-2 mt-1">
-                        <strong>Address:</strong> {store.address}
-                      </p>
-                      <p className="text-sm md:text-md mb-2">
-                        <strong>Contact number:</strong> {store.contact}
-                      </p>
-                      <p className="text-sm md:text-md">
-                        <strong>Time:</strong> {store.time_period}
-                      </p>
-                    </div>
-                  );
-                })
+                    <p className="text-sm md:text-md mb-2 mt-1">
+                      <strong>Address:</strong> {store.address}
+                    </p>
+                    <p className="text-sm md:text-md mb-2">
+                      <strong>Contact number:</strong> {store.contact}
+                    </p>
+                    <p className="text-sm md:text-md">
+                      <strong>Time:</strong> {store.time_period}
+                    </p>
+                  </Link>
+                ))
               ) : (
                 <div>No stores available</div>
               )}

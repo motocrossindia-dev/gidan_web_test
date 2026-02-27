@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 // import React, { useState, useEffect } from "react";
 // import { CiLocationOn } from "react-icons/ci"; // Import the location icon
 // // import axiosInstance from "../../Axios/axiosInstance";
@@ -177,44 +178,35 @@ const Stores = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {stores && Array.isArray(stores) && stores.length > 0 ? (
-            stores.map((store, index) => {
-              const mapLink = store.address_link
-                ? store.address_link
-                : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                  store.address
-                )}`;
-              return (
-                <div
-                  key={index}
-                  onClick={() => window.open(mapLink, "_blank")}
-                  className="p-4 border-2 border-bio-green rounded-md shadow-md bg-white w-full md:w-auto cursor-pointer hover:shadow-lg transition"
-                >
-                  {/* Store Image */}
-                  {store.image && (
-                    <img
-                      src={`https://backend.gidan.store${store.image}`}
-                      alt={store.location}
-                      className="w-full h-48 object-cover rounded-md mb-3"
-                    />
-                  )}
+            stores.map((store, index) => (
+              <Link
+                key={index}
+                href={`/stores/${store.slug}`}
+                className="p-4 border-2 border-bio-green rounded-md shadow-md bg-white w-full md:w-auto cursor-pointer hover:shadow-lg transition"
+              >
+                {store.image && (
+                  <img
+                    src={`https://backend.gidan.store${store.image}`}
+                    alt={store.location}
+                    className="w-full h-48 object-cover rounded-md mb-3"
+                  />
+                )}
 
-                  {/* Store Details */}
-                  <h3 className="text-lg font-semibold mb-2">
-                    {store.location}
-                  </h3>
+                <h3 className="text-lg font-semibold mb-2">
+                  {store.location}
+                </h3>
 
-                  <p className="text-sm mb-2">
-                    <strong>Address:</strong> {store.address}
-                  </p>
-                  <p className="text-sm mb-2">
-                    <strong>Contact number:</strong> {store.contact}
-                  </p>
-                  <p className="text-sm">
-                    <strong>Time:</strong> {store.time_period}
-                  </p>
-                </div>
-              );
-            })
+                <p className="text-sm mb-2">
+                  <strong>Address:</strong> {store.address}
+                </p>
+                <p className="text-sm mb-2">
+                  <strong>Contact number:</strong> {store.contact}
+                </p>
+                <p className="text-sm">
+                  <strong>Time:</strong> {store.time_period}
+                </p>
+              </Link>
+            ))
           ) : (
             <div>No stores available</div>
           )}
