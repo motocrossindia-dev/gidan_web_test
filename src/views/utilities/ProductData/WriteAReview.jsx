@@ -8,28 +8,7 @@ import axiosInstance from '../../../Axios/axiosInstance';
 
 const WriteAReview = ({ onClose, productId, productDetailData, isInline = false }) => {
   const product = productDetailData?.data?.product || productDetailData?.product || productDetailData;
-  const imageThumbnails = productDetailData?.data?.image_thumbnails || productDetailData?.images || [];
 
-  // Get image URL and handle prefixing
-  let productImage = "https://via.placeholder.com/80";
-  const rawImage = imageThumbnails[0]?.image || productDetailData?.image || product?.image;
-
-  if (rawImage) {
-    if (rawImage.startsWith('http')) {
-      productImage = rawImage;
-    } else {
-      productImage = `${process.env.NEXT_PUBLIC_API_URL || 'https://backend.gidan.store'}${rawImage}`;
-    }
-  }
-
-  const productName = product?.main_product_name || product?.name || product?.product_name || "Product";
-
-  // Extract variant details if available (e.g. size/weight/color)
-  const variantDetails = productDetailData?.variant_details || [
-    productDetailData?.data?.product_weights?.find(w => w.isSelected)?.size_grams,
-    productDetailData?.data?.product_sizes?.find(s => s.isSelected)?.size,
-    productDetailData?.data?.product_colors?.find(c => c.isSelected)?.color_name
-  ].filter(Boolean).join(" / ");
 
   const [rating, setRating] = useState(0);
   const [reviewTitle, setReviewTitle] = useState('');
@@ -121,21 +100,7 @@ const WriteAReview = ({ onClose, productId, productDetailData, isInline = false 
           <h2 className="text-xl font-bold text-gray-800">Write a Review</h2>
         </div>
 
-        <div className="flex items-center gap-4">
-          <img name=" "
-            src={productImage}
-            loading="lazy"
-            alt={productName}
-            className="w-20 h-20 rounded-lg object-contain bg-gray-50 border p-1"
-            onError={(e) => {
-              e.target.src = "https://via.placeholder.com/80";
-            }}
-          />
-          <div>
-            <h3 className="text-lg font-medium text-gray-900">{productName}</h3>
-            {variantDetails && <p className="text-gray-500 text-sm">{variantDetails}</p>}
-          </div>
-        </div>
+
 
         <div className="mt-6">
           <p className="font-semibold text-gray-700 mb-2">Please give rating*</p>

@@ -271,6 +271,18 @@ export default function ProductData({ initialProductData }) {
         window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     }, [pathname]);
 
+    // Auto-scroll to Write a Review section when it's opened
+    useEffect(() => {
+        if (isReviewModalOpen) {
+            setTimeout(() => {
+                const element = document.getElementById('write-review-section');
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100);
+        }
+    }, [isReviewModalOpen]);
+
     // URL normalization: ensure the URL uses the main product slug
     // This fires when product data becomes available (from SSR or fetch)
     useEffect(() => {
@@ -1553,7 +1565,7 @@ export default function ProductData({ initialProductData }) {
 
             {/* Write a Review Section (Inline) */}
             {isReviewModalOpen && (
-                <div className="bg-white px-4 md:px-20">
+                <div id="write-review-section" className="bg-white px-4 md:px-20">
                     <WriteAReview
                         isInline={true}
                         onClose={() => setIsReviewModalOpen(false)}
