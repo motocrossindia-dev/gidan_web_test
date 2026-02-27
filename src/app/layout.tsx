@@ -10,9 +10,11 @@ import Footer from "@/components/Footer/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import GoogleAnalytics from "@/GoogleAnalytics/GoogleAnalytics";
 
-import HomepageSchema from "@/views/utilities/seo/HomepageSchema";
-import Head from "next/head";
+
+
 import Verify from "@/Services/Services/Verify";
+import OrganizationSchema from "@/views/utilities/seo/OrganizationSchema";
+import StoreSchema from "@/views/utilities/seo/StoreSchema";
 import Home from '@/components/Home/Home';
 
 const nunitoSans = Nunito_Sans({
@@ -126,9 +128,8 @@ export default function RootLayout({
             style={{ display: 'none', visibility: 'hidden' }}
           />
         </noscript>
-        <Head>
-          <HomepageSchema />
-        </Head>
+        <OrganizationSchema />
+        <StoreSchema />
         <Providers>
           <GoogleAnalytics />
 

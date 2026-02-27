@@ -5,7 +5,7 @@ const schema = {
   "@id": "https://www.gidan.store/#organization",
   name: "Gidan Plants",
   url: "https://www.gidan.store",
-  logo: "https://www.gidan.store/logo192.ico",
+  logo: "https://www.gidan.store/logo.webp",
   description:
     "Gidan is India's trusted destination for plants, planters, seeds and urban gardening essentials with expert landscaping services.",
   address: {
