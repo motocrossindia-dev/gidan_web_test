@@ -18,8 +18,8 @@ export default function SubCategorySchema({
                 "@type": "CollectionPage",
                 "@id": `${subcategoryUrl}#collectionpage`,
                 "url": subcategoryUrl,
-                "name": subCategory.name,
-                "description": subCategory.description || `${subCategory.name} under ${category.name}`,
+                "name": subCategory.name || subCategory.slug || "Subcategory",
+                "description": subCategory.description || `${subCategory.name || subCategory.slug || "Subcategory"} under ${category.name || category.slug || "Category"}`,
                 "image": items[0]?.main_image || (items[0]?.images && items[0]?.images[0]) || ""
             },
             {
@@ -35,20 +35,20 @@ export default function SubCategorySchema({
                     {
                         "@type": "ListItem",
                         "position": 2,
-                        "name": category.name,
+                        "name": category.name || category.slug || "Category",
                         "item": `${siteUrl}${category.slug}/`
                     },
                     {
                         "@type": "ListItem",
                         "position": 3,
-                        "name": subCategory.name,
+                        "name": subCategory.name || subCategory.slug || "Subcategory",
                         "item": subcategoryUrl
                     }
                 ]
             },
             {
                 "@type": "ItemList",
-                "name": `${subCategory.name} Collection`,
+                "name": `${subCategory.name || subCategory.slug || "Subcategory"} Collection`,
                 "numberOfItems": items.length,
                 "itemListElement": items.map((item, index) => {
                     const productUrl = `${siteUrl.replace(/\/$/, '')}${getProductUrl(item, false)}`;

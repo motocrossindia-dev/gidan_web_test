@@ -15,8 +15,8 @@ export default function CategorySchema({
                 "@type": "CollectionPage",
                 "@id": `${baseUrl}${categorySlug}/#collectionpage`,
                 "url": `${baseUrl}${categorySlug}/`,
-                "name": categoryName,
-                "description": `Explore a curated collection of ${categoryName} from Gidan Store.`,
+                "name": categoryName || categorySlug || "Category",
+                "description": `Explore a curated collection of ${categoryName || categorySlug || "Category"} from Gidan Store.`,
                 "image": items[0]?.main_image || (items[0]?.images && items[0]?.images[0]) || ""
             },
             {
@@ -32,14 +32,14 @@ export default function CategorySchema({
                     {
                         "@type": "ListItem",
                         "position": 2,
-                        "name": categoryName,
+                        "name": categoryName || categorySlug || "Category",
                         "item": `${baseUrl}${categorySlug}/`
                     }
                 ]
             },
             {
                 "@type": "ItemList",
-                "name": `${categoryName} Collection`,
+                "name": `${categoryName || categorySlug || "Category"} Collection`,
                 "numberOfItems": items.length,
                 "itemListElement": items.map((item, index) => {
                     const productUrl = `${siteUrl}${getProductUrl(item, false)}`;
