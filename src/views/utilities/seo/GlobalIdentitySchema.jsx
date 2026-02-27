@@ -74,19 +74,7 @@ export default function GlobalIdentitySchema() {
                 }}
             />
 
-            {/* WebPage Schema */}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                        "@context": "https://schema.org",
-                        "@type": "WebPage",
-                        "url": siteUrl,
-                        "name": "Gidan - Plants, Seeds & Gardening Store Online India",
-                        "description": "Welcome to Gidan, India's trusted destination for plants, planters, seeds and urban gardening essentials with expert landscaping services."
-                    })
-                }}
-            />
+
         </>
     );
 }

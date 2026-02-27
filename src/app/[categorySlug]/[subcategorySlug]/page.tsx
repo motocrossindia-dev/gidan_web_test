@@ -61,6 +61,7 @@ import { fetchCategoryBySlug, fetchSubcategoryBySlug, fetchProductsByFilters, fe
 import CategoryStaticSEO from "@/views/utilities/Info/CategoryStaticSEO";
 import RecentlyViewedProducts from "@/components/Shared/RecentlyViewedProducts";
 import CheckoutStores from "@/views/utilities/PlantFilter/CheckoutStores";
+import CollectionSchema from "@/views/utilities/seo/CollectionSchema";
 
 export default async function SubcategoryPage({ params }: Props) {
   const { categorySlug, subcategorySlug } = await params;
@@ -106,6 +107,11 @@ export default async function SubcategoryPage({ params }: Props) {
 
   return (
     <>
+      <CollectionSchema
+        category={{ name: category.name, slug: category.slug }}
+        subcategory={{ name: subcategory.name, slug: subcategory.slug }}
+        products={initialData?.results || []}
+      />
       <Suspense fallback={<div className="flex justify-center p-8">Loading products...</div>}>
         {/* @ts-ignore */}
         <PlantFilter
