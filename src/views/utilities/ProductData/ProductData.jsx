@@ -799,10 +799,10 @@ export default function ProductData({ initialProductData }) {
                     setAddOnData(data?.data?.product_add_ons || []);
                     setImageThumbnails(data?.data?.product?.images || []);
 
-                    // GA4: Track view_item event
-                    if (data?.data?.product) {
-                        trackViewItem(data.data.product);
-                    }
+                    // GA4: Track view_item event (MOVED TO SEPARATE USEEFFECT)
+                    // if (data?.data?.product) {
+                    //     trackViewItem(data.data.product);
+                    // }
 
                     // Do NOT call updateUrlWithParams here — params should only
                     // be added when the user explicitly changes a variant.
@@ -889,6 +889,18 @@ export default function ProductData({ initialProductData }) {
         fetchData();
     }, [id, params.productSlug]); // Added params.productSlug to dependencies
     // ========== END NEW CODE ==========
+
+    // GA4: Dedicated effect for view_item to ensure it fires even on SSR/Hydration
+    const lastTrackedId = useRef(null);
+    useEffect(() => {
+        const product = productDetailData?.data?.product || productDetailData?.product;
+        const productId = product?.id || product?.prod_id;
+
+        if (productId && productId !== lastTrackedId.current) {
+            trackViewItem(product);
+            lastTrackedId.current = productId;
+        }
+    }, [productDetailData]);
 
     // ========== END SSR IMAGE FIX (No longer needed with product_detail_view) ==========
 
