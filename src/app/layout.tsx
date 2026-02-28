@@ -6,7 +6,6 @@ import { Providers } from "./providers";
 import NavBar from "@/components/NavigationBar/NavigationBar";
 import Footer from "@/components/Footer/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
-import GoogleAnalytics from "@/GoogleAnalytics/GoogleAnalytics";
 
 import Verify from "@/Services/Services/Verify";
 
@@ -123,8 +122,6 @@ export default function RootLayout({
         </noscript>
 
         <Providers>
-          <GoogleAnalytics />
-
           <Verify />
           <ScrollToTop />
           <Script id="tawk-to" strategy="lazyOnload">
@@ -139,11 +136,9 @@ export default function RootLayout({
             `}
           </Script>
           <div className="landing-page-layout w-full min-h-screen flex flex-col overflow-x-hidden">
-            {/* Sticky Header */}
             <div className="sticky top-0 left-0 w-full z-[10000]">
               <NavBar />
             </div>
-            {/* Main Content */}
             <main className="main-content w-full">
               {children}
               <Footer />
