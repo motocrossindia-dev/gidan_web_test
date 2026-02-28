@@ -125,7 +125,7 @@ function ShopTheLook() {
     return (
       <div className="w-full">
         <div className="px-4 py-6">
-          <h2 className="text-xl md:text-2xl lg:text-3xl mb-4 text-left font-semibold md:font-bold">
+          <h2 className="text-xl md:text-2xl lg:text-3xl mb-4 text-center font-semibold md:font-bold">
             Shop The Look
           </h2>
           <div className="w-full h-64 bg-gray-200 animate-pulse rounded-lg flex items-center justify-center">
@@ -141,7 +141,7 @@ function ShopTheLook() {
   return (
     <div className="w-full">
       <div className="px-4 py-6">
-        <h2 className="text-xl md:text-2xl lg:text-3xl mb-4 text-left font-semibold md:font-bold">
+        <h2 className="text-xl md:text-2xl lg:text-3xl mb-4 text-center font-semibold md:font-bold">
           Shop The Look
         </h2>
 

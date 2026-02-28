@@ -202,7 +202,14 @@ const LoadingFallback = () => (
   <div className="w-full h-32 bg-gray-100 animate-pulse rounded" />
 );
 
-const Home = ({ initialBanners, initialCategories, initialTrendingProducts }) => {
+const Home = ({
+  initialBanners,
+  initialCategories,
+  initialTrendingProducts,
+  initialFeaturedProducts,
+  initialBestsellerProducts,
+  initialSeasonalProducts
+}) => {
   // ✅ Use TanStack Query hook - automatic caching, no unnecessary re-renders
   const { data, isLoading, isError } = useBannerImages(initialBanners);
 
@@ -260,7 +267,11 @@ const Home = ({ initialBanners, initialCategories, initialTrendingProducts }) =>
       {/* Trending Section - lazy loaded below the fold */}
       <LazyLoadWrapper height="400px">
         <Suspense fallback={<LoadingFallback />}>
-          <TrendingSection initialData={initialTrendingProducts} />
+          <TrendingSection
+            initialTrending={initialTrendingProducts}
+            initialFeatured={initialFeaturedProducts}
+            initialBestseller={initialBestsellerProducts}
+          />
         </Suspense>
       </LazyLoadWrapper>
 
@@ -280,7 +291,7 @@ const Home = ({ initialBanners, initialCategories, initialTrendingProducts }) =>
       {/* Seasonal Section - lazy loaded */}
       <LazyLoadWrapper height="400px">
         <Suspense fallback={<LoadingFallback />}>
-          <SeasonalProduct initialData={initialTrendingProducts} />
+          <SeasonalProduct initialData={initialSeasonalProducts} />
         </Suspense>
       </LazyLoadWrapper>
 

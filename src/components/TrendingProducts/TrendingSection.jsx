@@ -10,14 +10,34 @@ import { selectAccessToken } from "../../redux/User/verificationSlice";
 import { useHomeProducts } from "../../hooks/useHomeProducts";
 import { getProductUrl } from "../../utils/urlHelper";
 
-const TrendingSection = ({ initialData }) => {
+const TrendingSection = ({ initialTrending, initialFeatured, initialBestseller }) => {
   const [selectedTab, setSelectedTab] = useState("");
   const router = useRouter();
   const accessToken = useSelector(selectAccessToken);
   const [visibleCount, setVisibleCount] = useState(8);
 
-  // Use TanStack Query hook - shared cache with Home.jsx and SeasonalProduct.jsx
-  const { data: productsDetails = [], isLoading, refetch } = useHomeProducts(accessToken, initialData);
+  // Map selected tab to API filters
+  const currentFilters = useMemo(() => {
+    if (selectedTab === "featured") return { is_featured: true };
+    if (selectedTab === "latest") return { is_trending: true };
+    if (selectedTab === "bestseller") return { is_best_seller: true };
+    return { is_trending: true }; // Default "All" to trending
+  }, [selectedTab]);
+
+  // Determine which initial data to use based on the tab
+  const initialDataForTab = useMemo(() => {
+    if (selectedTab === "featured") return initialFeatured;
+    if (selectedTab === "latest") return initialTrending;
+    if (selectedTab === "bestseller") return initialBestseller;
+    return initialTrending;
+  }, [selectedTab, initialTrending, initialFeatured, initialBestseller]);
+
+  // Use TanStack Query hook - now passing specific filters
+  const { data: productsDetails = [], isLoading, refetch } = useHomeProducts(
+    accessToken,
+    currentFilters,
+    initialDataForTab
+  );
 
   useEffect(() => {
     const updateVisibleCount = () => {
@@ -52,26 +72,12 @@ const TrendingSection = ({ initialData }) => {
   //   }, [router]);
 
 
-  const filteredProducts = useMemo(() => {
-    return productsDetails.filter((product) => {
-      if (selectedTab === "featured") {
-        return product.is_featured;
-      } else if (selectedTab === "latest") {
-        // "Latest" tab → newest / trending products
-        return product.is_trending || product.is_latest;
-      } else if (selectedTab === "bestseller") {
-        return product.is_best_seller;
-      }
-      // "All" tab: show trending products by default (this is the "Trending Products" section)
-      return product.is_trending || product.is_featured || product.is_best_seller;
-    });
-  }, [productsDetails, selectedTab]);
-
+  // No longer needed to filter locally as the API does it
   const visibleProducts = useMemo(() => {
-    return filteredProducts.slice(0, visibleCount);
-  }, [filteredProducts, visibleCount]);
+    return productsDetails.slice(0, visibleCount);
+  }, [productsDetails, visibleCount]);
 
-  if (isLoading) {
+  if (isLoading && !initialDataForTab) {
     return (
       <div className="p-4 rounded-md font-sans md:bg-white">
         <h2 className="md:text-2xl text-xl mb-4 text-center md:font-bold font-semibold">Trending Products</h2>

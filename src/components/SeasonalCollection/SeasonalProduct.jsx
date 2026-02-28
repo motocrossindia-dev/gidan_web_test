@@ -16,13 +16,12 @@ const SeasonalProduct = ({ initialData }) => {
   const router = useRouter();
   const accessToken = useSelector(selectAccessToken);
 
-  // Use TanStack Query hook - shared cache with Home.jsx and TrendingSection.jsx
-  const { data: allProducts = [], isLoading, refetch } = useHomeProducts(accessToken, initialData);
-
-  // Filter seasonal products
-  const products = useMemo(() => {
-    return allProducts.filter((product) => product.is_seasonal_collection === true);
-  }, [allProducts]);
+  // Use TanStack Query hook - now passing specific seasonal filter
+  const { data: products = [], isLoading, refetch } = useHomeProducts(
+    accessToken,
+    { is_seasonal_collection: true },
+    initialData
+  );
 
   useEffect(() => {
     const updateVisibleCount = () => {

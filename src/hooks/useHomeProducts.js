@@ -2,26 +2,31 @@
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '../Axios/axiosInstance';
 
-const fetchHomeProducts = async (accessToken) => {
+const fetchHomeProducts = async (accessToken, filters = {}) => {
   const config = accessToken
     ? { headers: { Authorization: `Bearer ${accessToken}` } }
     : {};
 
-  const response = await axiosInstance.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/product/homeProducts/`,
-    config
-  );
+  const queryParams = new URLSearchParams();
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value !== undefined && value !== "") {
+      queryParams.append(key, value);
+    }
+  });
 
-  return response?.data?.data?.products || [];
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/filters/main_productsFilter/?${queryParams.toString()}&page_size=20&limit=20&page=1`;
+  const response = await axiosInstance.get(url, config);
+
+  return response?.data?.results || response?.data?.products || [];
 };
 
-export const useHomeProducts = (accessToken, initialData = undefined) => {
+export const useHomeProducts = (accessToken, filters = {}, initialData = undefined) => {
   return useQuery({
-    queryKey: ['homeProducts', accessToken || 'guest'], // Unique key includes auth state
-    queryFn: () => fetchHomeProducts(accessToken),
-    staleTime: 5 * 60 * 1000, // Data stays fresh for 5 minutes
-    cacheTime: 10 * 60 * 1000, // Cache persists for 10 minutes
-    enabled: true, // Always fetch
+    queryKey: ['homeProducts', filters, accessToken || 'guest'], // Unique key includes filters and auth state
+    queryFn: () => fetchHomeProducts(accessToken, filters),
+    staleTime: 5 * 60 * 1000,
+    cacheTime: 10 * 60 * 1000,
+    enabled: true,
     initialData: initialData,
   });
 };

@@ -47,12 +47,48 @@ async function getInitialCategories() {
 // Pre-fetch Trending Products for better SEO/Hydration
 async function getInitialTrendingProducts() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/product/homeProducts/`, { next: { revalidate: 300 } });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/filters/main_productsFilter/?is_trending=true&page_size=20`, { next: { revalidate: 300 } });
     if (!res.ok) return [];
     const data = await res.json();
-    return data?.data?.products || [];
+    return data?.results || data?.products || [];
   } catch (err) {
     console.error("Failed to fetch trending products on server", err);
+    return [];
+  }
+}
+
+async function getInitialFeaturedProducts() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/filters/main_productsFilter/?is_featured=true&page_size=20`, { next: { revalidate: 300 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data?.results || data?.products || [];
+  } catch (err) {
+    console.error("Failed to fetch featured products on server", err);
+    return [];
+  }
+}
+
+async function getInitialBestsellerProducts() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/filters/main_productsFilter/?is_best_seller=true&page_size=20`, { next: { revalidate: 300 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data?.results || data?.products || [];
+  } catch (err) {
+    console.error("Failed to fetch best seller products on server", err);
+    return [];
+  }
+}
+
+async function getInitialSeasonalProducts() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/filters/main_productsFilter/?is_seasonal_collection=true&page_size=20`, { next: { revalidate: 300 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data?.results || data?.products || [];
+  } catch (err) {
+    console.error("Failed to fetch seasonal products on server", err);
     return [];
   }
 }
@@ -80,10 +116,20 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [initialBanners, initialCategories, initialTrendingProducts] = await Promise.all([
+  const [
+    initialBanners,
+    initialCategories,
+    initialTrendingProducts,
+    initialFeaturedProducts,
+    initialBestsellerProducts,
+    initialSeasonalProducts
+  ] = await Promise.all([
     getInitialBanners(),
     getInitialCategories(),
-    getInitialTrendingProducts()
+    getInitialTrendingProducts(),
+    getInitialFeaturedProducts(),
+    getInitialBestsellerProducts(),
+    getInitialSeasonalProducts()
   ]);
 
   // Generate preload link for LCP banner image server-side
@@ -112,6 +158,9 @@ export default async function HomePage() {
         initialBanners={initialBanners}
         initialCategories={initialCategories}
         initialTrendingProducts={initialTrendingProducts}
+        initialFeaturedProducts={initialFeaturedProducts}
+        initialBestsellerProducts={initialBestsellerProducts}
+        initialSeasonalProducts={initialSeasonalProducts}
       />
     </>
   );
