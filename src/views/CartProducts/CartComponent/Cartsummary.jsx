@@ -53,7 +53,7 @@ const CartSummary = ({
         const { message, address_status } = error.response.data;
 
         // ✅ Show snackbar with error message
-        enqueueSnackbar(message, { variant: "error" });
+        enqueueSnackbar(message || "Something went wrong, please try again.", { variant: "error" });
 
         // If address not available → redirect to profile
         if (address_status === false) {
