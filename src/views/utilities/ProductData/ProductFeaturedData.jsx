@@ -12,6 +12,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import Verify from "../../../Services/Services/Verify";
 import { getProductUrl } from "../../../utils/urlHelper";
+import { trackAddToCart, trackRemoveFromCart, trackAddToWishlist } from "../../../utils/ga4Ecommerce";
 
 
 const ProductFeaturedCard = ({
@@ -81,7 +82,6 @@ const ProductFeaturedCard = ({
         );
         if (response.status === 200) {
           enqueueSnackbar("Product Removed from wishlist", { variant: "success" });
-
         }
       } else {
         const response = await axios.post(
@@ -93,6 +93,8 @@ const ProductFeaturedCard = ({
         if (response.status === 200) {
           enqueueSnackbar("Added to wishlist", { variant: "success" });
 
+          // GA4: Track add_to_wishlist event
+          trackAddToWishlist({ id: product, name });
         }
       }
       getProducts()
@@ -122,6 +124,9 @@ const ProductFeaturedCard = ({
         if (response.status === 200) {
           enqueueSnackbar("Product Removed from cart", { variant: "success" });
           setIsAdded(!isAdded);
+
+          // GA4: Track remove_from_cart event
+          trackRemoveFromCart({ id: product, name, selling_price: price });
         }
       } else {
         const response = await axios.post(
@@ -133,6 +138,9 @@ const ProductFeaturedCard = ({
         if (response.status === 200) {
           enqueueSnackbar("Added to cart", { variant: "success" });
           setIsAdded(!isAdded);
+
+          // GA4: Track add_to_cart event
+          trackAddToCart({ id: product, name, selling_price: price });
         }
       }
       getProducts()

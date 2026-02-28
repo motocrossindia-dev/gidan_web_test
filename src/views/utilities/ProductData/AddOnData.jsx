@@ -10,6 +10,7 @@ import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
 import Link from "next/link";
 import { getProductUrl } from "../../../utils/urlHelper";
+import { trackAddToCart, trackRemoveFromCart } from "../../../utils/ga4Ecommerce";
 
 const AddOnData = ({
   name,
@@ -50,6 +51,9 @@ const AddOnData = ({
           enqueueSnackbar("Product Removed from cart", { variant: "success" });
           setIsAdded(!isAdded);
           window.dispatchEvent(new Event("cartUpdated"));
+
+          // GA4: Track remove_from_cart event
+          trackRemoveFromCart(product);
         }
       } else {
         const response = await axios.post(
@@ -62,6 +66,9 @@ const AddOnData = ({
           enqueueSnackbar("Added to cart", { variant: "success" });
           setIsAdded(!isAdded);
           window.dispatchEvent(new Event("cartUpdated"));
+
+          // GA4: Track add_to_cart event
+          trackAddToCart(product);
         }
       }
     } catch (error) {

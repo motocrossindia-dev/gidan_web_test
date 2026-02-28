@@ -13,6 +13,7 @@ import { FaStar } from 'react-icons/fa';
 import Verify from "../../../Services/Services/Verify";
 import ReactStars from "react-rating-stars-component";
 import { getProductUrl } from "../../../utils/urlHelper";
+import { trackAddToCart, trackAddToWishlist } from "../../../utils/ga4Ecommerce";
 
 
 const RecentlyViewedCard = ({
@@ -86,6 +87,10 @@ const RecentlyViewedCard = ({
           },
         }
       );
+
+      // GA4: Track add_to_wishlist event
+      trackAddToWishlist(product);
+
       fetchWishlistStatus();
     } catch (error) {
       console.error("There was an error adding the item to the wishlist:", error);
@@ -116,6 +121,11 @@ const RecentlyViewedCard = ({
           },
         }
       );
+
+      // GA4: Track add_to_cart event
+      if (response.status === 200 || response.status === 201) {
+        trackAddToCart(product);
+      }
     } catch (error) {
       console.error("There was an error adding the item to the cart:", error);
     }

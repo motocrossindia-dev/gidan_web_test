@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import Verify from "../../../Services/Services/Verify";
 import Link from "next/link";
 import axios from "axios";
+import { trackAddToCart, trackRemoveFromCart, trackAddToWishlist } from "../../../utils/ga4Ecommerce";
 
 const ProductSellerCard = ({
   name,
@@ -90,6 +91,9 @@ const ProductSellerCard = ({
         );
         if (response.status === 200 || response.status === 201) {
           enqueueSnackbar("Added to wishlist", { variant: "success" });
+
+          // GA4: Track add_to_wishlist event
+          trackAddToWishlist(typeof product === 'object' ? product : { id: product, name });
         }
       }
       if (getProducts) getProducts();
@@ -122,6 +126,9 @@ const ProductSellerCard = ({
           enqueueSnackbar("Product Removed from cart", { variant: "success" });
           setIsAdded(!isAdded);
           window.dispatchEvent(new Event("cartUpdated"));
+
+          // GA4: Track remove_from_cart event
+          trackRemoveFromCart(typeof product === 'object' ? product : { id: product, name, selling_price: price });
         }
       } else {
         const response = await axios.post(
@@ -134,6 +141,9 @@ const ProductSellerCard = ({
           enqueueSnackbar("Added to cart", { variant: "success" });
           setIsAdded(!isAdded);
           window.dispatchEvent(new Event("cartUpdated"));
+
+          // GA4: Track add_to_cart event
+          trackAddToCart(typeof product === 'object' ? product : { id: product, name, selling_price: price });
         }
       }
       if (getProducts) getProducts();

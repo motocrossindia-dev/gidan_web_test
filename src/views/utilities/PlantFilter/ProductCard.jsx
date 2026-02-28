@@ -14,6 +14,7 @@ import StarsOnCards from "../../../components/TrendingProducts/StarsOnCards";
 import ReactStars from "react-rating-stars-component";
 import Verify from "../../../Services/Services/Verify";
 import { getProductUrl } from "../../../utils/urlHelper";
+import { trackAddToCart, trackAddToWishlist } from "../../../utils/ga4Ecommerce";
 
 
 const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, inCart, ratingNumber, mrp, ribbon }) => {
@@ -48,6 +49,9 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                 window.dispatchEvent(new Event("cartUpdated"));
                 if ([200, 201].includes(response.status)) {
                     enqueueSnackbar("Added to cart", { variant: "success" });
+
+                    // GA4: Track add_to_cart event
+                    trackAddToCart(product);
                 }
             }
         } catch (error) {
@@ -79,6 +83,9 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                 window.dispatchEvent(new Event("wishlistUpdated"));
                 if ([200, 201].includes(response.status)) {
                     enqueueSnackbar("Added to wishlist", { variant: "success" });
+
+                    // GA4: Track add_to_wishlist event
+                    trackAddToWishlist(product);
                 }
             }
         } catch (error) {

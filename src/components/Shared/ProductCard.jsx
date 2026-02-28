@@ -15,6 +15,7 @@ import { enqueueSnackbar } from "notistack";
 import ReactStars from "react-rating-stars-component";
 import axiosInstance from "../../Axios/axiosInstance";
 import { getProductUrl } from "../../utils/urlHelper";
+import { trackAddToCart, trackRemoveFromCart, trackAddToWishlist } from "../../utils/ga4Ecommerce";
 
 
 const StarsOnCards = ({ rating, ratingNumber }) => {
@@ -64,6 +65,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                 if (response.status === 200 || response.status === 201) {
                     enqueueSnackbar("Added to wishlist", { variant: "success" });
                     window.dispatchEvent(new Event("wishlistUpdated"));
+                    trackAddToWishlist(product);
                 }
             }
             getProducts()
@@ -93,10 +95,11 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                     enqueueSnackbar("Product Removed from cart", { variant: "success" });
                     setIsAdded(!isAdded);
                     window.dispatchEvent(new Event("cartUpdated"));
+                    trackRemoveFromCart(product);
                 }
             } else {
                 const payload = { main_prod_id: product.id };
-                console.log("Add to cart payload:", payload); // Debug log
+                console.log("Add to cart payload:", payload);
 
                 const response = await axiosInstance.post(
                     `/order/cart/`,
@@ -107,6 +110,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                     enqueueSnackbar("Added to cart", { variant: "success" });
                     setIsAdded(!isAdded);
                     window.dispatchEvent(new Event("cartUpdated"));
+                    trackAddToCart(product);
                 }
             }
             getProducts()

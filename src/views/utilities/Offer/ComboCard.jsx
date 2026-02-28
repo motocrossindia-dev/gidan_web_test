@@ -11,6 +11,7 @@ import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { getProductUrl } from "../../../utils/urlHelper";
+import { trackAddToCart, trackAddToWishlist } from "../../../utils/ga4Ecommerce";
 
 const ComboCard = ({ combo }) => {
   const [isImageHovered, setIsImageHovered] = useState(false);
@@ -28,8 +29,8 @@ const ComboCard = ({ combo }) => {
       if (combo?.is_cart) {
         enqueueSnackbar("Combo already exists in cart.", { variant: "info" });
       } else {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/order/cart/`, 
-          { main_prod_id: combo.id, quantity: 1 }, 
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/order/cart/`,
+          { main_prod_id: combo.id, quantity: 1 },
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -40,6 +41,9 @@ const ComboCard = ({ combo }) => {
         window.dispatchEvent(new Event("cartUpdated"));
         if ([200, 201].includes(response.status)) {
           enqueueSnackbar("Added to cart", { variant: "success" });
+
+          // GA4: Track add_to_cart event
+          trackAddToCart(combo);
         }
       }
     } catch (error) {
@@ -58,8 +62,8 @@ const ComboCard = ({ combo }) => {
       if (combo?.is_wishlist) {
         enqueueSnackbar("Combo already exists in wishlist.", { variant: "info" });
       } else {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/`, 
-          { main_prod_id: combo.id, quantity: 1 }, 
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/`,
+          { main_prod_id: combo.id, quantity: 1 },
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
@@ -67,6 +71,9 @@ const ComboCard = ({ combo }) => {
         window.dispatchEvent(new Event("wishlistUpdated"));
         if ([200, 201].includes(response.status)) {
           enqueueSnackbar("Added to wishlist", { variant: "success" });
+
+          // GA4: Track add_to_wishlist event
+          trackAddToWishlist(combo);
         }
       }
     } catch (error) {
@@ -122,9 +129,9 @@ const ComboCard = ({ combo }) => {
               className={`w-40 sm:w-48 lg:w-[226px] h-[200px] lg:h-[260px] object-contain mt-4 transition-transform duration-300 rounded-[2rem] ${isImageHovered ? "scale-105" : "scale-100"}`}
               src={`${process.env.NEXT_PUBLIC_API_URL}${combo?.image}`}
               alt={combo?.name}
-              loading="lazy" 
-              width="400" 
-              height="400" 
+              loading="lazy"
+              width="400"
+              height="400"
               style={{ aspectRatio: '1/1' }}
             />
 
@@ -132,7 +139,7 @@ const ComboCard = ({ combo }) => {
             <div
               className={`absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 transition-all duration-300 ${isImageHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5 pointer-events-none"}`}
             >
-              <button 
+              <button
                 aria-label="Add to cart"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -143,7 +150,7 @@ const ComboCard = ({ combo }) => {
                 <MdOutlineShoppingBag className="w-4 h-4" />
               </button>
 
-              <button 
+              <button
                 aria-label="Add to wishlist"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -154,7 +161,7 @@ const ComboCard = ({ combo }) => {
                 {combo?.is_wishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
               </button>
 
-              <button 
+              <button
                 aria-label="Quick view"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -235,16 +242,16 @@ const ComboCard = ({ combo }) => {
                 className="w-32 h-32 object-contain rounded-md transition-transform duration-300 relative z-10"
                 src={`${process.env.NEXT_PUBLIC_API_URL}${combo?.image}`}
                 alt={combo?.name}
-                loading="lazy" 
-                width="400" 
-                height="400" 
+                loading="lazy"
+                width="400"
+                height="400"
                 style={{ aspectRatio: '1/1' }}
               />
             </div>
 
             {/* Action Buttons */}
             <div className="flex gap-2 mb-2">
-              <button 
+              <button
                 aria-label="Add to cart"
                 onClick={handleAddToCart}
                 className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
@@ -252,7 +259,7 @@ const ComboCard = ({ combo }) => {
                 <MdOutlineShoppingBag className="w-4 h-4" />
               </button>
 
-              <button 
+              <button
                 aria-label="Add to wishlist"
                 onClick={handleAddToWishlist}
                 className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
@@ -260,7 +267,7 @@ const ComboCard = ({ combo }) => {
                 {combo?.is_wishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
               </button>
 
-              <button 
+              <button
                 aria-label="Quick view"
                 onClick={handleQuickView}
                 className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"

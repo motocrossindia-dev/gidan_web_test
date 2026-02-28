@@ -10,6 +10,7 @@ import Verify from "../../../Services/Services/Verify";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { Helmet } from "react-helmet-async";
+import { trackAddToCart } from "../../../utils/ga4Ecommerce";
 
 
 const WishlistItem = ({
@@ -163,6 +164,9 @@ const WishList = () => {
         getWishlistItems()
         window.dispatchEvent(new Event("wishlistUpdated"));
 
+        // GA4: Track add_to_cart event
+        const wishlistProduct = wishlistItems.find(item => item.product_id === id);
+        if (wishlistProduct) trackAddToCart(wishlistProduct);
       }
     } catch (error) {
       console.error("Error adding item to cart:", error);
