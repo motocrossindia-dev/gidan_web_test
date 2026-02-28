@@ -125,11 +125,29 @@ const PaymentGateway = () => {
 
     try {
       // GA4: Track add_payment_info event
-      trackAddPaymentInfo(
-        orderData?.order_items || [],
-        selectedMethod,
-        orderData?.order?.grand_total
-      );
+      const paymentItems = orderData?.order_items || [];
+      console.log('GA4 Debug: add_payment_info items count:', paymentItems.length, 'method:', selectedMethod);
+      if (paymentItems.length > 0) {
+        trackAddPaymentInfo(
+          paymentItems,
+          selectedMethod,
+          orderData?.order?.grand_total
+        );
+      } else {
+        // Fallback: push event directly if order_items is empty
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ ecommerce: null });
+        window.dataLayer.push({
+          event: 'add_payment_info',
+          ecommerce: {
+            currency: 'INR',
+            value: orderData?.order?.grand_total || 0,
+            payment_type: selectedMethod,
+            items: []
+          }
+        });
+        console.log('GA4: add_payment_info tracked (fallback)', { selectedMethod });
+      }
 
       const response = await axiosInstance.patch(`/order/proceedToPayment/`, payload);
 

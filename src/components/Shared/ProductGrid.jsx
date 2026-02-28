@@ -150,7 +150,12 @@ const ProductGrid = ({
               <Link
                 key={key}
                 href={getProductUrl(product)}
-                onClick={() => window.scrollTo(0, 0)}
+                onClick={() => {
+                  // GA4: Track select_item when a product is clicked
+                  const productIndex = productDetails.findIndex(p => (p.id || p.prod_id) === (product.id || product.prod_id));
+                  trackSelectItem(product, listName, productIndex >= 0 ? productIndex : 0);
+                  window.scrollTo(0, 0);
+                }}
 
                 className="cursor-pointer w-full"
               >
