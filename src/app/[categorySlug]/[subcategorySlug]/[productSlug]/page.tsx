@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProductData from '@/views/utilities/ProductData/ProductData';
 import { fetchProductDetail } from "@/utils/serverApi";
+import ProductSchema from "@/views/utilities/seo/ProductSchema";
+import StoreSchema from "@/views/utilities/seo/StoreSchema";
 
 type Props = {
   params: Promise<{ categorySlug: string; subcategorySlug: string; productSlug: string }>;
@@ -62,5 +64,21 @@ export default async function ProductPage({ params, searchParams }: Props) {
   const productData = await getCachedProductDetail(productSlug, sParams);
   if (!productData) notFound();
 
-  return <ProductData initialProductData={productData} />;
+  const product = productData?.data?.product;
+  const ratingData = productData?.data?.product_rating || productData?.product_rating || product?.product_rating || { avg_rating: 0, num_ratings: 0, stars_given: [] };
+  const reviewData = productData?.data?.product_reviews || productData?.product_reviews || product?.product_reviews || [];
+
+  return (
+    <>
+      <ProductSchema
+        product={product}
+        images={product?.images || []}
+        rating={ratingData?.avg_rating || 0}
+        ratingCount={ratingData?.num_ratings || 0}
+        reviews={reviewData}
+      />
+      <StoreSchema />
+      <ProductData initialProductData={productData} />
+    </>
+  );
 }

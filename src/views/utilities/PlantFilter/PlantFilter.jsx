@@ -8,11 +8,9 @@ import { Close as CloseIcon } from "@mui/icons-material";
 
 import FilterSidebar from "../Featured/FilterSidebar";
 import ProductGrid from "../../../components/Shared/ProductGrid";
-import SubCategorySchema from "../seo/SubCategorySchema";
-import CategorySchema from "../seo/CategorySchema";
-import HomepageSchema from "../seo/HomepageSchema";
-import StoreSchema from "../seo/StoreSchema";
 import Breadcrumb from "../../../components/Shared/Breadcrumb";
+// Schemas moved to Server Component (page.tsx) for better SSR/SEO
+
 import Link from "next/link";
 import CategoryStaticSEO from "../Info/CategoryStaticSEO";
 import axiosInstance from "../../../Axios/axiosInstance";
@@ -127,9 +125,41 @@ function PlantFilter({
     });
     const [results, setResults] = useState(normalizedInitialResults.results || []);
     const [categoryData, setCategoryData] = useState(initialCategoryData || normalizedInitialResults.category_info?.category_info || null);
+    // Construct the initial query string to match getInitialProducts logic
+    const initialQueryString = useMemo(() => {
+        const params = new URLSearchParams();
+        const finalType = typeKey || (isSeasonalCollection || isTrending || isFeatured || isBestSeller ? "plant" : "");
+        params.append("type", finalType);
+        params.append("category_id", resolvedCategoryId || "");
+        params.append("subcategory_id", resolvedSubcategoryId || "");
+        params.append("search", "");
+        params.append("min_price", "");
+        params.append("max_price", "");
+        params.append("color_id", "");
+        params.append("size_id", "");
+        params.append("planter_size_id", "");
+        params.append("planter_id", "");
+        params.append("weight_id", "");
+        params.append("pot_type_id", "");
+        params.append("litre_id", "");
+        params.append("is_featured", isFeatured ? "true" : "unknown");
+        params.append("is_best_seller", isBestSeller ? "true" : "unknown");
+        params.append("is_seasonal_collection", isSeasonalCollection ? "true" : "unknown");
+        params.append("is_trending", isTrending ? "true" : "unknown");
+        params.append("ordering", "");
+        return params.toString();
+    }, [typeKey, resolvedCategoryId, resolvedSubcategoryId, isFeatured, isBestSeller, isSeasonalCollection, isTrending]);
+
+    const [currentQuery, setCurrentQuery] = useState(initialQueryString);
     const [filtersApplied, setFiltersApplied] = useState(false);
     const [isSearching, setIsSearching] = useState(false);
-    const [currentQuery, setCurrentQuery] = useState("");
+
+    // Sync currentQuery when props/ids resolve so ProductGrid pagination stays correct
+    useEffect(() => {
+        if (!filtersApplied) {
+            setCurrentQuery(initialQueryString);
+        }
+    }, [initialQueryString, filtersApplied]);
 
     // SEO state — initialised from server-fetched data, updates reactively on subcategory filter changes
     const [seoData, setSeoData] = useState(initialSEOData || null);
@@ -497,25 +527,7 @@ function PlantFilter({
                 </Box>
             </SwipeableDrawer>
 
-            <CategorySchema
-                categoryName={categoryName || fetchedCategoryName}
-                categorySlug={canonicalCategorySlug}
-                items={results || []}
-            />
-            <SubCategorySchema
-                category={{
-                    name: categoryName || fetchedCategoryName,
-                    slug: canonicalCategorySlug
-                }}
-                subCategory={
-                    canonicalSubcategorySlug ? {
-                        name: subCategoryName || fetchedSubcategoryName,
-                        slug: canonicalSubcategorySlug
-                    } : null
-                }
-                items={results || []}
-            />
-            <StoreSchema />
+            {/* Schemas moved to Server Component */}
         </>
     );
 }

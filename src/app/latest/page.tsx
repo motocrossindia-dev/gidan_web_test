@@ -25,6 +25,9 @@ export const metadata: Metadata = {
 };
 
 import { fetchProductsByFilters, fetchFilters } from "@/utils/serverApi";
+import CollectionSchema from "@/views/utilities/seo/CollectionSchema";
+import StoreSchema from "@/views/utilities/seo/StoreSchema";
+
 
 export default async function LatestPage() {
   const [initialData, filters] = await Promise.all([
@@ -33,8 +36,15 @@ export default async function LatestPage() {
   ]);
 
   return (
-    <Suspense fallback={<div className="flex justify-center p-8">Loading products...</div>}>
-      <PlantFilter initialResults={initialData} initialFilterData={filters} />
-    </Suspense>
+    <>
+      <CollectionSchema
+        category={{ name: "Latest", slug: "latest" }}
+        products={initialData?.results || []}
+      />
+      <StoreSchema />
+      <Suspense fallback={<div className="flex justify-center p-8">Loading products...</div>}>
+        <PlantFilter initialResults={initialData} initialFilterData={filters} />
+      </Suspense>
+    </>
   );
 }

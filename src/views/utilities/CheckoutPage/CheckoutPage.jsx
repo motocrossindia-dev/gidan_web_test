@@ -1052,10 +1052,7 @@ const CheckoutPage = () => {
       ? (comboOffer?.final_price ?? data?.order?.grand_total ?? 0)
       : (data?.order?.grand_total ?? 0);
 
-  const correctedPayableAmount =
-    selectedOption?.deliveryType === "Pick Up Store"
-      ? Math.max(backendTotal - deliveryCharge, 0)
-      : backendTotal;
+  const correctedPayableAmount = backendTotal;
 
   if (!dataLoaded || !data) {
     return (
@@ -1068,7 +1065,7 @@ const CheckoutPage = () => {
   return (
 
     <>
-      
+
 
       <div className="flex flex-col lg:flex-row bg-gray-100 p-4">
         {/* Left Side - Steps */}
@@ -1177,12 +1174,18 @@ const CheckoutPage = () => {
               </div>
 
               {/* Delivery Charges */}
-              {selectedOption?.deliveryType === "Door Delivery" && (
-                <div className="flex justify-between text-gray-700">
-                  <span>Delivery Charges</span>
-                  <span>₹{deliveryCharge}</span>
+              {/* Delivery Charges */}
+              <div className="flex justify-between text-gray-700">
+                <span>Delivery Charges</span>
+                <div className="flex flex-col items-end">
+                  <span className={deliveryCharge === 0 ? "text-bio-green" : ""}>
+                    {deliveryCharge > 0 ? `₹${deliveryCharge}` : "Free"}
+                  </span>
+                  {data?.shipping_info?.free_shipping && deliveryCharge > 0 && (
+                    <span className="text-[10px] text-bio-green">Coupon Applied</span>
+                  )}
                 </div>
-              )}
+              </div>
 
 
               {/* Packaging Fee */}

@@ -24,10 +24,10 @@ import { FaStar } from "react-icons/fa6";
 import { FaStarHalfAlt, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
-import ProductSchema from "../seo/ProductSchema";
-// HomepageSchema intentionally not used on product pages (wrong canonical entity)
-import StoreSchema from "../seo/StoreSchema";
+// Schemas moved to Server Component (page.tsx) for better SSR/SEO
 import WriteAReview from "./WriteAReview";
+import StoreSchema from "../seo/StoreSchema";
+
 // import FaqAccordion from "./ProductFaq";
 import { trackViewItem, trackAddToCart, trackAddToWishlist } from "../../../utils/ga4Ecommerce";
 import Breadcrumb from "../../../components/Shared/Breadcrumb";
@@ -1203,13 +1203,7 @@ export default function ProductData({ initialProductData }) {
                                     </button>
                                 </div>
                             </div>
-                            <ProductSchema
-                                product={productDetailData?.data?.product}
-                                images={imageThumbnails}
-                                rating={ratingData?.avg_rating || 0}
-                                ratingCount={ratingData?.num_ratings || 0}
-                                reviews={reviewData}
-                            />
+                            {/* ProductSchema moved to Server Component */}
 
                             <div className="flex mb-4 items-center">
                                 <div className="mr-4 flex items-center">

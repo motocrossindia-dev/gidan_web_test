@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import Offer from '@/views/utilities/Offer/Offer';
+import { fetchOfferProducts } from "@/utils/serverApi";
+import CollectionSchema from "@/views/utilities/seo/CollectionSchema";
+import StoreSchema from "@/views/utilities/seo/StoreSchema";
+
 
 
 export const metadata: Metadata = {
@@ -23,6 +27,18 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export default function OfferPage() {
-  return <Offer />;
+export default async function OfferPage() {
+  const products = await fetchOfferProducts();
+
+  return (
+    <>
+      <CollectionSchema
+        category={{ name: "Special Offers", slug: "offer" }}
+        products={products}
+      />
+      <StoreSchema />
+      <Offer initialOffers={products} />
+    </>
+  );
 }
+

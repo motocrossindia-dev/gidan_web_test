@@ -113,3 +113,15 @@ export async function fetchFilters(type, categoryId = null) {
         return null;
     }
 }
+
+export async function fetchOfferProducts() {
+    try {
+        const res = await fetch(`${API_URL}/product/offerProducts/`, { next: { revalidate: 300 } });
+        if (!res.ok) return [];
+        const data = await res.json();
+        return data?.products || [];
+    } catch (err) {
+        console.error("Error fetching offer products", err);
+        return [];
+    }
+}

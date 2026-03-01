@@ -11,8 +11,8 @@ import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import ProductCard from "../PlantFilter/ProductCard";
 import { getProductUrl } from "../../../utils/urlHelper";
 
-function Offer() {
-  const [offers, setOffers] = useState([]);
+function Offer({ initialOffers = [] }) {
+  const [offers, setOffers] = useState(initialOffers);
   const [cartItems, setCartItems] = useState([]);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -34,8 +34,10 @@ function Offer() {
   };
 
   useEffect(() => {
-    getOfferProducts();
-  }, []);
+    if (initialOffers.length === 0) {
+      getOfferProducts();
+    }
+  }, [initialOffers.length]);
 
   const handleAddToCartSubmit = (offer) => {
     // This is now handled internally by ProductCard
