@@ -956,6 +956,12 @@ const CheckoutPage = () => {
   const isCombo = !!(data?.order?.is_combo_purchase || data?.order?.is_shop_the_look || comboOffer);
 
   useEffect(() => {
+    if (data?.order?.is_shop_the_look && !selectedOption) {
+      setSelectedOption({ deliveryType: "Door Delivery", storeId: null });
+    }
+  }, [data?.order?.is_shop_the_look, selectedOption]);
+
+  useEffect(() => {
     // GA4: Track begin_checkout event
     if (data?.order_items && data.order_items.length > 0) {
       trackBeginCheckout(data.order_items, data?.order?.grand_total);

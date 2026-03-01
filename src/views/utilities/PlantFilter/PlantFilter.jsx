@@ -404,6 +404,20 @@ function PlantFilter({
 
             <div className="w-full overflow-visible">
                 <div className="container mx-auto px-4 md:px-8 max-w-full">
+                    {/* Mobile Filter Trigger */}
+                    <div className="flex md:hidden justify-between items-center bg-white p-3 rounded-lg shadow-sm border border-gray-200 mt-4 mb-2">
+                        <Typography variant="body2" className="text-gray-600 font-medium">
+                            Refine Products
+                        </Typography>
+                        <button
+                            onClick={() => setMobileOpen(true)}
+                            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md font-semibold text-sm hover:bg-green-700 transition-colors shadow-md"
+                        >
+                            <FiFilter />
+                            Filter
+                        </button>
+                    </div>
+
                     <div className="hidden md:block mt-4 overflow-visible relative z-50">
                         <FilterSidebar
                             setResults={setResults}

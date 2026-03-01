@@ -89,7 +89,7 @@ function ShopTheLook() {
       const placeOrderResponse = await axiosInstance.post(
         `/order/placeOrder/`,
         {
-          order_source: "combo",
+          order_source: "shop_the_look",
           combo_id: shopid
         }
       );
@@ -283,7 +283,7 @@ export default ShopTheLook;
 //     const fetchShoplook = async () => {
 //       try {
 //         const res = await axios.get(
-//             "https://backend.gidan.store/combo/combo-offers/"
+//             "https://backend.gidan.store/combo/shop_the_look_offers/"
 //         );
 //         const data = res?.data?.data?.shop_the_look[0];
 //         setShoplookData(data);

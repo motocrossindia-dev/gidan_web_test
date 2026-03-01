@@ -90,7 +90,7 @@ function PlantCare() {
 
   return (
     <>
-      
+
       <div className="container mx-auto min-h-screen">
         {/* Mobile Filter Button */}
         <div className="md:hidden px-4 pt-4">

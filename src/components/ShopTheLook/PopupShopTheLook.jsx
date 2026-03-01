@@ -21,7 +21,7 @@ const PopupShopTheLook = ({ onClose }) => {
   const getshpthelookproducts = async () => {
     try {
 
-      const response = await axiosInstance.get(`/combo/combo-offers/`);
+      const response = await axiosInstance.get(`/combo/shop_the_look_offers/`);
 
       if (response.status === 200) {
         const data = response.data.data.shop_the_look
@@ -109,7 +109,7 @@ const PopupShopTheLook = ({ onClose }) => {
       const placeOrderResponse = await axiosInstance.post(
         `${process.env.NEXT_PUBLIC_API_URL}/order/placeOrder/`,
         {
-          order_source: "combo",
+          order_source: "shop_the_look",
           combo_id: shopid
         },
         {
