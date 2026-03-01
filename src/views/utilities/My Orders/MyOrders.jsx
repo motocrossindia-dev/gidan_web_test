@@ -19,8 +19,6 @@ import {
 } from 'lucide-react';
 import axiosInstance from '../../../Axios/axiosInstance';
 import { enqueueSnackbar } from 'notistack';
-import { Helmet } from "react-helmet-async";
-
 // Using your actual data structure
 
 
@@ -496,10 +494,7 @@ const MyOrders = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Gidan - My Orders</title>
-        <meta name="robots" content="noindex, nofollow" />
-      </Helmet>
+      
       <div className="bg-gray-50 min-h-screen">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="mb-6">
@@ -542,8 +537,7 @@ export default MyOrders;
 //
 // // Using your actual data structure
 // import OrderModal from "./OrderModal";
-// import {Helmet} from "react-helmet-async";
-//
+// //
 // const MyOrders = () => {
 //   const [allOrders,setAllOrders] = useState([]);
 //   const [loading, setLoading] = useState(true);
@@ -1024,9 +1018,7 @@ export default MyOrders;
 //
 //   return (
 //       <>
-//         <Helmet>
-//           <title>Gidan - My Orders</title>
-//         </Helmet>
+//         
 //     <div className="bg-gray-50 min-h-screen">
 //       <div className="max-w-7xl mx-auto px-4 py-6">
 //         <div className="mb-6">

@@ -2,15 +2,10 @@
 
 import Link from "next/link";
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
-
 const NotFound = () => {
   return (
     <>
-      <Helmet>
-        <title>404 - Page Not Found | Gidan</title>
-        <meta name="description" content="The page you are looking for does not exist." />
-      </Helmet>
+      
       
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4">
         <div className="text-center">

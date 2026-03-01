@@ -10,7 +10,6 @@ import CheckoutStores from "./CheckoutStores";
 import Banner1 from "./Banner1";
 import { Card } from "@mui/material";
 import { FiFilter } from "react-icons/fi";
-import {Helmet} from "react-helmet-async";
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
 
@@ -25,9 +24,7 @@ function OutdoorPlants() {
 
   return (
       <>
-          <Helmet>
-              <title>Gidan - Outdoor Plants</title>
-          </Helmet>
+          
         <div className="container mx-auto bg-gray-100 pt-6">
       <Banner1 />
       <br />

@@ -3,7 +3,6 @@
 import Link from "next/link";
 // ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
 import { useRef } from "react";
-import Verify from "../../Services/Services/Verify";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
@@ -41,7 +40,6 @@ const Blog = () => {
 
   return (
     <>
-      <Verify />
       <section className="w-full py-6 md:py-8">
         <div className="container mx-auto px-4 md:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-6 font-sans">
@@ -207,13 +205,12 @@ export default Blog;
 //
 //   return (
 //     <>
-//       <Verify />
 //       <section className="w-full py-6 md:py-8">
 //         <div className="container mx-auto px-4 md:px-6 lg:px-8">
 //           <div className="flex justify-between items-center mb-6 font-sans">
 //             <h2 className="md:text-3xl text-xl font-bold mx-auto">Blogs</h2>
 //             <Link
-//               to="/blogcomponent"
+//               to="/blogs"
 //               className="text-white bg-bio-green md:text-xl text-xs rounded-md py-1 px-2 md:py-2 md:px-4 font-medium md:font-semibold"
 //             >
 //               View All
@@ -282,7 +279,7 @@ export default Blog;
 //                 </Swiper>
 //                 {/* <div className="flex justify-center mt-4">
 //                   <Link
-//                     to="/blogcomponent"
+//                     to="/blogs"
 //                     className="text-white bg-bio-green rounded-md py-2 px-4 font-semibold"
 //                   >
 //                     View All
@@ -298,7 +295,7 @@ export default Blog;
 //                     onClick={ViewAll}
 //                     className="bg-bio-green text-white w-[94px] h-[34px] rounded mx-1"
 //                   >
-//                     <Link href="/blogcomponent">View All</Link>
+//                     <Link href="/blogs">View All</Link>
 //                   </button>
 //                   <button
 //                     className="bg-white w-[30.24px] h-[30.24px] flex items-center justify-center rounded-full mx-1 border"

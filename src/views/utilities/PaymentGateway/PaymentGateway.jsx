@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
-import { Helmet } from "react-helmet-async";
 import { trackPurchase, trackAddPaymentInfo } from "../../../utils/ga4Ecommerce";
 
 const loadRazorpayScript = () =>
@@ -293,19 +292,7 @@ const PaymentGateway = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Gidan - Payment Gateway</title>
-
-        <meta
-          name="description"
-          content="Securely complete your payment for plants, pots, seeds, and gardening products on Gidan. Enjoy a fast, safe, and seamless checkout experience."
-        />
-
-        <link
-          rel="canonical"
-          href="https://www.gidan.store/paymentgateway"
-        />
-      </Helmet>
+      
 
       <div className="flex flex-col lg:flex-row gap-6 p-6">
         <div className="lg:w-3/4 max-h-screen overflow-y-auto p-4 bg-gray-100 rounded-lg shadow-lg">

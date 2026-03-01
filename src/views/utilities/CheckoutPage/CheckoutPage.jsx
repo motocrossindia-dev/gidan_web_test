@@ -11,7 +11,6 @@ import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
-import { Helmet } from "react-helmet-async";
 import { trackBeginCheckout, trackAddPaymentInfo, trackAddShippingInfo } from "../../../utils/ga4Ecommerce";
 
 
@@ -1069,19 +1068,7 @@ const CheckoutPage = () => {
   return (
 
     <>
-      <Helmet>
-        <title>Gidan - CheckoutPage </title>
-        <meta name="robots" content="noindex, nofollow" />
-        <meta
-          name="description"
-          content="Complete your Gidan order securely. Review your cart, provide shipping details, and make payment to get your plants, pots, seeds, and gardening products delivered safely."
-        />
-
-        <link
-          rel="canonical"
-          href="https://www.gidan.store/checkout"
-        />
-      </Helmet>
+      
 
       <div className="flex flex-col lg:flex-row bg-gray-100 p-4">
         {/* Left Side - Steps */}

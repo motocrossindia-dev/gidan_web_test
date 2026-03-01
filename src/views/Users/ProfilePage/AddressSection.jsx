@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { TrashIcon } from "lucide-react";
 import { useSnackbar } from "notistack";
-import Verify from "../../../Services/Services/Verify";
 import axiosInstance from "../../../Axios/axiosInstance";
 
 const AddressSection = () => {
@@ -231,7 +230,6 @@ const AddressSection = () => {
 
   return (
     <>
-      <Verify />
       <main className="p-8">
         <div className="border p-6 rounded bg-white">
           <h2 className="text-2xl font-bold mb-4">Address</h2>

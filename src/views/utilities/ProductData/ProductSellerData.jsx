@@ -11,7 +11,7 @@ import axiosInstance from "../../../Axios/axiosInstance";
 import { getProductUrl } from "../../../utils/urlHelper";
 import { enqueueSnackbar } from "notistack";
 import { useSelector } from "react-redux";
-import Verify from "../../../Services/Services/Verify";
+import ProductCard from "../PlantFilter/ProductCard";
 import Link from "next/link";
 import axios from "axios";
 import { trackAddToCart, trackRemoveFromCart, trackAddToWishlist } from "../../../utils/ga4Ecommerce";
@@ -156,7 +156,6 @@ const ProductSellerCard = ({
 
   return (
     <>
-      <Verify />
       <Paper
         elevation={0}
         onMouseEnter={() => setIsHovered(true)}

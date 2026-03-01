@@ -13,7 +13,6 @@ import { setVerifiedUser } from "../../redux/User/verificationSlice";
 import { setUsername } from "../../redux/Slice/userSlice";
 import { storeToken } from "../../Services/Services/LocalStorageServices";
 import { storenewData } from "../../redux/newUserData/newUserdataSlice";
-import Verify from "../../Services/Services/Verify";
 
 const Verification = ({ onClose, onSubmit }) => {
   const router = useRouter();
@@ -156,7 +155,6 @@ const Verification = ({ onClose, onSubmit }) => {
 
   return (
     <>
-      <Verify />
       <div
         className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)] z-[11000]"
         onClick={onClose}

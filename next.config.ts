@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
   // This is the correct way — using custom redirects caused infinite redirect loops.
   trailingSlash: true,
 
+  // Use absolute URLs for static assets (managed by assetPrefix)
+  assetPrefix: process.env.NEXT_PUBLIC_BASE_URL || undefined,
+
+
   // Map CRA env vars to Next.js NEXT_PUBLIC_ equivalents
   env: {
     REACT_APP_API_URL: process.env.NEXT_PUBLIC_API_URL,
@@ -53,6 +57,11 @@ const nextConfig: NextConfig = {
         permanent: false,
       })),
       ...redirectsData,
+      {
+        source: "/blogcomponent",
+        destination: "/blogs",
+        permanent: true,
+      },
       {
         source: "/category/:id",
         destination: "/:id/",

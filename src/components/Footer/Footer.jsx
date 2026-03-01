@@ -113,10 +113,19 @@ const Footer = () => {
                             <Link href="/careers/">Careers</Link>
                         </li>
                         <li className="hover:text-green-500">
-                            <Link href="/blogcomponent/">Blogs</Link>
+                            <Link href="/blogs/">Blogs</Link>
                         </li>
                         <li className="hover:text-green-500">
                             <Link href="/stores/">Our Stores</Link>
+                        </li>
+                        <li className="hover:text-green-500">
+                            <Link href="/trending/">Trending</Link>
+                        </li>
+                        <li className="hover:text-green-500">
+                            <Link href="/bestseller/">Bestsellers</Link>
+                        </li>
+                        <li className="hover:text-green-500">
+                            <Link href="/seasonal/">Seasonal</Link>
                         </li>
                         <li className="hover:text-green-500">
                             <Link href="/franchise-enquiry/">Franchise Enquiry</Link>
@@ -144,6 +153,12 @@ const Footer = () => {
                         </li>
                         <li className="hover:text-green-500" onClick={handleClickorder}>
                             <Link href="/profile/trackorder/">Track Order</Link>
+                        </li>
+                        <li className="hover:text-green-500">
+                            <Link href="/gifts/">Gifts</Link>
+                        </li>
+                        <li className="hover:text-green-500">
+                            <Link href="/services/">Services</Link>
                         </li>
                         <li className="hover:text-green-500">
                             <Link href="/faq/">FAQs</Link>
@@ -191,7 +206,10 @@ const Footer = () => {
                             }`}
                     >
                         <li className="hover:text-green-500" onClick={handleWalletClick}>
-                            <Link href="">Wallet</Link>
+                            <Link href="/profile/wallet/">Wallet</Link>
+                        </li>
+                        <li className="hover:text-green-500">
+                            <Link href="/offer/">Exclusive Offers</Link>
                         </li>
                     </ul>
                 </div>
@@ -425,7 +443,7 @@ export default Footer;
 //               <Link href="/careers">Careers</Link>
 //             </li>
 //             <li className="hover:text-green-500">
-//               <Link href="/blogcomponent">Blogs</Link>
+//               <Link href="/blogs">Blogs</Link>
 //             </li>
 //             <li className="hover:text-green-500">
 //               <Link href="/stores">Our Stores</Link>

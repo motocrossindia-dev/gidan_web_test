@@ -9,7 +9,6 @@ import { FaRegHeart, FaHeart, FaStar } from "react-icons/fa";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { FiEye } from "react-icons/fi";
 import { useSelector } from "react-redux";
-import Verify from "../../Services/Services/Verify";
 import { enqueueSnackbar } from "notistack";
 // import img from "./img";
 import ReactStars from "react-rating-stars-component";
@@ -142,7 +141,6 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
 
     return (
         <>
-            <Verify />
 
             {/* Desktop & Tablet View */}
             <div className="hidden sm:block">

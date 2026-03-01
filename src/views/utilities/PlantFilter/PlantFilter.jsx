@@ -129,6 +129,7 @@ function PlantFilter({
     const [categoryData, setCategoryData] = useState(initialCategoryData || normalizedInitialResults.category_info?.category_info || null);
     const [filtersApplied, setFiltersApplied] = useState(false);
     const [isSearching, setIsSearching] = useState(false);
+    const [currentQuery, setCurrentQuery] = useState("");
 
     // SEO state — initialised from server-fetched data, updates reactively on subcategory filter changes
     const [seoData, setSeoData] = useState(initialSEOData || null);
@@ -248,10 +249,11 @@ function PlantFilter({
                 queryParams.append("ordering", "");
 
                 const response = await axiosInstance.get(
-                    `/filters/main_productsFilter/?${queryParams}&page_size=100&limit=100&page=1`
+                    `/filters/main_productsFilter/?${queryParams}&page_size=12&limit=12&page=1`
                 );
 
                 if (response.status === 200) {
+                    setCurrentQuery(queryParams.toString());
                     setResults(response.data.results || []);
                     setProducts({
                         count: response.data.count,
@@ -398,6 +400,7 @@ function PlantFilter({
                             setSeoData={setSeoData}
                             setIsSubcategorySEO={setIsSubcategorySEO}
                             subcategoryList={initialCategoryData?.subCategory || []}
+                            setCurrentQuery={setCurrentQuery}
                         />
                     </div>
 
@@ -412,6 +415,7 @@ function PlantFilter({
                             categorySlug={canonicalCategorySlug}
                             subcategorySlug={canonicalSubcategorySlug}
                             hasSubcategory={!!resolvedSubcategoryId}
+                            query={currentQuery}
                         />
                         {isSearching && (
                             <div className="flex justify-center py-8">
@@ -488,6 +492,7 @@ function PlantFilter({
                         setSeoData={setSeoData}
                         setIsSubcategorySEO={setIsSubcategorySEO}
                         subcategoryList={initialCategoryData?.subCategory || []}
+                        setCurrentQuery={setCurrentQuery}
                     />
                 </Box>
             </SwipeableDrawer>

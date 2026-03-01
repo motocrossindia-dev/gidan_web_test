@@ -19,8 +19,7 @@ export const metadata: Metadata = {
     title: "Profile - Trackorder | Gidan Plants",
     description: "Shop and explore profile - trackorder at Gidan, India trusted online plant and gardening store.",
   },
-  alternates: { canonical: "https://www.gidan.store/profile/trackorder" },
-  robots: { index: true, follow: true },
+  robots: { index: false, follow: false },
 };
 
 export default function TrackOrderPage() {

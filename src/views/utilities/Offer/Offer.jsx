@@ -9,7 +9,6 @@ import axiosInstance from "../../../Axios/axiosInstance";
 import { addToCart } from "../../../redux/Slice/cartSlice";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import ProductCard from "../PlantFilter/ProductCard";
-import Verify from "../../../Services/Services/Verify";
 import { getProductUrl } from "../../../utils/urlHelper";
 
 function Offer() {
@@ -93,7 +92,6 @@ function Offer() {
           </div>
         ))}
       </div>
-      <Verify />
 
     </div>
   );

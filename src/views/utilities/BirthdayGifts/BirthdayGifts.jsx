@@ -10,8 +10,6 @@ import CheckoutStores from "./CheckoutStores";
 import Banner1 from "./Banner1";
 import { Card } from "@mui/material";
 import { FiFilter } from "react-icons/fi";
-import {Helmet} from "react-helmet-async";
-
 function BirthdayGifts() {
   const [showMobileFilter, setShowMobileFilter] = useState(false);
   useEffect(() => {
@@ -23,9 +21,7 @@ function BirthdayGifts() {
 
   return (
       <>
-          <Helmet>
-              <title>Gidan - Birthday Gifts</title>
-          </Helmet>
+          
           <div className="container mx-auto bg-gray-100 pt-6">
               <Banner1 />
               <br />

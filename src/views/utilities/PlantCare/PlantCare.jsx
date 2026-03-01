@@ -8,7 +8,6 @@ import ProductGrid from "../../../components/Shared/ProductGrid";
 import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
 import CheckoutStores from "./CheckoutStores";
 import { FiFilter } from "react-icons/fi";
-import { Helmet } from "react-helmet-async";
 import axiosInstance from "../../../Axios/axiosInstance";
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
@@ -91,9 +90,7 @@ function PlantCare() {
 
   return (
     <>
-      <Helmet>
-        <title>Gidan - Plant Care</title>
-      </Helmet>
+      
       <div className="container mx-auto min-h-screen">
         {/* Mobile Filter Button */}
         <div className="md:hidden px-4 pt-4">
@@ -172,7 +169,7 @@ export default PlantCare;
 // import CheckoutStores from "./CheckoutStores";
 // import { FiFilter } from "react-icons/fi";
 // // import  axiosInstance  from "../../../Axios/axiosInstance";
-// import {Helmet} from "react-helmet-async"; // Adjust the import path as necessary
+// // Adjust the import path as necessary
 //
 //
 // function PlantCare() {
@@ -223,9 +220,7 @@ export default PlantCare;
 //
 //   return (
 //       <>
-//           <Helmet>
-//               <title>Gidan - Plant Care</title>
-//           </Helmet>
+//           
 //     <div className="container mx-auto bg-gray-100 pt-6">
 //       {/* <Banner1 /> */}
 //       <br />

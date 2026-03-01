@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 import axiosInstance from "../../Axios/axiosInstance";
-import { Helmet } from "react-helmet-async";
-
 const StoreDetail = ({ slug }) => {
   const [store, setStore] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -39,11 +37,7 @@ const StoreDetail = ({ slug }) => {
 
   return (
     <>
-      <Helmet>
-        <title>{store.location} | Gidan Plants Store</title>
-        <meta name="description" content={`Visit Gidan Plants store at ${store.location}. ${store.address}`} />
-        <link rel="canonical" href={`https://www.gidan.store/stores/${slug}`} />
-      </Helmet>
+      
 
       <div className="container mx-auto p-6 max-w-6xl">
         <h1 className="text-3xl font-bold mb-6">{store.location}</h1>

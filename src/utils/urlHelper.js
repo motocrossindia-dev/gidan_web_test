@@ -33,8 +33,30 @@ export const toSlugString = (val) => {
     return convertToSlug(rawVal);
 };
 
+
+/**
+ * Convert a relative URL to an absolute URL using the base URL.
+ * 
+ * @param {string} path - Relative path (e.g., "/logo.webp")
+ * @returns {string} - Absolute URL
+ */
+export const toAbsoluteUrl = (path) => {
+    if (!path) return "";
+    if (path.startsWith('http') || path.startsWith('//') || path.startsWith('data:')) return path;
+
+    // Ensure path starts with /
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.gidan.store";
+
+    // Remove trailing slash from baseUrl if present
+    const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+
+    return `${cleanBaseUrl}${normalizedPath}`;
+};
+
 /**
  * Generates a standardized, crawlable 3-segment product URL.
+
  * Pattern: /:category/:subcategory/:productSlug/?variant=ID
  * 
  * @param {Object} product - Product data object

@@ -2,7 +2,6 @@
 
 import React, { useEffect } from 'react';
 import { Shield, Lock, Eye, Database, Smartphone, Users, AlertTriangle, Mail } from 'lucide-react';
-import { Helmet } from "react-helmet-async";
 import ReturnPolicySchema from "../../views/utilities/seo/ReturnPolicySchema";
 import HomepageSchema from "../../views/utilities/seo/HomepageSchema";
 import StoreSchema from "../../views/utilities/seo/StoreSchema";
@@ -15,19 +14,7 @@ const PrivacyPolicy = () => {
 
 
     <>
-      <Helmet>
-        <title>Gidan - Privacy Policy</title>
-
-        <meta
-          name="description"
-          content="Read Gidan's Privacy Policy to learn how we collect, use, and protect your information while shopping for plants, pots, seeds, and gardening products online."
-        />
-
-        <link
-          rel="canonical"
-          href="https://www.gidan.store/privacy-policy"
-        />
-      </Helmet>
+      
 
       <div className="max-w-4xl mx-auto p-6 bg-white text-gray-800 font-sans">
         {/* Header */}

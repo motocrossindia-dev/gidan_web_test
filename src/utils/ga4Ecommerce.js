@@ -105,8 +105,6 @@ export const trackViewItem = (product) => {
     window.dataLayer.push({ ecommerce: null }); // Clear previous ecommerce object
     window.dataLayer.push({ event: 'view_item', ecommerce: params });
     gtagEvent('view_item', params);
-
-    if (isDev) console.log('GA4: view_item tracked', { product: item.item_name });
 };
 
 /**
@@ -129,8 +127,6 @@ export const trackViewItemList = (products, listName = 'Product List') => {
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'view_item_list', ecommerce: params });
     gtagEvent('view_item_list', params);
-
-    if (isDev) console.log('GA4: view_item_list tracked', { listName, count: items.length });
 };
 
 /**
@@ -154,8 +150,6 @@ export const trackSelectItem = (product, listName = 'Product List', index = 0) =
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'select_item', ecommerce: params });
     gtagEvent('select_item', params);
-
-    if (isDev) console.log('GA4: select_item tracked', { product: item.item_name, listName });
 };
 
 /**
@@ -178,8 +172,6 @@ export const trackAddToCart = (product, quantity = 1) => {
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'add_to_cart', ecommerce: params });
     gtagEvent('add_to_cart', params);
-
-    if (isDev) console.log('GA4: add_to_cart tracked', { product: item.item_name, quantity });
 };
 
 /**
@@ -202,8 +194,6 @@ export const trackRemoveFromCart = (product, quantity = 1) => {
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'remove_from_cart', ecommerce: params });
     gtagEvent('remove_from_cart', params);
-
-    if (isDev) console.log('GA4: remove_from_cart tracked', { product: item.item_name, quantity });
 };
 
 /**
@@ -226,8 +216,6 @@ export const trackViewCart = (cartItems) => {
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'view_cart', ecommerce: params });
     gtagEvent('view_cart', params);
-
-    if (isDev) console.log('GA4: view_cart tracked', { itemCount: items.length, value });
 };
 
 /**
@@ -251,8 +239,6 @@ export const trackBeginCheckout = (cartItems, totalValue = null) => {
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'begin_checkout', ecommerce: params });
     gtagEvent('begin_checkout', params);
-
-    if (isDev) console.log('GA4: begin_checkout tracked', { itemCount: items.length, value });
 };
 
 /**
@@ -278,8 +264,6 @@ export const trackAddShippingInfo = (cartItems, shippingTier = 'Standard', total
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'add_shipping_info', ecommerce: params });
     gtagEvent('add_shipping_info', params);
-
-    if (isDev) console.log('GA4: add_shipping_info tracked', { shippingTier, value });
 };
 
 /**
@@ -305,8 +289,6 @@ export const trackAddPaymentInfo = (cartItems, paymentType = 'Unknown', totalVal
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'add_payment_info', ecommerce: params });
     gtagEvent('add_payment_info', params);
-
-    if (isDev) console.log('GA4: add_payment_info tracked', { paymentType, value });
 };
 
 /**
@@ -346,11 +328,6 @@ export const trackPurchase = (orderData) => {
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'purchase', ecommerce: params });
     gtagEvent('purchase', params);
-
-    if (isDev) console.log('GA4: purchase tracked', {
-        transaction_id: orderData.transaction_id,
-        value: params.value
-    });
 };
 
 /**
@@ -380,8 +357,6 @@ export const trackRefund = (transactionId, value = null, items = null) => {
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'refund', ecommerce: params });
     gtagEvent('refund', params);
-
-    if (isDev) console.log('GA4: refund tracked', { transaction_id: transactionId });
 };
 
 /**
@@ -403,8 +378,6 @@ export const trackAddToWishlist = (product) => {
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'add_to_wishlist', ecommerce: params });
     gtagEvent('add_to_wishlist', params);
-
-    if (isDev) console.log('GA4: add_to_wishlist tracked', { product: item.item_name });
 };
 
 /**
@@ -420,8 +393,6 @@ export const trackSearch = (searchTerm) => {
 
     window.dataLayer.push({ event: 'search', ...params });
     gtagEvent('search', params);
-
-    if (isDev) console.log('GA4: search tracked', { searchTerm });
 };
 
 /**
@@ -436,8 +407,6 @@ export const trackCustomEvent = (eventName, eventParams = {}) => {
 
     window.dataLayer.push({ event: eventName, ...eventParams });
     gtagEvent(eventName, eventParams);
-
-    if (isDev) console.log('GA4: custom event tracked', { eventName, eventParams });
 };
 
 export default {
@@ -456,3 +425,4 @@ export default {
     trackSearch,
     trackCustomEvent
 };
+

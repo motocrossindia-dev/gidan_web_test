@@ -29,7 +29,6 @@ import { useParams } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import Verify from "../../../Services/Services/Verify";
 import axiosInstance from "../../../Axios/axiosInstance";
-import { Helmet } from "react-helmet-async";
 import ProductSchema from "../seo/ProductSchema";
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
@@ -859,28 +858,7 @@ export default function Component() {
     return (
         <>
             <Verify />
-            <Helmet>
-                {/* Basic SEO */}
-                <title>{metaTitle}</title>
-                <meta name="description" content={metaDescription} />
-                <meta name="keywords" content={metaKeywords} />
-                <link rel="canonical" href={canonicalUrl} />
-
-                {/* Open Graph */}
-                <meta property="og:title" content={metaTitle} />
-                <meta property="og:description" content={metaDescription} />
-                <meta property="og:image" content={ogImage} />
-                <meta property="og:url" content={canonicalUrl} />
-                <meta property="og:type" content="product" />
-                <meta property="og:site_name" content="Gidan" />
-                <meta property="og:locale" content="en_IN" />
-
-                {/* Twitter Card */}
-                <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content={metaTitle} />
-                <meta name="twitter:description" content={metaDescription} />
-                <meta name="twitter:image" content={ogImage} />
-            </Helmet>
+            
 
             <div className="w-full" style={{ backgroundColor: "whitesmoke" }}>
                 <div className="container mx-auto px-3 py-4 font-sans md:px-8">
@@ -1401,8 +1379,7 @@ export default function Component() {
 // import {enqueueSnackbar} from "notistack";
 // import Verify from "../../../Services/Services/Verify";
 // import axiosInstance from "../../../Axios/axiosInstance";
-// import { Helmet } from "react-helmet-async";
-// import ProductSchema from "../seo/ProductSchema";
+// // import ProductSchema from "../seo/ProductSchema";
 // import HomepageSchema from "../seo/HomepageSchema";
 // import StoreSchema from "../seo/StoreSchema";
 //
@@ -2119,28 +2096,7 @@ export default function Component() {
 //     return (
 //         <>
 //             <Verify/>
-//             <Helmet>
-//                 {/* Basic SEO */}
-//                 <title>{metaTitle}</title>
-//                 <meta name="description" content={metaDescription} />
-//                 <meta name="keywords" content={metaKeywords} />
-//                 <link rel="canonical" href={canonicalUrl} />
-//
-//                 {/* Open Graph */}
-//                 <meta property="og:title" content={metaTitle} />
-//                 <meta property="og:description" content={metaDescription} />
-//                 <meta property="og:image" content={ogImage} />
-//                 <meta property="og:url" content={canonicalUrl} />
-//                 <meta property="og:type" content="product" />
-//                 <meta property="og:site_name" content="Gidan" />
-//                 <meta property="og:locale" content="en_IN" />
-//
-//                 {/* Twitter Card */}
-//                 <meta name="twitter:card" content="summary_large_image" />
-//                 <meta name="twitter:title" content={metaTitle} />
-//                 <meta name="twitter:description" content={metaDescription} />
-//                 <meta name="twitter:image" content={ogImage} />
-//             </Helmet>
+//             
 //
 //             <div className="w-full" style={{backgroundColor: "whitesmoke"}}>
 //                 <div className="container mx-auto px-3 py-4 font-sans md:px-8">

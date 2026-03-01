@@ -9,8 +9,7 @@ import useDeviceDetect from "../../../CustomHooks/useDeviceDetect";
 import DeactivationConfirmation from "../Deactivation/Deactivation"; // Import the DeactivationConfirmation component
 import AddressSection from "./AddressSection";
 import FAQSection from "./FAQSection";
-import Verify from "../../../Services/Services/Verify";
-import { Helmet } from "react-helmet-async";
+import axiosInstance from "../../../Axios/axiosInstance";
 import { setGst } from '../../../redux/Slice/userSlice';
 
 
@@ -144,21 +143,7 @@ const ProfileForm = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Gidan - My Profile Page</title>
-        <meta name="robots" content="noindex, nofollow" />
-        <meta
-          name="description"
-          content="Manage your Gidan account, view orders, track deliveries, and update your personal details. Access all your gardening purchases and rewards in one place."
-        />
 
-        <link
-          rel="canonical"
-          href="https://www.gidan.store/profile"
-        />
-      </Helmet>
-
-      <Verify />
       <div>
         <div>
           {showDeactivation ? (

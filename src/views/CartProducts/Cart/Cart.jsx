@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
-import { Helmet } from "react-helmet-async";
+import { useSearchParams } from "next/navigation";
 import { trackViewCart, trackRemoveFromCart } from "../../../utils/ga4Ecommerce";
 
 const Cart = () => {
@@ -104,19 +104,6 @@ const Cart = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Gidan - Cart</title>
-        <meta name="robots" content="noindex, nofollow" />
-        <meta
-          name="description"
-          content="Review the items in your Gidan cart before checkout. Manage your selected plants, pots, seeds, and gardening products for a smooth shopping experience."
-        />
-
-        <link
-          rel="canonical"
-          href="https://www.gidan.store/Cart"
-        />
-      </Helmet>
 
       {/* <Verify /> */}
       <div className="flex flex-col md:flex-row justify-center md:p-8 bg-gray-50 overflow-y-auto">

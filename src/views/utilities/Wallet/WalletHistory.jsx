@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { ArrowUpRight, ArrowDownRight, Gift, CreditCard } from "lucide-react";
-import { Helmet } from "react-helmet-async";
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
 
@@ -42,19 +41,7 @@ const WalletHistory = () => {
   return (
 
     <>
-      <Helmet>
-        <title>Gidan - Wallet History</title>
-        <meta name="robots" content="noindex, nofollow" />
-        <meta
-          name="description"
-          content="View your Gidan wallet history to track all transactions, rewards, and redemptions. Stay updated on your wallet activity for a seamless shopping experience."
-        />
-
-        <link
-          rel="canonical"
-          href="https://www.gidan.store/profile/wallethistory"
-        />
-      </Helmet>
+      
 
       <div className="flex justify-center sm:justify-start px-4 sm:px-6 bg-gray-100 min-h-screen w-full mt-2 sm:mt-3">
         <div className="w-full sm:w-full md:w-4/5 lg:w-full xl:w-full h-auto bg-white shadow-lg p-4 sm:p-6 rounded-lg">

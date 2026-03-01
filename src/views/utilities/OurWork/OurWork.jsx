@@ -21,8 +21,6 @@ import __ourwork6 from "../../../Assets/OurWork/ourwork6.webp";
 const _ourwork6 = typeof __ourwork6 === 'string' ? __ourwork6 : __ourwork6?.src || __ourwork6;
 const ourwork6 = typeof _ourwork6 === 'string' ? _ourwork6 : _ourwork6?.src || _ourwork6;
 import { FaPlay } from "react-icons/fa";
-import { Helmet } from "react-helmet-async";
-
 const OurWork = () => {
   const router = useRouter();
   useEffect(() => {
@@ -34,15 +32,7 @@ const OurWork = () => {
   };
   return (
       <>
-        <Helmet>
-          <title>About Gidan | Trusted Online Shopping Store</title>
         
-          <meta
-            name="description"
-            content="Learn about Gidan – our story, values & commitment to quality products and customer satisfaction."
-          />
-        
-        </Helmet>
     <div className="App">
     <h4 className="text-sm sm:text-base p-4">Home / Our Work</h4>
 

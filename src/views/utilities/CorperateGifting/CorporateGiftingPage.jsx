@@ -7,8 +7,6 @@ import plantImage from "../../../Assets/Gift/Gift3.webp"; // Adjust path as nece
 import __gift34 from "../../../Assets/Gift/Gift1.webp";
 const _gift34 = typeof __gift34 === 'string' ? __gift34 : __gift34?.src || __gift34;
 const gift34 = typeof _gift34 === 'string' ? _gift34 : _gift34?.src || _gift34;
-import {Helmet} from "react-helmet-async";
-
 const CorporateGiftingForm = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState({
@@ -168,9 +166,7 @@ const CorporateGiftingPage = () => {
 
   return (
       <>
-        <Helmet>
-          <title>Gidan - Corporate Gifting</title>
-        </Helmet>
+        
         <div className="min-h-screen p-4 mt-6 bg-white">
           {/* Hero Section */}
           <div className="relative h-48 md:h-64 overflow-hidden">

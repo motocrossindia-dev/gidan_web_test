@@ -9,15 +9,14 @@ import { enqueueSnackbar } from "notistack";
 import { isMobile } from "react-device-detect";
 import axiosInstance from "../../../Axios/axiosInstance";
 import ProductCard from "../PlantFilter/ProductCard";
-import Verify from "../../../Services/Services/Verify";
 import ModernComboCard from "./ModernComboCard";
 
 function ComboImage() {
   const accessToken = useSelector(selectAccessToken);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const [comboOffers, setComboOffers] = useState([])
-  const router = useRouter(); 
-  
+  const router = useRouter();
+
   const getAllcombos = async () => {
     try {
       const response = await axiosInstance.get(`/combo/combo_offers_list/`);
@@ -73,13 +72,13 @@ function ComboImage() {
       }
     } catch (error) {
       console.error("Error placing order:", error);
-      
+
       let errorMessage = "Failed to place order. Please try again.";
-      
+
       if (error.response) {
         const status = error.response.status;
         const serverMsg = error.response.data?.message || error.response.data?.error;
-        
+
         if (status === 400) {
           errorMessage = serverMsg || "Invalid order data. Please check your selection.";
         } else if (status === 401) {
@@ -90,7 +89,7 @@ function ComboImage() {
           errorMessage = serverMsg;
         }
       }
-      
+
       enqueueSnackbar(errorMessage, { variant: "error" });
     }
   };
@@ -103,16 +102,15 @@ function ComboImage() {
       </p>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 justify-items-center">
         {comboOffers?.map((offer, index) => (
-          <div 
-            key={offer.id || index} 
-            className="w-full cursor-pointer group" 
+          <div
+            key={offer.id || index}
+            className="w-full cursor-pointer group"
             onClick={() => handleBuyItNowSubmit(offer?.id)}
           >
             <ModernComboCard offer={offer} />
           </div>
         ))}
       </div>
-      <Verify />
 
     </div>
   );

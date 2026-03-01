@@ -16,8 +16,7 @@
 // ========== OLD CODE (Before Feb 16, 2026 - TanStack Query) - COMMENTED OUT ==========
 // import { useEffect, useState, lazy, Suspense } from 'react';
 // import axiosInstance from '../../Axios/axiosInstance';
-// import { Helmet } from "react-helmet-async";
-// import ResourceHints from '../Shared/ResourceHints';
+// // import ResourceHints from '../Shared/ResourceHints';
 // import LazyLoadWrapper from '../Shared/LazyLoadWrapper';
 // 
 // // Critical above-the-fold components - load immediately (no lazy loading)
@@ -79,14 +78,7 @@
 // 
 //   return (
 //     <div>
-//       <Helmet>
-//         <title>Gidan® – Buy Plants, Planters, Pots & Seeds Online in Bangalore</title>
-//         <meta
-//           name="description"
-//           content="Buy plants, planters, pots & seeds online in Bangalore from Gidan. Fresh plants, garden décor and reliable doorstep delivery."
-//         />
-//         <link rel="canonical" href="https://www.gidan.store/" />
-//       </Helmet>
+//       
 // 
 //       <ResourceHints />
 // 
@@ -175,32 +167,25 @@
 
 // ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
 import { useEffect, lazy, Suspense } from 'react';
-import { Helmet } from "react-helmet-async";
 import ResourceHints from '../Shared/ResourceHints';
 import LazyLoadWrapper from '../Shared/LazyLoadWrapper';
-import { useBannerImages } from '../../hooks/useBannerImages'; // TanStack Query hook
 
-// Critical above-the-fold components - load immediately (no lazy loading)
-import CategoryIcons from '../Category/CategoryIcons';
-import HeroSection from '../HeroSection/HeroSection';
-import Banner from '../Banner/Banner';
+// Critical above-the-fold components - load immediately
+import CategoryIcons from '../../components/Category/CategoryIcons';
+import HeroSection from '../../components/HeroSection/HeroSection';
+import Banner from '../../components/Banner/Banner';
 
-// Below-the-fold components - lazy load with code splitting for better performance
-const TrendingSection = lazy(() => import(/* webpackChunkName: "trending" */ '../TrendingProducts/TrendingSection'));
-const RewardClub = lazy(() => import(/* webpackChunkName: "reward-club" */ '../RewardClub/RewardClub'));
-const ShopTheLook = lazy(() => import(/* webpackChunkName: "shop-look" */ '../ShopTheLook/ShopTheLook'));
-const SeasonalProduct = lazy(() => import(/* webpackChunkName: "seasonal" */ '../SeasonalCollection/SeasonalProduct'));
-const OfferReward = lazy(() => import(/* webpackChunkName: "offer-reward" */ '../OfferReward/OfferReward'));
-const ComboOffer = lazy(() => import(/* webpackChunkName: "combo-offer" */ '../ComboOffer/ComboOffer'));
-const Blog = lazy(() => import(/* webpackChunkName: "blog" */ '../Blog/Blog'));
-const VideoSection = lazy(() => import(/* webpackChunkName: "video" */ '../VideoSection/VideoSection'));
-const CheckOutStore = lazy(() => import(/* webpackChunkName: "store" */ '../Store/CheckOutStore'));
+// Below-the-fold components - lazy load
+const TrendingSection = lazy(() => import(/* webpackChunkName: "trending" */ '../../components/TrendingProducts/TrendingSection'));
+const RewardClub = lazy(() => import(/* webpackChunkName: "reward-club" */ '../../components/RewardClub/RewardClub'));
+const ShopTheLook = lazy(() => import(/* webpackChunkName: "shop-look" */ '../../components/ShopTheLook/ShopTheLook'));
+const SeasonalProduct = lazy(() => import(/* webpackChunkName: "seasonal" */ '../../components/SeasonalCollection/SeasonalProduct'));
 const Services = lazy(() => import(/* webpackChunkName: "services" */ '../../Services/ServiceHome/Services'));
-
-// Defined outside component to prevent recreation on every render
-const LoadingFallback = () => (
-  <div className="w-full h-32 bg-gray-100 animate-pulse rounded" />
-);
+const OfferReward = lazy(() => import(/* webpackChunkName: "offer-reward" */ '../../components/OfferReward/OfferReward'));
+const ComboOffer = lazy(() => import(/* webpackChunkName: "combo-offer" */ '../../components/ComboOffer/ComboOffer'));
+const Blog = lazy(() => import(/* webpackChunkName: "blog" */ '../../components/Blog/Blog'));
+const VideoSection = lazy(() => import(/* webpackChunkName: "video" */ '../../components/VideoSection/VideoSection'));
+const CheckOutStore = lazy(() => import(/* webpackChunkName: "store" */ '../../components/Store/CheckOutStore'));
 
 const Home = ({
   initialBanners,
@@ -210,53 +195,18 @@ const Home = ({
   initialBestsellerProducts,
   initialSeasonalProducts
 }) => {
-  // ✅ Use TanStack Query hook - automatic caching, no unnecessary re-renders
-  const { data, isLoading, isError } = useBannerImages(initialBanners);
+  // Extract images from banners
+  const banners = initialBanners || [];
+  const homeImages = banners.filter(b => b.type === 'Home' && b.is_visible);
+  const heroImages = banners.filter(b => b.type === 'Hero' && b.is_visible);
 
-  // Prefetch below-the-fold components when browser is idle
-  useEffect(() => {
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(() => {
-        // TrendingSection removed from prefetch because it's now essential/SSR'd
-        import(/* webpackChunkName: "reward-club" */ '../RewardClub/RewardClub');
-        import(/* webpackChunkName: "seasonal" */ '../SeasonalCollection/SeasonalProduct');
-      });
-    }
-  }, []);
-
-  // Loading fallback moved outside component - see above
-
-  // Show loading state
-  if (isLoading && !initialBanners) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-gray-500 text-xl">Loading...</p>
-      </div>
-    );
-  }
-
-  // Show error state
-  if (isError) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-red-500 text-xl">Error loading banner images</p>
-      </div>
-    );
-  }
-
-  const { homeImages = [], heroImages = [] } = data || {};
+  // Loading fallback component
+  const LoadingFallback = () => (
+    <div className="w-full h-32 bg-gray-100 animate-pulse rounded" />
+  );
 
   return (
     <div>
-      <Helmet>
-        <title>Gidan® – Buy Plants, Planters, Pots & Seeds Online in Bangalore</title>
-        <meta
-          name="description"
-          content="Buy plants, planters, pots & seeds online in Bangalore from Gidan. Fresh plants, garden décor and reliable doorstep delivery."
-        />
-        <link rel="canonical" href="https://www.gidan.store/" />
-      </Helmet>
-
       <ResourceHints />
 
       {/* Critical above-the-fold content - no lazy loading */}
@@ -332,7 +282,7 @@ const Home = ({
       </LazyLoadWrapper>
 
 
-    </div>
+    </div >
   );
 };
 

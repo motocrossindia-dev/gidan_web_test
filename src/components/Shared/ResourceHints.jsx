@@ -1,6 +1,6 @@
 'use client';
 
-import { Helmet } from 'react-helmet-async';
+import React from 'react';
 
 /**
  * Resource Hints Component
@@ -9,24 +9,7 @@ import { Helmet } from 'react-helmet-async';
 const ResourceHints = () => {
   const apiDomain = process.env.NEXT_PUBLIC_API_URL;
 
-  return (
-    <Helmet>
-      {/* DNS Prefetch - Resolve DNS early */}
-      <link rel="dns-prefetch" href={apiDomain} />
-
-      {/* Preconnect - Establish early connection */}
-      <link rel="preconnect" href={apiDomain} crossOrigin="anonymous" />
-
-      {/* Preconnect to common CDNs */}
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-
-      {/* Note: Montserrat font is loaded via @fontsource/montserrat npm package */}
-
-      {/* Resource hints for better performance */}
-      <meta httpEquiv="x-dns-prefetch-control" content="on" />
-    </Helmet>
-  );
+  return null;
 };
 
 export default ResourceHints;

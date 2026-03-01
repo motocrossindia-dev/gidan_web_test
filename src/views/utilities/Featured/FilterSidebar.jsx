@@ -86,6 +86,7 @@ const FilterSidebar = ({
   setSeoData,
   setIsSubcategorySEO,
   subcategoryList = [],  // full subcategory objects with sub_category_info from server
+  setCurrentQuery,
 }) => {
   // Track if this is the very first render of the component
   const isInitialMount = useRef(true);
@@ -351,7 +352,8 @@ const FilterSidebar = ({
         if (setCategoryData) setCategoryData(null);
       }
 
-      const res = await axiosInstance.get(`/filters/main_productsFilter/?${params}&page_size=100`);
+      const res = await axiosInstance.get(`/filters/main_productsFilter/?${params}&page_size=12`);
+      if (setCurrentQuery) setCurrentQuery(params.toString());
       setResults(res.data.results);
 
       // Update pagination so ProductGrid shows correct count
@@ -525,7 +527,8 @@ const FilterSidebar = ({
       params.append("is_trending", isTrending ? "true" : "unknown");
       params.append("ordering", "");
 
-      const res = await axiosInstance.get(`/filters/main_productsFilter/?${params}&page_size=100`);
+      const res = await axiosInstance.get(`/filters/main_productsFilter/?${params}&page_size=12`);
+      if (setCurrentQuery) setCurrentQuery(params.toString());
       if (setResults) setResults(res.data.results || []);
       if (setProducts) {
         setProducts({
@@ -607,27 +610,47 @@ const FilterSidebar = ({
       <div className="px-4 md:px-6 py-4 w-full relative z-50">
         <div className="flex flex-col md:flex-row md:gap-4 flex-wrap pb-4 space-y-4 md:space-y-0">
           {/* Type Selector */}
-          <div className="w-full md:w-48 md:flex-shrink-0 z-50">
+          <div
+            className={`relative w-full md:w-48 md:flex-shrink-0 ${openFilters.type ? "z-[100]" : "z-50"}`}
+            ref={(el) => (dropdownContainerRefs.current.type = el)}
+          >
             <h3 className="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Type</h3>
-            <select
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-              value={selectedFilterType}
-              onChange={(e) => {
-                let value = e.target.value;
+            <button
+              aria-label="Toggle type filter"
+              onClick={() => handleFilterToggle("type")}
+              className="w-full px-3 py-2 text-sm text-left border border-gray-300 rounded-md bg-white hover:bg-gray-50 flex items-center justify-between"
+            >
+              <span className="text-gray-700 truncate">
+                {selectedFilterType
+                  ? selectedFilterType.charAt(0).toUpperCase() + selectedFilterType.slice(1)
+                  : "Select"}
+              </span>
+              {openFilters.type ? (
+                <FaAngleUp className="text-gray-600 ml-2 flex-shrink-0" />
+              ) : (
+                <FaAngleDown className="text-gray-600 ml-2 flex-shrink-0" />
+              )}
+            </button>
+
+            <DropdownMenu
+              isOpen={openFilters.type}
+              filter="type"
+              options={availableTypes}
+              selectedFilters={{ type: selectedFilterType }}
+              handleFilterSelection={(f, option) => {
+                let value = typeof option === "string" ? option : option.id;
                 // Normalize to singular
                 if (value.endsWith('s')) value = value.slice(0, -1);
                 setSelectedFilterType(value);
                 setUserHasSelectedType(true);
-                userInteracted.current = true; // Trigger auto-apply
-                setSelectedFilters((prev) => ({ ...prev, subcategories: undefined })); // Clear subcategory
+                userInteracted.current = true;
+                setSelectedFilters((prev) => {
+                  const { subcategories, ...rest } = prev;
+                  return rest;
+                });
+                setOpenFilters({});
               }}
-            >
-              {availableTypes.map((t) => (
-                <option key={t} value={t}>
-                  {t.charAt(0).toUpperCase() + t.slice(1)}
-                </option>
-              ))}
-            </select>
+            />
           </div>
 
           {/* Dynamic Filters */}

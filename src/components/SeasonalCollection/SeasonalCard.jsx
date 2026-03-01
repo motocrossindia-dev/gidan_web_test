@@ -9,7 +9,6 @@ import { FiEye } from "react-icons/fi";
 import { enqueueSnackbar } from "notistack";
 import { useSelector } from "react-redux";
 import { FaStar } from 'react-icons/fa';
-import Verify from "../../Services/Services/Verify";
 import ReactStars from "react-rating-stars-component";
 import StarsOnCards from "../TrendingProducts/StarsOnCards";
 import axiosInstance from "../../Axios/axiosInstance";
@@ -110,7 +109,6 @@ const SeasonalCard = ({
 
     return (
         <>
-            <Verify />
             {/* mobile view */}
             <div className="sm:hidden">
                 <Paper
@@ -366,7 +364,6 @@ export default memo(SeasonalCard, (prevProps, nextProps) => {
 // // import { enqueueSnackbar } from "notistack";
 // import { useSelector } from "react-redux";
 // import { FaStar } from 'react-icons/fa';
-// import Verify from "../../Services/Services/Verify";
 // import ReactStars from "react-rating-stars-component";
 // import StarsOnCards from "../TrendingProducts/StarsOnCards";
 // import axiosInstance from "../../Axios/axiosInstance";
@@ -474,7 +471,6 @@ export default memo(SeasonalCard, (prevProps, nextProps) => {
 //
 //     return (
 //         <>
-//             <Verify />
 //             {/* mobile view */}
 //             <div className="sm:hidden">
 //                 <Paper

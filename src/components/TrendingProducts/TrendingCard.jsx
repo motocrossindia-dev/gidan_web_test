@@ -7,7 +7,6 @@ import { FaRegHeart, FaHeart, FaStar } from "react-icons/fa";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { FiEye } from "react-icons/fi";
 import { useSelector } from "react-redux";
-import Verify from "../../Services/Services/Verify";
 import { enqueueSnackbar } from "notistack";
 import StarsOnCards from "./StarsOnCards";
 import ReactStars from "react-rating-stars-component";
@@ -96,7 +95,6 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
 
     return (
         <>
-            <Verify />
 
             {/* Desktop & Tablet View */}
             <div className="hidden sm:block">
@@ -380,7 +378,6 @@ export default memo(TrendingCard, (prevProps, nextProps) => {
 // import { MdOutlineShoppingBag } from "react-icons/md";
 // import { FiEye } from "react-icons/fi";
 // // import { useSelector } from "react-redux";
-// import Verify from "../../Services/Services/Verify";
 // import { enqueueSnackbar } from "notistack";
 // import StarsOnCards from "./StarsOnCards";
 // import ReactStars from "react-rating-stars-component";
@@ -475,7 +472,6 @@ export default memo(TrendingCard, (prevProps, nextProps) => {
 //
 //     return (
 //         <>
-//             <Verify />
 //
 //             {/* Desktop & Tablet View */}
 //             <div className="hidden sm:block">

@@ -5,7 +5,6 @@ import { FiShare2 } from "react-icons/fi";
 import __Refer from "../../../Assets/ReferAFriend.webp"; // Ensure the image path is correct
 const Refer = typeof __Refer === 'string' ? __Refer : __Refer?.src || __Refer;
 import axiosInstance from "../../../Axios/axiosInstance";
-import { Helmet } from "react-helmet-async";
 import HomepageSchema from "../../utilities/seo/HomepageSchema";
 import StoreSchema from "../../utilities/seo/StoreSchema";
 
@@ -54,19 +53,7 @@ function ReferAFriend() {
 
   return (
     <>
-      <Helmet>
-        <title>Gidan - Refer A Friend </title>
-        <meta name="robots" content="noindex, nofollow" />
-        <meta
-          name="description"
-          content="Refer a friend to Gidan and earn rewards. Invite friends to shop plants, pots, seeds, and plant care products while enjoying exclusive benefits."
-        />
-
-        <link
-          rel="canonical"
-          href="https://www.gidan.store/profile/referal"
-        />
-      </Helmet>
+      
 
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4 sm:px-6 mt-2 lg:px-8">
         {/* Main Card */}

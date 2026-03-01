@@ -11,8 +11,6 @@ import { setVerifiedUser } from "../../redux/User/verificationSlice";
 import { setUsername } from "../../redux/Slice/userSlice";
 import { storeToken } from "../../Services/Services/LocalStorageServices";
 import axiosInstance from "../../Axios/axiosInstance";
-import {Helmet} from "react-helmet-async";
-
 const logo = typeof __logo === 'string' ? __logo : __logo?.src || __logo;
 const logoImage = typeof __logoImage === 'string' ? __logoImage : __logoImage?.src || __logoImage;
 
@@ -86,10 +84,7 @@ const MobileLoginPage = () => {
 
   return (
       <>
-        <Helmet>
-          <title>Gidan - Mobile Login Page</title>
-          <meta name="robots" content="noindex, nofollow" />
-        </Helmet>
+        
     <div className="flex items-center justify-center bg-gray-50">
       <div className="w-full rounded-lg p-6">
         <div className="flex justify-center mb-4">

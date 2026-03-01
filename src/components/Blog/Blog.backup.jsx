@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
-import Verify from "../../Services/Services/Verify";
+import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
@@ -28,7 +28,7 @@ const Blog = () => {
 
   const ViewAll = async () => {
     try {
-      const response = await axiosInstance.get( `/product/viewAll` );
+      const response = await axiosInstance.get(`/product/viewAll`);
       if (response.status === 200) {
       }
     } catch (error) {
@@ -38,18 +38,18 @@ const Blog = () => {
   const Blogcard = ({ image, title, heading }) => {
     return (
       <div className="w-full max-w-[500px] mx-auto h-auto rounded-lg overflow-hidden font-sans flex flex-col items-center">
-       <div className="w-full aspect-[800/665] bg-gray-100 rounded-lg overflow-hidden">
-  <img
-    src={`${process.env.REACT_APP_API_URL}${image}`}
-    alt={title}
-    loading="lazy"
-    className="w-full h-full object-contain"
-    onError={(e) => {
-      e.target.onerror = null;
-      e.target.src = "https://via.placeholder.com/800x665?text=Image+Not+Available";
-    }}
-  />
-</div>
+        <div className="w-full aspect-[800/665] bg-gray-100 rounded-lg overflow-hidden">
+          <img
+            src={`${process.env.REACT_APP_API_URL}${image}`}
+            alt={title}
+            loading="lazy"
+            className="w-full h-full object-contain"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "https://via.placeholder.com/800x665?text=Image+Not+Available";
+            }}
+          />
+        </div>
 
         <div className="flex flex-col items-center text-center mt-4">
           <h3 className="text-gray-500 text-xs md:text-lg mt-1 max-w-[90%]">{title}</h3>
@@ -67,7 +67,7 @@ const Blog = () => {
           <div className="flex justify-between items-center mb-6 font-sans">
             <h2 className="md:text-3xl text-xl font-bold mx-auto">Blogs</h2>
             <NavLink
-              to="/blogcomponent"
+              to="/blogs"
               className="text-white bg-bio-green md:text-xl text-xs rounded-md py-1 px-2 md:py-2 md:px-4 font-medium md:font-semibold"
             >
               View All
@@ -136,7 +136,7 @@ const Blog = () => {
                 </Swiper>
                 {/* <div className="flex justify-center mt-4">
                   <NavLink
-                    to="/blogcomponent"
+                    to="/blogs"
                     className="text-white bg-bio-green rounded-md py-2 px-4 font-semibold"
                   >
                     View All
@@ -152,7 +152,7 @@ const Blog = () => {
                     onClick={ViewAll}
                     className="bg-bio-green text-white w-[94px] h-[34px] rounded mx-1"
                   >
-                    <Link to="/blogcomponent">View All</Link>
+                    <Link to="/blogs">View All</Link>
                   </button>
                   <button
                     className="bg-white w-[30.24px] h-[30.24px] flex items-center justify-center rounded-full mx-1 border"

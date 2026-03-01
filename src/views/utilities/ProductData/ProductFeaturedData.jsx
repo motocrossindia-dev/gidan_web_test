@@ -10,7 +10,7 @@ import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import Verify from "../../../Services/Services/Verify";
+import ProductCard from "../PlantFilter/ProductCard";
 import { getProductUrl } from "../../../utils/urlHelper";
 import { trackAddToCart, trackRemoveFromCart, trackAddToWishlist } from "../../../utils/ga4Ecommerce";
 
@@ -156,7 +156,6 @@ const ProductFeaturedCard = ({
 
   return (
     <>
-      <Verify />
       <Paper
         elevation={0}
         onMouseEnter={() => setIsHovered(true)}

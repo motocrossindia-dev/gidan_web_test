@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     images: ["https://www.gidan.store/gidan-og.jpg"],
   },
   alternates: {
-    canonical: "/",
+    canonical: process.env.NEXT_PUBLIC_BASE_URL || "https://www.gidan.store",
   },
 
   robots: {
@@ -78,18 +78,14 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/logo192.ico",
-  },
-  verification: {
-    google: "your-google-site-verification-token",
-  },
+  manifest: (process.env.NEXT_PUBLIC_BASE_URL || "https://www.gidan.store") + "/manifest.json",
 };
+
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#000000",
 };
 
 export default function RootLayout({
@@ -101,6 +97,106 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="preconnect" href="https://backend.gidan.store" />
+
+
+        {/* Razorpay Checkout */}
+        <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
+
+        {/* Global site tag (gtag.js) - Google Analytics */}
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-T4GR7HMTN6" strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-T4GR7HMTN6');
+          `}
+        </Script>
+
+        {/* Theme-based Logo and Service Worker Cleanup */}
+        <Script id="theme-logo-sw-cleanup" strategy="beforeInteractive">
+          {`
+            (function() {
+              // Logo/Favicon helper
+              function updateLogoByTheme(isDark) {
+                  const favicon = document.querySelector('link[rel="icon"]');
+                  const appleIcon = document.querySelector('link[rel="apple-touch-icon"]');
+                  const baseUrl = window.location.origin;
+                  const ts = new Date().getTime();
+                  const logo = isDark 
+                      ? baseUrl + "/logo-white.webp?v=" + ts 
+                      : baseUrl + "/logo.webp?v=" + ts;
+                  if (favicon) favicon.href = logo;
+                  if (appleIcon) appleIcon.href = logo;
+              }
+              const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+              updateLogoByTheme(darkModeQuery.matches);
+              darkModeQuery.addEventListener("change", function(e) { updateLogoByTheme(e.matches); });
+
+              // SW Cleanup
+              if ('serviceWorker' in navigator) {
+                  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                      for(let registration of registrations) { registration.unregister(); }
+                  });
+              }
+
+              // Rogue GTM text cleanup (Ultra-Aggressive)
+              // Root Cause: GTM Custom HTML tag missing <script> tags.
+              (function() {
+                const clean = (node) => {
+                  if (!node) return;
+                  if (node.nodeType === 3) { // Text Node
+                    const text = node.textContent || "";
+                    if (text.includes("fbq('track'") || (text.includes("ViewContent") && text.includes("[object Object]"))) {
+                      if (node.parentNode && !['SCRIPT', 'STYLE', 'HEAD'].includes(node.parentNode.tagName)) {
+                        node.textContent = "";
+                      }
+                    }
+                  } else if (node.nodeType === 1 && !['SCRIPT', 'STYLE', 'HEAD'].includes(node.tagName)) {
+                    // Quick check on element text
+                    const text = node.textContent || "";
+                    if (text.includes("fbq('track'") || text.includes("[object Object]")) {
+                      const walker = document.createTreeWalker(node, 4, null, false);
+                      let n;
+                      while(n = walker.nextNode()) {
+                        const t = n.textContent || "";
+                        if (t.includes("fbq('track'") || (t.includes("ViewContent") && t.includes("[object Object]"))) {
+                           if (n.parentNode && !['SCRIPT', 'STYLE', 'HEAD'].includes(n.parentNode.tagName)) {
+                             n.textContent = "";
+                           }
+                        }
+                      }
+                    }
+                  }
+                };
+
+                if (typeof window !== 'undefined') {
+                  // Initial scan
+                  if (document.documentElement) clean(document.documentElement);
+
+                  const observer = new MutationObserver((mutations) => {
+                    for (const m of mutations) {
+                      if (m.type === 'childList') {
+                        m.addedNodes.forEach(clean);
+                      } else if (m.type === 'characterData') {
+                        clean(m.target);
+                      }
+                    }
+                  });
+
+                  observer.observe(document.documentElement, {
+                    childList: true,
+                    subtree: true,
+                    characterData: true
+                  });
+                  
+                  // Secondary cleanup on window load (GTM sometimes injects late)
+                  window.addEventListener('load', () => clean(document.body));
+                }
+              })();
+            })();
+          `}
+        </Script>
       </head>
       <body className={`${nunitoSans.variable} font-sans antialiased`} suppressHydrationWarning>
         {/* Google Tag Manager */}
@@ -111,7 +207,7 @@ export default function RootLayout({
           'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
           })(window,document,'script','dataLayer','GTM-NT2JNL5Z');`}
         </Script>
-        {/* Google Tag Manager (noscript fallback) */}
+        {/* Noscript fallbacks */}
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-NT2JNL5Z"

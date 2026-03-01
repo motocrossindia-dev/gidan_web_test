@@ -4,8 +4,6 @@ import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
-import { Helmet } from "react-helmet-async";
-
 const Successpage = () => {
   const router = useRouter();
 
@@ -48,19 +46,7 @@ const Successpage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Gidan - Success page</title>
-
-        <meta
-          name="description"
-          content="Thank you for your order at Gidan! Your purchase of plants, pots, seeds, and gardening products has been successfully completed. Track your order in your profile."
-        />
-
-        <link
-          rel="canonical"
-          href="https://www.gidan.store/successpage"
-        />
-      </Helmet>
+      
 
 
       <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4 text-center">

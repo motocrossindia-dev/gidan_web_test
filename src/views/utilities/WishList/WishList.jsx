@@ -6,10 +6,8 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import axios from "axios";
-import Verify from "../../../Services/Services/Verify";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
-import { Helmet } from "react-helmet-async";
 import { trackAddToCart } from "../../../utils/ga4Ecommerce";
 
 
@@ -179,21 +177,8 @@ const WishList = () => {
   };
   return (
     <>
-      <Helmet>
-        <title>Gidan - WishList</title>
-        <meta name="robots" content="noindex, nofollow" />
-        <meta
-          name="description"
-          content="View and manage your Gidan wishlist. Save your favorite plants, pots, seeds, and gardening products to buy later and never miss out on your favorite items."
-        />
 
-        <link
-          rel="canonical"
-          href="https://www.gidan.store/wishlist"
-        />
-      </Helmet>
 
-      <Verify />
       <div className="container mx-auto md:p-4 sm:p-0 bg-gray-50">
         <h1 className="text-center text-xl sm:text-2xl font-bold mb-4 sm:mb-6">My Wishlist</h1>
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 px-4 sm:px-6 lg:px-16">

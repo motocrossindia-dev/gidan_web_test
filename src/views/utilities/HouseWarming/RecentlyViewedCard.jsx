@@ -10,9 +10,8 @@ import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { FaStar } from 'react-icons/fa';
-import Verify from "../../../Services/Services/Verify";
-import ReactStars from "react-rating-stars-component";
 import { getProductUrl } from "../../../utils/urlHelper";
+import ReactStars from "react-rating-stars-component";
 import { trackAddToCart, trackAddToWishlist } from "../../../utils/ga4Ecommerce";
 
 
@@ -139,7 +138,6 @@ const RecentlyViewedCard = ({
 
   return (
     <>
-      <Verify />
 
       <div className="sm:hidden">
         <Paper

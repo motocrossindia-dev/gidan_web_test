@@ -21,7 +21,6 @@ import {
 } from 'lucide-react';
 import axiosInstance from '../../../Axios/axiosInstance';
 import { enqueueSnackbar } from 'notistack';
-import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import WriteAReview from '../ProductData/WriteAReview';
 import { getProductUrl } from '../../../utils/urlHelper';
@@ -153,9 +152,7 @@ const PostSummaryView = () => {
 
     return (
         <div className="min-h-screen bg-white pb-20">
-            <Helmet>
-                <title>Order Summary | Gidan</title>
-            </Helmet>
+            
 
             {/* Top Navigation */}
             <div className="bg-gray-100 border-b">

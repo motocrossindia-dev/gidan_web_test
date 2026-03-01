@@ -6,8 +6,6 @@ import ProductGrid from "../../../components/Shared/ProductGrid";
 import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
 import CheckoutStores from "../PlantFilter/CheckoutStores";
 import axiosInstance from "../../../Axios/axiosInstance";
-import { Helmet } from "react-helmet-async";
-
 function CarouselTypeFilter() {
     const { slug } = useParams();
     const pathname = usePathname();
@@ -59,17 +57,7 @@ function CarouselTypeFilter() {
 
     return (
         <>
-            <Helmet>
-                <title>{displayName} | Gidan Plants</title>
-                <meta
-                    name="description"
-                    content={`Shop ${displayName.toLowerCase()} online at best prices. Wide range of premium varieties. Fast delivery & easy returns – Gidan.`}
-                />
-                <link
-                    rel="canonical"
-                    href={`https://www.gidan.store/carousel/${slug}`}
-                />
-            </Helmet>
+            
 
             <div className="w-full overflow-x-hidden">
                 <div className="container mx-auto px-4 md:px-8 max-w-full">

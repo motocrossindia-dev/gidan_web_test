@@ -8,7 +8,6 @@ const contactus = typeof _contactus === 'string' ? _contactus : _contactus?.src 
 import { useSnackbar } from "notistack"; // Import useSnackbar hook
 // Import useNavigate for navigation
 import axiosInstance from "../../../Axios/axiosInstance";
-import { Helmet } from "react-helmet-async";
 import CheckOutStore from "../PlantFilter/CheckoutStores";
 import ContactUsSchema from "../seo/ContactUsSchema";
 
@@ -140,19 +139,7 @@ const ContactUs = () => {
   return (
 
     <>
-      <Helmet>
-        <title>Contact Gidan | Customer Support & Help</title>
-
-        <meta
-          name="description"
-          content="Need help? Contact Gidan for orders, support & queries. We're here to assist you."
-        />
-
-        <link
-          rel="canonical"
-          href="https://www.gidan.store/contact-us"
-        />
-      </Helmet>
+      
 
 
       <div className="font-sans text-gray-800">

@@ -2,7 +2,6 @@
 
 import React from 'react'
 import { Plane as Plant, Gift, Sprout, } from 'lucide-react';
-import { Helmet } from "react-helmet-async";
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
 
@@ -13,19 +12,7 @@ const Comingsoon = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Gidan - Coming soon</title>
-
-        <meta
-          name="description"
-          content="Gidan gifts are coming soon. Get ready to shop plant gifts, gardening kits, and green surprises for every occasion."
-        />
-
-        <link
-          rel="canonical"
-          href="https://www.gidan.store/gifts"
-        />
-      </Helmet>
+      
 
       {/* <Header />
         <Navigation/> */}

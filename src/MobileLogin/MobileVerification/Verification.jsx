@@ -17,10 +17,6 @@ import {
 import { storeToken } from "../../Services/Services/LocalStorageServices";
 import { setVerifiedUser } from "../../redux/User/verificationSlice";
 import { setUsername } from "../../redux/Slice/userSlice";
-import {Helmet} from "react-helmet-async";
-
-
-
 const MobileVerification = () => {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
@@ -98,10 +94,7 @@ const MobileVerification = () => {
 
   return (
       <>
-        <Helmet>
-          <title>Gidan - Mobile Verification</title>
-          <meta name="robots" content="noindex, nofollow" />
-        </Helmet>
+        
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
         <div className="flex justify-center mb-4">

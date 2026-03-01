@@ -8,6 +8,7 @@ Allow: /
 Disallow: /cart
 Disallow: /checkout
 Disallow: /profile/
+Disallow: /profile/trackorder/
 Disallow: /orders
 Disallow: /wishlist
 Disallow: /wallet

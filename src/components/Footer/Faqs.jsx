@@ -1,27 +1,13 @@
 'use client';
 
 import React, { useEffect } from "react";
-import { Helmet } from "react-helmet-async";
-
 const FAQs = () => {
   useEffect(() => {
     window.scrollTo(0, 0); // Scroll to top on component mount
   }, []);
   return (
     <>
-      <Helmet>
-        <title>Gidan - FAQs</title>
-
-        <meta
-          name="description"
-          content="Find answers to common questions about orders, delivery, payments, returns, and plant care at Gidan. Get quick help and support here."
-        />
-
-        <link
-          rel="canonical"
-          href="https://www.gidan.store/faq"
-        />
-      </Helmet>
+      
 
       <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg">
         <h1 className="text-2xl font-bold mb-4 text-center">Frequently Asked Questions (FAQs)</h1>

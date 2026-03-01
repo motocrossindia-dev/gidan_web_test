@@ -6,10 +6,7 @@ import { useParams } from "next/navigation";
 // import FAQSection from "../PlantFilter/FAQSection";
 // import RecentlyViewedProduct from "../PlantFilter/RecentlyViewedProduct";
 // import CheckoutStores from "./PlantFilter/CheckoutStores";
-// // import { Helmet } from "react-helmet-async";
-
-
-// function CarouselData() {
+// // // function CarouselData() {
 //     const { id } = useParams();
 
 
@@ -19,9 +16,7 @@ import { useParams } from "next/navigation";
 
 //     return (
 //         <>
-//             <Helmet>
-//                 <title>Gidan - Carousel</title>
-//             </Helmet>
+//             
 //             <div className="container mx-auto  min-h-screen">
 
 //                 {/* Product Grid */}
@@ -55,7 +50,6 @@ import ProductGrid from "../../../components/Shared/ProductGrid";
 import FAQSection from "../PlantFilter/FAQSection";
 import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
 import CheckoutStores from "../PlantFilter/CheckoutStores";
-import { Helmet } from "react-helmet-async";
 import axios from "axios";
 function CarouselData() {
     const [results, setResults] = useState([]);
@@ -86,19 +80,7 @@ function CarouselData() {
 
     return (
         <>
-            <Helmet>
-                <title>Gidan - Carousel</title>
-
-                <meta
-                    name="description"
-                    content="Explore featured plants, pots, seeds, and plant care products at Gidan. Discover curated collections and highlights for smarter gardening."
-                />
-
-                <link
-                    rel="canonical"
-                    href={`https://www.gidan.store/carousel/${id}`}
-                />
-            </Helmet>
+            
 
 
             <div className="container mx-auto min-h-screen">

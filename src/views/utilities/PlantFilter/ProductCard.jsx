@@ -12,7 +12,6 @@ import { enqueueSnackbar } from "notistack";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import StarsOnCards from "../../../components/TrendingProducts/StarsOnCards";
 import ReactStars from "react-rating-stars-component";
-import Verify from "../../../Services/Services/Verify";
 import { getProductUrl } from "../../../utils/urlHelper";
 import { trackAddToCart, trackAddToWishlist } from "../../../utils/ga4Ecommerce";
 
@@ -104,7 +103,6 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
 
     return (
         <>
-            <Verify />
 
             {/* Desktop / Tablet */}
             <div className="hidden sm:block transition-transform duration-300 hover:-translate-y-2">
@@ -346,7 +344,6 @@ export default ProductCard;
 // import { selectAccessToken } from "../../../redux/User/verificationSlice";
 // import StarsOnCards from "../../../components/TrendingProducts/StarsOnCards";
 // import ReactStars from "react-rating-stars-component";
-// import Verify from "../../../Services/Services/Verify";
 //
 // const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, inCart, ratingNumber, mrp, ribbon }) => {
 //     const [isHovered, setIsHovered] = useState(false);
@@ -439,7 +436,6 @@ export default ProductCard;
 //
 //     return (
 //         <>
-//             <Verify />
 //
 //             {/* Desktop / Tablet */}
 //             <div className="hidden sm:block transition-transform duration-300 hover:-translate-y-2">

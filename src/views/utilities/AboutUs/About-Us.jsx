@@ -2,21 +2,13 @@
 
 import React from "react";
 import aboutUsImg from "../../../Assets/OurWork/ourwork3.webp";// Ensure you have an image asset
-import { Helmet } from "react-helmet-async";
 import AboutUsSchema from "../seo/AboutUsSchema";
 
 const AboutUs = () => {
     const _aboutUsImg = typeof aboutUsImg === 'string' ? aboutUsImg : aboutUsImg?.src || aboutUsImg;
     return (
         <>
-            <Helmet>
-                <title>About Gidan | Our Story, Mission & Vision</title>
-                <meta
-                    name="description"
-                    content="GIDAN is India’s destination for curated garden products. Built by Biotech Maali, we provide plants, planters, and gardening education for Indian homes."
-                />
-                <link rel="canonical" href="https://www.gidan.store/about-us" />
-            </Helmet>
+            
 
             <div className="font-sans text-gray-800">
                 {/* Header Section */}

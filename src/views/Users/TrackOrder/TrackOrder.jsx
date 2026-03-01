@@ -3,9 +3,7 @@
 // import React, { useEffect, useState } from "react";
 // import useDeviceDetect from "../../../CustomHooks/useDeviceDetect";
 // import location from "../../../Assets/21bd1d1e8c39ab293b04937cb183ed2d3481b3b4 (1).gif";
-// import {Helmet} from "react-helmet-async";
-
-// const TrackOrder = () => {
+// // const TrackOrder = () => {
 //   const { isDesktop } = useDeviceDetect();
 //   const [orderId, setOrderId] = useState("");
 //   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -21,9 +19,7 @@
 
 //   return (
 //       <>
-//         <Helmet>
-//           <title>Gidan - Track Order Page</title>
-//         </Helmet>
+//         
 //     <div className="flex justify-center items-center min-h-screen mx-10 bg-white font-sans">
 //       {!isSubmitted ? (
 //         <main className="w-min-full bg-white p-8 rounded-lg shadow-lg">
@@ -142,7 +138,6 @@ import useDeviceDetect from "../../../CustomHooks/useDeviceDetect";
 import __location from "../../../Assets/21bd1d1e8c39ab293b04937cb183ed2d3481b3b4 (1).webp";
 const _location = typeof __location === 'string' ? __location : __location?.src || __location;
 const location = typeof _location === 'string' ? _location : _location?.src || _location;
-import { Helmet } from "react-helmet-async";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
@@ -193,19 +188,7 @@ const TrackOrder = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Gidan - Track Order Page</title>
-        <meta name="robots" content="noindex, nofollow" />
-        <meta
-          name="description"
-          content="Track your Gidan order easily and stay updated on delivery status. Enter your details to view real-time order tracking and updates."
-        />
-
-        <link
-          rel="canonical"
-          href="https://www.gidan.store/profile/trackorder"
-        />
-      </Helmet>
+      
 
 
       <div className="flex justify-center items-center min-h-screen mx-10 bg-white font-sans">

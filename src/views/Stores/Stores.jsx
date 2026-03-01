@@ -5,9 +5,7 @@ import Link from "next/link";
 // import React, { useState, useEffect } from "react";
 // import { CiLocationOn } from "react-icons/ci"; // Import the location icon
 // // import axiosInstance from "../../Axios/axiosInstance";
-// import {Helmet} from "react-helmet-async";
-
-// const Stores = () => {
+// // const Stores = () => {
 //   const router = useRouter();
 //   // State to store selected store data for the form
 //   const [loading, setLoading] = useState(true); // State to track loading status
@@ -47,9 +45,7 @@ import Link from "next/link";
 //   };
 //   return (
 //       <>
-//         <Helmet>
-//           <title>Gidan - Stores</title>
-//         </Helmet>
+//         
 //     <div className="w-full bg-white-100 p-6 rounded-lg">
 //       <h2 className="text-2xl font-semibold text-start mb-6">
 //         Checkout Our Stores
@@ -116,8 +112,6 @@ import Link from "next/link";
 
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../Axios/axiosInstance";
-import { Helmet } from "react-helmet-async";
-
 const Stores = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -155,19 +149,7 @@ const Stores = () => {
 
   return (
     <>
-      <Helmet>
-        <title>About Gidan | Trusted Online Shopping Store</title>
-
-        <meta
-          name="description"
-          content="Learn about Gidan – our story, values & commitment to quality products and customer satisfaction."
-        />
-
-        <link
-          rel="canonical"
-          href="https://www.gidan.store/stores"
-        />
-      </Helmet>
+      
 
 
 

@@ -2,8 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../../Axios/axiosInstance';
-import { Helmet } from "react-helmet-async"
-
 const Carriers = () => {
   const [activeTab, setActiveTab] = useState('non-tech');
   const [expanded, setExpanded] = useState(null);
@@ -41,19 +39,7 @@ const Carriers = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Gidan - Carriers </title>
-
-        <meta
-          name="description"
-          content="Explore career opportunities at Gidan and grow with us. Join our team and be part of a smarter, greener gardening journey."
-        />
-
-        <link
-          rel="canonical"
-          href="https://www.gidan.store/careers"
-        />
-      </Helmet>
+      
 
       <div className="min-h-screen flex flex-col items-center justify-between p-4">
         <div className="w-full border-b">

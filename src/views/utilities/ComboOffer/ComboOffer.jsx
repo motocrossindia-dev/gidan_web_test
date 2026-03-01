@@ -6,8 +6,6 @@ const _combooffer = typeof __combooffer === 'string' ? __combooffer : __combooff
 const combooffer = typeof _combooffer === 'string' ? _combooffer : _combooffer?.src || _combooffer;
 import ComboImage from './ComboImage.jsx';
 import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
-import { Helmet } from "react-helmet-async";
-
 const ComboOffer = () => {
 
   useEffect(() => {
@@ -15,19 +13,7 @@ const ComboOffer = () => {
   }, []);
   return (
     <>
-      <Helmet>
-        <title>Gidan - Combo Offers</title>
-
-        <meta
-          name="description"
-          content="Explore combo offers at Gidan and save more on plants, pots, seeds, and plant care products. Grab the best gardening deals in one place."
-        />
-
-        <link
-          rel="canonical"
-          href="https://www.gidan.store/combooffer"
-        />
-      </Helmet>
+      
 
       <div>
         {/* Combo Offer Section */}

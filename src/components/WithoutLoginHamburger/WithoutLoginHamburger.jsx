@@ -169,7 +169,7 @@ const WithoutLoginHamburger = () => {
   };
 
   const additionalLinks = [
-    { label: "Blog", path: "/blogcomponent" },
+    { label: "Blog", path: "/blogs" },
     { label: "Track Order", path: "/trackorder" },
     { label: "Become A Franchise", path: "/franchise-enquiry" },
     { label: "Contact Us", path: "/contact-us" },
@@ -601,7 +601,7 @@ export default WithoutLoginHamburger;
 //   };
 // 
 //   const additionalLinks = [
-//     { label: "Blog", path: "/blogcomponent" },
+//     { label: "Blog", path: "/blogs" },
 //     { label: "Track Order", path: "/trackorder" },
 //     { label: "Become A Franchise", path: "/franchise-enquiry" },
 //     { label: "Contact Us", path: "/contact-us" },
