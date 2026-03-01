@@ -55,9 +55,9 @@
     "typescript": "5.9.3"
   },
   "browserslist": [
-    ">0.5%",
-    "not dead",
-    "not op_mini all",
-    "not IE 11"
+    "chrome >= 87",
+    "edge >= 88",
+    "firefox >= 78",
+    "safari >= 14"
   ]
 }

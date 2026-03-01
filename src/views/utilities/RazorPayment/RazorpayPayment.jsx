@@ -1,6 +1,7 @@
 'use client';
 
 import React from "react";
+import Script from "next/script";
 
 const RazorpayPayment = () => {
   const handlePayment = async () => {
@@ -30,6 +31,8 @@ const RazorpayPayment = () => {
 
   return (
     <div>
+      {/* Load Razorpay only on the payment page, not globally */}
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       <button onClick={handlePayment} className="bg-bio-green text-white px-4 py-2 rounded">
         Proceed To Payment
       </button>

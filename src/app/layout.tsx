@@ -96,13 +96,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="preconnect" href="https://backend.gidan.store" />
+        {/* Preconnect for LCP image origin — crossOrigin required for next/image CORS requests */}
+        <link rel="preconnect" href="https://backend.gidan.store" crossOrigin="anonymous" />
+        {/* DNS prefetch for 3rd-party origins — zero-cost hint to unblock connections */}
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://connect.facebook.net" />
+        <link rel="dns-prefetch" href="https://checkout.razorpay.com" />
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
 
-
-        {/* Razorpay Checkout */}
-        <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
-
-        {/* Global site tag (gtag.js) - Google Analytics */}
+        {/* Google Analytics — afterInteractive so it never blocks paint */}
         <Script async src="https://www.googletagmanager.com/gtag/js?id=G-T4GR7HMTN6" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
@@ -113,87 +115,27 @@ export default function RootLayout({
           `}
         </Script>
 
-        {/* Theme-based Logo and Service Worker Cleanup */}
-        <Script id="theme-logo-sw-cleanup" strategy="beforeInteractive">
+        {/* Logo/favicon theme switch — ONLY this tiny critical path stays beforeInteractive */}
+        <Script id="theme-logo" strategy="beforeInteractive">
+          {`(function(){function u(d){var f=document.querySelector('link[rel="icon"]'),a=document.querySelector('link[rel="apple-touch-icon"]'),o=location.origin;if(f)f.href=o+(d?'/logo-white.webp':'/logo.webp');if(a)a.href=o+(d?'/logo-white.webp':'/logo.webp');}var m=window.matchMedia('(prefers-color-scheme: dark)');u(m.matches);m.addEventListener('change',function(e){u(e.matches);});})();`}
+        </Script>
+
+        {/* SW cleanup + GTM rogue text fix — deferred afterInteractive, never blocks paint */}
+        <Script id="sw-gtm-cleanup" strategy="afterInteractive">
           {`
-            (function() {
-              // Logo/Favicon helper
-              function updateLogoByTheme(isDark) {
-                  const favicon = document.querySelector('link[rel="icon"]');
-                  const appleIcon = document.querySelector('link[rel="apple-touch-icon"]');
-                  const baseUrl = window.location.origin;
-                  const ts = new Date().getTime();
-                  const logo = isDark 
-                      ? baseUrl + "/logo-white.webp?v=" + ts 
-                      : baseUrl + "/logo.webp?v=" + ts;
-                  if (favicon) favicon.href = logo;
-                  if (appleIcon) appleIcon.href = logo;
-              }
-              const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
-              updateLogoByTheme(darkModeQuery.matches);
-              darkModeQuery.addEventListener("change", function(e) { updateLogoByTheme(e.matches); });
-
-              // SW Cleanup
-              if ('serviceWorker' in navigator) {
-                  navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                      for(let registration of registrations) { registration.unregister(); }
-                  });
-              }
-
-              // Rogue GTM text cleanup (Ultra-Aggressive)
-              // Root Cause: GTM Custom HTML tag missing <script> tags.
-              (function() {
-                const clean = (node) => {
-                  if (!node) return;
-                  if (node.nodeType === 3) { // Text Node
-                    const text = node.textContent || "";
-                    if (text.includes("fbq('track'") || (text.includes("ViewContent") && text.includes("[object Object]"))) {
-                      if (node.parentNode && !['SCRIPT', 'STYLE', 'HEAD'].includes(node.parentNode.tagName)) {
-                        node.textContent = "";
-                      }
-                    }
-                  } else if (node.nodeType === 1 && !['SCRIPT', 'STYLE', 'HEAD'].includes(node.tagName)) {
-                    // Quick check on element text
-                    const text = node.textContent || "";
-                    if (text.includes("fbq('track'") || text.includes("[object Object]")) {
-                      const walker = document.createTreeWalker(node, 4, null, false);
-                      let n;
-                      while(n = walker.nextNode()) {
-                        const t = n.textContent || "";
-                        if (t.includes("fbq('track'") || (t.includes("ViewContent") && t.includes("[object Object]"))) {
-                           if (n.parentNode && !['SCRIPT', 'STYLE', 'HEAD'].includes(n.parentNode.tagName)) {
-                             n.textContent = "";
-                           }
-                        }
-                      }
-                    }
-                  }
-                };
-
-                if (typeof window !== 'undefined') {
-                  // Initial scan
-                  if (document.documentElement) clean(document.documentElement);
-
-                  const observer = new MutationObserver((mutations) => {
-                    for (const m of mutations) {
-                      if (m.type === 'childList') {
-                        m.addedNodes.forEach(clean);
-                      } else if (m.type === 'characterData') {
-                        clean(m.target);
-                      }
-                    }
-                  });
-
-                  observer.observe(document.documentElement, {
-                    childList: true,
-                    subtree: true,
-                    characterData: true
-                  });
-                  
-                  // Secondary cleanup on window load (GTM sometimes injects late)
-                  window.addEventListener('load', () => clean(document.body));
+            if('serviceWorker'in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(reg){reg.unregister();});});}
+            (function(){
+              var bad=function(t){return t&&(t.includes("fbq('track'")||(t.includes('ViewContent')&&t.includes('[object Object]')));},
+              clean=function(n){
+                if(!n)return;
+                if(n.nodeType===3){if(bad(n.textContent)&&n.parentNode&&!['SCRIPT','STYLE','HEAD'].includes(n.parentNode.tagName))n.textContent='';}
+                else if(n.nodeType===1&&!['SCRIPT','STYLE','HEAD'].includes(n.tagName)){
+                  if(bad(n.textContent)){var w=document.createTreeWalker(n,4,null,false),x;while(x=w.nextNode()){if(bad(x.textContent)&&x.parentNode&&!['SCRIPT','STYLE','HEAD'].includes(x.parentNode.tagName))x.textContent='';}}
                 }
-              })();
+              };
+              if(document.documentElement)clean(document.documentElement);
+              new MutationObserver(function(ms){ms.forEach(function(m){if(m.type==='childList')m.addedNodes.forEach(clean);else if(m.type==='characterData')clean(m.target);});}).observe(document.documentElement,{childList:true,subtree:true,characterData:true});
+              window.addEventListener('load',function(){clean(document.body);});
             })();
           `}
         </Script>

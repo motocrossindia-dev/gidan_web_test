@@ -39,7 +39,7 @@ const nextConfig: NextConfig = {
   images: {
     qualities: [75, 80, 85],
     formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 3600,
+    minimumCacheTTL: 60 * 60 * 24 * 7, // 7 days — reduces repeat image downloads
     remotePatterns: [
       {
         protocol: "https",
