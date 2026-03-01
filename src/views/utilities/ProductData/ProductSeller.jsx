@@ -88,7 +88,7 @@ const ProductSeller = () => {
                   <div className="relative w-full flex flex-col items-center p-2">
                     {/* <div className="relative w-full flex mb-4">
                                     <img name=" "   
-                                      className="w-40 h-24 sm:w-40 sm:h-36 object-contain rounded-lg transition-transform duration-300 relative z-10 mt-6"
+                                      className="w-40 h-24 sm:w-40 sm:h-36 object-contain rounded-lg transition-transform duration-300 relative z-50 mt-6"
                                       src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
                                       loading="lazy"
                                       alt={product.name}
@@ -97,7 +97,7 @@ const ProductSeller = () => {
 
                     <div className="relative w-full flex justify-center mb-3">
                       <img
-                        className="w-full h-40 object-cover rounded-lg transition-transform duration-300 relative z-10"
+                        className="w-full h-40 object-cover rounded-lg transition-transform duration-300 relative z-50"
                         src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
                         alt={product.name}
                       />

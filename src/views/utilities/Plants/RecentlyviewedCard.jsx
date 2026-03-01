@@ -99,7 +99,7 @@ const RecentlyViewedCard = ({ name, price, oldPrice, imageUrl, rating }) => {
             onMouseLeave={() => setIsHovered(false)}
           >
             <img name=" "
-              className={`w-40 h-44 sm:w-52 sm:h-59 object-contain rounded-lg transition-transform duration-300 relative z-10 mt-8  ${
+              className={`w-40 h-44 sm:w-52 sm:h-59 object-contain rounded-lg transition-transform duration-300 relative z-50 mt-8  ${
                 isHovered ? "scale-105" : "scale-100"
               }`}
               src={imageUrl}

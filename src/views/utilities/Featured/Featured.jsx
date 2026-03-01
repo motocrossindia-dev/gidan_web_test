@@ -39,7 +39,7 @@ function Featured() {
 
         {/* --- CHANGE: Desktop Horizontal Filter - Full Width --- */}
         {/* This is the main container for the horizontal filter bar */}
-        <div className="hidden md:block mt-4 overflow-visible relative z-10">
+        <div className="hidden md:block mt-4 overflow-visible relative z-50">
           <FilterSidebar
             setResults={setResults}
             setShowMobileFilter={setShowMobileFilter} // Pass this to close mobile filter on apply

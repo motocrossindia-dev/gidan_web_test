@@ -104,7 +104,7 @@ function PlantCare() {
         </div>
 
         {/* Desktop Horizontal Filter - Full Width */}
-        <div className="hidden md:block mt-4 overflow-visible relative z-10">
+        <div className="hidden md:block mt-4 overflow-visible relative z-50">
           <FilterSidebar
             setResults={setResults}
           />
@@ -129,7 +129,7 @@ function PlantCare() {
 
         {/* Mobile Filter Sidebar Overlay */}
         {showMobileFilter && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 md:hidden">
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-[10005] md:hidden">
             <div className="absolute top-0 right-0 w-3/4 max-w-xs bg-white h-full shadow-lg z-50 overflow-y-auto">
               {/* Close Button */}
               <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between z-10">

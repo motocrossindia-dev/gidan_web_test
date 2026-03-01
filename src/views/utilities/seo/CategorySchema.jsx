@@ -8,6 +8,8 @@ export default function CategorySchema({
     const baseUrl = "https://www.gidan.store/";
     const siteUrl = "https://www.gidan.store";
 
+    const getProductImage = (item) => item?.main_image || item?.image || item?.prod_image || (Array.isArray(item?.images) && item.images[0]) || null;
+
     const schema = {
         "@context": "https://schema.org",
         "@graph": [
@@ -17,7 +19,7 @@ export default function CategorySchema({
                 "url": `${baseUrl}${categorySlug}/`,
                 "name": categoryName || categorySlug || "Category",
                 "description": `Explore a curated collection of ${categoryName || categorySlug || "Category"} from Gidan Store.`,
-                "image": items[0]?.main_image || (items[0]?.images && items[0]?.images[0]) || ""
+                ...(getProductImage(items[0]) ? { "image": getProductImage(items[0]) } : {})
             },
             {
                 "@type": "BreadcrumbList",
@@ -50,7 +52,7 @@ export default function CategorySchema({
                         "item": {
                             "@type": "Product",
                             "name": item.main_product_name || item.name || "Product",
-                            "image": item.main_image || (item.images && item.images[0]) || "",
+                            ...(getProductImage(item) ? { "image": getProductImage(item) } : {}),
                             "url": productUrl,
                             "offers": {
                                 "@type": "Offer",

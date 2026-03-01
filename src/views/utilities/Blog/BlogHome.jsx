@@ -19,7 +19,7 @@ function Blog() {
       <div className="absolute inset-0 bg-black opacity-60"></div>
 
       {/* Centered Content Box */}
-      <div className="relative z-10 flex items-center justify-center w-full px-4">
+      <div className="relative z-50 flex items-center justify-center w-full px-4">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-4">
           Become a MoveonWheels Partner
         </h2>

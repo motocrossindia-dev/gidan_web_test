@@ -255,7 +255,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                         {/* Image Section */}
                         <div className="relative w-full flex justify-center mb-3">
                             <img
-                                className="w-32 h-32 object-contain rounded-md transition-transform duration-300 relative z-10"
+                                className="w-32 h-32 object-contain rounded-md transition-transform duration-300 relative z-50"
                                 src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
                                 alt={name}
                                 loading="lazy" width="400" height="400" style={{ aspectRatio: '1/1' }}
@@ -585,7 +585,7 @@ export default ProductCard;
 //                         {/* Image Section */}
 //                         <div className="relative w-full flex justify-center mb-3">
 //                             <img
-//                                 className="w-32 h-32 object-contain rounded-md transition-transform duration-300 relative z-10"
+//                                 className="w-32 h-32 object-contain rounded-md transition-transform duration-300 relative z-50"
 //                                 src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
 //                                 alt={name}
 //                                 loading="lazy"

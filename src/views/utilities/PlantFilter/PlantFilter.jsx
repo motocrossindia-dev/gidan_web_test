@@ -493,6 +493,7 @@ function PlantFilter({
                 disableBackdropTransition={!iOS}
                 disableDiscovery={iOS}
                 sx={{
+                    zIndex: 10005,
                     '& .MuiDrawer-paper': {
                         boxSizing: 'border-box',
                         width: '85%',

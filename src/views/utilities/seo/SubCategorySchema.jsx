@@ -11,6 +11,8 @@ export default function SubCategorySchema({
     // Build proper 2-segment subcategory URL
     const subcategoryUrl = `${siteUrl}${category.slug}/${subCategory.slug}/`;
 
+    const getProductImage = (item) => item?.main_image || item?.image || item?.prod_image || (Array.isArray(item?.images) && item.images[0]) || null;
+
     const schema = {
         "@context": "https://schema.org",
         "@graph": [
@@ -20,7 +22,7 @@ export default function SubCategorySchema({
                 "url": subcategoryUrl,
                 "name": subCategory.name || subCategory.slug || "Subcategory",
                 "description": subCategory.description || `${subCategory.name || subCategory.slug || "Subcategory"} under ${category.name || category.slug || "Category"}`,
-                "image": items[0]?.main_image || (items[0]?.images && items[0]?.images[0]) || ""
+                ...(getProductImage(items[0]) ? { "image": getProductImage(items[0]) } : {})
             },
             {
                 "@type": "BreadcrumbList",
@@ -59,7 +61,7 @@ export default function SubCategorySchema({
                         "item": {
                             "@type": "Product",
                             "name": item.main_product_name || item.name || "Product",
-                            "image": item.main_image || (item.images && item.images[0]) || "",
+                            ...(getProductImage(item) ? { "image": getProductImage(item) } : {}),
                             "url": productUrl,
                             "offers": {
                                 "@type": "Offer",

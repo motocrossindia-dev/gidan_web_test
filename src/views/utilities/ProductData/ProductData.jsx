@@ -1475,18 +1475,12 @@ export default function ProductData({ initialProductData }) {
 
                 </div>
             </div>
-
-            {/* People also bought — full width, directly below buy section */}
             <div className="bg-white pt-4">
                 <PeopleAlsoBought title="People Also Bought" />
             </div>
-
-            {/* Product description / About */}
             <div className="bg-white p-4">
                 <AboutTheProducts productDetailData={productDetailData} />
             </div>
-
-            {/* Write a Review Section (Inline) */}
             {isReviewModalOpen && (
                 <div id="write-review-section" className="bg-white px-4 md:px-20">
                     <WriteAReview
@@ -1497,8 +1491,6 @@ export default function ProductData({ initialProductData }) {
                     />
                 </div>
             )}
-
-            {/* Product Reviews Section */}
             {(productDetailData?.data?.product || productDetailData?.product) && (
                 <ProductReviews
                     product_Rating={ratingData}
@@ -1511,7 +1503,6 @@ export default function ProductData({ initialProductData }) {
 
             <ProductFeatured />
             <ProductSeller />
-            {/* <FaqAccordion /> */}
 
             <StoreSchema />
         </>

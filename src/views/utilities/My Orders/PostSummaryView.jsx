@@ -268,7 +268,7 @@ const PostSummaryView = () => {
                                 const isCurrent = index === currentIndex;
 
                                 return (
-                                    <div key={step} className="flex flex-col items-center relative z-10 bg-white px-2">
+                                    <div key={step} className="flex flex-col items-center relative z-50 bg-white px-2">
                                         <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 ${isActive ? 'bg-green-500 border-green-100 text-white' : 'bg-white border-gray-200 text-gray-300'
                                             }`}>
                                             {isActive ? <CheckCircle2 className="w-4 h-4" /> : <div className="w-2 h-2 rounded-full bg-gray-300"></div>}
