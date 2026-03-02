@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
 
   // Use absolute URLs for static assets (managed by assetPrefix)
-  assetPrefix: process.env.NEXT_PUBLIC_BASE_URL || undefined,
+  assetPrefix: process.env.NODE_ENV === "production" ? (process.env.NEXT_PUBLIC_BASE_URL || undefined) : undefined,
 
 
   // Map CRA env vars to Next.js NEXT_PUBLIC_ equivalents
@@ -27,6 +27,11 @@ const nextConfig: NextConfig = {
   // Explicitly enable compression
   compress: true,
 
+  // Inline critical CSS and defer non-critical — fixes render-blocking CSS chunks
+  experimental: {
+    optimizeCss: true,
+  },
+
   // Turbopack resolve aliases (mirror of webpack aliases below)
   turbopack: {
     resolveAlias: {
@@ -37,9 +42,11 @@ const nextConfig: NextConfig = {
 
   // Image optimization domains
   images: {
-    qualities: [75, 80, 85],
+    qualities: [70, 75, 80],
     formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 60 * 60 * 24 * 7, // 7 days — reduces repeat image downloads
+    deviceSizes: [640, 750, 828, 1080, 1200, 1440, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days — maximize cache hits
     remotePatterns: [
       {
         protocol: "https",

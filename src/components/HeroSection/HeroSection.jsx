@@ -59,14 +59,14 @@ const HeroSection = ({ hero }) => {
                     <Image
                       src={`https://backend.gidan.store${banner.web_banner}`}
                       alt={`Hero Banner ${index + 1}`}
-                      width={1920}
-                      height={600}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1200px) 90vw, 1920px"
+                      width={1440}
+                      height={540}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1440px"
                       className="w-full h-auto cursor-pointer"
                       priority={index === 0}
                       fetchPriority={index === 0 ? "high" : "low"}
                       loading={index === 0 ? "eager" : "lazy"}
-                      quality={75}
+                      quality={70}
                     />
                   </Link>
                 </div>

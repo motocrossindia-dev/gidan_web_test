@@ -99,8 +99,8 @@ export default function RootLayout({
         {/* Preconnect for LCP image origin — crossOrigin required for next/image CORS requests */}
         <link rel="preconnect" href="https://backend.gidan.store" crossOrigin="anonymous" />
         {/* DNS prefetch for 3rd-party origins — zero-cost hint to unblock connections */}
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://connect.facebook.net" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://connect.facebook.net" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://checkout.razorpay.com" />
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
 
