@@ -180,14 +180,14 @@ const PaymentGateway = () => {
           return;
         }
 
-        // ✅ CASE 2: Partial Wallet + Razorpay Required
+        // ✅ CASE 2: Partial Wallet + Razorpay Requiredq111₹                                                                                       3                                                                                                                                                                                           
         const options = {
-          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,                                                     
           amount: razorpayOrder.amount || 0,
           currency: "INR",
-          name: "Bio-tech Maali",
+          name: "Gidan Store",
           description: "Pay remaining balance",
-          image: "https://your-logo-url.com",
+          image: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://www.gidan.store'}/logo.webp`,
           order_id: razorpayOrder.id,
           handler: async (paymentResponse) => {
             try {
