@@ -5,18 +5,22 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { useSnackbar } from "notistack";
-import useDeviceDetect from "../../../CustomHooks/useDeviceDetect";
-import DeactivationConfirmation from "../Deactivation/Deactivation"; // Import the DeactivationConfirmation component
+import { useMediaQuery } from 'react-responsive';
+import DeactivationConfirmation from "../Deactivation/Deactivation";
 import AddressSection from "./AddressSection";
 import FAQSection from "./FAQSection";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { setGst } from '../../../redux/Slice/userSlice';
+import MobileSidebar from '../../utilities/MobileSidebar/MobileSidebar';
+import EditProfile from '../../MobileUser/Edit Profile/EditProfile';
 
 
 const ProfileForm = () => {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const { isDesktop } = useDeviceDetect();
+  const isMobileView = useMediaQuery({ query: '(max-width: 780px)' });
+  const [mounted, setMounted] = useState(false);
+  const [mobileSection, setMobileSection] = useState(null);
   const accessToken = useSelector(selectAccessToken);
   const [isEditing, setIsEditing] = useState(false);
   const [showDeactivation, setShowDeactivation] = useState(false); // Define state for deactivation confirmation
@@ -32,6 +36,8 @@ const ProfileForm = () => {
 
   // const [userGst, setUserGst] = useState("");
   const gst = useSelector((state) => state.user.gst);
+
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0); // Scroll to the top
@@ -143,8 +149,25 @@ const ProfileForm = () => {
 
   return (
     <>
-
-      <div>
+      {mounted && isMobileView ? (
+        <>
+          {mobileSection === 'editprofile' && (
+            <EditProfile onBack={() => setMobileSection(null)} />
+          )}
+          {mobileSection === 'address' && (
+            <div>
+              <button
+                onClick={() => setMobileSection(null)}
+                className="flex items-center gap-2 p-4 text-bio-green font-medium"
+              >
+                ← Back
+              </button>
+              <AddressSection />
+            </div>
+          )}
+          {!mobileSection && <MobileSidebar onNavigate={setMobileSection} />}
+        </>
+      ) : (
         <div>
           {showDeactivation ? (
             <DeactivationConfirmation
@@ -340,10 +363,10 @@ const ProfileForm = () => {
               </div>
             </main>
           )}
+          <AddressSection />
+          {/* <FAQSection /> */}
         </div>
-        <AddressSection />
-        {/* <FAQSection /> */}
-      </div>
+      )}
     </>
   );
 };

@@ -134,6 +134,7 @@
 
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import useDeviceDetect from "../../../CustomHooks/useDeviceDetect";
 import __location from "../../../Assets/21bd1d1e8c39ab293b04937cb183ed2d3481b3b4 (1).webp";
 const _location = typeof __location === 'string' ? __location : __location?.src || __location;
@@ -188,10 +189,11 @@ const TrackOrder = () => {
 
   return (
     <>
-      
+      <Link href="/profile" className="flex md:hidden items-center gap-2 px-4 pt-4 pb-1 text-bio-green font-medium">
+        ← Back to Profile
+      </Link>
 
-
-      <div className="flex justify-center items-center min-h-screen mx-10 bg-white font-sans">
+      <div className="flex justify-center items-start min-h-screen mx-10 bg-white font-sans">
         {!isSubmitted ? (
           <main className="w-min-full bg-white p-8 rounded-lg shadow-lg">
             {/* Header */}

@@ -10,7 +10,7 @@ import HomepageSchema from "../../utilities/seo/HomepageSchema";
 import StoreSchema from "../../utilities/seo/StoreSchema";
 
 
-const EditProfile = () => {
+const EditProfile = ({ onBack }) => {
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => { setIsMounted(true); }, []);
@@ -24,7 +24,8 @@ const EditProfile = () => {
   });
 
   const handleBackClick = () => {
-    router.push("/mobilesidebar"); // Navigate to MobileSidebar
+    if (onBack) onBack();
+    else router.push("/profile");
   };
 
   const getProfile = async () => {
@@ -74,7 +75,7 @@ const EditProfile = () => {
     <>
               {/* <Header />
             <Navigation/> */}
-    <div className={`flex justify-center items-center min-h-screen ${isMounted && isMobile ? 'bg-gray-100' : 'bg-white'}`}>
+    <div className={`flex justify-center items-start min-h-screen ${isMounted && isMobile ? 'bg-gray-100' : 'bg-white'}`}>
       <div className="w-full max-w-md bg-white p-4 shadow-md rounded-lg">
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b">

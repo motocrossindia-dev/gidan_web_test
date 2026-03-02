@@ -16,7 +16,7 @@ const TrackOrderMobile = () => {
   const [trackingId, setTrackingId] = useState("");
 
   const handleBackClick = () => {
-    router.push("/mobilesidebar"); // Navigate to MobileSidebar
+    router.push("/profile");
   };
 
   return (

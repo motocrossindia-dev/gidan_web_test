@@ -12,10 +12,11 @@ import {
   MdAccountBalanceWallet,
   MdShoppingBag,
   MdEdit,
-  MdChevronRight
+  MdChevronRight,
+  MdMonetizationOn
 } from "react-icons/md";
 
-const MobileSidebar = () => {
+const MobileSidebar = ({ onNavigate }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState('');
 
@@ -34,12 +35,13 @@ const MobileSidebar = () => {
   }, []);
 
   const options = [
-    { label: "Edit Profile", icon: <MdPerson />, link: "/mobilesidebar/editprofile" },
-    { label: "Add New Address", icon: <MdLocationOn />, link: "/mobilesidebar/address" },
-    { label: "Track Order", icon: <MdLocalShipping />, link: "/mobilesidebar/trackmobile" },
-    { label: "Refer A Friend", icon: <MdPeople />, link: "/mobilesidebar/referalmobile" },
-    { label: "Add Gift Card", icon: <MdCardGiftcard />, link: "/mobilesidebar/giftcardmobile" },
-    { label: "Wallet", icon: <MdAccountBalanceWallet />, link: "/mobilesidebar/walletmobile" },
+    { label: "Edit Profile", icon: <MdPerson />, link: "/profile", section: "editprofile" },
+    { label: "Add New Address", icon: <MdLocationOn />, link: "/profile", section: "address" },
+    { label: "Track Order", icon: <MdLocalShipping />, link: "/profile/trackorder" },
+    { label: "Refer A Friend", icon: <MdPeople />, link: "/profile/referal" },
+    { label: "Add Gift Card", icon: <MdCardGiftcard />, link: "/profile/giftcard" },
+    { label: "GD Coins", icon: <MdMonetizationOn />, link: "/profile/btcoins" },
+    { label: "Wallet", icon: <MdAccountBalanceWallet />, link: "/profile/wallet" },
     { label: "My Orders", icon: <MdShoppingBag />, link: "/orders" },
   ];
 
@@ -86,19 +88,27 @@ const MobileSidebar = () => {
         </div>
 
         <div className="mt-4 space-y-2">
-          {options.map((option, index) => (
-            <Link
-              href={option.link || "#"}
-              key={index}
-              className="flex items-center justify-between p-4 bg-white rounded-lg shadow-md hover:bg-gray-100 transition"
-            >
-              <div className="flex items-center space-x-3">
-                <span className="text-bio-green text-2xl">{option.icon}</span>
-                <p className="text-gray-800 font-medium">{option.label}</p>
-              </div>
-              <MdChevronRight className="text-gray-400 text-xl" />
-            </Link>
-          ))}
+          {options.map((option, index) => {
+            const cls = "w-full flex items-center justify-between p-4 bg-white rounded-lg shadow-md hover:bg-gray-100 transition";
+            const inner = (
+              <>
+                <div className="flex items-center space-x-3">
+                  <span className="text-bio-green text-2xl">{option.icon}</span>
+                  <p className="text-gray-800 font-medium">{option.label}</p>
+                </div>
+                <MdChevronRight className="text-gray-400 text-xl" />
+              </>
+            );
+            return onNavigate && option.section ? (
+              <button key={index} className={cls} onClick={() => onNavigate(option.section)}>
+                {inner}
+              </button>
+            ) : (
+              <Link key={index} href={option.link || "#"} className={cls}>
+                {inner}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </>

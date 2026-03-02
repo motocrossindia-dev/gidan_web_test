@@ -8,6 +8,7 @@ import Verify from "../../../Services/Services/Verify";
 import axiosInstance from "../../../Axios/axiosInstance";
 import HomepageSchema from "../../utilities/seo/HomepageSchema";
 import StoreSchema from "../../utilities/seo/StoreSchema";
+import AddressForm from "@/components/Shared/AddressForm";
 
 
 
@@ -60,81 +61,13 @@ const AddressSection = () => {
   };
 
   const handleAddNewAddress = () => {
-    const newAddress = {
-      isEditing: true,
-      firstName: "",
-      lastName: "",
-      address: "",
-      city: "",
-      state: "",
-      pinCode: "",
-      phone: "",
-      addressType: "",
-      isDefault: false,
-    };
-    setAddress([...address, newAddress]);
-  };
-
-  const handleAddressChange = (index, field, value) => {
-    setAddress((prev) => {
-      const updatedAddrs = [...prev];
-      updatedAddrs[index] = { ...updatedAddrs[index], [field]: value };
-
-      if (field === "pinCode") {
-        const pinStr = String(value).trim();
-        if (pinStr.length !== 6) {
-          updatedAddrs[index].city = "";
-          updatedAddrs[index].state = "";
-        }
-      }
-      return updatedAddrs;
-    });
-
-    if (field === "pinCode") {
-      const pinStr = String(value).trim();
-      if (pinStr.length === 6) {
-        fetch(`https://api.postalpincode.in/pincode/${pinStr}`)
-          .then((res) => res.json())
-          .then((responseData) => {
-            if (responseData && responseData[0].Status === "Success") {
-              const data = responseData[0].PostOffice[0];
-              setAddress((prev) => {
-                const newAddrs = [...prev];
-                newAddrs[index] = {
-                  ...newAddrs[index],
-                  city: data.District || data.Block || data.Name || "",
-                  state: data.State || "",
-                };
-                return newAddrs;
-              });
-            } else {
-              setAddress((prev) => {
-                const newAddrs = [...prev];
-                newAddrs[index] = { ...newAddrs[index], city: "", state: "" };
-                return newAddrs;
-              });
-            }
-          })
-          .catch((err) => console.error("Error looking up Pincode:", err));
-      }
-    }
+    setAddress((prev) => [...prev, { isEditing: true, isDefault: false }]);
   };
 
   const handleEdit = (index) => {
-    const updatedAddresses = [...address];
-    updatedAddresses[index] = {
-      ...updatedAddresses[index],
-      isEditing: true,
-      firstName: updatedAddresses[index].first_name,
-      lastName: updatedAddresses[index].last_name,
-      pinCode: updatedAddresses[index].pincode,
-      addressType: updatedAddresses[index].address_type,
-      address: updatedAddresses[index].address,
-      city: updatedAddresses[index].city,
-      state: updatedAddresses[index].state,
-      phone: updatedAddresses[index].phone,
-    };
-    setAddress(updatedAddresses);
+    setAddress((prev) =>
+      prev.map((a, i) => (i === index ? { ...a, isEditing: true } : a))
+    );
   };
 
   const handleCancelEdit = (index) => {
@@ -150,28 +83,21 @@ const AddressSection = () => {
     setAddress(updatedAddresses);
   };
 
-  const handleSaveEdit = async (index) => {
+  const handleSaveEdit = async (index, formData) => {
     const currentAddress = address[index];
-
     const addressData = {
-      first_name: currentAddress.firstName || currentAddress.first_name,
-      last_name: currentAddress.lastName || currentAddress.last_name,
-      address: currentAddress.address,
-      city: currentAddress.city,
-      state: currentAddress.state,
-      address_type: currentAddress.addressType || currentAddress.address_type,
-      pincode: parseInt(currentAddress.pinCode || currentAddress.pincode),
-      phone: currentAddress.phone,
-      is_default: currentAddress.isDefault || currentAddress.is_default || false,
+      first_name: formData.firstName,
+      last_name: formData.lastName,
+      address: formData.address,
+      city: formData.city,
+      state: formData.state,
+      address_type: formData.addressType,
+      pincode: parseInt(formData.pinCode),
+      phone: formData.phone,
+      is_default: currentAddress.is_default || false,
     };
-
     try {
-      const response = await axiosInstance.post(
-        `/account/address/`,
-        addressData,
-
-      );
-
+      const response = await axiosInstance.post(`/account/address/`, addressData);
       if (response.data.message === "success") {
         fetchAddresses();
       }
@@ -180,30 +106,22 @@ const AddressSection = () => {
     }
   };
 
-  const handleSaveEditChanges = async (index) => {
+  const handleSaveEditChanges = async (index, formData) => {
     const currentAddress = address[index];
-
     const addressData = {
       address_id: currentAddress.id,
-      first_name: currentAddress.firstName || currentAddress.first_name,
-      last_name: currentAddress.lastName || currentAddress.last_name,
-      address: currentAddress.address,
-      city: currentAddress.city,
-      state: currentAddress.state,
-      address_type: currentAddress.addressType || currentAddress.address_type,
-      pincode: parseInt(currentAddress.pinCode || currentAddress.pincode),
-      phone: currentAddress.phone,
-      is_default:
-        currentAddress.isDefault || currentAddress.is_default || false,
+      first_name: formData.firstName,
+      last_name: formData.lastName,
+      address: formData.address,
+      city: formData.city,
+      state: formData.state,
+      address_type: formData.addressType,
+      pincode: parseInt(formData.pinCode),
+      phone: formData.phone,
+      is_default: currentAddress.is_default || false,
     };
-
     try {
-      const response = await axiosInstance.patch(
-        `/account/address/`,
-        addressData,
-
-      );
-
+      const response = await axiosInstance.patch(`/account/address/`, addressData);
       if (response.data.message === "success") {
         fetchAddresses();
       }
@@ -250,170 +168,27 @@ const AddressSection = () => {
               <div key={index} className="p-3 sm:p-4 mb-4 border rounded-lg">
                 {address.isEditing ? (
                   <div>
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
-                      <span className="font-bold text-lg">Edit Address</span>
-                      <button
-                        className="text-red-500 hover:text-red-700 font-semibold py-2 px-3 border border-red-200 rounded text-sm self-start sm:self-auto"
-                        onClick={() => handleCancelEdit(index)}
-                      >
-                        Cancel
-                      </button>
-                    </div>
-
-                    {/* Form Grid - Single column on mobile, two columns on desktop */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                      <input
-                        type="text"
-                        placeholder="First Name"
-                        value={address.firstName || address.first_name || ""}
-                        onChange={(e) =>
-                          handleAddressChange(index, "firstName", e.target.value)
-                        }
-                        className="p-3 sm:p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                        required
-                      />
-                      <input
-                        type="text"
-                        placeholder="Last Name"
-                        value={address.lastName || address.last_name || ""}
-                        onChange={(e) =>
-                          handleAddressChange(index, "lastName", e.target.value)
-                        }
-                        className="p-3 sm:p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                        required
-                      />
-
-                      {/* Full width address field */}
-                      <input
-                        type="text"
-                        placeholder="Apartment, Suite, etc. (Optional)"
-                        value={address.address || ""}
-                        onChange={(e) =>
-                          handleAddressChange(index, "address", e.target.value)
-                        }
-                        className="p-3 sm:p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base sm:col-span-2"
-                        required
-                      />
-
-                      <input
-                        type="text"
-                        placeholder="City"
-                        value={address.city || ""}
-                        onChange={(e) =>
-                          handleAddressChange(index, "city", e.target.value)
-                        }
-                        className="p-3 sm:p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                        required
-                      />
-
-                      <select
-                        value={address.state || ""}
-                        onChange={(e) =>
-                          handleAddressChange(index, "state", e.target.value)
-                        }
-                        className="p-3 sm:p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                        required
-                      >
-                        <option value="" disabled>
-                          Select State
-                        </option>
-                        <option value="Karnataka">Karnataka</option>
-                        <option value="Maharashtra">Maharashtra</option>
-                        <option value="Tamil Nadu">Tamil Nadu</option>
-                        <option value="Kerala">Kerala</option>
-                        <option value="Delhi">Delhi</option>
-                        <option value="Gujarat">Gujarat</option>
-                        <option value="Rajasthan">Rajasthan</option>
-                        <option value="Punjab">Punjab</option>
-                      </select>
-
-                      <input
-                        type="text"
-                        inputMode="numeric"
-                        pattern="[0-9]*"
-                        placeholder="PIN Code"
-                        value={address.pinCode !== undefined ? address.pinCode : (address.pincode || "")}
-                        maxLength={6}
-                        onChange={(e) => {
-                          const value = e.target.value.replace(/[^0-9]/g, "").slice(0, 6);
-                          handleAddressChange(index, "pinCode", value);
-                        }}
-                        className="p-3 sm:p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                        required
-                      />
-
-                      <input
-                        type="tel"
-                        placeholder="Phone"
-                        value={address.phone || ""}
-                        maxLength={10}
-                        inputMode="numeric"
-                        pattern="[0-9]*"
-                        onChange={(e) => {
-                          const value = e.target.value.slice(0, 10);
-                          handleAddressChange(index, "phone", value);
-                        }}
-                        className="p-3 sm:p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
-                        required
-                      />
-                    </div>
-
-                    {/* Address Type Selection */}
-                    <div className="mt-4">
-                      <label className="block font-semibold mb-3">Address Type</label>
-                      <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
-                        <label className="flex items-center cursor-pointer p-2 border rounded hover:bg-gray-50">
-                          <input
-                            type="radio"
-                            name={`addressType-${index}`}
-                            checked={
-                              address.addressType === "Home" ||
-                              address.address_type === "Home"
-                            }
-                            onChange={() =>
-                              handleAddressChange(index, "addressType", "Home")
-                            }
-                            className="mr-3 w-4 h-4"
-                          />
-                          <span className="text-sm sm:text-base">Home (All day Delivery)</span>
-                        </label>
-                        <label className="flex items-center cursor-pointer p-2 border rounded hover:bg-gray-50">
-                          <input
-                            type="radio"
-                            name={`addressType-${index}`}
-                            checked={
-                              address.addressType === "Work" ||
-                              address.address_type === "Work"
-                            }
-                            onChange={() =>
-                              handleAddressChange(index, "addressType", "Work")
-                            }
-                            className="mr-3 w-4 h-4"
-                          />
-                          <span className="text-sm sm:text-base">Work (9am - 6pm)</span>
-                        </label>
-                      </div>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
-                      <button
-                        className="bg-bio-green text-white font-semibold py-3 px-4 rounded hover:bg-green-600 text-base w-full sm:w-auto"
-                        onClick={
-                          address.id
-                            ? () => handleSaveEditChanges(index)
-                            : () => handleSaveEdit(index)
-                        }
-                      >
-                        Save Address
-                      </button>
-                      <button
-                        className="border border-bio-green text-bio-green font-semibold py-3 px-4 rounded hover:bg-green-100 text-base w-full sm:w-auto"
-                        onClick={() => handleCancelEdit(index)}
-                      >
-                        Cancel
-                      </button>
-                    </div>
+                    <p className="font-bold text-lg mb-3">{address.id ? "Edit Address" : "New Address"}</p>
+                    <AddressForm
+                      variant="profile"
+                      formIndex={index}
+                      initialValues={{
+                        firstName: address.first_name || "",
+                        lastName: address.last_name || "",
+                        address: address.address || "",
+                        city: address.city || "",
+                        state: address.state || "",
+                        pinCode: String(address.pincode || ""),
+                        phone: address.phone || "",
+                        addressType: address.address_type || "Home",
+                      }}
+                      onSave={(formData) =>
+                        address.id
+                          ? handleSaveEditChanges(index, formData)
+                          : handleSaveEdit(index, formData)
+                      }
+                      onCancel={() => handleCancelEdit(index)}
+                    />
                   </div>
                 ) : (
                   <div>

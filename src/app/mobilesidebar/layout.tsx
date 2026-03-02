@@ -1,5 +1,6 @@
-'use client';
+import { redirect } from 'next/navigation';
+import type { ReactNode } from 'react';
 
-export default function MobileSidebarLayout({ children }: { children: React.ReactNode }) {
-  return <div>{children}</div>;
+export default function MobileSidebarLayout({ children }: { children: ReactNode }) {
+  redirect('/profile');
 }

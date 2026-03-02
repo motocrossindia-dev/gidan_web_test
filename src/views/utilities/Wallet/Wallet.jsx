@@ -144,13 +144,8 @@ const Wallet = () => {
       })
 
       if (response.status === 200) {
-        if (isMobile) {
-          sessionStorage.setItem('wallet_history_data', JSON.stringify(response?.data?.data));
-          router.push('/mobilesidebar/wallethistory')
-        } else {
-          sessionStorage.setItem('wallet_history_data', JSON.stringify(response?.data?.data));
-          router.push('/profile/wallethistory')
-        }
+        sessionStorage.setItem('wallet_history_data', JSON.stringify(response?.data?.data));
+        router.push('/profile/wallethistory');
 
 
       }
@@ -165,7 +160,9 @@ const Wallet = () => {
   }, []);
   return (
     <>
-      
+      <Link href="/profile" className="flex md:hidden items-center gap-2 px-4 pt-4 pb-1 text-bio-green font-medium">
+        ← Back to Profile
+      </Link>
 
       <div className="flex justify-center sm:justify-start px-4 sm:px-6 mt-2 bg-gray-100 min-h-screen w-full">
         <div className="w-full sm:w-full md:w-4/5 lg:w-full xl:w-full h-auto bg-white shadow-lg p-4 sm:p-6 rounded-lg">

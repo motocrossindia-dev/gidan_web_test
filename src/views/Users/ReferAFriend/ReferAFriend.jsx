@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { FiShare2 } from "react-icons/fi";
 import __Refer from "../../../Assets/ReferAFriend.webp"; // Ensure the image path is correct
 const Refer = typeof __Refer === 'string' ? __Refer : __Refer?.src || __Refer;
@@ -53,7 +54,9 @@ function ReferAFriend() {
 
   return (
     <>
-      
+      <Link href="/profile" className="flex md:hidden items-center gap-2 px-4 pt-4 pb-1 text-bio-green font-medium">
+        ← Back to Profile
+      </Link>
 
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4 sm:px-6 mt-2 lg:px-8">
         {/* Main Card */}

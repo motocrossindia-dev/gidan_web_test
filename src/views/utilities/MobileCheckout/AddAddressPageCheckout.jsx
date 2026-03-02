@@ -1,84 +1,54 @@
 'use client';
 
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 import ProgressBar from "./OrderSummary";
 import HomepageSchema from "../seo/HomepageSchema";
-import StoreSchema from "../seo/StoreSchema"; // Adjust the import path as needed
+import StoreSchema from "../seo/StoreSchema";
+import axiosInstance from "../../../Axios/axiosInstance";
+import AddressForm from "@/components/Shared/AddressForm";
 
 const AddAddressPageCheckout = () => {
   const router = useRouter();
-  const [addressType, setAddressType] = useState('home');
+
+  const handleSave = async (form) => {
+    try {
+      const response = await axiosInstance.post(`/account/address/`, {
+        first_name: form.firstName,
+        last_name: form.lastName,
+        address: form.address,
+        city: form.city,
+        state: form.state,
+        pincode: parseInt(form.pinCode),
+        phone: form.phone,
+        address_type: form.addressType,
+        is_default: false,
+      });
+      if (response.data.message === "success") {
+        router.push("/address");
+      }
+    } catch (err) {
+      console.error("Error saving address:", err);
+    }
+  };
 
   return (
-    <><div className="max-w-md mx-auto bg-white min-h-screen flex flex-col">
-      <div className="p-4 flex-1">
-        <ProgressBar currentStep="address" />
-        
-        <form className="space-y-4">
-          <input
-            type="text"
-            placeholder="Name"
-            className="w-full border rounded-lg px-4 py-2"
+    <>
+      <div className="max-w-md mx-auto bg-white min-h-screen flex flex-col">
+        <div className="p-4 flex-1">
+          <ProgressBar currentStep="address" />
+          <AddressForm
+            variant="checkout"
+            saveLabel="Done"
+            cancelLabel="Cancel"
+            onSave={handleSave}
+            onCancel={() => router.push("/address")}
           />
-          <input
-            type="text"
-            placeholder="Last Name"
-            className="w-full border rounded-lg px-4 py-2"
-          />
-          <input
-            type="text"
-            placeholder="Apartment, suite, etc. (optional)"
-            className="w-full border rounded-lg px-4 py-2"
-          />
-          
-          <div className="mt-4">
-            <p className="text-sm font-medium mb-2">Address Type</p>
-            <div className="flex space-x-4">
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="addressType"
-                  value="home"
-                  checked={addressType === 'home'}
-                  onChange={(e) => setAddressType(e.target.value)}
-                  className="mr-2"
-                />
-                Home (All day delivery)
-              </label>
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="addressType"
-                  value="work"
-                  checked={addressType === 'work'}
-                  onChange={(e) => setAddressType(e.target.value)}
-                  className="mr-2"
-                />
-                Work/Office (9am-5pm)
-              </label>
-            </div>
-          </div>
-        </form>
+        </div>
       </div>
-
-      <div className="p-4 space-y-3">
-        <button 
-          onClick={() => router.push('/address')}
-          className="w-full py-3 border border-gray-300 rounded-lg font-medium"
-        >
-          Cancel
-        </button>
-        <button 
-          onClick={() => router.push('/address')}
-          className="w-full py-3 bg-green-600 text-white rounded-lg font-medium"
-        >
-          Done
-        </button>
-      </div>
-    </div>
-      <HomepageSchema/>
-      <StoreSchema/></>
+      <HomepageSchema />
+      <StoreSchema />
+    </>
   );
 };
 

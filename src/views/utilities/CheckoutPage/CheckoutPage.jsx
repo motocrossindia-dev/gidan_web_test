@@ -519,7 +519,7 @@ const OrderSummaryItem = ({ title, Quantity, mrp, sales_price, total, image }) =
 
 const OrderSummary = ({ selectedOption, selectedAddress, data }) => {
   const accessToken = useSelector(selectAccessToken);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const router = useRouter();
   // const [orderSummary, setOrderSummary] = useState([]);
   const orderData = null?.resource;

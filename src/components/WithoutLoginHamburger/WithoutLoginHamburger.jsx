@@ -113,7 +113,7 @@ const WithoutLoginHamburger = () => {
 
   const handleUserNameClick = () => {
     setIsOpen(false);
-    router.push("/mobilesidebar");
+    router.push("/profile");
   };
 
   const navigateToSignup = () => {

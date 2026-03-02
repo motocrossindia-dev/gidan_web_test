@@ -27,7 +27,7 @@ const RewardClub = () => {
       );
       return;
     }
-    router.push(isMobile ? "/mobilesidebar/referalmobile" : "/profile/referal");
+    router.push("/profile/referal");
   };
 
   if (isLoading) {

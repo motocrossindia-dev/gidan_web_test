@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react'
+import Link from 'next/link';
 import { Plane as Plant, Gift, Sprout, } from 'lucide-react';
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
@@ -12,7 +13,9 @@ const Comingsoon = () => {
 
   return (
     <>
-      
+      <Link href="/profile" className="flex md:hidden items-center gap-2 px-4 pt-4 pb-1 text-bio-green font-medium">
+        ← Back to Profile
+      </Link>
 
       {/* <Header />
         <Navigation/> */}
