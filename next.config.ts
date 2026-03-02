@@ -30,6 +30,14 @@ const nextConfig: NextConfig = {
   // Inline critical CSS and defer non-critical — fixes render-blocking CSS chunks
   experimental: {
     optimizeCss: true,
+    // Tree-shake react-icons barrel files — strips unused icon code from all 13 icon sets
+    optimizePackageImports: [
+      'react-icons/ai', 'react-icons/bs', 'react-icons/ci',
+      'react-icons/fa', 'react-icons/fa6', 'react-icons/fi',
+      'react-icons/go', 'react-icons/io', 'react-icons/io5',
+      'react-icons/md', 'react-icons/ri', 'react-icons/sl',
+      'react-icons/tb', 'lucide-react',
+    ],
   },
 
   // Turbopack resolve aliases (mirror of webpack aliases below)
