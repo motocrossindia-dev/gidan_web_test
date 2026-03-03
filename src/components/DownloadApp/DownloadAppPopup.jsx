@@ -62,7 +62,7 @@ const DownloadAppPopup = () => {
 
           {/* Botanical SVG background */}
           <svg
-            className="absolute inset-0 w-full h-full object-cover opacity-90"
+            className="absolute inset-0 w-full h-full object-cover opacity-40"
             viewBox="0 0 500 500"
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -129,6 +129,9 @@ const DownloadAppPopup = () => {
               </g>
             </g>
           </svg>
+
+          {/* Dark scrim so text/logo never clash with the illustration */}
+          <div className="absolute inset-0 z-[5]" style={{ background: "linear-gradient(to bottom, rgba(30,70,30,0.55) 0%, rgba(30,70,30,0.45) 100%)" }} />
 
           {/* Centered content */}
           <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 py-10">
