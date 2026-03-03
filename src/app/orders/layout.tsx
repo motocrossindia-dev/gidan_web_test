@@ -4,13 +4,12 @@ import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
-import SideBar from '@/views/Users/SideBar/SideBar';
 
-const SignIn       = dynamic(() => import('@/AuthPages/SignIn/Signin'),                 { ssr: false });
-const Verification = dynamic(() => import('@/AuthPages/Verification/Verification'),     { ssr: false });
-const Login        = dynamic(() => import('@/AuthPages/Login/Login'),                   { ssr: false });
+const SignIn       = dynamic(() => import('@/AuthPages/SignIn/Signin'),             { ssr: false });
+const Verification = dynamic(() => import('@/AuthPages/Verification/Verification'), { ssr: false });
+const Login        = dynamic(() => import('@/AuthPages/Login/Login'),               { ssr: false });
 
-export default function ProfileLayout({ children }: { children: React.ReactNode }) {
+export default function OrdersLayout({ children }: { children: React.ReactNode }) {
   const username = useSelector((state: any) => state.user.username);
   const isGuest  = !username || username === 'Guest';
   const router   = useRouter();
@@ -47,21 +46,14 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen">
-      <div className="flex px-4 md:px-8 md:py-6">
-        <div className="hidden md:block md:w-[290px] flex-shrink-0">
-          <SideBar />
+    <div className="min-h-screen bg-gray-50">
+      {isGuest ? (
+        <div className="flex items-center justify-center min-h-screen">
+          <p className="text-gray-400 text-sm">Please sign in to view your orders.</p>
         </div>
-        <div className="flex-1 min-w-0">
-          {isGuest ? (
-            <div className="flex items-center justify-center min-h-[60vh]">
-              <p className="text-gray-400 text-sm">Please sign in to view your profile.</p>
-            </div>
-          ) : (
-            children
-          )}
-        </div>
-      </div>
+      ) : (
+        children
+      )}
 
       {isSignInOpen && (
         <SignIn
