@@ -6,6 +6,7 @@ import React,{useEffect} from "react";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import Navigation from "./components/NavigationBar/NavigationBar";
+import DownloadApp from "./components/DownloadApp/DownloadApp";
 
 const LandingPageLayout = () => {
    const pathname = usePathname();
@@ -25,6 +26,9 @@ const LandingPageLayout = () => {
       
       <main className="main-content w-full overflow-x-hidden">
         {/* Outlet removed - use Next.js layout children */}
+
+          {/* Download App Section */}
+          <DownloadApp />
 
           {/* Footer */}
           <Footer />

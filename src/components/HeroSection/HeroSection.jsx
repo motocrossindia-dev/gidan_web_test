@@ -53,7 +53,6 @@ const HeroSection = ({ hero }) => {
             `}
               >
 
-                {/* Full-width hero image - no crop */}
                 <div className="w-full">
                   <Link href={bannerUrl}>
                     <Image
@@ -75,7 +74,6 @@ const HeroSection = ({ hero }) => {
             );
           })}
 
-          {/* Left Arrow */}
           <button
             onClick={goLeft}
             aria-label="Previous slide"

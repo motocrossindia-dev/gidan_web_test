@@ -5,6 +5,8 @@ import Script from "next/script";
 import { Providers } from "./providers";
 import NavBar from "@/components/NavigationBar/NavigationBar";
 import Footer from "@/components/Footer/Footer";
+import DownloadApp from "@/components/DownloadApp/DownloadApp";
+import DownloadAppPopup from "@/components/DownloadApp/DownloadAppPopup";
 import ScrollToTop from "@/components/ScrollToTop";
 
 import Verify from "@/Services/Services/Verify";
@@ -164,6 +166,7 @@ export default function RootLayout({
         <Providers>
           <Verify />
           <ScrollToTop />
+          <DownloadAppPopup />
           <Script id="tawk-to" strategy="lazyOnload">
             {`
               var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
@@ -181,6 +184,7 @@ export default function RootLayout({
             </div>
             <main className="main-content w-full">
               {children}
+              <DownloadApp />
               <Footer />
             </main>
           </div>

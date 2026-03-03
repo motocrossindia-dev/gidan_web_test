@@ -29,7 +29,7 @@ const persistConfig = {
     "wishlist",
     "verification",
     "newUsersdata",
-  ], // Specify which slices to persist
+  ], 
 };
 
 // Combine all reducers
