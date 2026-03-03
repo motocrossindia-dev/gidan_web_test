@@ -37,7 +37,7 @@ const WithoutLoginHamburger = () => {
     PLANTS: "plant",
     POTS: "pot",
     SEEDS: "seed",
-    "PLANT CARE": "plantcare",
+    "Plant Care": "plantcare",
   };
 
   useEffect(() => {
@@ -134,8 +134,6 @@ const WithoutLoginHamburger = () => {
 
     if (name === "GIFTS") {
       router.push(`/gifts/`);
-    } else if (name === "SERVICES") {
-      router.push(`/services/`);
     } else if (name === "OFFERS") {
       router.push(`/offer`);
     } else {
@@ -169,9 +167,9 @@ const WithoutLoginHamburger = () => {
   };
 
   const additionalLinks = [
-    { label: "Blog", path: "/blogs" },
-    { label: "Track Order", path: "/trackorder" },
-    { label: "Become A Franchise", path: "/franchise-enquiry" },
+    { label: "Blogs", path: "/blogs" },
+    { label: "Track Order", path: "/profile/trackorder" },
+    { label: "Get A Franchise", path: "/franchise-enquiry" },
     { label: "Contact Us", path: "/contact-us" },
   ];
 
@@ -245,14 +243,13 @@ const WithoutLoginHamburger = () => {
                     </div>
                   ) : (
                     <div>
-                      {categories.map((category) => (
+                      {categories.filter((category) => category.name !== "SERVICES").map((category) => (
                         <div key={category.id}>
                           {/* Main Category */}
                           <Link
                             href={
                               category.name === "GIFTS" ? "/gifts/" :
-                                category.name === "SERVICES" ? "/services/" :
-                                  category.name === "OFFERS" ? "/offer/" :
+                                category.name === "OFFERS" ? "/offer/" :
                                     `/${category.slug}/`
                             }
                             onClick={(e) => {
@@ -266,8 +263,8 @@ const WithoutLoginHamburger = () => {
                             }}
                             className="flex items-center justify-between px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100"
                           >
-                            <span className="text-gray-800 font-medium text-sm uppercase">
-                              {category.name}
+                            <span className="text-gray-800 font-medium text-sm">
+                              {category.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')}
                             </span>
                             {category.subcategories && category.subcategories.length > 0 && (
                               <FaChevronRight

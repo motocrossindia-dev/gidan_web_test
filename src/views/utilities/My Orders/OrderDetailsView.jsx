@@ -241,9 +241,9 @@ const OrderDetailsView = () => {
 
                     <div className="relative">
                         {/* Status bar */}
-                        <div className="flex justify-between items-center relative mb-12">
+                        <div className="flex justify-between items-start relative mb-4">
                             {/* Background Line */}
-                            <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -translate-y-1/2 z-0"></div>
+                            <div className="absolute top-4 left-4 right-4 h-1 bg-gray-200 -translate-y-1/2 z-0"></div>
 
                             {/* Active Line (Calculated based on status) */}
                             {(() => {
@@ -256,7 +256,7 @@ const OrderDetailsView = () => {
 
                                 return (
                                     <div
-                                        className="absolute top-1/2 left-0 h-1 bg-green-500 -translate-y-1/2 z-0 transition-all duration-500"
+                                        className="absolute top-4 left-4 h-1 bg-green-500 -translate-y-1/2 z-0 transition-all duration-500"
                                         style={{ width: progress }}
                                     ></div>
                                 );
@@ -270,16 +270,16 @@ const OrderDetailsView = () => {
                                 const isCurrent = index === currentIndex;
 
                                 return (
-                                    <div key={step} className="flex flex-col items-center relative z-50 bg-white px-2">
+                                    <div key={step} className="flex flex-col items-center relative z-50 w-1/4">
                                         <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 ${isActive ? 'bg-green-500 border-green-100 text-white' : 'bg-white border-gray-200 text-gray-300'}`}>
                                             {isActive ? <CheckCircle2 className="w-4 h-4" /> : <div className="w-2 h-2 rounded-full bg-gray-300"></div>}
                                         </div>
-                                        <div className="absolute top-10 whitespace-nowrap text-center">
-                                            <p className={`text-xs font-bold ${isActive ? 'text-gray-900' : 'text-gray-400'}`}>
+                                        <div className="mt-2 text-center w-full px-1">
+                                            <p className={`text-[10px] font-bold leading-tight break-words ${isActive ? 'text-gray-900' : 'text-gray-400'}`}>
                                                 {step.replace(/_/g, ' ')}
                                             </p>
                                             {isCurrent && extraOrderDetails?.status_history?.[0]?.timestamp && (
-                                                <p className="text-[10px] text-gray-500">{new Date(extraOrderDetails.status_history[0].timestamp).toLocaleDateString()}</p>
+                                                <p className="text-[9px] text-gray-500 mt-0.5">{new Date(extraOrderDetails.status_history[0].timestamp).toLocaleDateString()}</p>
                                             )}
                                         </div>
                                     </div>
