@@ -89,20 +89,16 @@ const DownloadApp = () => {
               />
             </a>
 
-            {/* App Store Badge */}
-            <a
-              href="https://apps.apple.com/in/app/urvann/id6743162874"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Download on the App Store"
-              className="flex items-center"
-            >
-              <img
-                src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
-                alt="Download on the App Store"
-                className="h-10 w-auto hover:opacity-90 transition-opacity drop-shadow-md"
-              />
-            </a>
+            {/* App Store – Coming Soon */}
+            <div className="flex items-center gap-2 bg-white/10 border border-white/30 rounded-xl px-4 h-[46px] cursor-not-allowed" aria-label="App Store – Coming Soon">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-white/70" viewBox="0 0 814 1000" fill="currentColor">
+                <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-37.5-155.5-127.4C46 790.7 0 663 0 541.8c0-207.1 134.7-316.6 267.7-316.6 68.7 0 126.2 45.2 169.6 45.2 41.5 0 106.5-47.7 183.5-47.7 37.9 0 138.4 3.2 207.9 100.3zm-159.3-113.9c31.4-37.9 53.6-90.5 53.6-143.1 0-7.7-.6-15.4-1.9-21.7-50.6 1.9-110.8 33.7-147.1 75.8-28.5 32.4-55.1 84.9-55.1 138.3 0 8.3 1.3 16.6 1.9 19.2 3.2.6 8.3 1.3 13.5 1.3 45.2 0 102.1-30.1 135.1-69.8z"/>
+              </svg>
+              <div className="leading-tight">
+                <p className="text-[10px] text-white/60 uppercase tracking-wide font-medium">Coming Soon on</p>
+                <p className="text-sm font-semibold text-white">App Store</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
