@@ -73,7 +73,7 @@ const HeroSection = ({ hero }) => {
               </div>
             );
           })}
-
+  
           <button
             onClick={goLeft}
             aria-label="Previous slide"

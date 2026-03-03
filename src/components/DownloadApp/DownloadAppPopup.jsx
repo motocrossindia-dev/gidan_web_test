@@ -2,13 +2,20 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { createPortal } from "react-dom";
 import { useSelector } from "react-redux";
 
 const DownloadAppPopup = () => {
   const [visible, setVisible] = useState(false);
   const [animating, setAnimating] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const username = useSelector((state) => state.user.username);
   const isGuest = !username || username === "Guest";
+
+  // Ensure portal target is available (SSR-safe)
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!isGuest) return;
@@ -25,25 +32,84 @@ const DownloadAppPopup = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isGuest]);
 
+  // Lock body scroll while modal is open (prevents Safari background scroll)
+  useEffect(() => {
+    if (!visible) return;
+    const originalOverflow = document.body.style.overflow;
+    const originalPosition = document.body.style.position;
+    const scrollY = window.scrollY;
+
+    document.body.style.overflow = "hidden";
+    // Safari fix: position fixed + top offset prevents rubber-band scroll bleed
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.position = originalPosition;
+      document.body.style.top = "";
+      document.body.style.width = "";
+      window.scrollTo(0, scrollY);
+    };
+  }, [visible]);
+
   const dismiss = () => {
     setAnimating(false);
     setTimeout(() => setVisible(false), 350);
   };
 
-  if (!visible) return null;
+  if (!visible || !mounted) return null;
 
-  return (
+  const modal = (
     <div
-      className={`fixed inset-0 z-[99999] flex items-center justify-center transition-all duration-300 ${
-        animating ? "opacity-100" : "opacity-0"
-      }`}
-      style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Download Gidan App"
+      // Use explicit top/left/right/bottom instead of inset-0 for Safari compatibility
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        // dvh fallback chain: dvh → -webkit-fill-available → 100%
+        height: "100dvh",
+        zIndex: 99999,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "rgba(0,0,0,0.6)",
+        // Contain touch/scroll events inside the overlay
+        overscrollBehavior: "contain",
+        WebkitOverflowScrolling: "touch",
+        // Force GPU layer to fix Safari stacking-context issues
+        transform: "translateZ(0)",
+        WebkitTransform: "translateZ(0)",
+        transition: "opacity 300ms ease",
+        opacity: animating ? 1 : 0,
+        padding: "1rem",
+        boxSizing: "border-box",
+      }}
       onClick={dismiss}
     >
       <div
-        className={`relative bg-white w-full max-w-sm mx-4 rounded-3xl overflow-hidden shadow-2xl transition-all duration-300 ${
-          animating ? "scale-100 opacity-100" : "scale-90 opacity-0"
-        }`}
+        style={{
+          position: "relative",
+          backgroundColor: "#fff",
+          width: "100%",
+          maxWidth: "24rem",
+          borderRadius: "1.5rem",
+          overflow: "hidden",
+          boxShadow: "0 25px 50px -12px rgba(0,0,0,0.35)",
+          transition: "transform 300ms ease, opacity 300ms ease",
+          transform: animating ? "scale(1)" : "scale(0.9)",
+          opacity: animating ? 1 : 0,
+          // Prevent inner content from triggering Safari momentum scroll bleed
+          WebkitOverflowScrolling: "auto",
+          maxHeight: "90dvh",
+          overflowY: "auto",
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
@@ -199,6 +265,8 @@ const DownloadAppPopup = () => {
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 };
 
 export default DownloadAppPopup;
