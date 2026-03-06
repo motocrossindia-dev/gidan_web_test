@@ -32,7 +32,10 @@ const PostSummaryView = () => {
     const [extraOrderDetails, setExtraOrderDetails] = useState(null); // From /order/{id}/
     const [orderHistory, setOrderHistory] = useState(null); // From orderHistory list
     const [loading, setLoading] = useState(true);
+    const [mounted, setMounted] = useState(false);
     const [activeReviewProductId, setActiveReviewProductId] = useState(null);
+    const [showGstDetail, setShowGstDetail] = useState(false);
+    const [showShippingDetail, setShowShippingDetail] = useState(false);
 
     const fetchAllOrderDetails = async () => {
         setLoading(true);
@@ -70,10 +73,16 @@ const PostSummaryView = () => {
     };
 
     useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
         if (id) {
             fetchAllOrderDetails();
         }
     }, [id]);
+
+    if (!mounted) return null;
 
     const formatDate = (timestamp) => {
         if (!timestamp) return "";
@@ -126,7 +135,7 @@ const PostSummaryView = () => {
                     <h2 className="text-xl font-bold text-gray-800 mb-2">Order not found</h2>
                     <p className="text-gray-600 mb-6">We couldn't find the order details for ID: {id}</p>
                     <button
-                        onClick={() => router.push('/orders')}
+                        onClick={() => router.push('/profile/orders')}
                         className="w-full bg-[#232F3E] text-white font-bold py-3 rounded-xl hover:bg-[#37475A] transition-all"
                     >
                         Go Back to My Orders
@@ -138,17 +147,10 @@ const PostSummaryView = () => {
 
     const orderIdToDisplay = extraOrderDetails?.order_id || orderHistory?.order_id || id;
     const orderDate = extraOrderDetails?.date || orderHistory?.date;
-    const totalAmount = Math.round(extraOrderDetails?.grand_total || orderData?.order?.grand_total || orderHistory?.grand_total || 0);
 
     // Validation Flags
-    const orderStatus = (extraOrderDetails?.status || orderHistory?.status || orderData?.order?.status || "")?.toUpperCase();
+    const orderStatus = (extraOrderDetails?.status_history?.[0]?.status || orderHistory?.status || "")?.toUpperCase();
     const isDelivered = orderStatus === 'DELIVERED';
-
-    // Shipping calculation
-    const itemsSubtotal = Math.round(extraOrderDetails?.total_price || orderData?.order?.total_price || orderHistory?.total_price || 0);
-    const totalDiscount = Math.round(extraOrderDetails?.total_discount || orderData?.order?.total_discount || orderHistory?.total_discount || 0);
-    const shippingValue = extraOrderDetails?.delivery_charge ?? (totalAmount - (itemsSubtotal - totalDiscount));
-    const finalShipping = Math.max(0, Math.round(shippingValue));
 
     return (
         <div className="min-h-screen bg-white pb-20">
@@ -159,7 +161,7 @@ const PostSummaryView = () => {
                 <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 text-sm text-gray-600">
                     <button onClick={() => router.push('/profile')} className="hover:underline">Your Account</button>
                     <ChevronRight className="w-3 h-3" />
-                    <button onClick={() => router.push('/orders')} className="hover:underline">Your Orders</button>
+                    <button onClick={() => router.push('/profile/orders')} className="hover:underline">Your Orders</button>
                     <ChevronRight className="w-3 h-3" />
                     <span className="text-[#4A7515] font-medium">Order Summary</span>
                 </div>
@@ -175,7 +177,7 @@ const PostSummaryView = () => {
                     </div>
                 </div>
 
-                {/* Main Summary Card (Amazon Style) */}
+                {/* Main Summary Card */}
                 <div className="border rounded-lg overflow-hidden mb-8 shadow-sm">
                     <div className="bg-gray-50 p-4 border-b grid grid-cols-1 md:grid-cols-3 gap-6">
                         {/* Shipping Address */}
@@ -201,29 +203,157 @@ const PostSummaryView = () => {
                             )}
                         </div>
 
-                        {/* Order Summary Table */}
+                        {/* Order Price Breakdown (Checkout Style) */}
                         <div>
-                            <h3 className="text-sm font-bold text-gray-900 mb-2">Order Summary</h3>
-                            <div className="space-y-1 text-sm text-gray-700">
-                                <div className="flex justify-between">
-                                    <span>Item(s) Subtotal:</span>
-                                    <span>₹{itemsSubtotal}</span>
+                            <h3 className="text-sm font-bold text-gray-900 mb-3">Order Summary</h3>
+                            <div className="space-y-2 text-sm">
+
+                                {/* MRP Total */}
+                                <div className="flex justify-between text-gray-600">
+                                    <span>MRP Total</span>
+                                    <span>₹{(extraOrderDetails?.items || []).reduce((s, i) => s + Number(i.mrp) * i.quantity, 0).toFixed(2)}</span>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span>Shipping:</span>
-                                    <span className={finalShipping === 0 ? 'text-green-700' : ''}>
-                                        {finalShipping === 0 ? '₹0.00' : `₹${finalShipping}`}
-                                    </span>
-                                </div>
-                                {totalDiscount > 0 && (
-                                    <div className="flex justify-between text-green-700">
-                                        <span>Discount:</span>
-                                        <span>-₹{totalDiscount}</span>
+
+                                {/* Product Discount */}
+                                {Number(extraOrderDetails?.total_discount ?? 0) > 0 && (
+                                    <div className="flex justify-between text-emerald-600 font-medium">
+                                        <span className="flex items-center gap-1">
+                                            Discount
+                                            {extraOrderDetails?.discount_type && (
+                                                <span className="text-[10px] bg-emerald-50 border border-emerald-200 rounded px-1 py-0.5 font-semibold">
+                                                    {extraOrderDetails.discount_type === "%" ? `${Number(extraOrderDetails.discount_value ?? 0).toFixed(0)}%` : `Flat ₹${Number(extraOrderDetails.discount_value ?? 0).toFixed(2)}`}
+                                                </span>
+                                            )}
+                                        </span>
+                                        <span>-₹{Number(extraOrderDetails.total_discount).toFixed(2)}</span>
                                     </div>
                                 )}
-                                <div className="flex justify-between font-bold text-gray-900 pt-1 border-t mt-1">
-                                    <span>Grand Total:</span>
-                                    <span>₹{Math.round(totalAmount)}</span>
+
+                                {/* Coupon Discount */}
+                                {extraOrderDetails?.coupon_applied && Number(extraOrderDetails?.coupon_discount ?? 0) > 0 && (
+                                    <div className="flex justify-between text-emerald-600 font-medium">
+                                        <span className="flex items-center gap-1">
+                                            🏷️ Coupon
+                                            {extraOrderDetails.coupon_value && (
+                                                <span className="text-[10px] bg-emerald-50 border border-emerald-200 rounded px-1 py-0.5 font-semibold">
+                                                    {extraOrderDetails.coupon_type === "%" ? `${Number(extraOrderDetails.coupon_value).toFixed(0)}%` : `₹${Number(extraOrderDetails.coupon_value).toFixed(2)}`}
+                                                </span>
+                                            )}
+                                        </span>
+                                        <span>-₹{Number(extraOrderDetails.coupon_discount).toFixed(2)}</span>
+                                    </div>
+                                )}
+
+                                {/* Taxable Sub Total */}
+                                <div className="flex justify-between text-gray-800 font-semibold border-t pt-2">
+                                    <span>Taxable Sub Total</span>
+                                    <span>₹{Number(extraOrderDetails?.total_price ?? 0).toFixed(2)}</span>
+                                </div>
+
+                                {/* Product GST Toggle */}
+                                {(Number(extraOrderDetails?.gst_amount_5 ?? 0) > 0 || Number(extraOrderDetails?.gst_amount_18 ?? 0) > 0) && (
+                                    <div>
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowGstDetail(v => !v)}
+                                            className="w-full flex items-center justify-between text-[10px] uppercase font-bold text-gray-400 tracking-widest py-1"
+                                        >
+                                            <span>Product Tax (GST)</span>
+                                            <span>{showGstDetail ? "▲" : "▼"}</span>
+                                        </button>
+                                        {showGstDetail && (
+                                            <div className="space-y-1 text-xs mt-1">
+                                                {Number(extraOrderDetails?.gst_amount_5 ?? 0) > 0 && (
+                                                    <div className="border border-gray-200 rounded p-2 space-y-0.5">
+                                                        <div className="flex justify-between font-medium text-gray-700">
+                                                            <span>GST @ 5%</span><span>₹{Number(extraOrderDetails.gst_amount_5).toFixed(2)}</span>
+                                                        </div>
+                                                        <div className="flex justify-between text-gray-400 pl-2">
+                                                            <span>CGST 2.5%</span><span>₹{Number(extraOrderDetails.cgst_amount_5).toFixed(2)}</span>
+                                                        </div>
+                                                        <div className="flex justify-between text-gray-400 pl-2">
+                                                            <span>SGST 2.5%</span><span>₹{Number(extraOrderDetails.sgst_amount_5).toFixed(2)}</span>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                {Number(extraOrderDetails?.gst_amount_18 ?? 0) > 0 && (
+                                                    <div className="border border-gray-200 rounded p-2 space-y-0.5">
+                                                        <div className="flex justify-between font-medium text-gray-700">
+                                                            <span>GST @ 18%</span><span>₹{Number(extraOrderDetails.gst_amount_18).toFixed(2)}</span>
+                                                        </div>
+                                                        <div className="flex justify-between text-gray-400 pl-2">
+                                                            <span>CGST 9%</span><span>₹{Number(extraOrderDetails.cgst_amount_18).toFixed(2)}</span>
+                                                        </div>
+                                                        <div className="flex justify-between text-gray-400 pl-2">
+                                                            <span>SGST 9%</span><span>₹{Number(extraOrderDetails.sgst_amount_18).toFixed(2)}</span>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {/* Shipping Toggle */}
+                                <div>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowShippingDetail(v => !v)}
+                                        className="w-full flex items-center justify-between text-[10px] uppercase font-bold text-gray-400 tracking-widest py-1"
+                                    >
+                                        <span>Shipping</span>
+                                        <span>{showShippingDetail ? "▲" : "▼"}</span>
+                                    </button>
+                                    <div className="flex justify-between text-sm text-gray-700">
+                                        <span>Shipping Charge</span>
+                                        <span>
+                                            {Number(extraOrderDetails?.shipping_charge ?? 0) === 0
+                                                ? "Free"
+                                                : `₹${(Number(extraOrderDetails.shipping_charge) + Number(extraOrderDetails?.shipping_gst ?? 0)).toFixed(2)}`}
+                                        </span>
+                                    </div>
+                                    {showShippingDetail && Number(extraOrderDetails?.shipping_charge ?? 0) > 0 && (
+                                        <div className="border border-gray-200 rounded p-2 space-y-0.5 text-xs mt-1">
+                                            <div className="flex justify-between text-gray-700">
+                                                <span>Shipping Charge (Base)</span><span>₹{extraOrderDetails.shipping_charge}</span>
+                                            </div>
+                                            {Number(extraOrderDetails?.shipping_gst ?? 0) > 0 && (
+                                                <>
+                                                    <div className="flex justify-between text-gray-700">
+                                                        <span>Shipping GST (18%)</span>
+                                                        <span>₹{Number(extraOrderDetails.shipping_gst).toFixed(2)}</span>
+                                                    </div>
+                                                    <div className="flex justify-between text-gray-400 pl-2">
+                                                        <span>CGST 9%</span><span>₹{Number(extraOrderDetails.shipping_cgst).toFixed(2)}</span>
+                                                    </div>
+                                                    <div className="flex justify-between text-gray-400 pl-2">
+                                                        <span>SGST 9%</span><span>₹{Number(extraOrderDetails.shipping_sgst).toFixed(2)}</span>
+                                                    </div>
+                                                    <div className="flex justify-between font-semibold text-gray-700 border-t pt-1">
+                                                        <span>Total Shipping</span>
+                                                        <span>₹{(Number(extraOrderDetails.shipping_charge) + Number(extraOrderDetails.shipping_gst)).toFixed(2)}</span>
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* GD Coins */}
+                                {Number(extraOrderDetails?.gd_coin ?? 0) > 0 && (
+                                    <div className="flex items-center justify-between pt-1">
+                                        <div className="flex items-center gap-1.5">
+                                            <span>🪙</span>
+                                            <span className="text-xs text-gray-600">GD Coins Earned</span>
+                                        </div>
+                                        <span className="font-bold text-orange-500">+{extraOrderDetails.gd_coin}</span>
+                                    </div>
+                                )}
+
+                                {/* Grand Total */}
+                                <div className="bg-gradient-to-r from-green-600 to-green-800 rounded-lg px-3 py-2 flex justify-between items-center mt-1">
+                                    <span className="text-white font-bold text-sm">Grand Total</span>
+                                    <span className="text-white font-extrabold">₹{Number(extraOrderDetails?.grand_total ?? 0).toFixed(2)}</span>
                                 </div>
                             </div>
                         </div>
@@ -324,9 +454,9 @@ const PostSummaryView = () => {
                                         </h3>
                                         <p className="text-xs text-gray-500">Sold by: Gidan Plants</p>
                                         <div className="flex items-baseline gap-2">
-                                            <span className="text-[#15803D] font-bold text-xl">₹{Math.round(item?.selling_price)}</span>
+                                            <span className="text-[#15803D] font-bold text-xl">₹{item?.selling_price}</span>
                                             {item?.mrp > item?.selling_price && (
-                                                <span className="text-sm text-gray-500 line-through">₹{Math.round(item?.mrp)}</span>
+                                                <span className="text-sm text-gray-500 line-through">₹{item?.mrp}</span>
                                             )}
                                         </div>
                                         <p className="text-sm font-medium">Qty: {item.quantity || 1}</p>
@@ -392,7 +522,7 @@ const PostSummaryView = () => {
                 {/* Bottom Links */}
                 <div className="mt-8 flex flex-col md:flex-row gap-4 items-center justify-between text-sm">
                     <button
-                        onClick={() => router.push('/orders')}
+                        onClick={() => router.push('/profile/orders')}
                         className="text-[#15803D] hover:underline flex items-center gap-1"
                     >
                         <ArrowLeft className="w-4 h-4" />

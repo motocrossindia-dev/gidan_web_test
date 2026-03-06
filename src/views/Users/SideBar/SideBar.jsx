@@ -55,7 +55,7 @@ const SideBar = () => {
         <div className="bg-white mt-6 flex-grow overflow-y-auto">
           <div className="h-[580px] pt-4 px-2">
             <Link
-              href="/orders"
+              href="/profile/orders"
               className="flex items-center justify-between bg-white p-4 rounded shadow-sm hover:bg-gray-50 transition"
             >
               {/* Left: Icon and Text */}

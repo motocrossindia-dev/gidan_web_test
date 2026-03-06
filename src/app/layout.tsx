@@ -8,6 +8,7 @@ import Footer from "@/components/Footer/Footer";
 import DownloadApp from "@/components/DownloadApp/DownloadApp";
 import DownloadAppPopup from "@/components/DownloadApp/DownloadAppPopup";
 import ScrollToTop from "@/components/ScrollToTop";
+import StaticBreadcrumb from "@/components/Shared/StaticBreadcrumb";
 
 import Verify from "@/Services/Services/Verify";
 
@@ -183,6 +184,7 @@ export default function RootLayout({
               <NavBar />
             </div>
             <main className="main-content w-full">
+              <StaticBreadcrumb />
               {children}
               <DownloadApp />
               <Footer />

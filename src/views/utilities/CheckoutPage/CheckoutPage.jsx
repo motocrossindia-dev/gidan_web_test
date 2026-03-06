@@ -75,21 +75,7 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
   const toggleDropdown = () => setIsOpen(!isOpen);
 
   return (
-    <div className="bg-gray-100 p-4 font-sans">
-      <div
-        className="bg-gradient-to-r from-green-500 to-green-900 text-white p-4 rounded-md cursor-pointer flex justify-between items-center"
-        onClick={toggleDropdown}
-      >
-        <h2 className="font-bold flex items-center text-sm md:text-base">
-          <span className="bg-white text-green-900 w-6 h-6 flex items-center justify-center rounded-full mr-2 text-xs">
-            2
-          </span>
-          Delivery Details
-        </h2>
-      </div>
-
-      {isOpen && (
-        <div className="bg-white p-4 shadow-md rounded-md mt-2 space-y-6">
+    <div className="p-4 font-sans space-y-6">
           <section>
             <div className="flex justify-between items-center mb-3">
               <h3 className="text-sm font-bold text-gray-700 border-b pb-1">1. Delivery Address</h3>
@@ -236,8 +222,6 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
               </div>
             )}
           </section>
-        </div>
-      )}
     </div>
   );
 };
@@ -469,37 +453,49 @@ const AddNewAddress = ({ isOpen, setIsOpen }) => {
 
 
 
-const OrderSummaryItem = ({ title, Quantity, mrp, sales_price, total, image }) => {
+const OrderSummaryItem = ({ title, Quantity, mrp, sales_price, discount, image }) => {
+  const saving = Number(mrp) - Number(sales_price);
+  const savingPct = mrp > 0 ? Math.round((saving / mrp) * 100) : 0;
 
   return (
-    <div className="flex items-center justify-between p-4 border-b">
-      <div className="flex gap-4">
-        <img name=" "
-          src={`${process.env.NEXT_PUBLIC_API_URL}${image}`}
-          alt={title}
-          loading="lazy"
-          className="w-24 h-24 object-cover rounded-md"
-        />
-        <div className="flex flex-col justify-between">
-          <div>
-            <h3 className="text-lg font-medium text-gray-900">{title}</h3>
-            <p className="text-sm text-gray-600">Quantity: {Quantity}</p>
-          </div>
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-semibold">₹{Math.round(sales_price)}</span>
-              {/* <span className="text-gray-500 text-sm">{mrp}</span> */}
-
-              <span className="text-gray-500 line-through text-sm">MRP ₹{Math.round(mrp)}</span>
-
-            </div>
-            {/* <p className="text-bio-green text-sm">You Save ₹{saving}</p> */}
-
-          </div>
+    <tr className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+      {/* Description */}
+      <td className="py-4 px-3">
+        <div className="flex items-center gap-3">
+          <img
+            src={`${process.env.NEXT_PUBLIC_API_URL}${image}`}
+            alt={title}
+            loading="lazy"
+            className="w-14 h-14 object-cover rounded-lg border border-gray-100 flex-shrink-0"
+          />
+          <span className="text-sm font-medium text-gray-800 leading-snug">{title}</span>
         </div>
-      </div>
+      </td>
 
-    </div>
+      {/* Quantity */}
+      <td className="py-4 px-3 text-center">
+        <span className="inline-flex items-center justify-center w-8 h-8 border border-gray-300 rounded text-sm font-semibold text-gray-700">
+          {Quantity}
+        </span>
+      </td>
+
+      {/* Savings */}
+      <td className="py-4 px-3 text-center">
+        {saving > 0 ? (
+          <div className="space-y-0.5">
+            <p className="text-red-500 text-xs font-bold">{savingPct}% Off</p>
+            <p className="text-gray-400 line-through text-xs">₹{Number(mrp).toFixed(2)}</p>
+          </div>
+        ) : (
+          <span className="text-gray-400 text-xs">—</span>
+        )}
+      </td>
+
+      {/* Price */}
+      <td className="py-4 px-3 text-right">
+        <span className="text-sm font-bold text-gray-800">₹{Number(sales_price).toFixed(2)}</span>
+      </td>
+    </tr>
   );
 };
 
@@ -577,43 +573,34 @@ const OrderSummary = ({ selectedOption, selectedAddress, data }) => {
           </span>
           Order Summary
         </h2>
-        <span className="text-white font-bold">{isOpen ? "" : ""}</span>
+        <span className="text-white font-bold">{isOpen ? "−" : "+"}</span>
       </div>
 
-      {/* Dropdown Content */}
       {isOpen && (
-        <div>
-          <div className="divide-y divide-gray-200 mt-4">
-            {/* <OrderSummaryItem
-              title="Peace Lily Plant"
-              details="2ft /2ft- GroPot / Ivory"
-              price="499.00"
-              originalPrice="599.00"
-              discount="20%"
-              savings="100.00"
-            /> */}
-            {(data?.order_items || []).map((item, idx) => (
-              <OrderSummaryItem
-                key={item.id ?? idx}
-                title={item.product_name}
-                Quantity={item.quantity}
-                mrp={Math.round(item.mrp)}
-                sales_price={Math.round(item.selling_price)}
-                total={Math.round(item.total)}
-                image={item.image}
-              />
-            ))}
-          </div>
-
-          {/* Save Order Summary Button
-          <div className="flex justify-center p-4 border-t mt-4">
-            <button
-              className="bg-bio-green text-white px-6 py-2 rounded-md hover:bg-lime-400 transition-colors"
-              onClick={handleSaveOrderSummary}
-            >
-              Place Order
-            </button>
-          </div> */}
+        <div className="bg-white rounded-b-md overflow-x-auto mt-0">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-gray-200">
+                <th className="text-left text-[10px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Items Description</th>
+                <th className="text-center text-[10px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Quantity</th>
+                <th className="text-center text-[10px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Savings</th>
+                <th className="text-right text-[10px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(data?.order_items || []).map((item, idx) => (
+                <OrderSummaryItem
+                  key={item.id ?? idx}
+                  title={item.product_name}
+                  Quantity={item.quantity}
+                  mrp={item.mrp}
+                  sales_price={item.selling_price}
+                  discount={item.discount}
+                  image={item.image}
+                />
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
@@ -725,22 +712,20 @@ const ApplyCoupon = ({ id, setCoupon }) => {
   };
 
   return (
-    <div className="bg-gray-100 p-4 mt-4">
+    <div className="font-sans">
+      {/* Toggle bar */}
       <div
-        className="bg-gradient-to-r from-green-500 to-green-900 text-white p-4 rounded-md cursor-pointer flex justify-between items-center"
+        className="px-5 py-3 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors"
         onClick={toggleDropdown}
       >
-        <h2 className="font-bold flex items-center text-sm md:text-base">
-          <span className="bg-white text-green-900 w-6 h-6 flex items-center justify-center rounded-full mr-2 text-xs">
-            3
-          </span>
-          Apply Coupon Code
-        </h2>
-        <span className="text-white font-bold text-xl sm:text-2xl">{isOpen ? "−" : "+"}</span>
+        <span className="text-sm font-semibold text-gray-700">
+          {isOpen ? "Hide coupons" : (coupons.length > 0 ? `${coupons.length} coupon${coupons.length > 1 ? 's' : ''} available` : "Enter coupon code")}
+        </span>
+        <span className="text-bio-green font-bold text-lg">{isOpen ? "−" : "+"}</span>
       </div>
 
       {isOpen && (
-        <div className="p-4">
+        <div className="px-5 pb-5">
           {/* Manual coupon entry */}
           <div className="flex flex-col sm:flex-row gap-2 mb-4">
             <input
@@ -748,11 +733,11 @@ const ApplyCoupon = ({ id, setCoupon }) => {
               placeholder="Enter coupon code"
               value={couponCode}
               onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-              className="p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-bio-green text-sm w-full"
+              className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-bio-green text-sm w-full"
             />
             <button
               onClick={applyManualCoupon}
-              className="bg-green-900 text-white font-semibold px-6 py-2 rounded-md hover:bg-bio-green transition-colors text-sm w-full sm:w-auto"
+              className="bg-bio-green text-white font-semibold px-6 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm w-full sm:w-auto"
             >
               Apply
             </button>
@@ -765,53 +750,41 @@ const ApplyCoupon = ({ id, setCoupon }) => {
                 coupons.map((offer) => (
                   <div
                     key={offer.id}
-                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border border-dashed rounded-md gap-2"
+                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border border-dashed rounded-lg gap-2"
                   >
                     <div className="flex items-start sm:items-center gap-3">
-                      <Tag className="text-bio-green mt-1 sm:mt-0" size={20} />
+                      <Tag className="text-bio-green mt-1 sm:mt-0 flex-shrink-0" size={18} />
                       <div className="text-sm">
-                        <p className="font-medium">{offer.description}</p>
-                        <p className="text-gray-600">
-                          Minimum Amount: ₹{offer.minimum_order_value}
-                        </p>
-                        <p className="font-bold text-green-800">{offer.code}</p>
+                        <p className="font-medium text-gray-800">{offer.description}</p>
+                        <p className="text-gray-500 text-xs">Min. ₹{offer.minimum_order_value}</p>
+                        <p className="font-bold text-bio-green text-xs mt-0.5">{offer.code}</p>
                       </div>
                     </div>
-
                     <button
-                      className={`font-semibold px-4 py-2 rounded-md mt-2 sm:mt-0 text-sm ${offer.is_applicable
-                        ? "text-white bg-green-900 hover:bg-bio-green cursor-pointer"
-                        : "text-gray-500 bg-gray-300 cursor-not-allowed"
+                      className={`font-semibold px-4 py-2 rounded-lg text-sm shrink-0 ${offer.is_applicable
+                        ? "text-white bg-bio-green hover:bg-green-700 cursor-pointer"
+                        : "text-gray-400 bg-gray-100 cursor-not-allowed"
                         }`}
                       onClick={() => offer.is_applicable && applyCouponById(offer.id)}
                       disabled={!offer.is_applicable}
                     >
-                      APPLY OFFER
+                      APPLY
                     </button>
                   </div>
                 ))
               ) : (
-                <div className="text-center text-sm text-gray-500 py-4">
-                  No available coupons at the moment 💸
-                </div>
+                <div className="text-center text-sm text-gray-400 py-4">No coupons available for this order</div>
               )}
             </div>
           </div>
 
-          {/* Hide scrollbar utility */}
           <style jsx global>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
+            .scrollbar-hide::-webkit-scrollbar { display: none; }
+            .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+          `}</style>
         </div>
       )}
     </div>
-
   );
 };
 
@@ -952,6 +925,10 @@ const CheckoutPage = () => {
   const [selectedAddress, setSelectedAddress] = useState([]);
   const [coupon, setCoupon] = useState();
   const [isAddNewOpen, setIsAddNewOpen] = useState(false);
+  const [paymentReady, setPaymentReady] = useState(false);
+  const [savingOrder, setSavingOrder] = useState(false);
+  const [showGstDetail, setShowGstDetail] = useState(false);
+  const [showShippingDetail, setShowShippingDetail] = useState(false);
 
   const isCombo = !!(data?.order?.is_combo_purchase || data?.order?.is_shop_the_look || comboOffer);
 
@@ -990,7 +967,7 @@ const CheckoutPage = () => {
 
   const handleSaveOrderSummary = async () => {
     if (!data?.order?.id || !selectedAddress || !selectedOption) {
-      enqueueSnackbar("Please fill in all the required details!", { variant: "warning" });
+      enqueueSnackbar("Please select a delivery address and delivery method!", { variant: "warning" });
       return;
     }
 
@@ -1001,6 +978,7 @@ const CheckoutPage = () => {
       store_id: selectedOption?.storeId,
     };
 
+    setSavingOrder(true);
     try {
       const response = await axios.patch(
         `${process.env.NEXT_PUBLIC_API_URL}/order/orderSummary/`,
@@ -1011,8 +989,6 @@ const CheckoutPage = () => {
       );
 
       if (response.data.message === "success") {
-        enqueueSnackbar("Order summary saved successfully!", { variant: "success" });
-
         // GA4: Track add_shipping_info event
         trackAddShippingInfo(
           data.order_items,
@@ -1035,20 +1011,25 @@ const CheckoutPage = () => {
           : response.data.data;
 
         sessionStorage.setItem('payment_order_data', JSON.stringify({ resource: finalOrderData, order_id: data.order.id }));
+        setPaymentReady(true);
         router.push("/paymentgateway");
       }
     } catch (error) {
       console.error("Error saving order summary:", error);
-
-      // Show a detailed error message
       enqueueSnackbar(
         error.response?.data?.message || "Failed to save order summary. Please try again.",
         { variant: "error" }
       );
+    } finally {
+      setSavingOrder(false);
     }
   };
 
   const deliveryCharge = Number(data?.shipping_info?.shipping_charge || 0);
+
+  // When coupon is applied, use updated values from coupon response
+  const activeOrder = coupon?.success ? coupon.order : data?.order;
+  const activeItems = coupon?.success ? coupon.order_items : data?.order_items;
 
   // Calculate backend total based on order type
   // Priority: coupon response > combo offer > original order data
@@ -1069,22 +1050,33 @@ const CheckoutPage = () => {
   }
 
   return (
+    <div className="min-h-screen bg-gray-100">
 
-    <>
+      {/* ── Breadcrumb ── */}
+      <div className="bg-white border-b">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 text-xs font-semibold text-gray-400">
+          <span
+            className="hover:text-bio-green cursor-pointer transition-colors"
+            onClick={() => router.push('/cart')}
+          >SHOPPING CART</span>
+          <span className="text-gray-300">›</span>
+          <span className="text-bio-green">CHECKOUT</span>
+          <span className="text-gray-300">›</span>
+          <span>CONFIRMATION</span>
+        </div>
+      </div>
 
+      <div className="max-w-6xl mx-auto px-4 py-6 flex flex-col lg:flex-row gap-6">
 
-      <div className="flex flex-col lg:flex-row bg-gray-100 p-4">
-        {/* Left Side - Steps */}
-        <div className="w-full lg:w-3/4">
-          <div className="space-y-4">
-            {/* Order Summary */}
-            <OrderSummary
-              selectedOption={selectedOption}
-              selectedAddress={selectedAddress}
-              data={data}
-            />
+        {/* ══ LEFT COLUMN ══ */}
+        <div className="w-full lg:w-3/5 space-y-4">
 
-            {/* Delivery Details (Address + Options) */}
+          {/* ── Step 1: Delivery Address ── */}
+          <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+            <div className="bg-gradient-to-r from-green-600 to-green-900 px-5 py-3 flex items-center gap-3">
+              <span className="w-6 h-6 rounded-full bg-white text-green-800 text-xs font-extrabold flex items-center justify-center">1</span>
+              <span className="text-white font-bold text-sm tracking-wide">DELIVERY ADDRESS</span>
+            </div>
             <DeliveryAddress
               setSelectedAddress={setSelectedAddress}
               selectedAddress={selectedAddress}
@@ -1092,173 +1084,328 @@ const CheckoutPage = () => {
               setIsAddNewOpen={setIsAddNewOpen}
               isAddNewOpen={isAddNewOpen}
             />
-
-            {/* Apply Coupon */}
-            <ApplyCoupon id={id} setCoupon={setCoupon} />
           </div>
+
+          {/* ── Step 2: Apply Coupon ── */}
+          <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+            <div className="bg-gradient-to-r from-green-600 to-green-900 px-5 py-3 flex items-center gap-3">
+              <span className="w-6 h-6 rounded-full bg-white text-green-800 text-xs font-extrabold flex items-center justify-center">2</span>
+              <span className="text-white font-bold text-sm tracking-wide">APPLY COUPON</span>
+            </div>
+            <div className="p-1">
+              <ApplyCoupon id={id} setCoupon={setCoupon} />
+            </div>
+          </div>
+
         </div>
 
-        {/* Right Side - Price Details (Sticky) */}
-        <div className="w-full lg:w-1/4 lg:pl-6">
-          <div className="bg-white p-4 rounded-md shadow-md sticky top-4">
-            <h2 className="text-gray-500 font-semibold mb-2">Your Items</h2>
-            <hr />
+        {/* ══ RIGHT COLUMN ══ */}
+        <div className="w-full lg:w-2/5">
+          <div className="bg-white rounded-xl shadow-md sticky top-4 overflow-hidden">
 
-            <div className="mt-4 space-y-4">
-              {(isCombo || data?.order?.is_shop_the_look) ? (
-                // ✅ Combo/Shop The Look Offer Block
-                <div className="flex flex-col gap-4">
-                  {/* Image Gallery */}
-                  <div className="flex flex-wrap gap-3">
-                    {data?.order_items?.map((item) => (
-                      <div key={item.id} className="w-16 h-16 rounded-md overflow-hidden border">
-                        <img
-                          src={`${axiosInstance.defaults.baseURL}${item.image}`}
-                          alt={item.product_name}
-                          className="w-full h-full object-cover"
-                          onError={(e) => (e.currentTarget.src = "/placeholder.png")}
-                        />
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Combo Title */}
-                  <div>
-                    <h3 className="font-semibold text-gray-800">
-                      {comboOffer?.title || "Shop The Look"}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      {data?.order_items?.length} items
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                // ✅ Normal Products Block
-                <>
-                  {/* Image Gallery - Render once */}
-                  <div className="flex flex-wrap gap-3 mt-4">
-                    {data?.order_items?.map((item) => (
-                      <div key={item.id} className="w-16 h-16 rounded-md overflow-hidden border">
-                        <img
-                          src={`${axiosInstance.defaults.baseURL}${item.image}`}
-                          alt={item.product_name}
-                          className="w-full h-full object-cover"
-                          onError={(e) => (e.currentTarget.src = "/placeholder.png")}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </>
+            {/* ── Header ── */}
+            <div className="bg-gradient-to-r from-green-600 to-green-900 px-4 py-3">
+              <p className="text-white font-bold text-sm tracking-wide">Order Summary</p>
+              {data?.order?.order_id && (
+                <p className="text-green-200 text-[10px] mt-0.5">{data.order.order_id} · {data.order.date}</p>
               )}
             </div>
 
-            {/* Price Details */}
-            <h2 className="text-gray-500 font-semibold mt-6 mb-2">Price Details</h2>
-            <hr />
-            <div className="space-y-2 mt-4">
-              {/* Price */}
-              <div className="flex justify-between text-gray-700">
-                <span>Sub Total x {data?.order_items?.length ?? 0}</span>
-                <span>
-                  ₹
-                  {Math.round((isCombo || data?.order?.is_shop_the_look)
-                    ? (data?.order?.total_price ?? 0)
-                    : (coupon?.order?.total_price ?? data?.order?.total_price ?? 0))}
-                </span>
+            <div className="p-4 space-y-5 max-h-[80vh] overflow-y-auto">
+              <div>
+                <p className="text-[10px] uppercase font-bold text-gray-400 tracking-widest mb-2">
+                  Items ({data?.order_items?.length ?? 0})
+                </p>
+                {(isCombo || data?.order?.is_shop_the_look) ? (
+                  <div className="flex flex-wrap gap-2">
+                    {activeItems?.map((item) => (
+                      <div key={item.id} className="relative">
+                        <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200">
+                          <img
+                            src={`${axiosInstance.defaults.baseURL}${item.image}`}
+                            alt={item.product_name}
+                            className="w-full h-full object-cover"
+                            onError={(e) => (e.currentTarget.src = "/placeholder-product.png")}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    <div className="ml-1 self-center">
+                      <p className="font-semibold text-gray-800 text-xs">{comboOffer?.title || "Shop The Look"}</p>
+                      <p className="text-[10px] text-gray-400">{data?.order_items?.length} items</p>
+                    </div>
+                  </div>
+                ) : (
+                  <table className="w-full text-xs border-collapse">
+                    <thead>
+                      <tr className="bg-gray-50">
+                        <th className="text-left text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-2 w-1/2">Items Description</th>
+                        <th className="text-center text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-1">Qty</th>
+                        <th className="text-center text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-1">Savings</th>
+                        <th className="text-right text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-2">Price</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {activeItems?.map((item) => {
+                        const discountPct = Number(item.discount_value ?? 0);
+                        const hasSaving = Number(item.discount ?? 0) > 0;
+                        return (
+                          <tr key={item.id} className="align-middle">
+                            {/* Description */}
+                            <td className="py-2 px-2">
+                              <div className="flex items-center gap-2">
+                                <div className="w-10 h-10 rounded overflow-hidden border border-gray-200 flex-shrink-0">
+                                  <img
+                                    src={`${axiosInstance.defaults.baseURL}${item.image}`}
+                                    alt={item.product_name}
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => (e.currentTarget.src = "/placeholder-product.png")}
+                                  />
+                                </div>
+                                <span className="font-semibold text-gray-800 text-[10px] leading-tight line-clamp-2">{item.product_name}</span>
+                              </div>
+                            </td>
+                            {/* Qty */}
+                            <td className="py-2 px-1 text-center">
+                              <span className="inline-block border border-gray-300 rounded px-1.5 py-0.5 text-[10px] font-semibold text-gray-700 min-w-[22px]">
+                                {item.quantity}
+                              </span>
+                            </td>
+                            {/* Savings */}
+                            <td className="py-2 px-1 text-center">
+                              {hasSaving ? (
+                                <div className="flex flex-col items-center gap-0.5">
+                                  <span className="text-[9px] font-bold text-red-500">
+                                    {item.discount_type === "%" ? `${discountPct.toFixed(0)}% Off` : `₹${Number(item.discount).toFixed(0)} Off`}
+                                  </span>
+                                  <span className="text-[9px] text-gray-400 line-through">₹{Number(item.mrp).toFixed(2)}</span>
+                                </div>
+                              ) : (
+                                <span className="text-[9px] text-gray-400">—</span>
+                              )}
+                            </td>
+                            {/* Price */}
+                            <td className="py-2 px-2 text-right">
+                              <span className="font-bold text-gray-800 text-[11px]">₹{Number(item.selling_price).toFixed(2)}</span>
+                              {Number(item.total_gst_amount ?? 0) > 0 && (
+                                <p className="text-[9px] text-indigo-500 mt-0.5">+GST ₹{Number(item.total_gst_amount).toFixed(2)}</p>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                )}
               </div>
 
-              {/* Discount */}
-              <div className="flex justify-between text-bio-green">
-                <span>Discount</span>
-                <span>-₹{Math.round(coupon?.order?.total_discount ?? data?.order?.total_discount ?? 0)}</span>
-              </div>
+              <hr className="border-dashed" />
 
-              {/* Coupon Discount */}
-              <div className="flex justify-between text-bio-green">
-                <span>Coupon Discount</span>
-                <span>-₹{Math.round(coupon?.discount_amount ?? 0)}</span>
-              </div>
+              {/* ── Price Breakdown ── */}
+              <div>
+                <p className="text-[10px] uppercase font-bold text-gray-400 tracking-widest mb-3">Price Breakdown</p>
+                <div className="space-y-2 text-sm">
 
-              {/* Delivery Charges */}
-              {/* Delivery Charges */}
-              <div className="flex justify-between text-gray-700">
-                <span>Delivery Charges</span>
-                <div className="flex flex-col items-end">
-                  <span className={deliveryCharge === 0 ? "text-bio-green" : ""}>
-                    {deliveryCharge > 0 ? `₹${deliveryCharge}` : "Free"}
-                  </span>
-                  {data?.shipping_info?.free_shipping && deliveryCharge > 0 && (
-                    <span className="text-[10px] text-bio-green">Coupon Applied</span>
+                  {/* MRP Total */}
+                  <div className="flex justify-between text-gray-600">
+                    <span>MRP Total</span>
+                    <span>₹{activeItems?.reduce((s, i) => s + Number(i.mrp) * i.quantity, 0).toFixed(2)}</span>
+                  </div>
+
+                  {/* Product Discount */}
+                  {Number(activeOrder?.total_discount ?? 0) > 0 && (
+                    <div className="flex justify-between text-emerald-600 font-medium">
+                      <span className="flex items-center gap-1">
+                        Discount
+                        {activeOrder?.discount_type && (
+                          <span className="text-[10px] bg-emerald-50 border border-emerald-200 rounded px-1 py-0.5 font-semibold">
+                            {activeOrder.discount_type === "%" ? `${Number(activeOrder.discount_value ?? 0).toFixed(0)}%` : `Flat ₹${Number(activeOrder.discount_value ?? 0).toFixed(2)}`}
+                          </span>
+                        )}
+                      </span>
+                      <span>-₹{Number(activeOrder?.total_discount ?? 0).toFixed(2)}</span>
+                    </div>
                   )}
-                </div>
-              </div>
 
+                  {/* Coupon Discount */}
+                  {coupon?.success && Number(coupon?.discount_amount ?? 0) > 0 && (
+                    <div className="flex justify-between text-emerald-600 font-medium">
+                      <span className="flex items-center gap-1">
+                        🏷️ Coupon
+                        <span className="text-[10px] bg-emerald-50 border border-emerald-200 rounded px-1 py-0.5 font-semibold">
+                          {coupon.coupon_code}
+                        </span>
+                      </span>
+                      <span>-₹{Number(coupon.discount_amount).toFixed(2)}</span>
+                    </div>
+                  )}
 
-              {/* Packaging Fee */}
-              {/* <div className="flex justify-between text-gray-700">
-        <span>Secured Packaging Fee</span>
-        <span className="line-through text-gray-400">₹198</span>
-        <span className="text-bio-green">Free</span>
-      </div> */}
-
-              <div className="bg-gradient-to-r from-yellow-100 to-orange-100 p-3 rounded-lg flex items-center justify-between mt-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl">🪙</span>
-                  <div>
-                    <p className="text-sm font-semibold text-gray-800">GD Coins Earned</p>
-                    <p className="text-xs text-gray-500">Use coins on your next order</p>
+                  {/* Taxable Sub Total */}
+                  <div className="flex justify-between text-gray-800 font-semibold border-t pt-2">
+                    <span>Taxable Sub Total</span>
+                    <span>₹{Number(activeOrder?.total_price ?? 0).toFixed(2)}</span>
                   </div>
                 </div>
-
-                <span className="text-lg font-bold text-orange-600">
-                  {Math.round(
-                    0.1 *
-                    (correctedPayableAmount)
-                  )}
-                </span>
               </div>
 
+              {/* ── Product GST ── */}
+              {(Number(activeOrder?.gst_amount_5 ?? 0) > 0 || Number(activeOrder?.gst_amount_18 ?? 0) > 0) && (
+                <>
+                  <hr className="border-dashed" />
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => setShowGstDetail((v) => !v)}
+                      className="w-full flex items-center justify-between text-[10px] uppercase font-bold text-gray-400 tracking-widest mb-1"
+                    >
+                      <span>Product Tax (GST)</span>
+                      <span className="text-gray-400 text-xs">{showGstDetail ? "▲" : "▼"}</span>
+                    </button>
+                    {showGstDetail && (
+                      <div className="space-y-1.5 text-sm mt-2">
+                        {Number(activeOrder?.gst_amount_5 ?? 0) > 0 && (
+                          <div className="border border-gray-200 rounded-lg p-2.5 space-y-1">
+                            <div className="flex justify-between font-medium text-gray-700">
+                              <span>GST @ 5%</span>
+                              <span>₹{Number(activeOrder.gst_amount_5).toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between text-gray-400 text-xs pl-2">
+                              <span>CGST 2.5%</span><span>₹{Number(activeOrder.cgst_amount_5).toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between text-gray-400 text-xs pl-2">
+                              <span>SGST 2.5%</span><span>₹{Number(activeOrder.sgst_amount_5).toFixed(2)}</span>
+                            </div>
+                          </div>
+                        )}
+                        {Number(activeOrder?.gst_amount_18 ?? 0) > 0 && (
+                          <div className="border border-gray-200 rounded-lg p-2.5 space-y-1">
+                            <div className="flex justify-between font-medium text-gray-700">
+                              <span>GST @ 18%</span>
+                              <span>₹{Number(activeOrder.gst_amount_18).toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between text-gray-400 text-xs pl-2">
+                              <span>CGST 9%</span><span>₹{Number(activeOrder.cgst_amount_18).toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between text-gray-400 text-xs pl-2">
+                              <span>SGST 9%</span><span>₹{Number(activeOrder.sgst_amount_18).toFixed(2)}</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+
+              {/* ── Shipping ── */}
+              <hr className="border-dashed" />
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setShowShippingDetail((v) => !v)}
+                  className="w-full flex items-center justify-between text-[10px] uppercase font-bold text-gray-400 tracking-widest mb-1"
+                >
+                  <span>Shipping</span>
+                  <span className="text-gray-400 text-xs">{showShippingDetail ? "▲" : "▼"}</span>
+                </button>
+                {/* Always show the total shipping line */}
+                <div className="flex justify-between text-sm font-medium text-gray-700 mt-1">
+                  <span>Shipping Charge</span>
+                  <span>{deliveryCharge === 0 ? "Free" : `₹${Number(data.shipping_info?.final_shipping ?? (deliveryCharge + Number(data?.shipping_info?.shipping_gst ?? 0))).toFixed(2)}`}</span>
+                </div>
+                {showShippingDetail && deliveryCharge > 0 && (
+                  <div className="border border-gray-200 rounded-lg p-2.5 space-y-1 text-sm mt-2">
+                    <div className="flex justify-between text-gray-700">
+                      <span>Shipping Charge (Base)</span>
+                      <span>₹{Number(deliveryCharge).toFixed(2)}</span>
+                    </div>
+                    {Number(data?.shipping_info?.shipping_gst ?? 0) > 0 && (
+                      <>
+                        <div className="flex justify-between text-gray-700">
+                          <span>Shipping GST (18%)</span>
+                          <span>₹{Number(data.shipping_info.shipping_gst).toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between text-gray-400 text-xs pl-2">
+                          <span>CGST 9%</span>
+                          <span>₹{Number(data.shipping_info.shipping_cgst).toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between text-gray-400 text-xs pl-2">
+                          <span>SGST 9%</span>
+                          <span>₹{Number(data.shipping_info.shipping_sgst).toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between text-gray-700 font-semibold border-t border-gray-200 pt-1.5 mt-1">
+                          <span>Total Shipping</span>
+                          <span>₹{Number(data.shipping_info.final_shipping ?? (deliveryCharge + Number(data?.shipping_info?.shipping_gst ?? 0))).toFixed(2)}</span>
+                        </div>
+                      </>
+                    )}
+                    {data?.shipping_info?.free_shipping && (
+                      <p className="text-[10px] text-gray-500 font-semibold">✓ Free shipping applied</p>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* ── Coupon applied confirmation ── */}
+              {(coupon?.success || data?.order?.coupon_applied) && (
+                <>
+                  <hr className="border-dashed" />
+                  <div className="bg-emerald-50 border border-dashed border-emerald-300 rounded-lg px-3 py-2 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-base">🏷️</span>
+                      <span className="text-xs font-bold text-emerald-700">
+                        {coupon?.coupon_code || data?.order?.applied_coupon || "Coupon Applied"}
+                      </span>
+                    </div>
+                    <span className="text-sm font-bold text-emerald-700">
+                      -₹{Number(coupon?.discount_amount ?? data?.order?.coupon_discount ?? 0).toFixed(2)}
+                    </span>
+                  </div>
+                </>
+              )}
 
             </div>
 
-            <hr className="my-4" />
+            {/* ── Fixed Bottom: GD Coins + Grand Total + Place Order ── */}
+            <div className="border-t border-gray-100 px-4 pt-3 pb-4 space-y-3">
+              {/* GD Coins */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">🪙</span>
+                  <div>
+                    <p className="text-xs font-bold text-gray-800">GD Coins Earned</p>
+                    <p className="text-[10px] text-gray-400">Use on your next order</p>
+                  </div>
+                </div>
+                <span className="text-lg font-extrabold text-orange-500">+{activeOrder?.gd_coin ?? 0}</span>
+              </div>
 
-            {/* Total Amount */}
-            <div className="flex justify-between font-semibold text-gray-900">
-              <span>Total Amount</span>
-              <span>₹{Math.round(correctedPayableAmount)}</span>
-            </div>
+              {/* Grand Total */}
+              <div className="bg-gradient-to-r from-green-600 to-green-800 rounded-xl p-3 flex justify-between items-center">
+                <span className="text-white font-bold text-sm">Grand Total</span>
+                <span className="text-white font-extrabold text-lg">₹{Number(activeOrder?.grand_total ?? 0).toFixed(2)}</span>
+              </div>
 
-
-
-
-            <hr className="my-4" />
-
-            {/* Savings */}
-            <div className="text-bio-green text-sm font-semibold">
-              You will save ₹
-              {Math.round(coupon?.discount_amount
-                ? coupon.discount_amount + (data?.order?.total_discount || 0)
-                : data?.order?.total_discount || 0)}
-              &nbsp; on this order
-            </div>
-
-
-            {/* Save Order Summary Button */}
-            <div className="flex justify-center p-4 border-t mt-4">
+              {/* Place Order */}
               <button
-                className="bg-bio-green text-white px-6 py-2 rounded-md hover:bg-lime-400 transition-colors"
+                disabled={savingOrder}
                 onClick={handleSaveOrderSummary}
+                className="w-full bg-bio-green text-white font-bold py-3.5 rounded-xl hover:bg-green-700 active:scale-[0.98] transition-all text-sm tracking-wide shadow disabled:opacity-60 flex items-center justify-center gap-2"
               >
-                Place Order
+                {savingOrder ? (
+                  <><span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span> Saving…</>
+                ) : (
+                  <>Place Order →</>
+                )}
               </button>
+              <p className="text-center text-[10px] text-gray-400">🔒 Safe and Secure Payments. 100% Authentic Products.</p>
             </div>
+
           </div>
         </div>
 
-
       </div>
-    </>
+    </div>
   );
 };
 

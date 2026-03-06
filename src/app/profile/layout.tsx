@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import SideBar from '@/views/Users/SideBar/SideBar';
+import ProfileBreadcrumb from '@/components/Profile/ProfileBreadcrumb';
 
 const SignIn       = dynamic(() => import('@/AuthPages/SignIn/Signin'),                 { ssr: false });
 const Verification = dynamic(() => import('@/AuthPages/Verification/Verification'),     { ssr: false });
@@ -53,6 +54,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
           <SideBar />
         </div>
         <div className="flex-1 min-w-0">
+          <ProfileBreadcrumb />
           {isGuest ? (
             <div className="flex items-center justify-center min-h-[60vh]">
               <p className="text-gray-400 text-sm">Please sign in to view your profile.</p>

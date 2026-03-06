@@ -37,7 +37,7 @@ const OrderSuccess = () => {
         {/* Action Buttons */}
         <div className="w-full space-y-3">
           <button
-            onClick={() => router.push('/orders')}
+            onClick={() => router.push('/profile/orders')}
             className="w-full py-3 bg-white border border-gray-300 rounded-lg font-medium"
           >
             Go to Your Orders

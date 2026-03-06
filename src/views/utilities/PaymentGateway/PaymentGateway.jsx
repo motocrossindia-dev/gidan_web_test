@@ -177,6 +177,7 @@ const PaymentGateway = () => {
           sessionStorage.removeItem('checkout_combo_offer');
           sessionStorage.removeItem('selected_combo_offer');
           sessionStorage.setItem('recent_payment_success', 'true');
+          sessionStorage.setItem('recent_order_id', String(order_id));
           router.push("/successpage");
           return;
         }
@@ -227,6 +228,7 @@ const PaymentGateway = () => {
                 sessionStorage.removeItem('checkout_combo_offer');
                 sessionStorage.removeItem('selected_combo_offer');
                 sessionStorage.setItem('recent_payment_success', 'true');
+                sessionStorage.setItem('recent_order_id', String(order_id));
                 router.push("/successpage");
               } else {
                 enqueueSnackbar("Payment verification failed.", { variant: "error" });

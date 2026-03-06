@@ -28,6 +28,7 @@ const MyOrders = () => {
   const [allOrders, setAllOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
   const [statusFilters, setStatusFilters] = useState({
@@ -69,6 +70,7 @@ const MyOrders = () => {
   }, [])
   const [timeFilters, setTimeFilters] = useState({
     'Last 30 Days': true,
+    '2026': true,
     '2025': true,
     '2024': true,
     '2023': true,
@@ -82,15 +84,13 @@ const MyOrders = () => {
 
     checkMobile();
     window.addEventListener('resize', checkMobile);
-
-    // Simulate loading
-    setTimeout(() => setLoading(false), 1000);
+    setMounted(true);
 
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   const handleOrderClick = (order) => {
-    router.push(`/orders/postsummary/${order.order_id}`);
+    router.push(`/profile/orders/postsummary/${order.order_id}`);
   };
 
 
@@ -106,6 +106,7 @@ const MyOrders = () => {
     });
     setTimeFilters({
       'Last 30 Days': true,
+      '2026': true,
       '2025': true,
       '2024': true,
       '2023': true,
@@ -130,6 +131,7 @@ const MyOrders = () => {
 
     const timeMatch =
       (timeFilters['Last 30 Days'] && isLast30Days) ||
+      (timeFilters['2026'] && orderYear === '2026') ||
       (timeFilters['2025'] && orderYear === '2025') ||
       (timeFilters['2024'] && orderYear === '2024') ||
       (timeFilters['2023'] && orderYear === '2023');
@@ -456,6 +458,28 @@ const MyOrders = () => {
     </div>
   );
 
+  if (!mounted) {
+    return (
+      <div className="bg-gray-50 min-h-screen">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white rounded-lg p-6 animate-pulse">
+                <div className="flex items-center gap-4">
+                  <div className="w-20 h-20 bg-gray-200 rounded-lg"></div>
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (isMobile) {
     return (
       <div className="bg-gray-50 min-h-screen">
@@ -479,9 +503,7 @@ const MyOrders = () => {
               Filters
             </button>
           </div>
-          <div className="px-4 pb-3">
-            <p className="text-sm text-gray-600">Home / My Account / My Orders</p>
-          </div>
+
         </div>
 
         <div className="p-4">
@@ -503,7 +525,6 @@ const MyOrders = () => {
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">My Orders</h1>
-            <p className="text-sm text-gray-600">Home / My Account / My Orders</p>
           </div>
 
           <div className="flex gap-6">

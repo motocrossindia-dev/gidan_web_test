@@ -42,7 +42,7 @@ const MobileSidebar = ({ onNavigate }) => {
     { label: "Add Gift Card", icon: <MdCardGiftcard />, link: "/profile/giftcard" },
     { label: "GD Coins", icon: <MdMonetizationOn />, link: "/profile/btcoins" },
     { label: "Wallet", icon: <MdAccountBalanceWallet />, link: "/profile/wallet" },
-    { label: "My Orders", icon: <MdShoppingBag />, link: "/orders" },
+    { label: "My Orders", icon: <MdShoppingBag />, link: "/profile/orders" },
   ];
 
   const handleEditClick = () => {

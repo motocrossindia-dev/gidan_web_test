@@ -60,7 +60,7 @@ const PaymentPage = () => {
               );
               if (verifyResponse.data.message === "Payment successful") {
                 enqueueSnackbar("Payment Verified Successfully!", { variant: "success" });
-                router.push('/orders')
+                router.push('/profile/orders')
               } else {
                 enqueueSnackbar("Payment Verification Failed.", { variant: "error" });
               }

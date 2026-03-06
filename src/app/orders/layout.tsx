@@ -14,15 +14,20 @@ export default function OrdersLayout({ children }: { children: React.ReactNode }
   const isGuest  = !username || username === 'Guest';
   const router   = useRouter();
 
+  const [mounted, setMounted] = useState(false);
   const [isSignInOpen,       setIsSignInOpen]       = useState(false);
   const [isVerificationOpen, setIsVerificationOpen] = useState(false);
   const [isLoginOpen,        setIsLoginOpen]        = useState(false);
 
   useEffect(() => {
-    if (isGuest) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && isGuest) {
       setIsSignInOpen(true);
     }
-  }, [isGuest]);
+  }, [mounted, isGuest]);
 
   const handleClose = () => {
     setIsSignInOpen(false);
@@ -45,9 +50,11 @@ export default function OrdersLayout({ children }: { children: React.ReactNode }
     setIsLoginOpen(false);
   };
 
+  // Always render children during SSR and initial mount to avoid hydration mismatch.
+  // Auth check happens client-side only via useEffect above.
   return (
     <div className="min-h-screen bg-gray-50">
-      {isGuest ? (
+      {mounted && isGuest ? (
         <div className="flex items-center justify-center min-h-screen">
           <p className="text-gray-400 text-sm">Please sign in to view your orders.</p>
         </div>

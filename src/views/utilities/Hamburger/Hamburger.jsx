@@ -131,8 +131,8 @@ const Hamburger = () => {
   };
 
   const additionalLinks = [
-    { label: "My Account", path: "/orders" },
-    { label: "Track Order", path: "/orders" },
+    { label: "My Account", path: "/profile/orders" },
+    { label: "Track Order", path: "/profile/orders" },
     { label: "Services", path: "/services" },
     { label: "Become A Franchise", path: "/franchise-enquiry" },
     { label: "Contact Us", path: "/contact-us" },

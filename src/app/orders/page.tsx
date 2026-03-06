@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
 import MyOrders from '@/views/utilities/My Orders/MyOrders';
 
-
 export const metadata: Metadata = {
   title: "Orders | Gidan Plants",
   description: "Shop and explore orders at Gidan, India trusted online plant and gardening store.",
   openGraph: {
     title: "Orders | Gidan Plants",
     description: "Shop and explore orders at Gidan, India trusted online plant and gardening store.",
-    url: "https://www.gidan.store/orders",
+    url: "https://www.gidan.store/profile/orders",
     siteName: "Gidan Plants",
     images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
@@ -19,7 +18,7 @@ export const metadata: Metadata = {
     title: "Orders | Gidan Plants",
     description: "Shop and explore orders at Gidan, India trusted online plant and gardening store.",
   },
-  alternates: { canonical: "https://www.gidan.store/orders" },
+  alternates: { canonical: "https://www.gidan.store/profile/orders" },
   robots: { index: false, follow: false },
 };
 

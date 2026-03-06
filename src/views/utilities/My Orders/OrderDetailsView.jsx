@@ -126,7 +126,7 @@ const OrderDetailsView = () => {
                     <h2 className="text-xl font-bold text-gray-800 mb-2">Order not found</h2>
                     <p className="text-gray-600 mb-6">We couldn't find the order details for ID: {id}</p>
                     <button
-                        onClick={() => router.push('/orders')}
+                        onClick={() => router.push('/profile/orders')}
                         className="w-full bg-[#232F3E] text-white font-bold py-3 rounded-xl hover:bg-[#37475A] transition-all"
                     >
                         Go Back to My Orders
@@ -159,7 +159,7 @@ const OrderDetailsView = () => {
                 <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 text-sm text-gray-600">
                     <button onClick={() => router.push('/profile')} className="hover:underline">Your Account</button>
                     <ChevronRight className="w-3 h-3" />
-                    <button onClick={() => router.push('/orders')} className="hover:underline">Your Orders</button>
+                    <button onClick={() => router.push('/profile/orders')} className="hover:underline">Your Orders</button>
                     <ChevronRight className="w-3 h-3" />
                     <span className="text-[#4A7515] font-medium">Order Details</span>
                 </div>
@@ -393,7 +393,7 @@ const OrderDetailsView = () => {
                 {/* Bottom Links */}
                 <div className="mt-8 flex flex-col md:flex-row gap-4 items-center justify-between text-sm">
                     <button
-                        onClick={() => router.push('/orders')}
+                        onClick={() => router.push('/profile/orders')}
                         className="text-[#15803D] hover:underline flex items-center gap-1"
                     >
                         <ArrowLeft className="w-4 h-4" />
