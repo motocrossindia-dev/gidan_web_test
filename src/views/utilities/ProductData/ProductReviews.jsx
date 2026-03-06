@@ -90,7 +90,7 @@ const RatingsAndReviews = ({ product_Rating, total_Rating, productId, onWriteRev
           <div className="space-y-3 pt-4">
             {stars_given.map((item) => (
               <div key={item.stars} className="flex items-center gap-3 group cursor-pointer">
-                <span className="text-sm font-medium text-blue-600 hover:underline min-w-[50px]">
+                <span className="text-sm font-medium text-bio-green hover:underline min-w-[50px]">
                   {item.stars} star
                 </span>
                 <div className="flex-1 bg-gray-100 rounded-sm h-6 overflow-hidden border">
@@ -99,7 +99,7 @@ const RatingsAndReviews = ({ product_Rating, total_Rating, productId, onWriteRev
                     style={{ width: `${item.percentage}%` }}
                   />
                 </div>
-                <span className="text-sm font-medium text-blue-600 min-w-[35px] text-right">
+                <span className="text-sm font-medium text-bio-green min-w-[35px] text-right">
                   {item.percentage}%
                 </span>
               </div>
@@ -125,7 +125,7 @@ const RatingsAndReviews = ({ product_Rating, total_Rating, productId, onWriteRev
           <div>
             <div className="flex items-center justify-between mb-8 border-b pb-4">
               <h3 className="text-2xl font-bold text-gray-900">Top reviews</h3>
-              <select className="bg-gray-50 border rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+              <select className="bg-gray-50 border rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-bio-green">
                 <option>Top reviews</option>
                 <option>Most recent</option>
               </select>

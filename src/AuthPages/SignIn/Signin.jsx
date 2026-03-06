@@ -129,7 +129,7 @@ const SignIn = ({ onClose, onGetOtpClick }) => {
             value={formData.mobile}
             onChange={handleChange}
             placeholder="+91 9876543210"
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-bio-green"
           />
 
         </div>

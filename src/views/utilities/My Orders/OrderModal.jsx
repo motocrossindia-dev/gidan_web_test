@@ -248,7 +248,7 @@
 //                             setIsSubmitting(false);
 //                           }
 //                         }}
-//                         className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+//                         className="px-4 py-2 text-sm bg-bio-green text-white rounded-md hover:bg-bio-green disabled:opacity-50"
 //                       >
 //                         {isSubmitting ? 'Submitting...' : 'Submit Return Request'}
 //                       </button>
@@ -599,7 +599,7 @@ const response = await axiosInstance.post(
                       <button
                         disabled={isSubmitting || !returnReason}
                         onClick={handleSubmitReturn}
-                        className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+                        className="px-4 py-2 text-sm bg-bio-green text-white rounded-md hover:bg-bio-green disabled:opacity-50"
                       >
                         {isSubmitting ? 'Submitting...' : 'Submit Return Request'}
                       </button>

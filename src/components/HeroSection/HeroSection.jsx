@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from "next/link";
-import convertToSlug from "../../utils/slugConverter";
+import { getBannerCategoryUrl } from "../../hooks/useBannerImages";
 
 const HeroSection = ({ hero }) => {
   const router = useRouter();
@@ -37,43 +37,50 @@ const HeroSection = ({ hero }) => {
   };
 
   return (
-    <div className="relative w-full overflow-hidden mt-4 min-h-[120px] sm:min-h-[350px]">
+    <div className="relative w-full overflow-hidden mt-4">
       {hero && hero.length > 0 ? (
-        <div className="relative w-full h-full">
+        <div className="relative w-full">
 
           {hero.map((banner, index) => {
-            const slug = convertToSlug(banner.category);
-            const bannerUrl = `/carousel/${slug}`;
+            const bannerUrl = getBannerCategoryUrl(banner);
 
             return (
               <div
                 key={banner.id}
-                className={`transition-opacity duration-700 ease-in-out
-              ${index === currentIndex ? "opacity-100" : "opacity-0 absolute inset-0"}
-            `}
+                className={index === currentIndex ? "block" : "hidden"}
               >
-
-                <div className="w-full">
-                  <Link href={bannerUrl}>
-                    <Image
-                      src={`https://backend.gidan.store${banner.web_banner}`}
-                      alt={`Hero Banner ${index + 1}`}
-                      width={1440}
-                      height={540}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1440px"
-                      className="w-full h-auto cursor-pointer"
-                      priority={index === 0}
-                      fetchPriority={index === 0 ? "high" : "low"}
-                      loading={index === 0 ? "eager" : "lazy"}
-                      quality={70}
-                    />
-                  </Link>
-                </div>
-
+                <Link href={bannerUrl} className="w-full block">
+                  {/* Desktop Image */}
+                  <Image
+                    src={`https://backend.gidan.store${banner.web_banner}`}
+                    alt={banner.title || `Hero Banner ${index + 1}`}
+                    width={1440}
+                    height={540}
+                    sizes="100vw"
+                    className="w-full h-auto hidden sm:block cursor-pointer"
+                    priority={index === 0}
+                    fetchPriority={index === 0 ? "high" : "low"}
+                    loading={index === 0 ? "eager" : "lazy"}
+                    quality={70}
+                  />
+                  {/* Mobile Image */}
+                  <Image
+                    src={`https://backend.gidan.store${banner.mobile_banner}`}
+                    alt={banner.title || `Hero Banner ${index + 1}`}
+                    width={800}
+                    height={600}
+                    sizes="100vw"
+                    className="w-full h-auto block sm:hidden cursor-pointer"
+                    priority={index === 0}
+                    fetchPriority={index === 0 ? "high" : "low"}
+                    loading={index === 0 ? "eager" : "lazy"}
+                    quality={75}
+                  />
+                </Link>
               </div>
             );
           })}
-  
+
           <button
             onClick={goLeft}
             aria-label="Previous slide"
@@ -119,8 +126,6 @@ const HeroSection = ({ hero }) => {
         </div>
       )}
     </div>
-
-
   );
 };
 

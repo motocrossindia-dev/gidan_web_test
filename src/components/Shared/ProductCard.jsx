@@ -8,7 +8,10 @@ import { Paper, Typography } from "@mui/material";
 import { FaRegHeart, FaHeart, FaStar } from "react-icons/fa";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { FiEye } from "react-icons/fi";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setPendingCartItem } from "../../redux/Slice/cartSlice";
+import { setPendingWishlistItem } from "../../redux/Slice/addtowishlistSlice";
+import { savePendingCartItem, savePendingWishlistItem } from "../../utils/pendingAction";
 import { enqueueSnackbar } from "notistack";
 // import img from "./img";
 import ReactStars from "react-rating-stars-component";
@@ -24,7 +27,7 @@ const StarsOnCards = ({ rating, ratingNumber }) => {
             {[1, 2, 3, 4, 5].map((star) => (
                 <FaStar
                     key={star}
-                    className={`w-4 h-4 ${star <= rating ? "text-blue-950" : "text-gray-300"
+                    className={`w-4 h-4 ${star <= rating ? "text-green-950" : "text-gray-300"
                         }`}
                 />
             ))}
@@ -37,12 +40,15 @@ const StarsOnCards = ({ rating, ratingNumber }) => {
 const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, inCart, getProducts, ratingNumber, mrp, ribbon }) => {
     const [isHovered, setIsHovered] = useState(false);
     const router = useRouter();
+    const dispatch = useDispatch();
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const [isAdded, setIsAdded] = useState(false);
 
     const handleAddToWishlist = useCallback(async () => {
         if (!isAuthenticated) {
-            enqueueSnackbar("Please sign..", { variant: "info" });
+            dispatch(setPendingWishlistItem(product));
+            savePendingWishlistItem({ main_prod_id: product?.id });
+            enqueueSnackbar("Please sign in to add to wishlist", { variant: "info" });
             router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
             return;
         }
@@ -73,6 +79,8 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
 
     const handleAddToCart = useCallback(async (e) => {
         if (!isAuthenticated) {
+            dispatch(setPendingCartItem(product));
+            savePendingCartItem({ main_prod_id: product?.id });
             router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
             return;
         }
@@ -86,16 +94,9 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
 
         try {
             if (inCart) {
-                const response = await axiosInstance.delete(
-                    `/order/cart/?main_product_id=${product.id}/`,
-                );
-
-                if (response.status === 200 || response.status === 201) {
-                    enqueueSnackbar("Product Removed from cart", { variant: "success" });
-                    setIsAdded(!isAdded);
-                    window.dispatchEvent(new Event("cartUpdated"));
-                    trackRemoveFromCart(product);
-                }
+                // Item already in cart — take user there directly
+                router.push("/cart");
+                return;
             } else {
                 const payload = { main_prod_id: product.id };
                 console.log("Add to cart payload:", payload);
@@ -110,12 +111,19 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                     setIsAdded(!isAdded);
                     window.dispatchEvent(new Event("cartUpdated"));
                     trackAddToCart(product);
+                    router.push("/cart");
                 }
             }
             getProducts()
         } catch (error) {
             console.error("Add to cart error:", error);
-            enqueueSnackbar("Failed to add to cart", { variant: "error" });
+            const msg = error.response?.data?.message || "";
+            if (msg.toLowerCase().includes("already") || msg.toLowerCase().includes("exists") || error.response?.status === 400) {
+                enqueueSnackbar("This item is already in your cart.", { variant: "info" });
+                router.push("/cart");
+            } else {
+                enqueueSnackbar(msg || "Failed to add to cart", { variant: "error" });
+            }
         }
     }, [isAuthenticated, router, inCart, product, getProducts, isAdded]);
 

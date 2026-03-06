@@ -5,6 +5,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../../redux/Slice/cartSlice";
 import { addtowishlist } from "../../../redux/Slice/addtowishlistSlice";
+import { savePendingCartItem, savePendingWishlistItem } from "../../../utils/pendingAction";
 import {
 
     ShoppingCart,
@@ -131,6 +132,7 @@ export default function ProductData({ initialProductData }) {
 
     const [pincode, setPincode] = useState("");
     const [error, setError] = useState("");
+    const [showNoDeliveryPopup, setShowNoDeliveryPopup] = useState(false);
     // ==========auth cart
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const [isAuthenticatedMobile] = useState(() => typeof window !== 'undefined' ? !!localStorage.getItem('userData') : false);
@@ -344,15 +346,11 @@ export default function ProductData({ initialProductData }) {
                         variant: "success",
                     });
                 } else {
-                    enqueueSnackbar("We're sorry, delivery is currently unavailable in your area 😔", {
-                        variant: "warning",
-                    });
+                    setShowNoDeliveryPopup(true);
                 }
             }
         } catch (error) {
-            enqueueSnackbar("We're sorry, delivery is currently unavailable in your area 😔", {
-                variant: "error",
-            });
+            setShowNoDeliveryPopup(true);
         }
 
     };
@@ -373,37 +371,36 @@ export default function ProductData({ initialProductData }) {
             };
 
             try {
-                if (accessToken) {
-                    const response = await axiosInstance.post(`/order/cart/`, product_data);
-                    if (response.status === 201) {
-                        dispatch(addToCart(product_data));
-                        enqueueSnackbar("Product added to cart successfully!", { variant: "success" });
-                        window.dispatchEvent(new Event("cartUpdated"));
+                const response = await axiosInstance.post(`/order/cart/`, product_data);
 
-                        // GA4: Track add_to_cart event
-                        trackAddToCart(productDetailData?.data?.product, quantity);
-
-                    }
-                } else if (token) {
-                    const response = await axiosInstance.post(`/order/cart/`,
-                        product_data,);
-                    if (response.status === 201) {
-                        dispatch(addToCart(product_data));
-                        enqueueSnackbar("Product added to cart successfully!", { variant: "success" });
-                        window.dispatchEvent(new Event("cartUpdated"));
-
-                        // GA4: Track add_to_cart event
-                        trackAddToCart(productDetailData?.data?.product, quantity);
-
-                    }
+                if (response.status === 201) {
+                    dispatch(addToCart(product_data));
+                    enqueueSnackbar("Product added to cart successfully!", { variant: "success" });
+                    window.dispatchEvent(new Event("cartUpdated"));
+                    trackAddToCart(productDetailData?.data?.product, quantity);
+                    router.push("/cart");
+                } else if (response.status === 200) {
+                    // Product already exists in cart — take user there directly
+                    enqueueSnackbar("This item is already in your cart.", { variant: "info" });
+                    router.push("/cart");
                 }
 
             } catch (error) {
-                enqueueSnackbar(error.response?.data?.message || "Failed to add product to cart", { variant: "info" });
+                const msg = error.response?.data?.message || "";
+                if (
+                    msg.toLowerCase().includes("already") ||
+                    msg.toLowerCase().includes("exists") ||
+                    error.response?.status === 400
+                ) {
+                    enqueueSnackbar("This item is already in your cart.", { variant: "info" });
+                    router.push("/cart");
+                } else {
+                    enqueueSnackbar(msg || "Failed to add product to cart", { variant: "info" });
+                }
             }
         } else {
             enqueueSnackbar("Please sign..", { variant: "info" });
-
+            savePendingCartItem({ prod_id: productDetailData?.data?.product?.id, quantity });
             if (isMobile) {
                 router.push("/mobile-signin", { replace: true });
             } else {
@@ -446,7 +443,8 @@ export default function ProductData({ initialProductData }) {
         } else {
             enqueueSnackbar("Please login..", {
                 variant: "info",
-            }); // Show login message
+            });
+            savePendingWishlistItem({ prod_id: productDetailData?.data?.product?.id });
             if (isMobile) {
                 router.push("/mobile-signin", { replace: true });
             } else {
@@ -504,6 +502,7 @@ export default function ProductData({ initialProductData }) {
         } else {
             // If not authenticated, redirect based on device type
             enqueueSnackbar("Please Login or Signup to Buy Our Products.", { variant: 'info' });
+            savePendingCartItem({ prod_id: productDetailData?.data?.product?.id, quantity });
             if (isMobile) {
                 router.push("/mobile-signin", { replace: true });
             } else {
@@ -536,6 +535,16 @@ export default function ProductData({ initialProductData }) {
 
 
     const handleQuantity = async (product_id, action, qty) => {
+        // When the user types directly, just validate & keep the typed value — don't increment via API
+        if (action === "direct") {
+            const parsed = parseInt(qty, 10);
+            if (!isNaN(parsed) && parsed >= 1) {
+                setQuantity(parsed);
+            } else {
+                setQuantity(1);
+            }
+            return;
+        }
         try {
             // Always send an action — default to "increment"
             const params = {
@@ -1056,7 +1065,7 @@ export default function ProductData({ initialProductData }) {
                                     {/* LENS BOX (Transparent Square) */}
                                     {zoom && (
                                         <div
-                                            className="absolute pointer-events-none border border-blue-400 bg-white/20 rounded-sm"
+                                            className="absolute pointer-events-none border border-green-400 bg-white/20 rounded-sm"
                                             style={{
                                                 width: lensSize,
                                                 height: lensSize,
@@ -1189,7 +1198,7 @@ export default function ProductData({ initialProductData }) {
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={handleViewReviewClick}
-                                        className="text-sm text-blue-600 hover:text-blue-800 hover:underline cursor-pointer bg-transparent border-none p-0"
+                                        className="text-sm text-bio-green hover:text-green-800 hover:underline cursor-pointer bg-transparent border-none p-0"
                                     >
                                         View reviews
                                     </button>
@@ -1197,7 +1206,7 @@ export default function ProductData({ initialProductData }) {
                                     <button
                                         onClick={handleWriteReviewClick}
                                         disabled={isCheckingPurchase}
-                                        className="text-sm text-blue-600 hover:text-blue-800 hover:underline cursor-pointer bg-transparent border-none p-0"
+                                        className="text-sm text-bio-green hover:text-green-800 hover:underline cursor-pointer bg-transparent border-none p-0"
                                     >
                                         {isCheckingPurchase ? "Checking..." : (productDetailData?.data?.product?.is_review ? "Edit your review" : (productDetailData?.data?.product_rating?.num_ratings === 0 ? "Be the first to review" : "Write a review"))}
                                     </button>
@@ -1417,6 +1426,31 @@ export default function ProductData({ initialProductData }) {
                                     </div>
                                     {error && <p className="text-red-500 text-xs mt-1 absolute">{error}</p>}
                                 </div>
+
+                                {/* No Delivery Popup */}
+                                {showNoDeliveryPopup && (
+                                    <div
+                                        className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]"
+                                        onClick={() => setShowNoDeliveryPopup(false)}
+                                    >
+                                        <div
+                                            className="bg-white rounded-2xl shadow-2xl p-6 mx-4 w-full max-w-sm text-center"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            <div className="text-5xl mb-4">😔</div>
+                                            <h2 className="text-lg font-bold text-gray-800 mb-2">Delivery Not Available</h2>
+                                            <p className="text-sm text-gray-500 mb-6">
+                                                We&apos;re sorry, delivery is currently unavailable for pincode <span className="font-semibold text-gray-700">{pincode}</span>. Please try a different pincode.
+                                            </p>
+                                            <button
+                                                className="w-full py-2 bg-bio-green text-white font-semibold rounded-lg hover:bg-green-700 transition-colors"
+                                                onClick={() => setShowNoDeliveryPopup(false)}
+                                            >
+                                                Got it
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                             <div className="flex mb-8 space-x-2">
                                 <div className="w-1/2">

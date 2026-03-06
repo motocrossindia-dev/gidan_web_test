@@ -81,7 +81,7 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
         onClick={toggleDropdown}
       >
         <h2 className="font-bold flex items-center text-sm md:text-base">
-          <span className="bg-white text-blue-900 w-6 h-6 flex items-center justify-center rounded-full mr-2 text-xs">
+          <span className="bg-white text-green-900 w-6 h-6 flex items-center justify-center rounded-full mr-2 text-xs">
             2
           </span>
           Delivery Details
@@ -108,7 +108,7 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
                 {addresses.length > 1 && (
                   <button
                     onClick={() => setShowAllAddresses(!showAllAddresses)}
-                    className="text-xs font-bold text-blue-600 hover:text-blue-800"
+                    className="text-xs font-bold text-bio-green hover:text-green-800"
                   >
                     {showAllAddresses ? "Show Selected Only" : "Change Address"}
                   </button>
@@ -224,8 +224,8 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
                       key={store.id}
                       onClick={() => handleStoreSelect(store.id)}
                       className={`p-3 rounded-lg cursor-pointer border transition-all ${selectedStoreId === store.id
-                        ? 'bg-blue-50 border-blue-500 ring-1 ring-blue-500'
-                        : 'bg-white border-gray-200 hover:border-blue-300'
+                        ? 'bg-green-50 border-green-500 ring-1 ring-bio-green'
+                        : 'bg-white border-gray-200 hover:border-green-300'
                         }`}
                     >
                       <p className="font-bold text-gray-800 text-xs">{store.pathname}</p>
@@ -437,7 +437,7 @@ const AddNewAddress = ({ isOpen, setIsOpen }) => {
               id="saveToProfile"
               checked={newAddress.isDefault}
               onChange={(e) => handleAddressChange("isDefault", e.target.checked)}
-              className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              className="w-4 h-4 text-bio-green border-gray-300 rounded focus:ring-bio-green"
             />
             <label htmlFor="saveToProfile" className="text-xs text-gray-600 font-medium cursor-pointer">
               Save in profile (Set as default)
@@ -446,7 +446,7 @@ const AddNewAddress = ({ isOpen, setIsOpen }) => {
           <div className="flex space-x-2 mt-4">
             <button
               type="submit"
-              className="bg-blue-900 text-white px-6 py-2 rounded-md font-bold hover:bg-blue-800"
+              className="bg-green-900 text-white px-6 py-2 rounded-md font-bold hover:bg-green-800"
             >
               Save Address
             </button>
@@ -572,7 +572,7 @@ const OrderSummary = ({ selectedOption, selectedAddress, data }) => {
         onClick={toggleDropdown}
       >
         <h2 className="font-bold flex items-center text-sm md:text-base">
-          <span className="bg-white text-blue-900 w-6 h-6 flex items-center justify-center rounded-full mr-2 text-xs">
+          <span className="bg-white text-green-900 w-6 h-6 flex items-center justify-center rounded-full mr-2 text-xs">
             1
           </span>
           Order Summary
@@ -731,7 +731,7 @@ const ApplyCoupon = ({ id, setCoupon }) => {
         onClick={toggleDropdown}
       >
         <h2 className="font-bold flex items-center text-sm md:text-base">
-          <span className="bg-white text-blue-900 w-6 h-6 flex items-center justify-center rounded-full mr-2 text-xs">
+          <span className="bg-white text-green-900 w-6 h-6 flex items-center justify-center rounded-full mr-2 text-xs">
             3
           </span>
           Apply Coupon Code
@@ -748,11 +748,11 @@ const ApplyCoupon = ({ id, setCoupon }) => {
               placeholder="Enter coupon code"
               value={couponCode}
               onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-              className="p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm w-full"
+              className="p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-bio-green text-sm w-full"
             />
             <button
               onClick={applyManualCoupon}
-              className="bg-blue-900 text-white font-semibold px-6 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm w-full sm:w-auto"
+              className="bg-green-900 text-white font-semibold px-6 py-2 rounded-md hover:bg-bio-green transition-colors text-sm w-full sm:w-auto"
             >
               Apply
             </button>
@@ -774,13 +774,13 @@ const ApplyCoupon = ({ id, setCoupon }) => {
                         <p className="text-gray-600">
                           Minimum Amount: ₹{offer.minimum_order_value}
                         </p>
-                        <p className="font-bold text-blue-800">{offer.code}</p>
+                        <p className="font-bold text-green-800">{offer.code}</p>
                       </div>
                     </div>
 
                     <button
                       className={`font-semibold px-4 py-2 rounded-md mt-2 sm:mt-0 text-sm ${offer.is_applicable
-                        ? "text-white bg-blue-900 hover:bg-blue-700 cursor-pointer"
+                        ? "text-white bg-green-900 hover:bg-bio-green cursor-pointer"
                         : "text-gray-500 bg-gray-300 cursor-not-allowed"
                         }`}
                       onClick={() => offer.is_applicable && applyCouponById(offer.id)}
@@ -862,11 +862,11 @@ const PaymentMethods = () => {
 
   return (
     <div className="bg-gray-100 p-4 mt-4">
-      <div className="bg-blue-900 text-white p-4 rounded-md cursor-pointer flex justify-between items-center"
+      <div className="bg-green-900 text-white p-4 rounded-md cursor-pointer flex justify-between items-center"
         onClick={toggleDropdown}
       >
         <h2 className="font-bold flex items-center">
-          <span className="bg-white text-blue-900 px-2 py-1 rounded-full mr-2">
+          <span className="bg-white text-green-900 px-2 py-1 rounded-full mr-2">
             4
           </span>
           Select a payment method

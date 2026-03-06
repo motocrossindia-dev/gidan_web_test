@@ -164,7 +164,7 @@ const PopupShopTheLook = ({ onClose }) => {
         >
           ✕
         </button>
-        <div className="bg-blue-800 text-white text-center py-3 sticky top-0 z-10">
+        <div className="bg-bio-green text-white text-center py-3 sticky top-0 z-10">
           <h2 className="text-lg md:text-2xl font-bold">Shop The Look</h2>
           <p className="text-xs md:text-sm">Add the shop look to your cart</p>
         </div>
@@ -209,7 +209,7 @@ const PopupShopTheLook = ({ onClose }) => {
         </Box>
         <div className="sticky bottom-0 z-10 bg-white p-4 flex justify-center gap-2">
           <button
-            className="w-1/2 py-2 bg-blue-600 text-white font-bold text-center rounded-lg hover:bg-blue-700"
+            className="w-1/2 py-2 bg-bio-green text-white font-bold text-center rounded-lg hover:bg-green-800"
             onClick={handleAddToCart}
           >
             Add to Cart

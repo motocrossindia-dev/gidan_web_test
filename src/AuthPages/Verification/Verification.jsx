@@ -8,16 +8,18 @@ const _biotech = typeof __biotech === 'string' ? __biotech : __biotech?.src || _
 const biotech = typeof _biotech === 'string' ? _biotech : _biotech?.src || _biotech;
 import { useSnackbar } from "notistack"; // Correct import
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setVerifiedUser } from "../../redux/User/verificationSlice";
 import { setUsername } from "../../redux/Slice/userSlice";
 import { storeToken } from "../../Services/Services/LocalStorageServices";
 import { storenewData } from "../../redux/newUserData/newUserdataSlice";
+import { getPendingCartItem, getPendingWishlistItem, clearPendingCartItem, clearPendingWishlistItem } from "../../utils/pendingAction";
+import axiosInstance from "../../Axios/axiosInstance";
 
 const Verification = ({ onClose, onSubmit }) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { enqueueSnackbar } = useSnackbar(); // Correct usage of useSnackbar
+  const { enqueueSnackbar } = useSnackbar();
   const [otpDigits, setOtpDigits] = useState(["", "", "", ""]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -90,7 +92,33 @@ const Verification = ({ onClose, onSubmit }) => {
           dispatch(setUsername(user.name || user.first_name));
           localStorage.setItem("userData", JSON.stringify(user));
           onClose();
-          router.push("/");
+
+          const pendingCartPayload = getPendingCartItem();
+          const pendingWishlistPayload = getPendingWishlistItem();
+
+          if (pendingCartPayload) {
+            try {
+              await axiosInstance.post("/order/cart/", pendingCartPayload);
+              enqueueSnackbar("Item added to cart!", { variant: "success" });
+            } catch (_) {
+              // silently ignore cart error
+            } finally {
+              clearPendingCartItem();
+            }
+            router.push("/cart");
+          } else if (pendingWishlistPayload) {
+            try {
+              await axiosInstance.post("/order/wishlist/", pendingWishlistPayload);
+              enqueueSnackbar("Item added to wishlist!", { variant: "success" });
+            } catch (_) {
+              // silently ignore wishlist error
+            } finally {
+              clearPendingWishlistItem();
+            }
+            router.push("/wishlist");
+          } else {
+            router.push("/");
+          }
         }
       }
 

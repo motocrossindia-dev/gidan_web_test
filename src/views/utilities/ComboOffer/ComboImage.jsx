@@ -100,7 +100,7 @@ function ComboImage() {
       <p className="text-gray-600 mb-8 md:text-xl">
         Indoor flowering plants bring vibrant colors and natural beauty into your home. From elegant peace lilies to cheerful ferns, these plants add a touch of joy and fragrance to any space. Discover the enchanting world of indoor flowering plants and create a blooming oasis indoors.
       </p>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 justify-items-center">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
         {comboOffers?.map((offer, index) => (
           <div
             key={offer.id || index}

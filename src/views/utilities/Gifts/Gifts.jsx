@@ -153,7 +153,7 @@ const Gifts = () => {
   return (
     <div className="container mx-auto p-6">
       <div className="text-sm text-gray-500 mb-4">
-        Home / <span className="text-blue-500">gifts</span>
+        Home / <span className="text-green-500">gifts</span>
       </div>
       <Header />
       <ShopBySection />

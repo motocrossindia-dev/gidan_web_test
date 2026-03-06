@@ -120,7 +120,7 @@ function ShopTheLook() {
           }}
         >
           <div>
-            <h2 className="text-lg md:text-2xl font-bold">Shop The Look</h2>
+            <h2 className="text-lg md:text-2xl font-bold font:">Shop The Look</h2>
             <p className="text-xs md:text-sm">Add the shop look to your cart</p>
           </div>
           <IconButton

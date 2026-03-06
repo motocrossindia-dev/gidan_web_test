@@ -144,7 +144,7 @@ const MyOrders = () => {
       case 'DELIVERED':
         return 'text-green-600 bg-green-50';
       case 'RETURNED':
-        return 'text-blue-600 bg-blue-50';
+        return 'text-bio-green bg-green-50';
       case 'PROCESSING':
         return 'text-orange-600 bg-orange-50';
       case 'ON_THE_WAY':
@@ -265,7 +265,7 @@ const MyOrders = () => {
 
     return (
       <div
-        className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md hover:border-blue-200 transition-all duration-200"
+        className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md hover:border-green-200 transition-all duration-200"
         onClick={() => handleOrderClick(order)}
       >
         <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
@@ -473,7 +473,7 @@ const MyOrders = () => {
             </div>
             <button aria-label="Toggle filters"
               onClick={() => setShowFilters(true)}
-              className="flex items-center gap-2 px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
+              className="flex items-center gap-2 px-3 py-2 bg-green-50 text-bio-green rounded-lg hover:bg-green-100 transition-colors"
             >
               <Filter className="w-4 h-4" />
               Filters
@@ -678,7 +678,7 @@ export default MyOrders;
 //       case 'DELIVERED':
 //         return 'text-green-600 bg-green-50';
 //       case 'RETURNED':
-//         return 'text-blue-600 bg-blue-50';
+//         return 'text-bio-green bg-green-50';
 //       case 'PROCESSING':
 //         return 'text-orange-600 bg-orange-50';
 //       case 'ON_THE_WAY':
@@ -795,7 +795,7 @@ export default MyOrders;
 //     };
 //   return(
 //     <div
-//       className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md hover:border-blue-200 transition-all duration-200"
+//       className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md hover:border-green-200 transition-all duration-200"
 //       onClick={() => handleOrderClick(order)}
 //     >
 //       <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
@@ -997,7 +997,7 @@ export default MyOrders;
 //             </div>
 //             <button
 //               onClick={() => setShowFilters(true)}
-//               className="flex items-center gap-2 px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
+//               className="flex items-center gap-2 px-3 py-2 bg-green-50 text-bio-green rounded-lg hover:bg-green-100 transition-colors"
 //             >
 //               <Filter className="w-4 h-4" />
 //               Filters

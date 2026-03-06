@@ -30,7 +30,7 @@ const PrivacyPolicy = () => {
 
         <div className="space-y-8">
           {/* Introduction */}
-          <section className="bg-blue-50 rounded-lg p-6 border-l-4 border-blue-400">
+          <section className="bg-green-50 rounded-lg p-6 border-l-4 border-green-400">
             <p className="text-gray-700 leading-relaxed">
               Please read carefully the Privacy Policy and the Terms of Use before you use our website, our tools or our services and before conducting any type of transaction with us. By using any of our services, you accept the practices described in this Privacy Policy and you agree to be bound by the Terms of Use.
             </p>
@@ -101,9 +101,9 @@ const PrivacyPolicy = () => {
               </div>
               <p>Your account name (not your email address) is displayed to other users when you send comments or messages through our Blog/Forums and other users can contact you through messages and comments.</p>
               <p>Creation of account and order placements deems use of your email address without further consent for non-marketing or administrative purposes (such as notifying you of major website changes, updates on Terms and Conditions or Privacy Policy, alerting you to messages from other members or for customer service purposes).</p>
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <p className="font-medium text-blue-800 mb-2">Marketing Communications</p>
-                <p className="text-blue-700">We use your contact information to send you offers based on your previous orders and your interests.</p>
+              <div className="bg-green-50 p-4 rounded-lg">
+                <p className="font-medium text-green-800 mb-2">Marketing Communications</p>
+                <p className="text-bio-green">We use your contact information to send you offers based on your previous orders and your interests.</p>
               </div>
             </div>
           </section>
@@ -142,9 +142,9 @@ const PrivacyPolicy = () => {
                   <li>• Phone call permissions</li>
                 </ul>
               </div>
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <p className="font-medium text-blue-800 mb-2">Third Party Services Used:</p>
-                <ul className="space-y-1 ml-4 text-blue-700">
+              <div className="bg-green-50 p-4 rounded-lg">
+                <p className="font-medium text-green-800 mb-2">Third Party Services Used:</p>
+                <ul className="space-y-1 ml-4 text-bio-green">
                   <li>• Google Play Services</li>
                   <li>• Firebase Analytics</li>
                   <li>• Facebook</li>
@@ -202,8 +202,8 @@ const PrivacyPolicy = () => {
                 <p className="text-sm text-gray-600">No credit card data stored on our servers</p>
               </div>
               <div className="bg-white p-4 rounded-md shadow-sm text-center">
-                <Shield className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                <h3 className="font-semibold text-blue-700 mb-1">Data Protection</h3>
+                <Shield className="w-8 h-8 text-bio-green mx-auto mb-2" />
+                <h3 className="font-semibold text-bio-green mb-1">Data Protection</h3>
                 <p className="text-sm text-gray-600">Encrypted storage and secure transmission</p>
               </div>
               <div className="bg-white p-4 rounded-md shadow-sm text-center">

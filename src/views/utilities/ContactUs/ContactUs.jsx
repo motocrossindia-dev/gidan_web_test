@@ -146,7 +146,7 @@ const ContactUs = () => {
         {/* Header Section */}
         <header className="bg-red-200 text-center py-10 w-full">
           <h1 className="text-4xl font-bold text-white">Let's Talk</h1>
-          <p className="text-xl text-blue-700 font-semibold">We're Here</p>
+          <p className="text-xl text-bio-green font-semibold">We're Here</p>
         </header>
 
         {/* Contact Form Section */}

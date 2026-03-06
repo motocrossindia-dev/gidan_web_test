@@ -178,7 +178,7 @@ function ShopTheLook() {
       >
         <DialogTitle
           sx={{
-            bgcolor: '#1e40af',
+            bgcolor: '#5A8A1A',
             color: 'white',
             textAlign: 'center',
             py: 2,

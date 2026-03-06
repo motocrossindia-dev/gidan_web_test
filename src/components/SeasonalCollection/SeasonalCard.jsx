@@ -8,6 +8,7 @@ import { MdOutlineShoppingBag } from "react-icons/md";
 import { FiEye } from "react-icons/fi";
 import { enqueueSnackbar } from "notistack";
 import { useSelector } from "react-redux";
+import { savePendingCartItem, savePendingWishlistItem } from "../../utils/pendingAction";
 import { FaStar } from 'react-icons/fa';
 import ReactStars from "react-rating-stars-component";
 import StarsOnCards from "../TrendingProducts/StarsOnCards";
@@ -36,6 +37,7 @@ const SeasonalCard = ({
 
     const handleAddToWishlist = useCallback(async () => {
         if (!isAuthenticated) {
+            savePendingWishlistItem({ main_prod_id: product });
             enqueueSnackbar("Please sign in to add to wishlist", { variant: "error" });
             router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
             return;
@@ -66,35 +68,37 @@ const SeasonalCard = ({
 
     const handleAddToCart = useCallback(async (e) => {
         if (!isAuthenticated) {
+            savePendingCartItem({ main_prod_id: product });
             router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
             return;
         }
 
         try {
             if (inCart) {
-                const response = await axiosInstance.delete(
-                    `/order/cart/?main_product_id=${product}/`,
-                );
-
-                if (response.status === 200) {
-                    enqueueSnackbar("Product Removed from cart", { variant: "success" });
-                    setIsAdded(!isAdded);
-                    window.dispatchEvent(new Event("cartUpdated"));
-                }
+                // Item already in cart — take user there directly
+                router.push("/cart");
+                return;
             } else {
                 const response = await axiosInstance.post(
                     `/order/cart/`,
                     { main_prod_id: product },
                 );
 
-                if (response.status === 200) {
+                if (response.status === 200 || response.status === 201) {
                     enqueueSnackbar("Added to cart", { variant: "success" });
                     setIsAdded(!isAdded);
                     window.dispatchEvent(new Event("cartUpdated"));
+                    router.push("/cart");
                 }
             }
             getProducts()
-        } catch (error) { }
+        } catch (error) {
+            const msg = error.response?.data?.message || "";
+            if (msg.toLowerCase().includes("already") || msg.toLowerCase().includes("exists") || error.response?.status === 400) {
+                enqueueSnackbar("This item is already in your cart.", { variant: "info" });
+                router.push("/cart");
+            }
+        }
     }, [isAuthenticated, router, inCart, product, getProducts, isAdded]);
 
     const handleQuickView = useCallback((e) => {

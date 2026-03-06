@@ -10,13 +10,15 @@ const logo = typeof _logo === 'string' ? _logo : _logo?.src || _logo;
 import __logoImage from "../../Assets/MobileLogin.webp";
 const _logoImage = typeof __logoImage === 'string' ? __logoImage : __logoImage?.src || __logoImage;
 const logoImage = typeof _logoImage === 'string' ? _logoImage : _logoImage?.src || _logoImage;
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   signInSuccess,
 } from "../../redux/Auth/authSlice";
 import { storeToken } from "../../Services/Services/LocalStorageServices";
 import { setVerifiedUser } from "../../redux/User/verificationSlice";
 import { setUsername } from "../../redux/Slice/userSlice";
+import { getPendingCartItem, getPendingWishlistItem, clearPendingCartItem, clearPendingWishlistItem } from "../../utils/pendingAction";
+import axiosInstance from "../../Axios/axiosInstance";
 const MobileVerification = () => {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
@@ -81,7 +83,33 @@ const MobileVerification = () => {
           dispatch(signInSuccess(response?.data?.data));
           localStorage.setItem("userData", JSON.stringify(response.data.data.user));
           localStorage.setItem("token", JSON.stringify(response.data.data.token.access));
-          router.push("/"); // Redirect to homepage after successful login
+
+          const pendingCartPayload = getPendingCartItem();
+          const pendingWishlistPayload = getPendingWishlistItem();
+
+          if (pendingCartPayload) {
+            try {
+              await axiosInstance.post("/order/cart/", pendingCartPayload);
+              enqueueSnackbar("Item added to cart!", { variant: "success" });
+            } catch (_) {
+              // silently ignore cart error
+            } finally {
+              clearPendingCartItem();
+            }
+            router.push("/cart");
+          } else if (pendingWishlistPayload) {
+            try {
+              await axiosInstance.post("/order/wishlist/", pendingWishlistPayload);
+              enqueueSnackbar("Item added to wishlist!", { variant: "success" });
+            } catch (_) {
+              // silently ignore wishlist error
+            } finally {
+              clearPendingWishlistItem();
+            }
+            router.push("/wishlist");
+          } else {
+            router.push("/"); // Redirect to homepage after successful login
+          }
         }
       }
     } catch (error) {

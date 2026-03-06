@@ -31,11 +31,11 @@ const DropdownMenu = ({ isOpen, filter, options, selectedFilters, handleFilterSe
               <div
                 key={option.id || idx}
                 onClick={() => handleFilterSelection(filter, option)}
-                className={`flex items-center p-2 rounded cursor-pointer transition-colors ${isSelected ? "bg-blue-100 text-blue-700" : "hover:bg-gray-50"
+                className={`flex items-center p-2 rounded cursor-pointer transition-colors ${isSelected ? "bg-green-100 text-bio-green" : "hover:bg-gray-50"
                   }`}
               >
                 {isSelected && (
-                  <svg className="w-4 h-4 mr-3 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-4 h-4 mr-3 text-bio-green" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fillRule="evenodd"
                       d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -708,7 +708,7 @@ const FilterSidebar = ({
                     userInteracted.current = true;
                     setPriceRange({ ...priceRange, min: e.target.value });
                   }}
-                  className="w-full md:w-28 px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                  className="w-full md:w-28 px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-bio-green"
                 />
                 <span className="text-gray-600">-</span>
                 <input
@@ -719,7 +719,7 @@ const FilterSidebar = ({
                     userInteracted.current = true;
                     setPriceRange({ ...priceRange, max: e.target.value });
                   }}
-                  className="w-full md:w-28 px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                  className="w-full md:w-28 px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-bio-green"
                 />
               </div>
             </div>
@@ -736,14 +736,14 @@ const FilterSidebar = ({
                 value && (
                   <span
                     key={`${filter}-${value}`}
-                    className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs"
+                    className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-bio-green rounded-full text-xs"
                   >
                     <span className="max-w-[150px] truncate">
                       {getDisplayName(filter, value)}
                     </span>
                     <button aria-label="Toggle filters"
                       onClick={() => removeFilter(filter, value)}
-                      className="ml-1 hover:text-blue-900 font-bold"
+                      className="ml-1 hover:text-green-900 font-bold"
                     >
                       ×
                     </button>

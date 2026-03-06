@@ -1,89 +1,9 @@
 'use client';
 
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 import { Paper } from "@mui/material";
-import { FaRegHeart, FaHeart } from "react-icons/fa";
-import { MdOutlineShoppingBag } from "react-icons/md";
-import { FiEye } from "react-icons/fi";
-import { useSelector } from "react-redux";
-import axios from "axios";
-import { enqueueSnackbar } from "notistack";
-import { selectAccessToken } from "../../../redux/User/verificationSlice";
-import { getProductUrl } from "../../../utils/urlHelper";
-import { trackAddToCart, trackAddToWishlist } from "../../../utils/ga4Ecommerce";
 
 const ComboCard = ({ combo }) => {
-  const [isImageHovered, setIsImageHovered] = useState(false);
-  const router = useRouter();
-  const accessToken = useSelector(selectAccessToken);
-  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-
-  const handleAddToCart = async () => {
-    if (!isAuthenticated) {
-      router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
-      return;
-    }
-
-    try {
-      if (combo?.is_cart) {
-        enqueueSnackbar("Combo already exists in cart.", { variant: "info" });
-      } else {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/order/cart/`,
-          { main_prod_id: combo.id, quantity: 1 },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        window.dispatchEvent(new Event("cartUpdated"));
-        if ([200, 201].includes(response.status)) {
-          enqueueSnackbar("Added to cart", { variant: "success" });
-
-          // GA4: Track add_to_cart event
-          trackAddToCart(combo);
-        }
-      }
-    } catch (error) {
-      enqueueSnackbar("Failed to add to cart. Please try again.", { variant: "error" });
-    }
-  };
-
-  const handleAddToWishlist = async () => {
-    if (!isAuthenticated) {
-      enqueueSnackbar("Please sign in to add to wishlist", { variant: "error" });
-      router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
-      return;
-    }
-
-    try {
-      if (combo?.is_wishlist) {
-        enqueueSnackbar("Combo already exists in wishlist.", { variant: "info" });
-      } else {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/`,
-          { main_prod_id: combo.id, quantity: 1 },
-          {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          }
-        );
-        window.dispatchEvent(new Event("wishlistUpdated"));
-        if ([200, 201].includes(response.status)) {
-          enqueueSnackbar("Added to wishlist", { variant: "success" });
-
-          // GA4: Track add_to_wishlist event
-          trackAddToWishlist(combo);
-        }
-      }
-    } catch (error) {
-      enqueueSnackbar("Failed to add to wishlist. Please try again.", { variant: "error" });
-    }
-  };
-
-  const handleQuickView = () => {
-    router.push(getProductUrl(combo));
-  };
 
   return (
     <>
@@ -120,13 +40,9 @@ const ComboCard = ({ combo }) => {
           </div>
 
           {/* Product Image */}
-          <div
-            className="relative w-full flex justify-center mb-2"
-            onMouseEnter={() => setIsImageHovered(true)}
-            onMouseLeave={() => setIsImageHovered(false)}
-          >
+          <div className="relative w-full flex justify-center mb-2">
             <img
-              className={`w-40 sm:w-48 lg:w-[226px] h-[200px] lg:h-[260px] object-contain mt-4 transition-transform duration-300 rounded-[2rem] ${isImageHovered ? "scale-105" : "scale-100"}`}
+              className="w-40 sm:w-48 lg:w-[226px] h-[200px] lg:h-[260px] object-contain mt-4 transition-transform duration-300 rounded-[2rem] hover:scale-105"
               src={`${process.env.NEXT_PUBLIC_API_URL}${combo?.image}`}
               alt={combo?.name}
               loading="lazy"
@@ -134,44 +50,6 @@ const ComboCard = ({ combo }) => {
               height="400"
               style={{ aspectRatio: '1/1' }}
             />
-
-            {/* Hover Actions */}
-            <div
-              className={`absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 transition-all duration-300 ${isImageHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5 pointer-events-none"}`}
-            >
-              <button
-                aria-label="Add to cart"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAddToCart();
-                }}
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${combo?.is_cart ? "bg-green-600 text-white" : "bg-white hover:bg-green-600 hover:text-white"} transition-colors`}
-              >
-                <MdOutlineShoppingBag className="w-4 h-4" />
-              </button>
-
-              <button
-                aria-label="Add to wishlist"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAddToWishlist();
-                }}
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${combo?.is_wishlist ? "bg-green-600 text-white" : "bg-white hover:bg-green-600 hover:text-white"} transition-colors`}
-              >
-                {combo?.is_wishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
-              </button>
-
-              <button
-                aria-label="Quick view"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleQuickView();
-                }}
-                className="w-8 h-8 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors"
-              >
-                <FiEye className="w-4 h-4" />
-              </button>
-            </div>
           </div>
 
           {/* Details */}
@@ -247,33 +125,6 @@ const ComboCard = ({ combo }) => {
                 height="400"
                 style={{ aspectRatio: '1/1' }}
               />
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex gap-2 mb-2">
-              <button
-                aria-label="Add to cart"
-                onClick={handleAddToCart}
-                className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
-              >
-                <MdOutlineShoppingBag className="w-4 h-4" />
-              </button>
-
-              <button
-                aria-label="Add to wishlist"
-                onClick={handleAddToWishlist}
-                className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
-              >
-                {combo?.is_wishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
-              </button>
-
-              <button
-                aria-label="Quick view"
-                onClick={handleQuickView}
-                className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
-              >
-                <FiEye className="w-4 h-4" />
-              </button>
             </div>
 
             {/* Product Info */}

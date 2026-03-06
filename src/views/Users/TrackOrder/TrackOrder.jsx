@@ -167,7 +167,7 @@ const TrackOrder = () => {
                         href={orderData.delivery_tracking_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 underline"
+                        className="text-bio-green underline"
                       >
                         {orderData.tracking_id}
                       </a>

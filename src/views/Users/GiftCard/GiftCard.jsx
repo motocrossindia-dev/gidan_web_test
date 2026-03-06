@@ -56,7 +56,7 @@ const TrackOrder = () => {
                 value={giftId}
                 onChange={(e) => setGiftId(e.target.value)}
                 placeholder="Enter your order ID"
-                className="w-[400px] h-[48px] p-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-600"
+                className="w-[400px] h-[48px] p-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-bio-green"
                 required
               />
             </div>

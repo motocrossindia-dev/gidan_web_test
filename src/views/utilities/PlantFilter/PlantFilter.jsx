@@ -340,7 +340,7 @@ function PlantFilter({
             setIsSearching(true);
             getInitialProducts();
         }
-    }, [path, typeKey, resolvedCategoryId, resolvedSubcategoryId, isResolvingIds, isSeasonalCollection, isTrending, isFeatured, isBestSeller, normalizedInitialResults, filtersApplied, results.length]);
+    }, [path, typeKey, resolvedCategoryId, resolvedSubcategoryId, isResolvingIds, isSeasonalCollection, isTrending, isFeatured, isBestSeller, normalizedInitialResults, filtersApplied]);
 
     const getDisplayName = () => {
         if (categoryData?.meta_title) return categoryData.meta_title;

@@ -131,7 +131,7 @@ const ProductGrid = ({
             : "No products found"}
         </div>
         {filtersApplied && productDetails?.length > 0 && (
-          <span className="text-xs text-blue-600 font-medium">
+          <span className="text-xs text-bio-green font-medium">
             Filters Active
           </span>
         )}
@@ -196,8 +196,8 @@ const ProductGrid = ({
       {/* Show total count when filters are applied */}
       {
         filtersApplied && productDetails?.length > 0 && (
-          <div className="flex justify-center mt-4 p-3 bg-blue-50 rounded">
-            <p className="text-blue-700 text-sm">
+          <div className="flex justify-center mt-4 p-3 bg-green-50 rounded">
+            <p className="text-bio-green text-sm">
               Showing all {productDetails?.length} filtered results
             </p>
           </div>

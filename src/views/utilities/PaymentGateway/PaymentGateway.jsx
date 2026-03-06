@@ -43,6 +43,7 @@ const PaymentGateway = () => {
   const [isGstSelected, setIsGstSelected] = useState(false);
   const [isGst, setIsGst] = useState(false);
   const [selectedGst, setSelectedGst] = useState("");
+  const [partialPaymentPopup, setPartialPaymentPopup] = useState(null); // { message, wallet_debited, razorpayOptions }
 
   const gstFromProfile = useSelector((state) => state.user.gst);
 
@@ -180,7 +181,7 @@ const PaymentGateway = () => {
           return;
         }
 
-        // ✅ CASE 2: Partial Wallet + Razorpay Requiredq111₹                                                                                       3                                                                                                                                                                                           
+        // ✅ CASE 2: Partial Wallet + Razorpay Required
         const options = {
           key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,                                                     
           amount: razorpayOrder.amount || 0,
@@ -271,11 +272,12 @@ const PaymentGateway = () => {
           return;
         }
 
-        const razorpay = new window.Razorpay(options);
-        razorpay.open();
-
-        razorpay.on("payment.failed", () => {
-          alert("Payment failed. Please try again.");
+        // Show confirmation popup before launching Razorpay
+        setPartialPaymentPopup({
+          message: response?.data?.message || "Wallet partially used. Please complete remaining payment via UPI.",
+          wallet_debited: response?.data?.wallet_debited || "0.00",
+          remaining: (razorpayOrder.amount / 100).toFixed(2),
+          razorpayOptions: options,
         });
       }
     } catch (error) {
@@ -290,9 +292,56 @@ const PaymentGateway = () => {
 
 
 
+  const handleProceedWithRazorpay = () => {
+    if (!partialPaymentPopup) return;
+    const razorpay = new window.Razorpay(partialPaymentPopup.razorpayOptions);
+    setPartialPaymentPopup(null);
+    razorpay.open();
+    razorpay.on("payment.failed", () => {
+      enqueueSnackbar("Payment failed. Please try again.", { variant: "error" });
+    });
+  };
+
   return (
     <>
-      
+      {/* Partial Wallet Payment Popup */}
+      {partialPaymentPopup && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]"
+          onClick={() => setPartialPaymentPopup(null)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl p-6 mx-4 w-full max-w-sm"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="text-4xl text-center mb-3">💳</div>
+            <h2 className="text-lg font-bold text-gray-800 text-center mb-3">Partial Wallet Payment</h2>
+            <p className="text-sm text-gray-600 text-center mb-4">{partialPaymentPopup.message}</p>
+            <div className="bg-gray-50 rounded-lg p-3 mb-5 space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-500">Wallet Debited</span>
+                <span className="font-semibold text-bio-green">₹{partialPaymentPopup.wallet_debited}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-500">Remaining via UPI</span>
+                <span className="font-semibold text-gray-800">₹{partialPaymentPopup.remaining}</span>
+              </div>
+            </div>
+            <button
+              className="w-full py-3 bg-bio-green text-white font-semibold rounded-lg hover:bg-green-700 transition-colors mb-2"
+              onClick={handleProceedWithRazorpay}
+            >
+              Proceed with Razorpay
+            </button>
+            <button
+              className="w-full py-2 text-gray-500 text-sm hover:text-gray-700 transition-colors"
+              onClick={() => setPartialPaymentPopup(null)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="flex flex-col lg:flex-row gap-6 p-6">
         <div className="lg:w-3/4 max-h-screen overflow-y-auto p-4 bg-gray-100 rounded-lg shadow-lg">

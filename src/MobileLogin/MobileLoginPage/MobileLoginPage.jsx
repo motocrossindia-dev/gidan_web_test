@@ -11,6 +11,7 @@ import { setVerifiedUser } from "../../redux/User/verificationSlice";
 import { setUsername } from "../../redux/Slice/userSlice";
 import { storeToken } from "../../Services/Services/LocalStorageServices";
 import axiosInstance from "../../Axios/axiosInstance";
+import { getPendingCartItem, getPendingWishlistItem, clearPendingCartItem, clearPendingWishlistItem } from "../../utils/pendingAction";
 const logo = typeof __logo === 'string' ? __logo : __logo?.src || __logo;
 const logoImage = typeof __logoImage === 'string' ? __logoImage : __logoImage?.src || __logoImage;
 
@@ -69,7 +70,34 @@ const MobileLoginPage = () => {
         dispatch(setUsername(user.name || user.first_name));
         localStorage.setItem("userData", JSON.stringify(user));
         enqueueSnackbar("Logged in successfully!", { variant: "success" });
-        router.push("/"); // Redirect to homepage after login
+
+        // If there's a pending cart/wishlist item (added before login), add it now
+        const pendingCartPayload = getPendingCartItem();
+        const pendingWishlistPayload = getPendingWishlistItem();
+
+        if (pendingCartPayload) {
+          try {
+            await axiosInstance.post("/order/cart/", pendingCartPayload);
+            enqueueSnackbar("Item added to cart!", { variant: "success" });
+          } catch (_) {
+            // silently ignore cart error
+          } finally {
+            clearPendingCartItem();
+          }
+          router.push("/cart");
+        } else if (pendingWishlistPayload) {
+          try {
+            await axiosInstance.post("/order/wishlist/", pendingWishlistPayload);
+            enqueueSnackbar("Item added to wishlist!", { variant: "success" });
+          } catch (_) {
+            // silently ignore wishlist error
+          } finally {
+            clearPendingWishlistItem();
+          }
+          router.push("/wishlist");
+        } else {
+          router.push("/"); // Redirect to homepage after login
+        }
       }
     } catch (error) {
       console.error("API Error: ", error); // Log error in the console
@@ -132,7 +160,7 @@ const MobileLoginPage = () => {
           </button>
         </form>
 
-        <p className="text-center text-sm text-blue-500 mt-5 cursor-pointer" onClick={() => router.push("/mobile-signin")}>
+        <p className="text-center text-sm text-green-500 mt-5 cursor-pointer" onClick={() => router.push("/mobile-signin")}>
           Back to sign-in
         </p>
       </div>

@@ -39,7 +39,7 @@ const ProductGrid = () => {
         <div className="relative mr-6 p-3">
           <button
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="bg-white border border-blue-700  text-blue-700 px-2 md:px-4 py-2 text-xs rounded-md hover:bg-blue-700 hover:text-white flex items-center gap-2"
+            className="bg-white border border-bio-green  text-bio-green px-2 md:px-4 py-2 text-xs rounded-md hover:bg-bio-green hover:text-white flex items-center gap-2"
           >
             <span>Sort By: {selectedSortOption}</span>
             {dropdownOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}

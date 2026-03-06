@@ -20,7 +20,7 @@ const ComboOffer = () => {
         <div className="container mx-auto p-6">
           {/* Breadcrumb */}
           <div className="text-sm text-gray-500 mb-4">
-            Home / <span className="text-blue-500">Combo Offers</span>
+            Home / <span className="text-green-500">Combo Offers</span>
           </div>
 
           {/* Image and Heading Section */}

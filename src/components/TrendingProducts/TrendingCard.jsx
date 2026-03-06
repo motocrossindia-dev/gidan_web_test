@@ -8,6 +8,7 @@ import { MdOutlineShoppingBag } from "react-icons/md";
 import { FiEye } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { enqueueSnackbar } from "notistack";
+import { savePendingCartItem, savePendingWishlistItem } from "../../utils/pendingAction";
 import StarsOnCards from "./StarsOnCards";
 import ReactStars from "react-rating-stars-component";
 import axiosInstance from "../../Axios/axiosInstance";
@@ -22,7 +23,8 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
 
     const handleAddToWishlist = useCallback(async () => {
         if (!isAuthenticated) {
-            enqueueSnackbar("Please sign..", { variant: "info" });
+            savePendingWishlistItem({ main_prod_id: product?.id });
+            enqueueSnackbar("Please sign in to add to wishlist", { variant: "info" });
             router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
             return;
         }
@@ -52,21 +54,16 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
 
     const handleAddToCart = useCallback(async (e) => {
         if (!isAuthenticated) {
+            savePendingCartItem({ main_prod_id: product?.id });
             router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
             return;
         }
 
         try {
             if (inCart) {
-                const response = await axiosInstance.delete(
-                    `/order/cart/?main_product_id=${product.id}/`,
-                );
-
-                if (response.status === 200 || response.status === 201) {
-                    enqueueSnackbar("Product Removed from cart", { variant: "success" });
-                    setIsAdded(!isAdded);
-                    window.dispatchEvent(new Event("cartUpdated"));
-                }
+                // Item already in cart — take user there directly
+                router.push("/cart");
+                return;
             } else {
                 const response = await axiosInstance.post(
                     `/order/cart/`,
@@ -77,10 +74,17 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                     enqueueSnackbar("Added to cart", { variant: "success" });
                     setIsAdded(!isAdded);
                     window.dispatchEvent(new Event("cartUpdated"));
+                    router.push("/cart");
                 }
             }
             getProducts()
-        } catch (error) { }
+        } catch (error) {
+            const msg = error.response?.data?.message || "";
+            if (msg.toLowerCase().includes("already") || msg.toLowerCase().includes("exists") || error.response?.status === 400) {
+                enqueueSnackbar("This item is already in your cart.", { variant: "info" });
+                router.push("/cart");
+            }
+        }
     }, [isAuthenticated, router, inCart, product.id, getProducts, isAdded]);
 
     const handleQuickView = useCallback((e) => {

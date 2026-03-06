@@ -59,7 +59,7 @@ const Carriers = () => {
             >
               Non -Tech Positions
               {activeTab === 'non-tech' && (
-                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500"></div>
+                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-green-500"></div>
               )}
             </button>
             <button
@@ -69,7 +69,7 @@ const Carriers = () => {
             >
               Technology Positions
               {activeTab === 'tech' && (
-                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500"></div>
+                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-green-500"></div>
               )}
             </button>
           </div>
@@ -100,7 +100,7 @@ const Carriers = () => {
                         href={job.google_form}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition"
+                        className="px-4 py-2 text-sm font-medium text-white bg-bio-green rounded-lg hover:bg-bio-green transition"
                       >
                         Apply Now
                       </a>
@@ -110,7 +110,7 @@ const Carriers = () => {
                   {/* Expand/Collapse */}
                   <button
                     onClick={() => handleExpand(job.id)}
-                    className="mt-4 text-sm font-medium text-blue-600 hover:underline"
+                    className="mt-4 text-sm font-medium text-bio-green hover:underline"
                   >
                     {expanded === job.id ? "Hide Details ▲" : "View Details ▼"}
                   </button>

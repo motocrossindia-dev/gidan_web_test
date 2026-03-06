@@ -102,10 +102,10 @@ const PaymentPage = () => {
               <div className="flex justify-between mb-2">
                 <span className="text-gray-400">Address</span>
                 <span className="text-gray-400">Order Summary</span>
-                <span className="text-blue-600 font-medium">Payment</span>
+                <span className="text-bio-green font-medium">Payment</span>
               </div>
               <div className="w-full bg-gray-200 h-1 rounded-full">
-                <div className="h-full bg-blue-600 rounded-full w-full transition-all duration-300"></div>
+                <div className="h-full bg-bio-green rounded-full w-full transition-all duration-300"></div>
               </div>
             </div>
           </div>

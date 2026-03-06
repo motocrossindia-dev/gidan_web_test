@@ -187,8 +187,8 @@ const WriteAReview = ({ onClose, productId, productDetailData, isInline = false 
 
         {/* Show existing review notice */}
         {hasExistingReview && (
-          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-blue-800 text-sm font-medium">
+          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-green-800 text-sm font-medium">
               ✓ You have already reviewed this product. You can edit your review below.
             </p>
           </div>

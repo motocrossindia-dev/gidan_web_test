@@ -261,7 +261,7 @@ const Wallet = () => {
               Go to{" "}
               <a
                 href="https://www.gidan.store"
-                className="text-blue-500 hover:underline"
+                className="text-green-500 hover:underline"
               >
                 www.gidan.store
               </a>{" "}

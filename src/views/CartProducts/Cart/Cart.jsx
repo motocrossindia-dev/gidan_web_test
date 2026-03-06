@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import ProductCard from "../CartComponent/ProductCard";
 import CartSummary from "../CartComponent/Cartsummary";
 import { useSelector } from "react-redux";
@@ -10,6 +11,7 @@ import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { useSearchParams } from "next/navigation";
 import { trackViewCart, trackRemoveFromCart } from "../../../utils/ga4Ecommerce";
+import emptyCartImg from "../../../Assets/emptycart.webp";
 
 const Cart = () => {
   const accessToken = useSelector(selectAccessToken);
@@ -151,10 +153,19 @@ const Cart = () => {
             </div>
           </>
         ) : (
-          <div className="flex flex-col items-center justify-center w-full h-full">
-            <h2 className="text-2xl font-semibold text-gray-700 mb-4">Your cart is empty</h2>
+          <div className="flex flex-col items-center justify-center w-full py-16">
+            <Image
+              src={emptyCartImg}
+              alt="Empty Cart"
+              width={280}
+              height={280}
+              className="mb-6 object-contain"
+              priority
+            />
+            <h2 className="text-2xl font-semibold text-gray-700 mb-2">Your cart is empty</h2>
+            <p className="text-gray-500 mb-6 text-sm">Looks like you haven't added anything yet.</p>
             <button
-              className="bg-lime-500 text-white py-2 px-4 rounded hover:bg-green-600"
+              className="bg-lime-500 text-white py-2 px-6 rounded-lg hover:bg-green-600 transition-colors"
               onClick={() => router.push("/")}
             >
               Continue Shopping

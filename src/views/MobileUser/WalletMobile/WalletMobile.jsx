@@ -40,7 +40,7 @@ const WalletMobile = () => {
       </div>
 
       {/* Wallet Transactions */}
-      <button className="w-full mt-4 bg-blue-500 text-white py-2 rounded-md text-lg font-semibold">
+      <button className="w-full mt-4 bg-green-500 text-white py-2 rounded-md text-lg font-semibold">
         Wallet Transactions History
       </button>
 

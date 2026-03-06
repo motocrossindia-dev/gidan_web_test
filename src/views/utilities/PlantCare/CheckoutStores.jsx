@@ -71,7 +71,7 @@ const CheckOutStore = () => {
                       href={store.address_link} // Set the address link for Google Maps
                       target="_blank" // Open in a new tab
                       rel="noopener noreferrer" // For security reasons
-                      className="ml-2 text-blue-900"
+                      className="ml-2 text-green-900"
                     >
                       <CiLocationOn />
                     </a>

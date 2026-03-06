@@ -6,7 +6,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import Image from "next/image";
 import "swiper/css";
-import { getMobileBannerUrl, getDesktopBannerUrl } from "../../hooks/useBannerImages";
+import { getMobileBannerUrl, getDesktopBannerUrl, getBannerCategoryUrl } from "../../hooks/useBannerImages";
 
 const Banner = ({ home }) => {
     const router = useRouter();
@@ -70,12 +70,14 @@ const Banner = ({ home }) => {
                                     <h3 className="text-sm md:text-xl lg:text-4xl font-semibold text-green-800 mb-4">
                                         {banner.subtitle}
                                     </h3>
-                                    <Link
-                                        href="/featured"
-                                        className="bg-bio-green text-white px-3 md:px-4 py-2 rounded-md w-fit mx-auto lg:mx-0 hover:bg-green-700 transition text-xs md:text-sm"
-                                    >
-                                        {banner.button_text}
-                                    </Link>
+                                    {banner.button_text && (
+                                        <Link
+                                            href={getBannerCategoryUrl(banner)}
+                                            className="bg-bio-green text-white px-3 md:px-4 py-2 rounded-md w-fit mx-auto lg:mx-0 hover:bg-green-700 transition text-xs md:text-sm"
+                                        >
+                                            {banner.button_text}
+                                        </Link>
+                                    )}
                                 </div>
                             </div>
                         </SwiperSlide>

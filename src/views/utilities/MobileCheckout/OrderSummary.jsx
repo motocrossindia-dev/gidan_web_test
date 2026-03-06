@@ -19,19 +19,19 @@ const ProgressBar = ({ currentStep }) => {
       </button>
       <div className="flex-1">
         <div className="flex justify-between mb-2">
-          <span className={currentStep === 'address' ? 'text-blue-600 font-medium' : 'text-gray-400'}>
+          <span className={currentStep === 'address' ? 'text-bio-green font-medium' : 'text-gray-400'}>
             Address
           </span>
-          <span className={currentStep === 'order' ? 'text-blue-600 font-medium' : 'text-gray-400'}>
+          <span className={currentStep === 'order' ? 'text-bio-green font-medium' : 'text-gray-400'}>
             Order Summary
           </span>
-          <span className={currentStep === 'payment' ? 'text-blue-600 font-medium' : 'text-gray-400'}>
+          <span className={currentStep === 'payment' ? 'text-bio-green font-medium' : 'text-gray-400'}>
             Payment
           </span>
         </div>
         <div className="w-full bg-gray-200 h-1 rounded-full">
           <div
-            className="h-full bg-blue-600 rounded-full transition-all duration-300"
+            className="h-full bg-bio-green rounded-full transition-all duration-300"
             style={{
               width: currentStep === 'address' ? '33%' :
                 currentStep === 'order' ? '66%' : '100%'

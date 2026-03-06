@@ -2,6 +2,7 @@
 
 import { useRouter, usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
@@ -9,6 +10,7 @@ import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { trackAddToCart } from "../../../utils/ga4Ecommerce";
+import emptyWishlistImg from "../../../Assets/wishlist.webp";
 
 
 const WishlistItem = ({
@@ -181,19 +183,40 @@ const WishList = () => {
 
       <div className="container mx-auto md:p-4 sm:p-0 bg-gray-50">
         <h1 className="text-center text-xl sm:text-2xl font-bold mb-4 sm:mb-6">My Wishlist</h1>
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 px-4 sm:px-6 lg:px-16">
-          {wishlistItems.map((item) => (
-            <WishlistItem
-              key={item.id}
-              product={item}
-              handleAddToCart={handleAddToCart}
-              handleRemove={handleRemove}
-              mrp={Math.round(item.mrp)}
-              price={Math.round(item.selling_price)}
-              {...item}
+        {wishlistItems.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16">
+            <Image
+              src={emptyWishlistImg}
+              alt="Empty Wishlist"
+              width={280}
+              height={280}
+              className="mb-6 object-contain"
+              priority
             />
-          ))}
-        </div>
+            <h2 className="text-xl font-semibold text-gray-700 mb-2">Your wishlist is empty</h2>
+            <p className="text-gray-500 mb-6 text-sm">Save items you love to your wishlist.</p>
+            <button
+              className="bg-lime-500 text-white py-2 px-6 rounded-lg hover:bg-green-600 transition-colors"
+              onClick={() => router.push("/")}
+            >
+              Explore Products
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 px-4 sm:px-6 lg:px-16">
+            {wishlistItems.map((item) => (
+              <WishlistItem
+                key={item.id}
+                product={item}
+                handleAddToCart={handleAddToCart}
+                handleRemove={handleRemove}
+                mrp={Math.round(item.mrp)}
+                price={Math.round(item.selling_price)}
+                {...item}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

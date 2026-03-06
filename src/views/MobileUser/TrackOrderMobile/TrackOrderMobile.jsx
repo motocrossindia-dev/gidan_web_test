@@ -38,7 +38,7 @@ const TrackOrderMobile = () => {
 
         {/* Input Field */}
         <div className="w-full max-w-md">
-          <label className="block text-blue-700 text-sm font-semibold mb-1">
+          <label className="block text-bio-green text-sm font-semibold mb-1">
             Order ID/Tracking Number
           </label>
           <input
@@ -46,7 +46,7 @@ const TrackOrderMobile = () => {
             placeholder="Enter order ID or Tracking Number"
             value={trackingId}
             onChange={(e) => setTrackingId(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-bio-green mb-4"
           />
 
           {/* Track Button */}

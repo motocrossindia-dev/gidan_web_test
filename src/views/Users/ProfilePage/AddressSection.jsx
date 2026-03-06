@@ -217,7 +217,7 @@ const AddressSection = () => {
           ))}
           <button
             onClick={handleAddNewAddress}
-            className="flex items-center gap-2 mt-4  p-4 mb-4 border rounded-lg  text-blue-700 font-semibold hover:text-blue-600"
+            className="flex items-center gap-2 mt-4  p-4 mb-4 border rounded-lg  text-bio-green font-semibold hover:text-bio-green"
           >
             <span className="text-2xl font-bold">+</span> Add New Address
           </button>

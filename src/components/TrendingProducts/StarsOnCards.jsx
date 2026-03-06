@@ -11,7 +11,7 @@ const StarsOnCards = ({rating,ratingNumber}) => {
     <FaStar
       key={star}
       className={`w-4 h-4 ${
-        star <= rating ? "text-blue-950" : "text-gray-300"
+        star <= rating ? "text-green-950" : "text-gray-300"
       }`}
     />
   ))}

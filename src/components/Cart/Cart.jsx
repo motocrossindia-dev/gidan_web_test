@@ -57,7 +57,7 @@ const Cart = ({ onClose }) => {
           ) : (
             <h2 className="text-lg font-semibold mb-4">Your cart is currently empty</h2>
           )}
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={onClose}>
+          <button className="bg-green-500 text-white px-4 py-2 rounded-md" onClick={onClose}>
             {cartItems.length > 0 ? "Continue Shopping" : "Add Products"}
           </button>
         </div>

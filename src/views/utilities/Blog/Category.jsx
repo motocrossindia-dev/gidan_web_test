@@ -128,10 +128,10 @@ function Category({ blogs, loading, selectedCategory }) {
                 ) : (
                  <div
   className={`max-w-none mb-4 text-gray-600
-    [&_a]:text-blue-600
+    [&_a]:text-bio-green
     [&_a]:underline
     [&_a]:font-medium
-    [&_a:hover]:text-blue-800
+    [&_a:hover]:text-green-800
     ${isExpanded ? '' : 'line-clamp-3'}
   `}
   dangerouslySetInnerHTML={{

@@ -29,8 +29,8 @@ const ShippingPolicy = () => {
 
         <div className="space-y-8">
           {/* Shipping Information */}
-          <section className="bg-blue-50 rounded-lg p-6 border-l-4 border-blue-400">
-            <h2 className="text-2xl font-semibold text-blue-700 mb-4 flex items-center gap-2">
+          <section className="bg-green-50 rounded-lg p-6 border-l-4 border-green-400">
+            <h2 className="text-2xl font-semibold text-bio-green mb-4 flex items-center gap-2">
               <Clock className="w-6 h-6" />
               How long does it take for an order to arrive?
             </h2>
@@ -44,7 +44,7 @@ const ShippingPolicy = () => {
                 <span>Most orders are delivered to your address within <strong>2-6 working days</strong> from the date when the order is placed</span>
               </p>
               <p className="flex items-start gap-2">
-                <Package className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
+                <Package className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
                 <span>You can track your order by clicking on the tracking link provided</span>
               </p>
             </div>
@@ -157,7 +157,7 @@ const ShippingPolicy = () => {
                 </ul>
               </div>
               <div className="bg-white p-4 rounded-md shadow-sm">
-                <h3 className="font-semibold text-blue-700 mb-2 flex items-center gap-2">
+                <h3 className="font-semibold text-bio-green mb-2 flex items-center gap-2">
                   <RefreshCw className="w-5 h-5" />
                   Returns
                 </h3>

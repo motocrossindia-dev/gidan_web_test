@@ -191,7 +191,7 @@ const ProductGrid = ({
             : "No products found"}
         </h2>
         {filtersApplied && productDetails?.length > 0 && (
-          <span className="text-xs text-blue-600 font-medium">
+          <span className="text-xs text-bio-green font-medium">
             Filters Active
           </span>
         )}

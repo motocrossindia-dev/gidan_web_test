@@ -69,7 +69,7 @@ const WalletHistory = () => {
                   key={status}
                   onClick={() => setActiveStatus(status)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeStatus === status
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-bio-green text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                 >
