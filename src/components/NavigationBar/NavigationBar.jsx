@@ -170,9 +170,9 @@ const NavBar = () => {
               <Image
                 src={logo}
                 alt="Gidan Logo"
-                width={115}
-                height={82}
-                className="h-16 w-auto"
+                width={180}
+                height={128}
+                className="h-24 w-auto"
                 priority
               />
             </Link>
@@ -184,9 +184,9 @@ const NavBar = () => {
               <Image
                 src={logo}
                 alt="Gidan Logo"
-                width={172}
-                height={122}
-                className="h-24 max-h-32 w-auto object-contain"
+                width={260}
+                height={185}
+                className="h-36 w-auto object-contain"
                 priority
               />
 
