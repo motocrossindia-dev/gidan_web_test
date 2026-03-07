@@ -6,7 +6,7 @@ import { ArrowBack } from '@mui/icons-material';
 import { enqueueSnackbar } from 'notistack';
 import axiosInstance from '../../../Axios/axiosInstance';
 
-const WriteAReview = ({ onClose, productId, productDetailData, isInline = false }) => {
+const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInline = false }) => {
   const product = productDetailData?.data?.product || productDetailData?.product || productDetailData;
 
 
@@ -60,8 +60,10 @@ const WriteAReview = ({ onClose, productId, productDetailData, isInline = false 
           setHasExistingReview(true);
         }
       } catch (error) {
-        console.error("Error fetching existing review:", error);
-        // If there's an error, assume no existing review
+        // 404 = no review yet, other errors also treated as no existing review
+        if (error?.response?.status !== 404) {
+          console.error("Error fetching existing review:", error);
+        }
       } finally {
         setIsLoadingExisting(false);
       }

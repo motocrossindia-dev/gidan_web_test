@@ -13,19 +13,19 @@ const ProductCard = ({ product, handleRemove, handleQuantityChange }) => {
 
   // Increment quantity
   const increment = () => {
+    const prev = quantity;
     const newQuantity = quantity + 1;
     setQuantity(newQuantity);
-    handleQuantityChange(product.id, newQuantity);
-
+    handleQuantityChange(product.id, newQuantity, () => setQuantity(prev));
   };
 
   // Decrement quantity
   const decrement = () => {
     if (quantity > 1) {
+      const prev = quantity;
       const newQuantity = quantity - 1;
       setQuantity(newQuantity);
-      handleQuantityChange(product.id, newQuantity);
-
+      handleQuantityChange(product.id, newQuantity, () => setQuantity(prev));
     }
   };
 
@@ -33,8 +33,9 @@ const ProductCard = ({ product, handleRemove, handleQuantityChange }) => {
   const handleInputChange = (e) => {
     let value = parseInt(e.target.value, 10);
     if (isNaN(value) || value < 1) value = 1;
+    const prev = quantity;
     setQuantity(value);
-    handleQuantityChange(product.id, value);
+    handleQuantityChange(product.id, value, () => setQuantity(prev));
   };
 
 

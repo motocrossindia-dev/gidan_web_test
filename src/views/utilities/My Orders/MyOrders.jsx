@@ -3,7 +3,7 @@
 
 
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import axiosInstance from '../../../Axios/axiosInstance';
 import { enqueueSnackbar } from 'notistack';
+import WriteAReview from '../ProductData/WriteAReview';
 // Using your actual data structure
 
 
@@ -28,8 +29,11 @@ const MyOrders = () => {
   const [allOrders, setAllOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [filterPos, setFilterPos] = useState({ x: null, y: null });
+  const [activeReviewOrder, setActiveReviewOrder] = useState(null);
 
   const [statusFilters, setStatusFilters] = useState({
     'PROCESSING': true,
@@ -76,18 +80,25 @@ const MyOrders = () => {
     '2023': true,
   });
 
-  // Check for mobile viewport
+  // Check for mobile / tablet viewport
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+    const checkViewport = () => {
+      const w = window.innerWidth;
+      setIsMobile(w < 768);
+      setIsTablet(w >= 768 && w < 1024);
     };
 
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
+    checkViewport();
+    window.addEventListener('resize', checkViewport);
     setMounted(true);
 
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkViewport);
   }, []);
+
+  // Reset drag position when filter closes
+  useEffect(() => {
+    if (!showFilters) setFilterPos({ x: null, y: null });
+  }, [showFilters]);
 
   const handleOrderClick = (order) => {
     router.push(`/profile/orders/postsummary/${order.order_id}`);
@@ -247,6 +258,18 @@ const MyOrders = () => {
                 Saved ₹{Math.round(order?.total_discount || 0).toLocaleString()}
               </div>
             )}
+            {order?.status === 'DELIVERED' && (
+              <button
+                onClick={(e) => { e.stopPropagation(); setActiveReviewOrder(order); }}
+                className={`mt-2 w-full py-1.5 rounded-lg text-xs font-semibold transition-all border ${
+                  order?.is_review || order?.is_reviewed
+                    ? 'border-green-600 text-green-700 hover:bg-green-50'
+                    : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                {order?.is_review || order?.is_reviewed ? '✓ Edit Review' : 'Write Review'}
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -318,8 +341,21 @@ const MyOrders = () => {
                   </div>
                 )}
               </div>
-
-              <span className="text-sm text-gray-600 capitalize">{order?.delivery_option}</span>
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-gray-600 capitalize">{order?.delivery_option}</span>
+                {order?.status === 'DELIVERED' && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setActiveReviewOrder(order); }}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
+                      order?.is_review || order?.is_reviewed
+                        ? 'border-green-600 text-green-700 hover:bg-green-50'
+                        : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {order?.is_review || order?.is_reviewed ? '✓ Edit Review' : 'Write Review'}
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -348,35 +384,72 @@ const MyOrders = () => {
       </div>
     </label>
   );
-  const FilterSidebar = () => (
-    <div className={`bg-gray-50 rounded-lg p-6 h-fit ${isMobile ? 'fixed inset-0 z-50 m-4 overflow-y-auto' : 'sticky top-4'
-      }`}>
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">Filter</h2>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleReset}
-            className="px-4 py-2 bg-gray-400 text-white text-sm font-medium rounded hover:bg-gray-500 transition-colors"
-          >
-            RESET
-          </button>
-          {isMobile && (
-            <button aria-label="Close"
-              onClick={() => setShowFilters(false)}
-              className="p-1 hover:bg-gray-200 rounded-lg"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          )}
-        </div>
-      </div>
+  const FilterSidebar = () => {
+    const isOverlay = isMobile || isTablet;
+    const isDraggable = isTablet; // tablet only – drag handle
+    const isDraggingRef = useRef(false);
+    const dragStartRef = useRef({ x: 0, y: 0 });
 
-      {/* Divider */}
-      <div className="border-b border-gray-300 mb-6"></div>
+    const getInitialXY = () => ({
+      x: filterPos.x !== null ? filterPos.x : window.innerWidth / 2 - 150,
+      y: filterPos.y !== null ? filterPos.y : window.innerHeight / 2 - 200,
+    });
 
+    const handleHeaderMouseDown = (e) => {
+      if (!isDraggable) return;
+      isDraggingRef.current = true;
+      const { x, y } = getInitialXY();
+      dragStartRef.current = { x: e.clientX - x, y: e.clientY - y };
+
+      const onMove = (ev) => {
+        if (!isDraggingRef.current) return;
+        setFilterPos({ x: ev.clientX - dragStartRef.current.x, y: ev.clientY - dragStartRef.current.y });
+      };
+      const onUp = () => {
+        isDraggingRef.current = false;
+        window.removeEventListener('mousemove', onMove);
+        window.removeEventListener('mouseup', onUp);
+      };
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onUp);
+      e.preventDefault();
+    };
+
+    const handleHeaderTouchStart = (e) => {
+      if (!isDraggable) return;
+      isDraggingRef.current = true;
+      const touch = e.touches[0];
+      const { x, y } = getInitialXY();
+      dragStartRef.current = { x: touch.clientX - x, y: touch.clientY - y };
+
+      const onMove = (ev) => {
+        if (!isDraggingRef.current) return;
+        const t = ev.touches[0];
+        setFilterPos({ x: t.clientX - dragStartRef.current.x, y: t.clientY - dragStartRef.current.y });
+      };
+      const onEnd = () => {
+        isDraggingRef.current = false;
+        window.removeEventListener('touchmove', onMove);
+        window.removeEventListener('touchend', onEnd);
+      };
+      window.addEventListener('touchmove', onMove, { passive: true });
+      window.addEventListener('touchend', onEnd);
+    };
+
+    const draggableStyle = isDraggable ? {
+      position: 'fixed',
+      left: filterPos.x !== null ? `${filterPos.x}px` : '50%',
+      top: filterPos.y !== null ? `${filterPos.y}px` : '50%',
+      transform: filterPos.x !== null ? 'none' : 'translate(-50%, -50%)',
+      zIndex: 50,
+      width: '300px',
+      maxHeight: '82vh',
+      overflowY: 'auto',
+      boxShadow: '0 12px 40px rgba(0,0,0,0.18)',
+    } : {};
+
+    const FilterContent = () => (
       <div className="space-y-8">
-        {/* Order Status Section */}
         <div>
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Order status</h3>
           <div className="space-y-1">
@@ -385,21 +458,12 @@ const MyOrders = () => {
                 key={status}
                 checked={checked}
                 label={status.replace(/_/g, ' ')}
-                onChange={() =>
-                  setStatusFilters((prev) => ({
-                    ...prev,
-                    [status]: !prev[status],
-                  }))
-                }
+                onChange={() => setStatusFilters((prev) => ({ ...prev, [status]: !prev[status] }))}
               />
             ))}
           </div>
         </div>
-
-        {/* Divider */}
         <div className="border-b border-gray-300"></div>
-
-        {/* Order Time Section */}
         <div>
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Order time</h3>
           <div className="space-y-1">
@@ -408,19 +472,69 @@ const MyOrders = () => {
                 key={time}
                 checked={checked}
                 label={time}
-                onChange={() =>
-                  setTimeFilters((prev) => ({
-                    ...prev,
-                    [time]: !prev[time],
-                  }))
-                }
+                onChange={() => setTimeFilters((prev) => ({ ...prev, [time]: !prev[time] }))}
               />
             ))}
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+
+    return (
+      <>
+        {/* Backdrop for any overlay */}
+        {isOverlay && (
+          <div
+            className="fixed inset-0 bg-black/30 z-40"
+            onClick={() => setShowFilters(false)}
+          />
+        )}
+
+        <div
+          className={`bg-gray-50 rounded-xl p-6 h-fit ${
+            !isOverlay
+              ? 'sticky top-4'
+              : !isDraggable
+              ? 'fixed inset-0 z-50 m-4 overflow-y-auto'
+              : ''
+          }`}
+          style={draggableStyle}
+        >
+          {/* Header / drag handle */}
+          <div
+            className={`flex justify-between items-center mb-6 ${
+              isDraggable ? 'cursor-grab active:cursor-grabbing select-none' : ''
+            }`}
+            onMouseDown={handleHeaderMouseDown}
+            onTouchStart={handleHeaderTouchStart}
+          >
+            <div className="flex items-center gap-2">
+              {isDraggable && (
+                <span className="text-gray-400 text-base leading-none">⠿</span>
+              )}
+              <h2 className="text-xl font-semibold text-gray-900">Filter</h2>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleReset}
+                className="px-4 py-2 bg-gray-400 text-white text-sm font-medium rounded hover:bg-gray-500 transition-colors"
+              >
+                RESET
+              </button>
+              {isOverlay && (
+                <button aria-label="Close" onClick={() => setShowFilters(false)} className="p-1 hover:bg-gray-200 rounded-lg">
+                  <X className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="border-b border-gray-300 mb-6"></div>
+          <FilterContent />
+        </div>
+      </>
+    );
+  };
 
   const content = (
     <div className="flex-1">
@@ -447,6 +561,7 @@ const MyOrders = () => {
               <DesktopOrderCard key={order?.id} order={order} />
             )
           )}
+
         </div>
       ) : (
         <div className="bg-white rounded-lg p-8 text-center">
@@ -480,6 +595,7 @@ const MyOrders = () => {
     );
   }
 
+  // ── Mobile layout ──────────────────────────────────────────────────
   if (isMobile) {
     return (
       <div className="bg-gray-50 min-h-screen">
@@ -503,18 +619,57 @@ const MyOrders = () => {
               Filters
             </button>
           </div>
-
         </div>
-
         <div className="p-4">
           {content}
         </div>
-
         {showFilters && <FilterSidebar />}
+        {activeReviewOrder && (
+          <WriteAReview
+            isInline={false}
+            onClose={() => setActiveReviewOrder(null)}
+            onSuccess={() => setActiveReviewOrder(null)}
+            productId={activeReviewOrder?.product_details?.id}
+            productDetailData={activeReviewOrder?.product_details}
+          />
+        )}
       </div>
     );
   }
 
+  // ── Tablet layout (768-1023 px) ────────────────────────────────────
+  if (isTablet) {
+    return (
+      <div className="bg-gray-50 min-h-screen">
+        <div className="max-w-4xl mx-auto px-4 py-6">
+          <div className="mb-6 flex items-center justify-between">
+            <h1 className="text-2xl font-bold text-gray-900">My Orders</h1>
+            <button
+              aria-label="Toggle filters"
+              onClick={() => setShowFilters(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-green-50 text-bio-green border border-green-200 rounded-lg hover:bg-green-100 transition-colors text-sm font-medium"
+            >
+              <Filter className="w-4 h-4" />
+              Filters
+            </button>
+          </div>
+          {content}
+        </div>
+        {showFilters && <FilterSidebar />}
+        {activeReviewOrder && (
+          <WriteAReview
+            isInline={false}
+            onClose={() => setActiveReviewOrder(null)}
+            onSuccess={() => setActiveReviewOrder(null)}
+            productId={activeReviewOrder?.product_details?.id}
+            productDetailData={activeReviewOrder?.product_details}
+          />
+        )}
+      </div>
+    );
+  }
+
+  // ── Desktop layout (≥ 1024 px) ─────────────────────────────────────
   return (
     <>
       <Link href="/profile" className="flex md:hidden items-center gap-2 px-4 pt-4 pb-1 text-bio-green font-medium">
@@ -528,13 +683,22 @@ const MyOrders = () => {
           </div>
 
           <div className="flex gap-6">
-            <div className="w-80 flex-shrink-0">
+            <div className="w-72 flex-shrink-0">
               <FilterSidebar />
             </div>
             {content}
           </div>
         </div>
       </div>
+      {activeReviewOrder && (
+        <WriteAReview
+          isInline={false}
+          onClose={() => setActiveReviewOrder(null)}
+          onSuccess={() => setActiveReviewOrder(null)}
+          productId={activeReviewOrder?.product_details?.id}
+          productDetailData={activeReviewOrder?.product_details}
+        />
+      )}
     </>
   );
 };

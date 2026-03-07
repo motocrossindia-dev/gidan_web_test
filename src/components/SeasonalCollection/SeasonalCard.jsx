@@ -46,7 +46,7 @@ const SeasonalCard = ({
         try {
             if (inWishlist) {
                 const response = await axiosInstance.delete(
-                    `/order/wishlist/?main_product_id=${product}/`,
+                    `/order/wishlist/?main_product_id=${product}`,
                 );
                 if (response.status === 200) {
                     enqueueSnackbar("Product Removed from wishlist", { variant: "success" });
@@ -81,7 +81,7 @@ const SeasonalCard = ({
             } else {
                 const response = await axiosInstance.post(
                     `/order/cart/`,
-                    { main_prod_id: product },
+                    { main_prod_id: product, quantity: 1 },
                 );
 
                 if (response.status === 200 || response.status === 201) {
@@ -94,9 +94,17 @@ const SeasonalCard = ({
             getProducts()
         } catch (error) {
             const msg = error.response?.data?.message || "";
-            if (msg.toLowerCase().includes("already") || msg.toLowerCase().includes("exists") || error.response?.status === 400) {
+            const availableStock = error.response?.data?.available_stock;
+            if (msg.toLowerCase().includes("not enough stock") || msg.toLowerCase().includes("stock")) {
+                const stockMsg = availableStock !== undefined
+                    ? `Only ${availableStock} unit${availableStock !== 1 ? 's' : ''} available in stock.`
+                    : msg;
+                enqueueSnackbar(stockMsg, { variant: "warning" });
+            } else if (msg.toLowerCase().includes("already") || msg.toLowerCase().includes("exists") || error.response?.status === 400) {
                 enqueueSnackbar("This item is already in your cart.", { variant: "info" });
                 router.push("/cart");
+            } else if (msg) {
+                enqueueSnackbar(msg, { variant: "error" });
             }
         }
     }, [isAuthenticated, router, inCart, product, getProducts, isAdded]);

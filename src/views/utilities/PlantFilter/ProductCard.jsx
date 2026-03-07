@@ -32,32 +32,26 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
             return;
         }
 
-        const isMainProduct = !!prod_id;
-        const payload = isMainProduct ? { prod_id: prod_id, quantity: 1 } : { main_prod_id: id, quantity: 1 };
-
         try {
             if (inCart) {
                 enqueueSnackbar("Product already exists in cart.", { variant: "info" });
             } else {
-                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/order/cart/`, payload, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                        "Content-Type": "application/json",
-                    },
-                });
+                const response = await axiosInstance.post(`/order/cart/`, { main_prod_id: id, quantity: 1 });
                 window.dispatchEvent(new Event("cartUpdated"));
                 if ([200, 201].includes(response.status)) {
                     enqueueSnackbar("Added to cart", { variant: "success" });
-
-                    // GA4: Track add_to_cart event
                     trackAddToCart(product);
                 }
             }
         } catch (error) {
-            if (error.response?.data?.message === "Product already exists in cart.") {
+            const msg = error.response?.data?.message || "";
+            const availableStock = error.response?.data?.available_stock;
+            if ((msg.toLowerCase().includes("not enough stock") || msg.toLowerCase().includes("stock")) && availableStock !== undefined) {
+                enqueueSnackbar(`Only ${availableStock} unit${availableStock !== 1 ? 's' : ''} available in stock.`, { variant: "warning" });
+            } else if (msg.toLowerCase().includes("already")) {
                 enqueueSnackbar("Product already exists in cart.", { variant: "info" });
             } else {
-                enqueueSnackbar("Failed to add to cart. Please try again.", { variant: "error" });
+                enqueueSnackbar(msg || "Failed to add to cart. Please try again.", { variant: "error" });
             }
         }
     };
@@ -69,29 +63,25 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
             return;
         }
 
-        const isMainProduct = !!prod_id;
-        const payload = isMainProduct ? { prod_id: prod_id, quantity: 1 } : { main_prod_id: id, quantity: 1 };
-
         try {
             if (inWishlist) {
-                enqueueSnackbar("Product already exists in wishlist.", { variant: "info" });
+                await axiosInstance.delete(`/order/wishlist/?main_product_id=${id}`);
+                window.dispatchEvent(new Event("wishlistUpdated"));
+                enqueueSnackbar("Removed from wishlist", { variant: "success" });
             } else {
-                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/`, payload, {
-                    headers: { Authorization: `Bearer ${accessToken}` },
-                });
+                const response = await axiosInstance.post(`/order/wishlist/`, { main_prod_id: id });
                 window.dispatchEvent(new Event("wishlistUpdated"));
                 if ([200, 201].includes(response.status)) {
                     enqueueSnackbar("Added to wishlist", { variant: "success" });
-
-                    // GA4: Track add_to_wishlist event
                     trackAddToWishlist(product);
                 }
             }
         } catch (error) {
-            if (error.response?.data?.message === "Product already exists in wishlist.") {
+            const msg = error.response?.data?.message || "";
+            if (msg.toLowerCase().includes("already")) {
                 enqueueSnackbar("Product already exists in wishlist.", { variant: "info" });
             } else {
-                enqueueSnackbar("Failed to add to wishlist. Please try again.", { variant: "error" });
+                enqueueSnackbar(msg || "Failed to update wishlist.", { variant: "error" });
             }
         }
     };

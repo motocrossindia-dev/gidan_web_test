@@ -375,20 +375,23 @@ const OrderDetailsView = () => {
                                     </div>
                                 </div>
 
-                                {activeReviewProductId === item.product_id && (
-                                    <div className="mt-8 pt-8 border-t border-dashed">
-                                        <WriteAReview
-                                            isInline={true}
-                                            onClose={() => setActiveReviewProductId(null)}
-                                            productId={item.product_id}
-                                            productDetailData={item}
-                                        />
-                                    </div>
-                                )}
                             </div>
                         ))}
                     </div>
                 </div>
+
+                {/* Write a Review Modal */}
+                {activeReviewProductId && (() => {
+                    const reviewItem = orderData?.order_items?.find(i => i.product_id === activeReviewProductId);
+                    return (
+                        <WriteAReview
+                            isInline={false}
+                            onClose={() => setActiveReviewProductId(null)}
+                            productId={activeReviewProductId}
+                            productDetailData={reviewItem}
+                        />
+                    );
+                })()}
 
                 {/* Bottom Links */}
                 <div className="mt-8 flex flex-col md:flex-row gap-4 items-center justify-between text-sm">

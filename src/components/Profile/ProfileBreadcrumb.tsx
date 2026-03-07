@@ -28,14 +28,28 @@ export default function ProfileBreadcrumb() {
   const crumbs: { label: string; href: string }[] = [];
   let currentHref = '';
 
-  for (const segment of segments) {
+  const SKIP_SEGMENTS = new Set(['postsummary']);
+
+  for (let i = 0; i < segments.length; i++) {
+    const segment = segments[i];
     currentHref += `/${segment}`;
+
+    if (SKIP_SEGMENTS.has(segment)) {
+      // Skip this segment — its ID child will carry the label
+      continue;
+    }
+
+    const prevSegment = segments[i - 1] ?? '';
     const label = PATH_LABELS[segment];
+
     if (label) {
       crumbs.push({ label, href: currentHref });
     } else if (/^\d+$/.test(segment) || segment.length > 8) {
-      // Dynamic order ID — label as "Details"
-      crumbs.push({ label: 'Details', href: currentHref });
+      // Dynamic ID — use parent segment name as label if available
+      const parentLabel = SKIP_SEGMENTS.has(prevSegment)
+        ? PATH_LABELS[prevSegment]
+        : 'Details';
+      crumbs.push({ label: parentLabel || 'Details', href: currentHref });
     }
   }
 

@@ -32,7 +32,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
         try {
             if (inWishlist) {
                 const response = await axiosInstance.delete(
-                    `/order/wishlist/?main_product_id=${product.id}/`,
+                    `/order/wishlist/?main_product_id=${product.id}`,
                 );
                 if (response.status === 200 || response.status === 201) {
                     enqueueSnackbar("Product Removed from wishlist!", { variant: "success" });
@@ -67,7 +67,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
             } else {
                 const response = await axiosInstance.post(
                     `/order/cart/`,
-                    { main_prod_id: product.id },
+                    { main_prod_id: product.id, quantity: 1 },
                 );
 
                 if (response.status === 200 || response.status === 201) {
@@ -80,9 +80,17 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
             getProducts()
         } catch (error) {
             const msg = error.response?.data?.message || "";
-            if (msg.toLowerCase().includes("already") || msg.toLowerCase().includes("exists") || error.response?.status === 400) {
+            const availableStock = error.response?.data?.available_stock;
+            if (msg.toLowerCase().includes("not enough stock") || msg.toLowerCase().includes("stock")) {
+                const stockMsg = availableStock !== undefined
+                    ? `Only ${availableStock} unit${availableStock !== 1 ? 's' : ''} available in stock.`
+                    : msg;
+                enqueueSnackbar(stockMsg, { variant: "warning" });
+            } else if (msg.toLowerCase().includes("already") || msg.toLowerCase().includes("exists") || error.response?.status === 400) {
                 enqueueSnackbar("This item is already in your cart.", { variant: "info" });
                 router.push("/cart");
+            } else if (msg) {
+                enqueueSnackbar(msg, { variant: "error" });
             }
         }
     }, [isAuthenticated, router, inCart, product.id, getProducts, isAdded]);
@@ -152,6 +160,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                             >
                                 <button aria-label="Add to cart"
                                     onClick={(e) => {
+                                        e.preventDefault();
                                         e.stopPropagation();
                                         handleAddToCart();
                                     }}
@@ -163,6 +172,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
 
                                 <button aria-label="Add to wishlist"
                                     onClick={(e) => {
+                                        e.preventDefault();
                                         e.stopPropagation();
                                         handleAddToWishlist();
                                     }}
@@ -174,6 +184,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
 
                                 <button aria-label="Quick view"
                                     onClick={(e) => {
+                                        e.preventDefault();
                                         e.stopPropagation();
                                         handleQuickView();
                                     }}
@@ -266,6 +277,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-20">
                                 <button aria-label="Add to cart"
                                     onClick={(e) => {
+                                        e.preventDefault();
                                         e.stopPropagation();
                                         handleAddToCart();
                                     }}
@@ -276,6 +288,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
 
                                 <button aria-label="Add to wishlist"
                                     onClick={(e) => {
+                                        e.preventDefault();
                                         e.stopPropagation();
                                         handleAddToWishlist();
                                     }}
@@ -286,6 +299,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
 
                                 <button aria-label="Quick view"
                                     onClick={(e) => {
+                                        e.preventDefault();
                                         e.stopPropagation();
                                         handleQuickView();
                                     }}

@@ -34,13 +34,15 @@ const TrackOrder = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const trimmedOrderId = orderId.trim();
+    setOrderId(trimmedOrderId);
     setIsSubmitted(true);
     setLoading(true);
     setError("");
 
     try {
       const res = await axios.get(
-        `https://backend.gidan.store/order/orderDetailHistory/${orderId}/`,//tracking/shipway/order/
+        `https://backend.gidan.store/order/orderDetailHistory/${trimmedOrderId}/`,//tracking/shipway/order/
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         }

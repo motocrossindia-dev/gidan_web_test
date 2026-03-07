@@ -436,7 +436,7 @@ const PostSummaryView = () => {
 
                                         {isDelivered && !(item.is_reviewed || item.is_review) && (
                                             <button
-                                                onClick={() => setActiveReviewProductId(activeReviewProductId === item.product_id ? null : item.product_id)}
+                                                onClick={() => setActiveReviewProductId(item.product_id)}
                                                 className="w-full border border-gray-300 hover:bg-gray-50 text-gray-700 py-1.5 rounded-lg text-[10px] font-semibold transition-all"
                                             >
                                                 Write Review
@@ -445,7 +445,7 @@ const PostSummaryView = () => {
 
                                         {(item.is_reviewed || item.is_review) && isDelivered && (
                                             <button
-                                                onClick={() => setActiveReviewProductId(activeReviewProductId === item.product_id ? null : item.product_id)}
+                                                onClick={() => setActiveReviewProductId(item.product_id)}
                                                 className="w-full border border-[#15803D] text-[#15803D] hover:bg-green-50 py-1.5 rounded-lg text-[10px] font-semibold transition-all flex items-center justify-center gap-1"
                                             >
                                                 <Check className="w-3 h-3" /> Edit Review
@@ -453,21 +453,23 @@ const PostSummaryView = () => {
                                         )}
                                     </div>
                                 </div>
-
-                                {activeReviewProductId === item.product_id && (
-                                    <div className="col-span-full border-t border-dashed p-4">
-                                        <WriteAReview
-                                            isInline={true}
-                                            onClose={() => setActiveReviewProductId(null)}
-                                            productId={item.product_id}
-                                            productDetailData={item}
-                                        />
-                                    </div>
-                                )}
                             </div>
                         ))}
                     </div>
                 </div>
+
+                {/* Write a Review Modal */}
+                {activeReviewProductId && (() => {
+                    const reviewItem = orderData?.order_items?.find(i => i.product_id === activeReviewProductId);
+                    return (
+                        <WriteAReview
+                            isInline={false}
+                            onClose={() => setActiveReviewProductId(null)}
+                            productId={activeReviewProductId}
+                            productDetailData={reviewItem}
+                        />
+                    );
+                })()}
 
                 {/* Bottom Links */}
                 <div className="mt-8 flex flex-col md:flex-row gap-4 items-center justify-between text-sm">

@@ -8,6 +8,7 @@ import { MdOutlineShoppingBag } from "react-icons/md";
 import { FiEye } from "react-icons/fi";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import axios from "axios";
+import axiosInstance from "../../../Axios/axiosInstance";
 import { useSelector } from "react-redux";
 import { FaStar } from 'react-icons/fa';
 import { getProductUrl } from "../../../utils/urlHelper";
@@ -39,14 +40,8 @@ const RecentlyViewedCard = ({
         return;
       }
 
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/?main_product_id_list=true`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
+      const response = await axiosInstance.get(
+        `/order/wishlist/?main_product_id_list=true`
       );
 
       const wishlistIds = response.data.main_product_ids || [];
@@ -76,23 +71,18 @@ const RecentlyViewedCard = ({
       }
 
 
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/`,
-        { main_prod_id: productId },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
+      const response = await axiosInstance.post(
+        `/order/wishlist/`,
+        { main_prod_id: productId }
       );
 
       // GA4: Track add_to_wishlist event
       trackAddToWishlist(product);
-
+      window.dispatchEvent(new Event("wishlistUpdated"));
       fetchWishlistStatus();
     } catch (error) {
-      console.error("There was an error adding the item to the wishlist:", error);
+      const msg = error.response?.data?.message || "";
+      enqueueSnackbar(msg || "Failed to update wishlist.", { variant: "error" });
     }
   };
 
@@ -110,23 +100,24 @@ const RecentlyViewedCard = ({
     }
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/order/cart/`,
-        { main_prod_id: product.id },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
+      const response = await axiosInstance.post(
+        `/order/cart/`,
+        { main_prod_id: product.id, quantity: 1 }
       );
-
-      // GA4: Track add_to_cart event
       if (response.status === 200 || response.status === 201) {
+        enqueueSnackbar("Added to cart", { variant: "success" });
+        window.dispatchEvent(new Event("cartUpdated"));
         trackAddToCart(product);
+        setIsAdded(!isAdded);
       }
     } catch (error) {
-      console.error("There was an error adding the item to the cart:", error);
+      const msg = error.response?.data?.message || "";
+      const availableStock = error.response?.data?.available_stock;
+      if ((msg.toLowerCase().includes("not enough stock") || msg.toLowerCase().includes("stock")) && availableStock !== undefined) {
+        enqueueSnackbar(`Only ${availableStock} unit${availableStock !== 1 ? 's' : ''} available in stock.`, { variant: "warning" });
+      } else {
+        enqueueSnackbar(msg || "Failed to add to cart.", { variant: "error" });
+      }
     }
   };
 

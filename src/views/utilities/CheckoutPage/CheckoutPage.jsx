@@ -8,7 +8,6 @@ import { CheckCircle } from 'lucide-react';
 import RazorpayPayment from "../RazorPayment/RazorpayPayment";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
-import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { trackBeginCheckout, trackAddPaymentInfo, trackAddShippingInfo, trackPurchase } from "../../../utils/ga4Ecommerce";
@@ -58,6 +57,7 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
       }
     } catch (error) {
       console.error("Error fetching addresses:", error);
+      enqueueSnackbar("Failed to load addresses. Please refresh and try again.", { variant: "error" });
     }
   };
 
@@ -70,7 +70,8 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
         setStores(response?.data?.data?.stores || []);
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching store list:", error);
+      enqueueSnackbar("Failed to load store list. Please refresh and try again.", { variant: "error" });
     }
   };
 
@@ -307,14 +308,9 @@ const AddNewAddress = ({ isOpen, setIsOpen }) => {
     };
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/account/address/`,
-        addressData,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
+      const response = await axiosInstance.post(
+        `/account/address/`,
+        addressData
       );
 
       if (response.data.message === "success") {
@@ -335,6 +331,10 @@ const AddNewAddress = ({ isOpen, setIsOpen }) => {
       }
     } catch (error) {
       console.error("Error saving address:", error);
+      enqueueSnackbar(
+        error.response?.data?.message || "Failed to save address. Please check your details and try again.",
+        { variant: "error" }
+      );
     }
   };
 
@@ -642,7 +642,8 @@ const ApplyCoupon = ({ id, setCoupon }) => {
         }
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching coupons:", error);
+      enqueueSnackbar("Failed to load available coupons.", { variant: "warning" });
     }
   };
 
@@ -665,17 +666,11 @@ const ApplyCoupon = ({ id, setCoupon }) => {
     }
     try {
       console.log("🎟️ Applying coupon ID:", couponId, "to order:", id);
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/order/applyCoupon/`,
+      const response = await axiosInstance.post(
+        `/order/applyCoupon/`,
         {
           selected_coupon_id: couponId,
           order_id: id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
         }
       );
 
@@ -1003,12 +998,9 @@ const CheckoutPage = () => {
 
     setSavingOrder(true);
     try {
-      const response = await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/order/orderSummary/`,
-        orderSummaryData,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
+      const response = await axiosInstance.patch(
+        `/order/orderSummary/`,
+        orderSummaryData
       );
 
       if (response.data.message === "success") {
@@ -1053,11 +1045,12 @@ const CheckoutPage = () => {
 
   const getWalletBalance = async () => {
     try {
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/wallet/wallet`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      const res = await axiosInstance.get(`/wallet/wallet`);
       if (res.status === 200) setWalletBalance(res.data?.data);
-    } catch (e) { console.warn('Wallet fetch failed', e); }
+    } catch (e) {
+      console.warn('Wallet fetch failed', e);
+      enqueueSnackbar('Failed to fetch wallet balance.', { variant: 'warning' });
+    }
   };
 
   useEffect(() => { if (showPaymentStep) getWalletBalance(); }, [showPaymentStep]);
@@ -1106,8 +1099,8 @@ const CheckoutPage = () => {
           order_id: razorpayOrder.id,
           handler: async (paymentResponse) => {
             try {
-              const verifyRes = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}/order/verifyPayment/`,
+              const verifyRes = await axiosInstance.post(
+                `/order/verifyPayment/`,
                 {
                   razorpay_payment_id: paymentResponse.razorpay_payment_id,
                   razorpay_order_id: paymentResponse.razorpay_order_id,
@@ -1116,8 +1109,7 @@ const CheckoutPage = () => {
                   payment_method: selectedPayMethod,
                   amount: razorpayOrder.amount / 100,
                   payment_details: paymentResponse,
-                },
-                { headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' } }
+                }
               );
               if (verifyRes.data.message === 'Payment successful') {
                 enqueueSnackbar('Payment completed successfully!', { variant: 'success' });
@@ -1143,10 +1135,9 @@ const CheckoutPage = () => {
             ondismiss: async () => {
               if (usedWallet > 0) {
                 try {
-                  await axios.post(
-                    `${process.env.NEXT_PUBLIC_API_URL}/order/payments/rollback-wallet/`,
-                    { order_id: orderId, wallet_amount: usedWallet },
-                    { headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' } }
+                  await axiosInstance.post(
+                    `/order/payments/rollback-wallet/`,
+                    { order_id: orderId, wallet_amount: usedWallet }
                   );
                   enqueueSnackbar('Wallet rollback successful.', { variant: 'info' });
                   setWalletAdded(0);
@@ -1163,12 +1154,20 @@ const CheckoutPage = () => {
           enqueueSnackbar('Failed to load payment gateway. Please try again.', { variant: 'error' });
           return;
         }
-        setPartialPaymentPopup({
-          message: response?.data?.message || 'Wallet partially used. Please complete remaining payment via UPI.',
-          wallet_debited: response?.data?.wallet_debited || '0.00',
-          remaining: (razorpayOrder.amount / 100).toFixed(2),
-          razorpayOptions: options,
-        });
+        // Only show the partial-wallet popup when wallet was actually debited.
+        // For pure Razorpay (no wallet used), open the gateway directly.
+        if (usedWallet > 0) {
+          setPartialPaymentPopup({
+            message: response?.data?.message || 'Wallet partially used. Please complete remaining payment via UPI.',
+            wallet_debited: response?.data?.wallet_debited || '0.00',
+            remaining: (razorpayOrder.amount / 100).toFixed(2),
+            razorpayOptions: options,
+          });
+        } else {
+          const razorpay = new window.Razorpay(options);
+          razorpay.open();
+          razorpay.on('payment.failed', () => { enqueueSnackbar('Payment failed. Please try again.', { variant: 'error' }); });
+        }
       }
     } catch (error) {
       console.error('Payment error:', error);

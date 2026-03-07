@@ -151,30 +151,29 @@ const WishList = () => {
     }
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/order/cart/`,
-        { prod_id: id },
-        { headers: { Authorization: `Bearer ${accessToken}` } }
+      const response = await axiosInstance.post(
+        `/order/cart/`,
+        { prod_id: id, quantity: 1 }
       );
 
-      if (response.status === 201) {
-
+      if (response.status === 201 || response.status === 200) {
         enqueueSnackbar("Added to cart", { variant: "success" });
         setIsAdded(!isAdded);
-        getWishlistItems()
+        getWishlistItems();
         window.dispatchEvent(new Event("wishlistUpdated"));
-
-        // GA4: Track add_to_cart event
         const wishlistProduct = wishlistItems.find(item => item.product_id === id);
         if (wishlistProduct) trackAddToCart(wishlistProduct);
       }
     } catch (error) {
       console.error("Error adding item to cart:", error);
-
-      const errorMessage = error.response?.data?.message || "Failed to add item to cart";
-      getWishlistItems()
-
-      enqueueSnackbar(errorMessage, { variant: "error" });
+      const msg = error.response?.data?.message || "Failed to add item to cart";
+      const availableStock = error.response?.data?.available_stock;
+      getWishlistItems();
+      if ((msg.toLowerCase().includes("not enough stock") || msg.toLowerCase().includes("stock")) && availableStock !== undefined) {
+        enqueueSnackbar(`Only ${availableStock} unit${availableStock !== 1 ? 's' : ''} available in stock.`, { variant: "warning" });
+      } else {
+        enqueueSnackbar(msg, { variant: "error" });
+      }
     }
   };
   return (

@@ -9,6 +9,7 @@ import { FiEye } from "react-icons/fi";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
 import axios from "axios";
+import axiosInstance from "../../../Axios/axiosInstance";
 import { useSelector } from "react-redux";
 import ProductCard from "../PlantFilter/ProductCard";
 import { getProductUrl } from "../../../utils/urlHelper";
@@ -129,17 +130,15 @@ const ProductFeaturedCard = ({
           trackRemoveFromCart({ id: product, name, selling_price: price });
         }
       } else {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/order/cart/`,
-          { main_prod_id: product },
-          { headers: { Authorization: `Bearer ${accessToken}` } }
+        const response = await axiosInstance.post(
+          `/order/cart/`,
+          { main_prod_id: product, quantity: 1 }
         );
 
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 201) {
           enqueueSnackbar("Added to cart", { variant: "success" });
           setIsAdded(!isAdded);
-
-          // GA4: Track add_to_cart event
+          window.dispatchEvent(new Event("cartUpdated"));
           trackAddToCart({ id: product, name, selling_price: price });
         }
       }

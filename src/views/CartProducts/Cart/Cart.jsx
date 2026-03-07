@@ -22,12 +22,7 @@ const Cart = () => {
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
-        const response = await axiosInstance.get(`${process.env.NEXT_PUBLIC_API_URL}/order/cart/`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await axiosInstance.get(`/order/cart/`);
 
         if (response.data?.message === "success") {
           const cartItems = response.data.data.cart;
@@ -45,17 +40,11 @@ const Cart = () => {
   }, [accessToken]);
 
   // Handle updating product quantity in cart
-  const handleUpdateQuantity = async (cartId, newQuantity) => {
+  const handleUpdateQuantity = async (cartId, newQuantity, rollback) => {
     try {
       const response = await axiosInstance.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/order/cart/`,
-        { cart_id: cartId, quantity: newQuantity },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
+        `/order/cart/`,
+        { cart_id: cartId, quantity: newQuantity }
       );
 
       if (response.data?.message === "success") {
@@ -68,19 +57,22 @@ const Cart = () => {
       window.dispatchEvent(new Event("cartUpdated"));
 
     } catch (err) {
-      enqueueSnackbar("Failed to update product quantity!", { variant: "error" });
+      const msg = err.response?.data?.message || "";
+      const availableStock = err.response?.data?.available_stock;
+      if ((msg.toLowerCase().includes("not enough stock") || msg.toLowerCase().includes("stock")) && availableStock !== undefined) {
+        enqueueSnackbar(`Only ${availableStock} unit${availableStock !== 1 ? 's' : ''} available in stock.`, { variant: "warning" });
+      } else {
+        enqueueSnackbar(msg || "Failed to update product quantity!", { variant: "error" });
+      }
+      // Rollback the local quantity to previous value
+      if (rollback) rollback();
     }
   };
 
   // Handle removing products from cart
   const handleRemove = async (id) => {
     try {
-      const response = await axiosInstance.delete(`${process.env.NEXT_PUBLIC_API_URL}/order/cart/${id}/`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axiosInstance.delete(`/order/cart/${id}/`);
 
       if (response.status === 200) {
         enqueueSnackbar("Product removed from cart!", { variant: "success" });

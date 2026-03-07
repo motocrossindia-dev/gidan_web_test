@@ -387,7 +387,13 @@ export default function ProductData({ initialProductData }) {
 
             } catch (error) {
                 const msg = error.response?.data?.message || "";
-                if (
+                const availableStock = error.response?.data?.available_stock;
+                if (msg.toLowerCase().includes("not enough stock") || msg.toLowerCase().includes("stock")) {
+                    const stockMsg = availableStock !== undefined
+                        ? `Only ${availableStock} unit${availableStock !== 1 ? 's' : ''} available in stock.`
+                        : msg;
+                    enqueueSnackbar(stockMsg, { variant: "warning" });
+                } else if (
                     msg.toLowerCase().includes("already") ||
                     msg.toLowerCase().includes("exists") ||
                     error.response?.status === 400

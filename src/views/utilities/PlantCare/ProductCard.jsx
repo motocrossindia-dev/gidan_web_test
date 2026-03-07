@@ -6,6 +6,7 @@ import ReactStars from 'react-rating-stars-component';
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { isMobile } from "react-device-detect";
 import axios from "axios";
+import axiosInstance from "../../../Axios/axiosInstance";
 import { Paper } from "@mui/material";
 import { FaStar } from "react-icons/fa";
 import { FaRegHeart,FaHeart } from "react-icons/fa";
@@ -36,23 +37,22 @@ const ProductCard = ({ name, price, oldPrice, imageUrl, rating ,product,mrp}) =>
       }
   
       try {
-        // Send the product id to the API to add to the cart
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/order/cart/`,
-          { main_prod_id: product.id }, // Send only the product id
-  
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`, // Include the user token for authentication
-            },
-          }
+        const response = await axiosInstance.post(
+          `/order/cart/`,
+          { main_prod_id: product.id, quantity: 1 }
         );
-  
-        // Handle the response, e.g., show a success message or update state
+        if (response.status === 200 || response.status === 201) {
+          enqueueSnackbar("Added to cart", { variant: "success" });
+          window.dispatchEvent(new Event("cartUpdated"));
+        }
       } catch (error) {
-        // Handle error, e.g., show an error message
-        console.error("There was an error adding the item to the cart:", error);
+        const msg = error.response?.data?.message || "";
+        const availableStock = error.response?.data?.available_stock;
+        if ((msg.toLowerCase().includes("not enough stock") || msg.toLowerCase().includes("stock")) && availableStock !== undefined) {
+          enqueueSnackbar(`Only ${availableStock} unit${availableStock !== 1 ? 's' : ''} available in stock.`, { variant: "warning" });
+        } else {
+          enqueueSnackbar(msg || "Failed to add to cart.", { variant: "error" });
+        }
       }
     };
  
@@ -63,14 +63,15 @@ const ProductCard = ({ name, price, oldPrice, imageUrl, rating ,product,mrp}) =>
       }
     
       try {
-        await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/order/wishlist/`,
-          { main_prod_id: product.id },
-          { headers: { Authorization: `Bearer ${accessToken}` } }
+        await axiosInstance.post(
+          `/order/wishlist/`,
+          { main_prod_id: product.id }
         );
+        window.dispatchEvent(new Event("wishlistUpdated"));
         fetchWishlistStatus();
       } catch (error) {
-        console.error("Error adding to wishlist:", error);
+        const msg = error.response?.data?.message || "";
+        enqueueSnackbar(msg || "Failed to update wishlist.", { variant: "error" });
       }
     };
 

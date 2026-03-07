@@ -56,7 +56,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
         try {
             if (inWishlist) {
                 const response = await axiosInstance.delete(
-                    `/order/wishlist/?main_product_id=${product.id}/`,
+                    `/order/wishlist/?main_product_id=${product.id}`,
                 );
                 if (response.status === 200 || response.status === 201) {
                     enqueueSnackbar("Product Removed from wishlist!", { variant: "success" });
