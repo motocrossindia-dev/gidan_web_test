@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Successpage from '@/views/utilities/PaymentGateway/Successpage';
+import Successpage from '@/views/utilities/Successpage/Successpage';
 
 
 export const metadata: Metadata = {

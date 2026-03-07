@@ -11,8 +11,20 @@ import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
-import { trackBeginCheckout, trackAddPaymentInfo, trackAddShippingInfo } from "../../../utils/ga4Ecommerce";
+import { trackBeginCheckout, trackAddPaymentInfo, trackAddShippingInfo, trackPurchase } from "../../../utils/ga4Ecommerce";
 
+const loadRazorpayScript = () =>
+  new Promise((resolve) => {
+    if (typeof window !== 'undefined' && typeof window.Razorpay !== 'undefined') {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
 
 
 const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOption, setIsAddNewOpen, isAddNewOpen }) => {
@@ -930,6 +942,17 @@ const CheckoutPage = () => {
   const [showGstDetail, setShowGstDetail] = useState(false);
   const [showShippingDetail, setShowShippingDetail] = useState(false);
 
+  // ── Payment Step State ──
+  const [showPaymentStep, setShowPaymentStep] = useState(false);
+  const [walletBalance, setWalletBalance] = useState(null);
+  const [walletAdded, setWalletAdded] = useState(0);
+  const [selectedPayMethod, setSelectedPayMethod] = useState('');
+  const [isGstSelected, setIsGstSelected] = useState(false);
+  const [isGst, setIsGst] = useState(false);
+  const [selectedGst, setSelectedGst] = useState('');
+  const [partialPaymentPopup, setPartialPaymentPopup] = useState(null);
+  const gstFromProfile = useSelector((state) => state.user.gst);
+
   const isCombo = !!(data?.order?.is_combo_purchase || data?.order?.is_shop_the_look || comboOffer);
 
   useEffect(() => {
@@ -989,6 +1012,9 @@ const CheckoutPage = () => {
       );
 
       if (response.data.message === "success") {
+        // Update data state so right panel reflects the latest prices
+        setData(response.data.data);
+
         // GA4: Track add_shipping_info event
         trackAddShippingInfo(
           data.order_items,
@@ -996,23 +1022,23 @@ const CheckoutPage = () => {
           data?.order?.grand_total
         );
 
-        // If coupon was applied, merge the coupon data into the response
+        // If coupon was applied, merge coupon metadata into the response.
+        // IMPORTANT: use response grand_total (post-shipping, post-coupon from server) — never override it.
         const finalOrderData = coupon?.success
           ? {
             ...response.data.data,
             order: {
               ...response.data.data.order,
-              grand_total: Math.max(0, Number(coupon.order?.grand_total ?? coupon.new_total ?? 0)),
               coupon_applied: true,
               coupon_discount: coupon.discount_amount,
-              applied_coupon: coupon.order?.applied_coupon
+              applied_coupon: coupon.order?.applied_coupon || coupon.coupon_code
             }
           }
           : response.data.data;
 
         sessionStorage.setItem('payment_order_data', JSON.stringify({ resource: finalOrderData, order_id: data.order.id }));
-        setPaymentReady(true);
-        router.push("/paymentgateway");
+        setShowPaymentStep(true);
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
       }
     } catch (error) {
       console.error("Error saving order summary:", error);
@@ -1025,11 +1051,161 @@ const CheckoutPage = () => {
     }
   };
 
-  const deliveryCharge = Number(data?.shipping_info?.shipping_charge || 0);
+  const getWalletBalance = async () => {
+    try {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/wallet/wallet`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      if (res.status === 200) setWalletBalance(res.data?.data);
+    } catch (e) { console.warn('Wallet fetch failed', e); }
+  };
 
-  // When coupon is applied, use updated values from coupon response
-  const activeOrder = coupon?.success ? coupon.order : data?.order;
-  const activeItems = coupon?.success ? coupon.order_items : data?.order_items;
+  useEffect(() => { if (showPaymentStep) getWalletBalance(); }, [showPaymentStep]);
+
+  const handlePayment = async () => {
+    if (!data?.order?.id || !selectedPayMethod) {
+      enqueueSnackbar('Please select a payment method.', { variant: 'warning' });
+      return;
+    }
+    const orderId = data.order.id;
+    const payload = { order_id: orderId, payment_method: selectedPayMethod, is_gst: isGst, gst_number: selectedGst };
+    try {
+      const paymentItems = activeItems || [];
+      if (paymentItems.length > 0) {
+        trackAddPaymentInfo(paymentItems, selectedPayMethod, activeOrder?.grand_total);
+      }
+      const response = await axiosInstance.patch(`/order/proceedToPayment/`, payload);
+      if (response.status === 200 || response.status === 206) {
+        const usedWallet = response?.data?.wallet_debited || 0;
+        setWalletAdded(usedWallet);
+        const razorpayOrder = response?.data?.razorpay_order;
+        // CASE 1: Full wallet payment
+        if (!razorpayOrder) {
+          enqueueSnackbar(response?.data?.message || 'Payment Successful via Wallet', { variant: 'success' });
+          trackPurchase({ transaction_id: orderId, value: activeOrder?.grand_total || 0, items: activeItems || [], shipping: activeOrder?.shipping_charge || 0, payment_type: 'Wallet' });
+          sessionStorage.removeItem('payment_order_data');
+          sessionStorage.removeItem('checkout_ordersummary');
+          sessionStorage.removeItem('checkout_combo_offer');
+          sessionStorage.removeItem('selected_combo_offer');
+          sessionStorage.setItem('recent_payment_success', 'true');
+          sessionStorage.setItem('recent_order_id', String(orderId));
+          router.push('/successpage');
+          return;
+        }
+        // CASE 2: Partial wallet + Razorpay
+        const name = activeOrder?.customer_name || '';
+        const email = activeOrder?.email || '';
+        const phone = activeOrder?.mobile || '';
+        const options = {
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+          amount: razorpayOrder.amount || 0,
+          currency: 'INR',
+          name: 'Gidan Store',
+          description: 'Pay remaining balance',
+          image: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://www.gidan.store'}/logo.webp`,
+          order_id: razorpayOrder.id,
+          handler: async (paymentResponse) => {
+            try {
+              const verifyRes = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}/order/verifyPayment/`,
+                {
+                  razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                  razorpay_order_id: paymentResponse.razorpay_order_id,
+                  razorpay_signature: paymentResponse.razorpay_signature,
+                  order_id: response.data.order_id,
+                  payment_method: selectedPayMethod,
+                  amount: razorpayOrder.amount / 100,
+                  payment_details: paymentResponse,
+                },
+                { headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' } }
+              );
+              if (verifyRes.data.message === 'Payment successful') {
+                enqueueSnackbar('Payment completed successfully!', { variant: 'success' });
+                trackPurchase({ transaction_id: orderId, value: razorpayOrder.amount / 100, items: activeItems || [], shipping: activeOrder?.shipping_charge || 0 });
+                sessionStorage.removeItem('payment_order_data');
+                sessionStorage.removeItem('checkout_ordersummary');
+                sessionStorage.removeItem('checkout_combo_offer');
+                sessionStorage.removeItem('selected_combo_offer');
+                sessionStorage.setItem('recent_payment_success', 'true');
+                sessionStorage.setItem('recent_order_id', String(orderId));
+                router.push('/successpage');
+              } else {
+                enqueueSnackbar('Payment verification failed.', { variant: 'error' });
+              }
+            } catch (err) {
+              console.error('Verification error:', err);
+              enqueueSnackbar('Payment verification error.', { variant: 'error' });
+            }
+          },
+          prefill: { name, email, contact: phone },
+          theme: { color: '#3399cc' },
+          modal: {
+            ondismiss: async () => {
+              if (usedWallet > 0) {
+                try {
+                  await axios.post(
+                    `${process.env.NEXT_PUBLIC_API_URL}/order/payments/rollback-wallet/`,
+                    { order_id: orderId, wallet_amount: usedWallet },
+                    { headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' } }
+                  );
+                  enqueueSnackbar('Wallet rollback successful.', { variant: 'info' });
+                  setWalletAdded(0);
+                } catch (err) {
+                  console.error('Rollback failed:', err);
+                  enqueueSnackbar('Failed to rollback wallet.', { variant: 'warning' });
+                }
+              }
+            },
+          },
+        };
+        const scriptLoaded = await loadRazorpayScript();
+        if (!scriptLoaded) {
+          enqueueSnackbar('Failed to load payment gateway. Please try again.', { variant: 'error' });
+          return;
+        }
+        setPartialPaymentPopup({
+          message: response?.data?.message || 'Wallet partially used. Please complete remaining payment via UPI.',
+          wallet_debited: response?.data?.wallet_debited || '0.00',
+          remaining: (razorpayOrder.amount / 100).toFixed(2),
+          razorpayOptions: options,
+        });
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      enqueueSnackbar(error?.response?.data?.message || 'Error processing your payment.', { variant: 'error' });
+    }
+  };
+
+  const handleProceedWithRazorpay = () => {
+    if (!partialPaymentPopup) return;
+    const razorpay = new window.Razorpay(partialPaymentPopup.razorpayOptions);
+    setPartialPaymentPopup(null);
+    razorpay.open();
+    razorpay.on('payment.failed', () => { enqueueSnackbar('Payment failed. Please try again.', { variant: 'error' }); });
+  };
+
+  // When coupon is applied, start from coupon.order (has correct grand_total with discount).
+  // Only override grand_total + shipping_charge from data.order AFTER the PATCH has run
+  // (showPaymentStep = true), when the server has recomputed totals with the chosen address.
+  const activeOrder = coupon?.success
+    ? {
+        ...coupon.order,
+        // Post-PATCH: data.order has server-authoritative totals (coupon + address shipping)
+        ...(showPaymentStep && data?.order ? {
+          grand_total: data.order.grand_total,
+          shipping_charge: data.order.shipping_charge,
+        } : {}),
+        coupon_applied: true,
+        coupon_discount: coupon.discount_amount,
+        applied_coupon: coupon.order?.applied_coupon || coupon.coupon_code,
+      }
+    : data?.order;
+
+  // Always use data.order_items for display — stable reference prevents image flicker.
+  // coupon.order_items only provides per-item coupon fields (not needed for display).
+  const activeItems = data?.order_items;
+
+  const deliveryCharge = Number(activeOrder?.shipping_charge || 0);
 
   // Calculate backend total based on order type
   // Priority: coupon response > combo offer > original order data
@@ -1050,7 +1226,47 @@ const CheckoutPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <>
+      {/* ── Partial Wallet Payment Popup ── */}
+      {partialPaymentPopup && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]"
+          onClick={() => setPartialPaymentPopup(null)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl p-6 mx-4 w-full max-w-sm"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="text-4xl text-center mb-3">💳</div>
+            <h2 className="text-lg font-bold text-gray-800 text-center mb-3">Partial Wallet Payment</h2>
+            <p className="text-sm text-gray-600 text-center mb-4">{partialPaymentPopup.message}</p>
+            <div className="bg-gray-50 rounded-lg p-3 mb-5 space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-500">Wallet Debited</span>
+                <span className="font-semibold text-green-600">₹{partialPaymentPopup.wallet_debited}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-500">Remaining via UPI</span>
+                <span className="font-semibold text-gray-800">₹{partialPaymentPopup.remaining}</span>
+              </div>
+            </div>
+            <button
+              className="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors mb-2"
+              onClick={handleProceedWithRazorpay}
+            >
+              Proceed with Razorpay
+            </button>
+            <button
+              className="w-full py-2 text-gray-500 text-sm hover:text-gray-700 transition-colors"
+              onClick={() => setPartialPaymentPopup(null)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="min-h-screen bg-gray-100">
 
       {/* ── Breadcrumb ── */}
       <div className="bg-white border-b">
@@ -1060,7 +1276,12 @@ const CheckoutPage = () => {
             onClick={() => router.push('/cart')}
           >SHOPPING CART</span>
           <span className="text-gray-300">›</span>
-          <span className="text-bio-green">CHECKOUT</span>
+          <span
+            className={!showPaymentStep ? 'text-bio-green' : 'hover:text-bio-green cursor-pointer transition-colors'}
+            onClick={() => showPaymentStep && setShowPaymentStep(false)}
+          >CHECKOUT</span>
+          <span className="text-gray-300">›</span>
+          <span className={showPaymentStep ? 'text-bio-green' : ''}>PAYMENT</span>
           <span className="text-gray-300">›</span>
           <span>CONFIRMATION</span>
         </div>
@@ -1071,31 +1292,91 @@ const CheckoutPage = () => {
         {/* ══ LEFT COLUMN ══ */}
         <div className="w-full lg:w-3/5 space-y-4">
 
-          {/* ── Step 1: Delivery Address ── */}
-          <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-            <div className="bg-gradient-to-r from-green-600 to-green-900 px-5 py-3 flex items-center gap-3">
-              <span className="w-6 h-6 rounded-full bg-white text-green-800 text-xs font-extrabold flex items-center justify-center">1</span>
-              <span className="text-white font-bold text-sm tracking-wide">DELIVERY ADDRESS</span>
-            </div>
-            <DeliveryAddress
-              setSelectedAddress={setSelectedAddress}
-              selectedAddress={selectedAddress}
-              setSelectedOption={setSelectedOption}
-              setIsAddNewOpen={setIsAddNewOpen}
-              isAddNewOpen={isAddNewOpen}
-            />
-          </div>
+          {!showPaymentStep ? (
+            <>
+              {/* ── Step 1: Delivery Address ── */}
+              <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div className="bg-gradient-to-r from-green-600 to-green-900 px-5 py-3 flex items-center gap-3">
+                  <span className="w-6 h-6 rounded-full bg-white text-green-800 text-xs font-extrabold flex items-center justify-center">1</span>
+                  <span className="text-white font-bold text-sm tracking-wide">DELIVERY ADDRESS</span>
+                </div>
+                <DeliveryAddress
+                  setSelectedAddress={setSelectedAddress}
+                  selectedAddress={selectedAddress}
+                  setSelectedOption={setSelectedOption}
+                  setIsAddNewOpen={setIsAddNewOpen}
+                  isAddNewOpen={isAddNewOpen}
+                />
+              </div>
 
-          {/* ── Step 2: Apply Coupon ── */}
-          <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-            <div className="bg-gradient-to-r from-green-600 to-green-900 px-5 py-3 flex items-center gap-3">
-              <span className="w-6 h-6 rounded-full bg-white text-green-800 text-xs font-extrabold flex items-center justify-center">2</span>
-              <span className="text-white font-bold text-sm tracking-wide">APPLY COUPON</span>
+              {/* ── Step 2: Apply Coupon ── */}
+              <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div className="bg-gradient-to-r from-green-600 to-green-900 px-5 py-3 flex items-center gap-3">
+                  <span className="w-6 h-6 rounded-full bg-white text-green-800 text-xs font-extrabold flex items-center justify-center">2</span>
+                  <span className="text-white font-bold text-sm tracking-wide">APPLY COUPON</span>
+                </div>
+                <div className="p-1">
+                  <ApplyCoupon id={id} setCoupon={setCoupon} />
+                </div>
+              </div>
+            </>
+          ) : (
+            /* ── Step 3: Payment ── */
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+              <div className="bg-gradient-to-r from-green-600 to-green-900 px-5 py-3 flex items-center gap-3">
+                <span className="w-6 h-6 rounded-full bg-white text-green-800 text-xs font-extrabold flex items-center justify-center">3</span>
+                <span className="text-white font-bold text-sm tracking-wide">SELECT PAYMENT METHOD</span>
+              </div>
+              <div className="p-5 space-y-4">
+
+                {/* GST Checkbox */}
+                <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={isGstSelected}
+                    onChange={(e) => { const v = e.target.checked; setIsGstSelected(v); setIsGst(v); setSelectedGst(v ? gstFromProfile : ''); }}
+                    className="w-4 h-4 text-green-600 border-gray-300 rounded"
+                  />
+                  <span>Use My GST Number</span>
+                </label>
+                {isGstSelected && (
+                  <p className="ml-6 text-sm text-gray-600">
+                    <strong>GST:</strong> {gstFromProfile || <span className="text-red-500">Not set — please add in Profile</span>}
+                  </p>
+                )}
+
+                {/* Payment options */}
+                <div className="space-y-3">
+                  {[
+                    { id: 'Wallet', label: 'Gidan Wallet', sub: `Balance: ₹${walletBalance?.balance ?? '…'}` },
+                    { id: 'UPI', label: 'Razorpay Secure', sub: 'UPI · Cards · Wallets · NetBanking' },
+                    { id: 'cod', label: 'Cash on Delivery', sub: 'Currently unavailable for your location', disabled: true },
+                  ].map((opt) => (
+                    <div
+                      key={opt.id}
+                      onClick={() => !opt.disabled && setSelectedPayMethod(opt.id)}
+                      className={`flex items-start gap-3 p-4 rounded-xl border-2 transition-all cursor-pointer
+                        ${opt.disabled ? 'opacity-40 cursor-not-allowed border-gray-100 bg-gray-50' :
+                          selectedPayMethod === opt.id ? 'border-green-500 bg-green-50' : 'border-gray-100 hover:border-green-200'}`}
+                    >
+                      <div className={`mt-0.5 w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0
+                        ${selectedPayMethod === opt.id ? 'border-green-600' : 'border-gray-300'}`}>
+                        {selectedPayMethod === opt.id && <div className="w-2.5 h-2.5 rounded-full bg-green-600" />}
+                      </div>
+                      <div>
+                        <p className="font-semibold text-sm text-gray-800">{opt.label}</p>
+                        <p className="text-xs text-gray-500 mt-0.5">{opt.sub}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {isGstSelected && !gstFromProfile && (
+                  <p className="text-red-500 text-sm font-medium text-center">Please add your GST number in Profile to proceed.</p>
+                )}
+              </div>
             </div>
-            <div className="p-1">
-              <ApplyCoupon id={id} setCoupon={setCoupon} />
-            </div>
-          </div>
+          )}
 
         </div>
 
@@ -1201,168 +1482,141 @@ const CheckoutPage = () => {
 
               <hr className="border-dashed" />
 
-              {/* ── Price Breakdown ── */}
+              {/* ── Price Details ── */}
               <div>
-                <p className="text-[10px] uppercase font-bold text-gray-400 tracking-widest mb-3">Price Breakdown</p>
+                <p className="text-[10px] uppercase font-bold text-gray-400 tracking-widest mb-3">Price Details</p>
                 <div className="space-y-2 text-sm">
 
-                  {/* MRP Total */}
+                  {/* Price */}
                   <div className="flex justify-between text-gray-600">
-                    <span>MRP Total</span>
-                    <span>₹{activeItems?.reduce((s, i) => s + Number(i.mrp) * i.quantity, 0).toFixed(2)}</span>
+                    <span>Price ({activeItems?.length ?? 0} item{(activeItems?.length ?? 0) !== 1 ? 's' : ''})</span>
+                    <span>₹{Number(activeItems?.reduce((s, i) => s + Number(i.mrp) * i.quantity, 0) ?? 0).toFixed(2)}</span>
                   </div>
 
                   {/* Product Discount */}
-                  {Number(activeOrder?.total_discount ?? 0) > 0 && (
+                  <div className="flex justify-between text-emerald-600 font-medium">
+                    <span className="flex items-center gap-1">
+                      Discount
+                      {activeOrder?.discount_type && Number(activeOrder?.total_discount ?? 0) > 0 && (
+                        <span className="text-[10px] bg-emerald-50 border border-emerald-200 rounded px-1 py-0.5 font-semibold">
+                          {activeOrder.discount_type === "%" ? `${Number(activeOrder.discount_value ?? 0).toFixed(0)}%` : `Flat`}
+                        </span>
+                      )}
+                    </span>
+                    <span>-₹{Number(activeOrder?.total_discount ?? 0).toFixed(2)}</span>
+                  </div>
+
+                  {/* Coupon Discount */}
+                  {(coupon?.success || activeOrder?.coupon_applied) && (
                     <div className="flex justify-between text-emerald-600 font-medium">
                       <span className="flex items-center gap-1">
-                        Discount
-                        {activeOrder?.discount_type && (
+                        🏷️ Coupon Discount
+                        {coupon?.coupon_code && (
                           <span className="text-[10px] bg-emerald-50 border border-emerald-200 rounded px-1 py-0.5 font-semibold">
-                            {activeOrder.discount_type === "%" ? `${Number(activeOrder.discount_value ?? 0).toFixed(0)}%` : `Flat ₹${Number(activeOrder.discount_value ?? 0).toFixed(2)}`}
+                            {coupon.coupon_code}
                           </span>
                         )}
                       </span>
-                      <span>-₹{Number(activeOrder?.total_discount ?? 0).toFixed(2)}</span>
+                      <span>-₹{Number(coupon?.discount_amount ?? activeOrder?.coupon_discount ?? 0).toFixed(2)}</span>
                     </div>
                   )}
 
-                  {/* Coupon Discount */}
-                  {coupon?.success && Number(coupon?.discount_amount ?? 0) > 0 && (
-                    <div className="flex justify-between text-emerald-600 font-medium">
-                      <span className="flex items-center gap-1">
-                        🏷️ Coupon
-                        <span className="text-[10px] bg-emerald-50 border border-emerald-200 rounded px-1 py-0.5 font-semibold">
-                          {coupon.coupon_code}
-                        </span>
-                      </span>
-                      <span>-₹{Number(coupon.discount_amount).toFixed(2)}</span>
-                    </div>
-                  )}
-
-                  {/* Taxable Sub Total */}
-                  <div className="flex justify-between text-gray-800 font-semibold border-t pt-2">
-                    <span>Taxable Sub Total</span>
-                    <span>₹{Number(activeOrder?.total_price ?? 0).toFixed(2)}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* ── Product GST ── */}
-              {(Number(activeOrder?.gst_amount_5 ?? 0) > 0 || Number(activeOrder?.gst_amount_18 ?? 0) > 0) && (
-                <>
-                  <hr className="border-dashed" />
-                  <div>
-                    <button
-                      type="button"
-                      onClick={() => setShowGstDetail((v) => !v)}
-                      className="w-full flex items-center justify-between text-[10px] uppercase font-bold text-gray-400 tracking-widest mb-1"
-                    >
-                      <span>Product Tax (GST)</span>
-                      <span className="text-gray-400 text-xs">{showGstDetail ? "▲" : "▼"}</span>
-                    </button>
-                    {showGstDetail && (
-                      <div className="space-y-1.5 text-sm mt-2">
-                        {Number(activeOrder?.gst_amount_5 ?? 0) > 0 && (
-                          <div className="border border-gray-200 rounded-lg p-2.5 space-y-1">
-                            <div className="flex justify-between font-medium text-gray-700">
-                              <span>GST @ 5%</span>
-                              <span>₹{Number(activeOrder.gst_amount_5).toFixed(2)}</span>
-                            </div>
-                            <div className="flex justify-between text-gray-400 text-xs pl-2">
-                              <span>CGST 2.5%</span><span>₹{Number(activeOrder.cgst_amount_5).toFixed(2)}</span>
-                            </div>
-                            <div className="flex justify-between text-gray-400 text-xs pl-2">
-                              <span>SGST 2.5%</span><span>₹{Number(activeOrder.sgst_amount_5).toFixed(2)}</span>
-                            </div>
-                          </div>
-                        )}
-                        {Number(activeOrder?.gst_amount_18 ?? 0) > 0 && (
-                          <div className="border border-gray-200 rounded-lg p-2.5 space-y-1">
-                            <div className="flex justify-between font-medium text-gray-700">
-                              <span>GST @ 18%</span>
-                              <span>₹{Number(activeOrder.gst_amount_18).toFixed(2)}</span>
-                            </div>
-                            <div className="flex justify-between text-gray-400 text-xs pl-2">
-                              <span>CGST 9%</span><span>₹{Number(activeOrder.cgst_amount_18).toFixed(2)}</span>
-                            </div>
-                            <div className="flex justify-between text-gray-400 text-xs pl-2">
-                              <span>SGST 9%</span><span>₹{Number(activeOrder.sgst_amount_18).toFixed(2)}</span>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </>
-              )}
-
-              {/* ── Shipping ── */}
-              <hr className="border-dashed" />
-              <div>
-                <button
-                  type="button"
-                  onClick={() => setShowShippingDetail((v) => !v)}
-                  className="w-full flex items-center justify-between text-[10px] uppercase font-bold text-gray-400 tracking-widest mb-1"
-                >
-                  <span>Shipping</span>
-                  <span className="text-gray-400 text-xs">{showShippingDetail ? "▲" : "▼"}</span>
-                </button>
-                {/* Always show the total shipping line */}
-                <div className="flex justify-between text-sm font-medium text-gray-700 mt-1">
-                  <span>Shipping Charge</span>
-                  <span>{deliveryCharge === 0 ? "Free" : `₹${Number(data.shipping_info?.final_shipping ?? (deliveryCharge + Number(data?.shipping_info?.shipping_gst ?? 0))).toFixed(2)}`}</span>
-                </div>
-                {showShippingDetail && deliveryCharge > 0 && (
-                  <div className="border border-gray-200 rounded-lg p-2.5 space-y-1 text-sm mt-2">
-                    <div className="flex justify-between text-gray-700">
-                      <span>Shipping Charge (Base)</span>
-                      <span>₹{Number(deliveryCharge).toFixed(2)}</span>
-                    </div>
-                    {Number(data?.shipping_info?.shipping_gst ?? 0) > 0 && (
-                      <>
-                        <div className="flex justify-between text-gray-700">
-                          <span>Shipping GST (18%)</span>
-                          <span>₹{Number(data.shipping_info.shipping_gst).toFixed(2)}</span>
-                        </div>
-                        <div className="flex justify-between text-gray-400 text-xs pl-2">
-                          <span>CGST 9%</span>
-                          <span>₹{Number(data.shipping_info.shipping_cgst).toFixed(2)}</span>
-                        </div>
-                        <div className="flex justify-between text-gray-400 text-xs pl-2">
-                          <span>SGST 9%</span>
-                          <span>₹{Number(data.shipping_info.shipping_sgst).toFixed(2)}</span>
-                        </div>
-                        <div className="flex justify-between text-gray-700 font-semibold border-t border-gray-200 pt-1.5 mt-1">
-                          <span>Total Shipping</span>
-                          <span>₹{Number(data.shipping_info.final_shipping ?? (deliveryCharge + Number(data?.shipping_info?.shipping_gst ?? 0))).toFixed(2)}</span>
-                        </div>
-                      </>
-                    )}
-                    {data?.shipping_info?.free_shipping && (
-                      <p className="text-[10px] text-gray-500 font-semibold">✓ Free shipping applied</p>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* ── Coupon applied confirmation ── */}
-              {(coupon?.success || data?.order?.coupon_applied) && (
-                <>
-                  <hr className="border-dashed" />
-                  <div className="bg-emerald-50 border border-dashed border-emerald-300 rounded-lg px-3 py-2 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-base">🏷️</span>
-                      <span className="text-xs font-bold text-emerald-700">
-                        {coupon?.coupon_code || data?.order?.applied_coupon || "Coupon Applied"}
-                      </span>
-                    </div>
-                    <span className="text-sm font-bold text-emerald-700">
-                      -₹{Number(coupon?.discount_amount ?? data?.order?.coupon_discount ?? 0).toFixed(2)}
+                  {/* Delivery Charges */}
+                  <div className="flex justify-between text-gray-600">
+                    <span>Delivery Charges</span>
+                    <span className={deliveryCharge === 0 ? "text-emerald-600 font-semibold" : ""}>
+                      {deliveryCharge === 0 ? "FREE" : `₹${Number(activeOrder?.shipping_charge).toFixed(2)}`}
                     </span>
                   </div>
-                </>
-              )}
+
+                  {/* Product GST (collapsible) */}
+                  {(Number(activeOrder?.gst_amount_5 ?? 0) > 0 || Number(activeOrder?.gst_amount_18 ?? 0) > 0) && (
+                    <div>
+                      <button
+                        type="button"
+                        onClick={() => setShowGstDetail((v) => !v)}
+                        className="w-full flex items-center justify-between text-gray-600 py-0.5"
+                      >
+                        <span>Product GST</span>
+                        <span className="flex items-center gap-1">
+                          <span>₹{(Number(activeOrder?.gst_amount_5 ?? 0) + Number(activeOrder?.gst_amount_18 ?? 0)).toFixed(2)}</span>
+                          <span className="text-gray-400 text-xs ml-1">{showGstDetail ? "▲" : "▼"}</span>
+                        </span>
+                      </button>
+                      {showGstDetail && (
+                        <div className="space-y-1 mt-1 pl-2 border-l-2 border-gray-100">
+                          {Number(activeOrder?.gst_amount_5 ?? 0) > 0 && (
+                            <>
+                              <div className="flex justify-between text-gray-500 text-xs">
+                                <span>GST @ 5%</span><span>₹{Number(activeOrder.gst_amount_5).toFixed(2)}</span>
+                              </div>
+                              <div className="flex justify-between text-gray-400 text-xs pl-2">
+                                <span>CGST 2.5%</span><span>₹{Number(activeOrder.cgst_amount_5).toFixed(2)}</span>
+                              </div>
+                              <div className="flex justify-between text-gray-400 text-xs pl-2">
+                                <span>SGST 2.5%</span><span>₹{Number(activeOrder.sgst_amount_5).toFixed(2)}</span>
+                              </div>
+                            </>
+                          )}
+                          {Number(activeOrder?.gst_amount_18 ?? 0) > 0 && (
+                            <>
+                              <div className="flex justify-between text-gray-500 text-xs">
+                                <span>GST @ 18%</span><span>₹{Number(activeOrder.gst_amount_18).toFixed(2)}</span>
+                              </div>
+                              <div className="flex justify-between text-gray-400 text-xs pl-2">
+                                <span>CGST 9%</span><span>₹{Number(activeOrder.cgst_amount_18).toFixed(2)}</span>
+                              </div>
+                              <div className="flex justify-between text-gray-400 text-xs pl-2">
+                                <span>SGST 9%</span><span>₹{Number(activeOrder.sgst_amount_18).toFixed(2)}</span>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Shipping GST (collapsible) */}
+                  {Number(activeOrder?.shipping_gst ?? 0) > 0 && (
+                    <div>
+                      <button
+                        type="button"
+                        onClick={() => setShowShippingDetail((v) => !v)}
+                        className="w-full flex items-center justify-between text-gray-600 py-0.5"
+                      >
+                        <span>Shipping GST</span>
+                        <span className="flex items-center gap-1">
+                          <span>₹{Number(activeOrder.shipping_gst).toFixed(2)}</span>
+                          <span className="text-gray-400 text-xs ml-1">{showShippingDetail ? "▲" : "▼"}</span>
+                        </span>
+                      </button>
+                      {showShippingDetail && (
+                        <div className="space-y-1 mt-1 pl-2 border-l-2 border-gray-100">
+                          <div className="flex justify-between text-gray-400 text-xs pl-2">
+                            <span>CGST 9%</span><span>₹{Number(activeOrder.shipping_cgst).toFixed(2)}</span>
+                          </div>
+                          <div className="flex justify-between text-gray-400 text-xs pl-2">
+                            <span>SGST 9%</span><span>₹{Number(activeOrder.shipping_sgst).toFixed(2)}</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Total Amount */}
+                  <div className="flex justify-between text-gray-800 font-bold border-t pt-2 text-base">
+                    <span>Total Amount</span>
+                    <span>₹{Number(activeOrder?.grand_total ?? 0).toFixed(2)}</span>
+                  </div>
+
+                  {/* Savings message */}
+                  {(Number(activeOrder?.total_discount ?? 0) + Number(coupon?.discount_amount ?? activeOrder?.coupon_discount ?? 0)) > 0 && (
+                    <p className="text-emerald-600 text-xs font-semibold text-center bg-emerald-50 rounded-lg py-1.5">
+                      You will save ₹{(Number(activeOrder?.total_discount ?? 0) + Number(coupon?.discount_amount ?? activeOrder?.coupon_discount ?? 0)).toFixed(2)} on this order
+                    </p>
+                  )}
+                </div>
+              </div>
 
             </div>
 
@@ -1386,18 +1640,28 @@ const CheckoutPage = () => {
                 <span className="text-white font-extrabold text-lg">₹{Number(activeOrder?.grand_total ?? 0).toFixed(2)}</span>
               </div>
 
-              {/* Place Order */}
-              <button
-                disabled={savingOrder}
-                onClick={handleSaveOrderSummary}
-                className="w-full bg-bio-green text-white font-bold py-3.5 rounded-xl hover:bg-green-700 active:scale-[0.98] transition-all text-sm tracking-wide shadow disabled:opacity-60 flex items-center justify-center gap-2"
-              >
-                {savingOrder ? (
-                  <><span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span> Saving…</>
-                ) : (
-                  <>Place Order →</>
-                )}
-              </button>
+              {/* Place Order / Proceed to Payment */}
+              {!showPaymentStep ? (
+                <button
+                  disabled={savingOrder}
+                  onClick={handleSaveOrderSummary}
+                  className="w-full bg-bio-green text-white font-bold py-3.5 rounded-xl hover:bg-green-700 active:scale-[0.98] transition-all text-sm tracking-wide shadow disabled:opacity-60 flex items-center justify-center gap-2"
+                >
+                  {savingOrder ? (
+                    <><span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span> Saving…</>
+                  ) : (
+                    <>Place Order →</>
+                  )}
+                </button>
+              ) : (
+                <button
+                  disabled={!selectedPayMethod || (isGstSelected && !gstFromProfile)}
+                  onClick={handlePayment}
+                  className="w-full bg-bio-green text-white font-bold py-3.5 rounded-xl hover:bg-green-700 active:scale-[0.98] transition-all text-sm tracking-wide shadow disabled:opacity-60 flex items-center justify-center gap-2"
+                >
+                  Pay ₹{Number(activeOrder?.grand_total ?? 0).toFixed(2)} →
+                </button>
+              )}
               <p className="text-center text-[10px] text-gray-400">🔒 Safe and Secure Payments. 100% Authentic Products.</p>
             </div>
 
@@ -1405,7 +1669,8 @@ const CheckoutPage = () => {
         </div>
 
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

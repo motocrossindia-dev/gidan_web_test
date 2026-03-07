@@ -7,7 +7,6 @@ import {
     Package,
     Download,
     RefreshCcw,
-    ChevronRight,
     CheckCircle2,
     Calendar,
     CreditCard,
@@ -154,18 +153,6 @@ const PostSummaryView = () => {
 
     return (
         <div className="min-h-screen bg-white pb-20">
-            
-
-            {/* Top Navigation */}
-            <div className="bg-gray-100 border-b">
-                <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 text-sm text-gray-600">
-                    <button onClick={() => router.push('/profile')} className="hover:underline">Your Account</button>
-                    <ChevronRight className="w-3 h-3" />
-                    <button onClick={() => router.push('/profile/orders')} className="hover:underline">Your Orders</button>
-                    <ChevronRight className="w-3 h-3" />
-                    <span className="text-[#4A7515] font-medium">Order Summary</span>
-                </div>
-            </div>
 
             <div className="max-w-6xl mx-auto px-4 py-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
@@ -433,79 +420,70 @@ const PostSummaryView = () => {
                         )}
                     </div>
 
-                    <div className="divide-y">
+                    <div className="p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                         {orderData?.order_items?.map((item, index) => (
-                            <div key={index} className="p-6">
-                                <div className="flex flex-col md:flex-row gap-6">
-                                    <div className="w-32 h-32 md:w-40 md:h-40 bg-gray-50 rounded-lg border flex-shrink-0 flex items-center justify-center p-2">
-                                        <img
-                                            src={item?.image?.startsWith('http') ? item.image : `${process.env.NEXT_PUBLIC_API_URL}${item?.image}`}
-                                            alt={item?.product_name}
-                                            className="max-w-full max-h-full object-contain mix-blend-multiply"
-                                        />
+                            <div key={index} className="flex flex-col rounded-xl border border-gray-100 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
+                                {/* Product Image */}
+                                <div
+                                    className="aspect-square bg-gray-50 flex items-center justify-center p-3 cursor-pointer"
+                                    onClick={() => router.push(getProductUrl(item))}
+                                >
+                                    <img
+                                        src={item?.image?.startsWith('http') ? item.image : `${process.env.NEXT_PUBLIC_API_URL}${item?.image}`}
+                                        alt={item?.product_name}
+                                        className="max-w-full max-h-full object-contain mix-blend-multiply"
+                                    />
+                                </div>
+
+                                {/* Details */}
+                                <div className="p-3 flex flex-col gap-1.5 flex-1">
+                                    <p
+                                        onClick={() => router.push(getProductUrl(item))}
+                                        className="text-xs font-semibold text-gray-800 leading-tight line-clamp-2 cursor-pointer hover:text-bio-green transition-colors"
+                                    >
+                                        {item?.product_name}
+                                    </p>
+
+                                    <div className="flex items-baseline gap-1.5 flex-wrap">
+                                        <span className="text-sm font-bold text-[#15803D]">₹{item?.selling_price}</span>
+                                        {Number(item?.mrp) > Number(item?.selling_price) && (
+                                            <span className="text-[10px] text-gray-400 line-through">₹{item?.mrp}</span>
+                                        )}
                                     </div>
 
-                                    <div className="flex-1 space-y-2">
-                                        <h3
+                                    <p className="text-[10px] text-gray-500">Qty: {item.quantity || 1}</p>
+
+                                    {/* Actions */}
+                                    <div className="mt-auto pt-2 flex flex-col gap-1.5">
+                                        <button
                                             onClick={() => router.push(getProductUrl(item))}
-                                            className="text-lg font-medium text-[#15803D] hover:text-[#5A8A1A] transition-colors cursor-pointer line-clamp-2"
+                                            className="w-full bg-[#5A8A1A] hover:bg-[#4A7515] text-white py-1.5 rounded-lg text-[10px] font-semibold transition-all"
                                         >
-                                            {item?.product_name}
-                                        </h3>
-                                        <p className="text-xs text-gray-500">Sold by: Gidan Plants</p>
-                                        <div className="flex items-baseline gap-2">
-                                            <span className="text-[#15803D] font-bold text-xl">₹{item?.selling_price}</span>
-                                            {item?.mrp > item?.selling_price && (
-                                                <span className="text-sm text-gray-500 line-through">₹{item?.mrp}</span>
-                                            )}
-                                        </div>
-                                        <p className="text-sm font-medium">Qty: {item.quantity || 1}</p>
+                                            Buy Again
+                                        </button>
 
-                                        <div className="flex flex-wrap gap-3 mt-4 pt-4">
+                                        {isDelivered && !(item.is_reviewed || item.is_review) && (
                                             <button
-                                                onClick={() => router.push(getProductUrl(item))}
-                                                className="bg-[#5A8A1A] hover:bg-[#4A7515] text-white px-4 py-1.5 rounded-full text-xs font-medium shadow-sm transition-all"
+                                                onClick={() => setActiveReviewProductId(activeReviewProductId === item.product_id ? null : item.product_id)}
+                                                className="w-full border border-gray-300 hover:bg-gray-50 text-gray-700 py-1.5 rounded-lg text-[10px] font-semibold transition-all"
                                             >
-                                                Buy it again
+                                                Write Review
                                             </button>
+                                        )}
 
-                                            {isDelivered && !(item.is_reviewed || item.is_review) && (
-                                                <button
-                                                    onClick={() => setActiveReviewProductId(activeReviewProductId === item.product_id ? null : item.product_id)}
-                                                    className="bg-white hover:bg-gray-50 text-gray-900 px-4 py-1.5 rounded-full text-xs font-medium shadow-sm border border-gray-300 transition-all font-medium"
-                                                >
-                                                    Write a product review
-                                                </button>
-                                            )}
-
-                                            {!isDelivered && (
-                                                <p className="text-[10px] text-gray-400 italic">Review available after delivery</p>
-                                            )}
-
-                                            {(item.is_reviewed || item.is_review) && isDelivered && (
-                                                <button
-                                                    onClick={() => setActiveReviewProductId(activeReviewProductId === item.product_id ? null : item.product_id)}
-                                                    className="bg-white hover:bg-gray-50 text-[#15803D] px-4 py-1.5 rounded-full text-xs font-medium shadow-sm border border-[#15803D] transition-all flex items-center gap-1"
-                                                >
-                                                    <Check className="w-3 h-3" /> Edit your review
-                                                </button>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {/* Action Column for Desktop */}
-                                    <div className="md:w-48 space-y-2 border-l md:pl-6 pt-4 md:pt-0">
-                                        {item.tracking_id && (
-                                            <button className="w-full text-left p-2 hover:bg-gray-50 rounded text-xs flex items-center justify-between group">
-                                                <span>Track package</span>
-                                                <ChevronRight className="w-3 h-3 text-gray-400 group-hover:text-gray-900" />
+                                        {(item.is_reviewed || item.is_review) && isDelivered && (
+                                            <button
+                                                onClick={() => setActiveReviewProductId(activeReviewProductId === item.product_id ? null : item.product_id)}
+                                                className="w-full border border-[#15803D] text-[#15803D] hover:bg-green-50 py-1.5 rounded-lg text-[10px] font-semibold transition-all flex items-center justify-center gap-1"
+                                            >
+                                                <Check className="w-3 h-3" /> Edit Review
                                             </button>
                                         )}
                                     </div>
                                 </div>
 
                                 {activeReviewProductId === item.product_id && (
-                                    <div className="mt-8 pt-8 border-t border-dashed">
+                                    <div className="col-span-full border-t border-dashed p-4">
                                         <WriteAReview
                                             isInline={true}
                                             onClose={() => setActiveReviewProductId(null)}
