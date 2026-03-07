@@ -37,7 +37,7 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
   const [showAllAddresses, setShowAllAddresses] = useState(false);
 
   const deliveryOptions = [
-    { id: "Door Delivery", label: "Door Delivery" },
+    { id: "DoorDelivery", label: "Door Delivery" },
     { id: "Pick Up Store", label: "Pickup From Store" }
   ];
 
@@ -957,7 +957,7 @@ const CheckoutPage = () => {
 
   useEffect(() => {
     if (data?.order?.is_shop_the_look && !selectedOption) {
-      setSelectedOption({ deliveryType: "Door Delivery", storeId: null });
+      setSelectedOption({ deliveryType: "DoorDelivery", storeId: null });
     }
   }, [data?.order?.is_shop_the_look, selectedOption]);
 
@@ -1207,8 +1207,6 @@ const CheckoutPage = () => {
 
   const deliveryCharge = Number(activeOrder?.shipping_charge || 0);
 
-  // Calculate backend total based on order type
-  // Priority: coupon response > combo offer > original order data
   const backendTotal = (coupon?.success && (coupon?.order?.grand_total !== undefined || coupon?.new_total !== undefined))
     ? Math.max(0, Number(coupon.order?.grand_total ?? coupon.new_total ?? 0))
     : (isCombo || data?.order?.is_shop_the_look)
