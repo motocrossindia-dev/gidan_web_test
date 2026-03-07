@@ -14,7 +14,7 @@ const Successpage = () => {
   const [paymentVerified, setPaymentVerified] = useState(false);
   const [showGstDetail, setShowGstDetail] = useState(false);
   const [showShippingDetail, setShowShippingDetail] = useState(false);
-  const [countdown, setCountdown] = useState(5);
+  const [countdown, setCountdown] = useState(8);
 
   useEffect(() => {
     setMounted(true);

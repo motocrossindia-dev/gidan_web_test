@@ -3,11 +3,11 @@ import BlogList from '@/views/Blog/BlogList';
 
 
 export const metadata: Metadata = {
-  title: "Blog | Plant Care and Gardening Guides | Gidan",
-  description: "Expert plant care articles, gardening how-tos and seasonal tips on the Gidan blog.",
+  title: "Gardening Tips & Plant Care Guides | Gidan Store Blog",
+  description: "Explore gardening tips, plant care guides and growing advice from Gidan Store. Learn how to grow healthy plants at home in Bangalore.",
   openGraph: {
-    title: "Blog | Plant Care and Gardening Guides | Gidan",
-    description: "Expert plant care articles, gardening how-tos and seasonal tips on the Gidan blog.",
+    title: "Gardening Tips & Plant Care Guides | Gidan Store Blog",
+    description: "Explore gardening tips, plant care guides and growing advice from Gidan Store. Learn how to grow healthy plants at home in Bangalore.",
     url: "https://www.gidan.store/blogs",
     siteName: "Gidan Plants",
     images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
@@ -16,8 +16,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Blog | Plant Care and Gardening Guides | Gidan",
-    description: "Expert plant care articles, gardening how-tos and seasonal tips on the Gidan blog.",
+    title: "Gardening Tips & Plant Care Guides | Gidan Store Blog",
+    description: "Explore gardening tips, plant care guides and growing advice from Gidan Store. Learn how to grow healthy plants at home in Bangalore.",
   },
   alternates: { canonical: "https://www.gidan.store/blogs" },
   robots: { index: true, follow: true },

@@ -3,11 +3,11 @@ import ComboOffer from '@/views/utilities/ComboOffer/ComboOffer';
 
 
 export const metadata: Metadata = {
-  title: "Combo Offers - Plants and Accessories | Gidan",
-  description: "Save more with exclusive plant and pot combo deals at Gidan.",
+  title: "Plant Combo Offers Online in Bangalore | Gidan Store",
+  description: "Buy plant combo offers online in Bangalore from Gidan Store. Shop indoor plants with pots and planters at special bundle prices.",
   openGraph: {
-    title: "Combo Offers - Plants and Accessories | Gidan",
-    description: "Save more with exclusive plant and pot combo deals at Gidan.",
+    title: "Plant Combo Offers Online in Bangalore | Gidan Store",
+    description: "Buy plant combo offers online in Bangalore from Gidan Store. Shop indoor plants with pots and planters at special bundle prices.",
     url: "https://www.gidan.store/combooffer",
     siteName: "Gidan Plants",
     images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
@@ -16,8 +16,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Combo Offers - Plants and Accessories | Gidan",
-    description: "Save more with exclusive plant and pot combo deals at Gidan.",
+    title: "Plant Combo Offers Online in Bangalore | Gidan Store",
+    description: "Buy plant combo offers online in Bangalore from Gidan Store. Shop indoor plants with pots and planters at special bundle prices.",
   },
   alternates: { canonical: "https://www.gidan.store/combooffer" },
   robots: { index: true, follow: true },

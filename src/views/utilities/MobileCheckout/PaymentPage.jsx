@@ -1,11 +1,12 @@
 'use client';
 
 import { useRouter, usePathname } from "next/navigation";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from 'notistack';
 import axios from 'axios';
+import { CheckCircle2, Package, ArrowRight, ShoppingBag } from 'lucide-react';
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
 
@@ -13,10 +14,29 @@ import StoreSchema from "../seo/StoreSchema";
 const PaymentPage = () => {
   const router = useRouter();
   const [paymentMethod, setPaymentMethod] = useState('');
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [successOrderId, setSuccessOrderId] = useState(null);
+  const [countdown, setCountdown] = useState(8);
   const pathname = usePathname();
   const orderData = null?.resource;
   const data = orderData?.orders || {};
   const accessToken = useSelector(selectAccessToken);
+
+  // Countdown + redirect after payment success
+  useEffect(() => {
+    if (!paymentSuccess) return;
+    const interval = setInterval(() => {
+      setCountdown((c) => {
+        if (c <= 1) {
+          clearInterval(interval);
+          router.push('/profile/orders');
+          return 0;
+        }
+        return c - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [paymentSuccess]);
 
   const handlePayment = async () => {
     // Add your payment processing logic here
@@ -60,7 +80,8 @@ const PaymentPage = () => {
               );
               if (verifyResponse.data.message === "Payment successful") {
                 enqueueSnackbar("Payment Verified Successfully!", { variant: "success" });
-                router.push('/profile/orders')
+                setSuccessOrderId(orderData?.orders?.id ?? null);
+                setPaymentSuccess(true);
               } else {
                 enqueueSnackbar("Payment Verification Failed.", { variant: "error" });
               }
@@ -85,6 +106,41 @@ const PaymentPage = () => {
     }
     // router.push('/order-success');
   };
+
+  // Show success screen instantly without any page navigation
+  if (paymentSuccess) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center py-10 px-4">
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-md overflow-hidden">
+          {/* Green Header */}
+          <div className="bg-gradient-to-r from-green-600 to-green-800 px-6 py-10 flex flex-col items-center text-center">
+            <CheckCircle2 className="w-20 h-20 text-white mb-4" />
+            <h1 className="text-2xl font-extrabold text-white">Order Placed Successfully!</h1>
+            {successOrderId && (
+              <p className="text-green-200 text-sm mt-1">Order ID: <span className="font-bold text-white">{successOrderId}</span></p>
+            )}
+          </div>
+
+          {/* Actions */}
+          <div className="px-6 py-8 space-y-3">
+            <button
+              onClick={() => router.push('/profile/orders')}
+              className="w-full bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 transition-all flex items-center justify-center gap-2"
+            >
+              <Package className="w-4 h-4" /> View My Orders <ArrowRight className="w-4 h-4" />
+            </button>
+            <p className="text-center text-xs text-gray-400">Redirecting to your orders in {countdown}s…</p>
+            <button
+              onClick={() => router.push('/')}
+              className="w-full border border-gray-200 text-gray-700 font-semibold py-3 rounded-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
+            >
+              <ShoppingBag className="w-4 h-4" /> Continue Shopping
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

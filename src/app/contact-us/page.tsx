@@ -3,11 +3,11 @@ import ContactUs from '@/views/utilities/ContactUs/ContactUs';
 
 
 export const metadata: Metadata = {
-  title: "Contact Us | Gidan Plants",
-  description: "Get in touch with Gidan for plant queries, order support or service enquiries.",
+  title: "Contact Gidan Store | Plant Store in Bangalore",
+  description: "Contact Gidan Store for plant orders, delivery support or gardening queries in Bangalore. Reach our team for plants, planters and garden supplies.",
   openGraph: {
-    title: "Contact Us | Gidan Plants",
-    description: "Get in touch with Gidan for plant queries, order support or service enquiries.",
+    title: "Contact Gidan Store | Plant Store in Bangalore",
+    description: "Contact Gidan Store for plant orders, delivery support or gardening queries in Bangalore. Reach our team for plants, planters and garden supplies.",
     url: "https://www.gidan.store/contact-us",
     siteName: "Gidan Plants",
     images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
@@ -16,8 +16,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Contact Us | Gidan Plants",
-    description: "Get in touch with Gidan for plant queries, order support or service enquiries.",
+    title: "Contact Gidan Store | Plant Store in Bangalore",
+    description: "Contact Gidan Store for plant orders, delivery support or gardening queries in Bangalore. Reach our team for plants, planters and garden supplies.",
   },
   alternates: { canonical: "https://www.gidan.store/contact-us" },
   robots: { index: true, follow: true },

@@ -4,11 +4,11 @@ import FAQSchema from '@/views/utilities/seo/FAQSchema';
 
 
 export const metadata: Metadata = {
-  title: "FAQ | Gidan Plants",
-  description: "Find answers to common questions about ordering plants, delivery, care tips and returns at Gidan.",
+  title: "Gidan Store FAQs | Plants Delivery & Care Questions",
+  description: "Find answers to common questions about plant delivery, plant care and orders at Gidan Store in Bangalore.",
   openGraph: {
-    title: "FAQ | Gidan Plants",
-    description: "Find answers to common questions about ordering plants, delivery, care tips and returns at Gidan.",
+    title: "Gidan Store FAQs | Plants Delivery & Care Questions",
+    description: "Find answers to common questions about plant delivery, plant care and orders at Gidan Store in Bangalore.",
     url: "https://www.gidan.store/faq",
     siteName: "Gidan Plants",
     images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
@@ -17,8 +17,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "FAQ | Gidan Plants",
-    description: "Find answers to common questions about ordering plants, delivery, care tips and returns at Gidan.",
+    title: "Gidan Store FAQs | Plants Delivery & Care Questions",
+    description: "Find answers to common questions about plant delivery, plant care and orders at Gidan Store in Bangalore.",
   },
   alternates: { canonical: "https://www.gidan.store/faq" },
   robots: { index: true, follow: true },

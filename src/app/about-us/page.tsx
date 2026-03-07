@@ -3,11 +3,11 @@ import AboutUs from '@/views/utilities/AboutUs/About-Us';
 
 
 export const metadata: Metadata = {
-  title: "About Us | Gidan Plants and Gardening",
-  description: "Learn about Gidan mission to bring greenery into every home. Trusted plant and gardening brand in India.",
+  title: "About Gidan Store | Plant Store in Bangalore",
+  description: "Learn about Gidan Store, your trusted plant store in Bangalore. Discover our passion for indoor plants, outdoor plants and gardening essentials.",
   openGraph: {
-    title: "About Us | Gidan Plants and Gardening",
-    description: "Learn about Gidan mission to bring greenery into every home. Trusted plant and gardening brand in India.",
+    title: "About Gidan Store | Plant Store in Bangalore",
+    description: "Learn about Gidan Store, your trusted plant store in Bangalore. Discover our passion for indoor plants, outdoor plants and gardening essentials.",
     url: "https://www.gidan.store/about-us",
     siteName: "Gidan Plants",
     images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
@@ -16,8 +16,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "About Us | Gidan Plants and Gardening",
-    description: "Learn about Gidan mission to bring greenery into every home. Trusted plant and gardening brand in India.",
+    title: "About Gidan Store | Plant Store in Bangalore",
+    description: "Learn about Gidan Store, your trusted plant store in Bangalore. Discover our passion for indoor plants, outdoor plants and gardening essentials.",
   },
   alternates: { canonical: "https://www.gidan.store/about-us" },
   robots: { index: true, follow: true },
