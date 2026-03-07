@@ -27,9 +27,8 @@ import { getProductUrl } from '../../../utils/urlHelper';
 const PostSummaryView = () => {
     const router = useRouter();
     const { id } = useParams(); // This will be the order_id string like BMO... or numeric id
-    const [orderData, setOrderData] = useState(null); // From orderHistoryItems
-    const [extraOrderDetails, setExtraOrderDetails] = useState(null); // From /order/{id}/
-    const [orderHistory, setOrderHistory] = useState(null); // From orderHistory list
+    // orderData = full response from orderHistoryItems: { order, order_items, delivery_address, tracking_updates }
+    const [orderData, setOrderData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [mounted, setMounted] = useState(false);
     const [activeReviewProductId, setActiveReviewProductId] = useState(null);
@@ -39,30 +38,23 @@ const PostSummaryView = () => {
     const fetchAllOrderDetails = async () => {
         setLoading(true);
         try {
-            // 1. Fetch from orderHistory to get numeric ID if "id" is order_id string
+            // id from URL is the order_id string (e.g. BMO2026...). API needs numeric order.id.
+            // Resolve via orderHistory list first.
             let numericId = id;
             const historyResponse = await axiosInstance.get('/order/orderHistory/');
             if (historyResponse.status === 200) {
                 const orders = historyResponse.data.data.orders;
-                const currentOrder = orders.find(o => o.id.toString() === id.toString() || o.order_id === id);
-                if (currentOrder) {
-                    setOrderHistory(currentOrder);
-                    numericId = currentOrder.id;
-                }
+                const found = orders.find(
+                    o => o.id.toString() === id.toString() || o.order_id === id
+                );
+                if (found) numericId = found.id;
             }
 
-            // 2. Fetch items and basic tracking
+            // orderHistoryItems returns: { order, order_items, delivery_address, tracking_updates }
             const itemsResponse = await axiosInstance.get(`/order/orderHistoryItems/${numericId}`);
             if (itemsResponse.status === 200) {
                 setOrderData(itemsResponse.data.data);
             }
-
-            // 3. Fetch specific details from the new API provided
-            const extraResponse = await axiosInstance.get(`/order/${numericId}/`);
-            if (extraResponse.status === 200) {
-                setExtraOrderDetails(extraResponse.data.data);
-            }
-
         } catch (error) {
             enqueueSnackbar("Failed to load order details", { variant: "error" });
             console.error(error);
@@ -93,7 +85,7 @@ const PostSummaryView = () => {
     };
 
     const getInvoice = async () => {
-        const numericId = orderHistory?.id || id;
+        const numericId = orderData?.order?.id || id;
         try {
             const response = await axiosInstance.get(`/order/invoice/${numericId}/`, {
                 responseType: 'blob',
@@ -103,7 +95,7 @@ const PostSummaryView = () => {
                 const blob = new Blob([response.data], { type: 'application/pdf' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                link.download = `invoice_${orderHistory?.order_id || numericId}.pdf`;
+                link.download = `invoice_${orderData?.order?.order_id || numericId}.pdf`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -126,7 +118,7 @@ const PostSummaryView = () => {
         );
     }
 
-    if (!orderData && !extraOrderDetails) {
+    if (!orderData) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <div className="text-center p-8 bg-white rounded-2xl shadow-sm max-w-md">
@@ -144,12 +136,12 @@ const PostSummaryView = () => {
         );
     }
 
-    const orderIdToDisplay = extraOrderDetails?.order_id || orderHistory?.order_id || id;
-    const orderDate = extraOrderDetails?.date || orderHistory?.date;
+    const orderIdToDisplay = orderData?.order?.order_id || id;
+    const orderDate = orderData?.order?.date;
 
-    // Validation Flags
-    const orderStatus = (extraOrderDetails?.status_history?.[0]?.status || orderHistory?.status || "")?.toUpperCase();
-    const isDelivered = orderStatus === 'DELIVERED';
+    // Latest status from tracking_updates (last entry = most recent)
+    const latestTrackingStatus = orderData?.tracking_updates?.slice(-1)?.[0]?.status?.toUpperCase() || '';
+    const isDelivered = latestTrackingStatus === 'DELIVERED';
 
     return (
         <div className="min-h-screen bg-white pb-20">
@@ -171,9 +163,9 @@ const PostSummaryView = () => {
                         <div>
                             <h3 className="text-sm font-bold text-gray-900 mb-2">Shipping Address</h3>
                             <div className="text-sm text-gray-700">
-                                <p className="font-bold">{extraOrderDetails?.delivery_address?.first_name} {extraOrderDetails?.delivery_address?.last_name || extraOrderDetails?.customer_name}</p>
-                                <p>{extraOrderDetails?.delivery_address?.address || extraOrderDetails?.order?.address}</p>
-                                <p>{extraOrderDetails?.delivery_address?.city}, {extraOrderDetails?.delivery_address?.state} {extraOrderDetails?.delivery_address?.pincode}</p>
+                                <p className="font-bold">{orderData?.delivery_address?.first_name} {orderData?.delivery_address?.last_name}</p>
+                                <p>{orderData?.delivery_address?.address}</p>
+                                <p>{orderData?.delivery_address?.city}, {orderData?.delivery_address?.state} {orderData?.delivery_address?.pincode}</p>
                                 <p>India</p>
                             </div>
                         </div>
@@ -183,10 +175,10 @@ const PostSummaryView = () => {
                             <h3 className="text-sm font-bold text-gray-900 mb-2">Payment Method</h3>
                             <div className="text-sm text-gray-700 flex items-center gap-2">
                                 <CreditCard className="w-4 h-4 text-gray-400" />
-                                <span>{extraOrderDetails?.payment_method || 'Online Payment'}</span>
+                                <span>{orderData?.order?.payment_method || 'Online Payment'}</span>
                             </div>
-                            {extraOrderDetails?.transfer_details?.method && (
-                                <p className="text-xs text-gray-500 mt-1 ml-6 uppercase">{extraOrderDetails.transfer_details.method} • {extraOrderDetails.transfer_details.bank || 'Captured'}</p>
+                            {orderData?.order?.transfer_details?.method && (
+                                <p className="text-xs text-gray-500 mt-1 ml-6 uppercase">{orderData.order.transfer_details.method} • {orderData.order.transfer_details.bank || 'Captured'}</p>
                             )}
                         </div>
 
@@ -195,85 +187,112 @@ const PostSummaryView = () => {
                             <h3 className="text-sm font-bold text-gray-900 mb-3">Order Summary</h3>
                             <div className="space-y-2 text-sm">
 
-                                {/* MRP Total */}
-                                <div className="flex justify-between text-gray-600">
-                                    <span>MRP Total</span>
-                                    <span>₹{(extraOrderDetails?.items || []).reduce((s, i) => s + Number(i.mrp) * i.quantity, 0).toFixed(2)}</span>
-                                </div>
+                                {/* MRP Total — only if items have mrp */}
+                                {(orderData?.order_items || []).some(i => Number(i.mrp) > 0) && (
+                                    <div className="flex justify-between text-gray-600">
+                                        <span>Price ({(orderData?.order_items || []).length} item{(orderData?.order_items || []).length !== 1 ? 's' : ''})</span>
+                                        <span>₹{(orderData?.order_items || []).reduce((s, i) => s + Number(i.mrp) * i.quantity, 0).toFixed(2)}</span>
+                                    </div>
+                                )}
 
                                 {/* Product Discount */}
-                                {Number(extraOrderDetails?.total_discount ?? 0) > 0 && (
+                                {Number(orderData?.order?.total_discount ?? 0) > 0 && (
                                     <div className="flex justify-between text-emerald-600 font-medium">
-                                        <span className="flex items-center gap-1">
-                                            Discount
-                                            {extraOrderDetails?.discount_type && (
-                                                <span className="text-[10px] bg-emerald-50 border border-emerald-200 rounded px-1 py-0.5 font-semibold">
-                                                    {extraOrderDetails.discount_type === "%" ? `${Number(extraOrderDetails.discount_value ?? 0).toFixed(0)}%` : `Flat ₹${Number(extraOrderDetails.discount_value ?? 0).toFixed(2)}`}
-                                                </span>
-                                            )}
-                                        </span>
-                                        <span>-₹{Number(extraOrderDetails.total_discount).toFixed(2)}</span>
+                                        <span>Discount</span>
+                                        <span>-₹{Number(orderData.order.total_discount).toFixed(2)}</span>
                                     </div>
                                 )}
 
                                 {/* Coupon Discount */}
-                                {extraOrderDetails?.coupon_applied && Number(extraOrderDetails?.coupon_discount ?? 0) > 0 && (
+                                {orderData?.order?.coupon_applied && Number(orderData?.order?.coupon_discount ?? 0) > 0 && (
                                     <div className="flex justify-between text-emerald-600 font-medium">
                                         <span className="flex items-center gap-1">
                                             🏷️ Coupon
-                                            {extraOrderDetails.coupon_value && (
+                                            {orderData.order.coupon_value > 0 && (
                                                 <span className="text-[10px] bg-emerald-50 border border-emerald-200 rounded px-1 py-0.5 font-semibold">
-                                                    {extraOrderDetails.coupon_type === "%" ? `${Number(extraOrderDetails.coupon_value).toFixed(0)}%` : `₹${Number(extraOrderDetails.coupon_value).toFixed(2)}`}
+                                                    {orderData.order.coupon_type === "%" ? `${Number(orderData.order.coupon_value).toFixed(0)}%` : `₹${Number(orderData.order.coupon_value).toFixed(2)}`}
                                                 </span>
                                             )}
                                         </span>
-                                        <span>-₹{Number(extraOrderDetails.coupon_discount).toFixed(2)}</span>
+                                        <span>-₹{Number(orderData.order.coupon_discount).toFixed(2)}</span>
                                     </div>
                                 )}
 
-                                {/* Taxable Sub Total */}
-                                <div className="flex justify-between text-gray-800 font-semibold border-t pt-2">
-                                    <span>Taxable Sub Total</span>
-                                    <span>₹{Number(extraOrderDetails?.total_price ?? 0).toFixed(2)}</span>
-                                </div>
+                                {/* Delivery Charges (base + GST) */}
+                                {(() => {
+                                    const base = Number(orderData?.order?.shipping_charge ?? 0);
+                                    const gst  = Number(orderData?.order?.shipping_gst   ?? 0);
+                                    const total = base + gst;
+                                    const isFree = total === 0;
+                                    return (
+                                        <div>
+                                            <div className="flex justify-between text-gray-600">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => !isFree && setShowShippingDetail(v => !v)}
+                                                    className="flex items-center gap-1 text-gray-600 hover:text-gray-900"
+                                                >
+                                                    Delivery Charges
+                                                    {!isFree && <span className="text-[10px] text-gray-400">{showShippingDetail ? '▲' : '▼'}</span>}
+                                                </button>
+                                                <span className={isFree ? 'text-emerald-600 font-semibold' : ''}>
+                                                    {isFree ? 'FREE' : `₹${total.toFixed(2)}`}
+                                                </span>
+                                            </div>
+                                            {!isFree && showShippingDetail && (
+                                                <div className="ml-2 mt-1 border border-gray-100 rounded p-2 space-y-1 text-xs text-gray-500">
+                                                    <div className="flex justify-between">
+                                                        <span>Base Shipping</span>
+                                                        <span>₹{base.toFixed(2)}</span>
+                                                    </div>
+                                                    {gst > 0 && (
+                                                        <>
+                                                            <div className="flex justify-between font-medium text-gray-600">
+                                                                <span>Shipping GST ({Number(orderData.order.shipping_cgst_value ?? 9) + Number(orderData.order.shipping_sgst_value ?? 9)}%)</span>
+                                                                <span>₹{gst.toFixed(2)}</span>
+                                                            </div>
+                                                            <div className="flex justify-between pl-2">
+                                                                <span>CGST {orderData.order.shipping_cgst_value ?? '9.00'}%</span>
+                                                                <span>₹{Number(orderData.order.shipping_cgst).toFixed(2)}</span>
+                                                            </div>
+                                                            <div className="flex justify-between pl-2">
+                                                                <span>SGST {orderData.order.shipping_sgst_value ?? '9.00'}%</span>
+                                                                <span>₹{Number(orderData.order.shipping_sgst).toFixed(2)}</span>
+                                                            </div>
+                                                        </>
+                                                    )}
+                                                    <div className="flex justify-between font-semibold text-gray-700 border-t pt-1">
+                                                        <span>Total Delivery</span>
+                                                        <span>₹{total.toFixed(2)}</span>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })()}
 
                                 {/* Product GST Toggle */}
-                                {(Number(extraOrderDetails?.gst_amount_5 ?? 0) > 0 || Number(extraOrderDetails?.gst_amount_18 ?? 0) > 0) && (
+                                {(Number(orderData?.order?.gst_amount_5 ?? 0) > 0 || Number(orderData?.order?.gst_amount_18 ?? 0) > 0) && (
                                     <div>
-                                        <button
-                                            type="button"
-                                            onClick={() => setShowGstDetail(v => !v)}
-                                            className="w-full flex items-center justify-between text-[10px] uppercase font-bold text-gray-400 tracking-widest py-1"
-                                        >
+                                        <button type="button" onClick={() => setShowGstDetail(v => !v)}
+                                            className="w-full flex items-center justify-between text-[10px] uppercase font-bold text-gray-400 tracking-widest py-1">
                                             <span>Product Tax (GST)</span>
                                             <span>{showGstDetail ? "▲" : "▼"}</span>
                                         </button>
                                         {showGstDetail && (
                                             <div className="space-y-1 text-xs mt-1">
-                                                {Number(extraOrderDetails?.gst_amount_5 ?? 0) > 0 && (
+                                                {Number(orderData?.order?.gst_amount_5 ?? 0) > 0 && (
                                                     <div className="border border-gray-200 rounded p-2 space-y-0.5">
-                                                        <div className="flex justify-between font-medium text-gray-700">
-                                                            <span>GST @ 5%</span><span>₹{Number(extraOrderDetails.gst_amount_5).toFixed(2)}</span>
-                                                        </div>
-                                                        <div className="flex justify-between text-gray-400 pl-2">
-                                                            <span>CGST 2.5%</span><span>₹{Number(extraOrderDetails.cgst_amount_5).toFixed(2)}</span>
-                                                        </div>
-                                                        <div className="flex justify-between text-gray-400 pl-2">
-                                                            <span>SGST 2.5%</span><span>₹{Number(extraOrderDetails.sgst_amount_5).toFixed(2)}</span>
-                                                        </div>
+                                                        <div className="flex justify-between font-medium text-gray-700"><span>GST @ 5%</span><span>₹{Number(orderData.order.gst_amount_5).toFixed(2)}</span></div>
+                                                        <div className="flex justify-between text-gray-400 pl-2"><span>CGST 2.5%</span><span>₹{Number(orderData.order.cgst_amount_5).toFixed(2)}</span></div>
+                                                        <div className="flex justify-between text-gray-400 pl-2"><span>SGST 2.5%</span><span>₹{Number(orderData.order.sgst_amount_5).toFixed(2)}</span></div>
                                                     </div>
                                                 )}
-                                                {Number(extraOrderDetails?.gst_amount_18 ?? 0) > 0 && (
+                                                {Number(orderData?.order?.gst_amount_18 ?? 0) > 0 && (
                                                     <div className="border border-gray-200 rounded p-2 space-y-0.5">
-                                                        <div className="flex justify-between font-medium text-gray-700">
-                                                            <span>GST @ 18%</span><span>₹{Number(extraOrderDetails.gst_amount_18).toFixed(2)}</span>
-                                                        </div>
-                                                        <div className="flex justify-between text-gray-400 pl-2">
-                                                            <span>CGST 9%</span><span>₹{Number(extraOrderDetails.cgst_amount_18).toFixed(2)}</span>
-                                                        </div>
-                                                        <div className="flex justify-between text-gray-400 pl-2">
-                                                            <span>SGST 9%</span><span>₹{Number(extraOrderDetails.sgst_amount_18).toFixed(2)}</span>
-                                                        </div>
+                                                        <div className="flex justify-between font-medium text-gray-700"><span>GST @ 18%</span><span>₹{Number(orderData.order.gst_amount_18).toFixed(2)}</span></div>
+                                                        <div className="flex justify-between text-gray-400 pl-2"><span>CGST 9%</span><span>₹{Number(orderData.order.cgst_amount_18).toFixed(2)}</span></div>
+                                                        <div className="flex justify-between text-gray-400 pl-2"><span>SGST 9%</span><span>₹{Number(orderData.order.sgst_amount_18).toFixed(2)}</span></div>
                                                     </div>
                                                 )}
                                             </div>
@@ -281,66 +300,20 @@ const PostSummaryView = () => {
                                     </div>
                                 )}
 
-                                {/* Shipping Toggle */}
-                                <div>
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowShippingDetail(v => !v)}
-                                        className="w-full flex items-center justify-between text-[10px] uppercase font-bold text-gray-400 tracking-widest py-1"
-                                    >
-                                        <span>Shipping</span>
-                                        <span>{showShippingDetail ? "▲" : "▼"}</span>
-                                    </button>
-                                    <div className="flex justify-between text-sm text-gray-700">
-                                        <span>Shipping Charge</span>
-                                        <span>
-                                            {Number(extraOrderDetails?.shipping_charge ?? 0) === 0
-                                                ? "Free"
-                                                : `₹${(Number(extraOrderDetails.shipping_charge) + Number(extraOrderDetails?.shipping_gst ?? 0)).toFixed(2)}`}
-                                        </span>
-                                    </div>
-                                    {showShippingDetail && Number(extraOrderDetails?.shipping_charge ?? 0) > 0 && (
-                                        <div className="border border-gray-200 rounded p-2 space-y-0.5 text-xs mt-1">
-                                            <div className="flex justify-between text-gray-700">
-                                                <span>Shipping Charge (Base)</span><span>₹{extraOrderDetails.shipping_charge}</span>
-                                            </div>
-                                            {Number(extraOrderDetails?.shipping_gst ?? 0) > 0 && (
-                                                <>
-                                                    <div className="flex justify-between text-gray-700">
-                                                        <span>Shipping GST (18%)</span>
-                                                        <span>₹{Number(extraOrderDetails.shipping_gst).toFixed(2)}</span>
-                                                    </div>
-                                                    <div className="flex justify-between text-gray-400 pl-2">
-                                                        <span>CGST 9%</span><span>₹{Number(extraOrderDetails.shipping_cgst).toFixed(2)}</span>
-                                                    </div>
-                                                    <div className="flex justify-between text-gray-400 pl-2">
-                                                        <span>SGST 9%</span><span>₹{Number(extraOrderDetails.shipping_sgst).toFixed(2)}</span>
-                                                    </div>
-                                                    <div className="flex justify-between font-semibold text-gray-700 border-t pt-1">
-                                                        <span>Total Shipping</span>
-                                                        <span>₹{(Number(extraOrderDetails.shipping_charge) + Number(extraOrderDetails.shipping_gst)).toFixed(2)}</span>
-                                                    </div>
-                                                </>
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
+
 
                                 {/* GD Coins */}
-                                {Number(extraOrderDetails?.gd_coin ?? 0) > 0 && (
+                                {Number(orderData?.order?.gd_coin ?? 0) > 0 && (
                                     <div className="flex items-center justify-between pt-1">
-                                        <div className="flex items-center gap-1.5">
-                                            <span>🪙</span>
-                                            <span className="text-xs text-gray-600">GD Coins Earned</span>
-                                        </div>
-                                        <span className="font-bold text-orange-500">+{extraOrderDetails.gd_coin}</span>
+                                        <div className="flex items-center gap-1.5"><span>🪙</span><span className="text-xs text-gray-600">GD Coins Earned</span></div>
+                                        <span className="font-bold text-orange-500">+{orderData.order.gd_coin}</span>
                                     </div>
                                 )}
 
                                 {/* Grand Total */}
                                 <div className="bg-gradient-to-r from-green-600 to-green-800 rounded-lg px-3 py-2 flex justify-between items-center mt-1">
                                     <span className="text-white font-bold text-sm">Grand Total</span>
-                                    <span className="text-white font-extrabold">₹{Number(extraOrderDetails?.grand_total ?? 0).toFixed(2)}</span>
+                                    <span className="text-white font-extrabold">₹{Number(orderData?.order?.grand_total ?? 0).toFixed(2)}</span>
                                 </div>
                             </div>
                         </div>
@@ -362,7 +335,7 @@ const PostSummaryView = () => {
 
                             {/* Active Line (Calculated based on status) */}
                             {(() => {
-                                const status = (extraOrderDetails?.status_history?.[0]?.status || orderHistory?.status || '').toUpperCase();
+                                const status = latestTrackingStatus;
                                 let progress = '0%';
                                 if (status === 'PROCESSING') progress = '25%';
                                 if (status === 'ORDER_CONFIRMED') progress = '50%';
@@ -378,24 +351,23 @@ const PostSummaryView = () => {
                             })()}
 
                             {['PROCESSING', 'ORDER_CONFIRMED', 'ON_THE_WAY', 'DELIVERED'].map((step, index) => {
-                                const status = (extraOrderDetails?.status_history?.[0]?.status || orderHistory?.status || '').toUpperCase();
                                 const steps = ['PROCESSING', 'ORDER_CONFIRMED', 'ON_THE_WAY', 'DELIVERED'];
-                                const currentIndex = steps.indexOf(status);
+                                const currentIndex = steps.indexOf(latestTrackingStatus);
                                 const isActive = index <= currentIndex;
                                 const isCurrent = index === currentIndex;
+                                const stepUpdate = orderData?.tracking_updates?.find(u => u.status.toUpperCase() === step);
 
                                 return (
                                     <div key={step} className="flex flex-col items-center relative z-50 w-1/4">
-                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 ${isActive ? 'bg-green-500 border-green-100 text-white' : 'bg-white border-gray-200 text-gray-300'
-                                            }`}>
+                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 ${isActive ? 'bg-green-500 border-green-100 text-white' : 'bg-white border-gray-200 text-gray-300'}`}>
                                             {isActive ? <CheckCircle2 className="w-4 h-4" /> : <div className="w-2 h-2 rounded-full bg-gray-300"></div>}
                                         </div>
                                         <div className="mt-2 text-center w-full px-1">
                                             <p className={`text-[10px] font-bold leading-tight break-words ${isActive ? 'text-gray-900' : 'text-gray-400'}`}>
                                                 {step.replace(/_/g, ' ')}
                                             </p>
-                                            {isCurrent && extraOrderDetails?.status_history?.[0]?.timestamp && (
-                                                <p className="text-[9px] text-gray-500 mt-0.5">{new Date(extraOrderDetails.status_history[0].timestamp).toLocaleDateString()}</p>
+                                            {isCurrent && stepUpdate?.timestamp && (
+                                                <p className="text-[9px] text-gray-500 mt-0.5">{new Date(stepUpdate.timestamp).toLocaleDateString()}</p>
                                             )}
                                         </div>
                                     </div>
@@ -409,7 +381,7 @@ const PostSummaryView = () => {
                 <div className="border rounded-lg overflow-hidden bg-white">
                     <div className="bg-gray-50 p-4 border-b flex justify-between items-center">
                         <h2 className="text-lg font-bold text-gray-900">Items Ordered</h2>
-                        {orderHistory?.status === 'DELIVERED' && (
+                        {isDelivered && (
                             <button
                                 onClick={getInvoice}
                                 className="text-sm font-medium text-bio-green hover:text-green-800 hover:underline flex items-center gap-1"

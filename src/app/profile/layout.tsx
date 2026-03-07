@@ -16,15 +16,20 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
   const isGuest  = !username || username === 'Guest';
   const router   = useRouter();
 
+  const [mounted,            setMounted]            = useState(false);
   const [isSignInOpen,       setIsSignInOpen]       = useState(false);
   const [isVerificationOpen, setIsVerificationOpen] = useState(false);
   const [isLoginOpen,        setIsLoginOpen]        = useState(false);
 
   useEffect(() => {
-    if (isGuest) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && isGuest) {
       setIsSignInOpen(true);
     }
-  }, [isGuest]);
+  }, [mounted, isGuest]);
 
   const handleClose = () => {
     setIsSignInOpen(false);
@@ -55,13 +60,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
         </div>
         <div className="flex-1 min-w-0">
           <ProfileBreadcrumb />
-          {isGuest ? (
-            <div className="flex items-center justify-center min-h-[60vh]">
-              <p className="text-gray-400 text-sm">Please sign in to view your profile.</p>
-            </div>
-          ) : (
-            children
-          )}
+          {children}
         </div>
       </div>
 
