@@ -13,6 +13,7 @@ const ProductCard = ({ product, handleRemove, handleQuantityChange }) => {
 
   // Increment quantity
   const increment = () => {
+    if (quantity >= 1000) return;
     const prev = quantity;
     const newQuantity = quantity + 1;
     setQuantity(newQuantity);
@@ -33,6 +34,7 @@ const ProductCard = ({ product, handleRemove, handleQuantityChange }) => {
   const handleInputChange = (e) => {
     let value = parseInt(e.target.value, 10);
     if (isNaN(value) || value < 1) value = 1;
+    if (value > 1000) value = 1000;
     const prev = quantity;
     setQuantity(value);
     handleQuantityChange(product.id, value, () => setQuantity(prev));
@@ -85,6 +87,7 @@ const ProductCard = ({ product, handleRemove, handleQuantityChange }) => {
                             <input
                 type="number"
                 min="1"
+                max="1000"
                 value={quantity}
                 onChange={handleInputChange}
                 className="w-12 text-center border border-gray-300 rounded px-1 py-0.5 text-sm md:text-base"

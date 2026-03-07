@@ -545,7 +545,7 @@ export default function ProductData({ initialProductData }) {
         if (action === "direct") {
             // User typed directly — validate locally then fire one stock check
             const parsed = parseInt(qty, 10);
-            const safe = !isNaN(parsed) && parsed >= 1 ? parsed : 1;
+            const safe = !isNaN(parsed) && parsed >= 1 ? Math.min(parsed, 1000) : 1;
             setQuantity(safe);
             // Debounced API check for typed value
             if (stockCheckTimer.current) clearTimeout(stockCheckTimer.current);
@@ -1405,6 +1405,7 @@ export default function ProductData({ initialProductData }) {
                                         <input
                                             type="number"
                                             min="1"
+                                            max="1000"
                                             className="w-20 text-center border border-bio-green bg-gray-200 text-black py-2 px-4
                                              [-moz-appearance:textfield]
                                              [appearance:textfield]
@@ -1413,8 +1414,9 @@ export default function ProductData({ initialProductData }) {
                                             value={quantity}
                                             onChange={(e) => {
                                                 const v = e.target.value;
-                                                // Let user type freely; just update display state
-                                                setQuantity(v === '' ? '' : Number(v));
+                                                // Let user type freely but cap at 1000
+                                                const num = Number(v);
+                                                setQuantity(v === '' ? '' : Math.min(num, 1000));
                                             }}
                                             onBlur={() =>
                                                 handleQuantity(
