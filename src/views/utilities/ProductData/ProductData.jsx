@@ -112,6 +112,7 @@ export default function ProductData({ initialProductData }) {
     const [selectedColor, setSelectedColor] = useState("");
     const [addOnData, setAddOnData] = useState([]);
     const [quantity, setQuantity] = useState(1);
+    const stockCheckTimer = useRef(null);
     const [inWishlist, setInWishlist] = useState(null)
     const [productDetailData, setProductDetailData] = useState(initialProductData || []);
     const [imageThumbnails, setImageThumbnails] = useState(initialProductData?.data?.product?.images || []);
@@ -540,33 +541,47 @@ export default function ProductData({ initialProductData }) {
     };
 
 
-    const handleQuantity = async (product_id, action, qty) => {
-        // When the user types directly, just validate & keep the typed value — don't increment via API
+    const handleQuantity = (product_id, action, qty) => {
         if (action === "direct") {
+            // User typed directly — validate locally then fire one stock check
             const parsed = parseInt(qty, 10);
-            if (!isNaN(parsed) && parsed >= 1) {
-                setQuantity(parsed);
-            } else {
-                setQuantity(1);
-            }
+            const safe = !isNaN(parsed) && parsed >= 1 ? parsed : 1;
+            setQuantity(safe);
+            // Debounced API check for typed value
+            if (stockCheckTimer.current) clearTimeout(stockCheckTimer.current);
+            stockCheckTimer.current = setTimeout(async () => {
+                try {
+                    const res = await axiosInstance.get(`/product/stockCheck/${product_id}/`, {
+                        params: { quantity: safe, action: "increment" },
+                    });
+                    if (res.status === 200) setQuantity(res.data.new_quantity);
+                } catch (err) {
+                    enqueueSnackbar(err?.response?.data?.message, { variant: "info" });
+                }
+            }, 400);
             return;
         }
-        try {
-            // Always send an action — default to "increment"
-            const params = {
-                quantity: qty,
-                action: action === "decrement" ? "decrement" : "increment",
-            };// For debugging
-            const response = await axiosInstance.get(`/product/stockCheck/${product_id}/`, {
-                params,
-            });
 
-            if (response.status === 200) {
-                setQuantity(response?.data?.new_quantity);
+        // +/− buttons: update UI immediately (feels instant), then debounce API
+        const next = action === "decrement" ? Math.max(1, qty - 1) : qty + 1;
+        setQuantity(next);
+
+        if (stockCheckTimer.current) clearTimeout(stockCheckTimer.current);
+        stockCheckTimer.current = setTimeout(async () => {
+            try {
+                const res = await axiosInstance.get(`/product/stockCheck/${product_id}/`, {
+                    params: {
+                        quantity: next,
+                        action: action === "decrement" ? "decrement" : "increment",
+                    },
+                });
+                if (res.status === 200) setQuantity(res.data.new_quantity);
+            } catch (err) {
+                // Revert to previous value on error (e.g. exceeds stock)
+                setQuantity(qty);
+                enqueueSnackbar(err?.response?.data?.message, { variant: "info" });
             }
-        } catch (error) {
-            enqueueSnackbar(error?.response?.data?.message, { variant: 'info' });
-        }
+        }, 400);
     };
     const handleSizeClick = async (size, product) => {
         try {
@@ -1396,7 +1411,11 @@ export default function ProductData({ initialProductData }) {
                                              [&::-webkit-inner-spin-button]:appearance-none
                                              [&::-webkit-outer-spin-button]:appearance-none"
                                             value={quantity}
-                                            onChange={(e) => setQuantity(Number(e.target.value))}
+                                            onChange={(e) => {
+                                                const v = e.target.value;
+                                                // Let user type freely; just update display state
+                                                setQuantity(v === '' ? '' : Number(v));
+                                            }}
                                             onBlur={() =>
                                                 handleQuantity(
                                                     productDetailData?.data?.product?.id,
