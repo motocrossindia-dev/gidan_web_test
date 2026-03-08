@@ -589,9 +589,6 @@ const OrderSummaryItem = ({ title, Quantity, mrp, sales_price, discount, image, 
       {/* Total */}
       <td className="py-3 px-3 text-right">
         <p className="text-sm font-bold text-gray-800">₹{lineTotal.toFixed(2)}</p>
-        {totalGst > 0 && (
-          <p className="text-[10px] text-gray-400 mt-0.5">GST incl.</p>
-        )}
       </td>
     </tr>
   );
@@ -1719,9 +1716,6 @@ const CheckoutPage = () => {
                             {/* Total */}
                             <td className="py-2 px-2 text-right">
                               <span className="font-bold text-gray-800 text-[11px]">₹{lineTotal.toFixed(2)}</span>
-                              {gstAmt > 0 && (
-                                <p className="text-[9px] text-gray-400 mt-0.5">GST incl.</p>
-                              )}
                             </td>
                           </tr>
                         );
