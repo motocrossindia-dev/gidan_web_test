@@ -1435,7 +1435,8 @@ const CheckoutPage = () => {
   // coupon.order_items only provides per-item coupon fields (not needed for display).
   const activeItems = data?.order_items;
 
-  const deliveryCharge = Number(activeOrder?.shipping_charge || 0);
+  const deliveryCharge = Number(data?.shipping_info?.shipping_charge ?? activeOrder?.shipping_charge ?? 0);
+  const isFreeShipping = data?.shipping_info?.free_shipping === true ? true : deliveryCharge === 0;
 
   const backendTotal = (coupon?.success && (coupon?.order?.grand_total !== undefined || coupon?.new_total !== undefined))
     ? Math.max(0, Number(coupon.order?.grand_total ?? coupon.new_total ?? 0))
@@ -1765,8 +1766,8 @@ const CheckoutPage = () => {
                   {/* Delivery Charges */}
                   <div className="flex justify-between text-gray-600">
                     <span>Delivery Charges</span>
-                    <span className={deliveryCharge === 0 ? "text-emerald-600 font-semibold" : ""}>
-                      {deliveryCharge === 0 ? "FREE" : `₹${Number(activeOrder?.shipping_charge).toFixed(2)}`}
+                    <span className={isFreeShipping ? "text-emerald-600 font-semibold" : ""}>
+                      {isFreeShipping ? "FREE" : `₹${deliveryCharge.toFixed(2)}`}
                     </span>
                   </div>
 
