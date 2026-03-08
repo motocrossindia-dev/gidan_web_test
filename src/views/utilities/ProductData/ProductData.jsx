@@ -366,6 +366,17 @@ export default function ProductData({ initialProductData }) {
                 enqueueSnackbar("Product is still loading. Please wait.", { variant: "warning" });
                 return;
             }
+
+            // Stock check before adding to cart
+            try {
+                await axiosInstance.get(`/product/stockCheck/${productId}/`, {
+                    params: { quantity, action: "increment" },
+                });
+            } catch (err) {
+                enqueueSnackbar(err?.response?.data?.message || "Not enough stock available.", { variant: "warning" });
+                return;
+            }
+
             const product_data = {
                 prod_id: productId,
                 quantity: quantity,
@@ -470,6 +481,16 @@ export default function ProductData({ initialProductData }) {
                 return;
             }
 
+            // Stock check before placing order
+            try {
+                await axiosInstance.get(`/product/stockCheck/${productId}/`, {
+                    params: { quantity, action: "increment" },
+                });
+            } catch (err) {
+                enqueueSnackbar(err?.response?.data?.message || "Not enough stock available.", { variant: "warning" });
+                return;
+            }
+
             const product_data = {
                 order_source: "product",
                 prod_id: productId,
@@ -543,39 +564,28 @@ export default function ProductData({ initialProductData }) {
 
     const handleQuantity = (product_id, action, qty) => {
         if (action === "direct") {
-            // User typed directly — validate locally then fire one stock check
+            // User typed directly — validate locally, no API override
             const parsed = parseInt(qty, 10);
             const safe = !isNaN(parsed) && parsed >= 1 ? Math.min(parsed, 1000) : 1;
             setQuantity(safe);
-            // Debounced API check for typed value
-            if (stockCheckTimer.current) clearTimeout(stockCheckTimer.current);
-            stockCheckTimer.current = setTimeout(async () => {
-                try {
-                    const res = await axiosInstance.get(`/product/stockCheck/${product_id}/`, {
-                        params: { quantity: safe, action: "increment" },
-                    });
-                    if (res.status === 200) setQuantity(res.data.new_quantity);
-                } catch (err) {
-                    enqueueSnackbar(err?.response?.data?.message, { variant: "info" });
-                }
-            }, 400);
             return;
         }
 
-        // +/− buttons: update UI immediately (feels instant), then debounce API
-        const next = action === "decrement" ? Math.max(1, qty - 1) : qty + 1;
+        // +/− buttons: update UI immediately (feels instant)
+        if (action === "decrement" && qty <= 1) return; // already at minimum, nothing to do
+        const next = action === "decrement" ? qty - 1 : qty + 1;
         setQuantity(next);
+
+        // Stock check only needed for increment (to verify availability)
+        if (action === "decrement") return;
 
         if (stockCheckTimer.current) clearTimeout(stockCheckTimer.current);
         stockCheckTimer.current = setTimeout(async () => {
             try {
-                const res = await axiosInstance.get(`/product/stockCheck/${product_id}/`, {
-                    params: {
-                        quantity: next,
-                        action: action === "decrement" ? "decrement" : "increment",
-                    },
+                await axiosInstance.get(`/product/stockCheck/${product_id}/`, {
+                    params: { quantity: 1, action: "increment" },
                 });
-                if (res.status === 200) setQuantity(res.data.new_quantity);
+                // Optimistic value is correct — do not override from API response
             } catch (err) {
                 // Revert to previous value on error (e.g. exceeds stock)
                 setQuantity(qty);
@@ -1396,6 +1406,7 @@ export default function ProductData({ initialProductData }) {
                                     <span className="font-bold text-black-700 text-base mb-2">Quantity:</span>
                                     <div className="flex items-center">
                                         <button aria-label="Button"
+                                            onMouseDown={(e) => e.preventDefault()}
                                             onClick={() => handleQuantity(productDetailData?.data?.product?.id, "decrement", quantity)}
                                             className="border border-bio-green text-black-700 py-2 px-4 rounded-l-lg hover:bg-bio-green"
                                         >
@@ -1427,6 +1438,7 @@ export default function ProductData({ initialProductData }) {
                                             }
                                         />
                                         <button aria-label="Button"
+                                            onMouseDown={(e) => e.preventDefault()}
                                             onClick={() => handleQuantity(productDetailData?.data?.product?.id, "increment", quantity)}
                                             className="border border-bio-green text-black-700 py-2 px-4 rounded-r-lg hover:bg-bio-green"
                                         >

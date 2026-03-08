@@ -26,7 +26,7 @@ const Header = () => {
           <Link
             href="/franchise-enquiry/"
             className="bg-white text-[#062e25] font-bold uppercase whitespace-nowrap rounded-lg px-2 md:py-1
-            hover:bg-green-700 transition text-[11px] md:text-[13px] flex items-center justify-center"
+            hover:bg-[#062e25] hover:text-white hover:border hover:border-white transition text-[11px] md:text-[13px] flex items-center justify-center"
           >
             Franchise Enquiry
           </Link>
