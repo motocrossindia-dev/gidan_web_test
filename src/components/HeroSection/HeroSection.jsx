@@ -37,7 +37,7 @@ const HeroSection = ({ hero }) => {
   };
 
   return (
-    <div className="relative w-full overflow-hidden mt-4">
+   <div className="relative w-full overflow-hidden mt-4">
       {hero && hero.length > 0 ? (
         <div className="relative w-full">
 

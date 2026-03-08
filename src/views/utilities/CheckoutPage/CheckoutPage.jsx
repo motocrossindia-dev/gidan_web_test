@@ -694,7 +694,7 @@ const OrderSummary = ({ selectedOption, selectedAddress, data }) => {
                   discount={item.discount}
                   image={item.image}
                   subtotal={item.subtotal}
-                  gst_amount={Math.max(0, Number(item.subtotal) - Number(item.total))}
+                  gst_amount={item.total_gst_amount}
                 />
               ))}
             </tbody>
@@ -704,16 +704,13 @@ const OrderSummary = ({ selectedOption, selectedAddress, data }) => {
           {data?.order && (() => {
             const o = data.order;
             const items           = data.order_items || [];
-            const totalQty        = items.reduce((s, i) => s + (Number(i.quantity) || 0), 0);
-            const itemsTotal      = items.reduce((s, i) => s + (Number(i.total)    || 0), 0);
+            const itemsTotal      = Number(o.total_price)      || 0;
             const itemDiscount    = Number(o.total_discount)   || 0;
             const couponDiscount  = Number(o.coupon_discount)  || 0;
-            // GST derived from item-level: subtotal includes GST, total does not
-            const totalProductGst = items.reduce((s, i) => s + Math.max(0, Number(i.subtotal) - Number(i.total)), 0);
+            const productGst      = Number(o.gst_amount_18)    + Number(o.gst_amount_5) + Number(o.gst_amount_0) || 0;
             const shippingCharge  = Number(o.shipping_charge)  || 0;
+            const shippingGst     = Number(o.shipping_gst)     || 0;
             const grandTotal      = Number(o.grand_total)      || 0;
-            // Shipping GST = grand_total - (selling totals - discounts + product GST + shipping)
-            const shippingGst     = Math.max(0, Math.round((grandTotal - itemsTotal + itemDiscount + couponDiscount - totalProductGst - shippingCharge) * 100) / 100);
             const totalSavings    = itemDiscount + couponDiscount;
 
             return (
@@ -745,11 +742,11 @@ const OrderSummary = ({ selectedOption, selectedAddress, data }) => {
                   </div>
                 )}
 
-                {/* Product GST (derived from item subtotals) */}
-                {totalProductGst > 0 && (
+                {/* Product GST (incl. in price) */}
+                {productGst > 0 && (
                   <div className="flex justify-between text-gray-500 text-xs">
                     <span>Product GST (incl. in price)</span>
-                    <span>₹{totalProductGst.toFixed(2)}</span>
+                    <span>₹{Number(productGst).toFixed(2)}</span>
                   </div>
                 )}
 
@@ -1732,10 +1729,10 @@ const CheckoutPage = () => {
                 <p className="text-[10px] uppercase font-bold text-gray-400 tracking-widest mb-3">Price Details</p>
                 <div className="space-y-2 text-sm">
 
-                  {/* Sub Total = sum of selling prices before GST */}
+                  {/* Sub Total */}
                   <div className="flex justify-between text-gray-600">
                     <span>Sub Total</span>
-                    <span>₹{Number(activeItems?.reduce((s, i) => s + (Number(i.total) || 0), 0) ?? 0).toFixed(2)}</span>
+                    <span>₹{Number(activeOrder?.total_price ?? 0).toFixed(2)}</span>
                   </div>
 
                   {/* Product Discount */}
@@ -1776,30 +1773,21 @@ const CheckoutPage = () => {
                     </span>
                   </div>
 
-                  {/* Product GST — derived from item subtotals */}
-                  {(() => {
-                    const productGst = (activeItems ?? []).reduce((s, i) => s + Math.max(0, Number(i.subtotal) - Number(i.total)), 0);
-                    return productGst > 0 ? (
-                      <div className="flex justify-between text-gray-600">
-                        <span>Product GST</span>
-                        <span>₹{productGst.toFixed(2)}</span>
-                      </div>
-                    ) : null;
-                  })()}
+                  {/* Product GST */}
+                  {(Number(activeOrder?.gst_amount_18 ?? 0) + Number(activeOrder?.gst_amount_5 ?? 0) + Number(activeOrder?.gst_amount_0 ?? 0)) > 0 && (
+                    <div className="flex justify-between text-gray-600">
+                      <span>Product GST</span>
+                      <span>₹{(Number(activeOrder?.gst_amount_18 ?? 0) + Number(activeOrder?.gst_amount_5 ?? 0) + Number(activeOrder?.gst_amount_0 ?? 0)).toFixed(2)}</span>
+                    </div>
+                  )}
 
-                  {/* Shipping GST — remainder after accounting for items + shipping */}
-                  {(() => {
-                    const productGst = (activeItems ?? []).reduce((s, i) => s + Math.max(0, Number(i.subtotal) - Number(i.total)), 0);
-                    const itemsSellingTotal = (activeItems ?? []).reduce((s, i) => s + (Number(i.total) || 0), 0);
-                    const disc = Number(activeOrder?.total_discount ?? 0) + Number(activeOrder?.coupon_discount ?? 0);
-                    const shippGst = Math.max(0, Math.round((Number(activeOrder?.grand_total ?? 0) - itemsSellingTotal + disc - productGst - Number(activeOrder?.shipping_charge ?? 0)) * 100) / 100);
-                    return shippGst > 0 ? (
-                      <div className="flex justify-between text-gray-600">
-                        <span>Shipping GST</span>
-                        <span>₹{shippGst.toFixed(2)}</span>
-                      </div>
-                    ) : null;
-                  })()}
+                  {/* Shipping GST */}
+                  {Number(activeOrder?.shipping_gst ?? 0) > 0 && (
+                    <div className="flex justify-between text-gray-600">
+                      <span>Shipping GST</span>
+                      <span>₹{Number(activeOrder.shipping_gst).toFixed(2)}</span>
+                    </div>
+                  )}
 
                   {/* Total Amount */}
                   <div className="flex justify-between text-gray-800 font-bold border-t pt-2 text-base">
