@@ -534,13 +534,11 @@ const AddNewAddress = ({ isOpen, setIsOpen }) => {
 const OrderSummaryItem = ({ title, Quantity, mrp, sales_price, discount, image, subtotal, gst_amount }) => {
   const qty        = Number(Quantity)    || 1;
   const unitMrp    = Number(mrp)         || 0;
-  // selling_price from API is qty-multiplied total; divide back to get unit price
   const unitPrice  = qty > 0 ? (Number(sales_price) || 0) / qty : (Number(sales_price) || 0);
   const unitDisc   = Number(discount)    || 0;
   const totalSaving = unitDisc * qty;
   const savingPct  = unitMrp > 0 && unitDisc > 0 ? Math.round((unitDisc / unitMrp) * 100) : 0;
-  const totalGst   = Number(gst_amount)  || 0;
-  const lineTotal  = Number(subtotal)    || (unitPrice * qty + totalGst);
+  const lineTotal  = Number(sales_price) || 0;
 
   return (
     <tr className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
@@ -1666,8 +1664,7 @@ const CheckoutPage = () => {
                         const qty        = Number(item.quantity)       || 1;
                         const totalSav   = unitDisc * qty;
                         const savPct     = unitMrp > 0 && unitDisc > 0 ? Math.round((unitDisc / unitMrp) * 100) : 0;
-                        const gstAmt     = Number(item.total_gst_amount) || 0;
-                        const lineTotal  = Number(item.subtotal)       || (unitPrice * qty + gstAmt);
+                        const lineTotal  = Number(item.total)          || 0;
                         return (
                           <tr key={item.id} className="align-middle">
                             {/* Description */}
