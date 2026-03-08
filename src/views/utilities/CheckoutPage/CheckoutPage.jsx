@@ -26,7 +26,7 @@ const loadRazorpayScript = () =>
   });
 
 
-const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOption, setIsAddNewOpen, isAddNewOpen }) => {
+const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOption, setIsAddNewOpen, isAddNewOpen, onConfirmStore }) => {
   const accessToken = useSelector(selectAccessToken);
   const [isOpen, setIsOpen] = useState(true);
   const [addresses, setAddresses] = useState([]);
@@ -34,6 +34,8 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
   const [stores, setStores] = useState([]);
   const [selectedStoreId, setSelectedStoreId] = useState(null);
   const [showAllAddresses, setShowAllAddresses] = useState(false);
+  const [confirmingStore, setConfirmingStore] = useState(false);
+  const [storeConfirmed, setStoreConfirmed] = useState(false);
 
   const deliveryOptions = [
     { id: "DoorDelivery", label: "Door Delivery" },
@@ -83,6 +85,7 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
   const handleStoreSelect = (storeId) => {
     setSelectedStoreId(storeId);
     setSelectedOption({ deliveryType: selectedDelType, storeId });
+    setStoreConfirmed(false); // reset confirmation when store changes
   };
 
   const toggleDropdown = () => setIsOpen(!isOpen);
@@ -232,6 +235,35 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
                     </div>
                   ))}
                 </div>
+
+                {/* Confirm Store button */}
+                {selectedStoreId && (
+                  <div className="mt-3">
+                    {storeConfirmed ? (
+                      <div className="flex items-center gap-2 text-green-700 text-sm font-semibold">
+                        <span>✓</span>
+                        <span>Store confirmed — free pickup applied</span>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={async () => {
+                          setConfirmingStore(true);
+                          const ok = await onConfirmStore?.();
+                          if (ok) setStoreConfirmed(true);
+                          setConfirmingStore(false);
+                        }}
+                        disabled={confirmingStore}
+                        className="w-full py-2 bg-bio-green text-white text-sm font-bold rounded-lg hover:bg-green-700 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+                      >
+                        {confirmingStore ? (
+                          <><span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span> Applying…</>
+                        ) : (
+                          '✓ Confirm Store & Apply Free Pickup'
+                        )}
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             )}
           </section>
@@ -254,12 +286,14 @@ const AddNewAddress = ({ isOpen, setIsOpen }) => {
     addressType: "",
     isDefault: false,
   });
+  const [newAddressErrors, setNewAddressErrors] = useState({});
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
   const handleAddressChange = (field, value) => {
+    setNewAddressErrors((prev) => ({ ...prev, [field]: '' }));
     setNewAddress((prev) => {
       const updated = { ...prev, [field]: value };
       if (field === "pinCode") {
@@ -295,6 +329,19 @@ const AddNewAddress = ({ isOpen, setIsOpen }) => {
   };
 
   const handleSaveNewAddress = async () => {
+    const errs = {};
+    if (!newAddress.firstName.trim()) errs.firstName = 'First name is required.';
+    if (!newAddress.lastName.trim()) errs.lastName = 'Last name is required.';
+    if (!newAddress.address.trim()) errs.address = 'Address is required.';
+    if (!newAddress.pinCode || String(newAddress.pinCode).length !== 6) errs.pinCode = 'Enter a valid 6-digit PIN code.';
+    if (!newAddress.city.trim()) errs.city = 'City is required. Enter a valid PIN code to auto-fill.';
+    if (!newAddress.state.trim()) errs.state = 'State is required. Enter a valid PIN code to auto-fill.';
+    if (!newAddress.phone || String(newAddress.phone).length !== 10) errs.phone = 'Enter a valid 10-digit phone number.';
+    if (!newAddress.addressType) errs.addressType = 'Please select an address type.';
+    if (Object.keys(errs).length > 0) {
+      setNewAddressErrors(errs);
+      return;
+    }
     const addressData = {
       first_name: newAddress.firstName,
       last_name: newAddress.lastName,
@@ -344,87 +391,106 @@ const AddNewAddress = ({ isOpen, setIsOpen }) => {
         <h3 className="text-bio-green font-bold mb-2">Add New Address</h3>
         <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSaveNewAddress(); }}>
           <div className="flex space-x-2">
-            <input
-              type="text"
-              placeholder="First name"
-              value={newAddress.firstName}
-              onChange={(e) => handleAddressChange("firstName", e.target.value)}
-              className="border p-2 rounded w-1/2"
-              required
-            />
-            <input
-              type="text"
-              placeholder="Last name"
-              value={newAddress.lastName}
-              onChange={(e) => handleAddressChange("lastName", e.target.value)}
-              className="border p-2 rounded w-1/2"
-              required
-            />
+            <div className="w-1/2">
+              <input
+                type="text"
+                placeholder="First name *"
+                value={newAddress.firstName}
+                onChange={(e) => handleAddressChange("firstName", e.target.value)}
+                className={`border p-2 rounded w-full${newAddressErrors.firstName ? ' border-red-500' : ''}`}
+              />
+              {newAddressErrors.firstName && <p className="text-red-500 text-xs mt-1">{newAddressErrors.firstName}</p>}
+            </div>
+            <div className="w-1/2">
+              <input
+                type="text"
+                placeholder="Last name *"
+                value={newAddress.lastName}
+                onChange={(e) => handleAddressChange("lastName", e.target.value)}
+                className={`border p-2 rounded w-full${newAddressErrors.lastName ? ' border-red-500' : ''}`}
+              />
+              {newAddressErrors.lastName && <p className="text-red-500 text-xs mt-1">{newAddressErrors.lastName}</p>}
+            </div>
           </div>
-          <input
-            type="text"
-            placeholder="Apartment, suite, etc. (optional)"
-            value={newAddress.address}
-            onChange={(e) => handleAddressChange("address", e.target.value)}
-            className="border p-2 rounded w-full"
-            required
-          />
+          <div>
+            <input
+              type="text"
+              placeholder="Apartment, suite, etc. *"
+              value={newAddress.address}
+              onChange={(e) => handleAddressChange("address", e.target.value)}
+              className={`border p-2 rounded w-full${newAddressErrors.address ? ' border-red-500' : ''}`}
+            />
+            {newAddressErrors.address && <p className="text-red-500 text-xs mt-1">{newAddressErrors.address}</p>}
+          </div>
           <div className="flex space-x-2">
-            <input
-              type="text"
-              placeholder="City (Auto-filled)"
-              value={newAddress.city || ""}
-              readOnly
-              className="border p-2 rounded w-1/3 bg-gray-100 cursor-not-allowed"
-            />
-            <input
-              type="text"
-              placeholder="State (Auto-filled)"
-              value={newAddress.state || ""}
-              readOnly
-              className="border p-2 rounded w-1/3 bg-gray-100 cursor-not-allowed"
-            />
-            <input
-              type="text"
-              placeholder="PIN Code"
-              value={newAddress.pinCode}
-              maxLength={6}
-              onChange={(e) => handleAddressChange("pinCode", e.target.value.replace(/\D/g, ""))}
-              className="border p-2 rounded w-1/3"
-              required
-            />
+            <div className="w-1/3">
+              <input
+                type="text"
+                placeholder="City (Auto-filled) *"
+                value={newAddress.city || ""}
+                readOnly
+                className={`border p-2 rounded w-full bg-gray-100 cursor-not-allowed${newAddressErrors.city ? ' border-red-500' : ''}`}
+              />
+              {newAddressErrors.city && <p className="text-red-500 text-xs mt-1">{newAddressErrors.city}</p>}
+            </div>
+            <div className="w-1/3">
+              <input
+                type="text"
+                placeholder="State (Auto-filled) *"
+                value={newAddress.state || ""}
+                readOnly
+                className={`border p-2 rounded w-full bg-gray-100 cursor-not-allowed${newAddressErrors.state ? ' border-red-500' : ''}`}
+              />
+              {newAddressErrors.state && <p className="text-red-500 text-xs mt-1">{newAddressErrors.state}</p>}
+            </div>
+            <div className="w-1/3">
+              <input
+                type="text"
+                placeholder="PIN Code *"
+                value={newAddress.pinCode}
+                maxLength={6}
+                onChange={(e) => handleAddressChange("pinCode", e.target.value.replace(/\D/g, ""))}
+                className={`border p-2 rounded w-full${newAddressErrors.pinCode ? ' border-red-500' : ''}`}
+              />
+              {newAddressErrors.pinCode && <p className="text-red-500 text-xs mt-1">{newAddressErrors.pinCode}</p>}
+            </div>
           </div>
-          <input
-            type="tel"
-            placeholder="Phone"
-            value={newAddress.phone}
-            maxLength={10}
-            onChange={(e) => handleAddressChange("phone", e.target.value.replace(/\D/g, ""))}
-            className="border p-2 rounded w-full"
-            required
-          />
-          <div className="flex space-x-4 items-center">
-            <label className="flex items-center">
-              <input
-                type="radio"
-                name="addressType"
-                checked={newAddress.addressType === "Home"}
-                onChange={() => handleAddressChange("addressType", "Home")}
-                className="mr-2"
-                required
-              />
-              Home
-            </label>
-            <label className="flex items-center">
-              <input
-                type="radio"
-                name="addressType"
-                checked={newAddress.addressType === "Work"}
-                onChange={() => handleAddressChange("addressType", "Work")}
-                className="mr-2"
-              />
-              Work
-            </label>
+          <div>
+            <input
+              type="tel"
+              placeholder="Phone *"
+              value={newAddress.phone}
+              maxLength={10}
+              onChange={(e) => handleAddressChange("phone", e.target.value.replace(/\D/g, ""))}
+              className={`border p-2 rounded w-full${newAddressErrors.phone ? ' border-red-500' : ''}`}
+            />
+            {newAddressErrors.phone && <p className="text-red-500 text-xs mt-1">{newAddressErrors.phone}</p>}
+          </div>
+          <div>
+            <p className="text-sm font-medium mb-1">Address Type *</p>
+            <div className="flex space-x-4 items-center">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="addressType"
+                  checked={newAddress.addressType === "Home"}
+                  onChange={() => handleAddressChange("addressType", "Home")}
+                  className="mr-2"
+                />
+                Home
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="addressType"
+                  checked={newAddress.addressType === "Work"}
+                  onChange={() => handleAddressChange("addressType", "Work")}
+                  className="mr-2"
+                />
+                Work
+              </label>
+            </div>
+            {newAddressErrors.addressType && <p className="text-red-500 text-xs mt-1">{newAddressErrors.addressType}</p>}
           </div>
 
           <div className="flex items-center gap-2 py-2">
@@ -465,14 +531,20 @@ const AddNewAddress = ({ isOpen, setIsOpen }) => {
 
 
 
-const OrderSummaryItem = ({ title, Quantity, mrp, sales_price, discount, image }) => {
-  const saving = Number(mrp) - Number(sales_price);
-  const savingPct = mrp > 0 ? Math.round((saving / mrp) * 100) : 0;
+const OrderSummaryItem = ({ title, Quantity, mrp, sales_price, discount, image, subtotal, gst_amount }) => {
+  const qty        = Number(Quantity)    || 1;
+  const unitMrp    = Number(mrp)         || 0;
+  const unitPrice  = Number(sales_price) || 0;
+  const unitDisc   = Number(discount)    || 0;
+  const totalSaving = unitDisc * qty;
+  const savingPct  = unitMrp > 0 && unitDisc > 0 ? Math.round((unitDisc / unitMrp) * 100) : 0;
+  const totalGst   = Number(gst_amount)  || 0;
+  const lineTotal  = Number(subtotal)    || (unitPrice * qty + totalGst);
 
   return (
     <tr className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
       {/* Description */}
-      <td className="py-4 px-3">
+      <td className="py-3 px-3">
         <div className="flex items-center gap-3">
           <img
             src={`${process.env.NEXT_PUBLIC_API_URL}${image}`}
@@ -480,32 +552,45 @@ const OrderSummaryItem = ({ title, Quantity, mrp, sales_price, discount, image }
             loading="lazy"
             className="w-14 h-14 object-cover rounded-lg border border-gray-100 flex-shrink-0"
           />
-          <span className="text-sm font-medium text-gray-800 leading-snug">{title}</span>
+          <p className="text-sm font-medium text-gray-800 leading-snug">{title}</p>
         </div>
       </td>
 
+      {/* MRP */}
+      <td className="py-3 px-3 text-center">
+        <p className={`text-sm ${unitDisc > 0 ? 'line-through text-gray-400' : 'text-gray-700 font-medium'}`}>
+          ₹{unitMrp.toFixed(2)}
+        </p>
+        {unitDisc > 0 && (
+          <p className="text-sm font-semibold text-gray-800 mt-0.5">₹{unitPrice.toFixed(2)}</p>
+        )}
+      </td>
+
       {/* Quantity */}
-      <td className="py-4 px-3 text-center">
+      <td className="py-3 px-3 text-center">
         <span className="inline-flex items-center justify-center w-8 h-8 border border-gray-300 rounded text-sm font-semibold text-gray-700">
-          {Quantity}
+          {qty}
         </span>
       </td>
 
       {/* Savings */}
-      <td className="py-4 px-3 text-center">
-        {saving > 0 ? (
+      <td className="py-3 px-3 text-center">
+        {totalSaving > 0 ? (
           <div className="space-y-0.5">
-            <p className="text-red-500 text-xs font-bold">{savingPct}% Off</p>
-            <p className="text-gray-400 line-through text-xs">₹{Number(mrp).toFixed(2)}</p>
+            <p className="text-emerald-600 text-sm font-bold">-₹{totalSaving.toFixed(2)}</p>
+            <p className="text-gray-400 text-[10px]">{savingPct}% off</p>
           </div>
         ) : (
           <span className="text-gray-400 text-xs">—</span>
         )}
       </td>
 
-      {/* Price */}
-      <td className="py-4 px-3 text-right">
-        <span className="text-sm font-bold text-gray-800">₹{Number(sales_price).toFixed(2)}</span>
+      {/* Total */}
+      <td className="py-3 px-3 text-right">
+        <p className="text-sm font-bold text-gray-800">₹{lineTotal.toFixed(2)}</p>
+        {totalGst > 0 && (
+          <p className="text-[10px] text-gray-400 mt-0.5">GST incl.</p>
+        )}
       </td>
     </tr>
   );
@@ -594,9 +679,10 @@ const OrderSummary = ({ selectedOption, selectedAddress, data }) => {
             <thead>
               <tr className="border-b border-gray-200">
                 <th className="text-left text-[10px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Items Description</th>
-                <th className="text-center text-[10px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Quantity</th>
+                <th className="text-center text-[10px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">MRP</th>
+                <th className="text-center text-[10px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Qty</th>
                 <th className="text-center text-[10px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Savings</th>
-                <th className="text-right text-[10px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Price</th>
+                <th className="text-right text-[10px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Total</th>
               </tr>
             </thead>
             <tbody>
@@ -609,10 +695,104 @@ const OrderSummary = ({ selectedOption, selectedAddress, data }) => {
                   sales_price={item.selling_price}
                   discount={item.discount}
                   image={item.image}
+                  subtotal={item.subtotal}
+                  gst_amount={item.total_gst_amount}
                 />
               ))}
             </tbody>
           </table>
+
+          {/* ── Price Breakdown ── */}
+          {data?.order && (() => {
+            const o = data.order;
+            const items           = data.order_items || [];
+            const totalQty        = items.reduce((s, i) => s + (Number(i.quantity) || 0), 0);
+            const itemsTotal      = items.reduce((s, i) => s + (Number(i.total)    || 0), 0);
+            const itemDiscount    = Number(o.total_discount)   || 0;
+            const couponDiscount  = Number(o.coupon_discount)  || 0;
+            const productGst18    = Number(o.gst_amount_18)    || 0;
+            const productGst5     = Number(o.gst_amount_5)     || 0;
+            const productGst0     = Number(o.gst_amount_0)     || 0;
+            const totalProductGst = productGst18 + productGst5 + productGst0;
+            const shippingCharge  = Number(o.shipping_charge)  || 0;
+            const shippingGst     = Number(o.shipping_gst)     || 0;
+            const grandTotal      = Number(o.grand_total)      || 0;
+            const totalSavings    = itemDiscount + couponDiscount;
+
+            return (
+              <div className="border-t border-gray-100 px-4 py-4 space-y-2 text-sm">
+                {/* Items subtotal */}
+                <div className="flex justify-between text-gray-600">
+                  <span>Sub Total</span>
+                  <span className="font-medium text-gray-800">₹{itemsTotal.toFixed(2)}</span>
+                </div>
+
+                {/* Item discount */}
+                {itemDiscount > 0 && (
+                  <div className="flex justify-between text-emerald-600">
+                    <span>Item Discount</span>
+                    <span className="font-medium">-₹{itemDiscount.toFixed(2)}</span>
+                  </div>
+                )}
+
+                {/* Coupon discount */}
+                {couponDiscount > 0 && (
+                  <div className="flex justify-between text-emerald-600">
+                    <span className="flex items-center gap-1">
+                      🏷️ Coupon Discount
+                      {o.applied_coupon && (
+                        <span className="text-[10px] bg-emerald-50 border border-emerald-200 rounded px-1">{o.applied_coupon}</span>
+                      )}
+                    </span>
+                    <span className="font-medium">-₹{couponDiscount.toFixed(2)}</span>
+                  </div>
+                )}
+
+                {/* Product GST */}
+                {totalProductGst > 0 && (
+                  <div className="flex justify-between text-gray-500 text-xs">
+                    <span className="flex items-center gap-1">
+                      Product GST
+                      {productGst18 > 0 && <span className="bg-gray-100 rounded px-1">18%: ₹{productGst18.toFixed(2)}</span>}
+                      {productGst5  > 0 && <span className="bg-gray-100 rounded px-1">5%: ₹{productGst5.toFixed(2)}</span>}
+                    </span>
+                    <span>₹{totalProductGst.toFixed(2)}</span>
+                  </div>
+                )}
+
+                {/* Shipping */}
+                <div className="flex justify-between text-gray-600">
+                  <span>Shipping Charge</span>
+                  <span className={`font-medium ${shippingCharge === 0 ? 'text-emerald-600' : 'text-gray-800'}`}>
+                    {shippingCharge === 0 ? 'FREE' : `₹${shippingCharge.toFixed(2)}`}
+                  </span>
+                </div>
+
+                {/* Shipping GST */}
+                {shippingGst > 0 && (
+                  <div className="flex justify-between text-gray-500 text-xs">
+                    <span>Shipping GST (18%)</span>
+                    <span>₹{shippingGst.toFixed(2)}</span>
+                  </div>
+                )}
+
+                {/* Divider */}
+                <div className="border-t border-dashed border-gray-200 pt-2 mt-1">
+                  <div className="flex justify-between text-base font-bold text-gray-900">
+                    <span>Grand Total</span>
+                    <span>₹{grandTotal.toFixed(2)}</span>
+                  </div>
+                </div>
+
+                {/* Savings callout */}
+                {totalSavings > 0 && (
+                  <p className="text-center text-xs text-emerald-700 bg-emerald-50 rounded-lg py-1.5 mt-1 font-semibold">
+                    🎉 You save ₹{totalSavings.toFixed(2)} on this order!
+                  </p>
+                )}
+              </div>
+            );
+          })()}
         </div>
       )}
     </div>
@@ -624,8 +804,9 @@ const OrderSummary = ({ selectedOption, selectedAddress, data }) => {
 
 
 
-const ApplyCoupon = ({ id, setCoupon }) => {
+const ApplyCoupon = ({ id, setCoupon, coupon, onRemoveCoupon }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [removing, setRemoving] = useState(false);
   const [couponCode, setCouponCode] = useState('');
   const accessToken = useSelector(selectAccessToken);
   const [coupons, setCoupons] = useState([]);
@@ -720,6 +901,28 @@ const ApplyCoupon = ({ id, setCoupon }) => {
 
   return (
     <div className="font-sans">
+      {/* Applied coupon banner */}
+      {coupon?.success && (
+        <div className="mx-5 mt-4 mb-2 flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-2">
+          <div className="flex items-center gap-2 text-emerald-700 text-sm font-semibold">
+            <span>🏷️</span>
+            <span>{coupon.coupon_code}</span>
+            <span className="text-emerald-600 font-normal text-xs">applied — saving ₹{Number(coupon.discount_amount ?? 0).toFixed(2)}</span>
+          </div>
+          <button
+            onClick={async () => {
+              setRemoving(true);
+              await onRemoveCoupon?.();
+              setRemoving(false);
+            }}
+            disabled={removing}
+            className="text-xs font-bold text-red-500 hover:text-red-700 disabled:opacity-50 ml-3"
+          >
+            {removing ? 'Removing…' : '✕ Remove'}
+          </button>
+        </div>
+      )}
+
       {/* Toggle bar */}
       <div
         className="px-5 py-3 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors"
@@ -983,17 +1186,47 @@ const CheckoutPage = () => {
       index === self.findIndex((i) => i.product_name === item.product_name)
   );
 
+  const handleRemoveCoupon = async () => {
+    if (!data?.order?.id) return;
+    try {
+      const res = await axiosInstance.post(`/order/removeCoupon/`, { order_id: data.order.id });
+      setCoupon(undefined);
+      if (res.data?.data) setData(res.data.data);
+      enqueueSnackbar('Coupon removed.', { variant: 'info' });
+    } catch (err) {
+      enqueueSnackbar(err?.response?.data?.message || 'Failed to remove coupon.', { variant: 'error' });
+    }
+  };
+
+  const handleConfirmStore = async () => {
+    await handleSaveOrderSummary();
+    return true;
+  };
+
   const handleSaveOrderSummary = async () => {
-    if (!data?.order?.id || !selectedAddress || !selectedOption) {
-      enqueueSnackbar("Please select a delivery address and delivery method!", { variant: "warning" });
+    if (!data?.order?.id) {
+      enqueueSnackbar("Order not found. Please restart checkout.", { variant: "warning" });
+      return;
+    }
+    if (!selectedOption) {
+      enqueueSnackbar("Please select a delivery method!", { variant: "warning" });
+      return;
+    }
+    const isPickup = selectedOption?.deliveryType === "Pick Up Store";
+    if (isPickup && !selectedOption?.storeId) {
+      enqueueSnackbar("Please select a pickup store!", { variant: "warning" });
+      return;
+    }
+    if (!isPickup && !selectedAddress) {
+      enqueueSnackbar("Please select a delivery address!", { variant: "warning" });
       return;
     }
 
     const orderSummaryData = {
       order_id: data.order.id,
-      address_id: selectedAddress,
+      address_id: selectedAddress || null,
       delivery_option: selectedOption?.deliveryType,
-      store_id: selectedOption?.storeId,
+      store_id: isPickup ? selectedOption?.storeId : null,
     };
 
     setSavingOrder(true);
@@ -1004,8 +1237,10 @@ const CheckoutPage = () => {
       );
 
       if (response.data.message === "success") {
-        // Update data state so right panel reflects the latest prices
-        setData(response.data.data);
+        const latestOrderData = response.data.data;
+
+        // Update data state so right panel reflects the latest prices (incl. zero shipping for pickup)
+        setData(latestOrderData);
 
         // GA4: Track add_shipping_info event
         trackAddShippingInfo(
@@ -1018,15 +1253,15 @@ const CheckoutPage = () => {
         // IMPORTANT: use response grand_total (post-shipping, post-coupon from server) — never override it.
         const finalOrderData = coupon?.success
           ? {
-            ...response.data.data,
+            ...latestOrderData,
             order: {
-              ...response.data.data.order,
+              ...latestOrderData.order,
               coupon_applied: true,
               coupon_discount: coupon.discount_amount,
               applied_coupon: coupon.order?.applied_coupon || coupon.coupon_code
             }
           }
-          : response.data.data;
+          : latestOrderData;
 
         sessionStorage.setItem('payment_order_data', JSON.stringify({ resource: finalOrderData, order_id: data.order.id }));
         setShowPaymentStep(true);
@@ -1154,16 +1389,24 @@ const CheckoutPage = () => {
           enqueueSnackbar('Failed to load payment gateway. Please try again.', { variant: 'error' });
           return;
         }
-        // Only show the partial-wallet popup when wallet was actually debited.
-        // For pure Razorpay (no wallet used), open the gateway directly.
         if (usedWallet > 0) {
+          // Partial wallet + Razorpay — show breakdown popup
           setPartialPaymentPopup({
             message: response?.data?.message || 'Wallet partially used. Please complete remaining payment via UPI.',
             wallet_debited: response?.data?.wallet_debited || '0.00',
             remaining: (razorpayOrder.amount / 100).toFixed(2),
             razorpayOptions: options,
           });
+        } else if (selectedPayMethod === 'Wallet') {
+          // Wallet selected but balance is insufficient — inform user then open Razorpay
+          setPartialPaymentPopup({
+            message: 'Your Gidan Wallet balance is insufficient. Please complete the full payment via UPI / Card.',
+            wallet_debited: '0.00',
+            remaining: (razorpayOrder.amount / 100).toFixed(2),
+            razorpayOptions: options,
+          });
         } else {
+          // Pure Razorpay / UPI selected — open gateway directly, no popup
           const razorpay = new window.Razorpay(options);
           razorpay.open();
           razorpay.on('payment.failed', () => { enqueueSnackbar('Payment failed. Please try again.', { variant: 'error' }); });
@@ -1303,6 +1546,7 @@ const CheckoutPage = () => {
                   setSelectedOption={setSelectedOption}
                   setIsAddNewOpen={setIsAddNewOpen}
                   isAddNewOpen={isAddNewOpen}
+                  onConfirmStore={handleConfirmStore}
                 />
               </div>
 
@@ -1313,7 +1557,7 @@ const CheckoutPage = () => {
                   <span className="text-white font-bold text-sm tracking-wide">APPLY COUPON</span>
                 </div>
                 <div className="p-1">
-                  <ApplyCoupon id={id} setCoupon={setCoupon} />
+                  <ApplyCoupon id={id} setCoupon={setCoupon} coupon={coupon} onRemoveCoupon={handleRemoveCoupon} />
                 </div>
               </div>
             </>
@@ -1418,15 +1662,22 @@ const CheckoutPage = () => {
                     <thead>
                       <tr className="bg-gray-50">
                         <th className="text-left text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-2 w-1/2">Items Description</th>
+                        <th className="text-center text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-1">MRP</th>
                         <th className="text-center text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-1">Qty</th>
                         <th className="text-center text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-1">Savings</th>
-                        <th className="text-right text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-2">Price</th>
+                        <th className="text-right text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-2">Total</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
                       {activeItems?.map((item) => {
-                        const discountPct = Number(item.discount_value ?? 0);
-                        const hasSaving = Number(item.discount ?? 0) > 0;
+                        const unitMrp    = Number(item.mrp)           || 0;
+                        const unitPrice  = Number(item.selling_price)  || 0;
+                        const unitDisc   = Number(item.discount)       || 0;
+                        const qty        = Number(item.quantity)       || 1;
+                        const totalSav   = unitDisc * qty;
+                        const savPct     = unitMrp > 0 && unitDisc > 0 ? Math.round((unitDisc / unitMrp) * 100) : 0;
+                        const gstAmt     = Number(item.total_gst_amount) || 0;
+                        const lineTotal  = Number(item.subtotal)       || (unitPrice * qty + gstAmt);
                         return (
                           <tr key={item.id} className="align-middle">
                             {/* Description */}
@@ -1443,30 +1694,37 @@ const CheckoutPage = () => {
                                 <span className="font-semibold text-gray-800 text-[10px] leading-tight line-clamp-2">{item.product_name}</span>
                               </div>
                             </td>
+                            {/* MRP */}
+                            <td className="py-2 px-1 text-center">
+                              <p className={`text-[10px] ${unitDisc > 0 ? 'line-through text-gray-400' : 'text-gray-700 font-semibold'}`}>
+                                ₹{unitMrp.toFixed(2)}
+                              </p>
+                              {unitDisc > 0 && (
+                                <p className="text-[10px] font-semibold text-gray-800 mt-0.5">₹{unitPrice.toFixed(2)}</p>
+                              )}
+                            </td>
                             {/* Qty */}
                             <td className="py-2 px-1 text-center">
                               <span className="inline-block border border-gray-300 rounded px-1.5 py-0.5 text-[10px] font-semibold text-gray-700 min-w-[22px]">
-                                {item.quantity}
+                                {qty}
                               </span>
                             </td>
                             {/* Savings */}
                             <td className="py-2 px-1 text-center">
-                              {hasSaving ? (
+                              {totalSav > 0 ? (
                                 <div className="flex flex-col items-center gap-0.5">
-                                  <span className="text-[9px] font-bold text-red-500">
-                                    {item.discount_type === "%" ? `${discountPct.toFixed(0)}% Off` : `₹${Number(item.discount).toFixed(0)} Off`}
-                                  </span>
-                                  <span className="text-[9px] text-gray-400 line-through">₹{Number(item.mrp).toFixed(2)}</span>
+                                  <span className="text-[9px] font-bold text-emerald-600">-₹{totalSav.toFixed(2)}</span>
+                                  <span className="text-[9px] text-gray-400">{savPct}% off</span>
                                 </div>
                               ) : (
                                 <span className="text-[9px] text-gray-400">—</span>
                               )}
                             </td>
-                            {/* Price */}
+                            {/* Total */}
                             <td className="py-2 px-2 text-right">
-                              <span className="font-bold text-gray-800 text-[11px]">₹{Number(item.selling_price).toFixed(2)}</span>
-                              {Number(item.total_gst_amount ?? 0) > 0 && (
-                                <p className="text-[9px] text-indigo-500 mt-0.5">+GST ₹{Number(item.total_gst_amount).toFixed(2)}</p>
+                              <span className="font-bold text-gray-800 text-[11px]">₹{lineTotal.toFixed(2)}</span>
+                              {gstAmt > 0 && (
+                                <p className="text-[9px] text-gray-400 mt-0.5">GST incl.</p>
                               )}
                             </td>
                           </tr>
@@ -1486,7 +1744,7 @@ const CheckoutPage = () => {
 
                   {/* Price */}
                   <div className="flex justify-between text-gray-600">
-                    <span>Price ({activeItems?.length ?? 0} item{(activeItems?.length ?? 0) !== 1 ? 's' : ''})</span>
+                    <span>Sub Total</span>
                     <span>₹{Number(activeItems?.reduce((s, i) => s + Number(i.mrp) * i.quantity, 0) ?? 0).toFixed(2)}</span>
                   </div>
 
@@ -1506,12 +1764,20 @@ const CheckoutPage = () => {
                   {/* Coupon Discount */}
                   {(coupon?.success || activeOrder?.coupon_applied) && (
                     <div className="flex justify-between text-emerald-600 font-medium">
-                      <span className="flex items-center gap-1">
+                      <span className="flex items-center gap-1 flex-wrap">
                         🏷️ Coupon Discount
                         {coupon?.coupon_code && (
                           <span className="text-[10px] bg-emerald-50 border border-emerald-200 rounded px-1 py-0.5 font-semibold">
                             {coupon.coupon_code}
                           </span>
+                        )}
+                        {coupon?.success && (
+                          <button
+                            onClick={handleRemoveCoupon}
+                            className="text-[10px] text-red-400 hover:text-red-600 font-bold leading-none ml-1"
+                          >
+                            ✕ Remove
+                          </button>
                         )}
                       </span>
                       <span>-₹{Number(coupon?.discount_amount ?? activeOrder?.coupon_discount ?? 0).toFixed(2)}</span>

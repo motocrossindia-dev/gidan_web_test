@@ -35,8 +35,10 @@ const AddressForm = ({
   formIndex = 0,
 }) => {
   const [form, setForm] = useState({ ...EMPTY_FORM, ...initialValues });
+  const [errors, setErrors] = useState({});
 
   const handleChange = (field, value) => {
+    setErrors((prev) => ({ ...prev, [field]: '' }));
     setForm((prev) => {
       const updated = { ...prev, [field]: value };
       if (field === 'pinCode' && String(value).length !== 6) {
@@ -69,6 +71,18 @@ const AddressForm = ({
   };
 
   const handleSave = () => {
+    const newErrors = {};
+    if (!form.firstName.trim()) newErrors.firstName = 'First name is required.';
+    if (!form.lastName.trim()) newErrors.lastName = 'Last name is required.';
+    if (!form.address.trim()) newErrors.address = 'Address is required.';
+    if (!form.pinCode || String(form.pinCode).length !== 6) newErrors.pinCode = 'Enter a valid 6-digit PIN code.';
+    if (!form.city.trim()) newErrors.city = 'City is required. Enter a valid PIN code to auto-fill.';
+    if (!form.state.trim()) newErrors.state = 'State is required. Enter a valid PIN code to auto-fill.';
+    if (!form.phone || String(form.phone).length !== 10) newErrors.phone = 'Enter a valid 10-digit phone number.';
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
     if (onSave) onSave(form);
   };
 
@@ -103,71 +117,88 @@ const AddressForm = ({
   return (
     <div>
       <form className={formWrapper} onSubmit={(e) => e.preventDefault()}>
-        <input
-          type="text"
-          placeholder="First Name"
-          value={form.firstName}
-          onChange={(e) => handleChange('firstName', e.target.value)}
-          className={inputBase}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Last Name"
-          value={form.lastName}
-          onChange={(e) => handleChange('lastName', e.target.value)}
-          className={inputBase}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Apartment, Suite, etc. (optional)"
-          value={form.address}
-          onChange={(e) => handleChange('address', e.target.value)}
-          className={`${inputBase} ${fullWidth}`}
-        />
-        <input
-          type="text"
-          inputMode="numeric"
-          pattern="[0-9]*"
-          placeholder="PIN Code"
-          value={form.pinCode}
-          maxLength={6}
-          onChange={(e) =>
-            handleChange('pinCode', e.target.value.replace(/[^0-9]/g, '').slice(0, 6))
-          }
-          className={inputBase}
-          required
-        />
-        <input
-          type="text"
-          placeholder="City (Auto-filled by PIN Code)"
-          value={form.city}
-          readOnly
-          className={inputReadOnly}
-        />
-        <input
-          type="text"
-          placeholder="State (Auto-filled by PIN Code)"
-          value={form.state}
-          readOnly
-          className={inputReadOnly}
-        />
-        <input
-          type="tel"
-          placeholder="Phone"
-          value={form.phone}
-          maxLength={10}
-          inputMode="numeric"
-          onChange={(e) =>
-            handleChange('phone', e.target.value.replace(/[^0-9]/g, '').slice(0, 10))
-          }
-          className={`${inputBase} ${fullWidth}`}
-          required
-        />
+        <div className={errors.firstName ? 'space-y-1' : ''}>
+          <input
+            type="text"
+            placeholder="First Name *"
+            value={form.firstName}
+            onChange={(e) => handleChange('firstName', e.target.value)}
+            className={`${inputBase}${errors.firstName ? ' border-red-500' : ''}`}
+          />
+          {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>}
+        </div>
+        <div className={errors.lastName ? 'space-y-1' : ''}>
+          <input
+            type="text"
+            placeholder="Last Name *"
+            value={form.lastName}
+            onChange={(e) => handleChange('lastName', e.target.value)}
+            className={`${inputBase}${errors.lastName ? ' border-red-500' : ''}`}
+          />
+          {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>}
+        </div>
+        <div className={`${fullWidth}${errors.address ? ' space-y-1' : ''}`}>
+          <input
+            type="text"
+            placeholder="Apartment, Suite, etc. *"
+            value={form.address}
+            onChange={(e) => handleChange('address', e.target.value)}
+            className={`${inputBase}${errors.address ? ' border-red-500' : ''}`}
+          />
+          {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
+        </div>
+        <div className={errors.pinCode ? 'space-y-1' : ''}>
+          <input
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            placeholder="PIN Code *"
+            value={form.pinCode}
+            maxLength={6}
+            onChange={(e) =>
+              handleChange('pinCode', e.target.value.replace(/[^0-9]/g, '').slice(0, 6))
+            }
+            className={`${inputBase}${errors.pinCode ? ' border-red-500' : ''}`}
+          />
+          {errors.pinCode && <p className="text-red-500 text-xs mt-1">{errors.pinCode}</p>}
+        </div>
+        <div className={errors.city ? 'space-y-1' : ''}>
+          <input
+            type="text"
+            placeholder="City (Auto-filled by PIN Code) *"
+            value={form.city}
+            readOnly
+            className={`${inputReadOnly}${errors.city ? ' border-red-500' : ''}`}
+          />
+          {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city}</p>}
+        </div>
+        <div className={errors.state ? 'space-y-1' : ''}>
+          <input
+            type="text"
+            placeholder="State (Auto-filled by PIN Code) *"
+            value={form.state}
+            readOnly
+            className={`${inputReadOnly}${errors.state ? ' border-red-500' : ''}`}
+          />
+          {errors.state && <p className="text-red-500 text-xs mt-1">{errors.state}</p>}
+        </div>
+        <div className={`${fullWidth}${errors.phone ? ' space-y-1' : ''}`}>
+          <input
+            type="tel"
+            placeholder="Phone *"
+            value={form.phone}
+            maxLength={10}
+            inputMode="numeric"
+            onChange={(e) =>
+              handleChange('phone', e.target.value.replace(/[^0-9]/g, '').slice(0, 10))
+            }
+            className={`${inputBase}${errors.phone ? ' border-red-500' : ''}`}
+          />
+          {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
+        </div>
 
         <div className={`${isCheckout ? 'pt-2' : 'mt-4'} ${fullWidth}`}>
-          <p className={`${isCheckout ? 'text-sm' : ''} font-medium mb-2`}>Address Type</p>
+          <p className={`${isCheckout ? 'text-sm' : ''} font-medium mb-2`}>Address Type *</p>
           <div className="flex space-x-4">
             <label className="flex items-center cursor-pointer">
               <input
