@@ -3,6 +3,7 @@ import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
 import { Providers } from "./providers";
+import Header from "@/components/Header/Header";
 import NavBar from "@/components/NavigationBar/NavigationBar";
 import Footer from "@/components/Footer/Footer";
 import DownloadApp from "@/components/DownloadApp/DownloadApp";
@@ -181,6 +182,7 @@ export default function RootLayout({
           </Script>
           <div className="landing-page-layout w-full min-h-screen flex flex-col overflow-x-hidden">
             <div className="sticky top-0 left-0 w-full z-[10000]">
+              <Header />
               <NavBar />
             </div>
             <main className="main-content w-full">
