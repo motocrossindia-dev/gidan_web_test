@@ -534,7 +534,8 @@ const AddNewAddress = ({ isOpen, setIsOpen }) => {
 const OrderSummaryItem = ({ title, Quantity, mrp, sales_price, discount, image, subtotal, gst_amount }) => {
   const qty        = Number(Quantity)    || 1;
   const unitMrp    = Number(mrp)         || 0;
-  const unitPrice  = Number(sales_price) || 0;
+  // selling_price from API is qty-multiplied total; divide back to get unit price
+  const unitPrice  = qty > 0 ? (Number(sales_price) || 0) / qty : (Number(sales_price) || 0);
   const unitDisc   = Number(discount)    || 0;
   const totalSaving = unitDisc * qty;
   const savingPct  = unitMrp > 0 && unitDisc > 0 ? Math.round((unitDisc / unitMrp) * 100) : 0;
@@ -696,7 +697,7 @@ const OrderSummary = ({ selectedOption, selectedAddress, data }) => {
                   discount={item.discount}
                   image={item.image}
                   subtotal={item.subtotal}
-                  gst_amount={item.total_gst_amount}
+                  gst_amount={Math.max(0, Number(item.subtotal) - Number(item.total))}
                 />
               ))}
             </tbody>
@@ -710,13 +711,12 @@ const OrderSummary = ({ selectedOption, selectedAddress, data }) => {
             const itemsTotal      = items.reduce((s, i) => s + (Number(i.total)    || 0), 0);
             const itemDiscount    = Number(o.total_discount)   || 0;
             const couponDiscount  = Number(o.coupon_discount)  || 0;
-            const productGst18    = Number(o.gst_amount_18)    || 0;
-            const productGst5     = Number(o.gst_amount_5)     || 0;
-            const productGst0     = Number(o.gst_amount_0)     || 0;
-            const totalProductGst = productGst18 + productGst5 + productGst0;
+            // GST derived from item-level: subtotal includes GST, total does not
+            const totalProductGst = items.reduce((s, i) => s + Math.max(0, Number(i.subtotal) - Number(i.total)), 0);
             const shippingCharge  = Number(o.shipping_charge)  || 0;
-            const shippingGst     = Number(o.shipping_gst)     || 0;
             const grandTotal      = Number(o.grand_total)      || 0;
+            // Shipping GST = grand_total - (selling totals - discounts + product GST + shipping)
+            const shippingGst     = Math.max(0, Math.round((grandTotal - itemsTotal + itemDiscount + couponDiscount - totalProductGst - shippingCharge) * 100) / 100);
             const totalSavings    = itemDiscount + couponDiscount;
 
             return (
@@ -748,14 +748,10 @@ const OrderSummary = ({ selectedOption, selectedAddress, data }) => {
                   </div>
                 )}
 
-                {/* Product GST */}
+                {/* Product GST (derived from item subtotals) */}
                 {totalProductGst > 0 && (
                   <div className="flex justify-between text-gray-500 text-xs">
-                    <span className="flex items-center gap-1">
-                      Product GST
-                      {productGst18 > 0 && <span className="bg-gray-100 rounded px-1">18%: ₹{productGst18.toFixed(2)}</span>}
-                      {productGst5  > 0 && <span className="bg-gray-100 rounded px-1">5%: ₹{productGst5.toFixed(2)}</span>}
-                    </span>
+                    <span>Product GST (incl. in price)</span>
                     <span>₹{totalProductGst.toFixed(2)}</span>
                   </div>
                 )}
@@ -1742,10 +1738,10 @@ const CheckoutPage = () => {
                 <p className="text-[10px] uppercase font-bold text-gray-400 tracking-widest mb-3">Price Details</p>
                 <div className="space-y-2 text-sm">
 
-                  {/* Price */}
+                  {/* Sub Total = sum of selling prices before GST */}
                   <div className="flex justify-between text-gray-600">
                     <span>Sub Total</span>
-                    <span>₹{Number(activeItems?.reduce((s, i) => s + Number(i.mrp) * i.quantity, 0) ?? 0).toFixed(2)}</span>
+                    <span>₹{Number(activeItems?.reduce((s, i) => s + (Number(i.total) || 0), 0) ?? 0).toFixed(2)}</span>
                   </div>
 
                   {/* Product Discount */}
@@ -1761,6 +1757,7 @@ const CheckoutPage = () => {
                     <span>-₹{Number(activeOrder?.total_discount ?? 0).toFixed(2)}</span>
                   </div>
 
+
                   {/* Coupon Discount */}
                   {(coupon?.success || activeOrder?.coupon_applied) && (
                     <div className="flex justify-between text-emerald-600 font-medium">
@@ -1771,14 +1768,7 @@ const CheckoutPage = () => {
                             {coupon.coupon_code}
                           </span>
                         )}
-                        {coupon?.success && (
-                          <button
-                            onClick={handleRemoveCoupon}
-                            className="text-[10px] text-red-400 hover:text-red-600 font-bold leading-none ml-1"
-                          >
-                            ✕ Remove
-                          </button>
-                        )}
+
                       </span>
                       <span>-₹{Number(coupon?.discount_amount ?? activeOrder?.coupon_discount ?? 0).toFixed(2)}</span>
                     </div>
@@ -1792,79 +1782,30 @@ const CheckoutPage = () => {
                     </span>
                   </div>
 
-                  {/* Product GST (collapsible) */}
-                  {(Number(activeOrder?.gst_amount_5 ?? 0) > 0 || Number(activeOrder?.gst_amount_18 ?? 0) > 0) && (
-                    <div>
-                      <button
-                        type="button"
-                        onClick={() => setShowGstDetail((v) => !v)}
-                        className="w-full flex items-center justify-between text-gray-600 py-0.5"
-                      >
+                  {/* Product GST — derived from item subtotals */}
+                  {(() => {
+                    const productGst = (activeItems ?? []).reduce((s, i) => s + Math.max(0, Number(i.subtotal) - Number(i.total)), 0);
+                    return productGst > 0 ? (
+                      <div className="flex justify-between text-gray-600">
                         <span>Product GST</span>
-                        <span className="flex items-center gap-1">
-                          <span>₹{(Number(activeOrder?.gst_amount_5 ?? 0) + Number(activeOrder?.gst_amount_18 ?? 0)).toFixed(2)}</span>
-                          <span className="text-gray-400 text-xs ml-1">{showGstDetail ? "▲" : "▼"}</span>
-                        </span>
-                      </button>
-                      {showGstDetail && (
-                        <div className="space-y-1 mt-1 pl-2 border-l-2 border-gray-100">
-                          {Number(activeOrder?.gst_amount_5 ?? 0) > 0 && (
-                            <>
-                              <div className="flex justify-between text-gray-500 text-xs">
-                                <span>GST @ 5%</span><span>₹{Number(activeOrder.gst_amount_5).toFixed(2)}</span>
-                              </div>
-                              <div className="flex justify-between text-gray-400 text-xs pl-2">
-                                <span>CGST 2.5%</span><span>₹{Number(activeOrder.cgst_amount_5).toFixed(2)}</span>
-                              </div>
-                              <div className="flex justify-between text-gray-400 text-xs pl-2">
-                                <span>SGST 2.5%</span><span>₹{Number(activeOrder.sgst_amount_5).toFixed(2)}</span>
-                              </div>
-                            </>
-                          )}
-                          {Number(activeOrder?.gst_amount_18 ?? 0) > 0 && (
-                            <>
-                              <div className="flex justify-between text-gray-500 text-xs">
-                                <span>GST @ 18%</span><span>₹{Number(activeOrder.gst_amount_18).toFixed(2)}</span>
-                              </div>
-                              <div className="flex justify-between text-gray-400 text-xs pl-2">
-                                <span>CGST 9%</span><span>₹{Number(activeOrder.cgst_amount_18).toFixed(2)}</span>
-                              </div>
-                              <div className="flex justify-between text-gray-400 text-xs pl-2">
-                                <span>SGST 9%</span><span>₹{Number(activeOrder.sgst_amount_18).toFixed(2)}</span>
-                              </div>
-                            </>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  )}
+                        <span>₹{productGst.toFixed(2)}</span>
+                      </div>
+                    ) : null;
+                  })()}
 
-                  {/* Shipping GST (collapsible) */}
-                  {Number(activeOrder?.shipping_gst ?? 0) > 0 && (
-                    <div>
-                      <button
-                        type="button"
-                        onClick={() => setShowShippingDetail((v) => !v)}
-                        className="w-full flex items-center justify-between text-gray-600 py-0.5"
-                      >
+                  {/* Shipping GST — remainder after accounting for items + shipping */}
+                  {(() => {
+                    const productGst = (activeItems ?? []).reduce((s, i) => s + Math.max(0, Number(i.subtotal) - Number(i.total)), 0);
+                    const itemsSellingTotal = (activeItems ?? []).reduce((s, i) => s + (Number(i.total) || 0), 0);
+                    const disc = Number(activeOrder?.total_discount ?? 0) + Number(activeOrder?.coupon_discount ?? 0);
+                    const shippGst = Math.max(0, Math.round((Number(activeOrder?.grand_total ?? 0) - itemsSellingTotal + disc - productGst - Number(activeOrder?.shipping_charge ?? 0)) * 100) / 100);
+                    return shippGst > 0 ? (
+                      <div className="flex justify-between text-gray-600">
                         <span>Shipping GST</span>
-                        <span className="flex items-center gap-1">
-                          <span>₹{Number(activeOrder.shipping_gst).toFixed(2)}</span>
-                          <span className="text-gray-400 text-xs ml-1">{showShippingDetail ? "▲" : "▼"}</span>
-                        </span>
-                      </button>
-                      {showShippingDetail && (
-                        <div className="space-y-1 mt-1 pl-2 border-l-2 border-gray-100">
-                          <div className="flex justify-between text-gray-400 text-xs pl-2">
-                            <span>CGST 9%</span><span>₹{Number(activeOrder.shipping_cgst).toFixed(2)}</span>
-                          </div>
-                          <div className="flex justify-between text-gray-400 text-xs pl-2">
-                            <span>SGST 9%</span><span>₹{Number(activeOrder.shipping_sgst).toFixed(2)}</span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
+                        <span>₹{shippGst.toFixed(2)}</span>
+                      </div>
+                    ) : null;
+                  })()}
 
                   {/* Total Amount */}
                   <div className="flex justify-between text-gray-800 font-bold border-t pt-2 text-base">
