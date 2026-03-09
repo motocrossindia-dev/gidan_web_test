@@ -84,103 +84,13 @@ jobs:
             # # 7️⃣ Restart PM2
             # echo "Restarting PM2..."
             
-            # pm2 restart ${{ env.PM2_APP_NAME }} || pm2 start npm --name "${{ env.PM2_APP_NAME }}" -- start
+            pm2 restart ${{ env.PM2_APP_NAME }} || pm2 start npm --name "${{ env.PM2_APP_NAME }}" -- start
             
             
-            # # 8️⃣ Save PM2
-            # pm2 save
+            # 8️⃣ Save PM2
+            pm2 save
             
             
             # echo "===================================="
             echo "Deployment Successful"
             echo "===================================="
-
-
-# /var/www/html/gidan_web_test/
-# name: Deploy to VPS
-
-# on:
-#   push:
-#     branches:
-#       - main
-
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v3
-
-#       - name: Deploy to Server
-#         uses: appleboy/ssh-action@master
-#         with:
-#           host: ${{ secrets.SERVER_IP }}
-#           username: ${{ secrets.SERVER_USER }}
-#           key: ${{ secrets.SSH_PRIVATE_KEY }}
-#           script: |
-#             set -e
-#             echo "Starting Deployment..."
-
-#             cd /var/www/gidan-app
-
-#             # Detect branch automatically
-#             BRANCH=${{ github.ref_name }}
-
-#             echo "Deploying branch: $BRANCH"
-
-#             # Discard any local changes (like package-lock.json from previous npm install)
-#             git reset --hard HEAD
-#             git clean -fd
-
-#             git pull https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/motocrossindia-dev/Gidan_Web_Nextjs.git $BRANCH
-
-#             npm install
-#             npm run build
-
-#             pm2 restart biotechmaali
-
-#             echo "Deployment Successful!"
-# # ===================
-# # name: Deploy to VPS
-
-# # on:
-# #   push:
-# #     branches:
-# #       - main
-
-# # jobs:
-# #   deploy:
-# #     runs-on: ubuntu-latest
-
-# #     steps:
-# #       - name: Checkout code
-# #         uses: actions/checkout@v3
-
-# #       - name: Deploy to Server
-# #         uses: appleboy/ssh-action@master
-# #         with:
-# #           host: ${{ secrets.SERVER_IP }}
-# #           username: ${{ secrets.SERVER_USER }}
-# #           key: ${{ secrets.SSH_PRIVATE_KEY }}
-# #           script: |
-# #             echo "Starting Deployment..."
-            
-# #             # 1. Go to project directory
-# #             cd /var/www/gidan-app
-            
-# #             # 2. Pull latest code using the Token URL
-# #             # This is required because you are a Collaborator, not the Owner
-# #             # git pull https://${{ secrets.GH_TOKEN }}@github.com/motocrossindia-dev/Gidan_Web_Nextjs.git main
-# #             git pull https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/motocrossindia-dev/Gidan_Web_Nextjs.git main
-            
-# #             # 3. Install dependencies
-# #             npm install
-            
-# #             # 4. Build the application
-# #             npm run build
-            
-# #             # 5. Restart PM2
-# #             pm2 restart biotechmaali
-            
-# #             echo "Deployment Successful!"
