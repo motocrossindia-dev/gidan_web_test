@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Login | Gidan Plants",
     description: "Login to your Gidan account with your mobile number.",
-    url: "https://www.gidan.store/mobile-login",
+    url: "https://gidanbackendtest.mymotokart.in/mobile-login",
     siteName: "Gidan Plants",
-    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
     type: "website",
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "Login | Gidan Plants",
     description: "Login to your Gidan account with your mobile number.",
   },
-  alternates: { canonical: "https://www.gidan.store/mobile-login" },
+  alternates: { canonical: "https://gidanbackendtest.mymotokart.in/mobile-login" },
   robots: { index: true, follow: true },
 };
 

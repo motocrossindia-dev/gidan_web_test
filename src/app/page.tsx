@@ -100,9 +100,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Gidan - Plants, Seeds & Gardening Store Online India",
     description: "Buy plants, seeds, pots, soil and gardening tools online at Gidan. Expert landscaping, terrace gardening and vertical garden services across India.",
-    url: "https://www.gidan.store",
+    url: "https://gidanbackendtest.mymotokart.in",
     siteName: "Gidan Plants",
-    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
     type: "website",
   },
@@ -111,7 +111,7 @@ export const metadata: Metadata = {
     title: "Gidan - Plants, Seeds & Gardening Store Online India",
     description: "Buy plants, seeds, pots, soil and gardening tools online at Gidan. Expert landscaping, terrace gardening and vertical garden services across India.",
   },
-  alternates: { canonical: "https://www.gidan.store" },
+  alternates: { canonical: "https://gidanbackendtest.mymotokart.in" },
   robots: { index: true, follow: true },
 };
 

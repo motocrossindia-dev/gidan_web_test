@@ -167,6 +167,6 @@
 ## After All Tags Are Done
 
 1. Click **Preview** (top right in GTM)
-2. Enter `https://www.gidan.store` or `http://localhost:3000`
+2. Enter `https://gidanbackendtest.mymotokart.in` or `http://localhost:3000`
 3. Browse the site — each action should show tags firing in the debug panel
 4. Once verified → **Submit → Publish**

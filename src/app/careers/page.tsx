@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Careers at Gidan Store | Gardening Jobs in Bangalore",
     description: "Explore career opportunities at Gidan Store in Bangalore. Join our team and grow your career in gardening, plants and ecommerce.",
-    url: "https://www.gidan.store/careers",
+    url: "https://gidanbackendtest.mymotokart.in/careers",
     siteName: "Gidan Plants",
-    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
     type: "website",
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "Careers at Gidan Store | Gardening Jobs in Bangalore",
     description: "Explore career opportunities at Gidan Store in Bangalore. Join our team and grow your career in gardening, plants and ecommerce.",
   },
-  alternates: { canonical: "https://www.gidan.store/careers" },
+  alternates: { canonical: "https://gidanbackendtest.mymotokart.in/careers" },
   robots: { index: true, follow: true },
 };
 

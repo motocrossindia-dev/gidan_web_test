@@ -2,11 +2,11 @@ export default function StoreSchema() {
     const schema = {
         "@context": "https://schema.org",
         "@type": "Store",
-        "@id": "https://www.gidan.store/#store",
+        "@id": "https://gidanbackendtest.mymotokart.in/#store",
         "name": "Gidan Store",
-        "url": "https://www.gidan.store",
-        "image": "https://www.gidan.store/logo.webp",
-        "parentOrganization": { "@id": "https://www.gidan.store/#organization" },
+        "url": "https://gidanbackendtest.mymotokart.in",
+        "image": "https://gidanbackendtest.mymotokart.in/logo.webp",
+        "parentOrganization": { "@id": "https://gidanbackendtest.mymotokart.in/#organization" },
         "address": {
             "@type": "PostalAddress",
             "addressLocality": "Bangalore",

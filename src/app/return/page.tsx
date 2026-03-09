@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Return Policy | Gidan Store Bangalore",
     description: "Read the return and replacement policy of Gidan Store. Learn how we handle damaged plants, refunds and customer support for orders.",
-    url: "https://www.gidan.store/return",
+    url: "https://gidanbackendtest.mymotokart.in/return",
     siteName: "Gidan Plants",
-    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
     type: "website",
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "Return Policy | Gidan Store Bangalore",
     description: "Read the return and replacement policy of Gidan Store. Learn how we handle damaged plants, refunds and customer support for orders.",
   },
-  alternates: { canonical: "https://www.gidan.store/return" },
+  alternates: { canonical: "https://gidanbackendtest.mymotokart.in/return" },
   robots: { index: true, follow: true },
 };
 

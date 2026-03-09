@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Profile - Trackorder | Gidan Plants",
     description: "Shop and explore profile - trackorder at Gidan, India trusted online plant and gardening store.",
-    url: "https://www.gidan.store/profile/trackorder",
+    url: "https://gidanbackendtest.mymotokart.in/profile/trackorder",
     siteName: "Gidan Plants",
-    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
     type: "website",
   },

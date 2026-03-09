@@ -177,10 +177,10 @@ export const redirectToStandardUrl = (currentPath, navigate, state = null) => {
  * Gets the canonical URL for a page
  * 
  * @param {string} path - The page path
- * @param {string} baseUrl - Base URL (default: https://www.gidan.store/)
+ * @param {string} baseUrl - Base URL (default: https://gidanbackendtest.mymotokart.in/)
  * @returns {string} - Full canonical URL
  */
-export const getCanonicalUrl = (path, baseUrl = 'https://www.gidan.store/') => {
+export const getCanonicalUrl = (path, baseUrl = 'https://gidanbackendtest.mymotokart.in/') => {
     const standardPath = standardizeUrl(path, false); // No trailing slash for canonical
     return `${baseUrl}${standardPath}`;
 };

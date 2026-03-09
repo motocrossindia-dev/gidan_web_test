@@ -2,10 +2,10 @@
 const schema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "@id": "https://www.gidan.store/#organization",
+  "@id": "https://gidanbackendtest.mymotokart.in/#organization",
   name: "Gidan Plants",
-  url: "https://www.gidan.store",
-  logo: "https://www.gidan.store/logo.webp",
+  url: "https://gidanbackendtest.mymotokart.in",
+  logo: "https://gidanbackendtest.mymotokart.in/logo.webp",
   description:
     "Gidan is India's trusted destination for plants, planters, seeds and urban gardening essentials with expert landscaping services.",
   address: {

@@ -3,7 +3,7 @@ import { getProductUrl } from "../../../utils/urlHelper";
 export default function SubCategorySchema({
     category,
     subCategory,
-    siteUrl = "https://www.gidan.store/",
+    siteUrl = "https://gidanbackendtest.mymotokart.in/",
     items = [] // [{ slug: "product-slug", category_slug: "category", sub_category_slug: "subcategory" }, ...]
 }) {
     if (!subCategory || !category) return null;

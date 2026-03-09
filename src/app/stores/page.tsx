@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Plant Stores in Bangalore | Gidan Store Locations",
     description: "Find Gidan Store locations in Bangalore. Visit our plant stores to explore indoor plants, outdoor plants, planters and gardening supplies.",
-    url: "https://www.gidan.store/stores",
+    url: "https://gidanbackendtest.mymotokart.in/stores",
     siteName: "Gidan Plants",
-    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
     type: "website",
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "Plant Stores in Bangalore | Gidan Store Locations",
     description: "Find Gidan Store locations in Bangalore. Visit our plant stores to explore indoor plants, outdoor plants, planters and gardening supplies.",
   },
-  alternates: { canonical: "https://www.gidan.store/stores" },
+  alternates: { canonical: "https://gidanbackendtest.mymotokart.in/stores" },
   robots: { index: true, follow: true },
 };
 

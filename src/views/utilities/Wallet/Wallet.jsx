@@ -260,7 +260,7 @@ const Wallet = () => {
             <li>
               Go to{" "}
               <a
-                href="https://www.gidan.store"
+                href="https://gidanbackendtest.mymotokart.in"
                 className="text-green-500 hover:underline"
               >
                 www.gidan.store

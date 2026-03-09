@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Flowering Plants | Gidan Plant Store",
     description: "Buy beautiful flowering plants for balcony, garden and indoors at Gidan.",
-    url: "https://www.gidan.store/flower",
+    url: "https://gidanbackendtest.mymotokart.in/flower",
     siteName: "Gidan Plants",
-    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
     type: "website",
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "Flowering Plants | Gidan Plant Store",
     description: "Buy beautiful flowering plants for balcony, garden and indoors at Gidan.",
   },
-  alternates: { canonical: "https://www.gidan.store/flower" },
+  alternates: { canonical: "https://gidanbackendtest.mymotokart.in/flower" },
   robots: { index: true, follow: true },
 };
 

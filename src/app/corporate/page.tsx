@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Corporate Gifting Plants | Gidan",
     description: "Premium indoor plants and green decor for corporate gifting. Bulk orders welcome at Gidan.",
-    url: "https://www.gidan.store/corporate",
+    url: "https://gidanbackendtest.mymotokart.in/corporate",
     siteName: "Gidan Plants",
-    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
     type: "website",
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "Corporate Gifting Plants | Gidan",
     description: "Premium indoor plants and green decor for corporate gifting. Bulk orders welcome at Gidan.",
   },
-  alternates: { canonical: "https://www.gidan.store/corporate" },
+  alternates: { canonical: "https://gidanbackendtest.mymotokart.in/corporate" },
   robots: { index: true, follow: true },
 };
 

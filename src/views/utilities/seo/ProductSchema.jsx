@@ -2,7 +2,7 @@ import { getProductUrl } from "../../../utils/urlHelper";
 
 export default function ProductSchema({
     product,
-    siteUrl = "https://www.gidan.store",
+    siteUrl = "https://gidanbackendtest.mymotokart.in",
     currency = "INR",
     brandName = "Gidan Store",
     rating = 0,

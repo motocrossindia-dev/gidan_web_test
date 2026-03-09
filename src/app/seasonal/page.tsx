@@ -9,9 +9,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Seasonal | Gidan Plants",
     description: "Shop and explore seasonal at Gidan, India trusted online plant and gardening store.",
-    url: "https://www.gidan.store/seasonal",
+    url: "https://gidanbackendtest.mymotokart.in/seasonal",
     siteName: "Gidan Plants",
-    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
     type: "website",
   },
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     title: "Seasonal | Gidan Plants",
     description: "Shop and explore seasonal at Gidan, India trusted online plant and gardening store.",
   },
-  alternates: { canonical: "https://www.gidan.store/seasonal" },
+  alternates: { canonical: "https://gidanbackendtest.mymotokart.in/seasonal" },
   robots: { index: true, follow: true },
 };
 

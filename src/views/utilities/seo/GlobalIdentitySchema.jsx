@@ -1,5 +1,5 @@
 export default function GlobalIdentitySchema() {
-    const siteUrl = "https://www.gidan.store";
+    const siteUrl = "https://gidanbackendtest.mymotokart.in";
 
     return (
         <>

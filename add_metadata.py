@@ -3,7 +3,7 @@
 import os, re
 
 APP = os.path.join(os.path.dirname(__file__), "src/app")
-BASE_URL = "https://www.gidan.store"
+BASE_URL = "https://gidanbackendtest.mymotokart.in"
 
 # Map route segment → (title, description)
 PAGE_META = {
@@ -48,7 +48,7 @@ export const metadata: Metadata = {{
     description: "{desc}",
     url: "{url}",
     siteName: "Gidan Plants",
-    images: [{{ url: "https://www.gidan.store/logo192.ico", width: 512, height: 512 }}],
+    images: [{{ url: "https://gidanbackendtest.mymotokart.in/logo192.ico", width: 512, height: 512 }}],
     locale: "en_IN",
     type: "website",
   }},

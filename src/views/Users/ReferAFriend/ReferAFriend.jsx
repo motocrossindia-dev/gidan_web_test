@@ -37,7 +37,7 @@ function ReferAFriend() {
     const referralCode = data?.referral_code || "No Referral Code"; // Default if empty
     const text = `Hey! I invite you to join Gidan. Use my referral code:
 : ${referralCode}`;
-    const url = `https://www.gidan.store/`;
+    const url = `https://gidanbackendtest.mymotokart.in/`;
 
     if (navigator.share) {
       navigator.share({

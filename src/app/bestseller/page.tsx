@@ -9,9 +9,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Best Selling Plants and Pots | Gidan",
     description: "Shop best-selling indoor plants, outdoor plants, pots and planters loved by thousands.",
-    url: "https://www.gidan.store/bestseller",
+    url: "https://gidanbackendtest.mymotokart.in/bestseller",
     siteName: "Gidan Plants",
-    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
     type: "website",
   },
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     title: "Best Selling Plants and Pots | Gidan",
     description: "Shop best-selling indoor plants, outdoor plants, pots and planters loved by thousands.",
   },
-  alternates: { canonical: "https://www.gidan.store/bestseller" },
+  alternates: { canonical: "https://gidanbackendtest.mymotokart.in/bestseller" },
   robots: { index: true, follow: true },
 };
 

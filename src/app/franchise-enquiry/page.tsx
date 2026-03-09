@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Plant Nursery Franchise in Bangalore | Gidan Store",
     description: "Explore plant nursery franchise opportunities with Gidan Store in Bangalore. Start your own gardening store with brand support and business guidance.",
-    url: "https://www.gidan.store/franchise-enquiry",
+    url: "https://gidanbackendtest.mymotokart.in/franchise-enquiry",
     siteName: "Gidan Plants",
-    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
     type: "website",
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "Plant Nursery Franchise in Bangalore | Gidan Store",
     description: "Explore plant nursery franchise opportunities with Gidan Store in Bangalore. Start your own gardening store with brand support and business guidance.",
   },
-  alternates: { canonical: "https://www.gidan.store/franchise-enquiry" },
+  alternates: { canonical: "https://gidanbackendtest.mymotokart.in/franchise-enquiry" },
   robots: { index: true, follow: true },
 };
 

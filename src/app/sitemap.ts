@@ -3,7 +3,7 @@ import { getProductUrl, toSlugString } from "../utils/urlHelper";
 
 const API_URL =
     process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store";
-const SITE_URL = "https://www.gidan.store";
+const SITE_URL = "https://gidanbackendtest.mymotokart.in";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const entries: MetadataRoute.Sitemap = [];

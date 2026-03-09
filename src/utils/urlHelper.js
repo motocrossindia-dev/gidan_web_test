@@ -46,7 +46,7 @@ export const toAbsoluteUrl = (path) => {
 
     // Ensure path starts with /
     const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.gidan.store";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://gidanbackendtest.mymotokart.in";
 
     // Remove trailing slash from baseUrl if present
     const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;

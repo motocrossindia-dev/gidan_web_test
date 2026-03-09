@@ -23,7 +23,7 @@ const nunitoSans = Nunito_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.gidan.store"),
+  metadataBase: new URL("https://gidanbackendtest.mymotokart.in"),
   title: {
     default: "Gidan - Plants, Seeds & Gardening Store Online India",
     template: "%s | Gidan Plants",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     "plant gifts",
     "Gidan plants",
   ],
-  authors: [{ name: "Gidan Plants", url: "https://www.gidan.store" }],
+  authors: [{ name: "Gidan Plants", url: "https://gidanbackendtest.mymotokart.in" }],
   creator: "Gidan Plants",
   publisher: "Gidan Plants",
   openGraph: {
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     siteName: "Gidan Plants",
     images: [
       {
-        url: "https://www.gidan.store/gidan-og.jpg",
+        url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg",
         width: 1200,
         height: 630,
         alt: "Gidan Plants - Online Plant Store India",
@@ -68,10 +68,10 @@ export const metadata: Metadata = {
     title: "Gidan - Plants & Gardening Store",
     description:
       "Buy plants, seeds, pots and gardening tools online at Gidan. Expert garden services across India.",
-    images: ["https://www.gidan.store/gidan-og.jpg"],
+    images: ["https://gidanbackendtest.mymotokart.in/gidan-og.jpg"],
   },
   alternates: {
-    canonical: process.env.NEXT_PUBLIC_BASE_URL || "https://www.gidan.store",
+    canonical: process.env.NEXT_PUBLIC_BASE_URL || "https://gidanbackendtest.mymotokart.in",
   },
 
   robots: {
@@ -84,7 +84,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  manifest: (process.env.NEXT_PUBLIC_BASE_URL || "https://www.gidan.store") + "/manifest.json",
+  manifest: (process.env.NEXT_PUBLIC_BASE_URL || "https://gidanbackendtest.mymotokart.in") + "/manifest.json",
 };
 
 

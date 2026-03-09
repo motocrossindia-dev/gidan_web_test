@@ -6,7 +6,7 @@
  *   siteUrl?: string
  * }} props
  */
-export default function CollectionSchema({ category, subcategory, products = [], siteUrl = "https://www.gidan.store" }) {
+export default function CollectionSchema({ category, subcategory, products = [], siteUrl = "https://gidanbackendtest.mymotokart.in" }) {
     const formatName = (str) => str ? str.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : '';
     const catName = category?.name || formatName(category?.slug) || "Category";
     const subName = subcategory?.name || formatName(subcategory?.slug) || "Subcategory";

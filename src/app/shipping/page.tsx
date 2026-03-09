@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Shipping Policy | Plant Delivery in Bangalore | Gidan",
     description: "Learn about plant delivery and shipping policies at Gidan Store. Find details on delivery timelines, locations and order processing in Bangalore.",
-    url: "https://www.gidan.store/shipping",
+    url: "https://gidanbackendtest.mymotokart.in/shipping",
     siteName: "Gidan Plants",
-    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
     type: "website",
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "Shipping Policy | Plant Delivery in Bangalore | Gidan",
     description: "Learn about plant delivery and shipping policies at Gidan Store. Find details on delivery timelines, locations and order processing in Bangalore.",
   },
-  alternates: { canonical: "https://www.gidan.store/shipping" },
+  alternates: { canonical: "https://gidanbackendtest.mymotokart.in/shipping" },
   robots: { index: true, follow: true },
 };
 

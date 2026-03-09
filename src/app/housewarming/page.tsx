@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Housewarming Gift Plants and Decor | Gidan",
     description: "Bring greenery and good luck to a new home. Shop housewarming plant gifts at Gidan.",
-    url: "https://www.gidan.store/housewarming",
+    url: "https://gidanbackendtest.mymotokart.in/housewarming",
     siteName: "Gidan Plants",
-    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
     type: "website",
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "Housewarming Gift Plants and Decor | Gidan",
     description: "Bring greenery and good luck to a new home. Shop housewarming plant gifts at Gidan.",
   },
-  alternates: { canonical: "https://www.gidan.store/housewarming" },
+  alternates: { canonical: "https://gidanbackendtest.mymotokart.in/housewarming" },
   robots: { index: true, follow: true },
 };
 

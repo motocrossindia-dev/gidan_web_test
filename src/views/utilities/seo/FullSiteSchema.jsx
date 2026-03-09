@@ -1,5 +1,5 @@
 export default function FullSiteSchema({ isHomePage = false }) {
-    const siteUrl = "https://www.gidan.store";
+    const siteUrl = "https://gidanbackendtest.mymotokart.in";
 
     const organization = {
         "@type": "Organization",

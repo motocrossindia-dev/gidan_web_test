@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "E-Gift Cards | Gidan Plants",
     description: "Send an e-gift card and let them choose their favourite plants at Gidan.",
-    url: "https://www.gidan.store/giftcard",
+    url: "https://gidanbackendtest.mymotokart.in/giftcard",
     siteName: "Gidan Plants",
-    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
     type: "website",
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "E-Gift Cards | Gidan Plants",
     description: "Send an e-gift card and let them choose their favourite plants at Gidan.",
   },
-  alternates: { canonical: "https://www.gidan.store/giftcard" },
+  alternates: { canonical: "https://gidanbackendtest.mymotokart.in/giftcard" },
   robots: { index: true, follow: true },
 };
 

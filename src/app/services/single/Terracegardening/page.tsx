@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Services - Single - Terracegardening | Gidan Plants",
     description: "Shop and explore services - single - terracegardening at Gidan, India trusted online plant and gardening store.",
-    url: "https://www.gidan.store/services/single/Terracegardening",
+    url: "https://gidanbackendtest.mymotokart.in/services/single/Terracegardening",
     siteName: "Gidan Plants",
-    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
     type: "website",
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "Services - Single - Terracegardening | Gidan Plants",
     description: "Shop and explore services - single - terracegardening at Gidan, India trusted online plant and gardening store.",
   },
-  alternates: { canonical: "https://www.gidan.store/services/single/Terracegardening" },
+  alternates: { canonical: "https://gidanbackendtest.mymotokart.in/services/single/Terracegardening" },
   robots: { index: true, follow: true },
 };
 

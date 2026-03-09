@@ -2,15 +2,15 @@ export default function WebsiteSchema() {
     const schema = {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "@id": "https://www.gidan.store/#website",
+        "@id": "https://gidanbackendtest.mymotokart.in/#website",
         "name": "Gidan Store",
-        "url": "https://www.gidan.store/",
-        "publisher": { "@id": "https://www.gidan.store/#organization" },
+        "url": "https://gidanbackendtest.mymotokart.in/",
+        "publisher": { "@id": "https://gidanbackendtest.mymotokart.in/#organization" },
         "potentialAction": {
             "@type": "SearchAction",
             "target": {
                 "@type": "EntryPoint",
-                "urlTemplate": "https://www.gidan.store/search?q={search_term_string}"
+                "urlTemplate": "https://gidanbackendtest.mymotokart.in/search?q={search_term_string}"
             },
             "query-input": "required name=search_term_string"
         }

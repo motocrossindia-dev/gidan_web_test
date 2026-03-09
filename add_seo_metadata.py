@@ -2,7 +2,7 @@
 import os, re
 
 APP = os.path.join(os.path.dirname(os.path.abspath(__file__)), "src/app")
-BASE_URL = "https://www.gidan.store"
+BASE_URL = "https://gidanbackendtest.mymotokart.in"
 
 PAGE_META = {
     "": ("Gidan - Plants, Seeds & Gardening Store Online India", "Buy plants, seeds, pots, soil and gardening tools online at Gidan. Expert landscaping, terrace gardening and vertical garden services across India."),
@@ -71,7 +71,7 @@ def build_metadata(title, desc, url):
         '    description: "' + desc + '",',
         '    url: "' + url + '",',
         '    siteName: "Gidan Plants",',
-        '    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],',
+        '    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],',
         '    locale: "en_IN",',
         '    type: "website",',
         '  },',

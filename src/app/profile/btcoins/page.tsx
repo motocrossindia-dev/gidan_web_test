@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Profile - Btcoins | Gidan Plants",
     description: "Shop and explore profile - btcoins at Gidan, India trusted online plant and gardening store.",
-    url: "https://www.gidan.store/profile/btcoins",
+    url: "https://gidanbackendtest.mymotokart.in/profile/btcoins",
     siteName: "Gidan Plants",
-    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
     type: "website",
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "Profile - Btcoins | Gidan Plants",
     description: "Shop and explore profile - btcoins at Gidan, India trusted online plant and gardening store.",
   },
-  alternates: { canonical: "https://www.gidan.store/profile/btcoins" },
+  alternates: { canonical: "https://gidanbackendtest.mymotokart.in/profile/btcoins" },
   robots: { index: true, follow: true },
 };
 

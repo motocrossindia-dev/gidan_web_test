@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Rakshabhandan | Gidan Plants",
     description: "Shop and explore rakshabhandan at Gidan, India trusted online plant and gardening store.",
-    url: "https://www.gidan.store/rakshabhandan",
+    url: "https://gidanbackendtest.mymotokart.in/rakshabhandan",
     siteName: "Gidan Plants",
-    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
     type: "website",
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "Rakshabhandan | Gidan Plants",
     description: "Shop and explore rakshabhandan at Gidan, India trusted online plant and gardening store.",
   },
-  alternates: { canonical: "https://www.gidan.store/rakshabhandan" },
+  alternates: { canonical: "https://gidanbackendtest.mymotokart.in/rakshabhandan" },
   robots: { index: true, follow: true },
 };
 

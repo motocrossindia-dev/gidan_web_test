@@ -1318,7 +1318,7 @@ const CheckoutPage = () => {
           currency: 'INR',
           name: 'Gidan Store',
           description: 'Pay remaining balance',
-          image: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://www.gidan.store'}/logo.webp`,
+          image: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://gidanbackendtest.mymotokart.in'}/logo.webp`,
           order_id: razorpayOrder.id,
           handler: async (paymentResponse) => {
             try {

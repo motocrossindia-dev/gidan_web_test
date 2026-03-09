@@ -4,15 +4,15 @@ export default function ReturnPolicySchema() {
         "@graph": [
             {
                 "@type": "WebPage",
-                "@id": "https://www.gidan.store/return-policy/#webpage",
-                "url": "https://www.gidan.store/return-policy/",
+                "@id": "https://gidanbackendtest.mymotokart.in/return-policy/#webpage",
+                "url": "https://gidanbackendtest.mymotokart.in/return-policy/",
                 "name": "Gidan Return & Replacement Policy"
             },
             {
                 "@type": "MerchantReturnPolicy",
-                "@id": "https://www.gidan.store/#returnpolicy",
+                "@id": "https://gidanbackendtest.mymotokart.in/#returnpolicy",
                 "name": "Gidan Return & Replacement Policy",
-                "merchantReturnLink": "https://www.gidan.store/return-policy/",
+                "merchantReturnLink": "https://gidanbackendtest.mymotokart.in/return-policy/",
                 "applicableCountry": {
                     "@type": "Country",
                     "name": "IN"

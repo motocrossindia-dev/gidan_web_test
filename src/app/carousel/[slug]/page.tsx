@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       locale: "en_IN",
       type: "website",
     },
-    alternates: { canonical: `https://www.gidan.store/carousel/${slug}` },
+    alternates: { canonical: `https://gidanbackendtest.mymotokart.in/carousel/${slug}` },
   };
 }
 

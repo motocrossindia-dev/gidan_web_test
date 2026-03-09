@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Verify OTP | Gidan Plants",
     description: "Verify your mobile number with OTP to access Gidan Plants.",
-    url: "https://www.gidan.store/mobile-verification",
+    url: "https://gidanbackendtest.mymotokart.in/mobile-verification",
     siteName: "Gidan Plants",
-    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
     type: "website",
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "Verify OTP | Gidan Plants",
     description: "Verify your mobile number with OTP to access Gidan Plants.",
   },
-  alternates: { canonical: "https://www.gidan.store/mobile-verification" },
+  alternates: { canonical: "https://gidanbackendtest.mymotokart.in/mobile-verification" },
   robots: { index: true, follow: true },
 };
 

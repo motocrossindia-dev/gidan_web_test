@@ -1,4 +1,4 @@
-export default function HomepageSchema({ siteUrl = "https://www.gidan.store" }) {
+export default function HomepageSchema({ siteUrl = "https://gidanbackendtest.mymotokart.in" }) {
     const cleanSiteUrl = siteUrl.endsWith('/') ? siteUrl.slice(0, -1) : siteUrl;
 
     const schema = {

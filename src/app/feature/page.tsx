@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Featured Plants | Gidan",
     description: "Browse featured plants and gardening products collection at Gidan.",
-    url: "https://www.gidan.store/feature",
+    url: "https://gidanbackendtest.mymotokart.in/feature",
     siteName: "Gidan Plants",
-    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
     type: "website",
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "Featured Plants | Gidan",
     description: "Browse featured plants and gardening products collection at Gidan.",
   },
-  alternates: { canonical: "https://www.gidan.store/feature" },
+  alternates: { canonical: "https://gidanbackendtest.mymotokart.in/feature" },
   robots: { index: true, follow: true },
 };
 

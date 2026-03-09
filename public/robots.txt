@@ -1,5 +1,5 @@
 # Gidan Store - Robots.txt
-# https://www.gidan.store/robots.txt
+# https://gidanbackendtest.mymotokart.in/robots.txt
 
 User-agent: *
 Allow: /
@@ -51,4 +51,4 @@ Allow: /fonts/
 Allow: /favicon.ico
 
 # Sitemap locations
-Sitemap: https://www.gidan.store/sitemap.xml
+Sitemap: https://gidanbackendtest.mymotokart.in/sitemap.xml

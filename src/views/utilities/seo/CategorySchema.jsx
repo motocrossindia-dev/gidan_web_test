@@ -5,8 +5,8 @@ export default function CategorySchema({
     categorySlug,
     items = [] // [{ slug: "product-slug", category_slug: "category", sub_category_slug: "subcategory" }, ...]
 }) {
-    const baseUrl = "https://www.gidan.store/";
-    const siteUrl = "https://www.gidan.store";
+    const baseUrl = "https://gidanbackendtest.mymotokart.in/";
+    const siteUrl = "https://gidanbackendtest.mymotokart.in";
 
     const getProductImage = (item) => item?.main_image || item?.image || item?.prod_image || (Array.isArray(item?.images) && item.images[0]) || null;
 

@@ -12,9 +12,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Plant Offers & Deals in Bangalore | Gidan Store",
     description: "Explore plant offers and deals in Bangalore at Gidan Store. Shop plants, planters and gardening essentials at special discounted prices.",
-    url: "https://www.gidan.store/offer",
+    url: "https://gidanbackendtest.mymotokart.in/offer",
     siteName: "Gidan Plants",
-    images: [{ url: "https://www.gidan.store/gidan-og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://gidanbackendtest.mymotokart.in/gidan-og.jpg", width: 1200, height: 630 }],
     locale: "en_IN",
     type: "website",
   },
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     title: "Plant Offers & Deals in Bangalore | Gidan Store",
     description: "Explore plant offers and deals in Bangalore at Gidan Store. Shop plants, planters and gardening essentials at special discounted prices.",
   },
-  alternates: { canonical: "https://www.gidan.store/offer" },
+  alternates: { canonical: "https://gidanbackendtest.mymotokart.in/offer" },
   robots: { index: true, follow: true },
 };
 
