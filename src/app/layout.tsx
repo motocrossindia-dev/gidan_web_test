@@ -84,7 +84,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  manifest: (process.env.NEXT_PUBLIC_BASE_URL || "https://gidanbackendtest.mymotokart.in") + "/manifest.json",
+  manifest: "/manifest.json",
 };
 
 

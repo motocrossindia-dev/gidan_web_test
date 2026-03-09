@@ -8,8 +8,10 @@ const nextConfig: NextConfig = {
   // This is the correct way — using custom redirects caused infinite redirect loops.
   trailingSlash: true,
 
-  // Use absolute URLs for static assets (managed by assetPrefix)
-assetPrefix: process.env.NODE_ENV === "production" ? (process.env.NEXT_PUBLIC_BASE_URL || undefined) : undefined,
+  // assetPrefix should only be set when a dedicated CDN host (separate from the API) is configured.
+  // NEXT_PUBLIC_BASE_URL points to the backend API, so we do NOT use it as assetPrefix —
+  // doing so would cause fonts/JS/CSS to be fetched from the backend and return 404.
+  // assetPrefix: process.env.NEXT_PUBLIC_CDN_URL || undefined,
 
 
   // Map CRA env vars to Next.js NEXT_PUBLIC_ equivalents
