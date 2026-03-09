@@ -1,48 +1,102 @@
-name: Deploy to VPS
 
+name: Standard VPS Deploy
+
+# 1️⃣ Trigger Deployment
 on:
   push:
     branches:
       - main
+      - dev_mohan
+
+# 2️⃣ Global Variables
+env:
+  PROJECT_NAME: "gidan_web_test"
+  SERVER_DIR: "/var/www/html/gidan_web_test"
+  PM2_APP_NAME: "gidan_web_test"
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
 
-      - name: Deploy to Server
-        uses: appleboy/ssh-action@master
+      # STEP 1 — Checkout Code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+
+      # STEP 2 — Deploy to VPS
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+          script_stop: true
+
           script: |
-            set -e
-            echo "Starting Deployment..."
-
-            cd /var/www/gidan-app
-
-            # Detect branch automatically
-            BRANCH=${{ github.ref_name }}
-
-            echo "Deploying branch: $BRANCH"
-
-            # Discard any local changes (like package-lock.json from previous npm install)
-            git reset --hard HEAD
-            git clean -fd
-
-            git pull https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/motocrossindia-dev/Gidan_Web_Nextjs.git $BRANCH
-
+            
+            echo "===================================="
+            echo "Starting Deployment"
+            echo "Project: ${{ env.PROJECT_NAME }}"
+            echo "Branch: ${{ github.ref_name }}"
+            echo "===================================="
+            
+            
+            # 1️⃣ Go to project folder
+            cd "${{ env.SERVER_DIR }}" || exit 1
+            
+            
+            # 2️⃣ Fix Git Safe Directory Error
+            git config --global --add safe.directory ${{ env.SERVER_DIR }}
+            
+            
+            # 3️⃣ Pull Latest Code
+            echo "Pulling latest code..."
+            
+            git fetch origin
+            
+            git reset --hard origin/${{ github.ref_name }}
+            
+            
+            # 4️⃣ Clean Old Build
+            echo "Cleaning old files..."
+            
+            rm -rf .next
+            rm -rf node_modules
+            rm -rf package-lock.json
+            
+            
+            # 5️⃣ Install Dependencies
+            echo "Installing dependencies..."
+            
             npm install
+            
+            
+            # 6️⃣ Build Next.js
+            echo "Building Next.js..."
+            
             npm run build
+            
+            
+            # # 7️⃣ Restart PM2
+            # echo "Restarting PM2..."
+            
+            # pm2 restart ${{ env.PM2_APP_NAME }} || pm2 start npm --name "${{ env.PM2_APP_NAME }}" -- start
+            
+            
+            # # 8️⃣ Save PM2
+            # pm2 save
+            
+            
+            echo "===================================="
+            echo "Deployment Successful"
+            echo "===================================="
 
-            pm2 restart biotechmaali
 
-            echo "Deployment Successful!"
-# ===================
+# /var/www/html/gidan_web_test/
 # name: Deploy to VPS
 
 # on:
@@ -65,23 +119,68 @@ jobs:
 #           username: ${{ secrets.SERVER_USER }}
 #           key: ${{ secrets.SSH_PRIVATE_KEY }}
 #           script: |
+#             set -e
 #             echo "Starting Deployment..."
-            
-#             # 1. Go to project directory
+
 #             cd /var/www/gidan-app
-            
-#             # 2. Pull latest code using the Token URL
-#             # This is required because you are a Collaborator, not the Owner
-#             # git pull https://${{ secrets.GH_TOKEN }}@github.com/motocrossindia-dev/Gidan_Web_Nextjs.git main
-#             git pull https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/motocrossindia-dev/Gidan_Web_Nextjs.git main
-            
-#             # 3. Install dependencies
+
+#             # Detect branch automatically
+#             BRANCH=${{ github.ref_name }}
+
+#             echo "Deploying branch: $BRANCH"
+
+#             # Discard any local changes (like package-lock.json from previous npm install)
+#             git reset --hard HEAD
+#             git clean -fd
+
+#             git pull https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/motocrossindia-dev/Gidan_Web_Nextjs.git $BRANCH
+
 #             npm install
-            
-#             # 4. Build the application
 #             npm run build
-            
-#             # 5. Restart PM2
+
 #             pm2 restart biotechmaali
-            
+
 #             echo "Deployment Successful!"
+# # ===================
+# # name: Deploy to VPS
+
+# # on:
+# #   push:
+# #     branches:
+# #       - main
+
+# # jobs:
+# #   deploy:
+# #     runs-on: ubuntu-latest
+
+# #     steps:
+# #       - name: Checkout code
+# #         uses: actions/checkout@v3
+
+# #       - name: Deploy to Server
+# #         uses: appleboy/ssh-action@master
+# #         with:
+# #           host: ${{ secrets.SERVER_IP }}
+# #           username: ${{ secrets.SERVER_USER }}
+# #           key: ${{ secrets.SSH_PRIVATE_KEY }}
+# #           script: |
+# #             echo "Starting Deployment..."
+            
+# #             # 1. Go to project directory
+# #             cd /var/www/gidan-app
+            
+# #             # 2. Pull latest code using the Token URL
+# #             # This is required because you are a Collaborator, not the Owner
+# #             # git pull https://${{ secrets.GH_TOKEN }}@github.com/motocrossindia-dev/Gidan_Web_Nextjs.git main
+# #             git pull https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/motocrossindia-dev/Gidan_Web_Nextjs.git main
+            
+# #             # 3. Install dependencies
+# #             npm install
+            
+# #             # 4. Build the application
+# #             npm run build
+            
+# #             # 5. Restart PM2
+# #             pm2 restart biotechmaali
+            
+# #             echo "Deployment Successful!"
