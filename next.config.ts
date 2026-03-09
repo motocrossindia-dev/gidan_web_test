@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
 
   // Use absolute URLs for static assets (managed by assetPrefix)
-  assetPrefix: process.env.NODE_ENV === "production" ? (process.env.NEXT_PUBLIC_BASE_URL || undefined) : undefined,
+  // assetPrefix: process.env.NODE_ENV === "production" ? (process.env.NEXT_PUBLIC_BASE_URL || undefined) : undefined,
 
 
   // Map CRA env vars to Next.js NEXT_PUBLIC_ equivalents

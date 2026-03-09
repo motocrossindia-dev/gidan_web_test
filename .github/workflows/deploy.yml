@@ -46,16 +46,16 @@ jobs:
             echo "📦 Installing dependencies..."
             npm install
             
-            # Create .env.local with secrets
-            echo "📝 Creating environment file..."
-            cat > .env.local << EOF
-              NEXT_PUBLIC_API_URL=https://gidanbackendtest.mymotokart.in
-              NEXT_PUBLIC_EMAILJS_SERVICE_ID=service_3gcdp4o
-              NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=template_eyhae8n
-              NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=3mksjdGCraFck20oh
-              NEXT_PUBLIC_RAZORPAY_KEY_ID=rzp_test_y70g5dxx6kOQ7v	
-              NEXT_PUBLIC_BASE_URL=https://gidanbackendtest.mymotokart.in
-            EOF
+            # # Create .env.local with secrets
+            # echo "📝 Creating environment file..."
+            # cat > .env.local << EOF
+            # NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
+            # NEXT_PUBLIC_EMAILJS_SERVICE_ID=${{ secrets.NEXT_PUBLIC_EMAILJS_SERVICE_ID }}
+            # NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=${{ secrets.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID }}
+            # NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY }}
+            # NEXT_PUBLIC_RAZORPAY_KEY_ID=${{ secrets.NEXT_PUBLIC_RAZORPAY_KEY_ID }}
+            # NEXT_PUBLIC_BASE_URL=${{ secrets.NEXT_PUBLIC_BASE_URL }}
+            # EOF
             
             # Build
             echo "🔨 Building Next.js..."
@@ -69,8 +69,8 @@ jobs:
                 pm2 reload ${{ env.PM2_APP_NAME }}
             else
                 echo "⚠️ App '${{ env.PM2_APP_NAME }}' NOT found. Starting fresh..."
-                # Start on Port 3001
-                PORT=3001 pm2 start npm --name "${{ env.PM2_APP_NAME }}" -- start
+                # Start on Port 3002
+                PORT=3002 pm2 start npm --name "${{ env.PM2_APP_NAME }}" -- start
             fi
             
             # 2. Save the PM2 list (This saves BOTH apps, but doesn't stop them)
