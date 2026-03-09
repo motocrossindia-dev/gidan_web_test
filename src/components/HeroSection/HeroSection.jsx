@@ -52,7 +52,7 @@ const HeroSection = ({ hero }) => {
                 <Link href={bannerUrl} className="w-full block">
                   {/* Desktop Image */}
                   <Image
-                    src={`https://backend.gidan.store${banner.web_banner}`}
+                    src={`https://gidanbackendtest.mymotokart.in${banner.web_banner}`}
                     alt={banner.title || `Hero Banner ${index + 1}`}
                     width={1440}
                     height={540}
@@ -65,7 +65,7 @@ const HeroSection = ({ hero }) => {
                   />
                   {/* Mobile Image */}
                   <Image
-                    src={`https://backend.gidan.store${banner.mobile_banner}`}
+                    src={`https://gidanbackendtest.mymotokart.in${banner.mobile_banner}`}
                     alt={banner.title || `Hero Banner ${index + 1}`}
                     width={800}
                     height={600}

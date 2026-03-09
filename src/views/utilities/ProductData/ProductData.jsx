@@ -1085,7 +1085,7 @@ export default function ProductData({ initialProductData }) {
                                                     const img = imageThumbnails[selectedImage] || imageThumbnails[0];
                                                     const path = img?.image || img?.url || "";
                                                     if (!path) return "";
-                                                    return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store"}${path}`;
+                                                    return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_API_URL || "https://gidanbackendtest.mymotokart.in"}${path}`;
                                                 })()
                                             }
                                             alt={productDetailData?.data?.product?.main_product_name || ""}
@@ -1117,7 +1117,7 @@ export default function ProductData({ initialProductData }) {
                                                 const img = imageThumbnails[selectedImage] || imageThumbnails[0];
                                                 const path = img?.image || img?.url || "";
                                                 if (!path) return "";
-                                                return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store"}${path}`;
+                                                return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_API_URL || "https://gidanbackendtest.mymotokart.in"}${path}`;
                                             })()})`,
                                             backgroundRepeat: "no-repeat",
 
@@ -1164,7 +1164,7 @@ export default function ProductData({ initialProductData }) {
                                                 src={(() => {
                                                     const path = image?.image || image?.url || "";
                                                     if (!path) return "";
-                                                    return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store"}${path}`;
+                                                    return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_API_URL || "https://gidanbackendtest.mymotokart.in"}${path}`;
                                                 })()}
                                                 loading="lazy"
                                                 alt={`${productData.name} ${i + 1}`}

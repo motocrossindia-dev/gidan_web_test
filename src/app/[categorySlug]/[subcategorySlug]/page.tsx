@@ -8,7 +8,7 @@ type Props = { params: Promise<{ categorySlug: string; subcategorySlug: string }
 // Fetch valid category slugs
 async function getValidCategorySlugs(): Promise<Set<string>> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store";
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://gidanbackendtest.mymotokart.in";
     const res = await fetch(`${apiUrl}/category/`, { next: { revalidate: 300 } });
     if (!res.ok) return new Set();
     const data = await res.json();
@@ -21,7 +21,7 @@ async function getValidCategorySlugs(): Promise<Set<string>> {
 // Fetch valid subcategory slugs for a given category
 async function getValidSubcategorySlugs(categorySlug: string): Promise<Set<string>> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store";
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://gidanbackendtest.mymotokart.in";
     const res = await fetch(`${apiUrl}/category/categoryWiseSubCategory/${categorySlug}/`, { next: { revalidate: 300 } });
     if (!res.ok) return new Set();
     const data = await res.json();

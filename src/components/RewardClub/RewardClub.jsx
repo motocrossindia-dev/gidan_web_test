@@ -107,7 +107,7 @@ export default RewardClub;
 //     const fetchBanner = async () => {
 //       try {
 //         const res = await axios.get(
-//             "https://backend.gidan.store/utils/content-blocks/?section=banner&title="
+//             "https://gidanbackendtest.mymotokart.in/utils/content-blocks/?section=banner&title="
 //         );
 //         setBannerData(res.data?.[0]);
 //       } catch (err) {

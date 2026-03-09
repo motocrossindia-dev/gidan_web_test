@@ -14,7 +14,7 @@ const ComboOffer = () => {
     const fetchComboOffer = async () => {
       try {
         const res = await axios.get(
-          "https://backend.gidan.store/utils/content-blocks/?section=combo_offers&title="
+          "https://gidanbackendtest.mymotokart.in/utils/content-blocks/?section=combo_offers&title="
         );
         setComboData(res.data?.[0]);
       } catch (error) {}

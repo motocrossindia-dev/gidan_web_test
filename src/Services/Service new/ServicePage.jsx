@@ -20,7 +20,7 @@ const ServicesPage = () => {
     const fetchServices = async () => {
       try {
         const res = await axios.get(
-          "https://backend.gidan.store/services/publicservice_list/"
+          "https://gidanbackendtest.mymotokart.in/services/publicservice_list/"
         );
 
         const visibleServices = res.data.filter(item => item.Visible);
@@ -102,7 +102,7 @@ const ServicesPage = () => {
                 <div className="w-full bg-white rounded-lg p-4">
                   <img
                     className="w-full h-60 object-cover rounded-lg mb-4"
-                    src={`https://backend.gidan.store${service.Image}`}
+                    src={`https://gidanbackendtest.mymotokart.in${service.Image}`}
                     alt={service.Heading}
                   />
                   <h3 className="text-xl font-semibold text-center text-gray-800">

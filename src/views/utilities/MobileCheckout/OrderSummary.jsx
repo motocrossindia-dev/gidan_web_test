@@ -146,7 +146,7 @@ const OrderSummary = () => {
           {orderItem.map((item, idx) => (
             <div key={item.id ?? idx} className="flex items-center space-x-4">
               <img name=" "
-                src={`https://backend.gidan.store${item.image}`}
+                src={`https://gidanbackendtest.mymotokart.in${item.image}`}
                 loading="lazy"
                 alt="Product"
                 className="w-20 h-20 object-cover rounded"

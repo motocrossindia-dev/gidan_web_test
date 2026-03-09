@@ -63,7 +63,7 @@ const OfferReward = () => {
     const fetchOffersRewards = async () => {
       try {
         const res = await axios.get(
-          "https://backend.gidan.store/utils/content-blocks/?section=offers_rewards&title="
+          "https://gidanbackendtest.mymotokart.in/utils/content-blocks/?section=offers_rewards&title="
         );
         setContentBlocks(res.data || []);
       } catch (error) {
@@ -202,7 +202,7 @@ export default OfferReward;
 //     const fetchOffersRewards = async () => {
 //       try {
 //         const res = await axios.get(
-//           "https://backend.gidan.store/utils/content-blocks/?section=offers_rewards&title="
+//           "https://gidanbackendtest.mymotokart.in/utils/content-blocks/?section=offers_rewards&title="
 //         );
 //         setContentBlocks(res.data || []);
 //       } catch (error) {

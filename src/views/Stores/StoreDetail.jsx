@@ -47,7 +47,7 @@ const StoreDetail = ({ slug }) => {
             {store.images.map((img) => (
               <img
                 key={img.id}
-                src={`https://backend.gidan.store${img.image}`}
+                src={`https://gidanbackendtest.mymotokart.in${img.image}`}
                 alt={store.location}
                 className="w-full h-64 object-cover rounded-lg shadow-md"
               />

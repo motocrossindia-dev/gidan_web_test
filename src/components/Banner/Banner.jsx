@@ -33,7 +33,7 @@ const Banner = ({ home }) => {
                                     {/* Desktop Image */}
                                     <div className="hidden sm:block w-full">
                                         <Image
-                                            src={`https://backend.gidan.store${getDesktopBannerUrl(banner)}`}
+                                            src={`https://gidanbackendtest.mymotokart.in${getDesktopBannerUrl(banner)}`}
                                             alt={banner.title || "Gidan promotional banner"}
                                             width={800}
                                             height={600}
@@ -48,7 +48,7 @@ const Banner = ({ home }) => {
                                     {/* Mobile Image */}
                                     <div className="block sm:hidden w-full">
                                         <Image
-                                            src={`https://backend.gidan.store${getMobileBannerUrl(banner)}`}
+                                            src={`https://gidanbackendtest.mymotokart.in${getMobileBannerUrl(banner)}`}
                                             alt={banner.title || "Gidan promotional banner"}
                                             width={400}
                                             height={300}

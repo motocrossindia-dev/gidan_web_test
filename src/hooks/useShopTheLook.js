@@ -18,7 +18,7 @@ import axios from 'axios';
 
 const fetchShopTheLook = async () => {
   const response = await axios.get(
-    "https://backend.gidan.store/combo/shop_the_look_offers/"
+    "https://gidanbackendtest.mymotokart.in/combo/shop_the_look_offers/"
   );
   const data = response?.data?.data?.shop_the_look[0];
   return {

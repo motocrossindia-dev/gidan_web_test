@@ -168,7 +168,7 @@ const Stores = () => {
               >
                 {store.image && (
                   <img
-                    src={`https://backend.gidan.store${store.image}`}
+                    src={`https://gidanbackendtest.mymotokart.in${store.image}`}
                     alt={store.location}
                     className="w-full h-48 object-cover rounded-md mb-3"
                   />

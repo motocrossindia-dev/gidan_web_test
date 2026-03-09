@@ -139,7 +139,7 @@ export default async function HomePage() {
   );
   const lcpBannerPath = firstHomeBanner?.mobile_banner || firstHomeBanner?.web_banner;
   const lcpPreloadUrl = lcpBannerPath
-    ? `/_next/image?url=${encodeURIComponent(`https://backend.gidan.store${lcpBannerPath}`)}&w=828&q=75`
+    ? `/_next/image?url=${encodeURIComponent(`https://gidanbackendtest.mymotokart.in${lcpBannerPath}`)}&w=828&q=75`
     : null;
 
   return (

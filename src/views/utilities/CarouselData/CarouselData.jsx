@@ -68,7 +68,7 @@ function CarouselData() {
         try {
 
             const res = await axios.get(
-                `https://backend.gidan.store/promotion/banner/${id}/`
+                `https://gidanbackendtest.mymotokart.in/promotion/banner/${id}/`
             );
 
             // 👇 IMPORTANT: take product_list only

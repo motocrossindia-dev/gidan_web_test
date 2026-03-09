@@ -152,7 +152,7 @@ function ShopTheLook() {
           className="w-full overflow-hidden bg-white hover:opacity-95 transition-opacity"
         >
           <Image
-            src={`https://backend.gidan.store${shoplookData?.image}`}
+            src={`https://gidanbackendtest.mymotokart.in${shoplookData?.image}`}
             alt="Shop the Look"
             width={1200}
             height={407}

@@ -18,7 +18,7 @@ import axios from 'axios';
 
 const fetchVideoData = async () => {
   const response = await axios.get(
-    "https://backend.gidan.store/utils/content-blocks/?section=home_screen_video"
+    "https://gidanbackendtest.mymotokart.in/utils/content-blocks/?section=home_screen_video"
   );
   return response.data?.[0] || null;
 };

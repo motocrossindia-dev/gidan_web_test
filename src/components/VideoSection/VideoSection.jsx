@@ -58,7 +58,7 @@ export default VideoSection;
 //   const fetchVideoData = async () => {
 //     try {
 //       const res = await axios.get(
-//         "https://backend.gidan.store/utils/content-blocks/?section=home_screen_video"
+//         "https://gidanbackendtest.mymotokart.in/utils/content-blocks/?section=home_screen_video"
 //       );
 //       setVideoData(res.data?.[0]);
 //     } catch (err) {

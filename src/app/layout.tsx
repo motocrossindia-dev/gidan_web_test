@@ -103,7 +103,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* Preconnect for LCP image origin — crossOrigin required for next/image CORS requests */}
-        <link rel="preconnect" href="https://backend.gidan.store" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://gidanbackendtest.mymotokart.in" crossOrigin="anonymous" />
         {/* DNS prefetch for 3rd-party origins — zero-cost hint to unblock connections */}
         <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://connect.facebook.net" crossOrigin="anonymous" />

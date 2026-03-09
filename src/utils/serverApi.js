@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://gidanbackendtest.mymotokart.in";
 
 export async function fetchCategoryBySlug(slug) {
     try {

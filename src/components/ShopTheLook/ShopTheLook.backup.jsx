@@ -24,7 +24,7 @@ function ShopTheLook() {
     const fetchShoplook = async () => {
       try {
         const res = await axios.get(
-          "https://backend.gidan.store/combo/combo-offers/"
+          "https://gidanbackendtest.mymotokart.in/combo/combo-offers/"
         );
         const data = res?.data?.data?.shop_the_look[0];
         setShoplookData(data);
@@ -91,7 +91,7 @@ function ShopTheLook() {
           className="w-full overflow-hidden bg-white hover:opacity-95 transition-opacity"
         >
           <img
-            src={`https://backend.gidan.store${shoplookData?.image}`}
+            src={`https://gidanbackendtest.mymotokart.in${shoplookData?.image}`}
             alt="Shop the Look"
             loading="lazy"
             className="w-full h-auto object-contain"
