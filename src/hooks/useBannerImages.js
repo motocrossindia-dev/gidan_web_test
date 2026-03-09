@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '../Axios/axiosInstance';
 
 const fetchBannerImages = async () => {
-  const response = await axiosInstance.get(`/promotion/banner/`);
+  const response = await axiosInstance.get(`https://gidanbackendtest.mymotokart.in/promotion/banner/`);
   const banner_images = response?.data?.data?.banners || [];
 
   return {
