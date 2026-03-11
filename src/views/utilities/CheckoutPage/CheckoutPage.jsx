@@ -803,10 +803,11 @@ const ApplyCoupon = ({ id, setCoupon, coupon, onRemoveCoupon }) => {
 
       if (response.status === 200) {
         console.log("✅ Coupon API Response:", response.data);
-        console.log("✅ New Grand Total:", response.data?.order?.grand_total);
-        console.log("✅ Discount Amount:", response.data?.discount_amount);
-        console.log("✅ Coupon Applied:", response.data?.success);
-        setCoupon(response.data);
+        const processedData = applyGstToOrderData(response.data);
+        console.log("✅ New Grand Total (w/ GST):", processedData?.order?.grand_total);
+        console.log("✅ Discount Amount:", processedData?.discount_amount);
+        console.log("✅ Coupon Applied:", processedData?.success);
+        setCoupon(processedData);
         enqueueSnackbar("Coupon applied successfully!", { variant: "success" });
       }
     } catch (error) {
@@ -1695,10 +1696,14 @@ const CheckoutPage = () => {
                               {/* Total */}
                               <td className="py-2 px-2 text-right">
                                 {lineGstAmt > 0 ? (
-                                  <p className="text-[9px] font-semibold text-gray-800 leading-tight whitespace-nowrap">
-                                    ₹{baseTotal.toFixed(2)}{' '}
-                                    <span className="text-amber-600">+₹{lineGstAmt.toFixed(2)} GST</span>
-                                  </p>
+                                  <div className="flex flex-col items-end gap-0.5">
+                                    <p className="text-xs font-semibold text-gray-800 leading-tight">
+                                      ₹{baseTotal.toFixed(2)}
+                                    </p>
+                                    <p className="text-[10px] text-amber-600 font-medium">
+                                      +₹{lineGstAmt.toFixed(2)} GST
+                                    </p>
+                                  </div>
                                 ) : (
                                   <span className="font-bold text-gray-800 text-[11px]">₹{lineTotal.toFixed(2)}</span>
                                 )}

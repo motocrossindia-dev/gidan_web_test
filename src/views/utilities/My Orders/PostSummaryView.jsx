@@ -144,6 +144,45 @@ const PostSummaryView = () => {
     const latestTrackingStatus = orderData?.tracking_updates?.slice(-1)?.[0]?.status?.toUpperCase() || '';
     const isDelivered = latestTrackingStatus === 'DELIVERED';
 
+    // Calculate accurate Taxable and GST totals
+    const { baseSubTotal, totalGst, slabEntries } = (() => {
+        let taxableSum = 0;
+        const slabs = {};
+        (orderData?.order_items || []).forEach(item => {
+            const cgstRate = parseFloat(item.cgst) || 0;
+            const sgstRate = parseFloat(item.sgst) || 0;
+            const gstField = parseFloat(String(item.gst || '').replace('%', '')) || 0;
+            const totalRate = (cgstRate + sgstRate) > 0 ? (cgstRate + sgstRate) : gstField;
+
+            const gstInclusiveTotal = Number(item.selling_price) || 0;
+            const lineGstAmt = Number(item.total_gst_amount || item.gst_amount) > 0
+                ? Number(item.total_gst_amount || item.gst_amount)
+                : totalRate > 0
+                    ? parseFloat((gstInclusiveTotal * totalRate / (100 + totalRate)).toFixed(2))
+                    : 0;
+            const basePreGstTotal = parseFloat((gstInclusiveTotal - lineGstAmt).toFixed(2));
+            taxableSum += basePreGstTotal;
+
+            if (totalRate > 0) {
+                const total = Number(item.total) || 0;
+                const taxable = total / (1 + totalRate / 100);
+                const gstAmt = total - taxable;
+                const key = `${totalRate}%`;
+                if (!slabs[key]) slabs[key] = { slab: key, cgstRate, sgstRate, gstAmt: 0, cgstAmt: 0, sgstAmt: 0 };
+                slabs[key].gstAmt += gstAmt;
+                slabs[key].cgstAmt += taxable * cgstRate / 100;
+                slabs[key].sgstAmt += taxable * sgstRate / 100;
+            }
+        });
+        const slabEntriesList = Object.values(slabs);
+        const gstSum = slabEntriesList.reduce((s, e) => s + e.gstAmt, 0);
+        return { baseSubTotal: taxableSum, totalGst: gstSum, slabEntries: slabEntriesList };
+    })();
+
+    const displayShipping = Number(orderData?.order?.shipping_charge ?? 0);
+    const displayCoupon = Number(orderData?.order?.coupon_discount ?? 0);
+    const displayGrandTotal = baseSubTotal + totalGst + displayShipping - displayCoupon;
+
     return (
         <div className="min-h-screen bg-white pb-20">
 
@@ -300,165 +339,242 @@ const PostSummaryView = () => {
                                 })()}
 
                                 {/* Total Amount */}
-                                <div className="flex justify-between font-bold text-gray-900 pt-2 border-t mt-2 text-base">
-                                    <span>Total Amount</span>
-                                    <span>₹{Number(orderData?.order?.grand_total ?? 0).toFixed(2)}</span>
-                                </div>
-                                {/* GD Coins */}
-                                {Number(orderData?.order?.gd_coin ?? 0) > 0 && (
-                                    <div className="flex items-center justify-between bg-orange-50 rounded px-2 py-1 mt-2">
-                                        <div className="flex items-center gap-1">
-                                            <span className="text-sm">🪙</span>
-                                            <p className="text-[10px] font-bold text-gray-800">Earned</p>
+                                {(() => {
+                                    const slabs = {};
+                                    (orderData?.order_items || []).forEach(item => {
+                                        const cgstRate = parseFloat(item.cgst) || 0;
+                                        const sgstRate = parseFloat(item.sgst) || 0;
+                                        const gstField = parseFloat(String(item.gst || '').replace('%', '')) || 0;
+                                        const totalRate = (cgstRate + sgstRate) > 0 ? (cgstRate + sgstRate) : gstField;
+                                        if (totalRate <= 0) return;
+                                        const total = Number(item.total) || 0;
+                                        const taxable = total / (1 + totalRate / 100);
+                                        const gstAmt = total - taxable;
+                                        const key = `${totalRate}%`;
+                                        if (!slabs[key]) slabs[key] = { slab: key, cgstRate, sgstRate, gstAmt: 0, cgstAmt: 0, sgstAmt: 0 };
+                                        slabs[key].gstAmt += gstAmt;
+                                        slabs[key].cgstAmt += taxable * cgstRate / 100;
+                                        slabs[key].sgstAmt += taxable * sgstRate / 100;
+                                    });
+                                    const slabEntries = Object.values(slabs);
+                                    const totalGst = slabEntries.reduce((s, e) => s + e.gstAmt, 0);
+
+                                    // Use grand_total directly. If the backend didn't add GST, we add it here.
+                                    // Make sure we only add it once!
+                                    // For now, testing adding it.
+                                    const baseGrandTotal = Number(orderData?.order?.grand_total ?? 0);
+
+
+                                    return (
+                                        <div className="flex justify-between font-bold text-gray-900 pt-2 border-t mt-2 text-base">
+                                            <span>Total Amount</span>
+                                            <span>₹{baseGrandTotal.toFixed(2)}</span>
                                         </div>
-                                        <span className="text-xs font-extrabold text-orange-500">+{orderData.order.gd_coin}</span>
-                                    </div>
+                                    );
+                                })()}
+
+                                {/* Savings message */}
+                                {(Number(orderData?.order?.total_discount ?? 0) + Number(orderData?.order?.coupon_discount ?? 0)) > 0 && (
+                                    <p className="text-emerald-600 text-xs font-semibold text-center bg-emerald-50 rounded-lg py-1.5 mt-2">
+                                        You will save ₹{(Number(orderData?.order?.total_discount ?? 0) + Number(orderData?.order?.coupon_discount ?? 0)).toFixed(2)} on this order
+                                    </p>
                                 )}
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Tracking Progress Section */}
-                <div className="mb-8 bg-white border rounded-lg p-6">
-                    <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
-                        <Truck className="w-5 h-5 text-gray-700" />
-                        Delivery Status
-                    </h2>
-
-                    <div className="relative">
-                        {/* Status bar */}
-                        <div className="flex justify-between items-start relative mb-4">
-                            {/* Background Line */}
-                            <div className="absolute top-4 left-4 right-4 h-1 bg-gray-200 -translate-y-1/2 z-0"></div>
-
-                            {/* Active Line (Calculated based on status) */}
-                            {(() => {
-                                const status = latestTrackingStatus;
-                                let progress = '0%';
-                                if (status === 'PROCESSING') progress = '25%';
-                                if (status === 'ORDER_CONFIRMED') progress = '50%';
-                                if (status === 'ON_THE_WAY') progress = '75%';
-                                if (status === 'DELIVERED') progress = '100%';
-
-                                return (
-                                    <div
-                                        className="absolute top-4 left-4 h-1 bg-green-500 -translate-y-1/2 z-0 transition-all duration-500"
-                                        style={{ width: progress }}
-                                    ></div>
-                                );
-                            })()}
-
-                            {['PROCESSING', 'ORDER_CONFIRMED', 'ON_THE_WAY', 'DELIVERED'].map((step, index) => {
-                                const steps = ['PROCESSING', 'ORDER_CONFIRMED', 'ON_THE_WAY', 'DELIVERED'];
-                                const currentIndex = steps.indexOf(latestTrackingStatus);
-                                const isActive = index <= currentIndex;
-                                const isCurrent = index === currentIndex;
-                                const stepUpdate = orderData?.tracking_updates?.find(u => u.status.toUpperCase() === step);
-
-                                return (
-                                    <div key={step} className="flex flex-col items-center relative z-50 w-1/4">
-                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 ${isActive ? 'bg-green-500 border-green-100 text-white' : 'bg-white border-gray-200 text-gray-300'}`}>
-                                            {isActive ? <CheckCircle2 className="w-4 h-4" /> : <div className="w-2 h-2 rounded-full bg-gray-300"></div>}
-                                        </div>
-                                        <div className="mt-2 text-center w-full px-1">
-                                            <p className={`text-[10px] font-bold leading-tight break-words ${isActive ? 'text-gray-900' : 'text-gray-400'}`}>
-                                                {step.replace(/_/g, ' ')}
-                                            </p>
-                                            {isCurrent && stepUpdate?.timestamp && (
-                                                <p className="text-[9px] text-gray-500 mt-0.5">{new Date(stepUpdate.timestamp).toLocaleDateString()}</p>
-                                            )}
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Items Section */}
-                <div className="border rounded-lg overflow-hidden bg-white">
-                    <div className="bg-gray-50 p-4 border-b flex justify-between items-center">
-                        <h2 className="text-lg font-bold text-gray-900">Items Ordered</h2>
-                        {isDelivered && (
-                            <button
-                                onClick={getInvoice}
-                                className="text-sm font-medium text-bio-green hover:text-green-800 hover:underline flex items-center gap-1"
-                            >
-                                <Download className="w-4 h-4" />
-                                Invoice
-                            </button>
-                        )}
-                    </div>
-
-                    <div className="p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                        {orderData?.order_items?.map((item, index) => (
-                            <div key={index} className="flex flex-col rounded-xl border border-gray-100 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
-                                {/* Product Image */}
-                                <div
-                                    className="aspect-square bg-gray-50 flex items-center justify-center p-3 cursor-pointer"
-                                    onClick={() => router.push(getProductUrl(item))}
-                                >
-                                    <img
-                                        src={item?.image?.startsWith('http') ? item.image : `${process.env.NEXT_PUBLIC_API_URL}${item?.image}`}
-                                        alt={item?.product_name}
-                                        className="max-w-full max-h-full object-contain mix-blend-multiply"
-                                    />
-                                </div>
-
-                                {/* Details */}
-                                <div className="p-3 flex flex-col gap-1.5 flex-1">
-                                    <p
-                                        onClick={() => router.push(getProductUrl(item))}
-                                        className="text-xs font-semibold text-gray-800 leading-tight line-clamp-2 cursor-pointer hover:text-bio-green transition-colors"
-                                    >
-                                        {item?.product_name}
-                                    </p>
-
-                                    <div className="flex items-baseline gap-1.5 flex-wrap">
-                                        <span className="text-sm font-bold text-[#15803D]">₹{item?.selling_price}</span>
-                                        {Number(item?.mrp) > Number(item?.selling_price) && (
-                                            <span className="text-[10px] text-gray-400 line-through">₹{item?.mrp}</span>
-                                        )}
-                                    </div>
-
-                                    <p className="text-[10px] text-gray-500">Qty: {item.quantity || 1}</p>
-
-                                    {/* Actions */}
-                                    <div className="mt-auto pt-2 flex flex-col gap-1.5">
-                                        <button
-                                            onClick={() => router.push(getProductUrl(item))}
-                                            className="w-full bg-[#5A8A1A] hover:bg-[#4A7515] text-white py-1.5 rounded-lg text-[10px] font-semibold transition-all"
-                                        >
-                                            Buy Again
-                                        </button>
-
-                                        {isDelivered && !(item.is_reviewed || item.is_review) && (
-                                            <button
-                                                onClick={() => setActiveReviewProductId(item.product_id)}
-                                                className="w-full border border-gray-300 hover:bg-gray-50 text-gray-700 py-1.5 rounded-lg text-[10px] font-semibold transition-all"
-                                            >
-                                                Write Review
-                                            </button>
-                                        )}
-
-                                        {(item.is_reviewed || item.is_review) && isDelivered && (
-                                            <button
-                                                onClick={() => setActiveReviewProductId(item.product_id)}
-                                                className="w-full border border-[#15803D] text-[#15803D] hover:bg-green-50 py-1.5 rounded-lg text-[10px] font-semibold transition-all flex items-center justify-center gap-1"
-                                            >
-                                                <Check className="w-3 h-3" /> Edit Review
-                                            </button>
-                                        )}
-                                    </div>
+                {/* ── Fixed Bottom: GD Coins + Grand Total ── */}
+                <div className="border-t border-gray-100 px-4 pt-3 pb-4 space-y-3 bg-white mt-4 mx-4 rounded-2xl shadow-sm border">
+                    {/* GD Coins */}
+                    {Number(orderData?.order?.gd_coin ?? 0) > 0 && (
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <span className="text-xl">🪙</span>
+                                <div>
+                                    <p className="text-xs font-bold text-gray-800">GD Coins Earned</p>
+                                    <p className="text-[10px] text-gray-400">Use on your next order</p>
                                 </div>
                             </div>
-                        ))}
+                            <span className="text-lg font-extrabold text-orange-500">+{orderData.order.gd_coin}</span>
+                        </div>
+                    )}
+
+                    {/* Grand Total */}
+                    {(() => {
+                        const slabs = {};
+                        (orderData?.order_items || []).forEach(item => {
+                            const cgstRate = parseFloat(item.cgst) || 0;
+                            const sgstRate = parseFloat(item.sgst) || 0;
+                            const gstField = parseFloat(String(item.gst || '').replace('%', '')) || 0;
+                            const totalRate = (cgstRate + sgstRate) > 0 ? (cgstRate + sgstRate) : gstField;
+                            if (totalRate <= 0) return;
+                            const total = Number(item.total) || 0;
+                            const taxable = total / (1 + totalRate / 100);
+                            const gstAmt = total - taxable;
+                            const key = `${totalRate}%`;
+                            if (!slabs[key]) slabs[key] = { slab: key, cgstRate, sgstRate, gstAmt: 0, cgstAmt: 0, sgstAmt: 0 };
+                            slabs[key].gstAmt += gstAmt;
+                            slabs[key].cgstAmt += taxable * cgstRate / 100;
+                            slabs[key].sgstAmt += taxable * sgstRate / 100;
+                        });
+                        const slabEntries = Object.values(slabs);
+                        const totalGst = slabEntries.reduce((s, e) => s + e.gstAmt, 0);
+
+                        const baseGrandTotal = Number(orderData?.order?.grand_total ?? 0);
+
+
+                        return (
+                            <div className="bg-gradient-to-r from-green-600 to-green-800 rounded-xl p-3 flex justify-between items-center">
+                                <span className="text-white font-bold text-sm">Grand Total</span>
+                                <span className="text-white font-extrabold text-lg">₹{baseGrandTotal.toFixed(2)}</span>
+                            </div>
+                        );
+                    })()}
+                </div>
+            </div>
+
+            {/* Tracking Progress Section */}
+            <div className="mb-8 bg-white border rounded-lg p-6">
+                <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
+                    <Truck className="w-5 h-5 text-gray-700" />
+                    Delivery Status
+                </h2>
+
+                <div className="relative">
+                    {/* Status bar */}
+                    <div className="flex justify-between items-start relative mb-4">
+                        {/* Background Line */}
+                        <div className="absolute top-4 left-4 right-4 h-1 bg-gray-200 -translate-y-1/2 z-0"></div>
+
+                        {/* Active Line (Calculated based on status) */}
+                        {(() => {
+                            const status = latestTrackingStatus;
+                            let progress = '0%';
+                            if (status === 'PROCESSING') progress = '25%';
+                            if (status === 'ORDER_CONFIRMED') progress = '50%';
+                            if (status === 'ON_THE_WAY') progress = '75%';
+                            if (status === 'DELIVERED') progress = '100%';
+
+                            return (
+                                <div
+                                    className="absolute top-4 left-4 h-1 bg-green-500 -translate-y-1/2 z-0 transition-all duration-500"
+                                    style={{ width: progress }}
+                                ></div>
+                            );
+                        })()}
+
+                        {['PROCESSING', 'ORDER_CONFIRMED', 'ON_THE_WAY', 'DELIVERED'].map((step, index) => {
+                            const steps = ['PROCESSING', 'ORDER_CONFIRMED', 'ON_THE_WAY', 'DELIVERED'];
+                            const currentIndex = steps.indexOf(latestTrackingStatus);
+                            const isActive = index <= currentIndex;
+                            const isCurrent = index === currentIndex;
+                            const stepUpdate = orderData?.tracking_updates?.find(u => u.status.toUpperCase() === step);
+
+                            return (
+                                <div key={step} className="flex flex-col items-center relative z-50 w-1/4">
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 ${isActive ? 'bg-green-500 border-green-100 text-white' : 'bg-white border-gray-200 text-gray-300'}`}>
+                                        {isActive ? <CheckCircle2 className="w-4 h-4" /> : <div className="w-2 h-2 rounded-full bg-gray-300"></div>}
+                                    </div>
+                                    <div className="mt-2 text-center w-full px-1">
+                                        <p className={`text-[10px] font-bold leading-tight break-words ${isActive ? 'text-gray-900' : 'text-gray-400'}`}>
+                                            {step.replace(/_/g, ' ')}
+                                        </p>
+                                        {isCurrent && stepUpdate?.timestamp && (
+                                            <p className="text-[9px] text-gray-500 mt-0.5">{new Date(stepUpdate.timestamp).toLocaleDateString()}</p>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
+            </div>
 
-                {/* Write a Review Modal */}
-                {activeReviewProductId && (() => {
+            {/* Items Section */}
+            <div className="border rounded-lg overflow-hidden bg-white">
+                <div className="bg-gray-50 p-4 border-b flex justify-between items-center">
+                    <h2 className="text-lg font-bold text-gray-900">Items Ordered</h2>
+                    {isDelivered && (
+                        <button
+                            onClick={getInvoice}
+                            className="text-sm font-medium text-bio-green hover:text-green-800 hover:underline flex items-center gap-1"
+                        >
+                            <Download className="w-4 h-4" />
+                            Invoice
+                        </button>
+                    )}
+                </div>
+
+                <div className="p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {orderData?.order_items?.map((item, index) => (
+                        <div key={index} className="flex flex-col rounded-xl border border-gray-100 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
+                            {/* Product Image */}
+                            <div
+                                className="aspect-square bg-gray-50 flex items-center justify-center p-3 cursor-pointer"
+                                onClick={() => router.push(getProductUrl(item))}
+                            >
+                                <img
+                                    src={item?.image?.startsWith('http') ? item.image : `${process.env.NEXT_PUBLIC_API_URL}${item?.image}`}
+                                    alt={item?.product_name}
+                                    className="max-w-full max-h-full object-contain mix-blend-multiply"
+                                />
+                            </div>
+
+                            {/* Details */}
+                            <div className="p-3 flex flex-col gap-1.5 flex-1">
+                                <p
+                                    onClick={() => router.push(getProductUrl(item))}
+                                    className="text-xs font-semibold text-gray-800 leading-tight line-clamp-2 cursor-pointer hover:text-bio-green transition-colors"
+                                >
+                                    {item?.product_name}
+                                </p>
+
+                                <div className="flex items-baseline gap-1.5 flex-wrap">
+                                    <span className="text-sm font-bold text-[#15803D]">₹{item?.selling_price}</span>
+                                    {Number(item?.mrp) > Number(item?.selling_price) && (
+                                        <span className="text-[10px] text-gray-400 line-through">₹{item?.mrp}</span>
+                                    )}
+                                </div>
+
+                                <p className="text-[10px] text-gray-500">Qty: {item.quantity || 1}</p>
+
+                                {/* Actions */}
+                                <div className="mt-auto pt-2 flex flex-col gap-1.5">
+                                    <button
+                                        onClick={() => router.push(getProductUrl(item))}
+                                        className="w-full bg-[#5A8A1A] hover:bg-[#4A7515] text-white py-1.5 rounded-lg text-[10px] font-semibold transition-all"
+                                    >
+                                        Buy Again
+                                    </button>
+
+                                    {isDelivered && !(item.is_reviewed || item.is_review) && (
+                                        <button
+                                            onClick={() => setActiveReviewProductId(item.product_id)}
+                                            className="w-full border border-gray-300 hover:bg-gray-50 text-gray-700 py-1.5 rounded-lg text-[10px] font-semibold transition-all"
+                                        >
+                                            Write Review
+                                        </button>
+                                    )}
+
+                                    {(item.is_reviewed || item.is_review) && isDelivered && (
+                                        <button
+                                            onClick={() => setActiveReviewProductId(item.product_id)}
+                                            className="w-full border border-[#15803D] text-[#15803D] hover:bg-green-50 py-1.5 rounded-lg text-[10px] font-semibold transition-all flex items-center justify-center gap-1"
+                                        >
+                                            <Check className="w-3 h-3" /> Edit Review
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Write a Review Modal */}
+            {
+                activeReviewProductId && (() => {
                     const reviewItem = orderData?.order_items?.find(i => i.product_id === activeReviewProductId);
                     return (
                         <WriteAReview
@@ -468,24 +584,24 @@ const PostSummaryView = () => {
                             productDetailData={reviewItem}
                         />
                     );
-                })()}
+                })()
+            }
 
-                {/* Bottom Links */}
-                <div className="mt-8 flex flex-col md:flex-row gap-4 items-center justify-between text-sm">
-                    <button
-                        onClick={() => router.push('/profile/orders')}
-                        className="text-[#15803D] hover:underline flex items-center gap-1"
-                    >
-                        <ArrowLeft className="w-4 h-4" />
-                        Back to Your Orders
-                    </button>
-                    <div className="flex gap-4">
-                        <button onClick={() => router.push('/contact-us/')} className="text-[#15803D] hover:underline">Help & Support</button>
-                        <span className="text-gray-300">|</span>
-                        <button onClick={() => router.push('/shipping/')} className="text-[#15803D] hover:underline">Shipping Policies</button>
-                        <span className="text-gray-300">|</span>
-                        <button onClick={() => router.push('/return/')} className="text-[#15803D] hover:underline">Return & Refund Policy</button>
-                    </div>
+            {/* Bottom Links */}
+            <div className="mt-8 flex flex-col md:flex-row gap-4 items-center justify-between text-sm">
+                <button
+                    onClick={() => router.push('/profile/orders')}
+                    className="text-[#15803D] hover:underline flex items-center gap-1"
+                >
+                    <ArrowLeft className="w-4 h-4" />
+                    Back to Your Orders
+                </button>
+                <div className="flex gap-4">
+                    <button onClick={() => router.push('/contact-us/')} className="text-[#15803D] hover:underline">Help & Support</button>
+                    <span className="text-gray-300">|</span>
+                    <button onClick={() => router.push('/shipping/')} className="text-[#15803D] hover:underline">Shipping Policies</button>
+                    <span className="text-gray-300">|</span>
+                    <button onClick={() => router.push('/return/')} className="text-[#15803D] hover:underline">Return & Refund Policy</button>
                 </div>
             </div>
         </div>
