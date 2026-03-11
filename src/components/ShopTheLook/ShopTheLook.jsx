@@ -11,6 +11,8 @@ import { isMobile } from "react-device-detect";
 import { useSelector } from "react-redux";
 import axiosInstance from "../../Axios/axiosInstance";
 import { useShopTheLook } from "../../hooks/useShopTheLook";
+import { applyGstToOrderData } from "../../utils/serverApi";
+
 
 function ShopTheLook() {
   const [showPopup, setShowPopup] = useState(false);
@@ -108,7 +110,7 @@ function ShopTheLook() {
           is_shop_the_look: true
         };
 
-        sessionStorage.setItem('checkout_ordersummary', JSON.stringify(placeOrderResponse.data.data));
+        sessionStorage.setItem('checkout_ordersummary', JSON.stringify(applyGstToOrderData(placeOrderResponse.data.data)));
         sessionStorage.setItem('checkout_combo_offer', JSON.stringify(comboOfferData));
         router.push("/checkout");
       }

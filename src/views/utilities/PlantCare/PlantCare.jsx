@@ -9,6 +9,7 @@ import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedPro
 import CheckoutStores from "./CheckoutStores";
 import { FiFilter } from "react-icons/fi";
 import axiosInstance from "../../../Axios/axiosInstance";
+import { applyGstToProduct } from "../../../utils/serverApi";
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
 
@@ -51,7 +52,7 @@ function PlantCare() {
             `${process.env.NEXT_PUBLIC_API_URL}/filters/main_productsFilter/?search=${query}`
           );
           if (response.status === 200) {
-            setResults(response.data.results || []);
+            setResults((response.data.results || []).map(applyGstToProduct));
             setProducts({
               count: response.data.count,
               next: response.data.next,
@@ -71,7 +72,7 @@ function PlantCare() {
         );
 
         if (response.status === 200) {
-          setResults(response.data.results || []);
+          setResults((response.data.results || []).map(applyGstToProduct));
           setProducts({
             count: response.data.count,
             next: response.data.next,

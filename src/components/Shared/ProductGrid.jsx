@@ -7,6 +7,7 @@ import ProductCard from "./ProductCard";
 import axiosInstance from "../../Axios/axiosInstance";
 import { getProductUrl, toSlugString } from "../../utils/urlHelper";
 import { trackViewItemList, trackSelectItem } from "../../utils/ga4Ecommerce";
+import { applyGstToProduct } from "../../utils/serverApi";
 
 
 const ProductGrid = ({
@@ -100,7 +101,7 @@ const ProductGrid = ({
       const res = await axiosInstance.get(url);
 
       if (res?.status === 200) {
-        const newProducts = res.data?.results || res.data?.products || [];
+        const newProducts = (res.data?.results || res.data?.products || []).map(applyGstToProduct);
 
         if (Array.isArray(newProducts)) {
           setResults(newProducts);

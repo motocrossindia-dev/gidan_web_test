@@ -9,6 +9,8 @@ import { enqueueSnackbar } from "notistack";
 import { isMobile } from "react-device-detect";
 import { useSelector } from "react-redux";
 import axiosInstance from "../../Axios/axiosInstance";
+import { applyGstToOrderData } from "../../utils/serverApi";
+
 
 
 const PopupShopTheLook = ({ onClose }) => {
@@ -136,7 +138,7 @@ const PopupShopTheLook = ({ onClose }) => {
           is_shop_the_look: true
         };
 
-        sessionStorage.setItem('checkout_ordersummary', JSON.stringify(placeOrderResponse.data.data));
+        sessionStorage.setItem('checkout_ordersummary', JSON.stringify(applyGstToOrderData(placeOrderResponse.data.data)));
         sessionStorage.setItem('checkout_combo_offer', JSON.stringify(comboOfferData));
         router.push("/checkout");
       }

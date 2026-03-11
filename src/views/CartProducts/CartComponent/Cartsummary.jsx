@@ -7,6 +7,8 @@ import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { useEffect } from "react";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { useSnackbar } from "notistack";   // ✅ import notistack
+import { applyGstToOrderData } from "../../../utils/serverApi";
+
 
 const CartSummary = ({
   totalItems,
@@ -37,7 +39,7 @@ const CartSummary = ({
       );
 
       if (response.status === 200) {
-        sessionStorage.setItem('checkout_ordersummary', JSON.stringify(response.data.data));
+        sessionStorage.setItem('checkout_ordersummary', JSON.stringify(applyGstToOrderData(response.data.data)));
         sessionStorage.removeItem('checkout_combo_offer');
         router.push("/checkout");
       }

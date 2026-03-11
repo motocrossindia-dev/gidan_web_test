@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import axiosInstance from "../../../Axios/axiosInstance";
+import { applyGstToProduct } from "../../../utils/serverApi";
 const API_URL = `/filters/filters_n/`;
 const getOptionValue = (option) => {
   if (typeof option === "string") return option;
@@ -354,7 +355,7 @@ const FilterSidebar = ({
 
       const res = await axiosInstance.get(`/filters/main_productsFilter/?${params}&page_size=12`);
       if (setCurrentQuery) setCurrentQuery(params.toString());
-      setResults(res.data.results);
+      setResults((res.data.results || []).map(applyGstToProduct));
 
       // Update pagination so ProductGrid shows correct count
       if (setProducts) {
@@ -529,7 +530,7 @@ const FilterSidebar = ({
 
       const res = await axiosInstance.get(`/filters/main_productsFilter/?${params}&page_size=12`);
       if (setCurrentQuery) setCurrentQuery(params.toString());
-      if (setResults) setResults(res.data.results || []);
+      if (setResults) setResults((res.data.results || []).map(applyGstToProduct));
       if (setProducts) {
         setProducts({
           count: res.data.count,

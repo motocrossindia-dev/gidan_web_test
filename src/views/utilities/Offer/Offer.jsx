@@ -26,7 +26,8 @@ function Offer({ initialOffers = [] }) {
     try {
       const response = await axiosInstance.get(`/product/offerProducts/`);
       if (response.status === 200) {
-        setOffers(response.data.products || []);
+        const { applyGstToProduct } = await import('../../../utils/serverApi');
+        setOffers((response.data.products || []).map(applyGstToProduct));
       }
     } catch (error) {
       console.error("Error fetching offers:", error);

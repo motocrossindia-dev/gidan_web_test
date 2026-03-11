@@ -14,6 +14,7 @@ import Breadcrumb from "../../../components/Shared/Breadcrumb";
 import Link from "next/link";
 import CategoryStaticSEO from "../Info/CategoryStaticSEO";
 import axiosInstance from "../../../Axios/axiosInstance";
+import { applyGstToProduct } from "../../../utils/serverApi";
 
 /**
  * @param {object} props
@@ -249,7 +250,7 @@ function PlantFilter({
                         `/product/offerProducts/`
                     );
                     if (response.status === 200) {
-                        setResults(response.data.products || []);
+                        setResults((response.data.products || []).map(applyGstToProduct));
                         setProducts(response.data || {});
                     }
                 } catch (error) { }
@@ -284,7 +285,7 @@ function PlantFilter({
 
                 if (response.status === 200) {
                     setCurrentQuery(queryParams.toString());
-                    setResults(response.data.results || []);
+                    setResults((response.data.results || []).map(applyGstToProduct));
                     setProducts({
                         count: response.data.count,
                         next: response.data.next,

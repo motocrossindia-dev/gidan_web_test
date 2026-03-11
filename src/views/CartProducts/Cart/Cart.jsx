@@ -11,6 +11,7 @@ import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { useSearchParams } from "next/navigation";
 import { trackViewCart, trackRemoveFromCart } from "../../../utils/ga4Ecommerce";
+import { applyGstToProduct } from "../../../utils/serverApi";
 import emptyCartImg from "../../../Assets/emptycart.webp";
 
 const Cart = () => {
@@ -25,7 +26,7 @@ const Cart = () => {
         const response = await axiosInstance.get(`/order/cart/`);
 
         if (response.data?.message === "success") {
-          const cartItems = response.data.data.cart;
+          const cartItems = (response.data.data.cart || []).map(applyGstToProduct);
           setProducts(cartItems);
 
           // GA4: Track view_cart event

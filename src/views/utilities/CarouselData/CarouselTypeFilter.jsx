@@ -6,6 +6,7 @@ import ProductGrid from "../../../components/Shared/ProductGrid";
 import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
 import CheckoutStores from "../PlantFilter/CheckoutStores";
 import axiosInstance from "../../../Axios/axiosInstance";
+import { applyGstToProduct } from "../../../utils/serverApi";
 function CarouselTypeFilter() {
     const { slug } = useParams();
     const pathname = usePathname();
@@ -28,7 +29,7 @@ function CarouselTypeFilter() {
                 `/filters/main_productsFilter/?type=${typeParam}`
             );
             if (res.status === 200) {
-                setResults(res.data.results || []);
+                setResults((res.data.results || []).map(applyGstToProduct));
                 setProducts({
                     count: res.data.count,
                     next: res.data.next,

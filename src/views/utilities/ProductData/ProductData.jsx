@@ -25,6 +25,7 @@ import { FaStar } from "react-icons/fa6";
 import { FaStarHalfAlt, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
+import { applyGstToDetailResponse, applyGstToOrderData } from "../../../utils/serverApi";
 // Schemas moved to Server Component (page.tsx) for better SSR/SEO
 import WriteAReview from "./WriteAReview";
 import StoreSchema from "../seo/StoreSchema";
@@ -506,7 +507,8 @@ export default function ProductData({ initialProductData }) {
                     window.dispatchEvent(new Event("cartUpdated"));
 
 
-                    sessionStorage.setItem('checkout_ordersummary', JSON.stringify(response.data.data));
+                    const orderDataWithGst = applyGstToOrderData(response.data.data);
+                    sessionStorage.setItem('checkout_ordersummary', JSON.stringify(orderDataWithGst));
                     sessionStorage.removeItem('checkout_combo_offer');
                     router.push("/checkout");
                 }
@@ -627,7 +629,7 @@ export default function ProductData({ initialProductData }) {
             setcategory_slug(data?.data?.product?.category_slug);
             setsubcategory_slug(data?.data?.product?.sub_category_slug);
             setImageThumbnails(images);
-            setProductDetailData(data);
+            setProductDetailData(applyGstToDetailResponse(data));
 
             // You can update state or perform additional actions with the filtered products
         } catch (error) {// Handle error scenarios
@@ -664,7 +666,7 @@ export default function ProductData({ initialProductData }) {
             setproduct_slug(data?.data?.product?.slug || id);
             setcategory_slug(data?.data?.product?.category_slug);
             setsubcategory_slug(data?.data?.product?.sub_category_slug);
-            setProductDetailData(data);
+            setProductDetailData(applyGstToDetailResponse(data));
         } catch (error) { }
     };
 
@@ -699,7 +701,7 @@ export default function ProductData({ initialProductData }) {
                 setImageThumbnails(data?.data?.product?.images || []);
             }
 
-            setProductDetailData(data);
+            setProductDetailData(applyGstToDetailResponse(data));
         } catch (error) { }
     };
 
@@ -736,7 +738,7 @@ export default function ProductData({ initialProductData }) {
             setcategory_slug(data?.data?.product?.category_slug);
             setsubcategory_slug(data?.data?.product?.sub_category_slug);
             setImageThumbnails(images);
-            setProductDetailData(data);
+            setProductDetailData(applyGstToDetailResponse(data));
 
             // You can update state or perform additional actions with the filtered products
         } catch (error) {// Handle error scenarios
@@ -776,7 +778,7 @@ export default function ProductData({ initialProductData }) {
             setcategory_slug(data?.data?.product?.category_slug);
             setsubcategory_slug(data?.data?.product?.sub_category_slug);
             setImageThumbnails(images);
-            setProductDetailData(data);
+            setProductDetailData(applyGstToDetailResponse(data));
 
             // You can update state or perform additional actions with the filtered products
         } catch (error) {// Handle error scenarios
@@ -815,7 +817,7 @@ export default function ProductData({ initialProductData }) {
             setcategory_slug(data?.data?.product?.category_slug);
             setsubcategory_slug(data?.data?.product?.sub_category_slug);
             setImageThumbnails(images);
-            setProductDetailData(data);
+            setProductDetailData(applyGstToDetailResponse(data));
             setSelectedImage(0);
 
         } catch (error) { }
@@ -833,7 +835,7 @@ export default function ProductData({ initialProductData }) {
                 const response = await axiosInstance.get(`/product/product_detail_view/${productSlug}/${queryParams ? '?' + queryParams : ''}`);
 
                 if (response.status === 200) {
-                    const data = response.data;
+                    const data = applyGstToDetailResponse(response.data);
                     setProductDetailData(data);
                     setAddOnData(data?.data?.product_add_ons || []);
                     setImageThumbnails(data?.data?.product?.images || []);
@@ -1200,7 +1202,7 @@ export default function ProductData({ initialProductData }) {
                             </p>
                             {productDetailData?.data?.product?.whats_included && (
                                 <p className="text-sm text-gray-600 mb-4 italic">
-                                    <span className="font-bold">What's included:</span> {productDetailData.data.product.whats_included}
+                                    <span className="font-bold">What&apos;s included:</span> {productDetailData.data.product.whats_included}
                                 </p>
                             )}
                             <div className="flex items-center gap-4 mb-4">

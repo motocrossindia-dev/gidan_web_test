@@ -1,5 +1,70 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://gidanbackendtest.mymotokart.in";
 
+// Apply GST to a product's mrp and selling_price.
+// API returns base (pre-GST) prices; actual price = base * (1 + total_gst / 100)
+// In Indian GST: total rate = CGST + SGST (e.g. 9+9=18%), fall back to gst field.
+// Handles both number and string values (detail API returns strings like "9.00", "18%").
+export function applyGstToProduct(product) {
+    const cgst = parseFloat(product.cgst) || 0;
+    const sgst = parseFloat(product.sgst) || 0;
+    const gst = parseFloat(String(product.gst).replace('%', '')) || 0;
+    const rate = (cgst + sgst) > 0 ? (cgst + sgst) : gst;
+    const multiplier = 1 + rate / 100;
+    return {
+        ...product,
+        mrp: parseFloat((product.mrp * multiplier).toFixed(2)),
+        selling_price: parseFloat((product.selling_price * multiplier).toFixed(2)),
+    };
+}
+
+// Apply GST to a full product_detail_view response object.
+export function applyGstToDetailResponse(responseData) {
+    if (!responseData?.data?.product) return responseData;
+    return {
+        ...responseData,
+        data: {
+            ...responseData.data,
+            product: applyGstToProduct(responseData.data.product),
+        },
+    };
+}
+
+// Apply GST to a placeOrder / order-fetch response ({ order, order_items, ... }).
+// Transforms each order_item's mrp, selling_price, total and recalculates
+// order.total_price and order.grand_total accordingly.
+export function applyGstToOrderData(data) {
+    if (!data) return data;
+
+    const orderItems = (data.order_items || []).map(item => {
+        const cgst = parseFloat(item.cgst) || 0;
+        const sgst = parseFloat(item.sgst) || 0;
+        const gst  = parseFloat(String(item.gst).replace('%', '')) || 0;
+        const rate = (cgst + sgst) > 0 ? (cgst + sgst) : gst;
+        const mul  = 1 + rate / 100;
+        return {
+            ...item,
+            mrp:           parseFloat((parseFloat(item.mrp)           * mul).toFixed(2)),
+            selling_price: parseFloat((parseFloat(item.selling_price) * mul).toFixed(2)),
+            total:         parseFloat((parseFloat(item.total)         * mul).toFixed(2)),
+        };
+    });
+
+    const order = data.order ? { ...data.order } : null;
+    if (order) {
+        const newTotalPrice   = orderItems.reduce((sum, i) => sum + i.total, 0);
+        const shippingCharge  = parseFloat(order.shipping_charge) || parseFloat(data.shipping_info?.shipping_charge) || 0;
+        const couponDiscount  = parseFloat(order.coupon_discount)  || 0;
+        order.total_price  = parseFloat(newTotalPrice.toFixed(2));
+        order.grand_total  = parseFloat((newTotalPrice + shippingCharge - couponDiscount).toFixed(2));
+        // Keep shipping_charge on order so downstream calcs stay consistent
+        if (!order.shipping_charge && shippingCharge > 0) {
+            order.shipping_charge = shippingCharge;
+        }
+    }
+
+    return { ...data, order, order_items: orderItems };
+}
+
 export async function fetchCategoryBySlug(slug) {
     try {
         const res = await fetch(`${API_URL}/category/`, { next: { revalidate: 300 } });
@@ -72,9 +137,10 @@ export async function fetchProductsByFilters(filters = {}) {
 
         // Normalize the response to ensure consistency with PlantFilter/ProductGrid expectations
         // Backend sometimes returns results, sometimes products. We ensure it's always an object.
+        const rawResults = (data?.results || data?.products || []).map(applyGstToProduct);
         return {
-            results: data?.results || data?.products || [],
-            count: data?.count || (data?.results || data?.products || []).length,
+            results: rawResults,
+            count: data?.count || rawResults.length,
             next: data?.next || null,
             previous: data?.previous || null,
             category_info: data?.category_info // Preserve extra metadata if present
@@ -92,7 +158,7 @@ export async function fetchProductDetail(productSlug, searchParams = {}) {
         const res = await fetch(url, { next: { revalidate: 3600 } });
         if (!res.ok) return null;
         const data = await res.json();
-        return data;
+        return applyGstToDetailResponse(data);
     } catch (err) {
         console.error("Error fetching product detail", err);
         return null;
@@ -119,7 +185,7 @@ export async function fetchOfferProducts() {
         const res = await fetch(`${API_URL}/product/offerProducts/`, { next: { revalidate: 300 } });
         if (!res.ok) return [];
         const data = await res.json();
-        return data?.products || [];
+        return (data?.products || []).map(applyGstToProduct);
     } catch (err) {
         console.error("Error fetching offer products", err);
         return [];

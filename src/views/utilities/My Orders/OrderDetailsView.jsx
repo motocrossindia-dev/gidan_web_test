@@ -24,6 +24,7 @@ import { enqueueSnackbar } from 'notistack';
 import { motion } from "framer-motion";
 import WriteAReview from '../ProductData/WriteAReview';
 import { getProductUrl } from '../../../utils/urlHelper';
+import { applyGstToOrderData } from '../../../utils/serverApi';
 
 const OrderDetailsView = () => {
     const router = useRouter();
@@ -52,13 +53,13 @@ const OrderDetailsView = () => {
             // 2. Fetch tracking and items (existing API)
             const response = await axiosInstance.get(`/order/orderHistoryItems/${numericId}`);
             if (response.status === 200) {
-                setOrderData(response.data.data);
+                setOrderData(applyGstToOrderData(response.data.data));
             }
 
             // 3. Fetch from the specific order API (new API)
             const extraResponse = await axiosInstance.get(`/order/${numericId}/`);
             if (extraResponse.status === 200) {
-                setExtraOrderDetails(extraResponse.data.data);
+                setExtraOrderDetails(applyGstToOrderData(extraResponse.data.data));
             }
 
         } catch (error) {
@@ -152,7 +153,7 @@ const OrderDetailsView = () => {
 
     return (
         <div className="min-h-screen bg-white pb-20">
-            
+
 
             {/* Top Navigation */}
             <div className="bg-gray-100 border-b">

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle2, Package, ArrowRight, ShoppingBag } from 'lucide-react';
 import axiosInstance from '../../../Axios/axiosInstance';
+import { applyGstToOrderData } from '../../../utils/serverApi';
 
 const Successpage = () => {
   const router = useRouter();
@@ -52,7 +53,7 @@ const Successpage = () => {
     const fetchOrder = async () => {
       try {
         const res = await axiosInstance.get(`/order/${orderId}/`);
-        if (res.status === 200) setOrderData(res.data.data);
+        if (res.status === 200) setOrderData(applyGstToOrderData(res.data.data));
       } catch (e) {
         console.error('Failed to fetch order details', e);
       } finally {

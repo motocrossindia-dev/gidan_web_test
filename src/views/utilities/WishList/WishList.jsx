@@ -10,6 +10,7 @@ import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { trackAddToCart } from "../../../utils/ga4Ecommerce";
+import { applyGstToProduct } from "../../../utils/serverApi";
 import emptyWishlistImg from "../../../Assets/wishlist.webp";
 
 
@@ -112,8 +113,8 @@ const WishList = () => {
   const getWishlistItems = async () => {
     try {
       const response = await axiosInstance.get(`/order/wishlist/`);
-      const itemsWithOldPrices = response.data?.data?.wishlists.map((item) => ({
-        ...item,
+      const itemsWithOldPrices = (response.data?.data?.wishlists || []).map((item) => ({
+        ...applyGstToProduct(item),
         oldPrice: Number(item.price) + 100,
       }));
       setWishlistItems(itemsWithOldPrices);

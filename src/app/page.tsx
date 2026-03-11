@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Home from '@/components/Home/Home';
 import HomepageSchema from "@/views/utilities/seo/HomepageSchema";
 import GlobalIdentitySchema from "@/views/utilities/seo/GlobalIdentitySchema";
+import { applyGstToProduct } from "@/utils/serverApi";
 // Server-side fetching for LCP optimization
 async function getInitialBanners() {
   try {
@@ -50,7 +51,7 @@ async function getInitialTrendingProducts() {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/filters/main_productsFilter/?is_trending=true&page_size=20`, { next: { revalidate: 300 } });
     if (!res.ok) return [];
     const data = await res.json();
-    return data?.results || data?.products || [];
+    return (data?.results || data?.products || []).map(applyGstToProduct);
   } catch (err) {
     console.error("Failed to fetch trending products on server", err);
     return [];
@@ -62,7 +63,7 @@ async function getInitialFeaturedProducts() {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/filters/main_productsFilter/?is_featured=true&page_size=20`, { next: { revalidate: 300 } });
     if (!res.ok) return [];
     const data = await res.json();
-    return data?.results || data?.products || [];
+    return (data?.results || data?.products || []).map(applyGstToProduct);
   } catch (err) {
     console.error("Failed to fetch featured products on server", err);
     return [];
@@ -74,7 +75,7 @@ async function getInitialBestsellerProducts() {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/filters/main_productsFilter/?is_best_seller=true&page_size=20`, { next: { revalidate: 300 } });
     if (!res.ok) return [];
     const data = await res.json();
-    return data?.results || data?.products || [];
+    return (data?.results || data?.products || []).map(applyGstToProduct);
   } catch (err) {
     console.error("Failed to fetch best seller products on server", err);
     return [];
@@ -86,7 +87,7 @@ async function getInitialSeasonalProducts() {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/filters/main_productsFilter/?is_seasonal_collection=true&page_size=20`, { next: { revalidate: 300 } });
     if (!res.ok) return [];
     const data = await res.json();
-    return data?.results || data?.products || [];
+    return (data?.results || data?.products || []).map(applyGstToProduct);
   } catch (err) {
     console.error("Failed to fetch seasonal products on server", err);
     return [];
