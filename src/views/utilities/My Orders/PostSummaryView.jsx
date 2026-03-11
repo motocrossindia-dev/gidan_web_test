@@ -384,8 +384,8 @@ const PostSummaryView = () => {
                     </div>
                 </div>
 
-                {/* ── Fixed Bottom: GD Coins + Grand Total ── */}
-                <div className="border-t border-gray-100 px-4 pt-3 pb-4 space-y-3 bg-white mt-4 mx-4 rounded-2xl shadow-sm border">
+                {/* ── Fixed Bottom: GD Coins  ── */}
+                <div className="pt-3 pb-4 space-y-3 px-4">
                     {/* GD Coins */}
                     {Number(orderData?.order?.gd_coin ?? 0) > 0 && (
                         <div className="flex items-center justify-between">
@@ -399,38 +399,6 @@ const PostSummaryView = () => {
                             <span className="text-lg font-extrabold text-orange-500">+{orderData.order.gd_coin}</span>
                         </div>
                     )}
-
-                    {/* Grand Total */}
-                    {(() => {
-                        const slabs = {};
-                        (orderData?.order_items || []).forEach(item => {
-                            const cgstRate = parseFloat(item.cgst) || 0;
-                            const sgstRate = parseFloat(item.sgst) || 0;
-                            const gstField = parseFloat(String(item.gst || '').replace('%', '')) || 0;
-                            const totalRate = (cgstRate + sgstRate) > 0 ? (cgstRate + sgstRate) : gstField;
-                            if (totalRate <= 0) return;
-                            const total = Number(item.total) || 0;
-                            const taxable = total / (1 + totalRate / 100);
-                            const gstAmt = total - taxable;
-                            const key = `${totalRate}%`;
-                            if (!slabs[key]) slabs[key] = { slab: key, cgstRate, sgstRate, gstAmt: 0, cgstAmt: 0, sgstAmt: 0 };
-                            slabs[key].gstAmt += gstAmt;
-                            slabs[key].cgstAmt += taxable * cgstRate / 100;
-                            slabs[key].sgstAmt += taxable * sgstRate / 100;
-                        });
-                        const slabEntries = Object.values(slabs);
-                        const totalGst = slabEntries.reduce((s, e) => s + e.gstAmt, 0);
-
-                        const baseGrandTotal = Number(orderData?.order?.grand_total ?? 0);
-
-
-                        return (
-                            <div className="bg-gradient-to-r from-green-600 to-green-800 rounded-xl p-3 flex justify-between items-center">
-                                <span className="text-white font-bold text-sm">Grand Total</span>
-                                <span className="text-white font-extrabold text-lg">₹{baseGrandTotal.toFixed(2)}</span>
-                            </div>
-                        );
-                    })()}
                 </div>
             </div>
 
