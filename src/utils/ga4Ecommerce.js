@@ -104,7 +104,6 @@ export const trackViewItem = (product) => {
 
     window.dataLayer.push({ ecommerce: null }); // Clear previous ecommerce object
     window.dataLayer.push({ event: 'view_item', ecommerce: params });
-    gtagEvent('view_item', params);
 };
 
 /**
@@ -126,7 +125,6 @@ export const trackViewItemList = (products, listName = 'Product List') => {
 
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'view_item_list', ecommerce: params });
-    gtagEvent('view_item_list', params);
 };
 
 /**
@@ -149,7 +147,6 @@ export const trackSelectItem = (product, listName = 'Product List', index = 0) =
 
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'select_item', ecommerce: params });
-    gtagEvent('select_item', params);
 };
 
 /**
@@ -171,7 +168,6 @@ export const trackAddToCart = (product, quantity = 1) => {
 
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'add_to_cart', ecommerce: params });
-    gtagEvent('add_to_cart', params);
 };
 
 /**
@@ -193,7 +189,6 @@ export const trackRemoveFromCart = (product, quantity = 1) => {
 
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'remove_from_cart', ecommerce: params });
-    gtagEvent('remove_from_cart', params);
 };
 
 /**
@@ -215,7 +210,6 @@ export const trackViewCart = (cartItems) => {
 
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'view_cart', ecommerce: params });
-    gtagEvent('view_cart', params);
 };
 
 /**
@@ -238,7 +232,6 @@ export const trackBeginCheckout = (cartItems, totalValue = null) => {
 
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'begin_checkout', ecommerce: params });
-    gtagEvent('begin_checkout', params);
 };
 
 /**
@@ -263,7 +256,6 @@ export const trackAddShippingInfo = (cartItems, shippingTier = 'Standard', total
 
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'add_shipping_info', ecommerce: params });
-    gtagEvent('add_shipping_info', params);
 };
 
 /**
@@ -288,7 +280,6 @@ export const trackAddPaymentInfo = (cartItems, paymentType = 'Unknown', totalVal
 
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'add_payment_info', ecommerce: params });
-    gtagEvent('add_payment_info', params);
 };
 
 /**
@@ -327,7 +318,6 @@ export const trackPurchase = (orderData) => {
 
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'purchase', ecommerce: params });
-    gtagEvent('purchase', params);
 };
 
 /**
@@ -356,7 +346,6 @@ export const trackRefund = (transactionId, value = null, items = null) => {
 
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'refund', ecommerce: params });
-    gtagEvent('refund', params);
 };
 
 /**
@@ -377,7 +366,6 @@ export const trackAddToWishlist = (product) => {
 
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({ event: 'add_to_wishlist', ecommerce: params });
-    gtagEvent('add_to_wishlist', params);
 };
 
 /**
@@ -392,7 +380,6 @@ export const trackSearch = (searchTerm) => {
     const params = { search_term: searchTerm };
 
     window.dataLayer.push({ event: 'search', ...params });
-    gtagEvent('search', params);
 };
 
 /**
@@ -406,7 +393,6 @@ export const trackCustomEvent = (eventName, eventParams = {}) => {
     if (!eventName || !initDataLayer()) return;
 
     window.dataLayer.push({ event: eventName, ...eventParams });
-    gtagEvent(eventName, eventParams);
 };
 
 export default {

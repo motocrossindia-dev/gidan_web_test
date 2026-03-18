@@ -110,17 +110,6 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://checkout.razorpay.com" />
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
 
-        {/* Google Analytics — afterInteractive so it never blocks paint */}
-        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-T4GR7HMTN6" strategy="afterInteractive" />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-T4GR7HMTN6');
-          `}
-        </Script>
-
         {/* Logo/favicon theme switch — ONLY this tiny critical path stays beforeInteractive */}
         <Script id="theme-logo" strategy="beforeInteractive">
           {`(function(){function u(d){var f=document.querySelector('link[rel="icon"]'),a=document.querySelector('link[rel="apple-touch-icon"]'),o=location.origin;if(f)f.href=o+(d?'/logo-white.webp':'/logo.webp');if(a)a.href=o+(d?'/logo-white.webp':'/logo.webp');}var m=window.matchMedia('(prefers-color-scheme: dark)');u(m.matches);m.addEventListener('change',function(e){u(e.matches);});})();`}
@@ -147,13 +136,15 @@ export default function RootLayout({
         </Script>
       </head>
       <body className={`${nunitoSans.variable} font-sans antialiased`} suppressHydrationWarning>
-        {/* Google Tag Manager */}
+        {/* Google Tag Manager - GA4 is managed via GTM container */}
         <Script id="gtm-script" strategy="afterInteractive">
-          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-          })(window,document,'script','dataLayer','GTM-NT2JNL5Z');`}
+          {`
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-NT2JNL5Z');
+          `}
         </Script>
         {/* Noscript fallbacks */}
         <noscript>
