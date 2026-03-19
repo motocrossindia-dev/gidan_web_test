@@ -20,18 +20,10 @@ const isBrowser = () => typeof window !== 'undefined';
  */
 const initDataLayer = () => {
     if (!isBrowser()) return false;
-    window.dataLayer = window.dataLayer || [];
-    return true;
-};
-
-/**
- * Helper: call gtag() directly so events reach GA4 even without GTM
- */
-const gtagEvent = (eventName, params) => {
-    if (!isBrowser()) return;
-    if (typeof window.gtag === 'function') {
-        window.gtag('event', eventName, params);
+    if (typeof window.dataLayer === 'undefined') {
+        window.dataLayer = [];
     }
+    return true;
 };
 
 /**

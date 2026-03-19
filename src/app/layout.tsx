@@ -100,7 +100,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* Preconnect for LCP image origin — crossOrigin required for next/image CORS requests */}
         <link rel="preconnect" href="https://backend.gidan.store" crossOrigin="anonymous" />
@@ -139,6 +139,7 @@ export default function RootLayout({
         {/* Google Tag Manager - GA4 is managed via GTM container */}
         <Script id="gtm-script" strategy="afterInteractive">
           {`
+            window.dataLayer = window.dataLayer || [];
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
             j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
