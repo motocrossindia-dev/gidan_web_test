@@ -1127,6 +1127,11 @@ const CheckoutPage = () => {
   const [savingOrder, setSavingOrder] = useState(false);
   const [showGstDetail, setShowGstDetail] = useState(false);
   const [showShippingDetail, setShowShippingDetail] = useState(false);
+  const [expandedGst, setExpandedGst] = useState({});
+
+  const toggleGstExpand = (key) => {
+    setExpandedGst(prev => ({ ...prev, [key]: !prev[key] }));
+  };
 
   // ── Payment Step State ──
   const [showPaymentStep, setShowPaymentStep] = useState(false);
@@ -1665,7 +1670,7 @@ const CheckoutPage = () => {
                         const qty        = Number(item.quantity)       || 1;
                         const totalSav   = unitDisc * qty;
                         const savPct     = unitMrp > 0 && unitDisc > 0 ? Math.round((unitDisc / unitMrp) * 100) : 0;
-                        const lineTotal  = Number(item.total)          || 0;
+                        const lineTotal  = Number(item.selling_price)  || 0;
                         return (
                           <tr key={item.id} className="align-middle">
                             {/* Description */}
@@ -1730,7 +1735,7 @@ const CheckoutPage = () => {
                   {/* Sub Total */}
                   <div className="flex justify-between text-gray-600">
                     <span>Sub Total</span>
-                    <span>₹{Number(activeOrder?.total_price ?? 0).toFixed(2)}</span>
+                    <span>₹{Number(activeOrder?.total_selling_price ?? 0).toFixed(2)}</span>
                   </div>
 
                   {/* Product Discount */}
@@ -1771,21 +1776,67 @@ const CheckoutPage = () => {
                     </span>
                   </div>
 
-                  {/* Product GST */}
-                  {(Number(activeOrder?.gst_amount_18 ?? 0) + Number(activeOrder?.gst_amount_5 ?? 0) + Number(activeOrder?.gst_amount_0 ?? 0)) > 0 && (
-                    <div className="flex justify-between text-gray-600">
-                      <span>Product GST</span>
-                      <span>₹{(Number(activeOrder?.gst_amount_18 ?? 0) + Number(activeOrder?.gst_amount_5 ?? 0) + Number(activeOrder?.gst_amount_0 ?? 0)).toFixed(2)}</span>
+                  {/* Taxable Value */}
+                  {Number(activeOrder?.taxable_value ?? 0) > 0 && (
+                    <div className="flex justify-between text-gray-600 border-t border-dashed pt-2">
+                      <span>Taxable Value</span>
+                      <span>₹{Number(activeOrder.taxable_value).toFixed(2)}</span>
                     </div>
                   )}
 
-                  {/* Shipping GST */}
-                  {Number(activeOrder?.shipping_gst ?? 0) > 0 && (
+                  {/* GST Breakdown (from summary) */}
+                  {activeOrder?.gst_breakdown?.summary && Object.entries(activeOrder.gst_breakdown.summary).map(([key, gst]) => {
+                    const totalGst = Number(gst.total || 0);
+                    if (totalGst === 0) return null;
+                    const rate = key.split('_')[1]; // e.g. "gst_18" -> "18"
+                    const isIntra = activeOrder.gst_type === 'intra';
+                    const isExpanded = expandedGst[key];
+
+                    return (
+                      <div key={key} className="space-y-1">
+                        <div 
+                          className="flex justify-between items-center text-gray-600 text-xs cursor-pointer hover:text-green-700 transition-colors py-0.5"
+                          onClick={() => toggleGstExpand(key)}
+                        >
+                          <div className="flex items-center gap-1">
+                            <span>GST ({rate}%)</span>
+                            <span className={`text-[8px] transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}>▼</span>
+                          </div>
+                          <span>₹{totalGst.toFixed(2)}</span>
+                        </div>
+                        
+                        {isExpanded && (
+                          <div className="overflow-hidden animate-in slide-in-from-top-1 duration-200">
+                            {isIntra ? (
+                              <div className="flex flex-col pl-4 text-[10px] text-gray-400 space-y-0.5 pb-1">
+                                <div className="flex justify-between">
+                                  <span>CGST ({Number(rate) / 2}%)</span>
+                                  <span>₹{Number(gst.cgst).toFixed(2)}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>SGST ({Number(rate) / 2}%)</span>
+                                  <span>₹{Number(gst.sgst).toFixed(2)}</span>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex justify-between pl-4 text-[10px] text-gray-500 pb-1">
+                                <span>IGST ({rate}%)</span>
+                                <span>₹{totalGst.toFixed(2)}</span>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+
+                  {/* GST Amount (Deprecated in favor of breakdown, but kept if needed elsewhere) */}
+                  {/* {Number(activeOrder?.gst_amount ?? 0) > 0 && (
                     <div className="flex justify-between text-gray-600">
-                      <span>Shipping GST</span>
-                      <span>₹{Number(activeOrder.shipping_gst).toFixed(2)}</span>
+                      <span>GST Amount</span>
+                      <span>₹{Number(activeOrder.gst_amount).toFixed(2)}</span>
                     </div>
-                  )}
+                  )} */}
 
                   {/* Total Amount */}
                   <div className="flex justify-between text-gray-800 font-bold border-t pt-2 text-base">

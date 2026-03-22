@@ -154,16 +154,14 @@ const OrderSummary = () => {
               <div className="flex-1">
                 <h3 className="font-medium">{item.product_name}</h3>
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm">₹{item.price}.00</span>
+                  <span className="text-sm">₹{item.selling_price}</span>
                   <div className="flex items-center">
                     <span className="px-2 py-1 bg-gray-100 border rounded-md text-sm">
-                      {/* {quantity[item`${item}`]} */}
                       {item.quantity}
                     </span>
                   </div>
                 </div>
               </div>
-              <button className="text-red-500 text-sm">Remove</button>
             </div>
           ))}
         </div>
@@ -215,23 +213,61 @@ const OrderSummary = () => {
           <div className="space-y-2">
             <div className="flex justify-between">
               <span className="text-gray-500">Price ({orderItem?.length || 0} items)</span>
-              <span>₹{order?.total_price}.00</span>
+              <span>₹{order?.total_selling_price || order?.total_price}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-gray-500">Discount</span>
-              <span className="text-green-500">-₹{order?.total_discount || 0}.00</span>
-            </div>
+            {Number(order?.total_discount || 0) > 0 && (
+              <div className="flex justify-between">
+                <span className="text-gray-500">Discount</span>
+                <span className="text-green-500">-₹{order?.total_discount}</span>
+              </div>
+            )}
             <div className="flex justify-between">
               <span className="text-gray-600">Delivery Charges</span>
-              <span className="text-green-500">₹50 Free</span>
+              <span className="text-green-500">
+                {order?.shipping_charge ? `₹${order.shipping_charge}` : 'Free'}
+              </span>
             </div>
-            <div className="flex justify-between">
-              {/* <span className="text-gray-600">Secured Packaging Fee</span>
-              <span>₹198</span> */}
-            </div>
+
+            {/* Taxable Value */}
+            {Number(order?.taxable_value || 0) > 0 && (
+              <div className="flex justify-between pt-2 border-t border-dashed">
+                <span className="text-gray-500">Taxable Value</span>
+                <span>₹{order.taxable_value}</span>
+              </div>
+            )}
+
+            {/* GST Breakdown */}
+            {order?.gst_breakdown?.groups && Object.entries(order.gst_breakdown.groups).map(([rate, group]) => (
+              Number(rate) > 0 && (
+                <div key={rate} className="space-y-1">
+                  <div className="flex justify-between text-xs text-gray-500">
+                    <span>GST ({rate}%)</span>
+                    <span>₹{group.igst || (group.cgst + group.sgst)}</span>
+                  </div>
+                  {order.gst_type === 'intra' ? (
+                    <>
+                      <div className="flex justify-between text-[10px] text-gray-400 pl-4">
+                        <span>CGST ({Number(rate) / 2}%)</span>
+                        <span>₹{group.cgst}</span>
+                      </div>
+                      <div className="flex justify-between text-[10px] text-gray-400 pl-4">
+                        <span>SGST ({Number(rate) / 2}%)</span>
+                        <span>₹{group.sgst}</span>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex justify-between text-[10px] text-gray-400 pl-4">
+                      <span>IGST ({rate}%)</span>
+                      <span>₹{group.igst}</span>
+                    </div>
+                  )}
+                </div>
+              )
+            ))}
+
             <div className="flex justify-between font-medium pt-2 border-t">
               <span>Total Amount</span>
-              <span>₹{order?.grand_total || 0}.00</span>
+              <span>₹{order?.grand_total || 0}</span>
             </div>
           </div>
         </div>
