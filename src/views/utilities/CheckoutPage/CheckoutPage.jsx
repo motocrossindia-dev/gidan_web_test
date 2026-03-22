@@ -92,181 +92,181 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
 
   return (
     <div className="p-4 font-sans space-y-6">
-          <section>
-            <div className="flex justify-between items-center mb-3">
-              <h3 className="text-sm font-bold text-gray-700 border-b pb-1">1. Delivery Address</h3>
-              <div className="flex gap-4">
-                <button
-                  onClick={() => {
-                    setIsAddNewOpen(true);
-                    setTimeout(() => {
-                      document.getElementById('add-new-address-section')?.scrollIntoView({ behavior: 'smooth' });
-                    }, 100);
-                  }}
-                  className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-bold border border-green-200 hover:bg-green-200 transition-colors"
-                >
-                  + Add Address
-                </button>
-                {addresses.length > 1 && (
-                  <button
-                    onClick={() => setShowAllAddresses(!showAllAddresses)}
-                    className="text-xs font-bold text-bio-green hover:text-green-800"
-                  >
-                    {showAllAddresses ? "Show Selected Only" : "Change Address"}
-                  </button>
+      <section>
+        <div className="flex justify-between items-center mb-3">
+          <h3 className="text-sm font-bold text-gray-700 border-b pb-1">1. Delivery Address</h3>
+          <div className="flex gap-4">
+            <button
+              onClick={() => {
+                setIsAddNewOpen(true);
+                setTimeout(() => {
+                  document.getElementById('add-new-address-section')?.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+              }}
+              className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-bold border border-green-200 hover:bg-green-200 transition-colors"
+            >
+              + Add Address
+            </button>
+            {addresses.length > 1 && (
+              <button
+                onClick={() => setShowAllAddresses(!showAllAddresses)}
+                className="text-xs font-bold text-bio-green hover:text-green-800"
+              >
+                {showAllAddresses ? "Show Selected Only" : "Change Address"}
+              </button>
+            )}
+          </div>
+        </div>
+
+        {!showAllAddresses && selectedAddrObj ? (
+          <div className="p-4 border border-bio-green bg-green-50 rounded-lg shadow-sm relative animate-in fade-in duration-300">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="font-bold text-gray-800 text-sm">{`${selectedAddrObj.first_name} ${selectedAddrObj.last_name}`}</span>
+                {selectedAddrObj.address_type && (
+                  <span className="px-2 py-0.5 bg-gray-200 text-gray-600 text-[9px] rounded uppercase font-bold tracking-wider">
+                    {selectedAddrObj.address_type}
+                  </span>
                 )}
               </div>
+              <p className="text-xs text-gray-600 line-clamp-2">{selectedAddrObj.address}</p>
+              <p className="text-xs text-gray-600">{selectedAddrObj.city}, {selectedAddrObj.state} - {selectedAddrObj.pincode}</p>
+              <p className="text-xs text-gray-700 font-medium mt-1"> {selectedAddrObj.phone}</p>
             </div>
-
-            {!showAllAddresses && selectedAddrObj ? (
-              <div className="p-4 border border-bio-green bg-green-50 rounded-lg shadow-sm relative animate-in fade-in duration-300">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-bold text-gray-800 text-sm">{`${selectedAddrObj.first_name} ${selectedAddrObj.last_name}`}</span>
-                    {selectedAddrObj.address_type && (
-                      <span className="px-2 py-0.5 bg-gray-200 text-gray-600 text-[9px] rounded uppercase font-bold tracking-wider">
-                        {selectedAddrObj.address_type}
-                      </span>
-                    )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in slide-in-from-top-2 duration-300">
+            {addresses.map((addr, index) => (
+              <div
+                key={addr.id || index}
+                onClick={() => {
+                  setSelectedAddress(addr.id);
+                  setShowAllAddresses(false);
+                }}
+                className={`p-4 border rounded-lg shadow-sm cursor-pointer relative transition-all hover:shadow-md ${selectedAddress === addr.id
+                  ? 'border-bio-green bg-green-50 ring-2 ring-bio-green ring-opacity-20'
+                  : 'border-gray-200'
+                  }`}
+              >
+                <div className="flex items-start gap-3">
+                  <div className={`mt-1 h-5 w-5 rounded-full border-2 flex items-center justify-center ${selectedAddress === addr.id ? 'border-bio-green' : 'border-gray-300'
+                    }`}>
+                    {selectedAddress === addr.id && <div className="h-2.5 w-2.5 rounded-full bg-bio-green"></div>}
                   </div>
-                  <p className="text-xs text-gray-600 line-clamp-2">{selectedAddrObj.address}</p>
-                  <p className="text-xs text-gray-600">{selectedAddrObj.city}, {selectedAddrObj.state} - {selectedAddrObj.pincode}</p>
-                  <p className="text-xs text-gray-700 font-medium mt-1"> {selectedAddrObj.phone}</p>
-                </div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in slide-in-from-top-2 duration-300">
-                {addresses.map((addr, index) => (
-                  <div
-                    key={addr.id || index}
-                    onClick={() => {
-                      setSelectedAddress(addr.id);
-                      setShowAllAddresses(false);
-                    }}
-                    className={`p-4 border rounded-lg shadow-sm cursor-pointer relative transition-all hover:shadow-md ${selectedAddress === addr.id
-                      ? 'border-bio-green bg-green-50 ring-2 ring-bio-green ring-opacity-20'
-                      : 'border-gray-200'
-                      }`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className={`mt-1 h-5 w-5 rounded-full border-2 flex items-center justify-center ${selectedAddress === addr.id ? 'border-bio-green' : 'border-gray-300'
-                        }`}>
-                        {selectedAddress === addr.id && <div className="h-2.5 w-2.5 rounded-full bg-bio-green"></div>}
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-bold text-gray-800 text-sm">{`${addr.first_name} ${addr.last_name}`}</span>
-                          {addr.address_type && (
-                            <span className="px-2 py-0.5 bg-gray-200 text-gray-600 text-[9px] rounded uppercase font-bold tracking-wider">
-                              {addr.address_type}
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-xs text-gray-600 line-clamp-2">{addr.address}</p>
-                        <p className="text-xs text-gray-600">{addr.city}, {addr.state} - {addr.pincode}</p>
-                      </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-bold text-gray-800 text-sm">{`${addr.first_name} ${addr.last_name}`}</span>
+                      {addr.address_type && (
+                        <span className="px-2 py-0.5 bg-gray-200 text-gray-600 text-[9px] rounded uppercase font-bold tracking-wider">
+                          {addr.address_type}
+                        </span>
+                      )}
                     </div>
-                  </div>
-                ))}
-
-                <div
-                  onClick={() => {
-                    setIsAddNewOpen(true);
-                    setTimeout(() => {
-                      document.getElementById('add-new-address-section')?.scrollIntoView({ behavior: 'smooth' });
-                    }, 100);
-                  }}
-                  className="p-4 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-500 hover:border-bio-green hover:text-bio-green transition-all cursor-pointer bg-gray-50 hover:bg-white min-h-[80px]"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="bg-gray-200 w-6 h-6 flex items-center justify-center rounded-full text-sm font-bold">+</span>
-                    <span className="font-semibold text-xs text-center leading-tight">Add New<br />Address</span>
+                    <p className="text-xs text-gray-600 line-clamp-2">{addr.address}</p>
+                    <p className="text-xs text-gray-600">{addr.city}, {addr.state} - {addr.pincode}</p>
                   </div>
                 </div>
               </div>
-            )}
+            ))}
 
-            {/* Inline Add New Address Form */}
-            {isAddNewOpen && (
-              <div className="mt-6 border-t pt-6 animate-in fade-in slide-in-from-top-4 duration-500">
-                <AddNewAddress isOpen={isAddNewOpen} setIsOpen={setIsAddNewOpen} />
+            <div
+              onClick={() => {
+                setIsAddNewOpen(true);
+                setTimeout(() => {
+                  document.getElementById('add-new-address-section')?.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+              }}
+              className="p-4 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-500 hover:border-bio-green hover:text-bio-green transition-all cursor-pointer bg-gray-50 hover:bg-white min-h-[80px]"
+            >
+              <div className="flex items-center gap-2">
+                <span className="bg-gray-200 w-6 h-6 flex items-center justify-center rounded-full text-sm font-bold">+</span>
+                <span className="font-semibold text-xs text-center leading-tight">Add New<br />Address</span>
               </div>
-            )}
-          </section>
+            </div>
+          </div>
+        )}
 
-          <section className="bg-gray-50 p-4 rounded-lg">
-            <h3 className="text-sm font-bold text-gray-700 mb-3 border-b pb-2">2. Choose Delivery Method</h3>
-            <div className="flex flex-col md:flex-row gap-4">
-              {deliveryOptions.map((option) => (
+        {/* Inline Add New Address Form */}
+        {isAddNewOpen && (
+          <div className="mt-6 border-t pt-6 animate-in fade-in slide-in-from-top-4 duration-500">
+            <AddNewAddress isOpen={isAddNewOpen} setIsOpen={setIsAddNewOpen} />
+          </div>
+        )}
+      </section>
+
+      <section className="bg-gray-50 p-4 rounded-lg">
+        <h3 className="text-sm font-bold text-gray-700 mb-3 border-b pb-2">2. Choose Delivery Method</h3>
+        <div className="flex flex-col md:flex-row gap-4">
+          {deliveryOptions.map((option) => (
+            <div
+              key={option.id}
+              onClick={() => handleOptionChange(option.id)}
+              className={`flex-1 p-3 border rounded-lg cursor-pointer flex items-center justify-between transition-all ${selectedDelType === option.id
+                ? 'border-bio-green bg-white shadow-sm ring-1 ring-bio-green'
+                : 'border-gray-200 bg-white hover:border-bio-green'
+                }`}
+            >
+              <div className="flex items-center gap-2">
+                <div className={`h-4 w-4 rounded-full border-2 flex items-center justify-center ${selectedDelType === option.id ? 'border-bio-green' : 'border-gray-300'
+                  }`}>
+                  {selectedDelType === option.id && <div className="h-2 w-2 rounded-full bg-bio-green"></div>}
+                </div>
+                <span className="text-sm font-medium text-gray-800">{option.label}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {selectedDelType === 'Pick Up Store' && (
+          <div className="mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
+            <label className="block mb-2 text-xs font-bold text-gray-600 uppercase">Select pickup store</label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto custom-scroll pr-2">
+              {stores.map((store) => (
                 <div
-                  key={option.id}
-                  onClick={() => handleOptionChange(option.id)}
-                  className={`flex-1 p-3 border rounded-lg cursor-pointer flex items-center justify-between transition-all ${selectedDelType === option.id
-                    ? 'border-bio-green bg-white shadow-sm ring-1 ring-bio-green'
-                    : 'border-gray-200 bg-white hover:border-bio-green'
+                  key={store.id}
+                  onClick={() => handleStoreSelect(store.id)}
+                  className={`p-3 rounded-lg cursor-pointer border transition-all ${selectedStoreId === store.id
+                    ? 'bg-green-50 border-green-500 ring-1 ring-bio-green'
+                    : 'bg-white border-gray-200 hover:border-green-300'
                     }`}
                 >
-                  <div className="flex items-center gap-2">
-                    <div className={`h-4 w-4 rounded-full border-2 flex items-center justify-center ${selectedDelType === option.id ? 'border-bio-green' : 'border-gray-300'
-                      }`}>
-                      {selectedDelType === option.id && <div className="h-2 w-2 rounded-full bg-bio-green"></div>}
-                    </div>
-                    <span className="text-sm font-medium text-gray-800">{option.label}</span>
-                  </div>
+                  <p className="font-bold text-gray-800 text-xs">{store.pathname}</p>
+                  <p className="text-[10px] text-gray-500 mt-1 line-clamp-2">{store.address}</p>
                 </div>
               ))}
             </div>
 
-            {selectedDelType === 'Pick Up Store' && (
-              <div className="mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
-                <label className="block mb-2 text-xs font-bold text-gray-600 uppercase">Select pickup store</label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto custom-scroll pr-2">
-                  {stores.map((store) => (
-                    <div
-                      key={store.id}
-                      onClick={() => handleStoreSelect(store.id)}
-                      className={`p-3 rounded-lg cursor-pointer border transition-all ${selectedStoreId === store.id
-                        ? 'bg-green-50 border-green-500 ring-1 ring-bio-green'
-                        : 'bg-white border-gray-200 hover:border-green-300'
-                        }`}
-                    >
-                      <p className="font-bold text-gray-800 text-xs">{store.pathname}</p>
-                      <p className="text-[10px] text-gray-500 mt-1 line-clamp-2">{store.address}</p>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Confirm Store button */}
-                {selectedStoreId && (
-                  <div className="mt-3">
-                    {storeConfirmed ? (
-                      <div className="flex items-center gap-2 text-green-700 text-sm font-semibold">
-                        <span>✓</span>
-                        <span>Store confirmed — free pickup applied</span>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={async () => {
-                          setConfirmingStore(true);
-                          const ok = await onConfirmStore?.();
-                          if (ok) setStoreConfirmed(true);
-                          setConfirmingStore(false);
-                        }}
-                        disabled={confirmingStore}
-                        className="w-full py-2 bg-bio-green text-white text-sm font-bold rounded-lg hover:bg-green-700 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
-                      >
-                        {confirmingStore ? (
-                          <><span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span> Applying…</>
-                        ) : (
-                          '✓ Confirm Store & Apply Free Pickup'
-                        )}
-                      </button>
-                    )}
+            {/* Confirm Store button */}
+            {selectedStoreId && (
+              <div className="mt-3">
+                {storeConfirmed ? (
+                  <div className="flex items-center gap-2 text-green-700 text-sm font-semibold">
+                    <span>✓</span>
+                    <span>Store confirmed — free pickup applied</span>
                   </div>
+                ) : (
+                  <button
+                    onClick={async () => {
+                      setConfirmingStore(true);
+                      const ok = await onConfirmStore?.();
+                      if (ok) setStoreConfirmed(true);
+                      setConfirmingStore(false);
+                    }}
+                    disabled={confirmingStore}
+                    className="w-full py-2 bg-bio-green text-white text-sm font-bold rounded-lg hover:bg-green-700 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+                  >
+                    {confirmingStore ? (
+                      <><span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span> Applying…</>
+                    ) : (
+                      '✓ Confirm Store & Apply Free Pickup'
+                    )}
+                  </button>
                 )}
               </div>
             )}
-          </section>
+          </div>
+        )}
+      </section>
     </div>
   );
 };
@@ -532,13 +532,13 @@ const AddNewAddress = ({ isOpen, setIsOpen }) => {
 
 
 const OrderSummaryItem = ({ title, Quantity, mrp, sales_price, discount, image, subtotal, gst_amount }) => {
-  const qty        = Number(Quantity)    || 1;
-  const unitMrp    = Number(mrp)         || 0;
-  const unitPrice  = qty > 0 ? (Number(sales_price) || 0) / qty : (Number(sales_price) || 0);
-  const unitDisc   = Number(discount)    || 0;
+  const qty = Number(Quantity) || 1;
+  const unitMrp = Number(mrp) || 0;
+  const unitPrice = qty > 0 ? (Number(sales_price) || 0) / qty : (Number(sales_price) || 0);
+  const unitDisc = Number(discount) || 0;
   const totalSaving = unitDisc * qty;
-  const savingPct  = unitMrp > 0 && unitDisc > 0 ? Math.round((unitDisc / unitMrp) * 100) : 0;
-  const lineTotal  = Number(sales_price) || 0;
+  const savingPct = unitMrp > 0 && unitDisc > 0 ? Math.round((unitDisc / unitMrp) * 100) : 0;
+  const lineTotal = Number(sales_price) || 0;
 
   return (
     <tr className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
@@ -701,15 +701,15 @@ const OrderSummary = ({ selectedOption, selectedAddress, data }) => {
           {/* ── Price Breakdown ── */}
           {data?.order && (() => {
             const o = data.order;
-            const items           = data.order_items || [];
-            const itemsTotal      = Number(o.total_price)      || 0;
-            const itemDiscount    = Number(o.total_discount)   || 0;
-            const couponDiscount  = Number(o.coupon_discount)  || 0;
-            const productGst      = Number(o.gst_amount_18)    + Number(o.gst_amount_5) + Number(o.gst_amount_0) || 0;
-            const shippingCharge  = Number(o.shipping_charge)  || 0;
-            const shippingGst     = Number(o.shipping_gst)     || 0;
-            const grandTotal      = Number(o.grand_total)      || 0;
-            const totalSavings    = itemDiscount + couponDiscount;
+            const items = data.order_items || [];
+            const itemsTotal = Number(o.total_price) || 0;
+            const itemDiscount = Number(o.total_discount) || 0;
+            const couponDiscount = Number(o.coupon_discount) || 0;
+            const productGst = Number(o.gst_amount_18) + Number(o.gst_amount_5) + Number(o.gst_amount_0) || 0;
+            const shippingCharge = Number(o.shipping_charge) || 0;
+            const shippingGst = Number(o.shipping_gst) || 0;
+            const grandTotal = Number(o.grand_total) || 0;
+            const totalSavings = itemDiscount + couponDiscount;
 
             return (
               <div className="border-t border-gray-100 px-4 py-4 space-y-2 text-sm">
@@ -1184,7 +1184,17 @@ const CheckoutPage = () => {
     try {
       const res = await axiosInstance.post(`/order/removeCoupon/`, { order_id: data.order.id });
       setCoupon(undefined);
-      if (res.data?.data) setData(res.data.data);
+
+      // The removeCoupon API returns { success, order, order_items, ... } directly in res.data
+      if (res.data?.order) {
+        const updatedData = res.data;
+        setData(updatedData);
+
+        // If we were in payment step, update the session storage as well
+        if (showPaymentStep) {
+          sessionStorage.setItem('payment_order_data', JSON.stringify({ resource: updatedData, order_id: data.order.id }));
+        }
+      }
       enqueueSnackbar('Coupon removed.', { variant: 'info' });
     } catch (err) {
       enqueueSnackbar(err?.response?.data?.message || 'Failed to remove coupon.', { variant: 'error' });
@@ -1424,16 +1434,16 @@ const CheckoutPage = () => {
   // (showPaymentStep = true), when the server has recomputed totals with the chosen address.
   const activeOrder = coupon?.success
     ? {
-        ...coupon.order,
-        // Post-PATCH: data.order has server-authoritative totals (coupon + address shipping)
-        ...(showPaymentStep && data?.order ? {
-          grand_total: data.order.grand_total,
-          shipping_charge: data.order.shipping_charge,
-        } : {}),
-        coupon_applied: true,
-        coupon_discount: coupon.discount_amount,
-        applied_coupon: coupon.order?.applied_coupon || coupon.coupon_code,
-      }
+      ...coupon.order,
+      // Post-PATCH: data.order has server-authoritative totals (coupon + address shipping)
+      ...(showPaymentStep && data?.order ? {
+        grand_total: data.order.grand_total,
+        shipping_charge: data.order.shipping_charge,
+      } : {}),
+      coupon_applied: true,
+      coupon_discount: coupon.discount_amount,
+      applied_coupon: coupon.order?.applied_coupon || coupon.coupon_code,
+    }
     : data?.order;
 
   // Always use data.order_items for display — stable reference prevents image flicker.
@@ -1502,408 +1512,471 @@ const CheckoutPage = () => {
 
       <div className="min-h-screen bg-gray-100">
 
-      {/* ── Breadcrumb ── */}
-      <div className="bg-white border-b">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 text-xs font-semibold text-gray-400">
-          <span
-            className="hover:text-bio-green cursor-pointer transition-colors"
-            onClick={() => router.push('/cart')}
-          >SHOPPING CART</span>
-          <span className="text-gray-300">›</span>
-          <span
-            className={!showPaymentStep ? 'text-bio-green' : 'hover:text-bio-green cursor-pointer transition-colors'}
-            onClick={() => showPaymentStep && setShowPaymentStep(false)}
-          >CHECKOUT</span>
-          <span className="text-gray-300">›</span>
-          <span className={showPaymentStep ? 'text-bio-green' : ''}>PAYMENT</span>
-          <span className="text-gray-300">›</span>
-          <span>CONFIRMATION</span>
-        </div>
-      </div>
-
-      <div className="max-w-6xl mx-auto px-4 py-6 flex flex-col lg:flex-row gap-6">
-
-        {/* ══ LEFT COLUMN ══ */}
-        <div className="w-full lg:w-3/5 space-y-4">
-
-          {!showPaymentStep ? (
-            <>
-              {/* ── Step 1: Delivery Address ── */}
-              <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-                <div className="bg-gradient-to-r from-green-600 to-green-900 px-5 py-3 flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-full bg-white text-green-800 text-xs font-extrabold flex items-center justify-center">1</span>
-                  <span className="text-white font-bold text-sm tracking-wide">DELIVERY ADDRESS</span>
-                </div>
-                <DeliveryAddress
-                  setSelectedAddress={setSelectedAddress}
-                  selectedAddress={selectedAddress}
-                  setSelectedOption={setSelectedOption}
-                  setIsAddNewOpen={setIsAddNewOpen}
-                  isAddNewOpen={isAddNewOpen}
-                  onConfirmStore={handleConfirmStore}
-                />
-              </div>
-
-              {/* ── Step 2: Apply Coupon ── */}
-              <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-                <div className="bg-gradient-to-r from-green-600 to-green-900 px-5 py-3 flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-full bg-white text-green-800 text-xs font-extrabold flex items-center justify-center">2</span>
-                  <span className="text-white font-bold text-sm tracking-wide">APPLY COUPON</span>
-                </div>
-                <div className="p-1">
-                  <ApplyCoupon id={id} setCoupon={setCoupon} coupon={coupon} onRemoveCoupon={handleRemoveCoupon} />
-                </div>
-              </div>
-            </>
-          ) : (
-            /* ── Step 3: Payment ── */
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-              <div className="bg-gradient-to-r from-green-600 to-green-900 px-5 py-3 flex items-center gap-3">
-                <span className="w-6 h-6 rounded-full bg-white text-green-800 text-xs font-extrabold flex items-center justify-center">3</span>
-                <span className="text-white font-bold text-sm tracking-wide">SELECT PAYMENT METHOD</span>
-              </div>
-              <div className="p-5 space-y-4">
-
-                {/* GST Checkbox */}
-                <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={isGstSelected}
-                    onChange={(e) => { const v = e.target.checked; setIsGstSelected(v); setIsGst(v); setSelectedGst(v ? gstFromProfile : ''); }}
-                    className="w-4 h-4 text-green-600 border-gray-300 rounded"
-                  />
-                  <span>Use My GST Number</span>
-                </label>
-                {isGstSelected && (
-                  <p className="ml-6 text-sm text-gray-600">
-                    <strong>GST:</strong> {gstFromProfile || <span className="text-red-500">Not set — please add in Profile</span>}
-                  </p>
-                )}
-
-                {/* Payment options */}
-                <div className="space-y-3">
-                  {[
-                    { id: 'Wallet', label: 'Gidan Wallet', sub: `Balance: ₹${walletBalance?.balance ?? '…'}` },
-                    { id: 'UPI', label: 'Razorpay Secure', sub: 'UPI · Cards · Wallets · NetBanking' },
-                    { id: 'cod', label: 'Cash on Delivery', sub: 'Currently unavailable for your location', disabled: true },
-                  ].map((opt) => (
-                    <div
-                      key={opt.id}
-                      onClick={() => !opt.disabled && setSelectedPayMethod(opt.id)}
-                      className={`flex items-start gap-3 p-4 rounded-xl border-2 transition-all cursor-pointer
-                        ${opt.disabled ? 'opacity-40 cursor-not-allowed border-gray-100 bg-gray-50' :
-                          selectedPayMethod === opt.id ? 'border-green-500 bg-green-50' : 'border-gray-100 hover:border-green-200'}`}
-                    >
-                      <div className={`mt-0.5 w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0
-                        ${selectedPayMethod === opt.id ? 'border-green-600' : 'border-gray-300'}`}>
-                        {selectedPayMethod === opt.id && <div className="w-2.5 h-2.5 rounded-full bg-green-600" />}
-                      </div>
-                      <div>
-                        <p className="font-semibold text-sm text-gray-800">{opt.label}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">{opt.sub}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {isGstSelected && !gstFromProfile && (
-                  <p className="text-red-500 text-sm font-medium text-center">Please add your GST number in Profile to proceed.</p>
-                )}
-              </div>
-            </div>
-          )}
-
-        </div>
-
-        {/* ══ RIGHT COLUMN ══ */}
-        <div className="w-full lg:w-2/5">
-          <div className="bg-white rounded-xl shadow-md sticky top-4 overflow-hidden">
-
-            {/* ── Header ── */}
-            <div className="bg-gradient-to-r from-green-600 to-green-900 px-4 py-3">
-              <p className="text-white font-bold text-sm tracking-wide">Order Summary</p>
-              {data?.order?.order_id && (
-                <p className="text-green-200 text-[10px] mt-0.5">{data.order.order_id} · {data.order.date}</p>
-              )}
-            </div>
-
-            <div className="p-4 space-y-5 max-h-[80vh] overflow-y-auto">
-              <div>
-                <p className="text-[10px] uppercase font-bold text-gray-400 tracking-widest mb-2">
-                  Items ({data?.order_items?.length ?? 0})
-                </p>
-                {(isCombo || data?.order?.is_shop_the_look) ? (
-                  <div className="flex flex-wrap gap-2">
-                    {activeItems?.map((item) => (
-                      <div key={item.id} className="relative">
-                        <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200">
-                          <img
-                            src={`${axiosInstance.defaults.baseURL}${item.image}`}
-                            alt={item.product_name}
-                            className="w-full h-full object-cover"
-                            onError={(e) => (e.currentTarget.src = "/placeholder-product.png")}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                    <div className="ml-1 self-center">
-                      <p className="font-semibold text-gray-800 text-xs">{comboOffer?.title || "Shop The Look"}</p>
-                      <p className="text-[10px] text-gray-400">{data?.order_items?.length} items</p>
-                    </div>
-                  </div>
-                ) : (
-                  <table className="w-full text-xs border-collapse">
-                    <thead>
-                      <tr className="bg-gray-50">
-                        <th className="text-left text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-2 w-1/2">Items Description</th>
-                        <th className="text-center text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-1">MRP</th>
-                        <th className="text-center text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-1">Qty</th>
-                        <th className="text-center text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-1">Savings</th>
-                        <th className="text-right text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-2">Total</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100">
-                      {activeItems?.map((item) => {
-                        const unitMrp    = Number(item.mrp)           || 0;
-                        const unitPrice  = Number(item.selling_price)  || 0;
-                        const unitDisc   = Number(item.discount)       || 0;
-                        const qty        = Number(item.quantity)       || 1;
-                        const totalSav   = unitDisc * qty;
-                        const savPct     = unitMrp > 0 && unitDisc > 0 ? Math.round((unitDisc / unitMrp) * 100) : 0;
-                        const lineTotal  = Number(item.selling_price)  || 0;
-                        return (
-                          <tr key={item.id} className="align-middle">
-                            {/* Description */}
-                            <td className="py-2 px-2">
-                              <div className="flex items-center gap-2">
-                                <div className="w-10 h-10 rounded overflow-hidden border border-gray-200 flex-shrink-0">
-                                  <img
-                                    src={`${axiosInstance.defaults.baseURL}${item.image}`}
-                                    alt={item.product_name}
-                                    className="w-full h-full object-cover"
-                                    onError={(e) => (e.currentTarget.src = "/placeholder-product.png")}
-                                  />
-                                </div>
-                                <span className="font-semibold text-gray-800 text-[10px] leading-tight line-clamp-2">{item.product_name}</span>
-                              </div>
-                            </td>
-                            {/* MRP */}
-                            <td className="py-2 px-1 text-center">
-                              <p className={`text-[10px] ${unitDisc > 0 ? 'line-through text-gray-400' : 'text-gray-700 font-semibold'}`}>
-                                ₹{unitMrp.toFixed(2)}
-                              </p>
-                              {unitDisc > 0 && (
-                                <p className="text-[10px] font-semibold text-gray-800 mt-0.5">₹{unitPrice.toFixed(2)}</p>
-                              )}
-                            </td>
-                            {/* Qty */}
-                            <td className="py-2 px-1 text-center">
-                              <span className="inline-block border border-gray-300 rounded px-1.5 py-0.5 text-[10px] font-semibold text-gray-700 min-w-[22px]">
-                                {qty}
-                              </span>
-                            </td>
-                            {/* Savings */}
-                            <td className="py-2 px-1 text-center">
-                              {totalSav > 0 ? (
-                                <div className="flex flex-col items-center gap-0.5">
-                                  <span className="text-[9px] font-bold text-emerald-600">-₹{totalSav.toFixed(2)}</span>
-                                  <span className="text-[9px] text-gray-400">{savPct}% off</span>
-                                </div>
-                              ) : (
-                                <span className="text-[9px] text-gray-400">—</span>
-                              )}
-                            </td>
-                            {/* Total */}
-                            <td className="py-2 px-2 text-right">
-                              <span className="font-bold text-gray-800 text-[11px]">₹{lineTotal.toFixed(2)}</span>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                )}
-              </div>
-
-              <hr className="border-dashed" />
-
-              {/* ── Price Details ── */}
-              <div>
-                <p className="text-[10px] uppercase font-bold text-gray-400 tracking-widest mb-3">Price Details</p>
-                <div className="space-y-2 text-sm">
-
-                  {/* Sub Total */}
-                  <div className="flex justify-between text-gray-600">
-                    <span>Sub Total</span>
-                    <span>₹{Number(activeOrder?.total_selling_price ?? 0).toFixed(2)}</span>
-                  </div>
-
-                  {/* Product Discount */}
-                  <div className="flex justify-between text-emerald-600 font-medium">
-                    <span className="flex items-center gap-1">
-                      Discount
-                      {activeOrder?.discount_type && Number(activeOrder?.total_discount ?? 0) > 0 && (
-                        <span className="text-[10px] bg-emerald-50 border border-emerald-200 rounded px-1 py-0.5 font-semibold">
-                          {activeOrder.discount_type === "%" ? `${Number(activeOrder.discount_value ?? 0).toFixed(0)}%` : `Flat`}
-                        </span>
-                      )}
-                    </span>
-                    <span>-₹{Number(activeOrder?.total_discount ?? 0).toFixed(2)}</span>
-                  </div>
-
-
-                  {/* Coupon Discount */}
-                  {(coupon?.success || activeOrder?.coupon_applied) && (
-                    <div className="flex justify-between text-emerald-600 font-medium">
-                      <span className="flex items-center gap-1 flex-wrap">
-                        🏷️ Coupon Discount
-                        {coupon?.coupon_code && (
-                          <span className="text-[10px] bg-emerald-50 border border-emerald-200 rounded px-1 py-0.5 font-semibold">
-                            {coupon.coupon_code}
-                          </span>
-                        )}
-
-                      </span>
-                      <span>-₹{Number(coupon?.discount_amount ?? activeOrder?.coupon_discount ?? 0).toFixed(2)}</span>
-                    </div>
-                  )}
-
-                  {/* Delivery Charges */}
-                  <div className="flex justify-between text-gray-600">
-                    <span>Delivery Charges</span>
-                    <span className={isFreeShipping ? "text-emerald-600 font-semibold" : ""}>
-                      {isFreeShipping ? "FREE" : `₹${deliveryCharge.toFixed(2)}`}
-                    </span>
-                  </div>
-
-                  {/* Taxable Value */}
-                  {Number(activeOrder?.taxable_value ?? 0) > 0 && (
-                    <div className="flex justify-between text-gray-600 border-t border-dashed pt-2">
-                      <span>Taxable Value</span>
-                      <span>₹{Number(activeOrder.taxable_value).toFixed(2)}</span>
-                    </div>
-                  )}
-
-                  {/* GST Breakdown (from summary) */}
-                  {activeOrder?.gst_breakdown?.summary && Object.entries(activeOrder.gst_breakdown.summary).map(([key, gst]) => {
-                    const totalGst = Number(gst.total || 0);
-                    if (totalGst === 0) return null;
-                    const rate = key.split('_')[1]; // e.g. "gst_18" -> "18"
-                    const isIntra = activeOrder.gst_type === 'intra';
-                    const isExpanded = expandedGst[key];
-
-                    return (
-                      <div key={key} className="space-y-1">
-                        <div 
-                          className="flex justify-between items-center text-gray-600 text-xs cursor-pointer hover:text-green-700 transition-colors py-0.5"
-                          onClick={() => toggleGstExpand(key)}
-                        >
-                          <div className="flex items-center gap-1">
-                            <span>GST ({rate}%)</span>
-                            <span className={`text-[8px] transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}>▼</span>
-                          </div>
-                          <span>₹{totalGst.toFixed(2)}</span>
-                        </div>
-                        
-                        {isExpanded && (
-                          <div className="overflow-hidden animate-in slide-in-from-top-1 duration-200">
-                            {isIntra ? (
-                              <div className="flex flex-col pl-4 text-[10px] text-gray-400 space-y-0.5 pb-1">
-                                <div className="flex justify-between">
-                                  <span>CGST ({Number(rate) / 2}%)</span>
-                                  <span>₹{Number(gst.cgst).toFixed(2)}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span>SGST ({Number(rate) / 2}%)</span>
-                                  <span>₹{Number(gst.sgst).toFixed(2)}</span>
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="flex justify-between pl-4 text-[10px] text-gray-500 pb-1">
-                                <span>IGST ({rate}%)</span>
-                                <span>₹{totalGst.toFixed(2)}</span>
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-
-                  {/* GST Amount (Deprecated in favor of breakdown, but kept if needed elsewhere) */}
-                  {/* {Number(activeOrder?.gst_amount ?? 0) > 0 && (
-                    <div className="flex justify-between text-gray-600">
-                      <span>GST Amount</span>
-                      <span>₹{Number(activeOrder.gst_amount).toFixed(2)}</span>
-                    </div>
-                  )} */}
-
-                  {/* Total Amount */}
-                  <div className="flex justify-between text-gray-800 font-bold border-t pt-2 text-base">
-                    <span>Total Amount</span>
-                    <span>₹{Number(activeOrder?.grand_total ?? 0).toFixed(2)}</span>
-                  </div>
-
-                  {/* Savings message */}
-                  {(Number(activeOrder?.total_discount ?? 0) + Number(coupon?.discount_amount ?? activeOrder?.coupon_discount ?? 0)) > 0 && (
-                    <p className="text-emerald-600 text-xs font-semibold text-center bg-emerald-50 rounded-lg py-1.5">
-                      You will save ₹{(Number(activeOrder?.total_discount ?? 0) + Number(coupon?.discount_amount ?? activeOrder?.coupon_discount ?? 0)).toFixed(2)} on this order
-                    </p>
-                  )}
-                </div>
-              </div>
-
-            </div>
-
-            {/* ── Fixed Bottom: GD Coins + Grand Total + Place Order ── */}
-            <div className="border-t border-gray-100 px-4 pt-3 pb-4 space-y-3">
-              {/* GD Coins */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">🪙</span>
-                  <div>
-                    <p className="text-xs font-bold text-gray-800">GD Coins Earned</p>
-                    <p className="text-[10px] text-gray-400">Use on your next order</p>
-                  </div>
-                </div>
-                <span className="text-lg font-extrabold text-orange-500">+{activeOrder?.gd_coin ?? 0}</span>
-              </div>
-
-              {/* Grand Total */}
-              <div className="bg-gradient-to-r from-green-600 to-green-800 rounded-xl p-3 flex justify-between items-center">
-                <span className="text-white font-bold text-sm">Grand Total</span>
-                <span className="text-white font-extrabold text-lg">₹{Number(activeOrder?.grand_total ?? 0).toFixed(2)}</span>
-              </div>
-
-              {/* Place Order / Proceed to Payment */}
-              {!showPaymentStep ? (
-                <button
-                  disabled={savingOrder}
-                  onClick={handleSaveOrderSummary}
-                  className="w-full bg-bio-green text-white font-bold py-3.5 rounded-xl hover:bg-green-700 active:scale-[0.98] transition-all text-sm tracking-wide shadow disabled:opacity-60 flex items-center justify-center gap-2"
-                >
-                  {savingOrder ? (
-                    <><span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span> Saving…</>
-                  ) : (
-                    <>Place Order →</>
-                  )}
-                </button>
-              ) : (
-                <button
-                  disabled={!selectedPayMethod || (isGstSelected && !gstFromProfile)}
-                  onClick={handlePayment}
-                  className="w-full bg-bio-green text-white font-bold py-3.5 rounded-xl hover:bg-green-700 active:scale-[0.98] transition-all text-sm tracking-wide shadow disabled:opacity-60 flex items-center justify-center gap-2"
-                >
-                  Pay ₹{Number(activeOrder?.grand_total ?? 0).toFixed(2)} →
-                </button>
-              )}
-              <p className="text-center text-[10px] text-gray-400">🔒 Safe and Secure Payments. 100% Authentic Products.</p>
-            </div>
-
+        {/* ── Breadcrumb ── */}
+        <div className="bg-white border-b">
+          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 text-xs font-semibold text-gray-400">
+            <span
+              className="hover:text-bio-green cursor-pointer transition-colors"
+              onClick={() => router.push('/cart')}
+            >SHOPPING CART</span>
+            <span className="text-gray-300">›</span>
+            <span
+              className={!showPaymentStep ? 'text-bio-green' : 'hover:text-bio-green cursor-pointer transition-colors'}
+              onClick={() => showPaymentStep && setShowPaymentStep(false)}
+            >CHECKOUT</span>
+            <span className="text-gray-300">›</span>
+            <span className={showPaymentStep ? 'text-bio-green' : ''}>PAYMENT</span>
+            <span className="text-gray-300">›</span>
+            <span>CONFIRMATION</span>
           </div>
         </div>
 
-      </div>
+        <div className="max-w-6xl mx-auto px-4 py-6 flex flex-col lg:flex-row gap-6">
+
+          {/* ══ LEFT COLUMN ══ */}
+          <div className="w-full lg:w-3/5 space-y-4">
+
+            {!showPaymentStep ? (
+              <>
+                {/* ── Step 1: Delivery Address ── */}
+                <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                  <div className="bg-gradient-to-r from-green-600 to-green-900 px-5 py-3 flex items-center gap-3">
+                    <span className="w-6 h-6 rounded-full bg-white text-green-800 text-xs font-extrabold flex items-center justify-center">1</span>
+                    <span className="text-white font-bold text-sm tracking-wide">DELIVERY ADDRESS</span>
+                  </div>
+                  <DeliveryAddress
+                    setSelectedAddress={setSelectedAddress}
+                    selectedAddress={selectedAddress}
+                    setSelectedOption={setSelectedOption}
+                    setIsAddNewOpen={setIsAddNewOpen}
+                    isAddNewOpen={isAddNewOpen}
+                    onConfirmStore={handleConfirmStore}
+                  />
+                </div>
+
+                {/* ── Step 2: Apply Coupon ── */}
+                <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                  <div className="bg-gradient-to-r from-green-600 to-green-900 px-5 py-3 flex items-center gap-3">
+                    <span className="w-6 h-6 rounded-full bg-white text-green-800 text-xs font-extrabold flex items-center justify-center">2</span>
+                    <span className="text-white font-bold text-sm tracking-wide">APPLY COUPON</span>
+                  </div>
+                  <div className="p-1">
+                    <ApplyCoupon id={id} setCoupon={setCoupon} coupon={coupon} onRemoveCoupon={handleRemoveCoupon} />
+                  </div>
+                </div>
+              </>
+            ) : (
+              /* ── Step 3: Payment ── */
+              <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div className="bg-gradient-to-r from-green-600 to-green-900 px-5 py-3 flex items-center gap-3">
+                  <span className="w-6 h-6 rounded-full bg-white text-green-800 text-xs font-extrabold flex items-center justify-center">3</span>
+                  <span className="text-white font-bold text-sm tracking-wide">SELECT PAYMENT METHOD</span>
+                </div>
+                <div className="p-5 space-y-4">
+
+                  {/* GST Checkbox */}
+                  <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={isGstSelected}
+                      onChange={(e) => { const v = e.target.checked; setIsGstSelected(v); setIsGst(v); setSelectedGst(v ? gstFromProfile : ''); }}
+                      className="w-4 h-4 text-green-600 border-gray-300 rounded"
+                    />
+                    <span>Use My GST Number</span>
+                  </label>
+                  {isGstSelected && (
+                    <p className="ml-6 text-sm text-gray-600">
+                      <strong>GST:</strong> {gstFromProfile || <span className="text-red-500">Not set — please add in Profile</span>}
+                    </p>
+                  )}
+
+                  {/* Payment options */}
+                  <div className="space-y-3">
+                    {[
+                      { id: 'Wallet', label: 'Gidan Wallet', sub: `Balance: ₹${walletBalance?.balance ?? '…'}` },
+                      { id: 'UPI', label: 'Razorpay Secure', sub: 'UPI · Cards · Wallets · NetBanking' },
+                      { id: 'cod', label: 'Cash on Delivery', sub: 'Currently unavailable for your location', disabled: true },
+                    ].map((opt) => (
+                      <div
+                        key={opt.id}
+                        onClick={() => !opt.disabled && setSelectedPayMethod(opt.id)}
+                        className={`flex items-start gap-3 p-4 rounded-xl border-2 transition-all cursor-pointer
+                        ${opt.disabled ? 'opacity-40 cursor-not-allowed border-gray-100 bg-gray-50' :
+                            selectedPayMethod === opt.id ? 'border-green-500 bg-green-50' : 'border-gray-100 hover:border-green-200'}`}
+                      >
+                        <div className={`mt-0.5 w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0
+                        ${selectedPayMethod === opt.id ? 'border-green-600' : 'border-gray-300'}`}>
+                          {selectedPayMethod === opt.id && <div className="w-2.5 h-2.5 rounded-full bg-green-600" />}
+                        </div>
+                        <div>
+                          <p className="font-semibold text-sm text-gray-800">{opt.label}</p>
+                          <p className="text-xs text-gray-500 mt-0.5">{opt.sub}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {isGstSelected && !gstFromProfile && (
+                    <p className="text-red-500 text-sm font-medium text-center">Please add your GST number in Profile to proceed.</p>
+                  )}
+                </div>
+              </div>
+            )}
+
+          </div>
+
+          {/* ══ RIGHT COLUMN ══ */}
+          <div className="w-full lg:w-2/5">
+            <div className="bg-white rounded-xl shadow-md sticky top-4 overflow-hidden">
+
+              {/* ── Header ── */}
+              <div className="bg-gradient-to-r from-green-600 to-green-900 px-4 py-3">
+                <p className="text-white font-bold text-sm tracking-wide">Order Summary</p>
+                {data?.order?.order_id && (
+                  <p className="text-green-200 text-[10px] mt-0.5">{data.order.order_id} · {data.order.date}</p>
+                )}
+              </div>
+
+              <div className="p-4 space-y-5 max-h-[80vh] overflow-y-auto">
+                <div>
+                  <p className="text-[10px] uppercase font-bold text-gray-400 tracking-widest mb-2">
+                    Items ({data?.order_items?.length ?? 0})
+                  </p>
+                  {(isCombo || data?.order?.is_shop_the_look) ? (
+                    <div className="flex flex-wrap gap-2">
+                      {activeItems?.map((item) => (
+                        <div key={item.id} className="relative">
+                          <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200">
+                            <img
+                              src={`${axiosInstance.defaults.baseURL}${item.image}`}
+                              alt={item.product_name}
+                              className="w-full h-full object-cover"
+                              onError={(e) => (e.currentTarget.src = "/placeholder-product.png")}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                      <div className="ml-1 self-center">
+                        <p className="font-semibold text-gray-800 text-xs">{comboOffer?.title || "Shop The Look"}</p>
+                        <p className="text-[10px] text-gray-400">{data?.order_items?.length} items</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <table className="w-full text-xs border-collapse">
+                      <thead>
+                        <tr className="bg-gray-50">
+                          <th className="text-left text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-2 w-1/2">Items Description</th>
+                          <th className="text-center text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-1">MRP</th>
+                          <th className="text-center text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-1">Qty</th>
+                          <th className="text-center text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-1">Savings</th>
+                          <th className="text-right text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-2">Total</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-100">
+                        {activeItems?.map((item) => {
+                          const unitMrp = Number(item.mrp) || 0;
+                          const unitPrice = Number(item.selling_price) || 0;
+                          const unitDisc = Number(item.discount) || 0;
+                          const qty = Number(item.quantity) || 1;
+                          const totalSav = unitDisc * qty;
+                          const savPct = unitMrp > 0 && unitDisc > 0 ? Math.round((unitDisc / unitMrp) * 100) : 0;
+                          const lineTotal = Number(item.selling_price) || 0;
+                          return (
+                            <tr key={item.id} className="align-middle">
+                              {/* Description */}
+                              <td className="py-2 px-2">
+                                <div className="flex items-center gap-2">
+                                  <div className="w-10 h-10 rounded overflow-hidden border border-gray-200 flex-shrink-0">
+                                    <img
+                                      src={`${axiosInstance.defaults.baseURL}${item.image}`}
+                                      alt={item.product_name}
+                                      className="w-full h-full object-cover"
+                                      onError={(e) => (e.currentTarget.src = "/placeholder-product.png")}
+                                    />
+                                  </div>
+                                  <span className="font-semibold text-gray-800 text-[10px] leading-tight line-clamp-2">{item.product_name}</span>
+                                </div>
+                              </td>
+                              {/* MRP */}
+                              <td className="py-2 px-1 text-center">
+                                <p className={`text-[10px] ${unitDisc > 0 ? 'line-through text-gray-400' : 'text-gray-700 font-semibold'}`}>
+                                  ₹{unitMrp.toFixed(2)}
+                                </p>
+                                {unitDisc > 0 && (
+                                  <p className="text-[10px] font-semibold text-gray-800 mt-0.5">₹{unitPrice.toFixed(2)}</p>
+                                )}
+                              </td>
+                              {/* Qty */}
+                              <td className="py-2 px-1 text-center">
+                                <span className="inline-block border border-gray-300 rounded px-1.5 py-0.5 text-[10px] font-semibold text-gray-700 min-w-[22px]">
+                                  {qty}
+                                </span>
+                              </td>
+                              {/* Savings */}
+                              <td className="py-2 px-1 text-center">
+                                {totalSav > 0 ? (
+                                  <div className="flex flex-col items-center gap-0.5">
+                                    <span className="text-[9px] font-bold text-emerald-600">-₹{totalSav.toFixed(2)}</span>
+                                    <span className="text-[9px] text-gray-400">{savPct}% off</span>
+                                  </div>
+                                ) : (
+                                  <span className="text-[9px] text-gray-400">—</span>
+                                )}
+                              </td>
+                              {/* Total */}
+                              <td className="py-2 px-2 text-right">
+                                <span className="font-bold text-gray-800 text-[11px]">₹{lineTotal.toFixed(2)}</span>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+
+                <hr className="border-dashed" />
+
+                {/* ── Price Details ── */}
+                <div>
+                  <p className="text-[10px] uppercase font-bold text-gray-400 tracking-widest mb-3">Price Details</p>
+                  <div className="space-y-2 text-sm">
+
+                    {/* Sub Total */}
+                    <div className="flex justify-between text-gray-600">
+                      <span>Sub Total</span>
+                      <span>₹{Number(activeOrder?.total_selling_price ?? 0).toFixed(2)}</span>
+                    </div>
+
+                    {/* Product Discount */}
+                    <div className="flex justify-between text-emerald-600 font-medium">
+                      <span className="flex items-center gap-1">
+                        Discount
+                        {activeOrder?.discount_type && Number(activeOrder?.total_discount ?? 0) > 0 && (
+                          <span className="text-[10px] bg-emerald-50 border border-emerald-200 rounded px-1 py-0.5 font-semibold">
+                            {activeOrder.discount_type === "%" ? `${Number(activeOrder.discount_value ?? 0).toFixed(0)}%` : `Flat`}
+                          </span>
+                        )}
+                      </span>
+                      <span>-₹{Number(activeOrder?.total_discount ?? 0).toFixed(2)}</span>
+                    </div>
+
+
+                    {/* Coupon Discount */}
+                    {(coupon?.success || activeOrder?.coupon_applied) && (
+                      <div className="flex justify-between text-emerald-600 font-medium">
+                        <span className="flex items-center gap-1 flex-wrap">
+                          🏷️ Coupon Discount
+                          {coupon?.coupon_code && (
+                            <span className="text-[10px] bg-emerald-50 border border-emerald-200 rounded px-1 py-0.5 font-semibold">
+                              {coupon.coupon_code}
+                            </span>
+                          )}
+
+                        </span>
+                        <span>-₹{Number(coupon?.discount_amount ?? activeOrder?.coupon_discount ?? 0).toFixed(2)}</span>
+                      </div>
+                    )}
+
+                    {/* Delivery Charges */}
+                    <div className="flex justify-between text-gray-600">
+                      <span>Delivery Charges</span>
+                      <span className={isFreeShipping ? "text-emerald-600 font-semibold" : ""}>
+                        {isFreeShipping ? "FREE" : `₹${deliveryCharge.toFixed(2)}`}
+                      </span>
+                    </div>
+
+                    {/* Taxable Value */}
+                    {Number(activeOrder?.taxable_value ?? 0) > 0 && (
+                      <div className="flex justify-between text-gray-600 border-t border-dashed pt-2">
+                        <span>Taxable Value</span>
+                        <span>₹{Number(activeOrder.taxable_value).toFixed(2)}</span>
+                      </div>
+                    )}
+
+                    {/* GST Section */}
+                    {(() => {
+                      const breakdownGroups = data?.order?.gst_breakdown?.groups;
+                      const summary = data?.order?.gst_summary;
+                      const newSummary = data?.order?.summary || data?.order?.gst_breakdown?.summary;
+
+                      // 1. Priority: New "summary" format (gst_18: { cgst, sgst, total })
+                      if (newSummary && Object.keys(newSummary).some(k => k.startsWith('gst_'))) {
+                        return Object.entries(newSummary).map(([key, gData]) => {
+                          const rate = key.split('_')[1];
+                          const totalGst = Number(gData.total || 0);
+                          if (totalGst === 0) return null;
+                          const isExpanded = !!expandedGst[rate];
+
+                          return (
+                            <div key={rate} className="space-y-0.5 py-1 transition-all duration-300">
+                              <div
+                                className="flex justify-between text-gray-600 text-[11px] font-medium cursor-pointer hover:bg-gray-50 rounded px-1 -mx-1 transition-colors"
+                                onClick={() => toggleGstExpand(rate)}
+                              >
+                                <span className="flex items-center gap-1">
+                                  <span className={`text-[8px] transition-transform duration-200`} style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>▶</span>
+                                  GST ({rate}%)
+                                </span>
+                                <span>₹{totalGst.toFixed(2)}</span>
+                              </div>
+
+                              {isExpanded && (
+                                <div className="space-y-0.5 pl-4 border-l border-gray-100 ml-1 mt-0.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                                  {Number(gData.cgst || 0) > 0 && (
+                                    <div className="flex justify-between text-[10px] text-gray-400">
+                                      <span>CGST ({Number(rate) / 2}%)</span>
+                                      <span>₹{Number(gData.cgst).toFixed(2)}</span>
+                                    </div>
+                                  )}
+                                  {Number(gData.sgst || 0) > 0 && (
+                                    <div className="flex justify-between text-[10px] text-gray-400">
+                                      <span>SGST ({Number(rate) / 2}%)</span>
+                                      <span>₹{Number(gData.sgst).toFixed(2)}</span>
+                                    </div>
+                                  )}
+                                  {(Number(gData.total || 0) > (Number(gData.cgst || 0) + Number(gData.sgst || 0)) + 0.01) && (
+                                    <div className="flex justify-between text-[10px] text-gray-400">
+                                      <span>IGST ({rate}%)</span>
+                                      <span>₹{(Number(gData.total) - (Number(gData.cgst || 0) + Number(gData.sgst || 0))).toFixed(2)}</span>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        });
+                      }
+
+                      if (breakdownGroups) {
+                        return Object.entries(breakdownGroups).map(([rate, group]) => {
+                          const totalGst = Number(group.total_amount || group.igst || (Number(group.cgst || 0) + Number(group.sgst || 0)) || 0);
+                          if (Number(rate) === 0 || totalGst === 0) return null;
+                          const isExpanded = !!expandedGst[rate];
+
+                          return (
+                            <div key={rate} className="space-y-0.5 py-1">
+                              <div
+                                className="flex justify-between text-gray-600 text-[11px] font-medium cursor-pointer hover:bg-gray-50 rounded px-1 -mx-1 transition-colors"
+                                onClick={() => toggleGstExpand(rate)}
+                              >
+                                <span className="flex items-center gap-1">
+                                  <span className={`text-[8px] transition-transform duration-200`} style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>▶</span>
+                                  GST ({rate}%)
+                                </span>
+                                <span>₹{totalGst.toFixed(2)}</span>
+                              </div>
+
+                              {isExpanded && (
+                                <div className="space-y-0.5 pl-4 border-l border-gray-100 ml-1 mt-0.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                                  {Number(group.cgst || 0) > 0 && (
+                                    <div className="flex justify-between text-[10px] text-gray-400">
+                                      <span>CGST ({Number(rate) / 2}%)</span>
+                                      <span>₹{Number(group.cgst).toFixed(2)}</span>
+                                    </div>
+                                  )}
+                                  {Number(group.sgst || 0) > 0 && (
+                                    <div className="flex justify-between text-[10px] text-gray-400">
+                                      <span>SGST ({Number(rate) / 2}%)</span>
+                                      <span>₹{Number(group.sgst).toFixed(2)}</span>
+                                    </div>
+                                  )}
+                                  {Number(group.igst || 0) > 0 && (
+                                    <div className="flex justify-between text-[10px] text-gray-400">
+                                      <span>IGST ({rate}%)</span>
+                                      <span>₹{Number(group.igst).toFixed(2)}</span>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        });
+                      }
+
+                      if (summary) {
+                        return Object.entries(summary).map(([rateStr, amount]) => {
+                          const rate = parseFloat(rateStr);
+                          const totalGst = Number(amount);
+                          if (rate === 0 || totalGst === 0) return null;
+                          return (
+                            <div key={rateStr} className="flex justify-between text-gray-600 text-[11px] font-medium py-1">
+                              <span>GST ({rate}%)</span>
+                              <span>₹{totalGst.toFixed(2)}</span>
+                            </div>
+                          );
+                        });
+                      }
+
+                      return null;
+                    })()}
+
+                    {/* Total Amount */}
+                    <div className="flex justify-between text-gray-800 font-bold border-t pt-2 text-base">
+                      <span>Total Amount</span>
+                      <span>₹{Number(activeOrder?.grand_total ?? 0).toFixed(2)}</span>
+                    </div>
+
+                    {/* Savings message */}
+                    {(Number(activeOrder?.total_discount ?? 0) + Number(coupon?.discount_amount ?? activeOrder?.coupon_discount ?? 0)) > 0 && (
+                      <p className="text-emerald-600 text-xs font-semibold text-center bg-emerald-50 rounded-lg py-1.5">
+                        You will save ₹{(Number(activeOrder?.total_discount ?? 0) + Number(coupon?.discount_amount ?? activeOrder?.coupon_discount ?? 0)).toFixed(2)} on this order
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+              </div>
+
+              {/* ── Fixed Bottom: GD Coins + Grand Total + Place Order ── */}
+              <div className="border-t border-gray-100 px-4 pt-3 pb-4 space-y-3">
+                {/* GD Coins */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">🪙</span>
+                    <div>
+                      <p className="text-xs font-bold text-gray-800">GD Coins Earned</p>
+                      <p className="text-[10px] text-gray-400">Use on your next order</p>
+                    </div>
+                  </div>
+                  <span className="text-lg font-extrabold text-orange-500">+{activeOrder?.gd_coin ?? 0}</span>
+                </div>
+
+                {/* Grand Total */}
+                <div className="bg-gradient-to-r from-green-600 to-green-800 rounded-xl p-3 flex justify-between items-center">
+                  <span className="text-white font-bold text-sm">Grand Total</span>
+                  <span className="text-white font-extrabold text-lg">₹{Number(activeOrder?.grand_total ?? 0).toFixed(2)}</span>
+                </div>
+
+                {/* Place Order / Proceed to Payment */}
+                {!showPaymentStep ? (
+                  <button
+                    disabled={savingOrder}
+                    onClick={handleSaveOrderSummary}
+                    className="w-full bg-bio-green text-white font-bold py-3.5 rounded-xl hover:bg-green-700 active:scale-[0.98] transition-all text-sm tracking-wide shadow disabled:opacity-60 flex items-center justify-center gap-2"
+                  >
+                    {savingOrder ? (
+                      <><span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span> Saving…</>
+                    ) : (
+                      <>Place Order →</>
+                    )}
+                  </button>
+                ) : (
+                  <button
+                    disabled={!selectedPayMethod || (isGstSelected && !gstFromProfile)}
+                    onClick={handlePayment}
+                    className="w-full bg-bio-green text-white font-bold py-3.5 rounded-xl hover:bg-green-700 active:scale-[0.98] transition-all text-sm tracking-wide shadow disabled:opacity-60 flex items-center justify-center gap-2"
+                  >
+                    Pay ₹{Number(activeOrder?.grand_total ?? 0).toFixed(2)} →
+                  </button>
+                )}
+                <p className="text-center text-[10px] text-gray-400">🔒 Safe and Secure Payments. 100% Authentic Products.</p>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
       </div>
     </>
   );
