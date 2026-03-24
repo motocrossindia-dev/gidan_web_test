@@ -715,7 +715,7 @@ const OrderSummary = ({ selectedOption, selectedAddress, data }) => {
               <div className="border-t border-gray-100 px-4 py-4 space-y-2 text-sm">
                 {/* Items subtotal */}
                 <div className="flex justify-between text-gray-600">
-                  <span>Sub Total</span>
+                  <span>Sub Total "</span>
                   <span className="font-medium text-gray-800">₹{itemsTotal.toFixed(2)}</span>
                 </div>
 
@@ -1744,7 +1744,7 @@ const CheckoutPage = () => {
 
                     {/* Sub Total */}
                     <div className="flex justify-between text-gray-600">
-                      <span>Sub Total</span>
+                      <span>Sub Total (Inclusive of GST)</span>
                       <span>₹{Number(activeOrder?.total_selling_price ?? 0).toFixed(2)}</span>
                     </div>
 
