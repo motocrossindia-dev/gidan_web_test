@@ -66,7 +66,7 @@ const ComboCard = ({ combo }) => {
             </h2>
             <div className="flex flex-col items-center gap-0.5">
               <div className="flex items-center gap-2">
-                <span className="text-xl font-bold text-[#15803D]">
+                <span className="text-xl font-bold text-[#062e25]">
                   ₹{Math.round(combo?.selling_price)}
                 </span>
                 {combo?.mrp && (combo?.mrp > combo?.selling_price) && (
@@ -77,7 +77,7 @@ const ComboCard = ({ combo }) => {
               </div>
 
               {combo?.mrp && combo?.selling_price && (combo?.mrp > combo?.selling_price) && (
-                <div className="bg-green-100 text-[#15803D] text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 border border-green-200">
+                <div className="bg-green-100 text-[#062e25] text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 border border-green-200">
                   SAVE ₹{Math.round(combo?.mrp - combo?.selling_price)} ({Math.round(((combo?.mrp - combo?.selling_price) / combo?.mrp) * 100)}% OFF)
                 </div>
               )}
@@ -142,7 +142,7 @@ const ComboCard = ({ combo }) => {
 
               <div className="flex flex-col items-center gap-0.5 mt-1">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-lg font-bold text-[#15803D]">
+                  <span className="text-lg font-bold text-[#062e25]">
                     ₹{Math.round(combo?.selling_price)}
                   </span>
                   {combo?.mrp && (combo?.mrp > combo?.selling_price) && (

@@ -173,7 +173,7 @@ export default function RootLayout({
             `}
           </Script>
           <div className="landing-page-layout w-full min-h-screen flex flex-col overflow-x-hidden">
-            <div className="sticky top-0 left-0 w-full z-[10000]">
+            <div className="sticky top-0 left-0 w-full z-10">
               <Header />
               <NavBar />
             </div>

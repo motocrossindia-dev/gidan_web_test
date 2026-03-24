@@ -3,14 +3,14 @@
 
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState, useMemo } from "react";
-import { Tag } from 'lucide-react';
-import { CheckCircle } from 'lucide-react';
+import { Tag, CheckCircle, Pencil, ChevronDown, Check } from 'lucide-react';
 import RazorpayPayment from "../RazorPayment/RazorpayPayment";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { trackBeginCheckout, trackAddPaymentInfo, trackAddShippingInfo, trackPurchase } from "../../../utils/ga4Ecommerce";
+import RightDrawer from "../../../components/Shared/RightDrawer";
 
 const loadRazorpayScript = () =>
   new Promise((resolve) => {
@@ -26,7 +26,7 @@ const loadRazorpayScript = () =>
   });
 
 
-const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOption, setIsAddNewOpen, isAddNewOpen, onConfirmStore }) => {
+const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOption, setIsAddNewOpen, isAddNewOpen, onConfirmStore, isGift, setIsGift }) => {
   const accessToken = useSelector(selectAccessToken);
   const [isOpen, setIsOpen] = useState(true);
   const [addresses, setAddresses] = useState([]);
@@ -91,11 +91,99 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
   const toggleDropdown = () => setIsOpen(!isOpen);
 
   return (
-    <div className="p-4 font-sans space-y-6">
-      <section>
-        <div className="flex justify-between items-center mb-3">
-          <h3 className="text-sm font-bold text-gray-700 border-b pb-1">1. Delivery Address</h3>
+    <div className="font-sans space-y-6">
+      {/* 1. Delivery Address Container */}
+      <section className="bg-white p-6 rounded-xl shadow-sm animate-in fade-in duration-500">
+        <div className="flex justify-between items-center mb-5 border-b border-gray-100 pb-2">
+          <div className="flex items-center gap-3">
+            <span className="bg-bio-green text-white w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold">1</span>
+            <h3 className="text-base font-bold text-gray-800 uppercase tracking-wide">Delivery Address</h3>
+          </div>
           <div className="flex gap-4">
+            {addresses.length > 0 && (
+              <button
+                onClick={() => setShowAllAddresses(!showAllAddresses)}
+                className="text-xs font-bold text-bio-green hover:text-[#051d18] transition-colors"
+              >
+                {showAllAddresses ? "Show Selected" : "Change"}
+              </button>
+            )}
+          </div>
+        </div>
+
+        {!showAllAddresses && selectedAddrObj ? (
+          <div className="p-5 border border-bio-green bg-green-50 rounded-2xl relative animate-in fade-in duration-300 shadow-sm transition-all">
+            <div className="flex items-start gap-3">
+              <div className="mt-1 h-5 w-5 rounded-full border-2 border-bio-green flex items-center justify-center">
+                <div className="h-2.5 w-2.5 rounded-full bg-bio-green"></div>
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  {selectedAddrObj.address_type && (
+                    <span className={`px-3 py-1 rounded-md text-[10px] font-bold tracking-wider flex items-center gap-1 ${selectedAddrObj.address_type.toLowerCase() === 'home'
+                      ? 'bg-green-100 text-green-700 border border-green-200'
+                      : 'bg-blue-100 text-blue-700 border border-blue-200'
+                      }`}>
+                      {selectedAddrObj.address_type.toUpperCase()}
+                    </span>
+                  )}
+                </div>
+                <h4 className="font-bold text-gray-800 text-sm mb-1">{`${selectedAddrObj.first_name} ${selectedAddrObj.last_name}`}</h4>
+                <p className="text-xs text-gray-500 leading-relaxed mb-1">
+                  {selectedAddrObj.address}, {selectedAddrObj.city}, {selectedAddrObj.state} — {selectedAddrObj.pincode}
+                </p>
+                <div className="flex items-center gap-2 text-xs text-gray-700 font-medium">
+                  <span className="text-gray-400">PH:</span>
+                  <span>+91 {selectedAddrObj.phone}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-4 animate-in fade-in duration-300">
+            <div className="max-h-[380px] overflow-y-auto px-1 py-1 custom-scroll space-y-3">
+              {addresses.map((addr, index) => (
+                <div
+                  key={addr.id || index}
+                  onClick={() => {
+                    setSelectedAddress(addr.id);
+                    setShowAllAddresses(false);
+                  }}
+                  className={`p-5 pl-14 border rounded-2xl cursor-pointer relative transition-all ${selectedAddress === addr.id
+                    ? 'border-bio-green bg-green-50/40 shadow-sm'
+                    : 'border-gray-100 bg-white hover:border-gray-200'
+                    }`}
+                >
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2">
+                    <div className={`h-6 w-6 rounded-full border-2 flex items-center justify-center ${selectedAddress === addr.id ? 'border-bio-green' : 'border-gray-300'
+                      }`}>
+                      {selectedAddress === addr.id && <div className="h-3 w-3 rounded-full bg-bio-green"></div>}
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <div className="mb-2">
+                      {addr.address_type && (
+                        <span className={`px-3 py-1 rounded-md text-[10px] font-bold tracking-wider ${addr.address_type.toLowerCase() === 'home'
+                          ? 'bg-green-100 text-green-700 border border-transparent'
+                          : 'bg-blue-100 text-blue-700 border border-transparent'
+                          }`}>
+                          {addr.address_type.toUpperCase()}
+                        </span>
+                      )}
+                    </div>
+                    <h4 className="font-extrabold text-gray-800 text-base mb-1">{`${addr.first_name} ${addr.last_name}`}</h4>
+                    <p className="text-sm text-gray-500 leading-relaxed mb-1 font-medium">
+                      {addr.address}, {addr.city}, {addr.state} — {addr.pincode}
+                    </p>
+                    <div className="flex items-center gap-2 text-sm text-gray-400 font-medium font-semibold">
+                      <span>PH:</span>
+                      <span className="text-gray-600">+91 {addr.phone}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
             <button
               onClick={() => {
                 setIsAddNewOpen(true);
@@ -103,169 +191,114 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
                   document.getElementById('add-new-address-section')?.scrollIntoView({ behavior: 'smooth' });
                 }, 100);
               }}
-              className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-bold border border-green-200 hover:bg-green-200 transition-colors"
+              className="w-full p-4 border-2 border-dashed border-green-200 rounded-2xl flex items-center justify-center gap-2 text-bio-green cursor-pointer bg-white transition-colors hover:bg-green-50 sticky bottom-0 mt-2 shadow-sm"
             >
-              + Add Address
+              <span className="text-xl font-light">+</span>
+              <span className="font-bold text-xs uppercase tracking-tight">Add a new delivery address</span>
             </button>
-            {addresses.length > 1 && (
-              <button
-                onClick={() => setShowAllAddresses(!showAllAddresses)}
-                className="text-xs font-bold text-bio-green hover:text-green-800"
-              >
-                {showAllAddresses ? "Show Selected Only" : "Change Address"}
-              </button>
-            )}
-          </div>
-        </div>
-
-        {!showAllAddresses && selectedAddrObj ? (
-          <div className="p-4 border border-bio-green bg-green-50 rounded-lg shadow-sm relative animate-in fade-in duration-300">
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="font-bold text-gray-800 text-sm">{`${selectedAddrObj.first_name} ${selectedAddrObj.last_name}`}</span>
-                {selectedAddrObj.address_type && (
-                  <span className="px-2 py-0.5 bg-gray-200 text-gray-600 text-[9px] rounded uppercase font-bold tracking-wider">
-                    {selectedAddrObj.address_type}
-                  </span>
-                )}
-              </div>
-              <p className="text-xs text-gray-600 line-clamp-2">{selectedAddrObj.address}</p>
-              <p className="text-xs text-gray-600">{selectedAddrObj.city}, {selectedAddrObj.state} - {selectedAddrObj.pincode}</p>
-              <p className="text-xs text-gray-700 font-medium mt-1"> {selectedAddrObj.phone}</p>
-            </div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in slide-in-from-top-2 duration-300">
-            {addresses.map((addr, index) => (
-              <div
-                key={addr.id || index}
-                onClick={() => {
-                  setSelectedAddress(addr.id);
-                  setShowAllAddresses(false);
-                }}
-                className={`p-4 border rounded-lg shadow-sm cursor-pointer relative transition-all hover:shadow-md ${selectedAddress === addr.id
-                  ? 'border-bio-green bg-green-50 ring-2 ring-bio-green ring-opacity-20'
-                  : 'border-gray-200'
-                  }`}
-              >
-                <div className="flex items-start gap-3">
-                  <div className={`mt-1 h-5 w-5 rounded-full border-2 flex items-center justify-center ${selectedAddress === addr.id ? 'border-bio-green' : 'border-gray-300'
-                    }`}>
-                    {selectedAddress === addr.id && <div className="h-2.5 w-2.5 rounded-full bg-bio-green"></div>}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-bold text-gray-800 text-sm">{`${addr.first_name} ${addr.last_name}`}</span>
-                      {addr.address_type && (
-                        <span className="px-2 py-0.5 bg-gray-200 text-gray-600 text-[9px] rounded uppercase font-bold tracking-wider">
-                          {addr.address_type}
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-xs text-gray-600 line-clamp-2">{addr.address}</p>
-                    <p className="text-xs text-gray-600">{addr.city}, {addr.state} - {addr.pincode}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-
-            <div
-              onClick={() => {
-                setIsAddNewOpen(true);
-                setTimeout(() => {
-                  document.getElementById('add-new-address-section')?.scrollIntoView({ behavior: 'smooth' });
-                }, 100);
-              }}
-              className="p-4 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-500 hover:border-bio-green hover:text-bio-green transition-all cursor-pointer bg-gray-50 hover:bg-white min-h-[80px]"
-            >
-              <div className="flex items-center gap-2">
-                <span className="bg-gray-200 w-6 h-6 flex items-center justify-center rounded-full text-sm font-bold">+</span>
-                <span className="font-semibold text-xs text-center leading-tight">Add New<br />Address</span>
-              </div>
-            </div>
           </div>
         )}
 
         {/* Inline Add New Address Form */}
         {isAddNewOpen && (
-          <div className="mt-6 border-t pt-6 animate-in fade-in slide-in-from-top-4 duration-500">
+          <div className="mt-8 border-t-2 border-dashed border-gray-100 pt-8 animate-in fade-in slide-in-from-top-4 duration-500">
             <AddNewAddress isOpen={isAddNewOpen} setIsOpen={setIsAddNewOpen} />
           </div>
         )}
       </section>
 
-      <section className="bg-gray-50 p-4 rounded-lg">
-        <h3 className="text-sm font-bold text-gray-700 mb-3 border-b pb-2">2. Choose Delivery Method</h3>
-        <div className="flex flex-col md:flex-row gap-4">
+      {/* 2. Choose Delivery Method Container */}
+      <section className="bg-white p-6 rounded-xl shadow-sm animate-in fade-in duration-500 delay-150">
+        <div className="flex items-center gap-3 border-b border-gray-100 pb-2 mb-6">
+          <span className="bg-bio-green text-white w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold">2</span>
+          <h3 className="text-base font-bold text-gray-800 uppercase tracking-wide">Choose Delivery Method</h3>
+        </div>
+        <div className="flex flex-col md:flex-row gap-5">
           {deliveryOptions.map((option) => (
             <div
               key={option.id}
               onClick={() => handleOptionChange(option.id)}
-              className={`flex-1 p-3 border rounded-lg cursor-pointer flex items-center justify-between transition-all ${selectedDelType === option.id
-                ? 'border-bio-green bg-white shadow-sm ring-1 ring-bio-green'
-                : 'border-gray-200 bg-white hover:border-bio-green'
+              className={`flex-1 p-5 rounded-2xl cursor-pointer relative border transition-all ${selectedDelType === option.id
+                ? 'border-bio-green bg-green-50/40 shadow-sm'
+                : 'border-gray-100 bg-white hover:border-gray-200'
                 }`}
             >
-              <div className="flex items-center gap-2">
-                <div className={`h-4 w-4 rounded-full border-2 flex items-center justify-center ${selectedDelType === option.id ? 'border-bio-green' : 'border-gray-300'
+              <div className="flex items-center gap-4">
+                <div className={`h-6 w-6 rounded-full border-2 flex items-center justify-center shrink-0 ${selectedDelType === option.id ? 'border-bio-green' : 'border-gray-300'
                   }`}>
-                  {selectedDelType === option.id && <div className="h-2 w-2 rounded-full bg-bio-green"></div>}
+                  {selectedDelType === option.id && <div className="h-3 w-3 rounded-full bg-bio-green"></div>}
                 </div>
-                <span className="text-sm font-medium text-gray-800">{option.label}</span>
+                <div className="flex-1">
+                  <span className={`text-base font-extrabold uppercase tracking-tight transition-colors ${selectedDelType === option.id ? 'text-gray-900' : 'text-gray-500'}`}>
+                    {option.label}
+                  </span>
+                  <p className="text-xs text-gray-400 font-medium mt-0.5">
+                    {option.id === 'DoorDelivery' ? 'Delivery to your selected address' : 'Collect from our nearest store'}
+                  </p>
+                </div>
               </div>
             </div>
           ))}
         </div>
 
         {selectedDelType === 'Pick Up Store' && (
-          <div className="mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
-            <label className="block mb-2 text-xs font-bold text-gray-600 uppercase">Select pickup store</label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto custom-scroll pr-2">
-              {stores.map((store) => (
-                <div
-                  key={store.id}
-                  onClick={() => handleStoreSelect(store.id)}
-                  className={`p-3 rounded-lg cursor-pointer border transition-all ${selectedStoreId === store.id
-                    ? 'bg-green-50 border-green-500 ring-1 ring-bio-green'
-                    : 'bg-white border-gray-200 hover:border-green-300'
-                    }`}
-                >
-                  <p className="font-bold text-gray-800 text-xs">{store.pathname}</p>
-                  <p className="text-[10px] text-gray-500 mt-1 line-clamp-2">{store.address}</p>
-                </div>
-              ))}
+          <div className="mt-8 animate-in fade-in slide-in-from-top-4 duration-500 border-t border-dashed border-gray-100 pt-6">
+            <label className="block mb-4 text-[11px] font-bold text-gray-400 uppercase tracking-[0.2em] ml-1">Select pickup store</label>
+            
+            <div className="relative group">
+              <select
+                value={selectedStoreId || ""}
+                onChange={(e) => handleStoreSelect(Number(e.target.value))}
+                className="w-full h-[64px] pl-14 pr-12 bg-white border-2 border-[#2A333E] rounded-[20px] appearance-none cursor-pointer focus:outline-none transition-all font-extrabold text-sm md:text-[15px] text-[#2A333E] uppercase tracking-tight shadow-sm"
+              >
+                <option value="" disabled className="text-gray-400 font-medium">Select a store Location</option>
+                {stores && stores.length > 0 ? (
+                  stores.map((store) => (
+                    <option key={store.id} value={store.id} className="">
+                      {store.address || store.pathname || 'Store Location'}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>No stores available</option>
+                )}
+              </select>
+              <div className="absolute left-6 top-1/2 -translate-y-1/2 pointer-events-none text-bio-green">
+                <ChevronDown size={22} strokeWidth={2.5} />
+              </div>
             </div>
 
-            {/* Confirm Store button */}
-            {selectedStoreId && (
-              <div className="mt-3">
-                {storeConfirmed ? (
-                  <div className="flex items-center gap-2 text-green-700 text-sm font-semibold">
-                    <span>✓</span>
-                    <span>Store confirmed — free pickup applied</span>
+            {/* Display Selected Store Address Details */}
+            {selectedStoreId && stores.find(s => s.id === selectedStoreId) && (
+              <div className="mt-4 p-6 bg-green-50/40 border border-bio-green rounded-2xl animate-in fade-in zoom-in-95 duration-300 shadow-sm">
+                <div className="flex items-start gap-4">
+                  <div className="flex-1">
+                    <p className="text-sm text-gray-500 font-medium leading-relaxed max-w-lg">
+                      {stores.find(s => s.id === selectedStoreId)?.address}
+                    </p>
                   </div>
-                ) : (
-                  <button
-                    onClick={async () => {
-                      setConfirmingStore(true);
-                      const ok = await onConfirmStore?.();
-                      if (ok) setStoreConfirmed(true);
-                      setConfirmingStore(false);
-                    }}
-                    disabled={confirmingStore}
-                    className="w-full py-2 bg-bio-green text-white text-sm font-bold rounded-lg hover:bg-green-700 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
-                  >
-                    {confirmingStore ? (
-                      <><span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span> Applying…</>
-                    ) : (
-                      '✓ Confirm Store & Apply Free Pickup'
-                    )}
-                  </button>
-                )}
+                </div>
               </div>
             )}
           </div>
         )}
+
+        {/* Gift Option */}
+        <div className="mt-8 pt-6 border-t border-dashed border-gray-100">
+          <label 
+            className="flex items-center gap-4 cursor-pointer group w-fit"
+            onClick={() => setIsGift(!isGift)}
+          >
+            <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all ${isGift ? 'bg-bio-green border-bio-green' : 'border-gray-300 group-hover:border-bio-green'}`}>
+              {isGift && <Check size={16} strokeWidth={4} className="text-white" />}
+            </div>
+            <span className={`text-sm font-extrabold uppercase tracking-tight transition-colors ${isGift ? 'text-gray-900' : 'text-gray-500'}`}>
+              This is a gift
+            </span>
+          </label>
+          <p className="text-xs text-gray-400 font-medium mt-1 ml-10">
+            Let us know if this is a gift and we'll ensure a special experience.
+          </p>
+        </div>
       </section>
     </div>
   );
@@ -508,7 +541,7 @@ const AddNewAddress = ({ isOpen, setIsOpen }) => {
           <div className="flex space-x-2 mt-4">
             <button
               type="submit"
-              className="bg-green-900 text-white px-6 py-2 rounded-md font-bold hover:bg-green-800"
+              className="bg-[#062e25] text-white px-6 py-2 rounded-md font-bold hover:bg-[#051d18]"
             >
               Save Address
             </button>
@@ -531,7 +564,7 @@ const AddNewAddress = ({ isOpen, setIsOpen }) => {
 
 
 
-const OrderSummaryItem = ({ title, Quantity, mrp, sales_price, discount, image, subtotal, gst_amount }) => {
+const OrderSummaryItem = ({ id, title, Quantity, mrp, sales_price, discount, image, onUpdateQuantity, isEditing }) => {
   const qty = Number(Quantity) || 1;
   const unitMrp = Number(mrp) || 0;
   const unitPrice = qty > 0 ? (Number(sales_price) || 0) / qty : (Number(sales_price) || 0);
@@ -542,51 +575,64 @@ const OrderSummaryItem = ({ title, Quantity, mrp, sales_price, discount, image, 
 
   return (
     <tr className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-      {/* Description */}
-      <td className="py-3 px-3">
-        <div className="flex items-center gap-3">
-          <img
-            src={`${process.env.NEXT_PUBLIC_API_URL}${image}`}
-            alt={title}
-            loading="lazy"
-            className="w-14 h-14 object-cover rounded-lg border border-gray-100 flex-shrink-0"
-          />
-          <p className="text-sm font-medium text-gray-800 leading-snug">{title}</p>
+      {/* Items Description */}
+      <td className="py-4 pr-3">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 bg-gray-50 rounded-lg overflow-hidden shrink-0 border border-gray-100 p-1">
+            <img
+              src={`${process.env.NEXT_PUBLIC_API_URL}${image}`}
+              alt={title}
+              className="w-full h-full object-contain"
+              onError={(e) => { e.target.src = '/placeholder.png'; }}
+            />
+          </div>
+          <div>
+            <h4 className="text-sm font-bold text-gray-800 leading-snug max-w-[200px] line-clamp-2">{title}</h4>
+            <p className="text-[11px] text-gray-400 font-medium">Standard Delivery</p>
+          </div>
         </div>
       </td>
 
       {/* MRP */}
-      <td className="py-3 px-3 text-center">
-        <p className={`text-sm ${unitDisc > 0 ? 'line-through text-gray-400' : 'text-gray-700 font-medium'}`}>
-          ₹{unitMrp.toFixed(2)}
-        </p>
-        {unitDisc > 0 && (
-          <p className="text-sm font-semibold text-gray-800 mt-0.5">₹{unitPrice.toFixed(2)}</p>
-        )}
+      <td className="py-4 px-3 text-center">
+        <span className="text-sm font-bold text-gray-800">₹{Number(mrp).toFixed(2)}</span>
       </td>
 
       {/* Quantity */}
-      <td className="py-3 px-3 text-center">
-        <span className="inline-flex items-center justify-center w-8 h-8 border border-gray-300 rounded text-sm font-semibold text-gray-700">
-          {qty}
-        </span>
-      </td>
-
-      {/* Savings */}
-      <td className="py-3 px-3 text-center">
-        {totalSaving > 0 ? (
-          <div className="space-y-0.5">
-            <p className="text-emerald-600 text-sm font-bold">-₹{totalSaving.toFixed(2)}</p>
-            <p className="text-gray-400 text-[10px]">{savingPct}% off</p>
+      <td className="py-4 px-3 text-center">
+        {isEditing ? (
+          <div className="flex items-center justify-center p-1.5 border border-bio-green bg-green-50 rounded-lg mx-auto w-fit shadow-sm gap-2">
+            <button
+              onClick={() => onUpdateQuantity(id, qty - 1)}
+              disabled={qty <= 1}
+              className="w-6 h-6 flex items-center justify-center bg-white border border-bio-green rounded-md text-bio-green font-bold text-lg hover:bg-bio-green hover:text-white transition-colors disabled:opacity-50"
+            >
+              −
+            </button>
+            <span className="w-8 text-center font-extrabold text-gray-800 text-sm">{qty}</span>
+            <button
+              onClick={() => onUpdateQuantity(id, qty + 1)}
+              className="w-6 h-6 flex items-center justify-center bg-white border border-bio-green rounded-md text-bio-green font-bold text-lg hover:bg-bio-green hover:text-white transition-colors"
+            >
+              +
+            </button>
           </div>
         ) : (
-          <span className="text-gray-400 text-xs">—</span>
+          <span className="text-sm font-extrabold text-gray-800 bg-gray-100 px-3 py-1 rounded-full">{qty}</span>
         )}
       </td>
 
+      {/* Savings */}
+      <td className="py-4 px-3 text-center">
+        <div className="flex flex-col items-center">
+          <span className="text-sm font-bold text-green-600">₹{Number(discount).toFixed(2)}</span>
+          <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-bold">SAVED</span>
+        </div>
+      </td>
+
       {/* Total */}
-      <td className="py-3 px-3 text-right">
-        <p className="text-sm font-bold text-gray-800">₹{lineTotal.toFixed(2)}</p>
+      <td className="py-4 pl-3 text-right">
+        <span className="text-sm font-extrabold text-gray-800">₹{Number(sales_price).toFixed(2)}</span>
       </td>
     </tr>
   );
@@ -606,181 +652,115 @@ const OrderSummaryItem = ({ title, Quantity, mrp, sales_price, discount, image, 
 
 
 
-const OrderSummary = ({ selectedOption, selectedAddress, data }) => {
+const OrderSummary = ({ selectedOption, selectedAddress, data, onUpdateData }) => {
   const accessToken = useSelector(selectAccessToken);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
-  // const [orderSummary, setOrderSummary] = useState([]);
-  const orderData = null?.resource;
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
-  // const handleSaveOrderSummary = async () => {
-  //   if (!data?.order?.id || !selectedAddress || !selectedOption) {
-  //     enqueueSnackbar("Please fill in all the required details!", {variant: "warning" });
-  //     return;
-  //   }
+  const handleUpdateQuantity = async (orderItemId, newQuantity) => {
+    if (newQuantity < 1) return;
 
-  //   const orderSummaryData = {
-  //     order_id: data.order.id,
-  //     address_id: selectedAddress,
-  //     delivery_option: selectedOption?.deliveryType,
-  //     store_id:selectedOption?.storeId,
-  //   };
+    try {
+      const response = await axiosInstance.patch(`/order/placeOrder/`, {
+        order_id: data?.order?.id || data?.id || data?.order_id,
+        order_item_id: orderItemId,
+        quantity: newQuantity
+      });
 
-  //   try {
-  //     const response = await axios.patch(
-  //       `${process.env.NEXT_PUBLIC_API_URL}/order/orderSummary/`,
-  //       orderSummaryData,
-  //       {
-  //         headers: {Authorization: `Bearer ${accessToken}` },
-  //       }
-  //     );
+      if (response.data.message === "success") {
+        onUpdateData(response.data.data);
+        enqueueSnackbar("Quantity updated", { variant: "success" });
+      }
+    } catch (error) {
+      console.error("Error updating quantity:", error);
+      enqueueSnackbar(error.response?.data?.message || "Failed to update quantity", { variant: "error" });
+    }
+  };
 
-  //     if (response.data.message === "success") {
-  //       enqueueSnackbar("Order summary saved successfully!", {variant: "success" });
-
-  //       router.push("/paymentgateway", {
-  //         state: {resource: response.data.data, order_id: data.order.id }
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.error("Error saving order summary:", error);
-
-  //     // Show a detailed error message
-  //     enqueueSnackbar(
-  //       error.response?.data?.message || "Failed to save order summary. Please try again.",
-  //       {variant: "error" }
-  //     );
-  //   }
-  // };
+  const orderItems = data?.order_items || [];
+  const orderData = data?.order || data;
 
   return (
-    <div className="bg-gray-100 p-4 mt-4">
-      <div className="bg-gradient-to-r from-green-500 to-green-900 text-white p-4 rounded-md cursor-pointer flex justify-between items-center"
+    <div className="bg-white p-4 md:p-6 rounded-xl shadow-sm mb-4">
+      <div className="flex items-center justify-between border-b border-gray-100 pb-2 mb-4 bg-white">
+        <div className="flex items-center gap-3">
+          <span className="bg-bio-green text-white w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold">3</span>
+          <h2 className="text-sm md:text-base font-bold text-gray-800 uppercase tracking-wide">
+            Review your order
+          </h2>
+        </div>
+        <button
+          onClick={(e) => { e.stopPropagation(); setIsEditing(!isEditing); if (!isOpen) setIsOpen(true); }}
+          className="text-xs font-bold flex items-center gap-1 text-bio-green hover:bg-green-50 px-2 py-1 rounded-md transition-colors"
+        >
+          <Pencil size={14} /> Edit cart
+        </button>
+      </div>
+
+      <div
+        className="flex items-center justify-between cursor-pointer py-2"
         onClick={toggleDropdown}
       >
-        <h2 className="font-bold flex items-center text-sm md:text-base">
-          <span className="bg-white text-green-900 w-6 h-6 flex items-center justify-center rounded-full mr-2 text-xs">
-            1
-          </span>
-          Order Summary
-        </h2>
-        <span className="text-white font-bold">{isOpen ? "−" : "+"}</span>
+        <div className="flex items-center gap-3 overflow-hidden">
+          <div className="flex -space-x-1 shrink-0">
+            {orderItems.slice(0, 3).map((item, idx) => (
+              <div key={idx} className="w-8 h-8 md:w-10 md:h-10 rounded-lg overflow-hidden border-2 border-white shadow-sm hover:z-10 bg-gray-50">
+                <img
+                  src={`${process.env.NEXT_PUBLIC_API_URL}${item.image}`}
+                  alt=""
+                  className="w-full h-full object-cover"
+                  onError={(e) => { e.target.src = '/placeholder.png'; }}
+                />
+              </div>
+            ))}
+          </div>
+          <div className="flex items-center gap-1.5 whitespace-nowrap overflow-hidden">
+            <span className="font-extrabold text-gray-800 text-xs md:text-sm shrink-0 uppercase">
+              Items ({orderItems.length})
+            </span>
+            <span className="text-gray-300 shrink-0">·</span>
+            <span className="text-xs md:text-sm text-gray-400 truncate font-medium">
+              {orderItems.map(i => i.product_name).join(", ")}
+            </span>
+          </div>
+        </div>
+        <div className={`text-gray-300 transition-transform duration-300 shrink-0 ml-4 ${isOpen ? 'rotate-180' : ''}`}>
+          <ChevronDown size={18} className="text-bio-green" />
+        </div>
       </div>
 
       {isOpen && (
-        <div className="bg-white rounded-b-md overflow-x-auto mt-0">
-          <table className="w-full text-sm">
+        <div className="bg-white rounded-b-md overflow-x-auto mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
+          <table className="w-full text-sm min-w-[600px]">
             <thead>
-              <tr className="border-b border-gray-200">
-                <th className="text-left text-[10px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Items Description</th>
-                <th className="text-center text-[10px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">MRP</th>
-                <th className="text-center text-[10px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Qty</th>
-                <th className="text-center text-[10px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Savings</th>
-                <th className="text-right text-[10px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Total</th>
+              <tr className="border-b border-gray-100">
+                <th className="text-left text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Items Description</th>
+                <th className="text-center text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">MRP</th>
+                <th className="text-center text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Qty</th>
+                <th className="text-center text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Savings</th>
+                <th className="text-right text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Total</th>
               </tr>
             </thead>
-            <tbody>
-              {(data?.order_items || []).map((item, idx) => (
+            <tbody className="divide-y divide-gray-50">
+              {orderItems.map((item, idx) => (
                 <OrderSummaryItem
                   key={item.id ?? idx}
+                  id={item.id}
                   title={item.product_name}
                   Quantity={item.quantity}
                   mrp={item.mrp}
                   sales_price={item.selling_price}
                   discount={item.discount}
                   image={item.image}
-                  subtotal={item.subtotal}
-                  gst_amount={item.total_gst_amount}
+                  onUpdateQuantity={handleUpdateQuantity}
+                  isEditing={isEditing}
                 />
               ))}
             </tbody>
           </table>
-
-          {/* ── Price Breakdown ── */}
-          {data?.order && (() => {
-            const o = data.order;
-            const items = data.order_items || [];
-            const itemsTotal = Number(o.total_price) || 0;
-            const itemDiscount = Number(o.total_discount) || 0;
-            const couponDiscount = Number(o.coupon_discount) || 0;
-            const productGst = Number(o.gst_amount_18) + Number(o.gst_amount_5) + Number(o.gst_amount_0) || 0;
-            const shippingCharge = Number(o.shipping_charge) || 0;
-            const shippingGst = Number(o.shipping_gst) || 0;
-            const grandTotal = Number(o.grand_total) || 0;
-            const totalSavings = itemDiscount + couponDiscount;
-
-            return (
-              <div className="border-t border-gray-100 px-4 py-4 space-y-2 text-sm">
-                {/* Items subtotal */}
-                <div className="flex justify-between text-gray-600">
-                  <span>Sub Total "</span>
-                  <span className="font-medium text-gray-800">₹{itemsTotal.toFixed(2)}</span>
-                </div>
-
-                {/* Item discount */}
-                {itemDiscount > 0 && (
-                  <div className="flex justify-between text-emerald-600">
-                    <span>Item Discount</span>
-                    <span className="font-medium">-₹{itemDiscount.toFixed(2)}</span>
-                  </div>
-                )}
-
-                {/* Coupon discount */}
-                {couponDiscount > 0 && (
-                  <div className="flex justify-between text-emerald-600">
-                    <span className="flex items-center gap-1">
-                      🏷️ Coupon Discount
-                      {o.applied_coupon && (
-                        <span className="text-[10px] bg-emerald-50 border border-emerald-200 rounded px-1">{o.applied_coupon}</span>
-                      )}
-                    </span>
-                    <span className="font-medium">-₹{couponDiscount.toFixed(2)}</span>
-                  </div>
-                )}
-
-                {/* Product GST (incl. in price) */}
-                {productGst > 0 && (
-                  <div className="flex justify-between text-gray-500 text-xs">
-                    <span>Product GST (incl. in price)</span>
-                    <span>₹{Number(productGst).toFixed(2)}</span>
-                  </div>
-                )}
-
-                {/* Shipping */}
-                <div className="flex justify-between text-gray-600">
-                  <span>Shipping Charge</span>
-                  <span className={`font-medium ${shippingCharge === 0 ? 'text-emerald-600' : 'text-gray-800'}`}>
-                    {shippingCharge === 0 ? 'FREE' : `₹${shippingCharge.toFixed(2)}`}
-                  </span>
-                </div>
-
-                {/* Shipping GST */}
-                {shippingGst > 0 && (
-                  <div className="flex justify-between text-gray-500 text-xs">
-                    <span>Shipping GST (18%)</span>
-                    <span>₹{shippingGst.toFixed(2)}</span>
-                  </div>
-                )}
-
-                {/* Divider */}
-                <div className="border-t border-dashed border-gray-200 pt-2 mt-1">
-                  <div className="flex justify-between text-base font-bold text-gray-900">
-                    <span>Grand Total</span>
-                    <span>₹{grandTotal.toFixed(2)}</span>
-                  </div>
-                </div>
-
-                {/* Savings callout */}
-                {totalSavings > 0 && (
-                  <p className="text-center text-xs text-emerald-700 bg-emerald-50 rounded-lg py-1.5 mt-1 font-semibold">
-                    🎉 You save ₹{totalSavings.toFixed(2)} on this order!
-                  </p>
-                )}
-              </div>
-            );
-          })()}
         </div>
       )}
     </div>
@@ -793,11 +773,11 @@ const OrderSummary = ({ selectedOption, selectedAddress, data }) => {
 
 
 const ApplyCoupon = ({ id, setCoupon, coupon, onRemoveCoupon }) => {
-  const [isOpen, setIsOpen] = useState(false);
   const [removing, setRemoving] = useState(false);
   const [couponCode, setCouponCode] = useState('');
   const accessToken = useSelector(selectAccessToken);
   const [coupons, setCoupons] = useState([]);
+  const [showDrawer, setShowDrawer] = useState(false);
 
   const getCoupones = async () => {
     if (!id) return;
@@ -805,10 +785,6 @@ const ApplyCoupon = ({ id, setCoupon, coupon, onRemoveCoupon }) => {
       const response = await axiosInstance.get(`/coupon/coupons/?order_id=${id}`);
       if (response.status === 200) {
         setCoupons(response.data.coupons);
-        // Auto-open accordion if coupons are available
-        if (response.data.coupons && response.data.coupons.length > 0) {
-          setIsOpen(true);
-        }
       }
     } catch (error) {
       console.error("Error fetching coupons:", error);
@@ -819,10 +795,6 @@ const ApplyCoupon = ({ id, setCoupon, coupon, onRemoveCoupon }) => {
   useEffect(() => {
     getCoupones();
   }, [id]);
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
 
   const applyCouponById = async (couponId) => {
     if (!id) {
@@ -844,17 +816,12 @@ const ApplyCoupon = ({ id, setCoupon, coupon, onRemoveCoupon }) => {
       );
 
       if (response.status === 200) {
-        console.log("✅ Coupon API Response:", response.data);
-        console.log("✅ New Grand Total:", response.data?.order?.grand_total);
-        console.log("✅ Discount Amount:", response.data?.discount_amount);
-        console.log("✅ Coupon Applied:", response.data?.success);
         setCoupon(response.data);
+        setShowDrawer(false);
         enqueueSnackbar("Coupon applied successfully!", { variant: "success" });
       }
     } catch (error) {
       const responseData = error.response?.data;
-      const statusCode = error.response?.status;
-      console.error("❌ Coupon application error:", { statusCode, responseData, message: error.message });
       const errorMessage =
         (typeof responseData === 'object' && responseData !== null && responseData.error) ||
         (typeof responseData === 'string' && responseData) ||
@@ -869,120 +836,148 @@ const ApplyCoupon = ({ id, setCoupon, coupon, onRemoveCoupon }) => {
       return;
     }
 
-    // Find the coupon in the available coupons list
-    const coupon = coupons.find(c => c.code === couponCode.trim().toUpperCase());
+    const foundCoupon = coupons.find(c => c.code === couponCode.trim().toUpperCase());
 
-    if (!coupon) {
+    if (!foundCoupon) {
       enqueueSnackbar("Invalid coupon code", { variant: "error" });
       return;
     }
 
-    if (!coupon.is_applicable) {
+    if (!foundCoupon.is_applicable) {
       enqueueSnackbar("This coupon cannot be applied to your order", { variant: "error" });
       return;
     }
 
-    // Apply the coupon using the existing method
-    await applyCouponById(coupon.id);
-    setCouponCode(''); // Clear the input after successful application
+    await applyCouponById(foundCoupon.id);
+    setCouponCode('');
   };
 
   return (
-    <div className="font-sans">
-      {/* Applied coupon banner */}
-      {coupon?.success && (
-        <div className="mx-5 mt-4 mb-2 flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-2">
-          <div className="flex items-center gap-2 text-emerald-700 text-sm font-semibold">
-            <span>🏷️</span>
-            <span>{coupon.coupon_code}</span>
-            <span className="text-emerald-600 font-normal text-xs">applied — saving ₹{Number(coupon.discount_amount ?? 0).toFixed(2)}</span>
-          </div>
-          <button
-            onClick={async () => {
-              setRemoving(true);
-              await onRemoveCoupon?.();
-              setRemoving(false);
-            }}
-            disabled={removing}
-            className="text-xs font-bold text-red-500 hover:text-red-700 disabled:opacity-50 ml-3"
-          >
-            {removing ? 'Removing…' : '✕ Remove'}
-          </button>
+    <>
+      <div className="bg-[#f2f8f2] p-4 rounded-lg mt-4 border border-emerald-50">
+        <div className="flex items-center gap-2 mb-3">
+          <Tag className="text-[#c5a382]" size={16} fill="#c5a382" />
+          <span className="text-[11px] font-bold text-[#062e25] uppercase tracking-wider">APPLY COUPON</span>
         </div>
-      )}
 
-      {/* Toggle bar */}
-      <div
-        className="px-5 py-3 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors"
-        onClick={toggleDropdown}
-      >
-        <span className="text-sm font-semibold text-gray-700">
-          {isOpen ? "Hide coupons" : (coupons.length > 0 ? `${coupons.length} coupon${coupons.length > 1 ? 's' : ''} available` : "Enter coupon code")}
-        </span>
-        <span className="text-bio-green font-bold text-lg">{isOpen ? "−" : "+"}</span>
-      </div>
-
-      {isOpen && (
-        <div className="px-5 pb-5">
-          {/* Manual coupon entry */}
-          <div className="flex flex-col sm:flex-row gap-2 mb-4">
-            <input
-              type="text"
-              placeholder="Enter coupon code"
-              value={couponCode}
-              onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-              className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-bio-green text-sm w-full"
-            />
+        {coupon?.success ? (
+          <div className="flex items-center justify-between bg-white border border-emerald-100 rounded-lg px-3 py-2">
+            <div className="flex flex-col">
+              <span className="text-emerald-700 text-xs font-bold">{coupon.coupon_code}</span>
+              <span className="text-emerald-600 text-[10px]">Applied - saved ₹{Number(coupon.discount_amount ?? 0).toFixed(2)}</span>
+            </div>
             <button
-              onClick={applyManualCoupon}
-              className="bg-bio-green text-white font-semibold px-6 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm w-full sm:w-auto"
+              onClick={async () => {
+                setRemoving(true);
+                await onRemoveCoupon?.();
+                setRemoving(false);
+              }}
+              disabled={removing}
+              className="text-[10px] font-bold text-red-500 hover:text-red-700 uppercase"
             >
-              Apply
+              {removing ? '...' : 'Remove'}
             </button>
           </div>
+        ) : (
+          <div className="space-y-3">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="Coupon code"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                className="flex-1 px-3 py-2 border-2 border-dashed border-[#062e25]/30 rounded-lg focus:outline-none text-sm bg-white placeholder:text-gray-300"
+              />
+              <button
+                onClick={applyManualCoupon}
+                className="bg-[#062e25] text-white font-bold px-5 py-2 rounded-lg hover:bg-[#051d18] transition-colors text-xs uppercase"
+              >
+                Apply
+              </button>
+            </div>
 
-          {/* Available coupons */}
-          <div className="max-h-48 overflow-y-auto scrollbar-hide">
-            <div className="space-y-2 pr-2">
-              {coupons.length > 0 ? (
-                coupons.map((offer) => (
-                  <div
-                    key={offer.id}
-                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border border-dashed rounded-lg gap-2"
+            {coupons.length > 0 && (
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-x-2">
+                  <span className="text-[10px] text-gray-500">Try</span>
+                  {coupons.slice(0, 1).map((c) => (
+                    <button
+                      key={c.id}
+                      onClick={() => c.is_applicable && applyCouponById(c.id)}
+                      className={`text-[10px] font-bold underline decoration-dashed transition-colors ${c.is_applicable ? 'text-[#062e25] hover:text-[#051d18]' : 'text-gray-400'}`}
+                    >
+                      {c.code}
+                    </button>
+                  ))}
+                  <span className="text-[10px] text-gray-400">· {coupons[0]?.description?.split(' ')[0] || 'Offers'}</span>
+                </div>
+                {coupons.length > 1 && (
+                  <button
+                    onClick={() => setShowDrawer(true)}
+                    className="text-[10px] font-bold text-[#062e25] uppercase hover:underline"
                   >
-                    <div className="flex items-start sm:items-center gap-3">
-                      <Tag className="text-bio-green mt-1 sm:mt-0 flex-shrink-0" size={18} />
-                      <div className="text-sm">
-                        <p className="font-medium text-gray-800">{offer.description}</p>
-                        <p className="text-gray-500 text-xs">Min. ₹{offer.minimum_order_value}</p>
-                        <p className="font-bold text-bio-green text-xs mt-0.5">{offer.code}</p>
+                    + More
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Reusable Side Drawer for Coupons */}
+            <RightDrawer
+              isOpen={showDrawer}
+              onClose={() => setShowDrawer(false)}
+              title="Available Coupons"
+              subtitle="Choose your best offer"
+              footerText="Apply coupons manually if you have a special code!"
+            >
+              <div className="space-y-4">
+                {coupons.map((c) => (
+                  <div
+                    key={c.id}
+                    className={`group relative p-5 border-2 rounded-[24px] transition-all duration-300 ${c.is_applicable
+                        ? 'bg-white border-gray-900 hover:border-emerald-600 shadow-sm'
+                        : 'bg-gray-50 border-gray-100 opacity-60'
+                      }`}
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-3">
+                          <span className={`font-black text-[11px] px-3.5 py-1.5 rounded-lg border-2 tracking-widest uppercase transition-colors ${c.is_applicable ? 'text-gray-900 bg-[#ebf5eb] border-gray-900' : 'text-gray-400 bg-gray-100 border-gray-200'}`}>
+                            {c.code}
+                          </span>
+                          {c.is_applicable && (
+                            <span className="text-2xl animate-pulse">
+                              🔥
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-base font-black text-gray-900 leading-snug tracking-tight">{c.description}</p>
+                        <p className="text-[10px] text-gray-500 mt-2 font-black uppercase tracking-widest border-l-2 border-emerald-400 pl-2">
+                          Valid on orders above ₹{c.minimum_order_value}
+                        </p>
                       </div>
                     </div>
-                    <button
-                      className={`font-semibold px-4 py-2 rounded-lg text-sm shrink-0 ${offer.is_applicable
-                        ? "text-white bg-bio-green hover:bg-green-700 cursor-pointer"
-                        : "text-gray-400 bg-gray-100 cursor-not-allowed"
-                        }`}
-                      onClick={() => offer.is_applicable && applyCouponById(offer.id)}
-                      disabled={!offer.is_applicable}
-                    >
-                      APPLY
-                    </button>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center text-sm text-gray-400 py-4">No coupons available for this order</div>
-              )}
-            </div>
-          </div>
 
-          <style jsx global>{`
-            .scrollbar-hide::-webkit-scrollbar { display: none; }
-            .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-          `}</style>
-        </div>
-      )}
-    </div>
+                    <div className="mt-5 pt-4 border-t border-dashed border-gray-200">
+                      <button
+                        onClick={() => c.is_applicable && applyCouponById(c.id)}
+                        className={`w-full py-4.5 rounded-2xl font-black text-[12px] uppercase tracking-[0.1em] transition-all active:scale-[0.96] flex items-center justify-center gap-2
+                        ${c.is_applicable
+                            ? 'bg-white text-gray-900 border-2 border-gray-900 hover:bg-gray-50 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none'
+                            : 'bg-gray-100 text-gray-300 cursor-not-allowed border-2 border-gray-200'
+                          }`}
+                      >
+                        {c.is_applicable ? 'APPLY COUPON' : 'LOCKED'}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </RightDrawer>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
@@ -1121,6 +1116,7 @@ const CheckoutPage = () => {
   const [orderResource, setOrderResource] = useState({});
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState([]);
+  const [isGift, setIsGift] = useState(false);
   const [coupon, setCoupon] = useState();
   const [isAddNewOpen, setIsAddNewOpen] = useState(false);
   const [paymentReady, setPaymentReady] = useState(false);
@@ -1230,6 +1226,7 @@ const CheckoutPage = () => {
       address_id: selectedAddress || null,
       delivery_option: selectedOption?.deliveryType,
       store_id: isPickup ? selectedOption?.storeId : null,
+      is_wrap: isGift,
     };
 
     setSavingOrder(true);
@@ -1481,7 +1478,6 @@ const CheckoutPage = () => {
             className="bg-white rounded-2xl shadow-2xl p-6 mx-4 w-full max-w-sm"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="text-4xl text-center mb-3">💳</div>
             <h2 className="text-lg font-bold text-gray-800 text-center mb-3">Partial Wallet Payment</h2>
             <p className="text-sm text-gray-600 text-center mb-4">{partialPaymentPopup.message}</p>
             <div className="bg-gray-50 rounded-lg p-3 mb-5 space-y-2 text-sm">
@@ -1539,40 +1535,33 @@ const CheckoutPage = () => {
             {!showPaymentStep ? (
               <>
                 {/* ── Step 1: Delivery Address ── */}
-                <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-                  <div className="bg-gradient-to-r from-green-600 to-green-900 px-5 py-3 flex items-center gap-3">
-                    <span className="w-6 h-6 rounded-full bg-white text-green-800 text-xs font-extrabold flex items-center justify-center">1</span>
-                    <span className="text-white font-bold text-sm tracking-wide">DELIVERY ADDRESS</span>
-                  </div>
-                  <DeliveryAddress
-                    setSelectedAddress={setSelectedAddress}
-                    selectedAddress={selectedAddress}
-                    setSelectedOption={setSelectedOption}
-                    setIsAddNewOpen={setIsAddNewOpen}
-                    isAddNewOpen={isAddNewOpen}
-                    onConfirmStore={handleConfirmStore}
-                  />
-                </div>
+                <DeliveryAddress
+                  setSelectedAddress={setSelectedAddress}
+                  selectedAddress={selectedAddress}
+                  setSelectedOption={setSelectedOption}
+                  setIsAddNewOpen={setIsAddNewOpen}
+                  isAddNewOpen={isAddNewOpen}
+                  onConfirmStore={handleConfirmStore}
+                  isGift={isGift}
+                  setIsGift={setIsGift}
+                />
 
-                {/* ── Step 2: Apply Coupon ── */}
-                <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-                  <div className="bg-gradient-to-r from-green-600 to-green-900 px-5 py-3 flex items-center gap-3">
-                    <span className="w-6 h-6 rounded-full bg-white text-green-800 text-xs font-extrabold flex items-center justify-center">2</span>
-                    <span className="text-white font-bold text-sm tracking-wide">APPLY COUPON</span>
-                  </div>
-                  <div className="p-1">
-                    <ApplyCoupon id={id} setCoupon={setCoupon} coupon={coupon} onRemoveCoupon={handleRemoveCoupon} />
-                  </div>
-                </div>
+                {/* ── Step 3: Review Order ── */}
+                <OrderSummary
+                  selectedOption={selectedOption}
+                  selectedAddress={selectedAddress}
+                  data={data}
+                  onUpdateData={setData}
+                />
               </>
             ) : (
-              /* ── Step 3: Payment ── */
-              <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-                <div className="bg-gradient-to-r from-green-600 to-green-900 px-5 py-3 flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-full bg-white text-green-800 text-xs font-extrabold flex items-center justify-center">3</span>
-                  <span className="text-white font-bold text-sm tracking-wide">SELECT PAYMENT METHOD</span>
+              /* ── Step 4: Payment ── */
+              <div className="bg-white p-6 rounded-xl shadow-sm">
+                <div className="flex items-center gap-3 border-b-2 border-gray-100 pb-2 mb-6">
+                  <span className="bg-bio-green text-white w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold">4</span>
+                  <h3 className="text-base font-bold text-gray-800 uppercase tracking-wide">Select Payment Method</h3>
                 </div>
-                <div className="p-5 space-y-4">
+                <div className="space-y-4">
 
                   {/* GST Checkbox */}
                   <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
@@ -1630,11 +1619,8 @@ const CheckoutPage = () => {
             <div className="bg-white rounded-xl shadow-md sticky top-4 overflow-hidden">
 
               {/* ── Header ── */}
-              <div className="bg-gradient-to-r from-green-600 to-green-900 px-4 py-3">
-                <p className="text-white font-bold text-sm tracking-wide">Order Summary</p>
-                {data?.order?.order_id && (
-                  <p className="text-green-200 text-[10px] mt-0.5">{data.order.order_id} · {data.order.date}</p>
-                )}
+              <div className=" px-4 py-3">
+                <p className="font-bold text-sm tracking-wide">Order Summary</p>
               </div>
 
               <div className="p-4 space-y-5 max-h-[80vh] overflow-y-auto">
@@ -1642,144 +1628,98 @@ const CheckoutPage = () => {
                   <p className="text-[10px] uppercase font-bold text-gray-400 tracking-widest mb-2">
                     Items ({data?.order_items?.length ?? 0})
                   </p>
-                  {(isCombo || data?.order?.is_shop_the_look) ? (
-                    <div className="flex flex-wrap gap-2">
-                      {activeItems?.map((item) => (
-                        <div key={item.id} className="relative">
-                          <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200">
-                            <img
-                              src={`${axiosInstance.defaults.baseURL}${item.image}`}
-                              alt={item.product_name}
-                              className="w-full h-full object-cover"
-                              onError={(e) => (e.currentTarget.src = "/placeholder-product.png")}
-                            />
+                  <div className="space-y-4">
+                    {activeItems?.map((item) => {
+                      const qty = Number(item.quantity) || 1;
+                      const lineTotal = Number(item.selling_price) || 0;
+                      return (
+                        <div key={item.id} className="flex items-center justify-between gap-3">
+                          <div className="flex items-center gap-3">
+                            <div className="relative w-12 h-12 rounded-lg overflow-hidden border border-gray-100 flex-shrink-0">
+                              <img
+                                src={`${axiosInstance.defaults.baseURL}${item.image}`}
+                                alt={item.product_name}
+                                className="w-full h-full object-cover"
+                                onError={(e) => (e.currentTarget.src = "/placeholder-product.png")}
+                              />
+                              <div className="absolute top-0 right-0 bg-gray-800/80 text-white text-[10px] font-bold w-4 h-4 rounded-bl-lg flex items-center justify-center">
+                                {qty}
+                              </div>
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="font-bold text-gray-800 text-xs leading-tight line-clamp-1">{item.product_name}</span>
+                              <div className="flex items-center gap-1.5 mt-0.5">
+                                <span className="text-[10px] text-gray-400">Regular</span>
+                                {item.is_climate_tested && (
+                                  <>
+                                    <span className="text-gray-300">·</span>
+                                    <span className="text-[10px] text-gray-400 flex items-center gap-0.5">
+                                      🌡️ Climate tested
+                                    </span>
+                                  </>
+                                )}
+                                {item.is_gift_packaging && (
+                                  <>
+                                    <span className="text-gray-300">·</span>
+                                    <span className="text-[10px] text-gray-400 flex items-center gap-0.5">
+                                      🎁 Gift packaging
+                                    </span>
+                                  </>
+                                )}
+                              </div>
+                            </div>
                           </div>
+                          <span className="font-bold text-gray-800 text-sm">₹{lineTotal.toFixed(0)}</span>
                         </div>
-                      ))}
-                      <div className="ml-1 self-center">
-                        <p className="font-semibold text-gray-800 text-xs">{comboOffer?.title || "Shop The Look"}</p>
-                        <p className="text-[10px] text-gray-400">{data?.order_items?.length} items</p>
-                      </div>
-                    </div>
-                  ) : (
-                    <table className="w-full text-xs border-collapse">
-                      <thead>
-                        <tr className="bg-gray-50">
-                          <th className="text-left text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-2 w-1/2">Items Description</th>
-                          <th className="text-center text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-1">MRP</th>
-                          <th className="text-center text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-1">Qty</th>
-                          <th className="text-center text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-1">Savings</th>
-                          <th className="text-right text-[9px] font-bold text-gray-400 uppercase tracking-wider py-1.5 px-2">Total</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-100">
-                        {activeItems?.map((item) => {
-                          const unitMrp = Number(item.mrp) || 0;
-                          const unitPrice = Number(item.selling_price) || 0;
-                          const unitDisc = Number(item.discount) || 0;
-                          const qty = Number(item.quantity) || 1;
-                          const totalSav = unitDisc * qty;
-                          const savPct = unitMrp > 0 && unitDisc > 0 ? Math.round((unitDisc / unitMrp) * 100) : 0;
-                          const lineTotal = Number(item.selling_price) || 0;
-                          return (
-                            <tr key={item.id} className="align-middle">
-                              {/* Description */}
-                              <td className="py-2 px-2">
-                                <div className="flex items-center gap-2">
-                                  <div className="w-10 h-10 rounded overflow-hidden border border-gray-200 flex-shrink-0">
-                                    <img
-                                      src={`${axiosInstance.defaults.baseURL}${item.image}`}
-                                      alt={item.product_name}
-                                      className="w-full h-full object-cover"
-                                      onError={(e) => (e.currentTarget.src = "/placeholder-product.png")}
-                                    />
-                                  </div>
-                                  <span className="font-semibold text-gray-800 text-[10px] leading-tight line-clamp-2">{item.product_name}</span>
-                                </div>
-                              </td>
-                              {/* MRP */}
-                              <td className="py-2 px-1 text-center">
-                                <p className={`text-[10px] ${unitDisc > 0 ? 'line-through text-gray-400' : 'text-gray-700 font-semibold'}`}>
-                                  ₹{unitMrp.toFixed(2)}
-                                </p>
-                                {unitDisc > 0 && (
-                                  <p className="text-[10px] font-semibold text-gray-800 mt-0.5">₹{unitPrice.toFixed(2)}</p>
-                                )}
-                              </td>
-                              {/* Qty */}
-                              <td className="py-2 px-1 text-center">
-                                <span className="inline-block border border-gray-300 rounded px-1.5 py-0.5 text-[10px] font-semibold text-gray-700 min-w-[22px]">
-                                  {qty}
-                                </span>
-                              </td>
-                              {/* Savings */}
-                              <td className="py-2 px-1 text-center">
-                                {totalSav > 0 ? (
-                                  <div className="flex flex-col items-center gap-0.5">
-                                    <span className="text-[9px] font-bold text-emerald-600">-₹{totalSav.toFixed(2)}</span>
-                                    <span className="text-[9px] text-gray-400">{savPct}% off</span>
-                                  </div>
-                                ) : (
-                                  <span className="text-[9px] text-gray-400">—</span>
-                                )}
-                              </td>
-                              {/* Total */}
-                              <td className="py-2 px-2 text-right">
-                                <span className="font-bold text-gray-800 text-[11px]">₹{lineTotal.toFixed(2)}</span>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  )}
+                      );
+                    })}
+                  </div>
                 </div>
 
                 <hr className="border-dashed" />
+
+                {/* ── Coupon Section ── */}
+                <ApplyCoupon
+                  id={id}
+                  setCoupon={setCoupon}
+                  coupon={coupon}
+                  onRemoveCoupon={handleRemoveCoupon}
+                />
 
                 {/* ── Price Details ── */}
                 <div>
                   <p className="text-[10px] uppercase font-bold text-gray-400 tracking-widest mb-3">Price Details</p>
                   <div className="space-y-2 text-sm">
 
-                    {/* Sub Total */}
-                    <div className="flex justify-between text-gray-600">
-                      <span>Sub Total (Inclusive of GST)</span>
+                    <div className="flex justify-between text-gray-600 pb-1">
+                      <span>Subtotal ({data?.order_items?.length ?? 0} items)</span>
                       <span>₹{Number(activeOrder?.total_selling_price ?? 0).toFixed(2)}</span>
                     </div>
 
-                    {/* Product Discount */}
-                    <div className="flex justify-between text-emerald-600 font-medium">
+                    <div className="flex justify-between text-emerald-600 font-medium pt-1">
                       <span className="flex items-center gap-1">
                         Discount
-                        {activeOrder?.discount_type && Number(activeOrder?.total_discount ?? 0) > 0 && (
-                          <span className="text-[10px] bg-emerald-50 border border-emerald-200 rounded px-1 py-0.5 font-semibold">
-                            {activeOrder.discount_type === "%" ? `${Number(activeOrder.discount_value ?? 0).toFixed(0)}%` : `Flat`}
-                          </span>
-                        )}
                       </span>
                       <span>-₹{Number(activeOrder?.total_discount ?? 0).toFixed(2)}</span>
                     </div>
 
-
                     {/* Coupon Discount */}
                     {(coupon?.success || activeOrder?.coupon_applied) && (
-                      <div className="flex justify-between text-emerald-600 font-medium">
-                        <span className="flex items-center gap-1 flex-wrap">
-                          🏷️ Coupon Discount
+                      <div className="flex justify-between text-emerald-600 font-medium pb-1">
+                        <span className="flex items-center gap-1 flex-wrap text-emerald-600">
+                          Coupon Discount
                           {coupon?.coupon_code && (
                             <span className="text-[10px] bg-emerald-50 border border-emerald-200 rounded px-1 py-0.5 font-semibold">
                               {coupon.coupon_code}
                             </span>
                           )}
-
                         </span>
                         <span>-₹{Number(coupon?.discount_amount ?? activeOrder?.coupon_discount ?? 0).toFixed(2)}</span>
                       </div>
                     )}
 
                     {/* Delivery Charges */}
-                    <div className="flex justify-between text-gray-600">
+                    <div className="flex justify-between text-gray-600 pt-1">
                       <span>Delivery Charges</span>
                       <span className={isFreeShipping ? "text-emerald-600 font-semibold" : ""}>
                         {isFreeShipping ? "FREE" : `₹${deliveryCharge.toFixed(2)}`}

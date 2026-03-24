@@ -3,9 +3,13 @@
 /* ===== Biotechmaali Theme ===== */
 @theme inline {
   --font-sans: "Nunito Sans", sans-serif;
-  --color-bio-green: #5A8A1A;
-  --color-bio-green-text: #4A7515;
-  --color-green-600: #15803D;
+  --color-bio-green: [#062e25];
+  --color-bio-green-text: [#062e25];
+  --color-green-600: [#062e25];
+  --color-green-700: [#062e25];
+  --color-emerald-600: [#062e25];
+  --color-emerald-700: [#062e25];
+  --color-emerald-800: [#062e25];
 }
 
 /* Apply font globally */

@@ -191,7 +191,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                         </h2>
                         <div className="flex flex-col items-center gap-0.5">
                             <div className="flex items-center gap-2">
-                                <span className="text-xl font-bold text-[#15803D]">
+                                <span className="text-xl font-bold text-[#062e25]">
                                     ₹{Math.round(price)}
                                 </span>
                                 {mrp && (mrp > price) && (
@@ -202,7 +202,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                             </div>
 
                             {mrp && price && (mrp > price) && (
-                                <div className="bg-green-100 text-[#15803D] text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 border border-green-200">
+                                <div className="bg-green-100 text-[#062e25] text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 border border-green-200">
                                     SAVE ₹{Math.round(mrp - price)} ({Math.round(((mrp - price) / mrp) * 100)}% OFF)
                                 </div>
                             )}
@@ -297,7 +297,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
 
                             <div className="flex flex-col items-center gap-0.5 mt-1">
                                 <div className="flex items-center gap-1.5">
-                                    <span className="text-lg font-bold text-[#15803D]">
+                                    <span className="text-lg font-bold text-[#062e25]">
                                         ₹{Math.round(price)}
                                     </span>
                                     {mrp && (mrp > price) && (

@@ -159,7 +159,7 @@ const NavBar = () => {
   const displayUsername = isMounted ? username : "Guest";
 
   return (
-    <div>
+    <div className="relative z-0">
       <nav className="w-full px-4 py-3 bg-white shadow-sm font-sans">
         <div className="max-w-full mx-auto flex items-center justify-between sm:justify-between px-4 md:px-8">
 

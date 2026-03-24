@@ -5,7 +5,7 @@ import Link from "next/link";
 const Header = () => {
 
   return (
-    <header className="bg-[#062e25] font-poppins">
+    <header className="bg-[#062e25] font-poppins relative z-0">
 
       <div className="max-w-full px-4 md:px-8 py-2 flex flex-row items-center justify-between gap-2 m-auto">
 

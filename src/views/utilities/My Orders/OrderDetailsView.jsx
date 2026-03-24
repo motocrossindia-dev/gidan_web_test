@@ -111,7 +111,7 @@ const OrderDetailsView = () => {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <div className="flex flex-col items-center">
-                    <div className="w-12 h-12 border-4 border-[#5A8A1A] border-t-transparent rounded-full animate-spin mb-4"></div>
+                    <div className="w-12 h-12 border-4 border-[#062e25] border-t-transparent rounded-full animate-spin mb-4"></div>
                     <p className="text-gray-600 font-medium">Loading order details...</p>
                 </div>
             </div>
@@ -161,7 +161,7 @@ const OrderDetailsView = () => {
                     <ChevronRight className="w-3 h-3" />
                     <button onClick={() => router.push('/profile/orders')} className="hover:underline">Your Orders</button>
                     <ChevronRight className="w-3 h-3" />
-                    <span className="text-[#4A7515] font-medium">Order Details</span>
+                    <span className="text-bio-green-text font-medium">Order Details</span>
                 </div>
             </div>
 
@@ -319,13 +319,13 @@ const OrderDetailsView = () => {
                                     <div className="flex-1 space-y-2">
                                         <h3
                                             onClick={() => router.push(getProductUrl(item))}
-                                            className="text-lg font-medium text-[#15803D] hover:text-[#5A8A1A] transition-colors cursor-pointer line-clamp-2"
+                                            className="text-lg font-medium text-[#062e25] hover:text-[#051d18] transition-colors cursor-pointer line-clamp-2"
                                         >
                                             {item?.product_name}
                                         </h3>
                                         <p className="text-xs text-gray-500">Sold by: Gidan Plants</p>
                                         <div className="flex items-baseline gap-2">
-                                            <span className="text-[#15803D] font-bold text-xl">₹{Math.round(item?.selling_price)}</span>
+                                            <span className="text-[#062e25] font-bold text-xl">₹{Math.round(item?.selling_price)}</span>
                                             {item?.mrp > item?.selling_price && (
                                                 <span className="text-sm text-gray-500 line-through">₹{Math.round(item?.mrp)}</span>
                                             )}
@@ -335,7 +335,7 @@ const OrderDetailsView = () => {
                                         <div className="flex flex-wrap gap-3 mt-4 pt-4">
                                             <button
                                                 onClick={() => router.push(getProductUrl(item))}
-                                                className="bg-[#5A8A1A] hover:bg-[#4A7515] text-white px-4 py-1.5 rounded-full text-xs font-medium shadow-sm transition-all"
+                                                className="bg-bio-green hover:bg-bio-green-text text-white px-4 py-1.5 rounded-full text-xs font-medium shadow-sm transition-all"
                                             >
                                                 Buy it again
                                             </button>
@@ -356,7 +356,7 @@ const OrderDetailsView = () => {
                                             {(item.is_reviewed || item.is_review) && isDelivered && (
                                                 <button
                                                     onClick={() => setActiveReviewProductId(activeReviewProductId === item.product_id ? null : item.product_id)}
-                                                    className="bg-white hover:bg-gray-50 text-[#15803D] px-4 py-1.5 rounded-full text-xs font-medium shadow-sm border border-[#15803D] transition-all flex items-center gap-1"
+                                                    className="bg-white hover:bg-gray-50 text-[#062e25] px-4 py-1.5 rounded-full text-xs font-medium shadow-sm border border-[#062e25] transition-all flex items-center gap-1"
                                                 >
                                                     <Check className="w-3 h-3" /> Edit your review
                                                 </button>
@@ -397,17 +397,17 @@ const OrderDetailsView = () => {
                 <div className="mt-8 flex flex-col md:flex-row gap-4 items-center justify-between text-sm">
                     <button
                         onClick={() => router.push('/profile/orders')}
-                        className="text-[#15803D] hover:underline flex items-center gap-1"
+                        className="text-[#062e25] hover:underline flex items-center gap-1"
                     >
                         <ArrowLeft className="w-4 h-4" />
                         Back to Your Orders
                     </button>
                     <div className="flex gap-4">
-                        <button onClick={() => router.push('/contact-us/')} className="text-[#15803D] hover:underline">Help & Support</button>
+                        <button onClick={() => router.push('/contact-us/')} className="text-[#062e25] hover:underline">Help & Support</button>
                         <span className="text-gray-300">|</span>
-                        <button onClick={() => router.push('/shipping/')} className="text-[#15803D] hover:underline">Shipping Policies</button>
+                        <button onClick={() => router.push('/shipping/')} className="text-[#062e25] hover:underline">Shipping Policies</button>
                         <span className="text-gray-300">|</span>
-                        <button onClick={() => router.push('/return/')} className="text-[#15803D] hover:underline">Return & Refund Policy</button>
+                        <button onClick={() => router.push('/return/')} className="text-[#062e25] hover:underline">Return & Refund Policy</button>
                     </div>
                 </div>
             </div>
