@@ -272,7 +272,7 @@ const PostSummaryView = () => {
                                 })()}
 
                                 {/* Product GST Toggle */}
-                                {(Number(orderData?.order?.gst_amount_5 ?? 0) > 0 || Number(orderData?.order?.gst_amount_18 ?? 0) > 0) && (
+                                {(Number(orderData?.order?.gst_amount_5 ?? 0) > 0 || Number(orderData?.order?.gst_amount_18 ?? 0) > 0 || (orderData?.order?.gst_breakdown?.summary && Object.values(orderData.order.gst_breakdown.summary).some(v => v.total > 0))) && (
                                     <div>
                                         <button type="button" onClick={() => setShowGstDetail(v => !v)}
                                             className="w-full flex items-center justify-between text-[10px] uppercase font-bold text-gray-400 tracking-widest py-1">
@@ -281,20 +281,61 @@ const PostSummaryView = () => {
                                         </button>
                                         {showGstDetail && (
                                             <div className="space-y-1 text-xs mt-1">
-                                                {Number(orderData?.order?.gst_amount_5 ?? 0) > 0 && (
-                                                    <div className="border border-gray-200 rounded p-2 space-y-0.5">
-                                                        <div className="flex justify-between font-medium text-gray-700"><span>GST @ 5%</span><span>₹{Number(orderData.order.gst_amount_5).toFixed(2)}</span></div>
-                                                        <div className="flex justify-between text-gray-400 pl-2"><span>CGST 2.5%</span><span>₹{Number(orderData.order.cgst_amount_5).toFixed(2)}</span></div>
-                                                        <div className="flex justify-between text-gray-400 pl-2"><span>SGST 2.5%</span><span>₹{Number(orderData.order.sgst_amount_5).toFixed(2)}</span></div>
-                                                    </div>
+                                                {/* Old fields fallback */}
+                                                {!orderData?.order?.gst_breakdown?.summary && (
+                                                    <>
+                                                        {Number(orderData?.order?.gst_amount_5 ?? 0) > 0 && (
+                                                            <div className="border border-gray-200 rounded p-2 space-y-0.5">
+                                                                <div className="flex justify-between font-medium text-gray-700"><span>GST @ 5%</span><span>₹{Number(orderData.order.gst_amount_5).toFixed(2)}</span></div>
+                                                                <div className="flex justify-between text-gray-400 pl-2"><span>CGST 2.5%</span><span>₹{Number(orderData.order.cgst_amount_5).toFixed(2)}</span></div>
+                                                                <div className="flex justify-between text-gray-400 pl-2"><span>SGST 2.5%</span><span>₹{Number(orderData.order.sgst_amount_5).toFixed(2)}</span></div>
+                                                            </div>
+                                                        )}
+                                                        {Number(orderData?.order?.gst_amount_18 ?? 0) > 0 && (
+                                                            <div className="border border-gray-200 rounded p-2 space-y-0.5">
+                                                                <div className="flex justify-between font-medium text-gray-700"><span>GST @ 18%</span><span>₹{Number(orderData.order.gst_amount_18).toFixed(2)}</span></div>
+                                                                <div className="flex justify-between text-gray-400 pl-2"><span>CGST 9%</span><span>₹{Number(orderData.order.cgst_amount_18).toFixed(2)}</span></div>
+                                                                <div className="flex justify-between text-gray-400 pl-2"><span>SGST 9%</span><span>₹{Number(orderData.order.sgst_amount_18).toFixed(2)}</span></div>
+                                                            </div>
+                                                        )}
+                                                    </>
                                                 )}
-                                                {Number(orderData?.order?.gst_amount_18 ?? 0) > 0 && (
-                                                    <div className="border border-gray-200 rounded p-2 space-y-0.5">
-                                                        <div className="flex justify-between font-medium text-gray-700"><span>GST @ 18%</span><span>₹{Number(orderData.order.gst_amount_18).toFixed(2)}</span></div>
-                                                        <div className="flex justify-between text-gray-400 pl-2"><span>CGST 9%</span><span>₹{Number(orderData.order.cgst_amount_18).toFixed(2)}</span></div>
-                                                        <div className="flex justify-between text-gray-400 pl-2"><span>SGST 9%</span><span>₹{Number(orderData.order.sgst_amount_18).toFixed(2)}</span></div>
-                                                    </div>
-                                                )}
+
+                                                {/* New gst_breakdown.summary field */}
+                                                {orderData?.order?.gst_breakdown?.summary && Object.entries(orderData.order.gst_breakdown.summary).map(([key, value]) => {
+                                                    if (value.total > 0) {
+                                                        const rate = key.split('_')[1];
+                                                        const taxValue = value.total / 2;
+                                                        const taxRate = (parseFloat(rate) / 2).toFixed(1);
+
+                                                        return (
+                                                            <div key={key} className="border border-gray-200 rounded p-2 space-y-1">
+                                                                <div className="flex justify-between font-medium text-gray-700">
+                                                                    <span>GST @ {rate}%</span>
+                                                                    <span>₹{value.total.toFixed(2)}</span>
+                                                                </div>
+                                                                {value.igst > 0 ? (
+                                                                    <div className="flex justify-between text-gray-400 pl-2 text-[10px]">
+                                                                        <span>IGST {rate}%</span>
+                                                                        <span>₹{value.igst.toFixed(2)}</span>
+                                                                    </div>
+                                                                ) : (
+                                                                    <>
+                                                                        <div className="flex justify-between text-gray-400 pl-2 text-[10px]">
+                                                                            <span>CGST {taxRate}%</span>
+                                                                            <span>₹{taxValue.toFixed(2)}</span>
+                                                                        </div>
+                                                                        <div className="flex justify-between text-gray-400 pl-2 text-[10px]">
+                                                                            <span>SGST {taxRate}%</span>
+                                                                            <span>₹{taxValue.toFixed(2)}</span>
+                                                                        </div>
+                                                                    </>
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    }
+                                                    return null;
+                                                })}
                                             </div>
                                         )}
                                     </div>
