@@ -101,7 +101,10 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                 enqueueSnackbar("This item is already in your cart.", { variant: "info" });
                 return;
             } else {
-                const payload = { main_prod_id: product.id };
+                const payload = { 
+                    main_prod_id: product.id,
+                    quantity: 1 
+                };
                 console.log("Add to cart payload:", payload);
 
                 const response = await axiosInstance.post(

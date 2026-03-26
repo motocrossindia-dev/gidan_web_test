@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import React, { useState, useEffect, Suspense } from "react";
@@ -72,6 +72,7 @@ const NavBar = () => {
 
   const dispatch = useDispatch();
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleWalletClick = () => {
     if (username === "Guest") {
@@ -94,6 +95,8 @@ const NavBar = () => {
   const toggleDropdown = () => {
     if (username !== "Guest") {
       setIsDropdownOpen(!isDropdownOpen);
+    } else {
+      setIsSignInOpen(true);
     }
   };
 
@@ -210,35 +213,99 @@ const NavBar = () => {
 
               {/* Categories in the same line as logo and icons */}
               <div className="flex items-center justify-center flex-grow whitespace-nowrap overflow-x-auto no-scrollbar scroll-smooth">
-                {publishedCategories.map((category, idx) => (
-                  <Link
-                    key={idx}
-                    href={
-                      category.name === "GIFTS" ? "/gifts/" :
-                        category.name === "SERVICES" ? "/services/" :
-                          category.name === "OFFERS" ? "/offer/" :
-                            `/${category.slug}/`
-                    }
-                    className="text-[#334155] hover:text-[#375421] font-medium text-[14px] lg:text-[15px] px-2 transition-colors"
-                  >
-                    {category.name.charAt(0).toUpperCase() + category.name.slice(1).toLowerCase()}
-                  </Link>
-                ))}
+                {publishedCategories.map((category, idx) => {
+                  const href = category.name === "GIFTS" ? "/gifts/" :
+                    category.name === "SERVICES" ? "/services/" :
+                      category.name === "OFFERS" ? "/offer/" :
+                        `/${category.slug}/`;
+                  const isActive = pathname === href;
+
+                  return (
+                    <Link
+                      key={idx}
+                      href={href}
+                      className={`relative font-medium text-[14px] lg:text-[15px] px-2 py-1 transition-all duration-300 group
+                        ${isActive ? 'text-[#375421]' : 'text-[#334155] hover:text-[#375421]'}
+                      `}
+                    >
+                      {category.name.charAt(0).toUpperCase() + category.name.slice(1).toLowerCase()}
+                      <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-[#375421] transition-all duration-300 transform 
+                        ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}
+                      `}></span>
+                    </Link>
+                  );
+                })}
               </div>
 
               <div className="flex items-center gap-4 flex-shrink-0">
-                <button onClick={handleWishListClick} className="text-gray-700">
-                  <WishlistIconWithCount className="scale-100 lg:scale-110" />
+                <button onClick={handleWishListClick} className="p-2 rounded-full transition-all duration-300 hover:bg-red-50 text-gray-700 hover:text-red-500 group">
+                  <WishlistIconWithCount className="scale-100 lg:scale-110 transition-transform group-hover:scale-110" />
                 </button>
-                <button onClick={handleCartClick} className="text-gray-700">
-                  <CartIconWithCount className="scale-100 lg:scale-110" />
+                <button onClick={handleCartClick} className="p-2 rounded-full transition-all duration-300 hover:bg-green-50 text-gray-700 hover:text-[#375421] group">
+                  <CartIconWithCount className="scale-100 lg:scale-110 transition-transform group-hover:scale-110" />
                 </button>
-                <button onClick={handleWalletClick} className="text-gray-700">
-                  <IoWalletOutline className="text-xl lg:text-2xl" />
+                <button onClick={handleWalletClick} className="p-2 rounded-full transition-all duration-300 hover:bg-green-50 text-gray-700 hover:text-[#375421] group">
+                  <IoWalletOutline className="text-xl lg:text-2xl transition-transform group-hover:scale-110" />
                 </button>
-                <button onClick={toggleDropdown} className="text-gray-700">
-                  <FaRegUser className="text-xl lg:text-2xl" />
-                </button>
+
+                <div
+                  className="relative p-1"
+                  onMouseEnter={() => username !== "Guest" && setIsDropdownOpen(true)}
+                  onMouseLeave={() => setIsDropdownOpen(false)}
+                >
+                  <button
+                    onClick={toggleDropdown}
+                    className="p-2 rounded-full transition-all duration-300 hover:bg-green-50 text-gray-700 hover:text-[#375421] flex items-center gap-1 group"
+                  >
+                    <FaRegUser className="text-xl lg:text-2xl transition-transform group-hover:scale-110" />
+                  </button>
+
+                  {isMounted && isDropdownOpen && username !== "Guest" && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl py-2 z-[100]">
+                      <div className="px-4 py-2 border-b border-gray-50 mb-1">
+                        <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Welcome</p>
+                        <p className="text-sm font-bold text-[#375421] truncate">{username}</p>
+                      </div>
+
+                      <Link
+                        href="/profile"
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#375421] transition-colors"
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
+                        <FaRegUser className="text-lg opacity-70" />
+                        <span>My Profile</span>
+                      </Link>
+
+                      <Link
+                        href="/profile/orders"
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#375421] transition-colors"
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
+                        <MdOutlineShoppingBag className="text-lg opacity-70" />
+                        <span>My Orders</span>
+                      </Link>
+
+                      <Link
+                        href="/profile/wallet"
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#375421] transition-colors"
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
+                        <IoWalletOutline className="text-lg opacity-70" />
+                        <span>My Wallet</span>
+                      </Link>
+
+                      <div className="mt-1 pt-1 border-t border-gray-50">
+                        <button
+                          onClick={handleLogOutClick}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                        >
+                          <IoIosLogOut className="text-lg opacity-70" />
+                          <span className="font-medium">Logout</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -279,31 +346,97 @@ const NavBar = () => {
               />
             </div>
 
-            <div className="flex items-center justify-center flex-[5] gap-4 whitespace-nowrap">
-              {publishedCategories.map((category, idx) => (
-                <Link
-                  key={idx}
-                  href={`/${category.slug}/`}
-                  className="text-[#334155] hover:text-[#375421] font-normal text-lg px-3 transition-colors"
-                >
-                  {category.name.charAt(0).toUpperCase() + category.name.slice(1).toLowerCase()}
-                </Link>
-              ))}
+            <div className="flex items-center justify-center flex-[5] gap-2 whitespace-nowrap h-full">
+              {publishedCategories.map((category, idx) => {
+                const href = `/${category.slug}/`;
+                const isActive = pathname === href;
+
+                return (
+                  <Link
+                    key={idx}
+                    href={href}
+                    className={`relative text-lg px-4 py-2 transition-all duration-300 font-normal group
+                      ${isActive ? 'text-[#375421]' : 'text-[#334155] hover:text-[#375421]'}
+                    `}
+                  >
+                    {category.name.charAt(0).toUpperCase() + category.name.slice(1).toLowerCase()}
+                    <span className={`absolute bottom-0 left-4 right-4 h-0.5 bg-[#375421] transition-all duration-300 transform origin-center
+                      ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}
+                    `}></span>
+                  </Link>
+                );
+              })}
             </div>
 
             <div className="flex items-center gap-6 border-l pl-8 border-gray-200 flex-shrink-0">
-              <button onClick={handleWishListClick} className="text-gray-700 hover:text-red-500 transition-colors">
-                <WishlistIconWithCount className="scale-125" />
+              <button onClick={handleWishListClick} className="p-3 rounded-full transition-all duration-300 hover:bg-red-50 text-gray-700 hover:text-red-500 group">
+                <WishlistIconWithCount className="scale-125 transition-transform group-hover:scale-135" />
               </button>
-              <button onClick={handleCartClick} className="text-gray-700 hover:text-[#375421] transition-colors">
-                <CartIconWithCount className="scale-125" />
+              <button onClick={handleCartClick} className="p-3 rounded-full transition-all duration-300 hover:bg-green-50 text-gray-700 hover:text-[#375421] group">
+                <CartIconWithCount className="scale-125 transition-transform group-hover:scale-135" />
               </button>
-              <button onClick={handleWalletClick} className="text-gray-700 hover:text-[#375421] transition-colors">
-                <IoWalletOutline className="text-2xl" />
+              <button onClick={handleWalletClick} className="p-3 rounded-full transition-all duration-300 hover:bg-green-50 text-gray-700 hover:text-[#375421] group">
+                <IoWalletOutline className="text-2xl transition-transform group-hover:scale-110" />
               </button>
-              <button onClick={toggleDropdown} className="text-gray-700 hover:text-[#375421] transition-colors">
-                <FaRegUser className="text-2xl" />
-              </button>
+              <div
+                className="relative group p-2"
+                onMouseEnter={() => username !== "Guest" && setIsDropdownOpen(true)}
+                onMouseLeave={() => setIsDropdownOpen(false)}
+              >
+                <button
+                  onClick={toggleDropdown}
+                  className="p-3 rounded-full transition-all duration-300 hover:bg-green-50 text-gray-700 hover:text-[#375421] flex items-center gap-1 group"
+                >
+                  <FaRegUser className="text-2xl transition-transform group-hover:scale-110" />
+                  {isMounted && username !== "Guest" && <FaChevronDown className={`text-xs transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />}
+                </button>
+
+                {isMounted && isDropdownOpen && username !== "Guest" && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl py-2 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="px-4 py-2 border-b border-gray-50 mb-1">
+                      <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Welcome</p>
+                      <p className="text-sm font-bold text-[#375421] truncate">{username}</p>
+                    </div>
+
+                    <Link
+                      href="/profile"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#375421] transition-colors"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <FaRegUser className="text-lg opacity-70" />
+                      <span>My Profile</span>
+                    </Link>
+
+                    <Link
+                      href="/profile/orders"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#375421] transition-colors"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <MdOutlineShoppingBag className="text-lg opacity-70" />
+                      <span>My Orders</span>
+                    </Link>
+
+                    <Link
+                      href="/profile/wallet"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#375421] transition-colors"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <IoWalletOutline className="text-lg opacity-70" />
+                      <span>My Wallet</span>
+                    </Link>
+
+                    <div className="mt-1 pt-1 border-t border-gray-50">
+                      <button
+                        onClick={handleLogOutClick}
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                      >
+                        <IoIosLogOut className="text-lg opacity-70" />
+                        <span className="font-medium">Logout</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
