@@ -46,7 +46,7 @@ const TrackOrder = () => {
 
     try {
       const res = await axios.get(
-        `https://backend.gidan.store/order/orderDetailHistory/${trimmedOrderId}/`,//tracking/shipway/order/
+        `${process.env.NEXT_PUBLIC_BASE_URL}/order/orderDetailHistory/${trimmedOrderId}/`,//tracking/shipway/order/
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         }
