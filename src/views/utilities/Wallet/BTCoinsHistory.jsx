@@ -1,29 +1,53 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
-import { ArrowUpRight, ArrowDownRight, Gift, CreditCard, ChevronLeft } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, Gift, CreditCard, ChevronLeft, Loader2 } from "lucide-react";
 import Breadcrumb from "../../../components/Shared/Breadcrumb";
 import { useRouter } from "next/navigation";
+import axiosInstace from "../../../Axios/axiosInstance";
 
 const GDCoinsHistory = () => {
   const router = useRouter();
   const [activeFilter, setActiveFilter] = useState('ALL');
-  const [filteredTransactions, setFilteredTransactions] = useState([]);
-
-  const transactions = null?.resourse || [];
-  const data = null?.data || { total_coins: 0 };
+  const [transactions, setTransactions] = useState([]);
+  const [walletData, setWalletData] = useState({ total_coins: 0 });
+  const [loading, setLoading] = useState(true);
 
   // Helper function to determine transaction icon
   const getTransactionIcon = (reference) => {
-    if (reference.toLowerCase().includes('referral')) {
+    if (reference?.toLowerCase()?.includes('referral')) {
       return Gift;
     }
     return CreditCard;
   };
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [transactionsRes, walletRes] = await Promise.all([
+          axiosInstace.get("/btcoins/btcoinsTransactions/"),
+          axiosInstace.get("/btcoins/btcoinswallet/")
+        ]);
+
+        if (transactionsRes.status === 200) {
+          setTransactions(transactionsRes.data?.data || []);
+        }
+        if (walletRes.status === 200) {
+          setWalletData(walletRes.data || { total_coins: 0 });
+        }
+      } catch (error) {
+        console.error("Error fetching GD Coins history:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
     window.scrollTo(0, 0);
   }, []);
+
+  const [filteredTransactions, setFilteredTransactions] = useState([]);
 
   useEffect(() => {
     if (activeFilter === 'ALL') {
@@ -33,12 +57,20 @@ const GDCoinsHistory = () => {
     }
   }, [activeFilter, transactions]);
 
+  if (loading) {
+    return (
+      <div className="flex h-[60vh] w-full items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-[#375421]" />
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="flex md:hidden items-center justify-between p-4 bg-white shadow-sm sticky top-0 z-40">
         <button
           onClick={() => router.push('/profile')}
-          className="flex items-center gap-1 text-bio-green bg-green-50 px-3 py-1.5 rounded-full border border-green-200 transition-all hover:bg-green-100"
+          className="flex items-center gap-1 text-[#375421] bg-green-50 px-3 py-1.5 rounded-full border border-green-200 transition-all hover:bg-green-100"
         >
           <ChevronLeft size={16} />
           <span className="text-sm font-medium">Profile</span>
@@ -61,7 +93,7 @@ const GDCoinsHistory = () => {
             <h2 className="text-xl font-semibold">GD Coins History</h2>
             <div className="text-right">
               <p className="text-sm text-gray-600">Current Balance</p>
-              <p className="text-xl font-bold text-[#375421]">{data.total_coins} Coins</p>
+              <p className="text-xl font-bold text-[#375421]">{walletData.total_coins} Coins</p>
             </div>
           </div>
 

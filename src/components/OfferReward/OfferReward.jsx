@@ -97,7 +97,7 @@ const OfferReward = () => {
     link:
       item.title === "Deal of the week" && id
         ? `/product/${id}`
-        : "/gifts/",
+        : "/gift/",
   }));
 
   const sideOffers = contentBlocks.slice(2, 5).map((item) => ({

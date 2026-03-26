@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Comingsoon from '@/views/utilities/Gifts/Comingsoon';
+import Comingsoon from '@/views/utilities/Gift/Comingsoon';
 
 
 export const metadata: Metadata = {

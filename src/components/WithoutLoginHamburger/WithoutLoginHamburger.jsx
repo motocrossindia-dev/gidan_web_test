@@ -133,7 +133,7 @@ const WithoutLoginHamburger = () => {
     setIsOpen(false);
 
     if (name === "GIFTS") {
-      router.push(`/gifts/`);
+      router.push(`/gift/`);
     } else if (name === "OFFERS") {
       router.push(`/offer`);
     } else {
@@ -248,7 +248,7 @@ const WithoutLoginHamburger = () => {
                           {/* Main Category */}
                           <Link
                             href={
-                              category.name === "GIFTS" ? "/gifts/" :
+                              category.name === "GIFTS" ? "/gift/" :
                                 category.name === "OFFERS" ? "/offer/" :
                                     `/${category.slug}/`
                             }

@@ -94,7 +94,7 @@ const Hamburger = () => {
     closeMenu();
 
     if (name === "GIFTS") {
-      router.push(`/gifts/`);
+      router.push(`/gift/`);
     } else if (name === "SERVICES") {
       router.push(`/services/`);
     } else if (name === "OFFERS") {

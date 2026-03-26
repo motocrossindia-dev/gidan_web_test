@@ -246,7 +246,7 @@ export default CategoryIcons;
 //   const getCategorywiseProduct = (id, categoryname, slug, typeKey) => {
 //     // Always navigate directly on mobile (no dropdown toggle)
 //     if (categoryname === "GIFTS") {
-//       router.push(`/gifts/`);
+//       router.push(`/gift/`);
 //     } else if (categoryname === "SERVICES") {
 //       router.push(`/services/`);
 //     } else if (categoryname === "OFFERS") {

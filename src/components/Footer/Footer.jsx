@@ -155,7 +155,7 @@ const Footer = () => {
                             <Link href="/profile/trackorder/">Track Order</Link>
                         </li>
                         <li className="hover:text-[#375421]">
-                            <Link href="/gifts/">Gifts</Link>
+                            <Link href="/gift/">Gifts</Link>
                         </li>
                         <li className="hover:text-[#375421]">
                             <Link href="/services/">Services</Link>

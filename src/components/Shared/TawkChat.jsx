@@ -34,11 +34,31 @@ const TawkChat = () => {
     <Script id="tawk-to" strategy="lazyOnload">
       {`
         var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        Tawk_API.onLoad = function(){
+            var shiftIframes = function() {
+                var isMobile = window.innerWidth <= 768;
+                var expected = isMobile ? 'translateY(-85px)' : 'none';
+                var iframes = document.querySelectorAll('iframe');
+                for (var i = 0; i < iframes.length; i++) {
+                    var z = iframes[i].style.zIndex;
+                    if (z && parseInt(z) >= 1000000) {
+                        if (iframes[i].style.transform !== expected) {
+                            iframes[i].style.setProperty('transform', expected, 'important');
+                        }
+                    }
+                }
+            };
+            shiftIframes();
+            var observer = new MutationObserver(shiftIframes);
+            observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
+        };
         (function(){
-          var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-          s1.async=true;
-          s1.src='https://embed.tawk.to/699cc6abfaf0a71c36d94cbd/1ji66g3s9';
-          s1.charset='UTF-8';s0.parentNode.insertBefore(s1,s0);
+            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+            s1.async=true;
+            s1.src='https://embed.tawk.to/699cc6abfaf0a71c36d94cbd/1ji66g3s9';
+            s1.charset='UTF-8';
+            s1.setAttribute('crossorigin','*');
+            s0.parentNode.insertBefore(s1,s0);
         })();
       `}
     </Script>

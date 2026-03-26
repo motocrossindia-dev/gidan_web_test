@@ -42,3 +42,10 @@ body {
 .animate-slide-left {
   animation: slide-left 0.3s ease-out;
 }
+
+/* Tawk.to mobile override to dodge bottom navigation bar */
+@media (max-width: 768px) {
+  iframe[title="chat widget"] {
+    bottom: 85px !important;
+  }
+}

@@ -71,7 +71,8 @@ export default async function SubcategoryPage({ params }: Props) {
     'plants': 'plant',
     'pots': 'pot',
     'seeds': 'seed',
-    'plant-care': 'plantcare'
+    'plant-care': 'plantcare',
+    'gift': 'gift'
   };
   const typeKey = categoryToTypeMap[categorySlug.toLowerCase()] || "plant";
 

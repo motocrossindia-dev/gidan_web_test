@@ -56,25 +56,32 @@ export default async function CategoryPage({ params }: Props) {
     'plants': 'plant',
     'pots': 'pot',
     'seeds': 'seed',
-    'plant-care': 'plantcare'
+    'plant-care': 'plantcare',
+    'gifts': 'gift'
   };
-  const typeKey = categoryToTypeMap[categorySlug.toLowerCase()] || "plant";
+  const categorySlugLower = categorySlug.toLowerCase();
+  const typeKey = categoryToTypeMap[categorySlugLower] || "plant";
 
-  const [category, subcategories, filters] = await Promise.all([
+  const [category, subcategories] = await Promise.all([
     fetchCategoryBySlug(categorySlug),
     fetchSubcategories(categorySlug),
-    fetchFilters(typeKey, (await fetchCategoryBySlug(categorySlug))?.id)
   ]);
 
   if (!category) notFound();
 
+  // Special handling for gifts - backend needs type='gift' and category_id=''
+  const isGiftCategory = categorySlugLower === 'gifts' || categorySlugLower === 'gift';
+  const effectiveCategoryId = isGiftCategory ? "" : category.id;
+
+  const filters = await fetchFilters(typeKey, category.id);
+
   // Attach subCategory to category object for PlantFilter
   const categoryWithSubs = { ...category, subCategory: subcategories };
 
-  // 2. Fetch initial products for this category using the already derived typeKey
+  // 2. Fetch initial products
   const initialData = await fetchProductsByFilters({
     type: typeKey,
-    category_id: category.id,
+    category_id: effectiveCategoryId,
   });
 
   // Extract SEO content — passed into PlantFilter as initialSEOData so it's SSR on first paint

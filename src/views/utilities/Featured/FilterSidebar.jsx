@@ -205,6 +205,18 @@ const FilterSidebar = ({
     }
   }, [selectedFilterType, categoryId]);
 
+  // Handle Type change with logic: remove all other filters
+  const handleTypeChange = (newType) => {
+    setSelectedFilterType(newType);
+    setUserHasSelectedType(true);
+    userInteracted.current = true;
+    
+    // Clear all other filters when Type changes
+    setSelectedFilters({});
+    setPriceRange({ min: "", max: "" });
+    setOpenFilters({});
+  };
+
   // Preselect subcategory from URL
   useEffect(() => {
     if (filterData.subcategories) {
@@ -243,10 +255,18 @@ const FilterSidebar = ({
     // Mark that user has interacted so auto-apply kicks in
     userInteracted.current = true;
 
-    setSelectedFilters((prev) => ({
-      ...prev,
-      [filter]: prev[filter] === value ? null : value,
-    }));
+    setSelectedFilters((prev) => {
+      // If user changes subcategories, remove all other filters EXCEPT category (if any in prev)
+      // Actually, category is usually handled via props (categoryId), so we clear all other dynamic filters.
+      if (filter === "subcategories") {
+        return { [filter]: prev[filter] === value ? null : value };
+      }
+
+      return {
+        ...prev,
+        [filter]: prev[filter] === value ? null : value,
+      };
+    });
     setOpenFilters({});
   }, []);
 
@@ -266,13 +286,18 @@ const FilterSidebar = ({
     const isTypeMismatch = typeKey && selectedFilterType &&
       selectedFilterType.toLowerCase() !== typeKey.toLowerCase();
 
-    // Start from route-derived IDs; clear them on type switch so the old category isn't sent
-    let finalCategoryId = isTypeMismatch ? "" : (categoryId || categoryIdFromSlug || "");
-    // Start with route subcategory only when types match; user selection overrides below
-    let finalSubcategoryId = isTypeMismatch ? "" : (subcategoryID || "");
-    let finalSubcategorySlug = isTypeMismatch ? "" : (subcategorySlug || "");
+    // Ensure that if we are on a gift route and the user switches to another type,
+    // we clear the category IDs to avoid showing products from different categories.
+    const isGiftRoute = typeKey?.toLowerCase() === "gift" || window.location.pathname.includes("/gift");
+    const forceResetIds = isTypeMismatch || (isGiftRoute && selectedFilterType.toLowerCase() !== "gift");
 
-    params.append("category_id", finalCategoryId);
+    // Start from route-derived IDs; clear them on type switch so the old category isn't sent
+    let finalCategoryId = forceResetIds ? "" : (categoryId || categoryIdFromSlug || "");
+    // Start with route subcategory only when types match; user selection overrides below
+    let finalSubcategoryId = forceResetIds ? "" : (subcategoryID || "");
+    let finalSubcategorySlug = forceResetIds ? "" : (subcategorySlug || "");
+
+    params.append("category_id", finalCategoryId || "");
 
     // Always apply user-selected subcategory regardless of type mismatch.
     // filterData.subcategories holds the live list for the currently selected type,
@@ -641,13 +666,13 @@ const FilterSidebar = ({
                 let value = typeof option === "string" ? option : option.id;
                 // Normalize to singular
                 if (value.endsWith('s')) value = value.slice(0, -1);
+                
+                // USER REQUIREMENT: remove all other filters when Type changes
                 setSelectedFilterType(value);
                 setUserHasSelectedType(true);
                 userInteracted.current = true;
-                setSelectedFilters((prev) => {
-                  const { subcategories, ...rest } = prev;
-                  return rest;
-                });
+                setSelectedFilters({});
+                setPriceRange({ min: "", max: "" });
                 setOpenFilters({});
               }}
             />

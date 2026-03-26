@@ -79,15 +79,17 @@ function PlantFilter({
     // Map known category slugs to their API IDs
     const categoryIdFromSlug = useMemo(() => {
         if (!effectiveCategorySlug) return null;
+        const slugLower = effectiveCategorySlug.toLowerCase();
+        if (slugLower === 'gifts' || slugLower === 'gift') return ""; // Return empty string for gifts category_id
         const slugToId = {
             'plants': 19,
             'pots': 20,
             'seeds': 21,
             'plant-care': 22,
         };
-        return slugToId[effectiveCategorySlug.toLowerCase()] || null;
+        return slugToId[slugLower] || null;
     }, [effectiveCategorySlug]);
-    const typeKey = derivedType;
+    const typeKey = derivedType || (effectiveCategorySlug?.toLowerCase() === 'gifts' || effectiveCategorySlug?.toLowerCase() === 'gift' ? 'gift' : null);
 
     // State to store fetched category/subcategory names when navigating via URL
     const [fetchedCategoryName, setFetchedCategoryName] = useState(null);
@@ -95,9 +97,11 @@ function PlantFilter({
 
     // Resolved IDs from slugs (for direct URL access)
     // Initialize from initialCategoryData if available to avoid waterfalls
-    const [resolvedCategoryId, setResolvedCategoryId] = useState(
-        categoryId || categoryIdFromSlug || initialCategoryData?.id || null
-    );
+    const [resolvedCategoryId, setResolvedCategoryId] = useState(() => {
+        const idFromSlug = categoryIdFromSlug;
+        if (idFromSlug === "") return ""; // Explicitly handle gift case
+        return categoryId || idFromSlug || initialCategoryData?.id || null;
+    });
     const [resolvedSubcategoryId, setResolvedSubcategoryId] = useState(
         subcategoryID || initialCategoryData?.subCategoryId || null
     );
