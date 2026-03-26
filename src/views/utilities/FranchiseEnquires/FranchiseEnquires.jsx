@@ -13,7 +13,7 @@ function FranchiseEnquires() {
     <>
       
 
-      <div className="space-y-10 bg-gray-100 mt-10 px-4 md:px-0 mb-2">
+      <div className="space-y-10 bg-site-bg mt-10 px-4 md:px-0 mb-2">
         <HeroSection />
         <FranchiseForm />
         <WhyWeRockSection />

@@ -42,7 +42,7 @@ const OurWork = () => {
     </div>
 
     {/* Hero Section */}
-    <div className="bg-gray-100 py-8 px-4 text-center">
+    <div className="bg-site-bg py-8 px-4 text-center">
       <h2 className="text-xl sm:text-2xl font-bold leading-tight">
         Elevate Your Outdoor Space. Transform your terrace into a lush green retreat with expert landscaping.
         <br /> Gidan
@@ -87,13 +87,13 @@ const OurWork = () => {
 
 
     {/* Call to Action 1 */}
-    <div className="bg-gray-100 py-8 px-4">
+    <div className="bg-site-bg py-8 px-4">
       <div className="container mx-auto flex flex-col lg:flex-row items-center max-w-[1280px]">
         <div className="w-full lg:w-1/2 text-center lg:text-left">
           <h4 className="text-xl sm:text-2xl lg:text-4xl font-bold mb-4">
             Design Your Dreamscape: <br /> Personalized Landscaping with Gidan
           </h4>
-          <button className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mt-4" onClick={handleRedirect}>
+          <button className="bg-[#375421] hover:bg-[#375421] hover:text-white text-white font-bold py-2 px-4 rounded mt-4" onClick={handleRedirect}>
             Contact
           </button>
         </div>
@@ -104,7 +104,7 @@ const OurWork = () => {
     </div>
 
     {/* Call to Action 2 */}
-    <div className="bg-gray-100 py-8 px-4">
+    <div className="bg-site-bg py-8 px-4">
       <div className="container mx-auto flex flex-col lg:flex-row items-center max-w-[1280px]">
         <div className="w-full lg:w-1/2 flex justify-center">
           <img name=" "    src={ourwork4} loading="lazy" alt="Landscape Design" className="w-full max-w-[660px] h-auto object-cover" />
@@ -113,7 +113,7 @@ const OurWork = () => {
           <h4 className="text-xl sm:text-2xl lg:text-4xl font-bold mb-4">
             Expert Advice, Anytime <br /> Personalized Garden Consultations <br /> with Gidan
           </h4>
-          <button className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mt-4" onClick={handleRedirect}>
+          <button className="bg-[#375421] hover:bg-[#375421] hover:text-white text-white font-bold py-2 px-4 rounded mt-4" onClick={handleRedirect}>
             Contact
           </button>
         </div>
@@ -133,7 +133,7 @@ const OurWork = () => {
     </div>
 
     {/* Team Section */}
-    <div className="py-8 px-4 bg-gray-50 text-center">
+    <div className="py-8 px-4 bg-site-bg text-center">
       <h2 className="text-xl sm:text-2xl font-bold mb-4">
         Meet the Visionaries <br /> The People Behind the Plants at Gidan
       </h2>

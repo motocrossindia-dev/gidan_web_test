@@ -221,7 +221,7 @@ export default PlantCare;
 //   return (
 //       <>
 //           
-//     <div className="container mx-auto bg-gray-100 pt-6">
+//     <div className="container mx-auto bg-site-bg pt-6">
 //       {/* <Banner1 /> */}
 //       <br />
 //       <div className="w-full">

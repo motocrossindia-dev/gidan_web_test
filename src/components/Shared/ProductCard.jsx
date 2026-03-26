@@ -48,8 +48,8 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
         if (!isAuthenticated) {
             dispatch(setPendingWishlistItem(product));
             savePendingWishlistItem({ main_prod_id: product?.id });
-            enqueueSnackbar("Please sign in to add to wishlist", { variant: "info" });
-            router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+            enqueueSnackbar("Added to wishlist (Guest)", { variant: "success" });
+            window.dispatchEvent(new Event("wishlistUpdated"));
             return;
         }
 
@@ -73,7 +73,9 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                     trackAddToWishlist(product);
                 }
             }
-            getProducts()
+            if (typeof getProducts === 'function') {
+                getProducts();
+            }
         } catch (error) { }
     }, [isAuthenticated, router, inWishlist, product.id, getProducts]);
 
@@ -81,7 +83,8 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
         if (!isAuthenticated) {
             dispatch(setPendingCartItem(product));
             savePendingCartItem({ main_prod_id: product?.id });
-            router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+            enqueueSnackbar("Added to cart (Guest)", { variant: "success" });
+            window.dispatchEvent(new Event("cartUpdated"));
             return;
         }
 
@@ -94,8 +97,8 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
 
         try {
             if (inCart) {
-                // Item already in cart — take user there directly
-                router.push("/cart");
+                // Item already in cart — just show info
+                enqueueSnackbar("This item is already in your cart.", { variant: "info" });
                 return;
             } else {
                 const payload = { main_prod_id: product.id };
@@ -111,16 +114,16 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                     setIsAdded(!isAdded);
                     window.dispatchEvent(new Event("cartUpdated"));
                     trackAddToCart(product);
-                    router.push("/cart");
                 }
             }
-            getProducts()
+            if (typeof getProducts === 'function') {
+                getProducts();
+            }
         } catch (error) {
             console.error("Add to cart error:", error);
             const msg = error.response?.data?.message || "";
             if (msg.toLowerCase().includes("already") || msg.toLowerCase().includes("exists") || error.response?.status === 400) {
                 enqueueSnackbar("This item is already in your cart.", { variant: "info" });
-                router.push("/cart");
             } else {
                 enqueueSnackbar(msg || "Failed to add to cart", { variant: "error" });
             }
@@ -154,6 +157,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
             <div className="hidden sm:block">
                 <Paper
                     elevation={0}
+                    onClick={() => router.push(productUrl)}
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}
                     sx={{
@@ -171,6 +175,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                         borderRadius: "1rem",
                         border: "1px solid transparent",
                         zIndex: isHovered ? 10 : 1,
+                        cursor: "pointer",
                         "&:hover": {
                             boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
                             transform: "translateY(-8px)",
@@ -209,6 +214,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                             >
                                 <button aria-label="Add to cart"
                                     onClick={(e) => {
+                                        e.preventDefault();
                                         e.stopPropagation();
                                         handleAddToCart();
                                     }}
@@ -220,6 +226,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
 
                                 <button aria-label="Add to wishlist"
                                     onClick={(e) => {
+                                        e.preventDefault();
                                         e.stopPropagation();
                                         handleAddToWishlist();
                                     }}
@@ -263,7 +270,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
 
                             {/* Discount */}
                             {mrp && price && (mrp > price) && (
-                                <span className="text-base font-semibold text-green-600 mt-1">
+                                <span className="text-base font-semibold text-[#375421] mt-1">
                                     {Math.round(((mrp - price) / mrp) * 100)}% OFF
                                 </span>
                             )}
@@ -283,6 +290,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
             <div className="sm:hidden">
                 <Paper
                     elevation={0}
+                    onClick={() => router.push(productUrl)}
                     sx={{
                         display: "flex",
                         flexDirection: "column",
@@ -295,6 +303,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                         border: "1px solid transparent",
                         transition: "all 0.3s ease",
                         zIndex: isHovered ? 10 : 1,
+                        cursor: "pointer",
                         "&:hover": {
                             boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.1)",
                             transform: "translateY(-5px)",
@@ -331,20 +340,22 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-20">
                                 <button aria-label="Add to cart"
                                     onClick={(e) => {
+                                        e.preventDefault();
                                         e.stopPropagation();
                                         handleAddToCart();
                                     }}
-                                    className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                    className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
                                 >
                                     <MdOutlineShoppingBag className="w-4 h-4" />
                                 </button>
 
                                 <button aria-label="Add to wishlist"
                                     onClick={(e) => {
+                                        e.preventDefault();
                                         e.stopPropagation();
                                         handleAddToWishlist();
                                     }}
-                                    className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                    className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
                                 >
                                     {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
                                 </button>
@@ -355,7 +366,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                                         e.preventDefault();
                                         router.push(productUrl);
                                     }}
-                                    className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                    className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
                                 >
                                     <FiEye className="w-4 h-4" />
                                 </button>
@@ -399,7 +410,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
 
                                 {/* Discount */}
                                 {mrp && price && (mrp > price) && (
-                                    <span className="text-sm font-semibold text-green-600 mt-1">
+                                    <span className="text-sm font-semibold text-[#375421] mt-1">
                                         {Math.round(((mrp - price) / mrp) * 100)}% OFF
                                     </span>
                                 )}

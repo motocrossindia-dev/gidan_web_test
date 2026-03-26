@@ -46,14 +46,14 @@ const WalletHistory = () => {
         ← Back to Profile
       </Link>
 
-      <div className="flex justify-center sm:justify-start px-4 sm:px-6 bg-gray-100 min-h-screen w-full mt-2 sm:mt-3">
+      <div className="flex justify-center sm:justify-start px-4 sm:px-6 bg-site-bg min-h-screen w-full mt-2 sm:mt-3">
         <div className="w-full sm:w-full md:w-4/5 lg:w-full xl:w-full h-auto bg-white shadow-lg p-4 sm:p-6 rounded-lg">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold">Wallet History</h2>
             <div className="text-right">
               <p className="text-sm text-gray-600">Current Balance</p>
-              <p className="text-xl font-bold text-green-600">{balance} Coins</p>
+              <p className="text-xl font-bold text-[#375421]">{balance} Coins</p>
             </div>
           </div>
 
@@ -70,7 +70,7 @@ const WalletHistory = () => {
                   onClick={() => setActiveStatus(status)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeStatus === status
                     ? 'bg-bio-green text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-site-bg text-gray-700 hover:bg-gray-200'
                     }`}
                 >
                   {status}
@@ -94,7 +94,7 @@ const WalletHistory = () => {
                     <div className="flex items-center space-x-4">
                       <div className={`p-2 rounded-full ${isEarned ? "bg-green-100" : "bg-orange-100"
                         }`}>
-                        <Icon className={`h-5 w-5 ${isEarned ? "text-green-600" : "text-orange-600"
+                        <Icon className={`h-5 w-5 ${isEarned ? "text-[#375421]" : "text-orange-600"
                           }`} />
                       </div>
                       <div>
@@ -110,7 +110,7 @@ const WalletHistory = () => {
                       </div>
                     </div>
                     <div className="flex items-center">
-                      <span className={`flex items-center font-semibold ${isEarned ? "text-green-600" : "text-orange-600"
+                      <span className={`flex items-center font-semibold ${isEarned ? "text-[#375421]" : "text-orange-600"
                         }`}>
                         {isEarned ? <ArrowUpRight className="h-5 w-5 mr-1" /> : <ArrowDownRight className="h-5 w-5 mr-1" />}
                         {isEarned ? "+" : "-"}{transaction.amount} Coins

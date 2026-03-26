@@ -29,6 +29,7 @@ const AddressForm = ({
   initialValues = {},
   onSave,
   onCancel,
+  showCancel = true,
   saveLabel = 'Save Address',
   cancelLabel = 'Cancel',
   variant = 'checkout',
@@ -94,8 +95,8 @@ const AddressForm = ({
     : 'p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full';
 
   const inputReadOnly = isCheckout
-    ? `${inputBase} bg-gray-100 cursor-not-allowed`
-    : `${inputBase} bg-gray-100 cursor-not-allowed`;
+    ? `${inputBase} bg-site-bg cursor-not-allowed`
+    : `${inputBase} bg-site-bg cursor-not-allowed`;
 
   const formWrapper = isCheckout
     ? 'space-y-3'
@@ -104,8 +105,8 @@ const AddressForm = ({
   const fullWidth = isCheckout ? '' : 'md:col-span-2';
 
   const saveBtnClass = isCheckout
-    ? 'w-full py-3 bg-green-600 text-white rounded-lg font-medium'
-    : 'bg-bio-green text-white font-semibold py-2 px-4 rounded hover:bg-green-600';
+    ? 'w-full py-3 bg-[#375421] text-white rounded-lg font-medium'
+    : 'bg-bio-green text-white font-semibold py-2 px-4 rounded hover:bg-[#375421] hover:text-white';
 
   const cancelBtnClass = isCheckout
     ? 'w-full py-3 border border-gray-300 rounded-lg font-medium'
@@ -227,7 +228,7 @@ const AddressForm = ({
       </form>
 
       <div className={buttonWrapper}>
-        {isCheckout && (
+        {showCancel && isCheckout && (
           <button onClick={onCancel} className={cancelBtnClass}>
             {cancelLabel}
           </button>
@@ -235,7 +236,7 @@ const AddressForm = ({
         <button onClick={handleSave} className={saveBtnClass}>
           {saveLabel}
         </button>
-        {!isCheckout && (
+        {showCancel && !isCheckout && (
           <button onClick={onCancel} className={cancelBtnClass}>
             {cancelLabel}
           </button>

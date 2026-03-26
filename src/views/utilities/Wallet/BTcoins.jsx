@@ -3,8 +3,10 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { Sprout, Gift, Users, History, HelpCircle } from "lucide-react";
+import { Sprout, Gift, Users, History, HelpCircle, ChevronLeft } from "lucide-react";
 import axiosInstace from "../../../Axios/axiosInstance";
+import Breadcrumb from "../../../components/Shared/Breadcrumb";
+
 const GDCoins = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -60,20 +62,43 @@ const GDCoins = () => {
 
   return (
     <>
-      <Link href="/profile" className="flex md:hidden items-center gap-2 px-4 pt-4 pb-1 text-bio-green font-medium">
-        ← Back to Profile
-      </Link>
-      <div className="flex justify-center sm:justify-start px-4 sm:px-6 bg-gray-100 min-h-screen w-full">
+      <div className="flex flex-col md:hidden bg-white shadow-sm sticky top-0 z-40 border-b">
+        <div className="px-4 pt-4 flex items-center justify-between">
+          <button
+            onClick={() => router.push('/profile')}
+            className="flex items-center text-[#375421] text-sm font-medium"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Profile
+          </button>
+          <div className="flex items-center gap-4 text-xs font-medium text-[#375421]">
+            <button className="hover:underline">Help & Support</button>
+          </div>
+        </div>
+
+        <div className="p-4 pt-2">
+          <h1 className="text-xl font-bold">GD Coins</h1>
+        </div>
+      </div>
+
+      <div className="mt-0 md:hidden text-xs sm:text-sm">
+        <Breadcrumb 
+          items={[{ label: 'Profile', path: '/profile' }]} 
+          currentPage="GD Coins" 
+        />
+      </div>
+
+      <div className="flex justify-center sm:justify-start px-4 sm:px-6 bg-site-bg min-h-screen w-full mt-2">
         <div className="w-full sm:w-full md:w-4/5 lg:w-full xl:w-full h-auto bg-white shadow-lg p-4 sm:p-6 rounded-lg">
           {/* Total GD Coins Balance */}
           <h2 className="text-lg font-semibold mb-2">GD Coins</h2>
           <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg mb-6">
             <div className="flex flex-col justify-between items-center space-y-5">
               <span className="text-gray-700 font-semibold flex items-center gap-2">
-                <Sprout className="text-green-600" />
+                <Sprout className="text-[#375421]" />
                 Total GD Coins Balance
               </span>
-              <span className="text-2xl font-bold text-green-600">{data?.total_coins} Coins</span>
+              <span className="text-2xl font-bold text-[#375421]">{data?.total_coins} Coins</span>
             </div>
             <div className="flex justify-between items-center mt-4">
               <button
@@ -97,12 +122,12 @@ const GDCoins = () => {
                 placeholder="Enter coins to redeem"
                 value={redeemCoins}
                 onChange={(e) => setRedeemCoins(e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-green-600"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#375421]"
               />
               <button
                 onClick={handleRedeemCoins}
                 disabled={loading}
-                className="bg-lime-600 text-white px-2 py-1 rounded-md hover:bg-green-700 disabled:opacity-60"
+                className="bg-lime-600 text-white px-2 py-1 rounded-md hover:bg-[#375421] hover:text-white disabled:opacity-60"
               >
                 {loading ? "Redeeming..." : "Redeem Coins"}
               </button>
@@ -115,14 +140,14 @@ const GDCoins = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="border border-green-100 rounded-lg p-4 hover:shadow-md transition-shadow">
                 <div className="flex items-center gap-3 mb-2">
-                  <Users className="text-green-600" />
+                  <Users className="text-[#375421]" />
                   <h3 className="font-semibold">Refer Friends</h3>
                 </div>
                 <p className="text-gray-600">Get 200 coins for each friend who makes their first purchase</p>
               </div>
               <div className="border border-green-100 rounded-lg p-4 hover:shadow-md transition-shadow">
                 <div className="flex items-center gap-3 mb-2">
-                  <Gift className="text-green-600" />
+                  <Gift className="text-[#375421]" />
                   <h3 className="font-semibold">Make Purchases</h3>
                 </div>
                 <p className="text-gray-600">Earn 1 coin for every ₹10 spent on plants</p>
@@ -140,9 +165,9 @@ const GDCoins = () => {
                 { coins: "1000", discount: "₹350 off" },
               ].map((reward, idx) => (
                 <div key={idx} className="bg-white border border-green-100 rounded-lg p-4 text-center hover:shadow-md transition-shadow">
-                  <p className="text-xl font-bold text-green-600">{reward.coins} Coins</p>
+                  <p className="text-xl font-bold text-[#375421]">{reward.coins} Coins</p>
                   <p className="text-gray-600">Get {reward.discount}</p>
-                  {/* <button className="mt-3 w-full bg-lime-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+                  {/* <button className="mt-3 w-full bg-lime-600 text-white px-4 py-2 rounded-md hover:bg-[#375421] hover:text-white">
                   Redeem Now
                 </button> */}
                 </div>
@@ -153,7 +178,7 @@ const GDCoins = () => {
           {/* FAQs Section */}
           <div className="mb-6 px-4 bg-transparent border border-black-100">
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <HelpCircle className="text-green-600" />
+              <HelpCircle className="text-[#375421]" />
               Frequently Asked Questions
             </h2>
             {[
@@ -277,17 +302,17 @@ export default GDCoins;
 //   return (
 //       <>
 //         
-//     <div className="flex justify-center sm:justify-start px-4 sm:px-6 bg-gray-100 min-h-screen w-full">
+//     <div className="flex justify-center sm:justify-start px-4 sm:px-6 bg-site-bg min-h-screen w-full">
 //       <div className="w-full sm:w-full md:w-4/5 lg:w-full xl:w-full h-auto bg-white shadow-lg p-4 sm:p-6 rounded-lg">
 //         {/* Total BT Coins Balance */}
 //         <h2 className="text-lg font-semibold mb-2">BT Coins</h2>
 //         <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg mb-6">
 //           <div className="flex flex-col justify-between items-center space-y-5">
 //             <span className="text-gray-700 font-semibold flex items-center gap-2">
-//               <Sprout className="text-green-600" />
+//               <Sprout className="text-[#375421]" />
 //               Total BT Coins Balance
 //             </span>
-//             <span className="text-2xl font-bold text-green-600">{data?.total_coins} Coins</span>
+//             <span className="text-2xl font-bold text-[#375421]">{data?.total_coins} Coins</span>
 //           </div>
 //           <div className="flex justify-between items-center mt-4">
 //             <Link  onClick={getTransactionHistory} className="text-md font-semibold text-lime-600 self-end flex items-center gap-2">
@@ -307,12 +332,12 @@ export default GDCoins;
 //                 placeholder="Enter coins to redeem"
 //                 value={redeemCoins}
 //                 onChange={(e) => setRedeemCoins(e.target.value)}
-//                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-green-600"
+//                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#375421]"
 //               />
 //               <button
 //                 onClick={handleRedeemCoins}
 //                 disabled={loading}
-//                 className="bg-lime-600 text-white px-2 py-1 rounded-md hover:bg-green-700 disabled:opacity-60"
+//                 className="bg-lime-600 text-white px-2 py-1 rounded-md hover:bg-[#375421] hover:text-white disabled:opacity-60"
 //               >
 //                 {loading ? "Redeeming..." : "Redeem Coins"}
 //               </button>
@@ -325,14 +350,14 @@ export default GDCoins;
 //           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 //             <div className="border border-green-100 rounded-lg p-4 hover:shadow-md transition-shadow">
 //               <div className="flex items-center gap-3 mb-2">
-//                 <Users className="text-green-600" />
+//                 <Users className="text-[#375421]" />
 //                 <h3 className="font-semibold">Refer Friends</h3>
 //               </div>
 //               <p className="text-gray-600">Get 200 coins for each friend who makes their first purchase</p>
 //             </div>
 //             <div className="border border-green-100 rounded-lg p-4 hover:shadow-md transition-shadow">
 //               <div className="flex items-center gap-3 mb-2">
-//                 <Gift className="text-green-600" />
+//                 <Gift className="text-[#375421]" />
 //                 <h3 className="font-semibold">Make Purchases</h3>
 //               </div>
 //               <p className="text-gray-600">Earn 1 coin for every ₹10 spent on plants</p>
@@ -350,9 +375,9 @@ export default GDCoins;
 //               { coins: "1000", discount: "₹350 off" },
 //             ].map((reward, idx) => (
 //               <div key={idx} className="bg-white border border-green-100 rounded-lg p-4 text-center hover:shadow-md transition-shadow">
-//                 <p className="text-xl font-bold text-green-600">{reward.coins} Coins</p>
+//                 <p className="text-xl font-bold text-[#375421]">{reward.coins} Coins</p>
 //                 <p className="text-gray-600">Get {reward.discount}</p>
-//                 {/* <button className="mt-3 w-full bg-lime-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+//                 {/* <button className="mt-3 w-full bg-lime-600 text-white px-4 py-2 rounded-md hover:bg-[#375421] hover:text-white">
 //                   Redeem Now
 //                 </button> */}
 //               </div>
@@ -363,7 +388,7 @@ export default GDCoins;
 //         {/* FAQs Section */}
 //         <div className="mb-6 px-4 bg-transparent border border-black-100">
 //           <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-//             <HelpCircle className="text-green-600" />
+//             <HelpCircle className="text-[#375421]" />
 //             Frequently Asked Questions
 //           </h2>
 //           {[

@@ -63,6 +63,8 @@ const RecentlyViewedCard = ({ name, price, oldPrice, imageUrl, rating, isNewArri
         { main_prod_id: product.id },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
+      enqueueSnackbar("Added to wishlist", { variant: "success" });
+      window.dispatchEvent(new Event("wishlistUpdated"));
       fetchWishlistStatus();
     } catch (error) {
       console.error("Error adding to wishlist:", error);

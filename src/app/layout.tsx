@@ -10,6 +10,9 @@ import DownloadApp from "@/components/DownloadApp/DownloadApp";
 import DownloadAppPopup from "@/components/DownloadApp/DownloadAppPopup";
 import ScrollToTop from "@/components/ScrollToTop";
 import StaticBreadcrumb from "@/components/Shared/StaticBreadcrumb";
+import MobileBottomNav from "@/components/Shared/MobileBottomNav";
+import TawkChat from "@/components/Shared/TawkChat";
+import CartWishlistSidebar from "@/components/Shared/CartWishlistSidebar";
 
 import Verify from "@/Services/Services/Verify";
 
@@ -159,30 +162,24 @@ export default function RootLayout({
 
         <Providers>
           <Verify />
+          <CartWishlistSidebar />
           <ScrollToTop />
           <DownloadAppPopup />
-          <Script id="tawk-to" strategy="lazyOnload">
-            {`
-              var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-              (function(){
-                var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-                s1.async=true;
-                s1.src='https://embed.tawk.to/699cc6abfaf0a71c36d94cbd/1ji66g3s9';
-                s1.charset='UTF-8';s0.parentNode.insertBefore(s1,s0);
-              })();
-            `}
-          </Script>
+          <TawkChat />
           <div className="landing-page-layout w-full min-h-screen flex flex-col overflow-x-hidden">
             <div className="sticky top-0 left-0 w-full z-10">
               <Header />
               <NavBar />
             </div>
             <main className="main-content w-full">
-              <StaticBreadcrumb />
+              <div className="hidden md:block">
+                <StaticBreadcrumb />
+              </div>
               {children}
               <DownloadApp />
               <Footer />
             </main>
+            <MobileBottomNav />
           </div>
         </Providers>
       </body>

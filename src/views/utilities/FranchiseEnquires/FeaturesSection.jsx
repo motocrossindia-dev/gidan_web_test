@@ -32,7 +32,7 @@ const features = [
 ];
 
 const FeaturesSection = () => (
-  <div className="py-12 bg-gray-100 px-4">
+  <div className="py-12 bg-site-bg px-4">
     <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-12 text-center">
       {features.map((feature, index) => (
         <div key={index}>

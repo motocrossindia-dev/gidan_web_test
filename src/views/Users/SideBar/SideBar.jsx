@@ -33,12 +33,12 @@ const SideBar = () => {
   };
 
   return (
-    <div className="bg-gray-100 hidden md:block shadow-lg"> {/* Sidebar container */}
+    <div className="bg-site-bg hidden md:block shadow-lg"> {/* Sidebar container */}
       <div className="w-[270px] h-screen font-sans flex flex-col">
 
         {/* Header Section */}
         <div className="h-[80px] px-4 bg-white flex items-center space-x-3 border-b shadow-sm">
-          <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full bg-[#375421] flex items-center justify-center">
             <span className="text-2xl font-semibold text-white">
               {hasMounted ? userName?.charAt(0).toUpperCase() : ""}
             </span>
@@ -56,11 +56,11 @@ const SideBar = () => {
           <div className="h-[580px] pt-4 px-2">
             <Link
               href="/profile/orders"
-              className="flex items-center justify-between bg-white p-4 rounded shadow-sm hover:bg-gray-50 transition"
+              className="flex items-center justify-between bg-white p-4 rounded shadow-sm hover:bg-site-bg transition"
             >
               {/* Left: Icon and Text */}
               <div className="flex items-center gap-3">
-                <IoReorderThree className="text-green-500 text-xl" />
+                <IoReorderThree className="text-[#375421] text-xl" />
                 <span className="text-gray-700 font-medium">MY ORDERS</span>
               </div>
 
@@ -78,19 +78,19 @@ const SideBar = () => {
 
 
             <MenuSection title="ACCOUNT SETTINGS">
-              <MenuItem icon={<MdOutlinePerson className="text-green-500" />} text="My Profile" to="/profile" />
-              <MenuItem icon={<IoLocationOutline className="text-green-500" />} text="Track Order" to="/profile/trackorder" />
-              {/* <MenuItem icon={<MdOutlineNotificationsActive className="text-green-500" />} text="Notifications" to="/profile/notification" /> */}
+              <MenuItem icon={<MdOutlinePerson className="text-[#375421]" />} text="My Profile" to="/profile" />
+              <MenuItem icon={<IoLocationOutline className="text-[#375421]" />} text="Track Order" to="/profile/trackorder" />
+              {/* <MenuItem icon={<MdOutlineNotificationsActive className="text-[#375421]" />} text="Notifications" to="/profile/notification" /> */}
             </MenuSection>
 
             <MenuSection title="PAYMENTS">
-              <MenuItem icon={<CiWallet className="text-green-500" />} text="Wallet" to="/profile/wallet" />
-              <MenuItem icon={<CiBitcoin className="text-green-500" />} text="GD Coins" to="/profile/btcoins" />
+              <MenuItem icon={<CiWallet className="text-[#375421]" />} text="Wallet" to="/profile/wallet" />
+              <MenuItem icon={<CiBitcoin className="text-[#375421]" />} text="GD Coins" to="/profile/btcoins" />
             </MenuSection>
 
             <MenuSection title="MY STUFF">
-              <MenuItem icon={<TbGiftCard className="text-green-500" />} text="Add A Gift Card" to="/profile/giftcard" />
-              <MenuItem icon={<GoCrossReference className="text-green-500" />} text="My Referrals" to="/profile/referal" />
+              <MenuItem icon={<TbGiftCard className="text-[#375421]" />} text="Add A Gift Card" to="/profile/giftcard" />
+              <MenuItem icon={<GoCrossReference className="text-[#375421]" />} text="My Referrals" to="/profile/referal" />
             </MenuSection>
 
             {/* Logout Button */}
@@ -138,7 +138,7 @@ const MenuSection = ({ title, children }) => (
 /* Sidebar Menu Item Component */
 const MenuItem = ({ icon, text, to, onClick }) => (
   <div
-    className="flex items-center justify-between px-4 py-3 rounded-md hover:bg-gray-100 transition cursor-pointer"
+    className="flex items-center justify-between px-4 py-3 rounded-md hover:bg-site-bg transition cursor-pointer"
     onClick={onClick}
   >
     <Link href={to || "#"} className="flex items-center space-x-3 w-full">

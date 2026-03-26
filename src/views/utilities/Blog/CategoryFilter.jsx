@@ -78,7 +78,7 @@ function CategoryFilter({
                 className={`border-t first:border-t-0 border-gray-200 transition-colors ${
                   selectedCategory === category.name 
                     ? 'bg-[#f1f5f1] text-[#2F4333]' 
-                    : 'hover:bg-gray-50'
+                    : 'hover:bg-site-bg'
                 }`}
               >
                 <button
@@ -90,7 +90,7 @@ function CategoryFilter({
                       {category.name}
                     </span>
                     {category.count && (
-                      <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">
+                      <span className="bg-site-bg text-gray-600 text-xs px-2 py-1 rounded-full">
                         {category.count}
                       </span>
                     )}
@@ -141,7 +141,7 @@ function CategoryFilter({
   <div className="absolute inset-x-0 bottom-0 flex flex-col items-center pb-4 sm:pb-6">     
    
     <Link href={'https://play.google.com/store/apps/details?id=com.biotechmaali.app&pcampaignid=web_share'}>       
-      <button className="px-6 py-2 bg-bio-green text-white rounded-full font-semibold hover:bg-bio-green transition-colors transform hover:scale-105 duration-200 text-sm sm:text-base">         
+      <button className="px-6 py-2 bg-bio-green text-white rounded-full font-semibold hover:bg-bio-green hover:text-white transition-colors transform hover:scale-105 duration-200 text-sm sm:text-base">         
         DOWNLOAD APP       
       </button>     
     </Link>   

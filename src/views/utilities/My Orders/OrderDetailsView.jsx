@@ -109,9 +109,9 @@ const OrderDetailsView = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <div className="min-h-screen flex items-center justify-center bg-site-bg">
                 <div className="flex flex-col items-center">
-                    <div className="w-12 h-12 border-4 border-[#062e25] border-t-transparent rounded-full animate-spin mb-4"></div>
+                    <div className="w-12 h-12 border-4 border-[#375421] border-t-transparent rounded-full animate-spin mb-4"></div>
                     <p className="text-gray-600 font-medium">Loading order details...</p>
                 </div>
             </div>
@@ -120,7 +120,7 @@ const OrderDetailsView = () => {
 
     if (!orderData && !extraOrderDetails) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <div className="min-h-screen flex items-center justify-center bg-site-bg">
                 <div className="text-center p-8 bg-white rounded-2xl shadow-sm max-w-md">
                     <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                     <h2 className="text-xl font-bold text-gray-800 mb-2">Order not found</h2>
@@ -155,7 +155,7 @@ const OrderDetailsView = () => {
             
 
             {/* Top Navigation */}
-            <div className="bg-gray-100 border-b">
+            <div className="bg-site-bg border-b">
                 <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 text-sm text-gray-600">
                     <button onClick={() => router.push('/profile')} className="hover:underline">Your Account</button>
                     <ChevronRight className="w-3 h-3" />
@@ -177,7 +177,7 @@ const OrderDetailsView = () => {
 
                 {/* Main Summary Card (Amazon Style) */}
                 <div className="border rounded-lg overflow-hidden mb-8 shadow-sm">
-                    <div className="bg-gray-50 p-4 border-b grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-site-bg p-4 border-b grid grid-cols-1 md:grid-cols-3 gap-6">
                         {/* Shipping Address */}
                         <div>
                             <h3 className="text-sm font-bold text-gray-900 mb-2">Shipping Address</h3>
@@ -213,12 +213,12 @@ const OrderDetailsView = () => {
                                 </div>
                                 <div className="flex justify-between">
                                     <span>Shipping:</span>
-                                    <span className={finalShipping === 0 ? 'text-green-700' : ''}>
+                                    <span className={finalShipping === 0 ? 'text-[#375421]' : ''}>
                                         {finalShipping === 0 ? '₹0.00' : `₹${finalShipping}`}
                                     </span>
                                 </div>
                                 {(totalDiscount) > 0 && (
-                                    <div className="flex justify-between text-green-700">
+                                    <div className="flex justify-between text-[#375421]">
                                         <span>Discount:</span>
                                         <span>-₹{totalDiscount}</span>
                                     </div>
@@ -256,7 +256,7 @@ const OrderDetailsView = () => {
 
                                 return (
                                     <div
-                                        className="absolute top-4 left-4 h-1 bg-green-500 -translate-y-1/2 z-0 transition-all duration-500"
+                                        className="absolute top-4 left-4 h-1 bg-[#375421] -translate-y-1/2 z-0 transition-all duration-500"
                                         style={{ width: progress }}
                                     ></div>
                                 );
@@ -271,7 +271,7 @@ const OrderDetailsView = () => {
 
                                 return (
                                     <div key={step} className="flex flex-col items-center relative z-50 w-1/4">
-                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 ${isActive ? 'bg-green-500 border-green-100 text-white' : 'bg-white border-gray-200 text-gray-300'}`}>
+                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 ${isActive ? 'bg-[#375421] border-green-100 text-white' : 'bg-white border-gray-200 text-gray-300'}`}>
                                             {isActive ? <CheckCircle2 className="w-4 h-4" /> : <div className="w-2 h-2 rounded-full bg-gray-300"></div>}
                                         </div>
                                         <div className="mt-2 text-center w-full px-1">
@@ -291,12 +291,12 @@ const OrderDetailsView = () => {
 
                 {/* Items Section */}
                 <div className="border rounded-lg overflow-hidden bg-white">
-                    <div className="bg-gray-50 p-4 border-b flex justify-between items-center">
+                    <div className="bg-site-bg p-4 border-b flex justify-between items-center">
                         <h2 className="text-lg font-bold text-gray-900">Items Ordered</h2>
                         {orderHistory?.status === 'DELIVERED' && (
                             <button
                                 onClick={getInvoice}
-                                className="text-sm font-medium text-bio-green hover:text-green-800 hover:underline flex items-center gap-1"
+                                className="text-sm font-medium text-bio-green hover:text-[#051d18] hover:underline flex items-center gap-1"
                             >
                                 <Download className="w-4 h-4" />
                                 Invoice
@@ -308,7 +308,7 @@ const OrderDetailsView = () => {
                         {orderData?.order_items?.map((item, index) => (
                             <div key={index} className="p-6">
                                 <div className="flex flex-col md:flex-row gap-6">
-                                    <div className="w-32 h-32 md:w-40 md:h-40 bg-gray-50 rounded-lg border flex-shrink-0 flex items-center justify-center p-2">
+                                    <div className="w-32 h-32 md:w-40 md:h-40 bg-site-bg rounded-lg border flex-shrink-0 flex items-center justify-center p-2">
                                         <img
                                             src={item?.image?.startsWith('http') ? item.image : `${process.env.NEXT_PUBLIC_API_URL}${item?.image}`}
                                             alt={item?.product_name}
@@ -319,13 +319,13 @@ const OrderDetailsView = () => {
                                     <div className="flex-1 space-y-2">
                                         <h3
                                             onClick={() => router.push(getProductUrl(item))}
-                                            className="text-lg font-medium text-[#062e25] hover:text-[#051d18] transition-colors cursor-pointer line-clamp-2"
+                                            className="text-lg font-medium text-[#375421] hover:text-[#051d18] transition-colors cursor-pointer line-clamp-2"
                                         >
                                             {item?.product_name}
                                         </h3>
                                         <p className="text-xs text-gray-500">Sold by: Gidan Plants</p>
                                         <div className="flex items-baseline gap-2">
-                                            <span className="text-[#062e25] font-bold text-xl">₹{Math.round(item?.selling_price)}</span>
+                                            <span className="text-[#375421] font-bold text-xl">₹{Math.round(item?.selling_price)}</span>
                                             {item?.mrp > item?.selling_price && (
                                                 <span className="text-sm text-gray-500 line-through">₹{Math.round(item?.mrp)}</span>
                                             )}
@@ -335,7 +335,7 @@ const OrderDetailsView = () => {
                                         <div className="flex flex-wrap gap-3 mt-4 pt-4">
                                             <button
                                                 onClick={() => router.push(getProductUrl(item))}
-                                                className="bg-bio-green hover:bg-bio-green-text text-white px-4 py-1.5 rounded-full text-xs font-medium shadow-sm transition-all"
+                                                className="bg-bio-green hover:bg-bio-green hover:text-white-text text-white px-4 py-1.5 rounded-full text-xs font-medium shadow-sm transition-all"
                                             >
                                                 Buy it again
                                             </button>
@@ -343,7 +343,7 @@ const OrderDetailsView = () => {
                                             {isDelivered && !(item.is_reviewed || item.is_review) && (
                                                 <button
                                                     onClick={() => setActiveReviewProductId(activeReviewProductId === item.product_id ? null : item.product_id)}
-                                                    className="bg-white hover:bg-gray-50 text-gray-900 px-4 py-1.5 rounded-full text-xs font-medium shadow-sm border border-gray-300 transition-all font-medium"
+                                                    className="bg-white hover:bg-site-bg text-gray-900 px-4 py-1.5 rounded-full text-xs font-medium shadow-sm border border-gray-300 transition-all font-medium"
                                                 >
                                                     Write a product review
                                                 </button>
@@ -356,7 +356,7 @@ const OrderDetailsView = () => {
                                             {(item.is_reviewed || item.is_review) && isDelivered && (
                                                 <button
                                                     onClick={() => setActiveReviewProductId(activeReviewProductId === item.product_id ? null : item.product_id)}
-                                                    className="bg-white hover:bg-gray-50 text-[#062e25] px-4 py-1.5 rounded-full text-xs font-medium shadow-sm border border-[#062e25] transition-all flex items-center gap-1"
+                                                    className="bg-white hover:bg-site-bg text-[#375421] px-4 py-1.5 rounded-full text-xs font-medium shadow-sm border border-[#375421] transition-all flex items-center gap-1"
                                                 >
                                                     <Check className="w-3 h-3" /> Edit your review
                                                 </button>
@@ -367,7 +367,7 @@ const OrderDetailsView = () => {
                                     {/* Action Column for Desktop */}
                                     <div className="md:w-48 space-y-2 border-l md:pl-6 pt-4 md:pt-0">
                                         {item.tracking_id && (
-                                            <button className="w-full text-left p-2 hover:bg-gray-50 rounded text-xs flex items-center justify-between group">
+                                            <button className="w-full text-left p-2 hover:bg-site-bg rounded text-xs flex items-center justify-between group">
                                                 <span>Track package</span>
                                                 <ChevronRight className="w-3 h-3 text-gray-400 group-hover:text-gray-900" />
                                             </button>
@@ -397,17 +397,17 @@ const OrderDetailsView = () => {
                 <div className="mt-8 flex flex-col md:flex-row gap-4 items-center justify-between text-sm">
                     <button
                         onClick={() => router.push('/profile/orders')}
-                        className="text-[#062e25] hover:underline flex items-center gap-1"
+                        className="text-[#375421] hover:underline flex items-center gap-1"
                     >
                         <ArrowLeft className="w-4 h-4" />
                         Back to Your Orders
                     </button>
                     <div className="flex gap-4">
-                        <button onClick={() => router.push('/contact-us/')} className="text-[#062e25] hover:underline">Help & Support</button>
+                        <button onClick={() => router.push('/contact-us/')} className="text-[#375421] hover:underline">Help & Support</button>
                         <span className="text-gray-300">|</span>
-                        <button onClick={() => router.push('/shipping/')} className="text-[#062e25] hover:underline">Shipping Policies</button>
+                        <button onClick={() => router.push('/shipping/')} className="text-[#375421] hover:underline">Shipping Policies</button>
                         <span className="text-gray-300">|</span>
-                        <button onClick={() => router.push('/return/')} className="text-[#062e25] hover:underline">Return & Refund Policy</button>
+                        <button onClick={() => router.push('/return/')} className="text-[#375421] hover:underline">Return & Refund Policy</button>
                     </div>
                 </div>
             </div>

@@ -216,7 +216,7 @@ const ContactUs = () => {
                   {/* Submit Button */}
                   <button
                     type="submit"
-                    className="bg-bio-green text-white px-16 py-2 rounded hover:bg-green-700 w-full md:w-auto"
+                    className="bg-bio-green text-white px-16 py-2 rounded hover:bg-[#375421] hover:text-white w-full md:w-auto"
                     disabled={loading}
                   >
                     {loading ? "Submitting..." : "Submit"}
@@ -227,7 +227,7 @@ const ContactUs = () => {
           </div>
         </section>
         {/* Inquiry Section */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full p-6 bg-gray-50">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full p-6 bg-site-bg">
           {/* First Box: Bulk/Corporate Inquiry */}
           <div className="p-4 border border-fuchsia-200 bg-white rounded w-full">
             <h3 className="">Head Office, Jaynagar</h3>
@@ -246,12 +246,12 @@ const ContactUs = () => {
         </section>
 
         {/* Franchise Consultation Section */}
-        <section className="text-center my-8 w-full p-6 bg-gray-100">
+        <section className="text-center my-8 w-full p-6 bg-site-bg">
           <h2 className="text-xl font-semibold mb-4">
             Request A Free Franchise Consultation
           </h2>
           <button
-            className="bg-bio-green text-white px-4 py-2 rounded hover:bg-green-700"
+            className="bg-bio-green text-white px-4 py-2 rounded hover:bg-[#375421] hover:text-white"
             onClick={handleClick}
           >
             Apply Now

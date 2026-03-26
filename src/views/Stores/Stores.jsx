@@ -91,12 +91,12 @@ import Link from "next/link";
 
 
 //       {/* Request a Free Franchise Consultation Section */}
-//       <section className="text-center my-8 w-full p-6 bg-gray-100">
+//       <section className="text-center my-8 w-full p-6 bg-site-bg">
 //         <h2 className="text-xl font-semibold mb-4">
 //           Request A Free Franchise Consultation
 //         </h2>
 //         <button 
-//       className="bg-bio-green text-white px-4 py-2 rounded hover:bg-green-700"
+//       className="bg-bio-green text-white px-4 py-2 rounded hover:bg-[#375421] hover:text-white"
 //       onClick={handleClick}
 //     >
 //       Apply Now
@@ -195,12 +195,12 @@ const Stores = () => {
         </div>
 
         {/* Request a Free Franchise Consultation Section */}
-        <section className="text-center my-8 w-full p-6 bg-gray-100">
+        <section className="text-center my-8 w-full p-6 bg-site-bg">
           <h2 className="text-xl font-semibold mb-4">
             Request A Free Franchise Consultation
           </h2>
           <button
-            className="bg-bio-green text-white px-4 py-2 rounded hover:bg-green-700"
+            className="bg-bio-green text-white px-4 py-2 rounded hover:bg-[#375421] hover:text-white"
             onClick={handleClick}
           >
             Apply Now

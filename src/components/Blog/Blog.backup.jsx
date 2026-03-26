@@ -38,7 +38,7 @@ const Blog = () => {
   const Blogcard = ({ image, title, heading }) => {
     return (
       <div className="w-full max-w-[500px] mx-auto h-auto rounded-lg overflow-hidden font-sans flex flex-col items-center">
-        <div className="w-full aspect-[800/665] bg-gray-100 rounded-lg overflow-hidden">
+        <div className="w-full aspect-[800/665] bg-site-bg rounded-lg overflow-hidden">
           <img
             src={`${process.env.REACT_APP_API_URL}${image}`}
             alt={title}

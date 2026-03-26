@@ -36,7 +36,7 @@ const ModernComboCard = ({ offer }) => {
         </h2>
 
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-sm sm:text-lg font-bold text-[#062e25]">
+          <span className="text-sm sm:text-lg font-bold text-[#375421]">
             ₹{Math.round(offer?.final_price)}
           </span>
           {offer?.total_price && offer?.total_price > offer?.final_price && (
@@ -47,14 +47,14 @@ const ModernComboCard = ({ offer }) => {
         </div>
 
         {offer?.total_price && offer?.final_price && offer?.total_price > offer?.final_price && (
-          <span className="text-[9px] sm:text-[10px] font-bold text-[#062e25] bg-green-100 px-2 py-0.5 rounded-full border border-green-200 mb-2">
+          <span className="text-[9px] sm:text-[10px] font-bold text-[#375421] bg-green-100 px-2 py-0.5 rounded-full border border-green-200 mb-2">
             SAVE ₹{Math.round(offer?.total_price - offer?.final_price)} ({Math.round(((offer?.total_price - offer?.final_price) / offer?.total_price) * 100)}% OFF)
           </span>
         )}
 
         {/* Buy It Now - appears on hover */}
         <button
-          className="w-full bg-[#062e25] text-white py-1.5 sm:py-2 px-3 rounded-xl hover:bg-[#051d18] transition-all duration-300 flex items-center justify-center mt-auto pt-2 font-bold text-xs sm:text-sm shadow-md opacity-0 group-hover:opacity-100"
+          className="w-full bg-[#375421] text-white py-1.5 sm:py-2 px-3 rounded-xl hover:bg-[#2d451b] hover:text-white transition-all duration-300 flex items-center justify-center mt-auto pt-2 font-bold text-xs sm:text-sm shadow-md opacity-0 group-hover:opacity-100"
           onClick={(e) => e.stopPropagation()}
         >
           <ShoppingCart className="inline-block mr-1.5 w-3.5 h-3.5" />

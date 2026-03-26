@@ -216,7 +216,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
 
                             {/* Discount */}
                             {mrp && price && (mrp > price) && (
-                                <span className="text-base font-semibold text-green-600 mt-1">
+                                <span className="text-base font-semibold text-[#375421] mt-1">
                                     {Math.round(((mrp - price) / mrp) * 100)}% OFF
                                 </span>
                             )}
@@ -281,7 +281,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                                         e.stopPropagation();
                                         handleAddToCart();
                                     }}
-                                    className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                    className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
                                 >
                                     <MdOutlineShoppingBag className="w-4 h-4" />
                                 </button>
@@ -292,7 +292,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                                         e.stopPropagation();
                                         handleAddToWishlist();
                                     }}
-                                    className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                    className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
                                 >
                                     {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
                                 </button>
@@ -303,7 +303,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                                         e.stopPropagation();
                                         handleQuickView();
                                     }}
-                                    className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                    className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
                                 >
                                     <FiEye className="w-4 h-4" />
                                 </button>
@@ -350,7 +350,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
 
                                 {/* Discount */}
                                 {mrp && price && (mrp > price) && (
-                                    <span className="text-sm font-semibold text-green-600 mt-1">
+                                    <span className="text-sm font-semibold text-[#375421] mt-1">
                                         {Math.round(((mrp - price) / mrp) * 100)}% OFF
                                     </span>
                                 )}
@@ -598,7 +598,7 @@ export default memo(TrendingCard, (prevProps, nextProps) => {
 //
 //                             {/* Discount */}
 //                             {mrp && price && (mrp>price) && (
-//                                 <span className="text-base font-semibold text-green-600 mt-1">
+//                                 <span className="text-base font-semibold text-[#375421] mt-1">
 //       {Math.round(((mrp - price) / mrp) * 100)}% OFF
 //     </span>
 //                             )}
@@ -663,7 +663,7 @@ export default memo(TrendingCard, (prevProps, nextProps) => {
 //                                         e.stopPropagation();
 //                                         handleAddToCart();
 //                                     }}
-//                                     className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+//                                     className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
 //                                 >
 //                                     <MdOutlineShoppingBag className="w-4 h-4" />
 //                                 </button>
@@ -673,7 +673,7 @@ export default memo(TrendingCard, (prevProps, nextProps) => {
 //                                         e.stopPropagation();
 //                                         handleAddToWishlist();
 //                                     }}
-//                                     className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+//                                     className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
 //                                 >
 //                                     {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
 //                                 </button>
@@ -683,7 +683,7 @@ export default memo(TrendingCard, (prevProps, nextProps) => {
 //                                         e.stopPropagation();
 //                                         handleQuickView();
 //                                     }}
-//                                     className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+//                                     className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
 //                                 >
 //                                     <FiEye className="w-4 h-4" />
 //                                 </button>
@@ -730,7 +730,7 @@ export default memo(TrendingCard, (prevProps, nextProps) => {
 //
 //                                 {/* Discount */}
 //                                 {mrp && price && (mrp>price) && (
-//                                     <span className="text-sm font-semibold text-green-600 mt-1">
+//                                     <span className="text-sm font-semibold text-[#375421] mt-1">
 //       {Math.round(((mrp - price) / mrp) * 100)}% OFF
 //     </span>
 //                                 )}

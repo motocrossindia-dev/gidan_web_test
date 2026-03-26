@@ -14,7 +14,7 @@ const Blog = () => {
   const Blogcard = ({ image, title, heading, slug }) => {
     return (
       <Link href={`/blogs/${slug}`} className="block w-full h-auto rounded-lg overflow-hidden font-sans flex flex-col cursor-pointer hover:shadow-lg transition-shadow">
-        <div className="w-full aspect-[4/3] bg-gray-100 rounded-lg overflow-hidden">
+        <div className="w-full aspect-[4/3] bg-site-bg rounded-lg overflow-hidden">
           <img
             src={`${process.env.NEXT_PUBLIC_API_URL}${image}`}
             alt={title}
@@ -84,10 +84,10 @@ const Blog = () => {
 
             {blogs.length > 1 && (
               <div className="flex justify-center items-center gap-3 mt-4">
-                <button aria-label="Previous blog" className="blog-prev w-9 h-9 flex items-center justify-center rounded-full border border-gray-300 bg-white hover:bg-gray-100 transition-colors">
+                <button aria-label="Previous blog" className="blog-prev w-9 h-9 flex items-center justify-center rounded-full border border-gray-300 bg-white hover:bg-site-bg transition-colors">
                   <FaAngleLeft className="text-bio-green" />
                 </button>
-                <button aria-label="Next blog" className="blog-next w-9 h-9 flex items-center justify-center rounded-full border border-gray-300 bg-white hover:bg-gray-100 transition-colors">
+                <button aria-label="Next blog" className="blog-next w-9 h-9 flex items-center justify-center rounded-full border border-gray-300 bg-white hover:bg-site-bg transition-colors">
                   <FaAngleRight className="text-bio-green" />
                 </button>
               </div>

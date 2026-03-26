@@ -80,7 +80,7 @@ function Category({ blogs, loading, selectedCategory }) {
               }`}
             >
               <div className="relative">
-                <div className="w-full aspect-[800/665] bg-gray-100">
+                <div className="w-full aspect-[800/665] bg-site-bg">
   <img
     src={`${process.env.NEXT_PUBLIC_API_URL}${post.image}`}
     alt={post.title}
@@ -131,7 +131,7 @@ function Category({ blogs, loading, selectedCategory }) {
     [&_a]:text-bio-green
     [&_a]:underline
     [&_a]:font-medium
-    [&_a:hover]:text-green-800
+    [&_a:hover]:text-[#051d18]
     ${isExpanded ? '' : 'line-clamp-3'}
   `}
   dangerouslySetInnerHTML={{

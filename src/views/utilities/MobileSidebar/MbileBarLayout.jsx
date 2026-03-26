@@ -12,7 +12,7 @@ const MobileBarLayout = () => {
     <div >
       <Header />
         <Navigation/>
-         <div className='  bg-gray-100'> 
+         <div className='  bg-site-bg'> 
       <div className='display flex  px-2'>
 
 

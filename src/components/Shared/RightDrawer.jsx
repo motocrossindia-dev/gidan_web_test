@@ -41,7 +41,7 @@ const RightDrawer = ({ isOpen, onClose, title, subtitle, children, footerIcon, f
         style={{ zIndex: 2147483647 }}
       >
         {/* Header - Styled to be prominent and clear */}
-        <div className="p-6 border-b flex justify-between items-center bg-gray-50/80">
+        <div className="p-6 border-b flex justify-between items-center bg-site-bg/80">
           <div>
             <h3 className="font-black text-gray-900 text-xl tracking-tight">{title}</h3>
             {subtitle && (
@@ -52,7 +52,7 @@ const RightDrawer = ({ isOpen, onClose, title, subtitle, children, footerIcon, f
           </div>
           <button
             onClick={onClose}
-            className="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-gray-100 transition-all hover:rotate-90 shadow-sm"
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-site-bg transition-all hover:rotate-90 shadow-sm"
           >
             ✕
           </button>
@@ -65,10 +65,10 @@ const RightDrawer = ({ isOpen, onClose, title, subtitle, children, footerIcon, f
 
         {/* Footer - Optional informational area */}
         {(footerText || footerIcon) && (
-          <div className="p-6 bg-gray-50 border-t">
+          <div className="p-6 bg-site-bg border-t">
             <div className="flex items-center gap-3 text-gray-800">
               <div className="p-2.5 bg-white border border-gray-200 rounded-xl shadow-sm">
-                {footerIcon || <Tag size={18} className="text-[#062e25]" />}
+                {footerIcon || <Tag size={18} className="text-[#375421]" />}
               </div>
               <p className="text-[11px] font-bold leading-tight uppercase tracking-tight">
                 {footerText}

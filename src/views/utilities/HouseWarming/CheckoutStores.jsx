@@ -92,7 +92,7 @@ const CheckOutStore = () => {
 
           <div className="flex justify-center mt-6">
             <button
-              className="bg-bio-green text-white py-2 px-4 rounded-md hover:bg-green-700"
+              className="bg-bio-green text-white py-2 px-4 rounded-md hover:bg-[#375421] hover:text-white"
               onClick={() => router.push("/stores")} // Navigate to the /stores page
             >
               View All

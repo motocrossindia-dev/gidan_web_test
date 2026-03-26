@@ -39,7 +39,7 @@ const FilterSidebarMobile = () => {
       <div className="p-4 border-b">
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-medium">Filter ({filterSections[0].count} Products)</h2>
-          <button className="p-1 hover:bg-gray-100 rounded-full">
+          <button className="p-1 hover:bg-site-bg rounded-full">
             <X className="h-5 w-5 text-gray-500" />
           </button>
         </div>
@@ -72,7 +72,7 @@ const FilterSidebarMobile = () => {
         </button>
         <button
           onClick={handleClear}
-          className="flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded hover:bg-gray-50 transition-colors"
+          className="flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded hover:bg-site-bg transition-colors"
         >
           Clear
         </button>

@@ -64,7 +64,7 @@ function CarouselTypeFilter() {
                     <div className="mt-4">
                         {loading && results.length === 0 ? (
                             <div className="flex justify-center items-center min-h-[300px]">
-                                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600" />
+                                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#375421]" />
                             </div>
                         ) : (
                             <ProductGrid

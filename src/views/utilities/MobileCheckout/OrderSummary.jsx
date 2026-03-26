@@ -130,7 +130,7 @@ const OrderSummary = () => {
             <h2 className="text-lg font-semibold">Order Summary</h2>
             <button
               onClick={() => router.push('/address')}
-              className="text-sm text-green-600"
+              className="text-sm text-[#375421]"
             >
               Change
             </button>
@@ -157,7 +157,7 @@ const OrderSummary = () => {
                 <div className="flex items-center space-x-2">
                   <span className="text-sm">₹{item.selling_price}</span>
                   <div className="flex items-center">
-                    <span className="px-2 py-1 bg-gray-100 border rounded-md text-sm">
+                    <span className="px-2 py-1 bg-site-bg border rounded-md text-sm">
                       {item.quantity}
                     </span>
                   </div>
@@ -189,7 +189,7 @@ const OrderSummary = () => {
             ))}
 
             {/* <div className="flex items-center space-x-2">
-              <input type="radio" name="delivery" id="regular" className="text-green-600" />
+              <input type="radio" name="delivery" id="regular" className="text-[#375421]" />
               <label htmlFor="regular">Regular (₹700.00)</label>
             </div> */}
           </div>
@@ -204,7 +204,7 @@ const OrderSummary = () => {
               placeholder="Discount code"
               className="flex-1 border rounded px-3 py-2"
             />
-            <button className="px-4 py-2 bg-green-600 text-white rounded">Apply</button>
+            <button className="px-4 py-2 bg-[#375421] text-white rounded">Apply</button>
           </div>
         </div>
 
@@ -219,12 +219,12 @@ const OrderSummary = () => {
             {Number(order?.total_discount || 0) > 0 && (
               <div className="flex justify-between">
                 <span className="text-gray-500">Discount</span>
-                <span className="text-green-500">-₹{order?.total_discount}</span>
+                <span className="text-[#375421]">-₹{order?.total_discount}</span>
               </div>
             )}
             <div className="flex justify-between">
               <span className="text-gray-600">Delivery Charges</span>
-              <span className="text-green-500">
+              <span className="text-[#375421]">
                 {order?.shipping_charge ? `₹${order.shipping_charge}` : 'Free'}
               </span>
             </div>
@@ -362,7 +362,7 @@ const OrderSummary = () => {
         </div>
 
         {/* Payment Button */}
-        <button onClick={handleSaveOrderSummary} className="w-full py-3 bg-green-600 text-white rounded-lg font-medium">
+        <button onClick={handleSaveOrderSummary} className="w-full py-3 bg-[#375421] text-white rounded-lg font-medium">
           Save Order Summary
         </button>
       </div>

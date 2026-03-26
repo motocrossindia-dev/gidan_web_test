@@ -31,7 +31,7 @@ const DropdownMenu = ({ isOpen, filter, options, selectedFilters, handleFilterSe
               <div
                 key={option.id || idx}
                 onClick={() => handleFilterSelection(filter, option)}
-                className={`flex items-center p-2 rounded cursor-pointer transition-colors ${isSelected ? "bg-green-100 text-bio-green" : "hover:bg-gray-50"
+                className={`flex items-center p-2 rounded cursor-pointer transition-colors ${isSelected ? "bg-green-100 text-bio-green" : "hover:bg-site-bg"
                   }`}
               >
                 {isSelected && (
@@ -589,7 +589,7 @@ const FilterSidebar = ({
           <div className="flex items-center gap-3">
             <button
               onClick={resetFilters}
-              className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700 font-medium"
+              className="px-4 py-2 text-sm bg-site-bg hover:bg-gray-200 rounded-md text-gray-700 font-medium"
             >
               Reset All
             </button>
@@ -599,7 +599,7 @@ const FilterSidebar = ({
                 isInitialMount.current = false;
                 applyFilters();
               }}
-              className="px-6 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-md font-medium md:hidden"
+              className="px-6 py-2 text-sm bg-[#375421] hover:bg-[#375421] hover:text-white text-white rounded-md font-medium md:hidden"
             >
               Apply Filters
             </button>
@@ -618,7 +618,7 @@ const FilterSidebar = ({
             <button
               aria-label="Toggle type filter"
               onClick={() => handleFilterToggle("type")}
-              className="w-full px-3 py-2 text-sm text-left border border-gray-300 rounded-md bg-white hover:bg-gray-50 flex items-center justify-between"
+              className="w-full px-3 py-2 text-sm text-left border border-gray-300 rounded-md bg-white hover:bg-site-bg flex items-center justify-between"
             >
               <span className="text-gray-700 truncate">
                 {selectedFilterType
@@ -671,7 +671,7 @@ const FilterSidebar = ({
                     handleFilterToggle(filter);
                     if (filter === "subcategories"); // Trigger auto-apply for subcategory
                   }}
-                  className="w-full px-3 py-2 text-sm text-left border border-gray-300 rounded-md bg-white hover:bg-gray-50 flex items-center justify-between"
+                  className="w-full px-3 py-2 text-sm text-left border border-gray-300 rounded-md bg-white hover:bg-site-bg flex items-center justify-between"
                 >
                   <span className="text-gray-700 truncate">
                     {selectedFilters[filter]

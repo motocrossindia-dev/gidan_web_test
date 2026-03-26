@@ -5,7 +5,7 @@ import Link from "next/link";
 const Header = () => {
 
   return (
-    <header className="bg-[#062e25] font-poppins relative z-0">
+    <header className="bg-[#375421] font-poppins relative z-0">
 
       <div className="max-w-full px-4 md:px-8 py-2 flex flex-row items-center justify-between gap-2 m-auto">
 
@@ -25,8 +25,8 @@ const Header = () => {
 
           <Link
             href="/franchise-enquiry/"
-            className="bg-white text-[#062e25] font-bold uppercase whitespace-nowrap rounded-lg px-2 md:py-1
-            hover:bg-[#062e25] hover:text-white hover:border hover:border-white transition text-[11px] md:text-[13px] flex items-center justify-center"
+            className="bg-white text-[#375421] font-bold uppercase whitespace-nowrap rounded-lg px-2 md:py-1
+            hover:bg-[#375421] hover:text-white hover:border hover:border-white transition text-[11px] md:text-[13px] flex items-center justify-center"
           >
             Franchise Enquiry
           </Link>

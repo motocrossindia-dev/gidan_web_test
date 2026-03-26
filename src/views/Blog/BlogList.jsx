@@ -38,7 +38,7 @@ function BlogList() {
               className="w-full h-48 object-cover"
             />
             <div className="p-4">
-              <span className="text-xs text-green-600 font-semibold">{blog.category}</span>
+              <span className="text-xs text-[#375421] font-semibold">{blog.category}</span>
               <h2 className="text-xl font-bold mt-2 mb-2">{blog.title}</h2>
               <p className="text-gray-600 text-sm line-clamp-3">{blog.short_description}</p>
               <div className="mt-4 flex justify-between items-center text-xs text-gray-500">

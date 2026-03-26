@@ -10,7 +10,7 @@ const WhyWeRockImage = typeof _WhyWeRockImage === 'string' ? _WhyWeRockImage : _
 const WhyWeRock = () => {
     return (
         // Outer container: Gray background with vertical padding
-        <div className="bg-gray-100 py-12 px-4 md:px-6">
+        <div className="bg-site-bg py-12 px-4 md:px-6">
 
             {/* Inner container: Centers content and limits max width */}
             <div className="w-full max-w-screen-xl mx-auto text-center">

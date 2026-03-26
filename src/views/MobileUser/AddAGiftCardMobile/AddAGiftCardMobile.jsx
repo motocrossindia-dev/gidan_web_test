@@ -13,7 +13,7 @@ const AddGiftCardMobile = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto min-h-screen bg-gray-100 p-4">
+    <div className="max-w-md mx-auto min-h-screen bg-site-bg p-4">
       {/* Header */}
       <div className="flex items-center p-4 bg-white shadow-md">
         <button onClick={() => window.history.back()} className="mr-3">
@@ -46,7 +46,7 @@ const AddGiftCardMobile = () => {
         {/* Apply Button */}
         <button
           onClick={handleApply}
-          className="w-full mt-4 bg-green-600 text-white py-2 rounded-md text-lg font-semibold"
+          className="w-full mt-4 bg-[#375421] text-white py-2 rounded-md text-lg font-semibold"
         >
           Apply
         </button>

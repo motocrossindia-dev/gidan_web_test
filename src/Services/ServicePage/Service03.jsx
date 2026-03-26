@@ -39,7 +39,7 @@ const Service03 = () => {
       <div className="flex justify-between items-center mb-8">
         <p className="text-gray-500 uppercase tracking-wider">03 / SERVICES</p>
         <button
-          className="text-green-800 hover:text-green-900 flex items-center bg-transparent border-none cursor-pointer"
+          className="text-[#051d18] hover:text-green-900 flex items-center bg-transparent border-none cursor-pointer"
         >
           See More Services <ChevronRight className="h-4 w-4 ml-1" />
         </button>

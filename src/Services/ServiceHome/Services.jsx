@@ -25,7 +25,7 @@ const ServiceCard = ({ image, title, heading }) => {
       className="w-full max-w-[500px] mx-auto h-auto rounded-lg overflow-hidden font-sans flex flex-col items-center cursor-pointer"
       onClick={handleClick} // Redirect on click
     >
-      <div className="w-full h-[250px] flex items-center justify-center bg-gray-100 rounded-lg">
+      <div className="w-full h-[250px] flex items-center justify-center bg-site-bg rounded-lg">
         <img name=" "   
           className="w-full h-full object-cover rounded-lg"
           src={image}
@@ -77,7 +77,7 @@ useEffect(() => {
   if (!services.length) return null;
 
   return (
-    <div className="w-full bg-gray-100">
+    <div className="w-full bg-site-bg">
       <section className="bg-white-100 py-6 m-10 font-sans sm:mt-[-2rem] md:mt-[-2rem] lg:mt-[-2rem]">
         <div className="mx-auto px-0">
           <h2 className="md:text-2xl text-xl font-bold text-gray-800 mb-6 text-center">

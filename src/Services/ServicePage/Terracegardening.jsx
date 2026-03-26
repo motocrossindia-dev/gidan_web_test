@@ -149,7 +149,7 @@ const TerraceGardening = () => {
         </section>
 
         {/* Features Section */}
-        <section className="bg-gray-50 py-16">
+        <section className="bg-site-bg py-16">
           <div className="max-w-7xl mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="bg-white p-6 rounded-lg shadow-sm">
@@ -215,7 +215,7 @@ const TerraceGardening = () => {
             <div className="mt-12 flex justify-center">
               <button
                 onClick={handleConnectClick}
-                className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-green-700 transition"
+                className="bg-[#375421] text-white px-6 py-3 rounded-lg shadow-md hover:bg-[#375421] hover:text-white transition"
               >
                 Let’s Connect
               </button>

@@ -53,7 +53,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="bg-site-bg min-h-screen">
       <div className="flex px-4 md:px-8 md:py-6">
         <div className="hidden md:block md:w-[290px] flex-shrink-0">
           <SideBar />

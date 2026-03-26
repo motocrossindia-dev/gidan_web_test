@@ -72,6 +72,7 @@ const PopupShopTheLook = ({ onClose }) => {
             `${combo_add_info.added_count} products added to cart!`,
             { variant: "success" }
           );
+          window.dispatchEvent(new Event("cartUpdated"));
         } else if (combo_add_info.already_in_cart_count > 0) {
           enqueueSnackbar(
             "All products are already in your cart!",
@@ -193,7 +194,7 @@ const PopupShopTheLook = ({ onClose }) => {
                     {product?.size}
                   </p>
                   <div className="flex items-center">
-                    <span className="text-green-600 font-bold text-sm md:text-lg mr-2">
+                    <span className="text-[#375421] font-bold text-sm md:text-lg mr-2">
                       {product?.selling_price}
                     </span>
                     <span className="text-gray-400 line-through text-xs md:text-sm">
@@ -209,7 +210,7 @@ const PopupShopTheLook = ({ onClose }) => {
         </Box>
         <div className="sticky bottom-0 z-10 bg-white p-4 flex justify-center gap-2">
           <button
-            className="w-1/2 py-2 bg-bio-green text-white font-bold text-center rounded-lg hover:bg-green-800"
+            className="w-1/2 py-2 bg-bio-green text-white font-bold text-center rounded-lg hover:bg-[#2d451b] hover:text-white"
             onClick={handleAddToCart}
           >
             Add to Cart

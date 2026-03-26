@@ -73,7 +73,7 @@
 // 
 //   // Loading fallback component
 //   const LoadingFallback = () => (
-//     <div className="w-full h-32 bg-gray-100 animate-pulse rounded" />
+//     <div className="w-full h-32 bg-site-bg animate-pulse rounded" />
 //   );
 // 
 //   return (
@@ -176,10 +176,8 @@ import HeroSection from '../../components/HeroSection/HeroSection';
 import Banner from '../../components/Banner/Banner';
 
 // Below-the-fold components - lazy load
-const TrendingSection = lazy(() => import(/* webpackChunkName: "trending" */ '../../components/TrendingProducts/TrendingSection'));
 const RewardClub = lazy(() => import(/* webpackChunkName: "reward-club" */ '../../components/RewardClub/RewardClub'));
 const ShopTheLook = lazy(() => import(/* webpackChunkName: "shop-look" */ '../../components/ShopTheLook/ShopTheLook'));
-const SeasonalProduct = lazy(() => import(/* webpackChunkName: "seasonal" */ '../../components/SeasonalCollection/SeasonalProduct'));
 const Services = lazy(() => import(/* webpackChunkName: "services" */ '../../Services/ServiceHome/Services'));
 const OfferReward = lazy(() => import(/* webpackChunkName: "offer-reward" */ '../../components/OfferReward/OfferReward'));
 const ComboOffer = lazy(() => import(/* webpackChunkName: "combo-offer" */ '../../components/ComboOffer/ComboOffer'));
@@ -189,11 +187,7 @@ const CheckOutStore = lazy(() => import(/* webpackChunkName: "store" */ '../../c
 
 const Home = ({
   initialBanners,
-  initialCategories,
-  initialTrendingProducts,
-  initialFeaturedProducts,
-  initialBestsellerProducts,
-  initialSeasonalProducts
+  initialCategories
 }) => {
   // Extract images from banners
   const banners = initialBanners || [];
@@ -202,7 +196,7 @@ const Home = ({
 
   // Loading fallback component
   const LoadingFallback = () => (
-    <div className="w-full h-32 bg-gray-100 animate-pulse rounded" />
+    <div className="w-full h-32 bg-site-bg animate-pulse rounded" />
   );
 
   return (
@@ -214,17 +208,6 @@ const Home = ({
       <HeroSection hero={heroImages} />
       <Banner home={homeImages} />
 
-      {/* Trending Section - lazy loaded below the fold */}
-      <LazyLoadWrapper height="400px">
-        <Suspense fallback={<LoadingFallback />}>
-          <TrendingSection
-            initialTrending={initialTrendingProducts}
-            initialFeatured={initialFeaturedProducts}
-            initialBestseller={initialBestsellerProducts}
-          />
-        </Suspense>
-      </LazyLoadWrapper>
-
       {/* Below-the-fold content - lazy load with intersection observer */}
       <LazyLoadWrapper height="300px">
         <Suspense fallback={<LoadingFallback />}>
@@ -235,13 +218,6 @@ const Home = ({
       <LazyLoadWrapper height="400px">
         <Suspense fallback={<LoadingFallback />}>
           <ShopTheLook />
-        </Suspense>
-      </LazyLoadWrapper>
-
-      {/* Seasonal Section - lazy loaded */}
-      <LazyLoadWrapper height="400px">
-        <Suspense fallback={<LoadingFallback />}>
-          <SeasonalProduct initialData={initialSeasonalProducts} />
         </Suspense>
       </LazyLoadWrapper>
 

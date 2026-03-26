@@ -19,7 +19,7 @@ const PrivacyPolicy = () => {
       <div className="max-w-4xl mx-auto p-6 bg-white text-gray-800 font-sans">
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-green-700 mb-4 flex items-center justify-center gap-3">
+          <h1 className="text-3xl font-bold text-[#375421] mb-4 flex items-center justify-center gap-3">
             <Shield className="w-8 h-8" />
             Privacy Policy
           </h1>
@@ -38,13 +38,13 @@ const PrivacyPolicy = () => {
 
           {/* Data Collection */}
           <section>
-            <h2 className="text-2xl font-semibold text-green-600 mb-4 flex items-center gap-2">
+            <h2 className="text-2xl font-semibold text-[#375421] mb-4 flex items-center gap-2">
               <Database className="w-6 h-6" />
               Data Collection
             </h2>
             <div className="space-y-4 text-gray-700">
               <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                <p className="font-semibold text-green-800 mb-2">Secure Payment Processing</p>
+                <p className="font-semibold text-[#051d18] mb-2">Secure Payment Processing</p>
                 <p>We do not store your credit card information or other sensitive data on our servers. Gidan uses the services of the most secure payment gateway to provide safe and secure payment procedures. Your credit card information is never transmitted via our website since the payment gateway is responsible for collecting, storing and encrypting your data.</p>
               </div>
               <p>All the information that is collected is used for products and services provision, billing, identification and authentication, services improvement, contact and research.</p>
@@ -54,13 +54,13 @@ const PrivacyPolicy = () => {
 
           {/* Cookies & Tracking */}
           <section>
-            <h2 className="text-2xl font-semibold text-green-600 mb-4 flex items-center gap-2">
+            <h2 className="text-2xl font-semibold text-[#375421] mb-4 flex items-center gap-2">
               <Eye className="w-6 h-6" />
               Cookies & Tracking Information
             </h2>
             <div className="space-y-4 text-gray-700">
               <p>When your browser visits our website, a cookie is created on your computer. A cookie is a small amount of data, which often includes an anonymous unique identifier that is sent to your browser from a web site's computers and stored on your computer's hard drive. The cookies are required in order to become a member of our service since they facilitate the access to our website and improve the user experience.</p>
-              <div className="bg-gray-50 p-4 rounded-lg">
+              <div className="bg-site-bg p-4 rounded-lg">
                 <p className="font-medium mb-2">We use cookies to:</p>
                 <ul className="space-y-1 ml-4">
                   <li>• Record current session information</li>
@@ -75,7 +75,7 @@ const PrivacyPolicy = () => {
 
           {/* Data Protection */}
           <section>
-            <h2 className="text-2xl font-semibold text-green-600 mb-4 flex items-center gap-2">
+            <h2 className="text-2xl font-semibold text-[#375421] mb-4 flex items-center gap-2">
               <Lock className="w-6 h-6" />
               Data Protection and Security
             </h2>
@@ -90,7 +90,7 @@ const PrivacyPolicy = () => {
 
           {/* Information Sharing */}
           <section>
-            <h2 className="text-2xl font-semibold text-green-600 mb-4 flex items-center gap-2">
+            <h2 className="text-2xl font-semibold text-[#375421] mb-4 flex items-center gap-2">
               <Users className="w-6 h-6" />
               Information Sharing and Disclosure
             </h2>
@@ -102,7 +102,7 @@ const PrivacyPolicy = () => {
               <p>Your account name (not your email address) is displayed to other users when you send comments or messages through our Blog/Forums and other users can contact you through messages and comments.</p>
               <p>Creation of account and order placements deems use of your email address without further consent for non-marketing or administrative purposes (such as notifying you of major website changes, updates on Terms and Conditions or Privacy Policy, alerting you to messages from other members or for customer service purposes).</p>
               <div className="bg-green-50 p-4 rounded-lg">
-                <p className="font-medium text-green-800 mb-2">Marketing Communications</p>
+                <p className="font-medium text-[#051d18] mb-2">Marketing Communications</p>
                 <p className="text-bio-green">We use your contact information to send you offers based on your previous orders and your interests.</p>
               </div>
             </div>
@@ -128,13 +128,13 @@ const PrivacyPolicy = () => {
 
           {/* Android Application Policy */}
           <section>
-            <h2 className="text-2xl font-semibold text-green-600 mb-4 flex items-center gap-2">
+            <h2 className="text-2xl font-semibold text-[#375421] mb-4 flex items-center gap-2">
               <Smartphone className="w-6 h-6" />
               Android Application Privacy Policy
             </h2>
             <div className="space-y-4 text-gray-700">
               <p>Gidan built the Gidan app as a Commercial app. This SERVICE is provided by Gidan and is intended for use as is.</p>
-              <div className="bg-gray-50 p-4 rounded-lg">
+              <div className="bg-site-bg p-4 rounded-lg">
                 <p className="font-medium mb-2">Information We May Collect:</p>
                 <ul className="space-y-1 ml-4">
                   <li>• User Identification</li>
@@ -143,7 +143,7 @@ const PrivacyPolicy = () => {
                 </ul>
               </div>
               <div className="bg-green-50 p-4 rounded-lg">
-                <p className="font-medium text-green-800 mb-2">Third Party Services Used:</p>
+                <p className="font-medium text-[#051d18] mb-2">Third Party Services Used:</p>
                 <ul className="space-y-1 ml-4 text-bio-green">
                   <li>• Google Play Services</li>
                   <li>• Firebase Analytics</li>
@@ -165,7 +165,7 @@ const PrivacyPolicy = () => {
 
           {/* Policy Updates */}
           <section>
-            <h2 className="text-2xl font-semibold text-green-600 mb-4">Changes and Updates to This Privacy Notice</h2>
+            <h2 className="text-2xl font-semibold text-[#375421] mb-4">Changes and Updates to This Privacy Notice</h2>
             <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
               <p className="text-yellow-800">This Privacy Notice may be revised periodically. Please revisit this page to stay aware of any changes. Your continued use of the Gidan websites constitutes your agreement to this Privacy Notice and any future revisions.</p>
             </div>
@@ -173,7 +173,7 @@ const PrivacyPolicy = () => {
 
           {/* Contact Information */}
           <section className="bg-green-50 rounded-lg p-6 border-l-4 border-green-400">
-            <h2 className="text-2xl font-semibold text-green-600 mb-4 flex items-center gap-2">
+            <h2 className="text-2xl font-semibold text-[#375421] mb-4 flex items-center gap-2">
               <Mail className="w-6 h-6" />
               Contact Us
             </h2>
@@ -183,7 +183,7 @@ const PrivacyPolicy = () => {
                 <div className="space-y-1 text-gray-700">
                   <p><strong>Name:</strong> Sujith Nadig</p>
                   <p className="flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-green-600" />
+                    <Mail className="w-4 h-4 text-[#375421]" />
                     <strong>Email:</strong> info@gidan.store
                   </p>
                 </div>
@@ -197,8 +197,8 @@ const PrivacyPolicy = () => {
             <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">Security Commitment</h2>
             <div className="grid md:grid-cols-3 gap-4">
               <div className="bg-white p-4 rounded-md shadow-sm text-center">
-                <Lock className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                <h3 className="font-semibold text-green-700 mb-1">Secure Payments</h3>
+                <Lock className="w-8 h-8 text-[#375421] mx-auto mb-2" />
+                <h3 className="font-semibold text-[#375421] mb-1">Secure Payments</h3>
                 <p className="text-sm text-gray-600">No credit card data stored on our servers</p>
               </div>
               <div className="bg-white p-4 rounded-md shadow-sm text-center">

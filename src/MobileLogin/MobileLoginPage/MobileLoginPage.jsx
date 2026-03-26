@@ -66,9 +66,12 @@ const MobileLoginPage = () => {
       if (response.data) {
         storeToken(response.data.data.token, response.data.data.token);
         const user = response.data.data.user;
+        localStorage.setItem("userData", JSON.stringify(user));
+        
+        // Ensure Redux has the token BEFORE dispatching events
         dispatch(setVerifiedUser(response.data));
         dispatch(setUsername(user.name || user.first_name));
-        localStorage.setItem("userData", JSON.stringify(user));
+
         enqueueSnackbar("Logged in successfully!", { variant: "success" });
 
         // If there's a pending cart/wishlist item (added before login), add it now
@@ -79,6 +82,7 @@ const MobileLoginPage = () => {
           try {
             await axiosInstance.post("/order/cart/", pendingCartPayload);
             enqueueSnackbar("Item added to cart!", { variant: "success" });
+            window.dispatchEvent(new Event("cartUpdated"));
           } catch (_) {
             // silently ignore cart error
           } finally {
@@ -89,6 +93,7 @@ const MobileLoginPage = () => {
           try {
             await axiosInstance.post("/order/wishlist/", pendingWishlistPayload);
             enqueueSnackbar("Item added to wishlist!", { variant: "success" });
+            window.dispatchEvent(new Event("wishlistUpdated"));
           } catch (_) {
             // silently ignore wishlist error
           } finally {
@@ -96,6 +101,8 @@ const MobileLoginPage = () => {
           }
           router.push("/wishlist");
         } else {
+          window.dispatchEvent(new Event("cartUpdated"));
+          window.dispatchEvent(new Event("wishlistUpdated"));
           router.push("/"); // Redirect to homepage after login
         }
       }
@@ -113,7 +120,7 @@ const MobileLoginPage = () => {
   return (
       <>
         
-    <div className="flex items-center justify-center bg-gray-50">
+    <div className="flex items-center justify-center bg-site-bg">
       <div className="w-full rounded-lg p-6">
         <div className="flex justify-center mb-4">
           <img name=" "    src={logo} alt="logo"  className="mx-auto w-[110px] h-[70px]" />
@@ -154,13 +161,13 @@ const MobileLoginPage = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-bio-green hover:bg-bio-green text-white py-2 rounded-lg font-medium"
+            className="w-full bg-bio-green hover:bg-bio-green hover:text-white text-white py-2 rounded-lg font-medium"
           >
             Login
           </button>
         </form>
 
-        <p className="text-center text-sm text-green-500 mt-5 cursor-pointer" onClick={() => router.push("/mobile-signin")}>
+        <p className="text-center text-sm text-[#375421] mt-5 cursor-pointer" onClick={() => router.push("/mobile-signin")}>
           Back to sign-in
         </p>
       </div>

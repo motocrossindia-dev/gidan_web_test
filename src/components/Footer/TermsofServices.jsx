@@ -11,7 +11,7 @@ const TermsOfService = () => {
     <>
       <div className="max-w-4xl mx-auto p-6 bg-white text-gray-800 font-sans">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-green-700 mb-4">Terms and Conditions</h1>
+          <h1 className="text-3xl font-bold text-[#375421] mb-4">Terms and Conditions</h1>
           <p className="text-gray-600 leading-relaxed">
             Please read the below points to understand the expressions under each circumstance before you have a wonderful shopping experience.
           </p>
@@ -20,9 +20,9 @@ const TermsOfService = () => {
         <div className="space-y-8">
           {/* Definitions Section */}
           <section>
-            <h2 className="text-2xl font-semibold text-green-600 mb-4">Definitions</h2>
+            <h2 className="text-2xl font-semibold text-[#375421] mb-4">Definitions</h2>
             <p className="text-gray-700 mb-3">While reading further, you may find several words which convey specific meaning:</p>
-            <div className="bg-gray-50 p-4 rounded-lg space-y-2">
+            <div className="bg-site-bg p-4 rounded-lg space-y-2">
               <p><strong>"Buyer"</strong> means the person who buys goods from the Seller</p>
               <p><strong>"Seller"</strong> means FARM AMMINO AGRITECH PRIVATE LIMITED who sell gardening products</p>
               <p><strong>"Goods"</strong> means the products offered by the seller for sale on the web site</p>
@@ -33,7 +33,7 @@ const TermsOfService = () => {
 
           {/* General Terms */}
           <section>
-            <h2 className="text-2xl font-semibold text-green-600 mb-4">General Terms</h2>
+            <h2 className="text-2xl font-semibold text-[#375421] mb-4">General Terms</h2>
             <div className="space-y-4 text-gray-700">
               <p>The use of this website, its services and tools are all governed by the below mentioned terms and conditions. If you make any transaction through this website, you shall undergo policies that are applicable to the website. If you transact with this website means you are contracting with Gidan and you shall follow the duties with this company.</p>
 
@@ -45,23 +45,23 @@ const TermsOfService = () => {
 
           {/* Limitations */}
           <section>
-            <h2 className="text-2xl font-semibold text-green-600 mb-4">Limitations</h2>
+            <h2 className="text-2xl font-semibold text-[#375421] mb-4">Limitations</h2>
             <p className="text-gray-700 mb-3">Our shipments are carefully inspected before the items leave our warehouse, but if you are not satisfied with your purchase, please follow the instructions below:</p>
             <ul className="space-y-3 text-gray-700">
               <li className="flex items-start">
-                <span className="text-green-600 mr-2">•</span>
+                <span className="text-[#375421] mr-2">•</span>
                 <span>The seller (Gidan) will not be responsible for any damage, direct loss suffered by the buyer due to any negligence, breach of contract or excessive pricing of the goods.</span>
               </li>
               <li className="flex items-start">
-                <span className="text-green-600 mr-2">•</span>
+                <span className="text-[#375421] mr-2">•</span>
                 <span>The seller is not responsible for any economic loss, loss of profit or any indirect third party loss suffered by the buyer caused due to any reason such as negligence, failure to meet any estimated delivery date, misrepresentation or breach of contract.</span>
               </li>
               <li className="flex items-start">
-                <span className="text-green-600 mr-2">•</span>
+                <span className="text-[#375421] mr-2">•</span>
                 <span>All offers for goods purchased by buyers shall be treated as offers listed under the clauses given in Terms & Conditions (T&C). The seller may choose not to accept or cancel a particular order without giving any particular reason.</span>
               </li>
               <li className="flex items-start">
-                <span className="text-green-600 mr-2">•</span>
+                <span className="text-[#375421] mr-2">•</span>
                 <span>Placing an order on Gidan will be treated as an evidence for acceptance of T&C on Gidan</span>
               </li>
             </ul>
@@ -69,7 +69,7 @@ const TermsOfService = () => {
 
           {/* Price, Payment and Delivery */}
           <section>
-            <h2 className="text-2xl font-semibold text-green-600 mb-4">Price, Payment and Delivery</h2>
+            <h2 className="text-2xl font-semibold text-[#375421] mb-4">Price, Payment and Delivery</h2>
             <div className="space-y-3 text-gray-700">
               <p>Pricing of the goods shall be specified similar as given in seller's current list price on the website inclusive of all application taxes and will be delivered to the address registered by the user on the website within 24 hours from the time of the orders that are successfully placed (subject to availability).</p>
               <p>Full payment of cash on delivery option shall be applicable for home delivery orders only</p>
@@ -80,7 +80,7 @@ const TermsOfService = () => {
 
           {/* Membership Eligibility */}
           <section>
-            <h2 className="text-2xl font-semibold text-green-600 mb-4">Membership Eligibility</h2>
+            <h2 className="text-2xl font-semibold text-[#375421] mb-4">Membership Eligibility</h2>
             <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
               <div className="space-y-3 text-gray-700">
                 <p>Gidan website is available only to those users who can form legally binding contracts under the Indian Contract Act, 1872. Those who cannot follow the norms or are incompetent to the contract (including minors, undischarged bankrupts, etc.) are not eligible to use this website</p>
@@ -92,7 +92,7 @@ const TermsOfService = () => {
 
           {/* Account and Registration Obligations */}
           <section>
-            <h2 className="text-2xl font-semibold text-green-600 mb-4">Your Account and Registration Obligations</h2>
+            <h2 className="text-2xl font-semibold text-[#375421] mb-4">Your Account and Registration Obligations</h2>
             <div className="space-y-3 text-gray-700">
               <p>If you are using this website, you are responsible for the maintenance of confidentiality of your User ID and Password and only you shall be responsible for all the activities on the website.</p>
               <p>With the use of this website, you agree to this that providing any information that is inaccurate, untrue, incomplete, not as per the terms of use then in that case we reserve the right to suspend or terminate or block access of your membership on the website.</p>
@@ -102,7 +102,7 @@ const TermsOfService = () => {
 
           {/* Governing Law */}
           <section>
-            <h2 className="text-2xl font-semibold text-green-600 mb-4">Governing Law and Jurisdiction</h2>
+            <h2 className="text-2xl font-semibold text-[#375421] mb-4">Governing Law and Jurisdiction</h2>
             <p className="text-gray-700">These terms and conditions shall only be governed by the law of India and any legal disputes/discrepancies will be heard or preceded in the jurisdiction of the Indian courts at Pune/Mumbai only</p>
           </section>
 
@@ -121,7 +121,7 @@ const TermsOfService = () => {
 
           {/* Contact Information */}
           <section className="bg-green-50 p-6 rounded-lg">
-            <h2 className="text-2xl font-semibold text-green-600 mb-4">Contact Information</h2>
+            <h2 className="text-2xl font-semibold text-[#375421] mb-4">Contact Information</h2>
             <div className="space-y-2 text-gray-700">
               <p><strong>Company:</strong> FARM AMMINO AGRITECH PRIVATE LIMITED</p>
               <p><strong>Email:</strong> info@gidan.store</p>

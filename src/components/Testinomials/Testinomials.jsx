@@ -71,14 +71,14 @@ const Testimonial = () => {
                 <div
                   key={index}
                   className={`w-8 h-2 rounded ${
-                    index === currentTestimonial ? "bg-green-500" : "bg-gray-300"
+                    index === currentTestimonial ? "bg-[#375421]" : "bg-gray-300"
                   }`}
                 ></div>
               ))}
             </div>
 
             <div className="flex justify-end">
-              <FaQuoteRight className="text-green-600 text-4xl font-semibold" />
+              <FaQuoteRight className="text-[#375421] text-4xl font-semibold" />
             </div>
           </div>
 
@@ -87,7 +87,7 @@ const Testimonial = () => {
             <div className="flex items-center">
               {[...Array(testimonials[currentTestimonial].rating)].map(
                 (_, index) => (
-                  <FaStar key={index} className="text-green-500" />
+                  <FaStar key={index} className="text-[#375421]" />
                 )
               )}
             </div>
@@ -100,7 +100,7 @@ const Testimonial = () => {
       </div>
 
       {/* Mobile View */}
-      <div className="md:hidden bg-gray-50 p-4">
+      <div className="md:hidden bg-site-bg p-4">
         <div className="flex items-start gap-3 mb-4">
           <img name=" "   
             src={testimonials[currentTestimonial].image}

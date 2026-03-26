@@ -91,6 +91,8 @@ const Verification = ({ onClose, onSubmit }) => {
           dispatch(setVerifiedUser(response.data));
           dispatch(setUsername(user.name || user.first_name));
           localStorage.setItem("userData", JSON.stringify(user));
+          window.dispatchEvent(new Event("cartUpdated"));
+          window.dispatchEvent(new Event("wishlistUpdated"));
           onClose();
 
           const pendingCartPayload = getPendingCartItem();
@@ -100,6 +102,7 @@ const Verification = ({ onClose, onSubmit }) => {
             try {
               await axiosInstance.post("/order/cart/", pendingCartPayload);
               enqueueSnackbar("Item added to cart!", { variant: "success" });
+              window.dispatchEvent(new Event("cartUpdated"));
             } catch (_) {
               // silently ignore cart error
             } finally {
@@ -110,6 +113,7 @@ const Verification = ({ onClose, onSubmit }) => {
             try {
               await axiosInstance.post("/order/wishlist/", pendingWishlistPayload);
               enqueueSnackbar("Item added to wishlist!", { variant: "success" });
+              window.dispatchEvent(new Event("wishlistUpdated"));
             } catch (_) {
               // silently ignore wishlist error
             } finally {
@@ -234,14 +238,14 @@ const Verification = ({ onClose, onSubmit }) => {
               <button
                 type="button"
                 onClick={handleResendOTP}
-                className="text-green-500 text-sm font-medium"
+                className="text-[#375421] text-sm font-medium"
               >
                 Resend
               </button>
             </div>
             <button
               type="submit"
-              className={`w-full bg-green-600 text-white py-2 rounded-md ${loading ? "opacity-50 cursor-not-allowed" : "hover:bg-green-700"
+              className={`w-full bg-[#375421] text-white py-2 rounded-md ${loading ? "opacity-50 cursor-not-allowed" : "hover:bg-[#375421] hover:text-white"
                 }`}
               disabled={loading}
             >

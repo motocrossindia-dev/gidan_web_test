@@ -34,6 +34,7 @@ import ClickAwayListener from "@mui/material/ClickAwayListener";
 import CartIconWithCount from "../Cart/cartcount";
 import WishlistIconWithCount from "../../views/utilities/WishList/wishlistcount";
 import { trackSearch } from "../../utils/ga4Ecommerce";
+import { useCategories } from "../../hooks/useCategories";
 
 const NavigationModalParams = ({ setIsSignInOpen, setIsVerificationOpen, setIsLoginOpen }) => {
   const searchParams = useSearchParams();
@@ -57,6 +58,10 @@ const NavBar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isWalletPopupOpen, setIsWalletPopupOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const { data: categoryData = [], isLoading } = useCategories();
+
+  const publishedCategories = categoryData.filter((category) => category?.is_published === true);
 
   const username = useSelector((state) => state.user.username || "Guest");
   const [isMounted, setIsMounted] = useState(false);
@@ -159,146 +164,147 @@ const NavBar = () => {
   const displayUsername = isMounted ? username : "Guest";
 
   return (
-    <div className="relative z-0">
-      <nav className="w-full px-4 py-3 bg-white shadow-sm font-sans">
-        <div className="max-w-full mx-auto flex items-center justify-between sm:justify-between px-4 md:px-8">
-
-          {/* MOBILE */}
-          <div className="sm:hidden flex justify-left items-center space-x-4">
-            <WithoutLoginHamburger />
-            <Link href="/" onClick={() => window.scrollTo({ top: -10 })}>
+    <div className="relative z-50">
+      <nav className="w-full px-4 py-3 bg-white font-sans border-b border-gray-100 sticky top-0 left-0 right-0">
+        <div className="max-w-[1920px] mx-auto">
+          {/* MOBILE (Below 800px): LOGO, SEARCH, HAMBURGER in one row */}
+          <div className="flex md:hidden items-center justify-between w-full h-[60px] gap-3 px-3">
+            <Link href="/" onClick={() => window.scrollTo({ top: -10 })} className="flex-shrink-0">
               <Image
                 src={logo}
                 alt="Gidan Logo"
-                width={180}
-                height={128}
-                className="h-24 w-auto"
+                width={80}
+                height={50}
+                className="h-8 w-auto object-contain"
                 priority
               />
             </Link>
-          </div>
-
-          {/* DESKTOP */}
-          <div className="hidden sm:flex items-center">
-            <Link href="/" onClick={() => window.scrollTo({ top: -10 })}>
-              <Image
-                src={logo}
-                alt="Gidan Logo"
-                width={260}
-                height={185}
-                className="h-36 w-auto object-contain"
-                priority
-              />
-
-            </Link>
-          </div>
-
-          {/* Search bar (Desktop) */}
-          <div className="flex-1 max-w-full mx-4 hidden sm:block">
-            <div className="relative w-full">
-              <IoSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <div className="relative flex-grow max-w-[60%]">
+              <IoSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={handleSearch}
-                placeholder="Search Products, Brands and More"
-                className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:border-green-500"
+                placeholder="Search"
+                className="w-full pl-9 pr-3 py-1.5 bg-gray-50 border border-gray-200 rounded-full focus:outline-none text-sm"
+              />
+            </div>
+            <div className="flex-shrink-0 flex items-center justify-center min-w-[40px]">
+              <WithoutLoginHamburger />
+            </div>
+          </div>
+
+          {/* TABLET (800px - 1200px): Logo, Categories & Icons top row, Search bottom row */}
+          <div className="hidden md:flex xl:hidden flex-col gap-4 px-4">
+            <div className="flex items-center justify-between gap-4">
+              <Link href="/" onClick={() => window.scrollTo({ top: -10 })} className="flex-shrink-0">
+                <Image
+                  src={logo}
+                  alt="Gidan Logo"
+                  width={110}
+                  height={70}
+                  className="h-9 w-auto object-contain"
+                  priority
+                />
+              </Link>
+
+              {/* Categories in the same line as logo and icons */}
+              <div className="flex items-center justify-center flex-grow whitespace-nowrap overflow-x-auto no-scrollbar scroll-smooth">
+                {publishedCategories.map((category, idx) => (
+                  <Link
+                    key={idx}
+                    href={
+                      category.name === "GIFTS" ? "/gifts/" :
+                        category.name === "SERVICES" ? "/services/" :
+                          category.name === "OFFERS" ? "/offer/" :
+                            `/${category.slug}/`
+                    }
+                    className="text-[#334155] hover:text-[#375421] font-medium text-[14px] lg:text-[15px] px-2 transition-colors"
+                  >
+                    {category.name.charAt(0).toUpperCase() + category.name.slice(1).toLowerCase()}
+                  </Link>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-4 flex-shrink-0">
+                <button onClick={handleWishListClick} className="text-gray-700">
+                  <WishlistIconWithCount className="scale-100 lg:scale-110" />
+                </button>
+                <button onClick={handleCartClick} className="text-gray-700">
+                  <CartIconWithCount className="scale-100 lg:scale-110" />
+                </button>
+                <button onClick={handleWalletClick} className="text-gray-700">
+                  <IoWalletOutline className="text-xl lg:text-2xl" />
+                </button>
+                <button onClick={toggleDropdown} className="text-gray-700">
+                  <FaRegUser className="text-xl lg:text-2xl" />
+                </button>
+              </div>
+            </div>
+
+            {/* Row 2: Search Bar at the very bottom of the Tablet nav */}
+            <div className="relative w-full max-w-[600px] mx-auto pb-1">
+              <IoSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={handleSearch}
+                placeholder="Search plants, seeds, planters..."
+                className="w-full pl-11 pr-5 py-2.5 bg-white border border-gray-300 rounded-full focus:outline-none text-base"
               />
             </div>
           </div>
 
-          {/* Icons */}
-          <div className="flex items-center md:space-x-6 space-x-4">
+          {/* DESKTOP (Above 1200px): Everything in one line */}
+          <div className="hidden xl:flex items-center justify-between gap-6 px-8">
+            <Link href="/" onClick={() => window.scrollTo({ top: -10 })} className="flex-shrink-0">
+              <Image
+                src={logo}
+                alt="Gidan Logo"
+                width={140}
+                height={100}
+                className="h-14 w-auto object-contain"
+                priority
+              />
+            </Link>
 
-            <button
-              onClick={handleWishListClick}
-              className="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-bio-green hover:text-white"
-              aria-label="View wishlist"
-            >
-              <WishlistIconWithCount />
-            </button>
+            <div className="relative flex-[3] max-w-[500px]">
+              <IoSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={handleSearch}
+                placeholder="Search plants, seeds, planters..."
+                className="w-full pl-11 pr-6 py-2.5 bg-white border border-slate-300 rounded-full focus:outline-none text-lg text-gray-600 font-light"
+              />
+            </div>
 
-            <button
-              onClick={handleCartClick}
-              className="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-bio-green hover:text-white"
-              aria-label="View shopping cart"
-            >
-              <CartIconWithCount />
-            </button>
+            <div className="flex items-center justify-center flex-[5] gap-4 whitespace-nowrap">
+              {publishedCategories.map((category, idx) => (
+                <Link
+                  key={idx}
+                  href={`/${category.slug}/`}
+                  className="text-[#334155] hover:text-[#375421] font-normal text-lg px-3 transition-colors"
+                >
+                  {category.name.charAt(0).toUpperCase() + category.name.slice(1).toLowerCase()}
+                </Link>
+              ))}
+            </div>
 
-            <button
-              onClick={handleWalletClick}
-              className="hidden sm:flex w-12 h-12 items-center justify-center rounded-lg hover:bg-bio-green hover:text-white"
-              aria-label="View wallet"
-            >
-              <IoWalletOutline className="text-xl" />
-            </button>
-
-            {/* User Dropdown */}
-            <ClickAwayListener onClickAway={() => setIsDropdownOpen(false)}>
-              <div className="relative hidden sm:flex gap-4">
-                {displayUsername === "Guest" ? (
-                  <button
-                    className="flex items-center space-x-2 text-gray-500"
-                    onClick={() => setIsSignInOpen(true)}
-                    aria-label="Sign in to your account"
-                  >
-                    <FaRegUser className="text-xl" />
-                    <span>Guest</span>
-                  </button>
-                ) : (
-                  <button
-                    className="flex items-center justify-between px-4 py-2 bg-bio-green text-white rounded-md w-40"
-                    onClick={toggleDropdown}
-                    aria-label="User account menu"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <FaRegUser className="text-xl" />
-                      <span>{displayUsername.slice(0, 5)}..</span>
-                    </div>
-                    <FaChevronDown />
-                  </button>
-                )}
-
-                {isDropdownOpen && (
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 bg-white rounded-lg shadow-lg w-40 z-50">
-                    <ul className="py-1">
-                      <li className="px-4 py-3 hover:bg-gray-50" onClick={() => setIsDropdownOpen(false)}>
-                        <Link href="/profile" className="flex items-center">
-                          <FaRegUser className="mr-3 text-gray-600" />
-                          My Profile
-                        </Link>
-                      </li>
-
-                      <li className="px-4 py-3 hover:bg-gray-50" onClick={() => setIsDropdownOpen(false)}>
-                        <Link href="/profile/trackorder" className="flex items-center">
-                          <TbCurrentLocation className="mr-3 text-gray-600" />
-                          Track Order
-                        </Link>
-                      </li>
-
-                      <li className="px-4 py-3 hover:bg-gray-50 cursor-pointer flex items-center gap-3" onClick={handleLogOutClick}>
-                        <IoIosLogOut className="text-gray-600 text-lg flex-shrink-0" />
-                        <span className="text-gray-700">Logout</span>
-                      </li>
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </ClickAwayListener>
-          </div>
-        </div>
-
-        {/* MOBILE Search */}
-        <div className="block sm:hidden mt-3">
-          <div className="relative">
-            <IoSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              onChange={handleSearch}
-              placeholder="Search for Products, Brands and More"
-              className="w-full pl-10 pr-4 py-2 border text-sm border-gray-300 rounded-lg"
-            />
+            <div className="flex items-center gap-6 border-l pl-8 border-gray-200 flex-shrink-0">
+              <button onClick={handleWishListClick} className="text-gray-700 hover:text-red-500 transition-colors">
+                <WishlistIconWithCount className="scale-125" />
+              </button>
+              <button onClick={handleCartClick} className="text-gray-700 hover:text-[#375421] transition-colors">
+                <CartIconWithCount className="scale-125" />
+              </button>
+              <button onClick={handleWalletClick} className="text-gray-700 hover:text-[#375421] transition-colors">
+                <IoWalletOutline className="text-2xl" />
+              </button>
+              <button onClick={toggleDropdown} className="text-gray-700 hover:text-[#375421] transition-colors">
+                <FaRegUser className="text-2xl" />
+              </button>
+            </div>
           </div>
         </div>
       </nav>
@@ -331,7 +337,7 @@ const NavBar = () => {
                   <div className="text-center mt-4">
                     <button
                       onClick={handleSignIn}
-                      className="border border-green-500 text-green-500 px-4 py-2 rounded-md"
+                      className="border border-[#375421] text-[#375421] px-4 py-2 rounded-md"
                       aria-label="Sign in to view wishlist"
                     >
                       Sign In
@@ -378,7 +384,7 @@ const NavBar = () => {
             <Image src={empty} alt="Empty Cart" width={320} height={240} className="mx-auto mb-4" />
             <h2 className="text-lg font-semibold mb-4">Your cart is currently empty</h2>
             <button
-              className="bg-green-500 text-white px-4 py-2 rounded-md"
+              className="bg-[#375421] text-white px-4 py-2 rounded-md"
               onClick={() => setIsCartOpen(false)}
               aria-label="Close empty cart message and add products"
             >
@@ -583,7 +589,7 @@ export default NavBar;
 //                 value={searchTerm}
 //                 onChange={handleSearch}
 //                 placeholder="Search Products, Brands and More"
-//                 className="w-[90%] pl-10 pr-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500"
+//                 className="w-[90%] pl-10 pr-4 py-2 bg-site-bg border border-gray-300 rounded-lg focus:outline-none focus:border-[#375421]"
 //               />
 //
 //             </div>
@@ -592,21 +598,21 @@ export default NavBar;
 //           {/* Icons */}
 //           <div className="flex items-center md:space-x-6 space-x-4 md:pr-10 pr-0 mr-25">
 // <button
-//   className="flex flex-col items-center justify-center w-12 h-12 text-gray-600 hover:text-white hover:bg-bio-green rounded-lg transition-all duration-200 mr-4"
+//   className="flex flex-col items-center justify-center w-12 h-12 text-gray-600 hover:text-white hover:bg-bio-green hover:text-white rounded-lg transition-all duration-200 mr-4"
 //   onClick={handleWishListClick}
 // >
 //   <WishlistIconWithCount/>
 // </button>
 //
 // <button
-//   className="flex flex-col items-center justify-center w-12 h-12 text-gray-600 hover:text-white hover:bg-bio-green rounded-lg transition-all duration-200 mr-4"
+//   className="flex flex-col items-center justify-center w-12 h-12 text-gray-600 hover:text-white hover:bg-bio-green hover:text-white rounded-lg transition-all duration-200 mr-4"
 //   onClick={handleCartClick}
 // >
 //   <CartIconWithCount />
 // </button>
 //
 // <button
-//   className="hidden sm:flex flex-col items-center justify-center w-12 h-12 text-gray-600 hover:text-white hover:bg-bio-green rounded-lg transition-all duration-200 mr-4"
+//   className="hidden sm:flex flex-col items-center justify-center w-12 h-12 text-gray-600 hover:text-white hover:bg-bio-green hover:text-white rounded-lg transition-all duration-200 mr-4"
 //   onClick={handleWalletClick}
 // >
 //   <IoWalletOutline className="text-xl" />
@@ -624,7 +630,7 @@ export default NavBar;
 //                 </button>
 //               ) : (
 //                 <button
-//                   className="flex items-center justify-between px-4 py-2 bg-bio-green text-white rounded-md hover:bg-bio-green-100 w-40"
+//                   className="flex items-center justify-between px-4 py-2 bg-bio-green text-white rounded-md hover:bg-bio-green hover:text-white-100 w-40"
 //                   onClick={toggleDropdown}
 //                 >
 //                   <div className="flex items-center space-x-2">
@@ -638,7 +644,7 @@ export default NavBar;
 //               {isDropdownOpen && (
 //                 <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-0 bg-white rounded-lg shadow-lg w-40 z-50 border border-gray-100">
 //                   <ul className="py-1">
-//                     <li className="flex items-center px-4 py-3 hover:bg-gray-50 cursor-pointer">
+//                     <li className="flex items-center px-4 py-3 hover:bg-site-bg cursor-pointer">
 //                       <Link to="/profile" className="flex items-center w-full">
 //                         <FaRegUser className="mr-3 text-gray-600 text-lg" />
 //                         <span className="text-gray-700">My Profile</span>
@@ -646,7 +652,7 @@ export default NavBar;
 //                     </li>
 //
 //
-//                     <li className="flex items-center px-4 py-3 hover:bg-gray-50 cursor-pointer ">
+//                     <li className="flex items-center px-4 py-3 hover:bg-site-bg cursor-pointer ">
 //                       <Link
 //                         to="/profile/trackorder"
 //                         className="flex items-center w-full"
@@ -656,7 +662,7 @@ export default NavBar;
 //                       </Link>
 //                     </li>
 //                     <li
-//                       className="flex items-center px-4 py-3 hover:bg-gray-50 cursor-pointer"
+//                       className="flex items-center px-4 py-3 hover:bg-site-bg cursor-pointer"
 //                       onClick={handleLogOutClick}
 //                     >
 //                       <IoIosLogOut className="mr-3 text-gray-600 text-lg" />
@@ -677,7 +683,7 @@ export default NavBar;
 //               type="text"
 //               onChange={handleSearch}
 //               placeholder="Search for Products, Brands and More"
-//               className="w-full pl-10 pr-4 py-2 border text-sm border-gray-300 rounded-lg focus:outline-none focus:border-green-500"
+//               className="w-full pl-10 pr-4 py-2 border text-sm border-gray-300 rounded-lg focus:outline-none focus:border-[#375421]"
 //             />
 //           </div>
 //         </div>
@@ -726,7 +732,7 @@ export default NavBar;
 //                   <div className="text-center mt-4">
 //                     <button
 //                       onClick={handleSignIn}
-//                       className="bg-white text-green-500 border border-green-500 px-4 py-2 rounded-md hover:bg-green-100"
+//                       className="bg-white text-[#375421] border border-[#375421] px-4 py-2 rounded-md hover:bg-green-100"
 //                     >
 //                       Sign In
 //                     </button>
@@ -781,7 +787,7 @@ export default NavBar;
 //         Your cart is currently empty
 //       </h2>
 //       <button
-//         className="bg-green-500 text-white px-4 py-2 rounded-md"
+//         className="bg-[#375421] text-white px-4 py-2 rounded-md"
 //         onClick={() => setIsCartOpen(false)}
 //       >
 //         Add Products

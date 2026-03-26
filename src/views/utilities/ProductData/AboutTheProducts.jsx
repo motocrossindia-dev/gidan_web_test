@@ -81,7 +81,7 @@ const AboutProduct = ({ productDetailData }) => {
 
   const getTabStyle = (tabName) => {
     return `relative w-full text-left p-4 border-b border-gray-200 transition-colors
-      ${activeTab === tabName ? "text-lime-600 font-medium bg-gray-100" : "text-gray-600 hover:bg-gray-50"}`;
+      ${activeTab === tabName ? "text-lime-600 font-medium bg-site-bg" : "text-gray-600 hover:bg-site-bg"}`;
   };
 
   const getGreenLine = (tabName) => {

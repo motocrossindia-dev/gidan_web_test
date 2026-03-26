@@ -15,7 +15,7 @@ import { IoLogOutOutline } from "react-icons/io5";
 
 function T1() {
   return (
-    <div className='bg-gray-100 '>
+    <div className='bg-site-bg '>
       <div className="w-[270px] h-[743px] font-sans">
         {/* Header Section */}
         <div className="h-[74px] px-4 bg-white flex items-center space-x-2 border-b">
@@ -70,7 +70,7 @@ const MenuItem = ({ icon, text, badge, to }) => (
       {icon && <span className="text-xl">{icon}</span>} {/* Removed the previous color styling here */}
       <span className="text-md font-semibold">{text}</span>
     </Link>
-    {badge && <div className="text-green-500 text-sm">{badge}</div>}
+    {badge && <div className="text-[#375421] text-sm">{badge}</div>}
   </div>
 );
 

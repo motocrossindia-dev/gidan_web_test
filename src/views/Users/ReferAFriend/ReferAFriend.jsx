@@ -58,7 +58,7 @@ function ReferAFriend() {
         ← Back to Profile
       </Link>
 
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4 sm:px-6 mt-2 lg:px-8">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-site-bg px-4 sm:px-6 mt-2 lg:px-8">
         {/* Main Card */}
         <div className="bg-white rounded-lg shadow-md p-6 sm:p-8 w-full max-w-5xl">
 
@@ -67,9 +67,9 @@ function ReferAFriend() {
             <h2 className="text-2xl font-semibold text-gray-700 text-center sm:text-left">
               Refer a Friend
             </h2>
-            <div className="text-sm text-center sm:text-right border border-green-500 px-3 py-2 rounded-md">
-              <span className="text-green-600">Total Referrals: </span>
-              <span className="text-green-600 font-semibold">{data?.total_referrals}</span>
+            <div className="text-sm text-center sm:text-right border border-[#375421] px-3 py-2 rounded-md">
+              <span className="text-[#375421]">Total Referrals: </span>
+              <span className="text-[#375421] font-semibold">{data?.total_referrals}</span>
             </div>
           </div>
 
@@ -84,7 +84,7 @@ function ReferAFriend() {
           </div>
 
           {/* Referral Link */}
-          <div className="flex flex-col sm:flex-row items-center bg-gray-100 rounded-lg border mb-6 w-full mx-auto">
+          <div className="flex flex-col sm:flex-row items-center bg-site-bg rounded-lg border mb-6 w-full mx-auto">
             <input
               type="text"
               className="text-sm p-4 focus:outline-none text-gray-600 truncate w-full sm:flex-grow rounded-t-lg sm:rounded-tr-none sm:rounded-l-lg"
@@ -93,7 +93,7 @@ function ReferAFriend() {
               readOnly
             />
             <button
-              className="w-full sm:w-[174px] h-[60px] bg-green-500 text-white font-semibold flex justify-center items-center rounded-b-lg sm:rounded-bl-none sm:rounded-r-lg"
+              className="w-full sm:w-[174px] h-[60px] bg-[#375421] text-white font-semibold flex justify-center items-center rounded-b-lg sm:rounded-bl-none sm:rounded-r-lg"
               onClick={handleShare}
             >
               <FiShare2 className="mr-2" /> SHARE

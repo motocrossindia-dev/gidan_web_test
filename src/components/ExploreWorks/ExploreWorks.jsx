@@ -31,7 +31,7 @@ const ExploreWorks = () => {
             </h3>
             <Link href="/ourwork">
               <button 
-                className="bg-bio-green text-white md:font-semibold font-normal py-1 md:py-2 px-4 md:px-6 rounded-md hover:bg-green-600 text-md md:text-base"
+                className="bg-bio-green text-white md:font-semibold font-normal py-1 md:py-2 px-4 md:px-6 rounded-md hover:bg-[#375421] hover:text-white text-md md:text-base"
               >
                 Explore Now
               </button>

@@ -6,7 +6,7 @@ const _franchiseenquires = typeof __franchiseenquires === 'string' ? __franchise
 const franchiseenquires = typeof _franchiseenquires === 'string' ? _franchiseenquires : _franchiseenquires?.src || _franchiseenquires;
 
 const HeroSection = () => (
-    <div className="w-full bg-gray-100">
+    <div className="w-full bg-site-bg">
         <img
             src={franchiseenquires}
             loading="lazy"

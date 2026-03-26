@@ -16,7 +16,7 @@ const AboutUs = () => {
                     <h1 className="text-3xl md:text-5xl font-bold text-green-900 mb-2">
                         About GIDAN
                     </h1>
-                    <p className="text-lg md:text-2xl text-green-800 font-semibold">
+                    <p className="text-lg md:text-2xl text-[#051d18] font-semibold">
                         Cultivating Green Ecosystems, One Plant at a Time
                     </p>
                 </header>
@@ -65,7 +65,7 @@ const AboutUs = () => {
             Tablet: 2 Columns
             Desktop: 3 Columns
         */}
-                <section className="p-6 md:p-12 bg-gray-50 w-full">
+                <section className="p-6 md:p-12 bg-site-bg w-full">
                     <div className="max-w-7xl mx-auto">
                         <h2 className="text-2xl md:text-4xl font-bold text-center text-green-900 mb-8 md:mb-12">
                             Why Choose GIDAN?
@@ -74,7 +74,7 @@ const AboutUs = () => {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                             {/* Card 1 */}
                             <div className="bg-white p-6 md:p-8 rounded-lg shadow-sm border border-green-100 hover:shadow-md transition-shadow h-full">
-                                <div className="text-green-600 font-bold text-xl mb-3">Quality Tested</div>
+                                <div className="text-[#375421] font-bold text-xl mb-3">Quality Tested</div>
                                 <p className="text-gray-600 text-sm md:text-base leading-relaxed">
                                     Our focus is on quality-tested gardening and agricultural products that are practical, reliable, and suitable for Indian homes and climatic conditions.
                                 </p>
@@ -82,7 +82,7 @@ const AboutUs = () => {
 
                             {/* Card 2 */}
                             <div className="bg-white p-6 md:p-8 rounded-lg shadow-sm border border-green-100 hover:shadow-md transition-shadow h-full">
-                                <div className="text-green-600 font-bold text-xl mb-3">Education First</div>
+                                <div className="text-[#375421] font-bold text-xl mb-3">Education First</div>
                                 <p className="text-gray-600 text-sm md:text-base leading-relaxed">
                                     We believe access to the right products must go hand in hand with the right knowledge. Our goal is to reduce trial-and-error and improve long-term plant health.
                                 </p>
@@ -90,7 +90,7 @@ const AboutUs = () => {
 
                             {/* Card 3 */}
                             <div className="bg-white p-6 md:p-8 rounded-lg shadow-sm border border-green-100 hover:shadow-md transition-shadow h-full">
-                                <div className="text-green-600 font-bold text-xl mb-3">Sustainable Practices</div>
+                                <div className="text-[#375421] font-bold text-xl mb-3">Sustainable Practices</div>
                                 <p className="text-gray-600 text-sm md:text-base leading-relaxed">
                                     All products are carefully selected to ensure they are safe for home use and aligned with sustainable gardening practices.
                                 </p>
@@ -105,7 +105,7 @@ const AboutUs = () => {
 
                         {/* Vision */}
                         <div className="text-center px-2">
-                            <h3 className="text-xl md:text-3xl font-bold text-green-800 mb-4 tracking-wide">Our Vision</h3>
+                            <h3 className="text-xl md:text-3xl font-bold text-[#051d18] mb-4 tracking-wide">Our Vision</h3>
                             <p className="text-gray-700 italic text-lg md:text-2xl leading-relaxed font-light">
                                 "Rooted in a holistic approach—where greenery and development coexist to enable sustainable growth for humanity."
                             </p>
@@ -116,7 +116,7 @@ const AboutUs = () => {
 
                         {/* Mission */}
                         <div className="text-center px-2">
-                            <h3 className="text-xl md:text-3xl font-bold text-green-800 mb-4 tracking-wide">Our Mission</h3>
+                            <h3 className="text-xl md:text-3xl font-bold text-[#051d18] mb-4 tracking-wide">Our Mission</h3>
                             <p className="text-gray-700 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
                                 To provide the right set of plants, the right garden products, and the right guidance to every customer we serve.
                             </p>
@@ -140,16 +140,16 @@ const AboutUs = () => {
                                 </p>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                                    <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-500">
-                                        <strong className="block text-green-800">Biotech Maali</strong>
+                                    <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-[#375421]">
+                                        <strong className="block text-[#051d18]">Biotech Maali</strong>
                                         <span className="text-gray-600 text-sm">Garden setup and services</span>
                                     </div>
-                                    <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-500">
-                                        <strong className="block text-green-800">Vaneera</strong>
+                                    <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-[#375421]">
+                                        <strong className="block text-[#051d18]">Vaneera</strong>
                                         <span className="text-gray-600 text-sm">Landscaping solutions</span>
                                     </div>
-                                    <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-500 sm:col-span-2">
-                                        <strong className="block text-green-800">GIDAN</strong>
+                                    <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-[#375421] sm:col-span-2">
+                                        <strong className="block text-[#051d18]">GIDAN</strong>
                                         <span className="text-gray-600 text-sm">Garden and agricultural products</span>
                                     </div>
                                 </div>
@@ -161,7 +161,7 @@ const AboutUs = () => {
 
                             {/* Founder Card */}
                             <div className="w-full lg:w-1/3 bg-white p-6 md:p-8 rounded-xl shadow-md border border-green-200 flex flex-col justify-center">
-                                <h3 className="text-xl font-bold text-green-800 mb-4 border-b border-green-100 pb-2">Founder</h3>
+                                <h3 className="text-xl font-bold text-[#051d18] mb-4 border-b border-green-100 pb-2">Founder</h3>
                                 <p className="text-gray-700 leading-relaxed">
                                     Founded with the vision and expertise of <strong>Sujith Nadig</strong>, a biotech engineer, GIDAN is not just a store—it is a growing community committed to mindful gardening, responsible agriculture, and greener living.
                                 </p>

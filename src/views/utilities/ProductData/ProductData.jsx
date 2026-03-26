@@ -390,11 +390,9 @@ export default function ProductData({ initialProductData }) {
                     enqueueSnackbar("Product added to cart successfully!", { variant: "success" });
                     window.dispatchEvent(new Event("cartUpdated"));
                     trackAddToCart(productDetailData?.data?.product, quantity);
-                    router.push("/cart");
                 } else if (response.status === 200) {
-                    // Product already exists in cart — take user there directly
+                    // Product already exists in cart — just show info
                     enqueueSnackbar("This item is already in your cart.", { variant: "info" });
-                    router.push("/cart");
                 }
 
             } catch (error) {
@@ -411,19 +409,14 @@ export default function ProductData({ initialProductData }) {
                     error.response?.status === 400
                 ) {
                     enqueueSnackbar("This item is already in your cart.", { variant: "info" });
-                    router.push("/cart");
                 } else {
                     enqueueSnackbar(msg || "Failed to add product to cart", { variant: "info" });
                 }
             }
         } else {
-            enqueueSnackbar("Please sign..", { variant: "info" });
+            enqueueSnackbar("Added to cart (Guest)", { variant: "success" });
             savePendingCartItem({ prod_id: productDetailData?.data?.product?.id, quantity });
-            if (isMobile) {
-                router.push("/mobile-signin", { replace: true });
-            } else {
-                router.push("/?modal=signIn", { replace: true });
-            }
+            window.dispatchEvent(new Event("cartUpdated"));
         }
 
 
@@ -459,15 +452,11 @@ export default function ProductData({ initialProductData }) {
                 ); // Show error message
             }
         } else {
-            enqueueSnackbar("Please login..", {
-                variant: "info",
+            enqueueSnackbar("Added to wishlist (Guest)", {
+                variant: "success",
             });
             savePendingWishlistItem({ prod_id: productDetailData?.data?.product?.id });
-            if (isMobile) {
-                router.push("/mobile-signin", { replace: true });
-            } else {
-                router.push("/?modal=signIn", { replace: true });
-            }
+            window.dispatchEvent(new Event("wishlistUpdated"));
         }
     };
 
@@ -1062,10 +1051,10 @@ export default function ProductData({ initialProductData }) {
 
                             {/* Main Image with Fully Working Zoom */}
                             {/* Main Image with Lens + Right Side Zoom */}
-                            <div className="relative flex justify-center bg-gray-100">
+                            <div className="relative flex justify-center bg-site-bg">
 
                                 <div
-                                    className="relative w-full max-w-[500px] bg-gray-100 rounded-lg overflow-hidden"
+                                    className="relative w-full max-w-[500px] bg-site-bg rounded-lg overflow-hidden"
                                     onMouseEnter={() => setZoom(true)}
                                     onMouseLeave={() => setZoom(false)}
                                     onMouseMove={(e) => {
@@ -1155,7 +1144,7 @@ export default function ProductData({ initialProductData }) {
                                         <button aria-label="Button"
                                             key={i}
                                             onClick={() => setSelectedImage(i)}
-                                            className={`w-16 h-16 sm:w-20 sm:h-20 md:w-[90px] md:h-[90px] rounded-lg bg-gray-100 flex items-center justify-center shrink-0 ${selectedImage === i
+                                            className={`w-16 h-16 sm:w-20 sm:h-20 md:w-[90px] md:h-[90px] rounded-lg bg-site-bg flex items-center justify-center shrink-0 ${selectedImage === i
                                                 ? "ring-2 ring-indigo-300 ring-inset"
                                                 : ""
                                                 }`}
@@ -1229,7 +1218,7 @@ export default function ProductData({ initialProductData }) {
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={handleViewReviewClick}
-                                        className="text-sm text-bio-green hover:text-green-800 hover:underline cursor-pointer bg-transparent border-none p-0"
+                                        className="text-sm text-bio-green hover:text-[#051d18] hover:underline cursor-pointer bg-transparent border-none p-0"
                                     >
                                         View reviews
                                     </button>
@@ -1237,7 +1226,7 @@ export default function ProductData({ initialProductData }) {
                                     <button
                                         onClick={handleWriteReviewClick}
                                         disabled={isCheckingPurchase}
-                                        className="text-sm text-bio-green hover:text-green-800 hover:underline cursor-pointer bg-transparent border-none p-0"
+                                        className="text-sm text-bio-green hover:text-[#051d18] hover:underline cursor-pointer bg-transparent border-none p-0"
                                     >
                                         {isCheckingPurchase ? "Checking..." : (productDetailData?.data?.product?.is_review ? "Edit your review" : (productDetailData?.data?.product_rating?.num_ratings === 0 ? "Be the first to review" : "Write a review"))}
                                     </button>
@@ -1408,7 +1397,7 @@ export default function ProductData({ initialProductData }) {
                                         <button aria-label="Button"
                                             onMouseDown={(e) => e.preventDefault()}
                                             onClick={() => handleQuantity(productDetailData?.data?.product?.id, "decrement", quantity)}
-                                            className="border border-bio-green text-black-700 py-2 px-4 rounded-l-lg hover:bg-bio-green"
+                                            className="border border-bio-green text-black-700 py-2 px-4 rounded-l-lg hover:bg-bio-green hover:text-white"
                                         >
                                             -
                                         </button>
@@ -1440,7 +1429,7 @@ export default function ProductData({ initialProductData }) {
                                         <button aria-label="Button"
                                             onMouseDown={(e) => e.preventDefault()}
                                             onClick={() => handleQuantity(productDetailData?.data?.product?.id, "increment", quantity)}
-                                            className="border border-bio-green text-black-700 py-2 px-4 rounded-r-lg hover:bg-bio-green"
+                                            className="border border-bio-green text-black-700 py-2 px-4 rounded-r-lg hover:bg-bio-green hover:text-white"
                                         >
                                             +
                                         </button>
@@ -1457,7 +1446,7 @@ export default function ProductData({ initialProductData }) {
                                             className="flex-grow px-4 py-2 border border-gray-300 rounded-l outline-none focus:border-bio-green min-w-0"
                                         />
                                         <button
-                                            className="px-6 py-2 bg-bio-green text-white rounded-r hover:bg-green-700 whitespace-nowrap"
+                                            className="px-6 py-2 bg-bio-green text-white rounded-r hover:bg-[#375421] hover:text-white whitespace-nowrap"
                                             onClick={handleCheck}
                                         >
                                             Check
@@ -1482,7 +1471,7 @@ export default function ProductData({ initialProductData }) {
                                                 We&apos;re sorry, delivery is currently unavailable for pincode <span className="font-semibold text-gray-700">{pincode}</span>. Please try a different pincode.
                                             </p>
                                             <button
-                                                className="w-full py-2 bg-bio-green text-white font-semibold rounded-lg hover:bg-green-700 transition-colors"
+                                                className="w-full py-2 bg-bio-green text-white font-semibold rounded-lg hover:bg-[#375421] hover:text-white transition-colors"
                                                 onClick={() => setShowNoDeliveryPopup(false)}
                                             >
                                                 Got it
@@ -1496,7 +1485,7 @@ export default function ProductData({ initialProductData }) {
                                     {productDetailData?.data?.product?.in_stock === false ? (
                                         <button
                                             aria-label="Add to cart disabled"
-                                            className="w-full border border-gray-400 text-gray-400 bg-gray-100 py-2 px-4 rounded-lg cursor-not-allowed"
+                                            className="w-full border border-gray-400 text-gray-400 bg-site-bg py-2 px-4 rounded-lg cursor-not-allowed"
                                             disabled
                                         >
                                             <ShoppingCart className="inline-block mr-2" />
@@ -1535,7 +1524,7 @@ export default function ProductData({ initialProductData }) {
                                 </button>
                             ) : (
                                 <button
-                                    className="bg-bio-green text-white py-2 px-4 rounded-lg w-full hover:bg-bio-green"
+                                    className="bg-bio-green text-white py-2 px-4 rounded-lg w-full hover:bg-bio-green hover:text-white"
                                     onClick={handleBuyItNowSubmit}
                                 >
                                     Buy It Now

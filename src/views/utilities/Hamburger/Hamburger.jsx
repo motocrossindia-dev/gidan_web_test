@@ -165,9 +165,9 @@ const Hamburger = () => {
               <div className="fixed top-0 left-0 w-3/4 max-w-xs h-full bg-white shadow-2xl z-[1001] transform transition-transform duration-300 ease-in-out overflow-y-auto md:hidden flex flex-col">
 
                 {/* Header */}
-                <div className="flex items-center justify-between p-5 border-b border-gray-100 bg-gray-50">
+                <div className="flex items-center justify-between p-5 border-b border-gray-100 bg-site-bg">
                   <div className="flex items-center gap-3 font-semibold text-gray-800">
-                    <FaUser className="text-green-600" />
+                    <FaUser className="text-[#375421]" />
                     <span>My Account</span>
                   </div>
                   <button aria-label="Button"
@@ -203,7 +203,7 @@ const Hamburger = () => {
                                     onClick={() => handleCategoryClick(category)}
                                     className="flex items-center justify-between p-3 rounded-lg hover:bg-green-50 cursor-pointer transition-colors group border-b border-gray-50"
                                 >
-                                  <span className="text-gray-700 font-medium group-hover:text-green-700">
+                                  <span className="text-gray-700 font-medium group-hover:text-[#375421]">
                                     {category.name}
                                   </span>
                                   {category.subcategories && category.subcategories.length > 0 ? (
@@ -219,14 +219,14 @@ const Hamburger = () => {
 
                                 {/* Subcategories Dropdown */}
                                 {expandedCategory === category.id && category.subcategories && category.subcategories.length > 0 && (
-                                    <div className="ml-4 mt-1 mb-2 space-y-1 bg-gray-50 rounded-lg p-2">
+                                    <div className="ml-4 mt-1 mb-2 space-y-1 bg-site-bg rounded-lg p-2">
                                       {category.subcategories.map((subcategory) => (
                                           <div
                                               key={subcategory.id}
                                               onClick={() => handleSubcategoryClick(category, subcategory)}
                                               className="flex items-center justify-between p-2 pl-4 rounded-lg hover:bg-white cursor-pointer transition-colors group"
                                           >
-                                            <span className="text-gray-600 text-sm group-hover:text-green-700">
+                                            <span className="text-gray-600 text-sm group-hover:text-[#375421]">
                                               {subcategory.name}
                                             </span>
                                             {subcategory.product_count && (
@@ -255,7 +255,7 @@ const Hamburger = () => {
                               key={index}
                               href={item.path}
                               onClick={closeMenu}
-                              className="block p-3 rounded-lg text-gray-600 hover:text-green-700 hover:bg-gray-50 transition-colors text-sm font-medium"
+                              className="block p-3 rounded-lg text-gray-600 hover:text-[#375421] hover:bg-site-bg transition-colors text-sm font-medium"
                           >
                             {item.label}
                           </Link>
@@ -265,13 +265,13 @@ const Hamburger = () => {
                 </div>
 
                 {/* SOCIAL MEDIA FOOTER */}
-                <div className="p-6 border-t border-gray-100 bg-gray-50">
+                <div className="p-6 border-t border-gray-100 bg-site-bg">
                   <div className="flex justify-center items-center space-x-6">
                     <a
                         href="https://www.facebook.com/thegidanstore/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-black hover:text-green-500 transition-colors"
+                        className="text-black hover:text-[#375421] transition-colors"
                     >
                       <FaFacebookF size={20} />
                     </a>
@@ -279,7 +279,7 @@ const Hamburger = () => {
                         href="https://www.instagram.com/thegidanstore/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-black hover:text-green-500 transition-colors"
+                        className="text-black hover:text-[#375421] transition-colors"
                     >
                       <FaInstagram size={20} />
                     </a>
@@ -287,7 +287,7 @@ const Hamburger = () => {
                         href="https://www.linkedin.com/company/thegidanstore/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-black hover:text-green-500 transition-colors"
+                        className="text-black hover:text-[#375421] transition-colors"
                     >
                       <FaLinkedin size={20} />
                     </a>
@@ -295,7 +295,7 @@ const Hamburger = () => {
                         href="https://www.youtube.com/@thegidanstore/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-black hover:text-green-500 transition-colors"
+                        className="text-black hover:text-[#375421] transition-colors"
                     >
                       <FaYoutube size={20} />
                     </a>
@@ -303,7 +303,7 @@ const Hamburger = () => {
                         href="https://whatsapp.com/channel/0029Vac6g6TB4hdL2NqaEc1f/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-black hover:text-green-500 transition-colors"
+                        className="text-black hover:text-[#375421] transition-colors"
                     >
                       <FaWhatsapp size={20} />
                     </a>
@@ -436,9 +436,9 @@ export default Hamburger;
 //               <div className="fixed top-0 left-0 w-3/4 max-w-xs h-full bg-white shadow-2xl z-[1001] transform transition-transform duration-300 ease-in-out overflow-y-auto md:hidden flex flex-col">
 //
 //                 {/* Header */}
-//                 <div className="flex items-center justify-between p-5 border-b border-gray-100 bg-gray-50">
+//                 <div className="flex items-center justify-between p-5 border-b border-gray-100 bg-site-bg">
 //                   <div className="flex items-center gap-3 font-semibold text-gray-800">
-//                     <FaUser className="text-green-600" />
+//                     <FaUser className="text-[#375421]" />
 //                     <span>My Account</span>
 //                   </div>
 //                   <button
@@ -473,7 +473,7 @@ export default Hamburger;
 //                                   onClick={() => handleCategoryClick(category)}
 //                                   className="flex items-center justify-between p-3 rounded-lg hover:bg-green-50 cursor-pointer transition-colors group border-b border-gray-50 last:border-0"
 //                               >
-//                         <span className="text-gray-700 font-medium group-hover:text-green-700">
+//                         <span className="text-gray-700 font-medium group-hover:text-[#375421]">
 //                           {category.name}
 //                         </span>
 //                                 {/* Arrow Icon indicating navigation */}
@@ -495,7 +495,7 @@ export default Hamburger;
 //                               key={index}
 //                               to={item.path}
 //                               onClick={closeMenu}
-//                               className="block p-3 rounded-lg text-gray-600 hover:text-green-700 hover:bg-gray-50 transition-colors text-sm font-medium"
+//                               className="block p-3 rounded-lg text-gray-600 hover:text-[#375421] hover:bg-site-bg transition-colors text-sm font-medium"
 //                           >
 //                             {item.label}
 //                           </Link>
@@ -505,13 +505,13 @@ export default Hamburger;
 //                 </div>
 //
 //                 {/* SOCIAL MEDIA FOOTER */}
-//                 <div className="p-6 border-t border-gray-100 bg-gray-50">
+//                 <div className="p-6 border-t border-gray-100 bg-site-bg">
 //                   <div className="flex justify-center items-center space-x-6">
 //                     <a
 //                         href="https://www.facebook.com/thegidanstore/"
 //                         target="_blank"
 //                         rel="noopener noreferrer"
-//                         className="text-black hover:text-green-500 transition-colors"
+//                         className="text-black hover:text-[#375421] transition-colors"
 //                     >
 //                       <FaFacebookF size={20} />
 //                     </a>
@@ -519,7 +519,7 @@ export default Hamburger;
 //                         href="https://www.instagram.com/thegidanstore/"
 //                         target="_blank"
 //                         rel="noopener noreferrer"
-//                         className="text-black hover:text-green-500 transition-colors"
+//                         className="text-black hover:text-[#375421] transition-colors"
 //                     >
 //                       <FaInstagram size={20} />
 //                     </a>
@@ -527,7 +527,7 @@ export default Hamburger;
 //                         href="https://www.linkedin.com/company/thegidanstore/"
 //                         target="_blank"
 //                         rel="noopener noreferrer"
-//                         className="text-black hover:text-green-500 transition-colors"
+//                         className="text-black hover:text-[#375421] transition-colors"
 //                     >
 //                       <FaLinkedin size={20} />
 //                     </a>
@@ -535,7 +535,7 @@ export default Hamburger;
 //                         href="https://www.youtube.com/@thegidanstore/"
 //                         target="_blank"
 //                         rel="noopener noreferrer"
-//                         className="text-black hover:text-green-500 transition-colors"
+//                         className="text-black hover:text-[#375421] transition-colors"
 //                     >
 //                       <FaYoutube size={20} />
 //                     </a>
@@ -543,7 +543,7 @@ export default Hamburger;
 //                         href="https://whatsapp.com/channel/0029Vac6g6TB4hdL2NqaEc1f/"
 //                         target="_blank"
 //                         rel="noopener noreferrer"
-//                         className="text-black hover:text-green-500 transition-colors"
+//                         className="text-black hover:text-[#375421] transition-colors"
 //                     >
 //                       <FaWhatsapp size={20} />
 //                     </a>

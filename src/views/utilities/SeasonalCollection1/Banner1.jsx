@@ -25,13 +25,13 @@ const Banner1 = () => {
 
         {/* Right side with text content */}
         <div className="w-3/4 sm:w-3/4 lg:w-1/2 pl-8 flex flex-col justify-end ">
-          <h2 className="text-xs md:text-sm lg:text-3xl text-green-800 mb-2 font-normal ml-11 md:ml-0">
+          <h2 className="text-xs md:text-sm lg:text-3xl text-[#051d18] mb-2 font-normal ml-11 md:ml-0">
             {banner.title}
           </h2>
-          <h3 className="text-sm md:text-sm lg:text-4xl font-semibold text-green-800 mb-4">
+          <h3 className="text-sm md:text-sm lg:text-4xl font-semibold text-[#051d18] mb-4">
             {banner.subtitle}
           </h3>
-          <button className="bg-bio-green text-white md:px-6 md:py-2 py-1 px-4 rounded-md w-fit text-xs hover:bg-bio-green transition-colors ml-auto mr-9">
+          <button className="bg-bio-green text-white md:px-6 md:py-2 py-1 px-4 rounded-md w-fit text-xs hover:bg-bio-green hover:text-white transition-colors ml-auto mr-9">
             {banner.buttonText}
           </button>
         </div>

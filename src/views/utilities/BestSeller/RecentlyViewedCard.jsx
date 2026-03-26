@@ -120,7 +120,7 @@ const RecentlyViewedCard = ({ name, price, oldPrice, imageUrl, rating, isNewArri
       {/* Hover Line */}
       {isHovered && (
         <div
-          className="absolute bottom-0 left-1/2 transform -translate-x-1/2 bg-green-800"
+          className="absolute bottom-0 left-1/2 transform -translate-x-1/2 bg-[#051d18]"
           style={{
             width: "90px",
             height: "4px",

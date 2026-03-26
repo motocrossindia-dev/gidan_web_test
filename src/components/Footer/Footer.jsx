@@ -106,28 +106,28 @@ const Footer = () => {
                         className={`space-y-2 transition-all duration-300 md:block ${openSection === "quick-links" ? "block" : "hidden"
                             }`}
                     >
-                        <li className="hover:text-green-500 ">
+                        <li className="hover:text-[#375421] ">
                             <Link href="/">Home</Link>
                         </li>
-                        <li className="hover:text-green-500">
+                        <li className="hover:text-[#375421]">
                             <Link href="/careers/">Careers</Link>
                         </li>
-                        <li className="hover:text-green-500">
+                        <li className="hover:text-[#375421]">
                             <Link href="/blogs/">Blogs</Link>
                         </li>
-                        <li className="hover:text-green-500">
+                        <li className="hover:text-[#375421]">
                             <Link href="/stores/">Our Stores</Link>
                         </li>
-                        <li className="hover:text-green-500">
+                        <li className="hover:text-[#375421]">
                             <Link href="/trending/">Trending</Link>
                         </li>
-                        <li className="hover:text-green-500">
+                        <li className="hover:text-[#375421]">
                             <Link href="/bestseller/">Bestsellers</Link>
                         </li>
-                        <li className="hover:text-green-500">
+                        <li className="hover:text-[#375421]">
                             <Link href="/seasonal/">Seasonal</Link>
                         </li>
-                        <li className="hover:text-green-500">
+                        <li className="hover:text-[#375421]">
                             <Link href="/franchise-enquiry/">Franchise Enquiry</Link>
                         </li>
                     </ul>
@@ -145,22 +145,22 @@ const Footer = () => {
                         className={`space-y-2 transition-all duration-300 md:block ${openSection === "more-info" ? "block" : "hidden"
                             }`}
                     >
-                        <li className="hover:text-green-500">
+                        <li className="hover:text-[#375421]">
                             <Link href="/contact-us/">Contact Us</Link>
                         </li>
-                        <li className="hover:text-green-500">
+                        <li className="hover:text-[#375421]">
                             <Link href="/about-us/">About Us</Link>
                         </li>
-                        <li className="hover:text-green-500" onClick={handleClickorder}>
+                        <li className="hover:text-[#375421]" onClick={handleClickorder}>
                             <Link href="/profile/trackorder/">Track Order</Link>
                         </li>
-                        <li className="hover:text-green-500">
+                        <li className="hover:text-[#375421]">
                             <Link href="/gifts/">Gifts</Link>
                         </li>
-                        <li className="hover:text-green-500">
+                        <li className="hover:text-[#375421]">
                             <Link href="/services/">Services</Link>
                         </li>
-                        <li className="hover:text-green-500">
+                        <li className="hover:text-[#375421]">
                             <Link href="/faq/">FAQs</Link>
                         </li>
                     </ul>
@@ -178,16 +178,16 @@ const Footer = () => {
                         className={`space-y-2 transition-all duration-300 md:block ${openSection === "policies" ? "block" : "hidden"
                             }`}
                     >
-                        <li className="hover:text-green-500 ">
+                        <li className="hover:text-[#375421] ">
                             <Link href="/terms/">Terms and Conditions</Link>
                         </li>
-                        <li className="hover:text-green-500 ">
+                        <li className="hover:text-[#375421] ">
                             <Link href="/privacy-policy/">Privacy Policy</Link>
                         </li>
-                        <li className="hover:text-green-500 ">
+                        <li className="hover:text-[#375421] ">
                             <Link href="/shipping/">Shipping Policy</Link>
                         </li>
-                        <li className="hover:text-green-500 ">
+                        <li className="hover:text-[#375421] ">
                             <Link href="/return/">Return Policy</Link>
                         </li>
                     </ul>
@@ -205,10 +205,10 @@ const Footer = () => {
                         className={`space-y-2 transition-all duration-300 md:block ${openSection === "offers-rewards" ? "block" : "hidden"
                             }`}
                     >
-                        <li className="hover:text-green-500" onClick={handleWalletClick}>
+                        <li className="hover:text-[#375421]" onClick={handleWalletClick}>
                             <Link href="/profile/wallet/">Wallet</Link>
                         </li>
-                        <li className="hover:text-green-500">
+                        <li className="hover:text-[#375421]">
                             <Link href="/offer/">Exclusive Offers</Link>
                         </li>
                     </ul>
@@ -236,7 +236,7 @@ const Footer = () => {
                     <form
                         ref={formRef}
                         onSubmit={handleSubmit}
-                        className="flex items-center border border-green-500 rounded-lg overflow-hidden"
+                        className="flex items-center border border-[#375421] rounded-lg overflow-hidden"
                     >
                         <input
                             type="email"
@@ -265,7 +265,7 @@ const Footer = () => {
                             href="https://www.facebook.com/thegidanstore/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-black hover:text-green-500"
+                            className="text-black hover:text-[#375421]"
                             aria-label="Visit our Facebook page"
                         >
                             <FaFacebookF size={20} />
@@ -274,7 +274,7 @@ const Footer = () => {
                             href="https://www.instagram.com/thegidanstore/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-black hover:text-green-500"
+                            className="text-black hover:text-[#375421]"
                             aria-label="Visit our Instagram page"
                         >
                             <FaInstagram size={20} />
@@ -283,7 +283,7 @@ const Footer = () => {
                             href="https://www.linkedin.com/company/thegidanstore/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-black hover:text-green-500"
+                            className="text-black hover:text-[#375421]"
                             aria-label="Visit our LinkedIn page"
                         >
                             <FaLinkedin size={20} />
@@ -292,7 +292,7 @@ const Footer = () => {
                             href="https://www.youtube.com/@thegidanstore/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-black hover:text-green-500"
+                            className="text-black hover:text-[#375421]"
                             aria-label="Visit our YouTube channel"
                         >
                             <FaYoutube size={20} />
@@ -301,7 +301,7 @@ const Footer = () => {
                             href="https://whatsapp.com/channel/0029Vac6g6TB4hdL2NqaEc1f/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-black hover:text-green-500"
+                            className="text-black hover:text-[#375421]"
                             aria-label="Join our WhatsApp channel"
                         >
                             <FaWhatsapp size={20} />
@@ -430,28 +430,28 @@ export default Footer;
 //             className={`space-y-2 transition-all duration-300 md:block ${openSection === "quick-links" ? "block" : "hidden"
 //               }`}
 //           >
-//             <li className="hover:text-green-500 ">
+//             <li className="hover:text-[#375421] ">
 //               <Link href="/">Home</Link>
 //             </li>
-//             {/* <li className="hover:text-green-500">
+//             {/* <li className="hover:text-[#375421]">
 //               <Link href="/ourwork"> Our Work</Link>
 //             </li>
-//             <li className="hover:text-green-500">
+//             <li className="hover:text-[#375421]">
 //               <Link href="/services">Services</Link>
 //             </li> */}
-//             <li className="hover:text-green-500">
+//             <li className="hover:text-[#375421]">
 //               <Link href="/careers">Careers</Link>
 //             </li>
-//             <li className="hover:text-green-500">
+//             <li className="hover:text-[#375421]">
 //               <Link href="/blogs">Blogs</Link>
 //             </li>
-//             <li className="hover:text-green-500">
+//             <li className="hover:text-[#375421]">
 //               <Link href="/stores">Our Stores</Link>
 //             </li>
-//             <li className="hover:text-green-500">
+//             <li className="hover:text-[#375421]">
 //               <Link href="/franchise-enquiry">Franchise Enquiry</Link>
 //             </li>
-//             <li className="hover:text-green-500">
+//             <li className="hover:text-[#375421]">
 //                <Link href="/faq">FAQs</Link>
 //             </li>
 //           </ul>
@@ -469,26 +469,26 @@ export default Footer;
 //             className={`space-y-2 transition-all duration-300 md:block ${openSection === "customer-care" ? "block" : "hidden"
 //               }`}
 //           >
-//             <li className="hover:text-green-500">
+//             <li className="hover:text-[#375421]">
 //               <Link href="/contact-us">Contact Us</Link>
 //             </li>
-//             <li className="hover:text-green-500">
+//             <li className="hover:text-[#375421]">
 //               <Link href="/about-us">About Us</Link>
 //             </li>
 //
-//             <li className="hover:text-green-500" onClick={handleClickorder}>
+//             <li className="hover:text-[#375421]" onClick={handleClickorder}>
 //               <Link href="/profile/trackorder">Track Order</Link>
 //             </li>
-//             <li className="hover:text-green-500 ">
+//             <li className="hover:text-[#375421] ">
 //               <Link href="/terms">Terms and Conditions</Link>
 //             </li>
-//             <li className="hover:text-green-500 ">
+//             <li className="hover:text-[#375421] ">
 //               <Link href="/privacy-policy">Privacy Policy</Link>
 //             </li>
-//             <li className="hover:text-green-500 ">
+//             <li className="hover:text-[#375421] ">
 //               <Link href="/shipping">Shipping Policy</Link>
 //             </li>
-//             <li className="hover:text-green-500 ">
+//             <li className="hover:text-[#375421] ">
 //               <Link href="/return">Return Policy</Link>
 //             </li>
 //
@@ -507,10 +507,10 @@ export default Footer;
 //             className={`space-y-2 transition-all duration-300 md:block ${openSection === "offers-rewards" ? "block" : "hidden"
 //               }`}
 //           >
-//             {/* <li className="hover:text-green-500" onClick={handleClick}>
+//             {/* <li className="hover:text-[#375421]" onClick={handleClick}>
 //               <Link href="">Rewards Club</Link>
 //             </li> */}
-//             <li className="hover:text-green-500" onClick={handleWalletClick}>
+//             <li className="hover:text-[#375421]" onClick={handleWalletClick}>
 //               <Link href="">Wallet</Link>
 //             </li>
 //           </ul>
@@ -533,7 +533,7 @@ export default Footer;
 //               Email:{" "}
 //               <Link
 //                 to="mailto:info@gidan.store"
-//                 className="hover:text-green-500"
+//                 className="hover:text-[#375421]"
 //               >
 //                 info@gidan.store
 //               </Link>
@@ -554,7 +554,7 @@ export default Footer;
 //     <form
 //       ref={formRef}
 //       onSubmit={handleSubmit}
-//       className="flex items-center border border-green-500 rounded-lg overflow-hidden"
+//       className="flex items-center border border-[#375421] rounded-lg overflow-hidden"
 //     >
 //       <input
 //         type="email"
@@ -583,7 +583,7 @@ export default Footer;
 //     href="https://www.facebook.com/thegidanstore/"
 //     target="_blank"
 //     rel="noopener noreferrer"
-//     className="text-black hover:text-green-500"
+//     className="text-black hover:text-[#375421]"
 //   >
 //     <FaFacebookF size={20} />
 //   </a>
@@ -591,7 +591,7 @@ export default Footer;
 //     href="https://www.instagram.com/thegidanstore/"
 //     target="_blank"
 //     rel="noopener noreferrer"
-//     className="text-black hover:text-green-500"
+//     className="text-black hover:text-[#375421]"
 //   >
 //     <FaInstagram size={20} />
 //   </a>
@@ -599,7 +599,7 @@ export default Footer;
 //     href="https://www.linkedin.com/company/thegidanstore/"
 //     target="_blank"
 //     rel="noopener noreferrer"
-//     className="text-black hover:text-green-500"
+//     className="text-black hover:text-[#375421]"
 //   >
 //     <FaLinkedin size={20} />
 //   </a>
@@ -607,7 +607,7 @@ export default Footer;
 //     href="https://www.youtube.com/@thegidanstore/"
 //     target="_blank"
 //     rel="noopener noreferrer"
-//     className="text-black hover:text-green-500"
+//     className="text-black hover:text-[#375421]"
 //   >
 //     <FaYoutube size={20} />
 //   </a>

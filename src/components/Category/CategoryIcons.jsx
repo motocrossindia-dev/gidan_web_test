@@ -64,7 +64,7 @@ const CategoryIcons = ({ initialData }) => {
 
   return (
     <>
-      <div className="max-w-full mx-auto px-4 md:px-8 pt-4 md:pt-6 pb-0 relative z-10">
+      <div className="max-w-full mx-auto px-4 md:px-8 pt-4 md:pt-6 pb-0 relative z-0">
         {/* Category Container */}
         <div
           id="category-scroll-container"
@@ -133,11 +133,11 @@ const CategoryIcons = ({ initialData }) => {
                         return (
                           <li
                             key={index}
-                            className="hover:text-green-600 cursor-pointer transition-colors duration-200"
+                            className="hover:text-[#375421] cursor-pointer transition-colors duration-200"
                           >
                             <Link
                               href={subcategoryUrl}
-                              className="block py-1 px-2 rounded hover:bg-gray-50 text-xs sm:text-sm"
+                              className="block py-1 px-2 rounded hover:bg-site-bg text-xs sm:text-sm"
                             >
                               {item.name}
                             </Link>
@@ -341,7 +341,7 @@ export default CategoryIcons;
 //                         return (
 //                           <li
 //                             key={index}
-//                             className="hover:text-green-600 cursor-pointer transition-colors duration-200"
+//                             className="hover:text-[#375421] cursor-pointer transition-colors duration-200"
 //                           >
 //                             <Link
 //                               to={subcategoryUrl}
@@ -356,7 +356,7 @@ export default CategoryIcons;
 //                                   subcategory_slug: item.slug
 //                                 }
 //                               }}
-//                               className="block py-1 px-2 rounded hover:bg-gray-50 text-xs sm:text-sm"
+//                               className="block py-1 px-2 rounded hover:bg-site-bg text-xs sm:text-sm"
 //                             >
 //                               {item.name}
 //                             </Link>

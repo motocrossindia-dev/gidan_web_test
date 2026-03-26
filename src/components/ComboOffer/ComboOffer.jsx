@@ -58,7 +58,7 @@ const ComboOffer = () => {
             <div className="pt-2">
               <Link
                 href="/combooffer"
-                className="inline-block text-white bg-bio-green hover:bg-green-700 text-sm sm:text-base md:text-lg px-5 py-2.5 md:px-6 md:py-3 rounded-md font-medium transition-colors duration-200 shadow-sm hover:shadow-md"
+                className="inline-block text-white bg-bio-green hover:bg-[#375421] hover:text-white text-sm sm:text-base md:text-lg px-5 py-2.5 md:px-6 md:py-3 rounded-md font-medium transition-colors duration-200 shadow-sm hover:shadow-md"
               >
                 {comboData?.button_text || "Explore Combo"}
               </Link>
@@ -121,7 +121,7 @@ export default ComboOffer;
 //             <div className="pt-2">
 //               <Link
 //                 to="/combooffer"
-//                 className="inline-block text-white bg-bio-green hover:bg-green-700 text-sm sm:text-base md:text-lg px-5 py-2.5 md:px-6 md:py-3 rounded-md font-medium transition-colors duration-200 shadow-sm hover:shadow-md"
+//                 className="inline-block text-white bg-bio-green hover:bg-[#375421] hover:text-white text-sm sm:text-base md:text-lg px-5 py-2.5 md:px-6 md:py-3 rounded-md font-medium transition-colors duration-200 shadow-sm hover:shadow-md"
 //               >
 //                 {comboData?.button_text || "Explore Combo"}
 //               </Link>

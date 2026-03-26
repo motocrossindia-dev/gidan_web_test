@@ -54,14 +54,14 @@ const Notification = () => {
   }, []);
 
   return (
-    <div className="flex justify-center px-4 bg-gray-100 min-h-screen">
+    <div className="flex justify-center px-4 bg-site-bg min-h-screen">
       <div className="w-full bg-white p-4 shadow-md rounded-lg">
         <h2 className="text-2xl font-bold mb-4">Notifications</h2>
         <div className="space-y-2">
           {dummyNotifications.map((notification, index) => (
             <div
               key={index}
-              className="flex items-center border rounded-lg p-4 bg-gray-50 shadow-sm"
+              className="flex items-center border rounded-lg p-4 bg-site-bg shadow-sm"
             >
               <img name=" "   
                 src={notification.imageSrc}
@@ -76,7 +76,7 @@ const Notification = () => {
                 <p className="text-gray-600 text-sm">{notification.price}</p>
                 <p className="text-xs text-gray-400">{notification.date}</p>
               </div>
-              <Link href={`productdata/${notification.id}`} className="text-green-600 text-sm font-semibold ml-auto">
+              <Link href={`productdata/${notification.id}`} className="text-[#375421] text-sm font-semibold ml-auto">
   More Details &rarr;
 </Link>
 

@@ -66,7 +66,7 @@ const LazyLoadWrapper = ({
       ) : (
         placeholder || (
           <div
-            className="w-full bg-gray-50 animate-pulse"
+            className="w-full bg-site-bg animate-pulse"
             style={{ height }}
           />
         )

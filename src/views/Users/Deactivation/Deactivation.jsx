@@ -60,7 +60,7 @@ function DeactivationConfirmation() {
             Confirm Deactivation
           </button>
 
-          <button className="bg-green-500 hover:bg-bio-green text-white font-bold py-2 px-4 rounded">
+          <button className="bg-[#375421] hover:bg-bio-green hover:text-white text-white font-bold py-2 px-4 rounded">
             No, let's stay!
           </button>
         </div>

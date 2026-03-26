@@ -76,7 +76,7 @@ const RewardClub = () => {
 
           <button
             onClick={referafriend}
-            className="bg-[#8BC34A] text-white px-8 py-3.5 lg:px-10 lg:py-4 rounded-md w-fit mx-auto lg:mx-0 hover:bg-green-600 transition text-base lg:text-lg font-medium"
+            className="bg-[#8BC34A] text-white px-8 py-3.5 lg:px-10 lg:py-4 rounded-md w-fit mx-auto lg:mx-0 hover:bg-[#375421] hover:text-white transition text-base lg:text-lg font-medium"
           >
             {bannerData?.button_text || "Refer Now"}
           </button>
@@ -157,7 +157,7 @@ export default RewardClub;
 //
 //             <button
 //                 onClick={referafriend}
-//                 className="bg-[#8BC34A] text-white px-8 py-3.5 lg:px-10 lg:py-4 rounded-md w-fit mx-auto lg:mx-0 hover:bg-green-600 transition text-base lg:text-lg font-medium"
+//                 className="bg-[#8BC34A] text-white px-8 py-3.5 lg:px-10 lg:py-4 rounded-md w-fit mx-auto lg:mx-0 hover:bg-[#375421] hover:text-white transition text-base lg:text-lg font-medium"
 //             >
 //               {bannerData?.button_text || "Refer Now"}
 //             </button>

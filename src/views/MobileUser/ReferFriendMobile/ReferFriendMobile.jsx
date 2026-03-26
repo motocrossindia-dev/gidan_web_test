@@ -20,7 +20,7 @@ const ReferFriendMobile = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto min-h-screen bg-gray-100">
+    <div className="max-w-md mx-auto min-h-screen bg-site-bg">
       {/* Header */}
       <div className="flex items-center p-4 bg-white shadow-md">
         <button onClick={() => window.history.back()} className="mr-3">
@@ -49,7 +49,7 @@ const ReferFriendMobile = () => {
           />
           <button
             onClick={handleShare}
-            className="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center"
+            className="bg-[#375421] text-white px-4 py-2 rounded-lg flex items-center"
           >
             <FaShareAlt className="mr-2" /> Share
           </button>
@@ -58,7 +58,7 @@ const ReferFriendMobile = () => {
 
       {/* Total Referrals */}
       <div className="p-4">
-        <div className="bg-white shadow-md rounded-lg p-3 text-center text-green-700 font-semibold">
+        <div className="bg-white shadow-md rounded-lg p-3 text-center text-[#375421] font-semibold">
           Total Referrals: 0
         </div>
       </div>

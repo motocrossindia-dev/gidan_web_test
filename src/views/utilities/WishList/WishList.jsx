@@ -72,7 +72,7 @@ const WishlistItem = ({
 
       {/* <Link to="/cart" className="mt-auto"> */}
       <button
-        className={`w-full py-2 rounded text-xs sm:text-sm font-medium text-white transition ${isOutOfStock ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
+        className={`w-full py-2 rounded text-xs sm:text-sm font-medium text-white transition ${isOutOfStock ? "bg-gray-400 cursor-not-allowed" : "bg-[#375421] hover:bg-[#375421] hover:text-white"
           }`}
         disabled={isOutOfStock}
         onClick={() => {
@@ -161,6 +161,7 @@ const WishList = () => {
         setIsAdded(!isAdded);
         getWishlistItems();
         window.dispatchEvent(new Event("wishlistUpdated"));
+        window.dispatchEvent(new Event("cartUpdated"));
         const wishlistProduct = wishlistItems.find(item => item.product_id === id);
         if (wishlistProduct) trackAddToCart(wishlistProduct);
       }
@@ -180,7 +181,7 @@ const WishList = () => {
     <>
 
 
-      <div className="container mx-auto md:p-4 sm:p-0 bg-gray-50">
+      <div className="container mx-auto md:p-4 sm:p-0 bg-site-bg">
         <h1 className="text-center text-xl sm:text-2xl font-bold mb-4 sm:mb-6">My Wishlist</h1>
         {wishlistItems.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16">
@@ -195,7 +196,7 @@ const WishList = () => {
             <h2 className="text-xl font-semibold text-gray-700 mb-2">Your wishlist is empty</h2>
             <p className="text-gray-500 mb-6 text-sm">Save items you love to your wishlist.</p>
             <button
-              className="bg-lime-500 text-white py-2 px-6 rounded-lg hover:bg-green-600 transition-colors"
+              className="bg-lime-500 text-white py-2 px-6 rounded-lg hover:bg-[#375421] hover:text-white transition-colors"
               onClick={() => router.push("/")}
             >
               Explore Products

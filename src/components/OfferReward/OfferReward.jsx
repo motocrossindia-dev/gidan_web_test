@@ -14,7 +14,7 @@ const OfferCard = ({ title, description, buttonText, image, link }) => (
         <p className="mb-3 sm:mb-4 md:mb-5 lg:mb-6 text-xs sm:text-sm md:text-base leading-relaxed">{description}</p>
         <Link 
           href={link || "#"} 
-          className="bg-white text-green-700 font-medium py-2 sm:py-2.5 px-5 sm:px-6 rounded-md text-sm sm:text-base text-center w-fit hover:bg-gray-100 transition duration-300 active:scale-[0.98]"
+          className="bg-white text-[#375421] font-medium py-2 sm:py-2.5 px-5 sm:px-6 rounded-md text-sm sm:text-base text-center w-fit hover:bg-site-bg transition duration-300 active:scale-[0.98]"
         >
           {buttonText}
         </Link>
@@ -153,7 +153,7 @@ export default OfferReward;
 //         <p className="mb-5 sm:mb-6 text-sm sm:text-sm leading-relaxed">{description}</p>
 //         <Link 
 //           to={link} 
-//           className="bg-white text-green-700 font-medium py-3 sm:py-1 px-6 sm:px-6 rounded-md text-center sm:w-fit hover:bg-gray-100 transition duration-300 active:scale-[0.98]"
+//           className="bg-white text-[#375421] font-medium py-3 sm:py-1 px-6 sm:px-6 rounded-md text-center sm:w-fit hover:bg-site-bg transition duration-300 active:scale-[0.98]"
 //         >
 //           {buttonText}
 //         </Link>

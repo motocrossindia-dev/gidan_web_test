@@ -157,7 +157,7 @@ function ShopTheLook() {
                     {product?.size}
                   </p>
                   <div className="flex items-center gap-2">
-                    <span className="text-green-600 font-bold text-sm md:text-lg">
+                    <span className="text-[#375421] font-bold text-sm md:text-lg">
                       ₹{product?.selling_price}
                     </span>
                     <span className="text-gray-600 line-through text-xs md:text-sm">

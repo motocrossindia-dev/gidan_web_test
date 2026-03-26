@@ -37,7 +37,7 @@ const HeroSection = ({ hero }) => {
   };
 
   return (
-   <div className="relative w-full overflow-hidden mt-4">
+   <div className="relative w-full overflow-hidden mt-4 z-0">
       {hero && hero.length > 0 ? (
         <div className="relative w-full">
 
@@ -113,7 +113,7 @@ const HeroSection = ({ hero }) => {
                 aria-label={`Go to slide ${index + 1}`}
                 className="w-12 h-12 flex items-center justify-center"
               >
-                <span className={`w-3 h-3 rounded-full block ${index === currentIndex ? "bg-green-600" : "bg-gray-300"
+                <span className={`w-3 h-3 rounded-full block ${index === currentIndex ? "bg-[#375421]" : "bg-gray-300"
                   }`} />
               </button>
             ))}
@@ -121,7 +121,7 @@ const HeroSection = ({ hero }) => {
 
         </div>
       ) : (
-        <div className="w-full h-[450px] bg-gray-100 flex items-center justify-center">
+        <div className="w-full h-[450px] bg-site-bg flex items-center justify-center">
           <p>No hero images available</p>
         </div>
       )}

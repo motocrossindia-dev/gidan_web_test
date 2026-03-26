@@ -8,6 +8,9 @@ const location = typeof _location === 'string' ? _location : _location?.src || _
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
+import { useRouter } from "next/navigation";
+import { ChevronLeft, ArrowLeft } from "lucide-react";
+import Breadcrumb from "../../../components/Shared/Breadcrumb";
 
 const STEPS = [
   { key: 'PROCESSING',       label: 'Processing' },
@@ -17,6 +20,7 @@ const STEPS = [
 ];
 
 const TrackOrder = () => {
+  const router = useRouter();
   const { isDesktop } = useDeviceDetect();
   const [orderId, setOrderId] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -79,11 +83,33 @@ const TrackOrder = () => {
 
   return (
     <>
-      <Link href="/profile" className="flex md:hidden items-center gap-2 px-4 pt-4 pb-1 text-bio-green font-medium">
-        ← Back to Profile
-      </Link>
+      <div className="flex flex-col md:hidden bg-white shadow-sm sticky top-0 z-40 border-b">
+        <div className="px-4 pt-4 flex items-center justify-between">
+          <button
+            onClick={() => router.push('/profile')}
+            className="flex items-center text-[#375421] text-sm font-medium"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Profile
+          </button>
+          <div className="flex items-center gap-4 text-xs font-medium text-[#375421]">
+            <button className="hover:underline">Help & Support</button>
+          </div>
+        </div>
 
-      <div className="flex justify-center items-start min-h-screen mx-4 md:mx-10 bg-white font-sans">
+        <div className="p-4 pt-2">
+          <h1 className="text-xl font-bold">Track Order</h1>
+        </div>
+      </div>
+
+      <div className="mt-0 md:hidden text-xs sm:text-sm">
+        <Breadcrumb 
+          items={[{ label: 'Profile', path: '/profile' }]} 
+          currentPage="Track Order" 
+        />
+      </div>
+
+      <div className="flex justify-center items-start min-h-screen mx-4 md:mx-10 bg-white font-sans mt-4">
         {!isSubmitted ? (
           <main className="w-full max-w-lg bg-white p-8 rounded-lg shadow-lg">
             <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
@@ -109,7 +135,7 @@ const TrackOrder = () => {
                     value={orderId}
                     onChange={(e) => setOrderId(e.target.value)}
                     placeholder="Enter your order ID"
-                    className="w-full max-w-[400px] h-[48px] p-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-green-600"
+                    className="w-full max-w-[400px] h-[48px] p-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-[#375421]"
                     required
                   />
                 </div>
@@ -117,7 +143,7 @@ const TrackOrder = () => {
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className="w-full max-w-[400px] h-[48px] py-2 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-md transition duration-300"
+                  className="w-full max-w-[400px] h-[48px] py-2 px-4 bg-[#375421] hover:bg-[#375421] hover:text-white text-white font-semibold rounded-md transition duration-300"
                 >
                   SUBMIT
                 </button>
@@ -130,7 +156,7 @@ const TrackOrder = () => {
             {/* Header row */}
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-bold text-gray-800">
-                Order ID: <span className="text-green-700">{orderId}</span>
+                Order ID: <span className="text-[#375421]">{orderId}</span>
               </h2>
               <button
                 onClick={() => { setIsSubmitted(false); setOrderData(null); setError(""); }}
@@ -143,7 +169,7 @@ const TrackOrder = () => {
             {/* Loading / Error */}
             {loading && (
               <div className="flex justify-center py-12">
-                <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
+                <div className="w-8 h-8 border-4 border-[#375421] border-t-transparent rounded-full animate-spin" />
               </div>
             )}
             {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -155,7 +181,7 @@ const TrackOrder = () => {
                 {/* Current status badge */}
                 <div className="flex items-center gap-3">
                   <span className="text-sm text-gray-500">Current Status:</span>
-                  <span className="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">
+                  <span className="inline-block bg-green-100 text-[#051d18] text-xs font-semibold px-3 py-1 rounded-full">
                     {orderData.current_status_display || orderData.current_status}
                   </span>
                 </div>
@@ -189,7 +215,7 @@ const TrackOrder = () => {
 
                     {/* Active track */}
                     <div
-                      className="absolute top-4 left-[12.5%] h-1 bg-green-500 z-0 transition-all duration-500"
+                      className="absolute top-4 left-[12.5%] h-1 bg-[#375421] z-0 transition-all duration-500"
                       style={{ width: `calc(${progressPct} * 0.75)` }}
                     />
 
@@ -203,7 +229,7 @@ const TrackOrder = () => {
                           {/* Dot */}
                           <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 transition-all
                             ${isActive
-                              ? 'bg-green-500 border-green-200 text-white'
+                              ? 'bg-[#375421] border-green-200 text-white'
                               : 'bg-white border-gray-300 text-gray-300'}
                           `}>
                             {isActive ? (
@@ -218,7 +244,7 @@ const TrackOrder = () => {
                           {/* Label + timestamp */}
                           <div className="mt-2 text-center w-full px-0.5">
                             <p className={`text-[10px] font-bold leading-tight break-words
-                              ${isCurrent ? 'text-green-700' : isActive ? 'text-gray-800' : 'text-gray-400'}
+                              ${isCurrent ? 'text-[#375421]' : isActive ? 'text-gray-800' : 'text-gray-400'}
                             `}>
                               {step.label}
                             </p>
@@ -239,7 +265,7 @@ const TrackOrder = () => {
                     <ul className="space-y-3">
                       {orderData.status_history.map((entry) => (
                         <li key={entry.id} className="flex items-start gap-3 text-sm">
-                          <span className="mt-0.5 w-2 h-2 rounded-full bg-green-500 flex-shrink-0 mt-1.5" />
+                          <span className="mt-0.5 w-2 h-2 rounded-full bg-[#375421] flex-shrink-0 mt-1.5" />
                           <div>
                             <p className="font-medium text-gray-800">{entry.status_display || entry.status}</p>
                             <p className="text-xs text-gray-500">{new Date(entry.timestamp).toLocaleString('en-IN', {

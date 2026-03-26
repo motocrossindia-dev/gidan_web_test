@@ -11,17 +11,19 @@ const CartIconWithCount = () => {
     const accessToken = useSelector(selectAccessToken);
 
     useEffect(() => {
-        // If not logged in, just reset count to 0 and skip fetch
-        if (!accessToken) {
-            setCartCount(0);
-            return;
-        }
-
         const fetchCartData = async () => {
+            // If not logged in, count pending items in localStorage
+            if (!accessToken) {
+                const pending = localStorage.getItem("pendingCartAction");
+                setCartCount(pending ? 1 : 0);
+                return;
+            }
+
             try {
-                const response = await axiosInstance.get('https://backend.gidan.store/order/cart/');
+                // ADDED: Cache-busting timestamp to prevent stale browser/server responses
+                const response = await axiosInstance.get(`/order/cart/?t=${new Date().getTime()}`);
                 const cartItems = response.data?.data?.cart || [];
-                const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+                const totalQuantity = Array.isArray(cartItems) ? cartItems.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0) : 0;
                 setCartCount(totalQuantity);
             } catch (error) {
                 console.error('Failed to fetch cart data', error);
@@ -35,17 +37,21 @@ const CartIconWithCount = () => {
         };
 
         window.addEventListener('cartUpdated', handleCartUpdate);
+        window.addEventListener('storage', handleCartUpdate);
         return () => {
             window.removeEventListener('cartUpdated', handleCartUpdate);
+            window.removeEventListener('storage', handleCartUpdate);
         };
     }, [accessToken]);
 
     return (
         <div className="relative">
             <FiShoppingCart className="w-6 h-6 text-black" />
-            <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-1.5">
-        {cartCount}
-      </span>
+            {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center justify-center min-w-[18px] h-[18px]">
+                    {cartCount > 99 ? '99+' : cartCount}
+                </span>
+            )}
         </div>
     );
 };

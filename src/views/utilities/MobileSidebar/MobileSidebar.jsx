@@ -35,6 +35,7 @@ const MobileSidebar = ({ onNavigate }) => {
   }, []);
 
   const options = [
+    { label: "My Orders", icon: <MdShoppingBag />, link: "/profile/orders" },
     { label: "Edit Profile", icon: <MdPerson />, link: "/profile", section: "editprofile" },
     { label: "Add New Address", icon: <MdLocationOn />, link: "/profile", section: "address" },
     { label: "Track Order", icon: <MdLocalShipping />, link: "/profile/trackorder" },
@@ -42,7 +43,6 @@ const MobileSidebar = ({ onNavigate }) => {
     { label: "Add Gift Card", icon: <MdCardGiftcard />, link: "/profile/giftcard" },
     { label: "GD Coins", icon: <MdMonetizationOn />, link: "/profile/btcoins" },
     { label: "Wallet", icon: <MdAccountBalanceWallet />, link: "/profile/wallet" },
-    { label: "My Orders", icon: <MdShoppingBag />, link: "/profile/orders" },
   ];
 
   const handleEditClick = () => {
@@ -56,7 +56,7 @@ const MobileSidebar = ({ onNavigate }) => {
   return (
     <>
 
-      <div className="max-w-md mx-auto p-2 bg-gray-100 rounded-lg shadow-lg mt-4">
+      <div className="max-w-md mx-auto p-2 bg-site-bg rounded-lg shadow-lg mt-4">
         <div className="flex items-center justify-between p-4 bg-white rounded-lg shadow-md">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 rounded-full bg-bio-green/10 flex items-center justify-center border border-bio-green/20">
@@ -78,18 +78,11 @@ const MobileSidebar = ({ onNavigate }) => {
               )}
             </div>
           </div>
-          <button
-            className="p-2 text-gray-400 hover:text-bio-green transition-colors"
-            onClick={handleEditClick}
-            aria-label="Edit Name"
-          >
-            <MdEdit size={20} />
-          </button>
         </div>
 
         <div className="mt-4 space-y-2">
           {options.map((option, index) => {
-            const cls = "w-full flex items-center justify-between p-4 bg-white rounded-lg shadow-md hover:bg-gray-100 transition";
+            const cls = "w-full flex items-center justify-between p-4 bg-white rounded-lg shadow-md hover:bg-site-bg transition";
             const inner = (
               <>
                 <div className="flex items-center space-x-3">

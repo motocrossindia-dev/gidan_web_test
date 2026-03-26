@@ -18,7 +18,7 @@ const ShippingPolicy = () => {
       <div className="max-w-4xl mx-auto p-6 bg-white text-gray-800 font-sans">
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-green-700 mb-4 flex items-center justify-center gap-3">
+          <h1 className="text-3xl font-bold text-[#375421] mb-4 flex items-center justify-center gap-3">
             <Truck className="w-8 h-8" />
             Shipping and Return Policy
           </h1>
@@ -36,15 +36,15 @@ const ShippingPolicy = () => {
             </h2>
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
-                <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="w-5 h-5 text-[#375421] mt-0.5 flex-shrink-0" />
                 <span>All the orders are dispatched from our warehouse within <strong>1 working days</strong></span>
               </p>
               <p className="flex items-start gap-2">
-                <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="w-5 h-5 text-[#375421] mt-0.5 flex-shrink-0" />
                 <span>Most orders are delivered to your address within <strong>2-6 working days</strong> from the date when the order is placed</span>
               </p>
               <p className="flex items-start gap-2">
-                <Package className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                <Package className="w-5 h-5 text-[#375421] mt-0.5 flex-shrink-0" />
                 <span>You can track your order by clicking on the tracking link provided</span>
               </p>
             </div>
@@ -66,16 +66,16 @@ const ShippingPolicy = () => {
                 </p>
               </div>
               <div className="bg-green-100 p-4 rounded-md">
-                <p className="text-green-800 font-medium mb-3">
+                <p className="text-[#051d18] font-medium mb-3">
                   If you are worried about the plant health, we have your back. Just contact our support team:
                 </p>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-green-600" />
+                    <Mail className="w-4 h-4 text-[#375421]" />
                     <span><strong>Email Us:</strong> support@www.gidan.store</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <MessageCircle className="w-4 h-4 text-green-600" />
+                    <MessageCircle className="w-4 h-4 text-[#375421]" />
                     <span><strong>WhatsApp us</strong> at7483316150</span>
                   </div>
                 </div>
@@ -85,7 +85,7 @@ const ShippingPolicy = () => {
 
           {/* Non-Plant Returns */}
           <section className="bg-green-50 rounded-lg p-6 border-l-4 border-green-400">
-            <h2 className="text-2xl font-semibold text-green-700 mb-4 flex items-center gap-2">
+            <h2 className="text-2xl font-semibold text-[#375421] mb-4 flex items-center gap-2">
               <CheckCircle className="w-6 h-6" />
               Can you return non-plant products? Yes.
             </h2>
@@ -121,7 +121,7 @@ const ShippingPolicy = () => {
         </section> */}
 
           {/* Return Address */}
-          <section className="bg-gray-50 rounded-lg p-6 border-l-4 border-gray-400">
+          <section className="bg-site-bg rounded-lg p-6 border-l-4 border-gray-400">
             <h2 className="text-2xl font-semibold text-gray-700 mb-4 flex items-center gap-2">
               <MapPin className="w-6 h-6" />
               Return Address
@@ -134,7 +134,7 @@ const ShippingPolicy = () => {
                   Jayanagar, Bengaluru, Karnataka 560041,
                 </p>
                 <div className="flex items-center gap-2 mt-3">
-                  <Phone className="w-4 h-4 text-green-600" />
+                  <Phone className="w-4 h-4 text-[#375421]" />
                   <span><strong>Telephone:</strong>+91 7483316150</span>
                 </div>
               </div>
@@ -146,7 +146,7 @@ const ShippingPolicy = () => {
             <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">Quick Summary</h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-white p-4 rounded-md shadow-sm">
-                <h3 className="font-semibold text-green-700 mb-2 flex items-center gap-2">
+                <h3 className="font-semibold text-[#375421] mb-2 flex items-center gap-2">
                   <Truck className="w-5 h-5" />
                   Shipping
                 </h3>

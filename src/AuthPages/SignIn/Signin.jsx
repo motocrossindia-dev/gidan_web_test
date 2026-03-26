@@ -135,7 +135,7 @@ const SignIn = ({ onClose, onGetOtpClick }) => {
         </div>
         {error && <p className="text-red-500 text-xs mb-4">{error}</p>}
         <button
-          className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700"
+          className="w-full bg-[#375421] text-white py-2 rounded-md hover:bg-[#375421] hover:text-white"
           onClick={handleSubmit} // Submit the form
         >
           Get OTP

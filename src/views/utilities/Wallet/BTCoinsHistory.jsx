@@ -1,9 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
-import { ArrowUpRight, ArrowDownRight, Gift, CreditCard } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, Gift, CreditCard, ChevronLeft } from "lucide-react";
+import Breadcrumb from "../../../components/Shared/Breadcrumb";
+import { useRouter } from "next/navigation";
 
 const GDCoinsHistory = () => {
+  const router = useRouter();
   const [activeFilter, setActiveFilter] = useState('ALL');
   const [filteredTransactions, setFilteredTransactions] = useState([]);
 
@@ -32,14 +35,33 @@ const GDCoinsHistory = () => {
 
   return (
     <>
-      <div className="flex justify-center sm:justify-start px-4 sm:px-6 bg-gray-100 min-h-screen w-full">
+      <div className="flex md:hidden items-center justify-between p-4 bg-white shadow-sm sticky top-0 z-40">
+        <button
+          onClick={() => router.push('/profile')}
+          className="flex items-center gap-1 text-bio-green bg-green-50 px-3 py-1.5 rounded-full border border-green-200 transition-all hover:bg-green-100"
+        >
+          <ChevronLeft size={16} />
+          <span className="text-sm font-medium">Profile</span>
+        </button>
+        <h1 className="text-lg font-semibold absolute left-1/2 -translate-x-1/2">GD Coins</h1>
+        <div className="w-10"></div>
+      </div>
+
+      <div className="mt-2 md:hidden text-xs sm:text-sm">
+        <Breadcrumb 
+          items={[{ label: 'Profile', path: '/profile' }]} 
+          currentPage="GD Coins" 
+        />
+      </div>
+
+      <div className="flex justify-center sm:justify-start px-4 sm:px-6 bg-site-bg min-h-screen w-full mt-2">
         <div className="w-full sm:w-full md:w-4/5 lg:w-full xl:w-full h-auto bg-white shadow-lg p-4 sm:p-6 rounded-lg">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold">GD Coins History</h2>
             <div className="text-right">
               <p className="text-sm text-gray-600">Current Balance</p>
-              <p className="text-xl font-bold text-green-600">{data.total_coins} Coins</p>
+              <p className="text-xl font-bold text-[#375421]">{data.total_coins} Coins</p>
             </div>
           </div>
 
@@ -48,8 +70,8 @@ const GDCoinsHistory = () => {
             <button aria-label="Toggle filters"
               onClick={() => setActiveFilter('ALL')}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeFilter === 'ALL'
-                ? 'bg-green-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-[#375421] text-white'
+                : 'bg-site-bg text-gray-700 hover:bg-gray-200'
                 }`}
             >
               All
@@ -57,8 +79,8 @@ const GDCoinsHistory = () => {
             <button aria-label="Toggle filters"
               onClick={() => setActiveFilter('EARN')}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeFilter === 'EARN'
-                ? 'bg-green-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-[#375421] text-white'
+                : 'bg-site-bg text-gray-700 hover:bg-gray-200'
                 }`}
             >
               Earned
@@ -66,8 +88,8 @@ const GDCoinsHistory = () => {
             <button aria-label="Toggle filters"
               onClick={() => setActiveFilter('SPENT')}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeFilter === 'SPENT'
-                ? 'bg-green-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-[#375421] text-white'
+                : 'bg-site-bg text-gray-700 hover:bg-gray-200'
                 }`}
             >
               Spent
@@ -89,7 +111,7 @@ const GDCoinsHistory = () => {
                     <div className="flex items-center space-x-4">
                       <div className={`p-2 rounded-full ${isEarned ? "bg-green-100" : "bg-orange-100"
                         }`}>
-                        <Icon className={`h-5 w-5 ${isEarned ? "text-green-600" : "text-orange-600"
+                        <Icon className={`h-5 w-5 ${isEarned ? "text-[#375421]" : "text-orange-600"
                           }`} />
                       </div>
                       <div>
@@ -104,7 +126,7 @@ const GDCoinsHistory = () => {
                       </div>
                     </div>
                     <div className="flex items-center">
-                      <span className={`flex items-center font-semibold ${isEarned ? "text-green-600" : "text-orange-600"
+                      <span className={`flex items-center font-semibold ${isEarned ? "text-[#375421]" : "text-orange-600"
                         }`}>
                         {isEarned ? (
                           <ArrowUpRight className="h-5 w-5 mr-1" />
@@ -168,14 +190,14 @@ export default GDCoinsHistory;
 //       <>
 //         
 //
-//     <div className="flex justify-center sm:justify-start px-4 sm:px-6 bg-gray-100 min-h-screen w-full">
+//     <div className="flex justify-center sm:justify-start px-4 sm:px-6 bg-site-bg min-h-screen w-full">
 //       <div className="w-full sm:w-full md:w-4/5 lg:w-full xl:w-full h-auto bg-white shadow-lg p-4 sm:p-6 rounded-lg">
 //         {/* Header */}
 //         <div className="flex items-center justify-between mb-6">
 //           <h2 className="text-xl font-semibold">BT Coins History</h2>
 //           <div className="text-right">
 //             <p className="text-sm text-gray-600">Current Balance</p>
-//             <p className="text-xl font-bold text-green-600">{data.total_coins} Coins</p>
+//             <p className="text-xl font-bold text-[#375421]">{data.total_coins} Coins</p>
 //           </div>
 //         </div>
 //
@@ -185,8 +207,8 @@ export default GDCoinsHistory;
 //             onClick={() => setActiveFilter('ALL')}
 //             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
 //               activeFilter === 'ALL'
-//                 ? 'bg-green-600 text-white'
-//                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+//                 ? 'bg-[#375421] text-white'
+//                 : 'bg-site-bg text-gray-700 hover:bg-gray-200'
 //             }`}
 //           >
 //             All
@@ -195,8 +217,8 @@ export default GDCoinsHistory;
 //             onClick={() => setActiveFilter('EARN')}
 //             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
 //               activeFilter === 'EARN'
-//                 ? 'bg-green-600 text-white'
-//                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+//                 ? 'bg-[#375421] text-white'
+//                 : 'bg-site-bg text-gray-700 hover:bg-gray-200'
 //             }`}
 //           >
 //             Earned
@@ -205,8 +227,8 @@ export default GDCoinsHistory;
 //             onClick={() => setActiveFilter('SPENT')}
 //             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
 //               activeFilter === 'SPENT'
-//                 ? 'bg-green-600 text-white'
-//                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+//                 ? 'bg-[#375421] text-white'
+//                 : 'bg-site-bg text-gray-700 hover:bg-gray-200'
 //             }`}
 //           >
 //             Spent
@@ -230,7 +252,7 @@ export default GDCoinsHistory;
 //                       isEarned ? "bg-green-100" : "bg-orange-100"
 //                     }`}>
 //                       <Icon className={`h-5 w-5 ${
-//                         isEarned ? "text-green-600" : "text-orange-600"
+//                         isEarned ? "text-[#375421]" : "text-orange-600"
 //                       }`} />
 //                     </div>
 //                     <div>
@@ -246,7 +268,7 @@ export default GDCoinsHistory;
 //                   </div>
 //                   <div className="flex items-center">
 //                     <span className={`flex items-center font-semibold ${
-//                       isEarned ? "text-green-600" : "text-orange-600"
+//                       isEarned ? "text-[#375421]" : "text-orange-600"
 //                     }`}>
 //                       {isEarned ? (
 //                         <ArrowUpRight className="h-5 w-5 mr-1" />

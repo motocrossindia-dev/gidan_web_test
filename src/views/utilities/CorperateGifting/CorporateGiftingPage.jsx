@@ -43,14 +43,14 @@ const CorporateGiftingForm = () => {
           For more details, you can reach out to us at{' '}
           <a 
             href="mailto:kiran@biotechmagii.com" 
-            className="text-green-600 hover:text-green-700"
+            className="text-[#375421] hover:text-[#375421]"
           >
             kiran@biotechmagii.com
           </a>
           {' '}or call us at{' '}
           <a 
             href="tel:8884981840" 
-            className="text-green-600 hover:text-green-700"
+            className="text-[#375421] hover:text-[#375421]"
           >
             8884981840
           </a>
@@ -77,7 +77,7 @@ const CorporateGiftingForm = () => {
           value={formData.name}
           onChange={handleChange}
           placeholder="Name"
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#375421]"
           required
         />
         <input
@@ -86,7 +86,7 @@ const CorporateGiftingForm = () => {
           value={formData.email}
           onChange={handleChange}
           placeholder="Email"
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#375421]"
           required
         />
         <input
@@ -95,7 +95,7 @@ const CorporateGiftingForm = () => {
           value={formData.phone}
           onChange={handleChange}
           placeholder="Phone"
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#375421]"
           required
         />
         <input
@@ -104,7 +104,7 @@ const CorporateGiftingForm = () => {
           value={formData.company}
           onChange={handleChange}
           placeholder="Company"
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#375421]"
         />
         <textarea
           name="message"
@@ -112,11 +112,11 @@ const CorporateGiftingForm = () => {
           onChange={handleChange}
           placeholder="Message"
           rows={4}
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#375421]"
         />
         <button
           type="submit"
-          className="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition duration-200"
+          className="w-full bg-[#375421] text-white py-3 rounded-md hover:bg-[#375421] hover:text-white transition duration-200"
         >
           Send
         </button>

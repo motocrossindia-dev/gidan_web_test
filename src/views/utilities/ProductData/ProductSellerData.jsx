@@ -82,6 +82,7 @@ const ProductSellerCard = ({
         );
         if (response.status === 200 || response.status === 201) {
           enqueueSnackbar("Product Removed from wishlist", { variant: "success" });
+          window.dispatchEvent(new Event("wishlistUpdated"));
         }
       } else {
         const response = await axios.post(
@@ -91,6 +92,7 @@ const ProductSellerCard = ({
         );
         if (response.status === 200 || response.status === 201) {
           enqueueSnackbar("Added to wishlist", { variant: "success" });
+          window.dispatchEvent(new Event("wishlistUpdated"));
 
           // GA4: Track add_to_wishlist event
           trackAddToWishlist(typeof product === 'object' ? product : { id: product, name });

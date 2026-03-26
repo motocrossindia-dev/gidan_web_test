@@ -151,7 +151,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                                     e.stopPropagation();
                                     handleAddToCart();
                                 }}
-                                className={`w-8 h-8 rounded-full flex items-center justify-center ${inCart ? "bg-green-600 text-white" : "bg-white hover:bg-green-600 hover:text-white"} transition-colors`}
+                                className={`w-8 h-8 rounded-full flex items-center justify-center ${inCart ? "bg-[#375421] text-white" : "bg-white hover:bg-[#375421] hover:text-white"} transition-colors`}
                             >
                                 <MdOutlineShoppingBag className="w-4 h-4" />
                             </button>
@@ -161,7 +161,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                                     e.stopPropagation();
                                     handleAddToWishlist();
                                 }}
-                                className={`w-8 h-8 rounded-full flex items-center justify-center ${inWishlist ? "bg-green-600 text-white" : "bg-white hover:bg-green-600 hover:text-white"} transition-colors`}
+                                className={`w-8 h-8 rounded-full flex items-center justify-center ${inWishlist ? "bg-[#375421] text-white" : "bg-white hover:bg-[#375421] hover:text-white"} transition-colors`}
                             >
                                 {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
                             </button>
@@ -171,7 +171,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                                     e.stopPropagation();
                                     handleQuickView();
                                 }}
-                                className="w-8 h-8 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors"
+                                className="w-8 h-8 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors"
                             >
                                 <FiEye className="w-4 h-4" />
                             </button>
@@ -191,7 +191,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                         </h2>
                         <div className="flex flex-col items-center gap-0.5">
                             <div className="flex items-center gap-2">
-                                <span className="text-xl font-bold text-[#062e25]">
+                                <span className="text-xl font-bold text-[#375421]">
                                     ₹{Math.round(price)}
                                 </span>
                                 {mrp && (mrp > price) && (
@@ -202,7 +202,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                             </div>
 
                             {mrp && price && (mrp > price) && (
-                                <div className="bg-green-100 text-[#062e25] text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 border border-green-200">
+                                <div className="bg-green-100 text-[#375421] text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 border border-green-200">
                                     SAVE ₹{Math.round(mrp - price)} ({Math.round(((mrp - price) / mrp) * 100)}% OFF)
                                 </div>
                             )}
@@ -256,21 +256,21 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                         <div className="flex gap-2 mb-2">
                             <button aria-label="Add to cart"
                                 onClick={handleAddToCart}
-                                className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
                             >
                                 <MdOutlineShoppingBag className="w-4 h-4" />
                             </button>
 
                             <button aria-label="Add to wishlist"
                                 onClick={handleAddToWishlist}
-                                className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
                             >
                                 {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
                             </button>
 
                             <button aria-label="Quick view"
                                 onClick={handleQuickView}
-                                className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
                             >
                                 <FiEye className="w-4 h-4" />
                             </button>
@@ -297,7 +297,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
 
                             <div className="flex flex-col items-center gap-0.5 mt-1">
                                 <div className="flex items-center gap-1.5">
-                                    <span className="text-lg font-bold text-[#062e25]">
+                                    <span className="text-lg font-bold text-[#375421]">
                                         ₹{Math.round(price)}
                                     </span>
                                     {mrp && (mrp > price) && (
@@ -307,7 +307,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                                     )}
                                 </div>
                                 {mrp && price && (mrp > price) && (
-                                    <span className="text-[10px] font-bold text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-100">
+                                    <span className="text-[10px] font-bold text-[#375421] bg-green-50 px-1.5 py-0.5 rounded border border-green-100">
                                         {Math.round(((mrp - price) / mrp) * 100)}% OFF
                                     </span>
                                 )}
@@ -483,7 +483,7 @@ export default ProductCard;
 //                                     e.stopPropagation();
 //                                     handleAddToCart();
 //                                 }}
-//                                 className={`w-8 h-8 rounded-full flex items-center justify-center ${inCart ? "bg-green-600 text-white" : "bg-white hover:bg-green-600 hover:text-white"} transition-colors`}
+//                                 className={`w-8 h-8 rounded-full flex items-center justify-center ${inCart ? "bg-[#375421] text-white" : "bg-white hover:bg-[#375421] hover:text-white"} transition-colors`}
 //                             >
 //                                 <MdOutlineShoppingBag className="w-4 h-4" />
 //                             </button>
@@ -493,7 +493,7 @@ export default ProductCard;
 //                                     e.stopPropagation();
 //                                     handleAddToWishlist();
 //                                 }}
-//                                 className={`w-8 h-8 rounded-full flex items-center justify-center ${inWishlist ? "bg-green-600 text-white" : "bg-white hover:bg-green-600 hover:text-white"} transition-colors`}
+//                                 className={`w-8 h-8 rounded-full flex items-center justify-center ${inWishlist ? "bg-[#375421] text-white" : "bg-white hover:bg-[#375421] hover:text-white"} transition-colors`}
 //                             >
 //                                 {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
 //                             </button>
@@ -503,7 +503,7 @@ export default ProductCard;
 //                                     e.stopPropagation();
 //                                     handleQuickView();
 //                                 }}
-//                                 className="w-8 h-8 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors"
+//                                 className="w-8 h-8 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors"
 //                             >
 //                                 <FiEye className="w-4 h-4" />
 //                             </button>
@@ -532,7 +532,7 @@ export default ProductCard;
 //
 //                             {/* Discount */}
 //                             {mrp && price && (mrp>price) && (
-//                                 <span className="text-base font-semibold text-green-600 mt-1">
+//                                 <span className="text-base font-semibold text-[#375421] mt-1">
 //       {Math.round(((mrp - price) / mrp) * 100)}% OFF
 //     </span>
 //                             )}
@@ -586,21 +586,21 @@ export default ProductCard;
 //                         <div className="flex gap-2 mb-2">
 //                             <button
 //                                 onClick={handleAddToCart}
-//                                 className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+//                                 className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
 //                             >
 //                                 <MdOutlineShoppingBag className="w-4 h-4" />
 //                             </button>
 //
 //                             <button
 //                                 onClick={handleAddToWishlist}
-//                                 className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+//                                 className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
 //                             >
 //                                 {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
 //                             </button>
 //
 //                             <button
 //                                 onClick={handleQuickView}
-//                                 className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+//                                 className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
 //                             >
 //                                 <FiEye className="w-4 h-4" />
 //                             </button>
@@ -641,7 +641,7 @@ export default ProductCard;
 //
 //                                 {/* Discount */}
 //                                 {mrp && price && (mrp>price) && (
-//                                     <span className="text-sm font-semibold text-green-600 mt-1">
+//                                     <span className="text-sm font-semibold text-[#375421] mt-1">
 //       {Math.round(((mrp - price) / mrp) * 100)}% OFF
 //     </span>
 //                                 )}

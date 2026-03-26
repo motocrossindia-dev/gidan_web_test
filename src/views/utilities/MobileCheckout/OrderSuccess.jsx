@@ -45,7 +45,7 @@ const OrderSuccess = () => {
 
           <button
             onClick={() => router.push('/')}
-            className="w-full py-3 bg-green-600 text-white rounded-lg font-medium"
+            className="w-full py-3 bg-[#375421] text-white rounded-lg font-medium"
           >
             Continue Shopping
           </button>

@@ -119,7 +119,7 @@ export default function StaticBreadcrumb() {
   const parentCrumbs = crumbs.slice(0, -1);
 
   return (
-    <div className="bg-gray-50 border-b border-gray-200">
+    <div className="bg-site-bg border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-1 text-sm text-gray-500 flex-wrap">
         <Link href="/" className="flex items-center gap-1 hover:text-bio-green transition-colors">
           <Home size={14} />

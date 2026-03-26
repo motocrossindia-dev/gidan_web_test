@@ -63,7 +63,7 @@ const AddressPage = () => {
           <div className="mb-6">
             <h2 className="text-lg font-medium mb-4">Deliver To:</h2>
             <div
-              className="border rounded-lg p-4 mb-4 cursor-pointer border-green-600"
+              className="border rounded-lg p-4 mb-4 cursor-pointer border-[#375421]"
               onClick={() => setSelectedAddress(0)}
             >
               <div className="flex justify-between items-start">
@@ -75,7 +75,7 @@ const AddressPage = () => {
                         e.stopPropagation();
                         setEditingAddress(true);
                       }}
-                      className="text-sm text-green-600"
+                      className="text-sm text-[#375421]"
                     >
                       Edit
                     </button>
@@ -97,7 +97,7 @@ const AddressPage = () => {
         <div className="p-4 border-t">
           <button
             onClick={() => router.push('/order-summary')}
-            className="w-full py-3 bg-green-600 text-white rounded-lg font-medium"
+            className="w-full py-3 bg-[#375421] text-white rounded-lg font-medium"
           >
             Deliver Here
           </button>

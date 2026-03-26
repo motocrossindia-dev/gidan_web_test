@@ -3,7 +3,7 @@
 
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState, useMemo } from "react";
-import { Tag, CheckCircle, Pencil, ChevronDown, Check } from 'lucide-react';
+import { Tag, CheckCircle, Pencil, ChevronDown, Check, X } from 'lucide-react';
 import RazorpayPayment from "../RazorPayment/RazorpayPayment";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
@@ -121,8 +121,8 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
                 <div className="flex items-center gap-2 mb-2">
                   {selectedAddrObj.address_type && (
                     <span className={`px-3 py-1 rounded-md text-[10px] font-bold tracking-wider flex items-center gap-1 ${selectedAddrObj.address_type.toLowerCase() === 'home'
-                      ? 'bg-green-100 text-green-700 border border-green-200'
-                      : 'bg-blue-100 text-blue-700 border border-blue-200'
+                      ? 'bg-[#375421]/10 text-[#375421] border border-[#375421]/20'
+                      : 'bg-orange-100 text-orange-700 border border-orange-200'
                       }`}>
                       {selectedAddrObj.address_type.toUpperCase()}
                     </span>
@@ -149,9 +149,9 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
                     setSelectedAddress(addr.id);
                     setShowAllAddresses(false);
                   }}
-                  className={`p-5 pl-14 border rounded-2xl cursor-pointer relative transition-all ${selectedAddress === addr.id
-                    ? 'border-bio-green bg-green-50/40 shadow-sm'
-                    : 'border-gray-100 bg-white hover:border-gray-200'
+                  className={`p-5 pl-14 border rounded-2xl cursor-pointer relative transition-all duration-300 ${selectedAddress === addr.id
+                    ? 'border-bio-green bg-green-50 shadow-md scale-[1.01]'
+                    : 'border-gray-100 bg-white hover:border-bio-green hover:bg-green-100/20 hover:shadow-md'
                     }`}
                 >
                   <div className="absolute left-4 top-1/2 -translate-y-1/2">
@@ -164,8 +164,8 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
                     <div className="mb-2">
                       {addr.address_type && (
                         <span className={`px-3 py-1 rounded-md text-[10px] font-bold tracking-wider ${addr.address_type.toLowerCase() === 'home'
-                          ? 'bg-green-100 text-green-700 border border-transparent'
-                          : 'bg-blue-100 text-blue-700 border border-transparent'
+                          ? 'bg-[#375421]/10 text-[#375421] border border-transparent'
+                          : 'bg-orange-100 text-orange-700 border border-transparent'
                           }`}>
                           {addr.address_type.toUpperCase()}
                         </span>
@@ -285,19 +285,18 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
         {/* Gift Option */}
         <div className="mt-8 pt-6 border-t border-dashed border-gray-100">
           <label 
-            className="flex items-center gap-4 cursor-pointer group w-fit"
+            className="flex items-center gap-4 cursor-pointer group"
             onClick={() => setIsGift(!isGift)}
           >
-            <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all ${isGift ? 'bg-bio-green border-bio-green' : 'border-gray-300 group-hover:border-bio-green'}`}>
+            <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all shrink-0 ${isGift ? 'bg-bio-green border-bio-green' : 'border-gray-300 group-hover:border-bio-green'}`}>
               {isGift && <Check size={16} strokeWidth={4} className="text-white" />}
             </div>
-            <span className={`text-sm font-extrabold uppercase tracking-tight transition-colors ${isGift ? 'text-gray-900' : 'text-gray-500'}`}>
-              This is a gift
-            </span>
+            <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-3">
+              <span className={`text-sm font-extrabold uppercase tracking-tight transition-colors whitespace-nowrap ${isGift ? 'text-gray-900' : 'text-gray-500'}`}>
+                 This is a gift
+              </span>
+            </div>
           </label>
-          <p className="text-xs text-gray-400 font-medium mt-1 ml-10">
-            Let us know if this is a gift and we'll ensure a special experience.
-          </p>
         </div>
       </section>
     </div>
@@ -462,7 +461,7 @@ const AddNewAddress = ({ isOpen, setIsOpen }) => {
                 placeholder="City (Auto-filled) *"
                 value={newAddress.city || ""}
                 readOnly
-                className={`border p-2 rounded w-full bg-gray-100 cursor-not-allowed${newAddressErrors.city ? ' border-red-500' : ''}`}
+                className={`border p-2 rounded w-full bg-site-bg cursor-not-allowed${newAddressErrors.city ? ' border-red-500' : ''}`}
               />
               {newAddressErrors.city && <p className="text-red-500 text-xs mt-1">{newAddressErrors.city}</p>}
             </div>
@@ -472,7 +471,7 @@ const AddNewAddress = ({ isOpen, setIsOpen }) => {
                 placeholder="State (Auto-filled) *"
                 value={newAddress.state || ""}
                 readOnly
-                className={`border p-2 rounded w-full bg-gray-100 cursor-not-allowed${newAddressErrors.state ? ' border-red-500' : ''}`}
+                className={`border p-2 rounded w-full bg-site-bg cursor-not-allowed${newAddressErrors.state ? ' border-red-500' : ''}`}
               />
               {newAddressErrors.state && <p className="text-red-500 text-xs mt-1">{newAddressErrors.state}</p>}
             </div>
@@ -541,14 +540,14 @@ const AddNewAddress = ({ isOpen, setIsOpen }) => {
           <div className="flex space-x-2 mt-4">
             <button
               type="submit"
-              className="bg-[#062e25] text-white px-6 py-2 rounded-md font-bold hover:bg-[#051d18]"
+              className="bg-[#375421] text-white px-6 py-2 rounded-md font-bold hover:bg-[#2d451b] hover:text-white"
             >
               Save Address
             </button>
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="border border-gray-300 px-6 py-2 rounded-md hover:bg-gray-50"
+              className="border border-gray-300 px-6 py-2 rounded-md hover:bg-site-bg"
             >
               Cancel
             </button>
@@ -564,7 +563,7 @@ const AddNewAddress = ({ isOpen, setIsOpen }) => {
 
 
 
-const OrderSummaryItem = ({ id, title, Quantity, mrp, sales_price, discount, image, onUpdateQuantity, isEditing }) => {
+const OrderSummaryItem = ({ id, title, Quantity, mrp, sales_price, discount, image, onUpdateQuantity, isEditing, isMobile }) => {
   const qty = Number(Quantity) || 1;
   const unitMrp = Number(mrp) || 0;
   const unitPrice = qty > 0 ? (Number(sales_price) || 0) / qty : (Number(sales_price) || 0);
@@ -573,12 +572,68 @@ const OrderSummaryItem = ({ id, title, Quantity, mrp, sales_price, discount, ima
   const savingPct = unitMrp > 0 && unitDisc > 0 ? Math.round((unitDisc / unitMrp) * 100) : 0;
   const lineTotal = Number(sales_price) || 0;
 
+  if (isMobile) {
+    return (
+      <div className="border-b border-gray-50 py-4 last:border-0">
+        <div className="flex gap-4">
+          <div className="w-20 h-20 bg-site-bg rounded-xl overflow-hidden shrink-0 border border-gray-100 p-1">
+            <img
+              src={`${process.env.NEXT_PUBLIC_API_URL}${image}`}
+              alt={title}
+              className="w-full h-full object-contain"
+              onError={(e) => { e.target.src = '/placeholder.png'; }}
+            />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h4 className="font-bold text-gray-800 text-sm leading-tight line-clamp-2 mb-1">{title}</h4>
+            <p className="text-[10px] text-gray-400 font-medium mb-3">Standard Delivery</p>
+            
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-400 line-through">₹{Number(mrp).toFixed(2)}</span>
+                <span className="font-bold text-gray-800">₹{Number(sales_price / qty).toFixed(2)}</span>
+              </div>
+              
+              {isEditing ? (
+                <div className="flex items-center p-1 border border-bio-green bg-green-50 rounded-lg gap-2">
+                  <button
+                    onClick={() => onUpdateQuantity(id, qty - 1)}
+                    disabled={qty <= 1}
+                    className="w-5 h-5 flex items-center justify-center bg-white border border-bio-green rounded-md text-bio-green"
+                  >
+                    <span className="leading-none select-none relative -top-[0.5px]">−</span>
+                  </button>
+                  <span className="w-5 text-center font-bold text-gray-800 text-[11px]">{qty}</span>
+                  <button
+                    onClick={() => onUpdateQuantity(id, qty + 1)}
+                    className="w-5 h-5 flex items-center justify-center bg-white border border-bio-green rounded-md text-bio-green"
+                  >
+                    <span className="leading-none select-none relative -top-[0.5px]">+</span>
+                  </button>
+                </div>
+              ) : (
+                <span className="text-[11px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">Qty: {qty}</span>
+              )}
+            </div>
+            
+            <div className="flex items-center justify-between mt-2 pt-2 border-t border-dotted border-gray-100">
+              <div className="flex items-center gap-1">
+                <span className="text-[10px] text-emerald-600 font-bold">SAVED ₹{Number(discount).toFixed(2)}</span>
+              </div>
+              <span className="font-extrabold text-gray-800">₹{Number(sales_price).toFixed(2)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <tr className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+    <tr className="hidden md:table-row border-b border-gray-100 hover:bg-site-bg transition-colors">
       {/* Items Description */}
       <td className="py-4 pr-3">
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 bg-gray-50 rounded-lg overflow-hidden shrink-0 border border-gray-100 p-1">
+          <div className="w-14 h-14 bg-site-bg rounded-lg overflow-hidden shrink-0 border border-gray-100 p-1">
             <img
               src={`${process.env.NEXT_PUBLIC_API_URL}${image}`}
               alt={title}
@@ -607,26 +662,26 @@ const OrderSummaryItem = ({ id, title, Quantity, mrp, sales_price, discount, ima
               disabled={qty <= 1}
               className="w-6 h-6 flex items-center justify-center bg-white border border-bio-green rounded-md text-bio-green font-bold text-lg hover:bg-bio-green hover:text-white transition-colors disabled:opacity-50"
             >
-              −
+              <span className="leading-none select-none relative -top-[1px]">−</span>
             </button>
             <span className="w-8 text-center font-extrabold text-gray-800 text-sm">{qty}</span>
             <button
               onClick={() => onUpdateQuantity(id, qty + 1)}
               className="w-6 h-6 flex items-center justify-center bg-white border border-bio-green rounded-md text-bio-green font-bold text-lg hover:bg-bio-green hover:text-white transition-colors"
             >
-              +
+              <span className="leading-none select-none relative -top-[1px]">+</span>
             </button>
           </div>
         ) : (
-          <span className="text-sm font-extrabold text-gray-800 bg-gray-100 px-3 py-1 rounded-full">{qty}</span>
+          <span className="text-sm font-extrabold text-gray-800 bg-site-bg px-3 py-1 rounded-full">{qty}</span>
         )}
       </td>
 
       {/* Savings */}
       <td className="py-4 px-3 text-center">
         <div className="flex flex-col items-center">
-          <span className="text-sm font-bold text-green-600">₹{Number(discount).toFixed(2)}</span>
-          <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-bold">SAVED</span>
+          <span className="text-sm font-bold text-[#375421]">₹{Number(discount).toFixed(2)}</span>
+          <span className="text-[10px] bg-green-100 text-[#375421] px-1.5 py-0.5 rounded-full font-bold">SAVED</span>
         </div>
       </td>
 
@@ -694,9 +749,9 @@ const OrderSummary = ({ selectedOption, selectedAddress, data, onUpdateData }) =
         </div>
         <button
           onClick={(e) => { e.stopPropagation(); setIsEditing(!isEditing); if (!isOpen) setIsOpen(true); }}
-          className="text-xs font-bold flex items-center gap-1 text-bio-green hover:bg-green-50 px-2 py-1 rounded-md transition-colors"
+          className="text-xs font-bold flex items-center gap-1 text-bio-green hover:bg-bio-green hover:text-white px-2 py-1 rounded-md transition-all border border-transparent hover:border-bio-green scale-100 active:scale-95"
         >
-          <Pencil size={14} /> Edit cart
+          <Pencil size={12} className="shrink-0" /> <span className="relative top-[0.5px]">Edit cart</span>
         </button>
       </div>
 
@@ -707,7 +762,7 @@ const OrderSummary = ({ selectedOption, selectedAddress, data, onUpdateData }) =
         <div className="flex items-center gap-3 overflow-hidden">
           <div className="flex -space-x-1 shrink-0">
             {orderItems.slice(0, 3).map((item, idx) => (
-              <div key={idx} className="w-8 h-8 md:w-10 md:h-10 rounded-lg overflow-hidden border-2 border-white shadow-sm hover:z-10 bg-gray-50">
+              <div key={idx} className="w-8 h-8 md:w-10 md:h-10 rounded-lg overflow-hidden border-2 border-white shadow-sm hover:z-10 bg-site-bg">
                 <img
                   src={`${process.env.NEXT_PUBLIC_API_URL}${item.image}`}
                   alt=""
@@ -733,34 +788,57 @@ const OrderSummary = ({ selectedOption, selectedAddress, data, onUpdateData }) =
       </div>
 
       {isOpen && (
-        <div className="bg-white rounded-b-md overflow-x-auto mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
-          <table className="w-full text-sm min-w-[600px]">
-            <thead>
-              <tr className="border-b border-gray-100">
-                <th className="text-left text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Items Description</th>
-                <th className="text-center text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">MRP</th>
-                <th className="text-center text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Qty</th>
-                <th className="text-center text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Savings</th>
-                <th className="text-right text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Total</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-50">
-              {orderItems.map((item, idx) => (
-                <OrderSummaryItem
-                  key={item.id ?? idx}
-                  id={item.id}
-                  title={item.product_name}
-                  Quantity={item.quantity}
-                  mrp={item.mrp}
-                  sales_price={item.selling_price}
-                  discount={item.discount}
-                  image={item.image}
-                  onUpdateQuantity={handleUpdateQuantity}
-                  isEditing={isEditing}
-                />
-              ))}
-            </tbody>
-          </table>
+        <div className="bg-white rounded-b-md mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
+          <div className="hidden md:block">
+            <div className="max-h-[400px] overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent pr-1">
+              <table className="w-full text-sm min-w-[600px]">
+                <thead className="sticky top-0 bg-white z-10 shadow-[0_1px_0_0_rgba(0,0,0,0.05)]">
+                  <tr className="border-b border-gray-100">
+                    <th className="text-left text-[11px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Items Description</th>
+                    <th className="text-center text-[11px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">MRP</th>
+                    <th className="text-center text-[11px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Qty</th>
+                    <th className="text-center text-[11px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Savings</th>
+                    <th className="text-right text-[11px] font-bold uppercase tracking-widest text-gray-400 py-3 px-3">Total</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-50">
+                  {orderItems.map((item, idx) => (
+                    <OrderSummaryItem
+                      key={item.id ?? idx}
+                      id={item.id}
+                      title={item.product_name}
+                      Quantity={item.quantity}
+                      mrp={item.mrp}
+                      sales_price={item.selling_price}
+                      discount={item.discount}
+                      image={item.image}
+                      onUpdateQuantity={handleUpdateQuantity}
+                      isEditing={isEditing}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Mobile specific list - with vertical scroll if list is long */}
+          <div className="md:hidden max-h-[500px] overflow-y-auto overflow-x-hidden space-y-2 pr-1">
+            {orderItems.map((item, idx) => (
+              <OrderSummaryItem
+                key={item.id ?? idx}
+                id={item.id}
+                title={item.product_name}
+                Quantity={item.quantity}
+                mrp={item.mrp}
+                sales_price={item.selling_price}
+                discount={item.discount}
+                image={item.image}
+                onUpdateQuantity={handleUpdateQuantity}
+                isEditing={isEditing}
+                isMobile={true}
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -857,7 +935,7 @@ const ApplyCoupon = ({ id, setCoupon, coupon, onRemoveCoupon }) => {
       <div className="bg-[#f2f8f2] p-4 rounded-lg mt-4 border border-emerald-50">
         <div className="flex items-center gap-2 mb-3">
           <Tag className="text-[#c5a382]" size={16} fill="#c5a382" />
-          <span className="text-[11px] font-bold text-[#062e25] uppercase tracking-wider">APPLY COUPON</span>
+          <span className="text-[11px] font-bold text-[#375421] uppercase tracking-wider">APPLY COUPON</span>
         </div>
 
         {coupon?.success ? (
@@ -883,38 +961,35 @@ const ApplyCoupon = ({ id, setCoupon, coupon, onRemoveCoupon }) => {
             <div className="flex gap-2">
               <input
                 type="text"
-                placeholder="Coupon code"
+                placeholder="PROMO CODE"
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                className="flex-1 px-3 py-2 border-2 border-dashed border-[#062e25]/30 rounded-lg focus:outline-none text-sm bg-white placeholder:text-gray-300"
+                className="flex-1 px-3 py-2 border-2 border-dashed border-[#375421]/30 rounded-lg focus:outline-none text-sm bg-white placeholder:text-gray-300 font-bold uppercase"
               />
               <button
                 onClick={applyManualCoupon}
-                className="bg-[#062e25] text-white font-bold px-5 py-2 rounded-lg hover:bg-[#051d18] transition-colors text-xs uppercase"
+                className="bg-[#375421] text-white font-bold px-6 py-2 rounded-lg hover:bg-[#2d451b] hover:text-white transition-colors text-xs uppercase tracking-widest shadow-sm"
               >
-                Apply
+                APPLY
               </button>
             </div>
 
             {coupons.length > 0 && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-x-2">
-                  <span className="text-[10px] text-gray-500">Try</span>
-                  {coupons.slice(0, 1).map((c) => (
-                    <button
-                      key={c.id}
-                      onClick={() => c.is_applicable && applyCouponById(c.id)}
-                      className={`text-[10px] font-bold underline decoration-dashed transition-colors ${c.is_applicable ? 'text-[#062e25] hover:text-[#051d18]' : 'text-gray-400'}`}
-                    >
-                      {c.code}
-                    </button>
-                  ))}
-                  <span className="text-[10px] text-gray-400">· {coupons[0]?.description?.split(' ')[0] || 'Offers'}</span>
+                  <span className="text-[10px] text-gray-500 font-bold uppercase tracking-tighter">Try</span>
+                  <button
+                    onClick={() => coupons[0]?.is_applicable && applyCouponById(coupons[0].id)}
+                    className={`text-[10px] font-bold underline decoration-dashed transition-colors uppercase ${coupons[0]?.is_applicable ? 'text-[#375421] hover:text-[#2d451b]' : 'text-gray-400'}`}
+                  >
+                    {coupons[0]?.code}
+                  </button>
+                  <span className="text-[10px] text-gray-400 font-medium">· Launch from payment</span>
                 </div>
                 {coupons.length > 1 && (
                   <button
                     onClick={() => setShowDrawer(true)}
-                    className="text-[10px] font-bold text-[#062e25] uppercase hover:underline"
+                    className="text-[10px] font-bold text-[#375421] uppercase hover:underline"
                   >
                     + More
                   </button>
@@ -936,13 +1011,13 @@ const ApplyCoupon = ({ id, setCoupon, coupon, onRemoveCoupon }) => {
                     key={c.id}
                     className={`group relative p-5 border-2 rounded-[24px] transition-all duration-300 ${c.is_applicable
                         ? 'bg-white border-gray-900 hover:border-emerald-600 shadow-sm'
-                        : 'bg-gray-50 border-gray-100 opacity-60'
+                        : 'bg-site-bg border-gray-100 opacity-60'
                       }`}
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-3">
-                          <span className={`font-black text-[11px] px-3.5 py-1.5 rounded-lg border-2 tracking-widest uppercase transition-colors ${c.is_applicable ? 'text-gray-900 bg-[#ebf5eb] border-gray-900' : 'text-gray-400 bg-gray-100 border-gray-200'}`}>
+                          <span className={`font-black text-[11px] px-3.5 py-1.5 rounded-lg border-2 tracking-widest uppercase transition-colors ${c.is_applicable ? 'text-gray-900 bg-[#ebf5eb] border-gray-900' : 'text-gray-400 bg-site-bg border-gray-200'}`}>
                             {c.code}
                           </span>
                           {c.is_applicable && (
@@ -963,8 +1038,8 @@ const ApplyCoupon = ({ id, setCoupon, coupon, onRemoveCoupon }) => {
                         onClick={() => c.is_applicable && applyCouponById(c.id)}
                         className={`w-full py-4.5 rounded-2xl font-black text-[12px] uppercase tracking-[0.1em] transition-all active:scale-[0.96] flex items-center justify-center gap-2
                         ${c.is_applicable
-                            ? 'bg-white text-gray-900 border-2 border-gray-900 hover:bg-gray-50 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none'
-                            : 'bg-gray-100 text-gray-300 cursor-not-allowed border-2 border-gray-200'
+                            ? 'bg-white text-gray-900 border-2 border-gray-900 hover:bg-site-bg shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none'
+                            : 'bg-site-bg text-gray-300 cursor-not-allowed border-2 border-gray-200'
                           }`}
                       >
                         {c.is_applicable ? 'APPLY COUPON' : 'LOCKED'}
@@ -1027,12 +1102,12 @@ const PaymentMethods = () => {
   };
 
   return (
-    <div className="bg-gray-100 p-4 mt-4">
-      <div className="bg-green-900 text-white p-4 rounded-md cursor-pointer flex justify-between items-center"
+    <div className="bg-site-bg p-4 mt-4">
+      <div className="bg-[#375421] text-white p-4 rounded-md cursor-pointer flex justify-between items-center shadow-md hover:bg-[#2d451b] transition-colors"
         onClick={toggleDropdown}
       >
-        <h2 className="font-bold flex items-center">
-          <span className="bg-white text-green-900 px-2 py-1 rounded-full mr-2">
+        <h2 className="font-bold flex items-center uppercase tracking-wider text-sm">
+          <span className="bg-white text-[#375421] w-6 h-6 rounded-full mr-3 flex items-center justify-center text-xs font-black shadow-inner">
             4
           </span>
           Select a payment method
@@ -1050,12 +1125,12 @@ const PaymentMethods = () => {
                 onClick={() => option.type === 'radio' && setSelectedMethod(option.id)}
               >
                 {option.type === 'checkbox' ? (
-                  <CheckCircle className="w-6 h-6 text-green-600 mt-1 flex-shrink-0" />
+                  <CheckCircle className="w-6 h-6 text-[#375421] mt-1 flex-shrink-0" />
                 ) : (
                   <div className="mt-1 flex-shrink-0">
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedMethod === option.id ? 'border-green-600 bg-white' : 'border-green-600 bg-white'}`}>
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedMethod === option.id ? 'border-[#375421] bg-white' : 'border-[#375421] bg-white'}`}>
                       {selectedMethod === option.id && (
-                        <div className="w-2.5 h-2.5 rounded-full bg-green-600" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-[#375421]" />
                       )}
                     </div>
                   </div>
@@ -1078,7 +1153,7 @@ const PaymentMethods = () => {
             {selectedMethod === 'razorpay' ? (
               <RazorpayPayment />
             ) : (
-              <button className="bg-bio-green text-white font-medium px-8 py-3 rounded hover:bg-green-700 transition-colors">
+              <button className="bg-bio-green text-white font-medium px-8 py-3 rounded hover:bg-[#375421] hover:text-white transition-colors">
                 Proceed To Payment
               </button>
             )}
@@ -1471,59 +1546,246 @@ const CheckoutPage = () => {
       {/* ── Partial Wallet Payment Popup ── */}
       {partialPaymentPopup && (
         <div
-          className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]"
+          className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center animate-in fade-in duration-300 px-4"
+          style={{ zIndex: 100001 }}
           onClick={() => setPartialPaymentPopup(null)}
         >
           <div
-            className="bg-white rounded-2xl shadow-2xl p-6 mx-4 w-full max-w-sm"
+            className="bg-white rounded-[32px] shadow-2xl p-8 w-full max-w-md transform transition-all animate-in zoom-in-95 duration-200"
+            style={{ zIndex: 100002 }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-lg font-bold text-gray-800 text-center mb-3">Partial Wallet Payment</h2>
-            <p className="text-sm text-gray-600 text-center mb-4">{partialPaymentPopup.message}</p>
-            <div className="bg-gray-50 rounded-lg p-3 mb-5 space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-500">Wallet Debited</span>
-                <span className="font-semibold text-green-600">₹{partialPaymentPopup.wallet_debited}</span>
+            <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
+              <span className="text-3xl text-[#375421]">💳</span>
+            </div>
+            <h2 className="text-xl font-black text-gray-900 text-center uppercase tracking-tight mb-2">Partial Balance Due</h2>
+            <p className="text-xs text-gray-500 text-center font-bold uppercase tracking-widest mb-6 leading-relaxed">
+              {partialPaymentPopup.message}
+            </p>
+            
+            <div className="bg-site-bg rounded-2xl p-5 mb-8 space-y-3 border border-gray-100">
+              <div className="flex justify-between items-baseline">
+                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Wallet Used</span>
+                <span className="font-black text-lg text-[#375421]">₹{partialPaymentPopup.wallet_debited}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-500">Remaining via UPI</span>
-                <span className="font-semibold text-gray-800">₹{partialPaymentPopup.remaining}</span>
+              <div className="h-px bg-dashed bg-gray-200 w-full shrink-0" />
+              <div className="flex justify-between items-baseline">
+                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest text-emerald-700">Balance to Pay</span>
+                <span className="font-black text-2xl text-gray-900">₹{partialPaymentPopup.remaining}</span>
               </div>
             </div>
+
             <button
-              className="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors mb-2"
+              className="w-full py-5 bg-[#375421] text-white font-black text-sm uppercase tracking-[0.2em] rounded-2xl hover:bg-[#2d451b] shadow-[0_20px_40px_-15px_rgba(55,84,33,0.4)] transition-all active:scale-[0.98] mb-3"
               onClick={handleProceedWithRazorpay}
             >
-              Proceed with Razorpay
+              Pay Remaining Balance
             </button>
             <button
-              className="w-full py-2 text-gray-500 text-sm hover:text-gray-700 transition-colors"
+              className="w-full py-3 text-gray-400 text-[10px] font-black uppercase tracking-widest hover:text-gray-600 transition-colors"
               onClick={() => setPartialPaymentPopup(null)}
             >
-              Cancel
+              Cancel Payment
             </button>
           </div>
         </div>
       )}
 
-      <div className="min-h-screen bg-gray-100">
+      {/* ── Payment Method Centered Modal ── */}
+      {showPaymentStep && (
+        <div 
+          className="fixed inset-0 flex items-center justify-center p-4 shadow-2xl"
+          style={{ zIndex: 99999 }}
+        >
+          <div 
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" 
+            style={{ zIndex: 99998 }}
+            onClick={() => setShowPaymentStep(false)}
+          />
+          <div 
+            className="relative bg-white w-[95%] max-w-2xl rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 fade-in duration-200"
+            style={{ zIndex: 99999 }}
+          >
+            {/* Modal Header */}
+            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white shrink-0">
+              <div>
+                <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight leading-none">Select Payment Method</h3>
+                <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest mt-1">Secure · 256-bit Encryption</p>
+              </div>
+              <button 
+                onClick={() => setShowPaymentStep(false)}
+                className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="p-6 md:p-10 space-y-6">
+              {/* Order Summary Recap - Compact Row */}
+              <div className="bg-site-bg rounded-2xl p-4 border border-gray-100 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-1 h-8 bg-[#375421] rounded-full" />
+                  <div>
+                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Total Amount</p>
+                    <span className="text-xl font-black text-gray-900 leading-none">₹{correctedPayableAmount.toFixed(2)}</span>
+                  </div>
+                </div>
+                <div className="flex -space-x-2">
+                  {/* Map over items from data if available, or just show a placeholder if activeItems is not defined in this scope */}
+                  {data?.items?.slice(0, 3).map((item, idx) => (
+                    <div key={idx} className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-100 shadow-sm">
+                      <img src={`${axiosInstance.defaults.baseURL}${item.image}`} className="w-full h-full object-cover" alt="" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-5">
+                {/* GST Checkbox - More compact */}
+                <div
+                  className={`p-4 rounded-2xl border-2 transition-all cursor-pointer ${isGstSelected ? 'border-[#375421] bg-green-50' : 'border-gray-100 bg-white'}`}
+                  onClick={() => {
+                    const v = !isGstSelected;
+                    setIsGstSelected(v);
+                    setIsGst(v);
+                    setSelectedGst(v ? gstFromProfile : '');
+                  }}
+                >
+                  <label className="flex items-center gap-3 text-sm text-gray-700 cursor-pointer w-full">
+                    <div className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${isGstSelected ? 'bg-[#375421] border-[#375421]' : 'border-gray-300'}`}>
+                      {isGstSelected && <Check size={12} className="text-white" strokeWidth={5} />}
+                    </div>
+                    <span className="font-black uppercase tracking-tight text-[11px] text-gray-900">Include GST Details</span>
+                  </label>
+                  {isGstSelected && (
+                    <div className="mt-3 ml-7 pt-3 border-t border-dashed border-green-200">
+                      <p className="text-[10px] text-green-700 font-bold uppercase">{gstFromProfile ? `GSTIN: ${gstFromProfile}` : 'Missing GST in Profile'}</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Payment options - Grid for wide screen */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {[
+                    { id: 'Wallet', label: 'Gidan Wallet', sub: `₹${walletBalance?.balance ?? '0'}` },
+                    { id: 'UPI', label: 'Razorpay Secure', sub: 'Cards · UPI · Pay' },
+                    { id: 'cod', label: 'Pay on Delivery', sub: 'Unavailable', disabled: true },
+                  ].map((opt) => (
+                    <div
+                      key={opt.id}
+                      onClick={() => !opt.disabled && setSelectedPayMethod(opt.id)}
+                      className={`flex items-center gap-3 p-4 rounded-2xl border-2 transition-all cursor-pointer
+                      ${opt.id === 'cod' ? 'md:col-span-1 opacity-40 cursor-not-allowed border-gray-100' : 
+                        selectedPayMethod === opt.id ? 'border-[#375421] bg-green-50' : 'border-gray-100 bg-white hover:border-gray-300'}`}
+                    >
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0
+                      ${selectedPayMethod === opt.id ? 'border-[#375421]' : 'border-gray-300'}`}>
+                        {selectedPayMethod === opt.id && <div className="w-2 h-2 rounded-full bg-[#375421]" />}
+                      </div>
+                      <div>
+                        <p className="font-black text-[11px] text-gray-900 uppercase leading-none">{opt.label}</p>
+                        <p className="text-[9px] text-gray-500 mt-1 font-bold uppercase tracking-widest leading-none">{opt.sub}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Action Button & Footer Info */}
+              <div className="pt-2">
+                <button
+                  onClick={handlePayment}
+                  disabled={isGstSelected && !gstFromProfile}
+                  className={`w-full py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all
+                  ${(isGstSelected && !gstFromProfile) 
+                    ? 'bg-gray-100 text-gray-300 cursor-not-allowed' 
+                    : 'bg-[#375421] text-white hover:shadow-lg active:scale-[0.99]'}`}
+                >
+                  Confirm Order
+                </button>
+                
+                <div className="mt-6 pt-6 border-t border-dashed border-gray-100">
+                  <div className="grid grid-cols-2 gap-x-6 gap-y-1.5">
+                    {[
+                      'SSL-secured checkout',
+                      '7-day plant guarantee',
+                      'Free shipping',
+                      'Easy 7-day returns'
+                    ].map((text, i) => (
+                      <div key={i} className="flex items-center gap-2">
+                        <Check size={9} className="text-emerald-600" strokeWidth={5} />
+                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-tighter truncate">{text}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center justify-between gap-2 mt-5 opacity-40 grayscale px-1">
+                    {['UPI', 'GPay', 'Visa', 'Mastercard', 'RuPay'].map((brand) => (
+                      <span key={brand} className="text-[7px] font-black border border-gray-300 px-1 py-0.5 rounded-sm uppercase">{brand}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="min-h-screen bg-site-bg">
 
         {/* ── Breadcrumb ── */}
-        <div className="bg-white border-b">
-          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 text-xs font-semibold text-gray-400">
-            <span
-              className="hover:text-bio-green cursor-pointer transition-colors"
-              onClick={() => router.push('/cart')}
-            >SHOPPING CART</span>
-            <span className="text-gray-300">›</span>
-            <span
-              className={!showPaymentStep ? 'text-bio-green' : 'hover:text-bio-green cursor-pointer transition-colors'}
-              onClick={() => showPaymentStep && setShowPaymentStep(false)}
-            >CHECKOUT</span>
-            <span className="text-gray-300">›</span>
-            <span className={showPaymentStep ? 'text-bio-green' : ''}>PAYMENT</span>
-            <span className="text-gray-300">›</span>
-            <span>CONFIRMATION</span>
+        <div className="bg-white border-b py-8">
+          <div className="max-w-4xl mx-auto px-4">
+            <div className="flex items-center justify-between w-full relative">
+              {/* Step 1: Cart */}
+              <div className="flex items-center gap-3 relative z-10 group cursor-pointer" onClick={() => router.push('/cart')}>
+                <div className="w-10 h-10 rounded-full border-2 border-[#e6edde] bg-[#f2f7ec] flex items-center justify-center transition-all group-hover:border-[#375421]">
+                  <Check size={16} className="text-[#375421]" strokeWidth={3} />
+                </div>
+                <span className="text-[13px] font-bold text-gray-400 uppercase tracking-wide group-hover:text-gray-600 transition-colors">Shopping Cart</span>
+              </div>
+
+              {/* Line 1 */}
+              <div className="flex-1 h-[2px] mx-4 bg-[#e6edde]" />
+
+              {/* Step 2: Checkout */}
+              <div className="flex items-center gap-3 relative z-10">
+                <div className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all duration-500
+                  ${!showPaymentStep ? 'bg-[#375421] border-[#375421] shadow-lg shadow-green-100' : 'bg-[#f2f7ec] border-[#e6edde] opacity-80'}`}>
+                  {showPaymentStep ? (
+                    <Check size={16} className="text-[#375421]" strokeWidth={3} />
+                  ) : (
+                    <span className="text-sm font-black text-white">2</span>
+                  )}
+                </div>
+                <span className={`text-[13px] font-bold uppercase tracking-wide transition-colors
+                  ${!showPaymentStep ? 'text-[#375421]' : 'text-gray-400'}`}>Checkout</span>
+              </div>
+
+              {/* Line 2 */}
+              <div className={`flex-1 h-[2px] mx-4 transition-colors duration-500 ${showPaymentStep ? 'bg-[#375421]' : 'bg-[#e6edde]'}`} />
+
+              {/* Step 3: Payment */}
+              <div className="flex items-center gap-3 relative z-10">
+                <div className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all duration-500
+                  ${showPaymentStep ? 'bg-[#375421] border-[#375421] shadow-lg shadow-green-100' : 'bg-[#f2f7ec] border-[#e6edde]'}`}>
+                  <span className={`text-sm font-black transition-colors ${showPaymentStep ? 'text-white' : 'text-gray-400 opacity-60'}`}>3</span>
+                </div>
+                <span className={`text-[13px] font-bold uppercase tracking-wide transition-colors
+                  ${showPaymentStep ? 'text-[#375421]' : 'text-gray-400'}`}>Payment</span>
+              </div>
+
+              {/* Line 3 */}
+              <div className="flex-1 h-[2px] mx-4 bg-[#e6edde]" />
+
+              {/* Step 4: Confirmation */}
+              <div className="flex items-center gap-3 relative z-10 opacity-60">
+                <div className="w-10 h-10 rounded-full border-2 border-[#e6edde] bg-[#f2f7ec] flex items-center justify-center">
+                  <span className="text-sm font-black text-gray-400 opacity-60">4</span>
+                </div>
+                <span className="text-[13px] font-bold text-gray-400 uppercase tracking-wide">Confirmation</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1555,59 +1817,26 @@ const CheckoutPage = () => {
                 />
               </>
             ) : (
-              /* ── Step 4: Payment ── */
-              <div className="bg-white p-6 rounded-xl shadow-sm">
-                <div className="flex items-center gap-3 border-b-2 border-gray-100 pb-2 mb-6">
-                  <span className="bg-bio-green text-white w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold">4</span>
-                  <h3 className="text-base font-bold text-gray-800 uppercase tracking-wide">Select Payment Method</h3>
+              /* ── Step 4: Payment Placeholder (Hidden, moved to Drawer) ── */
+              <div className="bg-white p-16 rounded-xl shadow-sm text-center">
+                <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
+                  <span className="text-3xl text-[#375421]">🛡️</span>
                 </div>
-                <div className="space-y-4">
-
-                  {/* GST Checkbox */}
-                  <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={isGstSelected}
-                      onChange={(e) => { const v = e.target.checked; setIsGstSelected(v); setIsGst(v); setSelectedGst(v ? gstFromProfile : ''); }}
-                      className="w-4 h-4 text-green-600 border-gray-300 rounded"
-                    />
-                    <span>Use My GST Number</span>
-                  </label>
-                  {isGstSelected && (
-                    <p className="ml-6 text-sm text-gray-600">
-                      <strong>GST:</strong> {gstFromProfile || <span className="text-red-500">Not set — please add in Profile</span>}
-                    </p>
-                  )}
-
-                  {/* Payment options */}
-                  <div className="space-y-3">
-                    {[
-                      { id: 'Wallet', label: 'Gidan Wallet', sub: `Balance: ₹${walletBalance?.balance ?? '…'}` },
-                      { id: 'UPI', label: 'Razorpay Secure', sub: 'UPI · Cards · Wallets · NetBanking' },
-                      { id: 'cod', label: 'Cash on Delivery', sub: 'Currently unavailable for your location', disabled: true },
-                    ].map((opt) => (
-                      <div
-                        key={opt.id}
-                        onClick={() => !opt.disabled && setSelectedPayMethod(opt.id)}
-                        className={`flex items-start gap-3 p-4 rounded-xl border-2 transition-all cursor-pointer
-                        ${opt.disabled ? 'opacity-40 cursor-not-allowed border-gray-100 bg-gray-50' :
-                            selectedPayMethod === opt.id ? 'border-green-500 bg-green-50' : 'border-gray-100 hover:border-green-200'}`}
-                      >
-                        <div className={`mt-0.5 w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0
-                        ${selectedPayMethod === opt.id ? 'border-green-600' : 'border-gray-300'}`}>
-                          {selectedPayMethod === opt.id && <div className="w-2.5 h-2.5 rounded-full bg-green-600" />}
-                        </div>
-                        <div>
-                          <p className="font-semibold text-sm text-gray-800">{opt.label}</p>
-                          <p className="text-xs text-gray-500 mt-0.5">{opt.sub}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {isGstSelected && !gstFromProfile && (
-                    <p className="text-red-500 text-sm font-medium text-center">Please add your GST number in Profile to proceed.</p>
-                  )}
+                <h3 className="text-lg font-black text-gray-800 uppercase tracking-widest mb-2">Secure Checkout</h3>
+                <p className="text-xs text-gray-400 font-bold max-w-xs mx-auto mb-6">Completing your order details... Please select your payment method in the side window.</p>
+                <div className="flex flex-col gap-3">
+                  <button 
+                    onClick={() => setShowPaymentStep(true)}
+                    className="bg-[#375421] text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest"
+                  >
+                    Open Payment Window
+                  </button>
+                  <button 
+                    onClick={() => setShowPaymentStep(false)}
+                    className="text-emerald-700 text-[10px] font-black uppercase tracking-widest hover:underline"
+                  >
+                    Go Back to Delivery
+                  </button>
                 </div>
               </div>
             )}
@@ -1676,15 +1905,16 @@ const CheckoutPage = () => {
                   </div>
                 </div>
 
-                <hr className="border-dashed" />
+                {!showPaymentStep && (
+                  <ApplyCoupon
+                    id={id}
+                    setCoupon={setCoupon}
+                    coupon={coupon}
+                    onRemoveCoupon={handleRemoveCoupon}
+                  />
+                )}
 
-                {/* ── Coupon Section ── */}
-                <ApplyCoupon
-                  id={id}
-                  setCoupon={setCoupon}
-                  coupon={coupon}
-                  onRemoveCoupon={handleRemoveCoupon}
-                />
+                <hr className="border-dashed" />
 
                 {/* ── Price Details ── */}
                 <div>
@@ -1736,26 +1966,35 @@ const CheckoutPage = () => {
 
                     {/* GST Section */}
                     {(() => {
-                      const breakdownGroups = data?.order?.gst_breakdown?.groups;
-                      const summary = data?.order?.gst_summary;
-                      const newSummary = data?.order?.summary || data?.order?.gst_breakdown?.summary;
+                      // Support both data structures: data.order.gst_breakdown (from orderSummary) 
+                      // and data.order.gst_breakdown.gst_X (from initial summary)
+                      const breakdown = data?.order?.gst_breakdown || {};
+                      
+                      // Check for gst_N pattern in either breakdown root or breakdown.summary
+                      const summary = breakdown.summary || breakdown;
+                      const gstKeys = Object.keys(summary).filter(k => k.startsWith('gst_'));
 
-                      // 1. Priority: New "summary" format (gst_18: { cgst, sgst, total })
-                      if (newSummary && Object.keys(newSummary).some(k => k.startsWith('gst_'))) {
-                        return Object.entries(newSummary).map(([key, gData]) => {
+                      if (gstKeys.length > 0) {
+                        return gstKeys.map(key => {
                           const rate = key.split('_')[1];
+                          const gData = summary[key];
                           const totalGst = Number(gData.total || 0);
                           if (totalGst === 0) return null;
                           const isExpanded = !!expandedGst[rate];
 
                           return (
-                            <div key={rate} className="space-y-0.5 py-1 transition-all duration-300">
+                            <div key={rate} className="space-y-0.5 py-1">
                               <div
-                                className="flex justify-between text-gray-600 text-[11px] font-medium cursor-pointer hover:bg-gray-50 rounded px-1 -mx-1 transition-colors"
+                                className="flex justify-between text-gray-600 text-[11px] font-medium cursor-pointer hover:bg-site-bg rounded px-1 -mx-1 transition-colors"
                                 onClick={() => toggleGstExpand(rate)}
                               >
                                 <span className="flex items-center gap-1">
-                                  <span className={`text-[8px] transition-transform duration-200`} style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>▶</span>
+                                  <span 
+                                    className="text-[8px] transition-transform duration-200" 
+                                    style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}
+                                  >
+                                    ▶
+                                  </span>
                                   GST ({rate}%)
                                 </span>
                                 <span>₹{totalGst.toFixed(2)}</span>
@@ -1775,12 +2014,13 @@ const CheckoutPage = () => {
                                       <span>₹{Number(gData.sgst).toFixed(2)}</span>
                                     </div>
                                   )}
-                                  {(Number(gData.total || 0) > (Number(gData.cgst || 0) + Number(gData.sgst || 0)) + 0.01) && (
+                                  {/* IGST detection (Remaining after CGST/SGST) */}
+                                  {Number(gData.igst || 0) > 0 || (totalGst > (Number(gData.cgst || 0) + Number(gData.sgst || 0)) + 0.01) ? (
                                     <div className="flex justify-between text-[10px] text-gray-400">
                                       <span>IGST ({rate}%)</span>
-                                      <span>₹{(Number(gData.total) - (Number(gData.cgst || 0) + Number(gData.sgst || 0))).toFixed(2)}</span>
+                                      <span>₹{(Number(gData.igst) || (totalGst - (Number(gData.cgst || 0) + Number(gData.sgst || 0)))).toFixed(2)}</span>
                                     </div>
-                                  )}
+                                  ) : null}
                                 </div>
                               )}
                             </div>
@@ -1788,6 +2028,8 @@ const CheckoutPage = () => {
                         });
                       }
 
+                      // Legacy fallback for other structures (breakdownGroups)
+                      const breakdownGroups = breakdown?.groups;
                       if (breakdownGroups) {
                         return Object.entries(breakdownGroups).map(([rate, group]) => {
                           const totalGst = Number(group.total_amount || group.igst || (Number(group.cgst || 0) + Number(group.sgst || 0)) || 0);
@@ -1797,11 +2039,16 @@ const CheckoutPage = () => {
                           return (
                             <div key={rate} className="space-y-0.5 py-1">
                               <div
-                                className="flex justify-between text-gray-600 text-[11px] font-medium cursor-pointer hover:bg-gray-50 rounded px-1 -mx-1 transition-colors"
+                                className="flex justify-between text-gray-600 text-[11px] font-medium cursor-pointer hover:bg-site-bg rounded px-1 -mx-1 transition-colors"
                                 onClick={() => toggleGstExpand(rate)}
                               >
                                 <span className="flex items-center gap-1">
-                                  <span className={`text-[8px] transition-transform duration-200`} style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>▶</span>
+                                  <span
+                                    className="text-[8px] transition-transform duration-200"
+                                    style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}
+                                  >
+                                    ▶
+                                  </span>
                                   GST ({rate}%)
                                 </span>
                                 <span>₹{totalGst.toFixed(2)}</span>
@@ -1883,7 +2130,7 @@ const CheckoutPage = () => {
                 </div>
 
                 {/* Grand Total */}
-                <div className="bg-gradient-to-r from-green-600 to-green-800 rounded-xl p-3 flex justify-between items-center">
+                <div className="bg-gradient-to-r from-[#375421] to-[#051d18] rounded-xl p-3 flex justify-between items-center">
                   <span className="text-white font-bold text-sm">Grand Total</span>
                   <span className="text-white font-extrabold text-lg">₹{Number(activeOrder?.grand_total ?? 0).toFixed(2)}</span>
                 </div>
@@ -1893,7 +2140,7 @@ const CheckoutPage = () => {
                   <button
                     disabled={savingOrder}
                     onClick={handleSaveOrderSummary}
-                    className="w-full bg-bio-green text-white font-bold py-3.5 rounded-xl hover:bg-green-700 active:scale-[0.98] transition-all text-sm tracking-wide shadow disabled:opacity-60 flex items-center justify-center gap-2"
+                    className="w-full bg-bio-green text-white font-bold py-3.5 rounded-xl hover:bg-[#375421] hover:text-white active:scale-[0.98] transition-all text-sm tracking-wide shadow disabled:opacity-60 flex items-center justify-center gap-2"
                   >
                     {savingOrder ? (
                       <><span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span> Saving…</>
@@ -1905,7 +2152,7 @@ const CheckoutPage = () => {
                   <button
                     disabled={!selectedPayMethod || (isGstSelected && !gstFromProfile)}
                     onClick={handlePayment}
-                    className="w-full bg-bio-green text-white font-bold py-3.5 rounded-xl hover:bg-green-700 active:scale-[0.98] transition-all text-sm tracking-wide shadow disabled:opacity-60 flex items-center justify-center gap-2"
+                    className="w-full bg-bio-green text-white font-bold py-3.5 rounded-xl hover:bg-[#375421] hover:text-white active:scale-[0.98] transition-all text-sm tracking-wide shadow disabled:opacity-60 flex items-center justify-center gap-2"
                   >
                     Pay ₹{Number(activeOrder?.grand_total ?? 0).toFixed(2)} →
                   </button>

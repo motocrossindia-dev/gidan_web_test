@@ -19,7 +19,7 @@ const RefundPolicy = () => {
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 py-12 px-4">
         <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
           {/* Header Section */}
-          <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-8">
+          <div className="bg-gradient-to-r from-[#375421] to-emerald-600 text-white p-8">
             <h1 className="text-4xl font-bold text-center mb-4">Refund Policy</h1>
             <p className="text-center text-green-100 text-lg">
               Your satisfaction is our priority at Gidan
@@ -29,9 +29,9 @@ const RefundPolicy = () => {
           {/* Content Section */}
           <div className="p-8 space-y-8">
             {/* Introduction */}
-            <div className="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-lg">
+            <div className="bg-green-50 border-l-4 border-[#375421] p-6 rounded-r-lg">
               <p className="text-gray-700 leading-relaxed">
-                At <span className="font-semibold text-green-700">Gidan</span>, we take great care in delivering healthy and thriving plants.
+                At <span className="font-semibold text-[#375421]">Gidan</span>, we take great care in delivering healthy and thriving plants.
               </p>
               <p className="text-gray-700 leading-relaxed mt-3">
                 However, due to the nature of live plants, it is common for them to show minor signs of stress (such as slight drooping or yellowing leaves) during transit. Rest assured, with proper care, your plant will quickly recover and flourish in its new environment.
@@ -40,7 +40,7 @@ const RefundPolicy = () => {
                 Natural variations occur in plants, and factors like size, shape, and color may differ slightly from the images shown on our website. These differences reflect each plant's unique growth pattern and do not affect its quality or health.
               </p>
               <p className="text-gray-700 leading-relaxed mt-3">
-                Thank you for your understanding and for choosing <span className="font-semibold text-green-700">Farm Amino Agritech Private Limited</span> to bring greenery into your space!
+                Thank you for your understanding and for choosing <span className="font-semibold text-[#375421]">Farm Amino Agritech Private Limited</span> to bring greenery into your space!
               </p>
             </div>
 
@@ -72,16 +72,16 @@ const RefundPolicy = () => {
               <div className="space-y-6">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                    <span className="bg-green-100 text-green-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2">1</span>
+                    <span className="bg-green-100 text-[#051d18] rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2">1</span>
                     Eligibility for Replacement
                   </h3>
                   <ul className="space-y-2 ml-8">
                     <li className="flex items-start">
-                      <span className="text-green-500 mr-2">•</span>
+                      <span className="text-[#375421] mr-2">•</span>
                       <span className="text-gray-700">The product is damaged or not in usable condition upon arrival</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="text-green-500 mr-2">•</span>
+                      <span className="text-[#375421] mr-2">•</span>
                       <span className="text-gray-700">The wrong item was delivered</span>
                     </li>
                   </ul>
@@ -89,7 +89,7 @@ const RefundPolicy = () => {
 
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                    <span className="bg-green-100 text-green-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2">2</span>
+                    <span className="bg-green-100 text-[#051d18] rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2">2</span>
                     How to Request a Replacement
                   </h3>
                   <div className="ml-8">
@@ -100,11 +100,11 @@ const RefundPolicy = () => {
                     </div>
                     <ul className="space-y-2">
                       <li className="flex items-start">
-                        <span className="text-green-500 mr-2">•</span>
+                        <span className="text-[#375421] mr-2">•</span>
                         <span className="text-gray-700">Clear images/short video of the damaged product and packaging</span>
                       </li>
                       <li className="flex items-start">
-                        <span className="text-green-500 mr-2">•</span>
+                        <span className="text-[#375421] mr-2">•</span>
                         <span className="text-gray-700">Your order number and details of the issue</span>
                       </li>
                     </ul>
@@ -114,16 +114,16 @@ const RefundPolicy = () => {
 
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                    <span className="bg-green-100 text-green-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2">3</span>
+                    <span className="bg-green-100 text-[#051d18] rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2">3</span>
                     Replacement Process
                   </h3>
                   <ul className="space-y-3 ml-8">
                     <li className="flex items-start">
-                      <span className="text-green-500 mr-2">•</span>
+                      <span className="text-[#375421] mr-2">•</span>
                       <span className="text-gray-700">Once approved, a new product will be dispatched at no additional cost</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="text-green-500 mr-2">•</span>
+                      <span className="text-[#375421] mr-2">•</span>
                       <div className="text-gray-700">
                         If the desired product is unavailable, you can:
                         <ul className="mt-2 space-y-1 ml-4">
@@ -147,7 +147,7 @@ const RefundPolicy = () => {
 
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                    <span className="bg-green-100 text-green-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2">4</span>
+                    <span className="bg-green-100 text-[#051d18] rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2">4</span>
                     Exceptions
                   </h3>
                   <div className="ml-8 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
@@ -177,15 +177,15 @@ const RefundPolicy = () => {
                   </p>
                   <ul className="space-y-2 ml-4">
                     <li className="flex items-start">
-                      <span className="text-green-500 mr-2">•</span>
+                      <span className="text-[#375421] mr-2">•</span>
                       <span className="text-gray-700">Clear images of the products received</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="text-green-500 mr-2">•</span>
+                      <span className="text-[#375421] mr-2">•</span>
                       <span className="text-gray-700">Pictures of the packaging and the shipping label on the package</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="text-green-500 mr-2">•</span>
+                      <span className="text-[#375421] mr-2">•</span>
                       <span className="text-gray-700">Your order number and a brief description of the missing item</span>
                     </li>
                   </ul>
@@ -210,16 +210,16 @@ const RefundPolicy = () => {
 
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                    <span className="bg-green-100 text-green-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2">1</span>
+                    <span className="bg-green-100 text-[#051d18] rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2">1</span>
                     Cancellation Window
                   </h3>
                   <ul className="space-y-2 ml-8">
                     <li className="flex items-start">
-                      <span className="text-green-500 mr-2">•</span>
+                      <span className="text-[#375421] mr-2">•</span>
                       <span className="text-gray-700">Orders can be canceled within 2 hours of order placement for free</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="text-green-500 mr-2">•</span>
+                      <span className="text-[#375421] mr-2">•</span>
                       <span className="text-gray-700">Once your order has been shipped, cancellations will no longer be possible</span>
                     </li>
                   </ul>
@@ -232,7 +232,7 @@ const RefundPolicy = () => {
 
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                    <span className="bg-green-100 text-green-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2">2</span>
+                    <span className="bg-green-100 text-[#051d18] rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2">2</span>
                     How to Cancel
                   </h3>
                   <div className="ml-8 bg-emerald-50 border border-emerald-200 rounded-lg p-4">
@@ -258,16 +258,16 @@ const RefundPolicy = () => {
 
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                    <span className="bg-green-100 text-green-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2">1</span>
+                    <span className="bg-green-100 text-[#051d18] rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2">1</span>
                     Eligibility for Refunds
                   </h3>
                   <ul className="space-y-2 ml-8">
                     <li className="flex items-start">
-                      <span className="text-green-500 mr-2">•</span>
+                      <span className="text-[#375421] mr-2">•</span>
                       <span className="text-gray-700">The item delivered was incorrect</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="text-green-500 mr-2">•</span>
+                      <span className="text-[#375421] mr-2">•</span>
                       <span className="text-gray-700">The product was damaged or lost in transit</span>
                     </li>
                   </ul>
@@ -275,7 +275,7 @@ const RefundPolicy = () => {
 
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                    <span className="bg-green-100 text-green-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2">2</span>
+                    <span className="bg-green-100 text-[#051d18] rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2">2</span>
                     How to Request a Refund
                   </h3>
                   <div className="ml-8">
@@ -286,11 +286,11 @@ const RefundPolicy = () => {
                     </div>
                     <ul className="space-y-2">
                       <li className="flex items-start">
-                        <span className="text-green-500 mr-2">•</span>
+                        <span className="text-[#375421] mr-2">•</span>
                         <span className="text-gray-700">Clear images/short video of the damaged product and packaging</span>
                       </li>
                       <li className="flex items-start">
-                        <span className="text-green-500 mr-2">•</span>
+                        <span className="text-[#375421] mr-2">•</span>
                         <span className="text-gray-700">Your order number and details of the issue</span>
                       </li>
                     </ul>
@@ -301,7 +301,7 @@ const RefundPolicy = () => {
             </section>
 
             {/* Footer Contact */}
-            <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl p-6 text-center">
+            <div className="bg-gradient-to-r from-[#375421] to-emerald-600 text-white rounded-xl p-6 text-center">
               <h3 className="text-xl font-semibold mb-4">Need Help?</h3>
               <div className="flex flex-col md:flex-row justify-center items-center space-y-3 md:space-y-0 md:space-x-6">
                 <div className="flex items-center space-x-2">

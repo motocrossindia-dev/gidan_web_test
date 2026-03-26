@@ -51,10 +51,10 @@ const MenuSection = ({ title, children }) => (
 const MenuItem = ({ icon, text, badge }) => (
   <div className="flex items-center justify-between px-4 py-2 hover:bg-gray-200 cursor-pointer">
     <div className="flex items-center space-x-2">
-      {icon && <span className="text-green-500 text-xl">{icon}</span>}
+      {icon && <span className="text-[#375421] text-xl">{icon}</span>}
       <span className="text-sm">{text}</span>
     </div>
-    {badge && <div className="text-green-500 text-sm">{badge}</div>}
+    {badge && <div className="text-[#375421] text-sm">{badge}</div>}
   </div>
 );
 

@@ -108,7 +108,7 @@ function DealOfWeek() {
                 </h3>
 
                 <div className="mb-2">
-                  <span className="text-green-600 text-lg font-bold">₹{finalPrice}</span>
+                  <span className="text-[#375421] text-lg font-bold">₹{finalPrice}</span>
                 </div>
                 <div className="mb-2">
                   <span className="text-gray-600 line-through">
@@ -130,7 +130,7 @@ function DealOfWeek() {
                 )}
 
                 <button
-                  className="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-300 flex items-center justify-center"
+                  className="w-full bg-[#375421] text-white py-2 px-4 rounded hover:bg-[#375421] hover:text-white transition duration-300 flex items-center justify-center"
                   onClick={() => handleBuyItNowSubmit(deal)}
                 >
                   <ShoppingCart className="inline-block mr-2" />

@@ -40,7 +40,7 @@ const RecentlyViewedProduct = () => {
   };
 
   return (
-    <div className="w-full bg-gray-100">
+    <div className="w-full bg-site-bg">
       <div className="my-8 p-4 bg-grey-200 rounded-md">
         <h2 className="md:text-2xl text-xl mb-4 text-center md:font-bold font-semibold">
           Recently Viewed

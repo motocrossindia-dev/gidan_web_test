@@ -21,7 +21,7 @@ const EcommerceGiftCard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Left: Image Section */}
           <div className="h-full">
-            <div className="aspect-square bg-gray-50 rounded-lg overflow-hidden">
+            <div className="aspect-square bg-site-bg rounded-lg overflow-hidden">
               {/* Using a placeholder since actual image path may vary */}
               <img name=" "   
                 src={GiftCardVoucher}
@@ -68,10 +68,10 @@ const EcommerceGiftCard = () => {
 
             {/* Action Buttons */}
             <div className="mt-10 space-y-3">
-              <button className="w-full bg-bio-green hover:bg-bio-green text-white py-3 px-4 rounded-md transition">
+              <button className="w-full bg-bio-green hover:bg-bio-green hover:text-white text-white py-3 px-4 rounded-md transition">
                 Add To Cart
               </button>
-              <button className="w-full bg-bio-green hover:bg-bio-green text-white py-3 px-4 rounded-md transition">
+              <button className="w-full bg-bio-green hover:bg-bio-green hover:text-white text-white py-3 px-4 rounded-md transition">
                 Buy It Now
               </button>
             </div>
@@ -83,7 +83,7 @@ const EcommerceGiftCard = () => {
                 placeholder="Enter Pin Code"
                 className="flex-1 rounded-l-md border-gray-300 border p-2 focus:ring-2 focus:ring-gray-200 focus:outline-none"
               />
-              <button className="bg-bio-green hover:bg-bio-green text-white px-6 py-2 rounded-r-md transition">
+              <button className="bg-bio-green hover:bg-bio-green hover:text-white text-white px-6 py-2 rounded-r-md transition">
                 Check
               </button>
             </div>

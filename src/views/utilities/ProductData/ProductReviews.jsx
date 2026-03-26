@@ -93,7 +93,7 @@ const RatingsAndReviews = ({ product_Rating, total_Rating, productId, onWriteRev
                 <span className="text-sm font-medium text-bio-green hover:underline min-w-[50px]">
                   {item.stars} star
                 </span>
-                <div className="flex-1 bg-gray-100 rounded-sm h-6 overflow-hidden border">
+                <div className="flex-1 bg-site-bg rounded-sm h-6 overflow-hidden border">
                   <div
                     className="bg-orange-500 h-full transition-all duration-500"
                     style={{ width: `${item.percentage}%` }}
@@ -111,7 +111,7 @@ const RatingsAndReviews = ({ product_Rating, total_Rating, productId, onWriteRev
             <p className="text-sm text-gray-600 mb-4">Share your thoughts with other customers</p>
             <button
               onClick={onWriteReview || (() => setIsModalOpen(true))}
-              className="w-full bg-white border border-gray-300 shadow-sm rounded-lg py-2 text-sm font-medium hover:bg-gray-50 transition-all text-gray-800"
+              className="w-full bg-white border border-gray-300 shadow-sm rounded-lg py-2 text-sm font-medium hover:bg-site-bg transition-all text-gray-800"
             >
               {productDetailData?.data?.product?.is_review ? 'Edit your review' : 'Write a customer review'}
             </button>
@@ -125,7 +125,7 @@ const RatingsAndReviews = ({ product_Rating, total_Rating, productId, onWriteRev
           <div>
             <div className="flex items-center justify-between mb-8 border-b pb-4">
               <h3 className="text-2xl font-bold text-gray-900">Top reviews</h3>
-              <select className="bg-gray-50 border rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-bio-green">
+              <select className="bg-site-bg border rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-bio-green">
                 <option>Top reviews</option>
                 <option>Most recent</option>
               </select>
@@ -163,7 +163,7 @@ const RatingsAndReviews = ({ product_Rating, total_Rating, productId, onWriteRev
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed">
+              <div className="text-center py-20 bg-site-bg rounded-2xl border-2 border-dashed">
                 <Star className="w-12 h-12 mx-auto mb-4 text-gray-300" />
                 <p className="text-xl font-bold text-gray-900">No reviews yet</p>
                 <p className="text-gray-500">Be the first to share your experience!</p>

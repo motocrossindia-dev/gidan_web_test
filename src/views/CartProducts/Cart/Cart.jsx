@@ -100,7 +100,7 @@ const Cart = () => {
     <>
 
       {/* <Verify /> */}
-      <div className="flex flex-col md:flex-row justify-center md:p-8 bg-gray-50 overflow-y-auto">
+      <div className="flex flex-col md:flex-row justify-center md:p-8 bg-site-bg overflow-y-auto">
         <style>
           {`
           .custom-scrollbar::-webkit-scrollbar {
@@ -157,7 +157,7 @@ const Cart = () => {
             <h2 className="text-2xl font-semibold text-gray-700 mb-2">Your cart is empty</h2>
             <p className="text-gray-500 mb-6 text-sm">Looks like you haven't added anything yet.</p>
             <button
-              className="bg-lime-500 text-white py-2 px-6 rounded-lg hover:bg-green-600 transition-colors"
+              className="bg-lime-500 text-white py-2 px-6 rounded-lg hover:bg-[#375421] hover:text-white transition-colors"
               onClick={() => router.push("/")}
             >
               Continue Shopping

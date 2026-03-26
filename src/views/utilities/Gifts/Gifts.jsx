@@ -68,7 +68,7 @@ const ProductsSection = ({ title, products }) => (
       <button className="bg-white w-[40px] h-[40px] flex items-center justify-center rounded-full mx-2 border">
         <FaChevronLeft className="text-gray-500" />
       </button>
-      <button className="bg-green-600 text-white w-[120px] h-[40px] rounded-full mx-2 font-semibold">
+      <button className="bg-[#375421] text-white w-[120px] h-[40px] rounded-full mx-2 font-semibold">
         View All
       </button>
       <button className="bg-white w-[40px] h-[40px] flex items-center justify-center rounded-full mx-2 border">
@@ -98,7 +98,7 @@ const FaqAccordion = () => {
       {faqItems.map((item, index) => (
         <div key={index} className="border-b">
           <button
-            className="w-full text-left p-4 flex justify-between items-center bg-gray-100 hover:bg-gray-200 focus:outline-none"
+            className="w-full text-left p-4 flex justify-between items-center bg-site-bg hover:bg-gray-200 focus:outline-none"
             onClick={() => toggleAccordion(index)}
           >
             <span className="text-gray-700">{item}</span>
@@ -153,7 +153,7 @@ const Gifts = () => {
   return (
     <div className="container mx-auto p-6">
       <div className="text-sm text-gray-500 mb-4">
-        Home / <span className="text-green-500">gifts</span>
+        Home / <span className="text-[#375421]">gifts</span>
       </div>
       <Header />
       <ShopBySection />

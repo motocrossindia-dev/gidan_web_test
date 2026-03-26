@@ -5,7 +5,7 @@ import { FaArrowLeft } from "react-icons/fa";
 
 const AddressPage = () => {
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-site-bg">
       {/* Header */}
       <div className="bg-white p-4 flex items-center border-b">
         <FaArrowLeft className="text-lg cursor-pointer" />
@@ -16,16 +16,16 @@ const AddressPage = () => {
       <div className="bg-white p-4 flex items-center justify-center border-b">
         <div className="flex items-center space-x-4">
           <div className="flex items-center">
-            <div className="w-6 h-6 bg-green-500 text-white flex items-center justify-center rounded-full">
+            <div className="w-6 h-6 bg-[#375421] text-white flex items-center justify-center rounded-full">
               ✓
             </div>
             <span className="ml-2 text-sm text-gray-700 font-medium">
               Address
             </span>
           </div>
-          <div className="w-16 h-1 bg-green-500" />
+          <div className="w-16 h-1 bg-[#375421]" />
           <div className="flex items-center">
-            <div className="w-6 h-6 border-2 border-green-500 flex items-center justify-center rounded-full text-green-500">
+            <div className="w-6 h-6 border-2 border-[#375421] flex items-center justify-center rounded-full text-[#375421]">
               2
             </div>
             <span className="ml-2 text-sm text-gray-700 font-medium">

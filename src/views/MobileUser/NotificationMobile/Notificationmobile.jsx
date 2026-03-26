@@ -30,7 +30,7 @@ const notifications = [
 
 const Notifications = () => {
   return (
-    <div className="max-w-md mx-auto bg-gray-100 min-h-screen">
+    <div className="max-w-md mx-auto bg-site-bg min-h-screen">
       {/* Header with Back Button */}
       <div className="flex items-center p-4 bg-white shadow-md">
         <button onClick={() => window.history.back()} className="mr-3">
@@ -46,9 +46,9 @@ const Notifications = () => {
             <img name=" "    src={item.image}  alt="Plant" className="w-16 h-16 rounded-md" />
             <div className="ml-3 flex-1">
               <p className="text-gray-700 text-sm">{item.title}</p>
-              <p className="text-green-600 font-semibold">{item.price}</p>
+              <p className="text-[#375421] font-semibold">{item.price}</p>
               <p className="text-gray-500 text-xs">{item.date}</p>
-              <button className="text-green-500 font-medium text-sm mt-1">
+              <button className="text-[#375421] font-medium text-sm mt-1">
                 More Details →
               </button>
             </div>

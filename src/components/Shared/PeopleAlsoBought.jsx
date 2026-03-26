@@ -81,13 +81,13 @@ const PeopleAlsoBought = ({ title = "People also bought" }) => {
 
                                         {/* Action Icons */}
                                         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 transition-all duration-300 z-20 opacity-0 hover:opacity-100 hover:translate-y-0">
-                                            <button className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200">
+                                            <button className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200">
                                                 <MdOutlineShoppingBag className="w-4 h-4" />
                                             </button>
-                                            <button className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200">
+                                            <button className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200">
                                                 <FaRegHeart className="w-4 h-4" />
                                             </button>
-                                            <button className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200">
+                                            <button className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200">
                                                 <FiEye className="w-4 h-4" />
                                             </button>
                                         </div>
@@ -120,7 +120,7 @@ const PeopleAlsoBought = ({ title = "People also bought" }) => {
                                                 )}
 
                                                 {product?.mrp && (product?.mrp > product?.selling_price) && (
-                                                    <span className="text-sm font-semibold text-green-600 mt-1">
+                                                    <span className="text-sm font-semibold text-[#375421] mt-1">
                                                         {Math.round(((product.mrp - product.selling_price) / product.mrp) * 100)}% OFF
                                                     </span>
                                                 )}

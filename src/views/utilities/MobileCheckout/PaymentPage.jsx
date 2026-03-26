@@ -113,10 +113,10 @@ const PaymentPage = () => {
   // Show success screen instantly without any page navigation
   if (paymentSuccess) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center py-10 px-4">
+      <div className="min-h-screen bg-site-bg flex flex-col items-center py-10 px-4">
         <div className="w-full max-w-md bg-white rounded-2xl shadow-md overflow-hidden">
           {/* Green Header */}
-          <div className="bg-gradient-to-r from-green-600 to-green-800 px-6 py-10 flex flex-col items-center text-center">
+          <div className="bg-gradient-to-r from-[#375421] to-[#051d18] px-6 py-10 flex flex-col items-center text-center">
             <CheckCircle2 className="w-20 h-20 text-white mb-4" />
             <h1 className="text-2xl font-extrabold text-white">Order Placed Successfully!</h1>
             {successOrderId && (
@@ -128,14 +128,14 @@ const PaymentPage = () => {
           <div className="px-6 py-8 space-y-3">
             <button
               onClick={() => router.push('/profile/orders')}
-              className="w-full bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 transition-all flex items-center justify-center gap-2"
+              className="w-full bg-[#375421] text-white font-bold py-3 rounded-xl hover:bg-[#375421] hover:text-white transition-all flex items-center justify-center gap-2"
             >
               <Package className="w-4 h-4" /> View My Orders <ArrowRight className="w-4 h-4" />
             </button>
             <p className="text-center text-xs text-gray-400">Redirecting to your orders in {countdown}s…</p>
             <button
               onClick={() => router.push('/')}
-              className="w-full border border-gray-200 text-gray-700 font-semibold py-3 rounded-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
+              className="w-full border border-gray-200 text-gray-700 font-semibold py-3 rounded-xl hover:bg-site-bg transition-all flex items-center justify-center gap-2"
             >
               <ShoppingBag className="w-4 h-4" /> Continue Shopping
             </button>
@@ -181,11 +181,11 @@ const PaymentPage = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Discount</span>
-                <span className="text-green-600">₹{data.total_discount}.00</span>
+                <span className="text-[#375421]">₹{data.total_discount}.00</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Delivery Charges</span>
-                <span className="text-green-600">₹50 Free</span>
+                <span className="text-[#375421]">₹50 Free</span>
               </div>
               {/* <div className="flex justify-between">
               <span className="text-gray-600">Secured Packaging Fee</span>
@@ -287,7 +287,7 @@ const PaymentPage = () => {
               return null;
             })()}
 
-            <div className="mt-2 text-green-600 text-sm">
+            <div className="mt-2 text-[#375421] text-sm">
               You will save ₹{data.total_discount}.00 on this order
             </div>
           </div>
@@ -303,7 +303,7 @@ const PaymentPage = () => {
                   value="reward"
                   checked={paymentMethod === 'reward'}
                   onChange={(e) => setPaymentMethod(e.target.value)}
-                  className="text-green-600"
+                  className="text-[#375421]"
                 />
                 <label htmlFor="reward" className="flex-1">
                   <div className="font-medium">Reward Points Worth₹65.07</div>
@@ -321,7 +321,7 @@ const PaymentPage = () => {
                   value="wallet"
                   checked={paymentMethod === 'wallet'}
                   onChange={(e) => setPaymentMethod(e.target.value)}
-                  className="text-green-600"
+                  className="text-[#375421]"
                 />
                 <label htmlFor="wallet" className="flex-1">
                   <div className="font-medium">25% Utilization on Cart Value</div>
@@ -338,7 +338,7 @@ const PaymentPage = () => {
                   value="UPI"
                   checked={paymentMethod === 'UPI'}
                   onChange={(e) => setPaymentMethod(e.target.value)}
-                  className="text-green-600"
+                  className="text-[#375421]"
                 />
                 <label htmlFor="razorpay" className="flex-1">
                   <div className="font-medium">Razorpay Secure (UPI, Cards, Wallet, NetBanking)</div>
@@ -355,7 +355,7 @@ const PaymentPage = () => {
                   value="cod"
                   checked={paymentMethod === 'cod'}
                   onChange={(e) => setPaymentMethod(e.target.value)}
-                  className="text-green-600"
+                  className="text-[#375421]"
                 />
                 <label htmlFor="cod" className="flex-1">
                   <div className="font-medium">Cash on Delivery/Pay on Delivery</div>
@@ -368,7 +368,7 @@ const PaymentPage = () => {
           <div className="mt-6 space-y-3">
             <button
               onClick={handlePayment}
-              className="w-full py-3 bg-green-600 text-white rounded-lg font-medium"
+              className="w-full py-3 bg-[#375421] text-white rounded-lg font-medium"
             >
               Proceed To Payment
             </button>

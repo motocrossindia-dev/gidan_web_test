@@ -78,11 +78,14 @@ const MobileVerification = () => {
         } else {
           storeToken(response?.data?.data?.token, response?.data?.data?.token);
           const user = response.data.data.user;
+          // dispatch events and set storage
+          localStorage.setItem("userData", JSON.stringify(response.data.data.user));
+          localStorage.setItem("token", JSON.stringify(response.data.data.token.access));
+
+          // Ensure Redux has the token BEFORE dispatching events
           dispatch(setVerifiedUser(response.data));
           dispatch(setUsername(user.name || user.first_name));
           dispatch(signInSuccess(response?.data?.data));
-          localStorage.setItem("userData", JSON.stringify(response.data.data.user));
-          localStorage.setItem("token", JSON.stringify(response.data.data.token.access));
 
           const pendingCartPayload = getPendingCartItem();
           const pendingWishlistPayload = getPendingWishlistItem();
@@ -91,6 +94,7 @@ const MobileVerification = () => {
             try {
               await axiosInstance.post("/order/cart/", pendingCartPayload);
               enqueueSnackbar("Item added to cart!", { variant: "success" });
+              window.dispatchEvent(new Event("cartUpdated"));
             } catch (_) {
               // silently ignore cart error
             } finally {
@@ -101,6 +105,7 @@ const MobileVerification = () => {
             try {
               await axiosInstance.post("/order/wishlist/", pendingWishlistPayload);
               enqueueSnackbar("Item added to wishlist!", { variant: "success" });
+              window.dispatchEvent(new Event("wishlistUpdated"));
             } catch (_) {
               // silently ignore wishlist error
             } finally {
@@ -108,6 +113,8 @@ const MobileVerification = () => {
             }
             router.push("/wishlist");
           } else {
+            window.dispatchEvent(new Event("cartUpdated"));
+            window.dispatchEvent(new Event("wishlistUpdated"));
             router.push("/"); // Redirect to homepage after successful login
           }
         }
@@ -123,7 +130,7 @@ const MobileVerification = () => {
   return (
       <>
         
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+    <div className="flex items-center justify-center min-h-screen bg-site-bg">
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
         <div className="flex justify-center mb-4">
           <img name=" "    src={logo}  alt="logo" className="mx-auto w-[110px] h-[70px]" />
@@ -150,7 +157,7 @@ const MobileVerification = () => {
           {error && <p className="text-red-500 text-center text-sm mb-4">{error}</p>}
           <button
             type="submit"
-            className={`w-full bg-bio-green text-white py-2 rounded-md ${loading ? "opacity-50 cursor-not-allowed" : "hover:bg-bio-green"}`}
+            className={`w-full bg-bio-green text-white py-2 rounded-md ${loading ? "opacity-50 cursor-not-allowed" : "hover:bg-bio-green hover:text-white"}`}
             disabled={loading}
           >
             {loading ? "Submitting..." : "Submit"}

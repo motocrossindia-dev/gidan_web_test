@@ -83,7 +83,7 @@ const ServicesPage = () => {
   return (
     <>
       <div className="bg-white min-h-screen">
-        <header className="bg-gray-100 text-black py-3 md:py-4 px-8 mt-4">
+        <header className="bg-site-bg text-black py-3 md:py-4 px-8 mt-4">
           <h1 className="text-2xl md:text-3xl  font-bold text-center">Services We Provide</h1>
         </header>
 
@@ -142,7 +142,7 @@ const ServicesPage = () => {
 
 
           {/* Form Section */}
-          <div className="max-w-screen mx-auto p-6 bg-gray-50 rounded-lg shadow-lg">
+          <div className="max-w-screen mx-auto p-6 bg-site-bg rounded-lg shadow-lg">
             <div className="flex flex-col md:flex-row gap-12">
               <div className="md:w-1/2 w-full">
                 <img name=" "
@@ -156,7 +156,7 @@ const ServicesPage = () => {
 
                 {/* Show success/error comment */}
                 {comment && (
-                  <p className={`mb-4 text-center ${comment.includes("successfully") ? "text-green-600" : "text-red-600"}`}>
+                  <p className={`mb-4 text-center ${comment.includes("successfully") ? "text-[#375421]" : "text-red-600"}`}>
                     {comment}
                   </p>
                 )}

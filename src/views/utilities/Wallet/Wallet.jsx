@@ -12,6 +12,8 @@ import FAQSection from "./Faq";
 import { isMobile } from "react-device-detect";
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
+import Breadcrumb from "../../../components/Shared/Breadcrumb";
+import { ChevronLeft, ArrowLeft } from "lucide-react";
 
 
 
@@ -160,18 +162,40 @@ const Wallet = () => {
   }, []);
   return (
     <>
-      <Link href="/profile" className="flex md:hidden items-center gap-2 px-4 pt-4 pb-1 text-bio-green font-medium">
-        ← Back to Profile
-      </Link>
+      <div className="flex flex-col md:hidden bg-white shadow-sm sticky top-0 z-40 border-b">
+        <div className="px-4 pt-4 flex items-center justify-between">
+          <button
+            onClick={() => router.push('/profile')}
+            className="flex items-center text-[#375421] text-sm font-medium"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Profile
+          </button>
+          <div className="flex items-center gap-4 text-xs font-medium text-[#375421]">
+            <button className="hover:underline">Help & Support</button>
+          </div>
+        </div>
 
-      <div className="flex justify-center sm:justify-start px-4 sm:px-6 mt-2 bg-gray-100 min-h-screen w-full">
+        <div className="p-4 pt-2">
+          <h1 className="text-xl font-bold">My Wallet</h1>
+        </div>
+      </div>
+
+      <div className="mt-0 md:hidden">
+        <Breadcrumb 
+          items={[{ label: 'Profile', path: '/profile' }]} 
+          currentPage="Wallet" 
+        />
+      </div>
+
+      <div className="flex justify-center sm:justify-start px-4 sm:px-6 mt-2 bg-site-bg min-h-screen w-full">
         <div className="w-full sm:w-full md:w-4/5 lg:w-full xl:w-full h-auto bg-white shadow-lg p-4 sm:p-6 rounded-lg">
           {/* Total Wallet Balance */}
           <h2 className="text-lg font-semibold mb-2">Gidan Wallet</h2>
-          <div className="bg-gray-100 p-4 rounded-lg mb-6">
+          <div className="bg-site-bg p-4 rounded-lg mb-6">
             <div className="flex flex-col justify-between items-center space-y-5">
               <span className="text-gray-700 font-semibold">Total Wallet Balance</span>
-              <span className="text-2xl font-bold text-green-600">₹{wallet?.balance}</span>
+              <span className="text-2xl font-bold text-[#375421]">₹{wallet?.balance}</span>
             </div>
             <div className="flex justify-between items-center">
               <div>{/* Placeholder to fill the left side */}
@@ -192,7 +216,7 @@ const Wallet = () => {
                 value={amount}
                 onChange={handleInputChange}
                 placeholder="₹1000"
-                className="w-full p-3 border font-semibold rounded-lg text-green-600 focus:outline-none focus:border-green-500"
+                className="w-full p-3 border font-semibold rounded-lg text-[#375421] focus:outline-none focus:border-[#375421]"
               />
             </div>
 
@@ -201,7 +225,7 @@ const Wallet = () => {
                 <button
                   key={idx}
                   onClick={() => handlePresetClick(amt)}
-                  className="w-1/3 sm:w-1/4 md:w-1/5 border border-md border-gray-300 font-semibold text-center text-green-600 py-2 px-2 rounded-md hover:border-green-500 active:bg-border-green-500"
+                  className="w-1/3 sm:w-1/4 md:w-1/5 border border-md border-gray-300 font-semibold text-center text-[#375421] py-2 px-2 rounded-md hover:border-[#375421] active:bg-border-[#375421]"
                 >
                   {amt}
                 </button>
@@ -211,14 +235,14 @@ const Wallet = () => {
             <div className="text-center sm:text-left">
               <button
                 onClick={handleTopUp}
-                className="w-full mb-6 bg-lime-600 text-white px-4 py-4 rounded-md hover:bg-green-700">
+                className="w-full mb-6 bg-lime-600 text-white px-4 py-4 rounded-md hover:bg-[#375421] hover:text-white">
                 Proceed To Top-Up
               </button>
             </div>
           </div>
 
           {/* <div>
-          <button className="w-full mb-6 bg-lime-600 text-white px-4 py-4 rounded-md hover:bg-green-700">
+          <button className="w-full mb-6 bg-lime-600 text-white px-4 py-4 rounded-md hover:bg-[#375421] hover:text-white">
             Proceed To Top-Up
           </button>
         </div> */}
@@ -233,7 +257,7 @@ const Wallet = () => {
                   <FiAlertCircle className="ml-1" />
                 </span>
               </div>
-              <span className="text-green-600 font-semibold mt-2 sm:mt-0">₹500</span>
+              <span className="text-[#375421] font-semibold mt-2 sm:mt-0">₹500</span>
             </div>
             <div className="bg-transparent border border-black-100 p-4 rounded-lg flex flex-col sm:flex-row justify-between items-center">
               <div className="flex flex-col items-center sm:items-start">
@@ -243,7 +267,7 @@ const Wallet = () => {
                   <FiAlertCircle className="ml-1" />
                 </span>
               </div>
-              <span className="text-green-600 font-semibold mt-2 sm:mt-0">₹0</span>
+              <span className="text-[#375421] font-semibold mt-2 sm:mt-0">₹0</span>
             </div>
           </div>
 
@@ -261,7 +285,7 @@ const Wallet = () => {
               Go to{" "}
               <a
                 href="https://www.gidan.store"
-                className="text-green-500 hover:underline"
+                className="text-[#375421] hover:underline"
               >
                 www.gidan.store
               </a>{" "}

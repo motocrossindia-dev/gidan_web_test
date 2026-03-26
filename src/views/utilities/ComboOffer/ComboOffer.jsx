@@ -20,7 +20,7 @@ const ComboOffer = () => {
         <div className="container mx-auto p-6">
           {/* Breadcrumb */}
           <div className="text-sm text-gray-500 mb-4">
-            Home / <span className="text-green-500">Combo Offers</span>
+            Home / <span className="text-[#375421]">Combo Offers</span>
           </div>
 
           {/* Image and Heading Section */}
@@ -28,7 +28,7 @@ const ComboOffer = () => {
             {/* Container for Image and Text */}
             <div className="flex justify-between items-center">
               {/* Heading */}
-              <h2 className="text-2xl md:text-4xl font-normal text-green-600 text-center md:px-36">
+              <h2 className="text-2xl md:text-4xl font-normal text-[#375421] text-center md:px-36">
                 Explore the combo Below
               </h2>
               {/* Dummy Image */}
@@ -72,7 +72,7 @@ const FaqAccordion = () => {
       {faqItems.map((item, index) => (
         <div key={index} className="border-b">
           <button
-            className="w-full text-left p-4 flex justify-between items-center bg-gray-100 hover:bg-gray-200 focus:outline-none"
+            className="w-full text-left p-4 flex justify-between items-center bg-site-bg hover:bg-gray-200 focus:outline-none"
             onClick={() => toggleAccordion(index)}
           >
             <span className="text-gray-700">{item}</span>

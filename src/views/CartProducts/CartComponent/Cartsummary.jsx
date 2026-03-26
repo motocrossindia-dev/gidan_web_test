@@ -86,14 +86,14 @@ const CartSummary = ({
             <span>Price ({totalItems} items)</span>
             <span>₹{Math.round(totalAmount)}</span>
           </div>
-          <div className="flex justify-between text-green-600">
+          <div className="flex justify-between text-[#375421]">
             <span>Discount</span>
             <span>-₹{Math.round(discount)}</span>
           </div>
 
           {/* <div className="flex justify-between">
           <span>Delivery Charges</span>
-          <span className="text-green-600">Free</span>
+          <span className="text-[#375421]">Free</span>
         </div> */}
           {/* <div className="flex justify-between">
           <span>Packaging Fee</span>
@@ -103,7 +103,7 @@ const CartSummary = ({
             <span>Total Amount</span>
             <span>₹{Math.round(totalAmount - discount)}</span>
           </div>
-          <p className="text-green-600 mt-2">
+          <p className="text-[#375421] mt-2">
             You will save ₹{Math.round(discount)} on this order
           </p>
         </div>
@@ -112,7 +112,7 @@ const CartSummary = ({
         <div className="flex justify-end">
           <button
             onClick={handlePlaceOrder}
-            className="w-full md:full bg-lime-500 text-white py-2 m-4 rounded-sm hover:bg-green-600"
+            className="w-full md:full bg-lime-500 text-white py-2 m-4 rounded-sm hover:bg-[#375421] hover:text-white"
           >
             Place Order
           </button>

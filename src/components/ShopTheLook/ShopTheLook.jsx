@@ -52,6 +52,7 @@ function ShopTheLook() {
             `${combo_add_info.added_count} products added to cart!`,
             { variant: "success" }
           );
+          window.dispatchEvent(new Event("cartUpdated"));
         } else if (combo_add_info.already_in_cart_count > 0) {
           enqueueSnackbar(
             "All products are already in your cart!",
@@ -178,7 +179,7 @@ function ShopTheLook() {
       >
         <DialogTitle
           sx={{
-            bgcolor: '#062e25',
+            bgcolor: '#375421',
             color: 'white',
             textAlign: 'center',
             py: 2,
@@ -225,7 +226,7 @@ function ShopTheLook() {
                     {product?.size}
                   </p>
                   <div className="flex items-center gap-2">
-                    <span className="text-green-600 font-bold text-sm md:text-lg">
+                    <span className="text-[#375421] font-bold text-sm md:text-lg">
                       ₹{product?.selling_price}
                     </span>
                     <span className="text-gray-600 line-through text-xs md:text-sm">

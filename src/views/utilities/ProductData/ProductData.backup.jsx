@@ -867,10 +867,10 @@ export default function Component() {
 
                             {/* Main Image with Fully Working Zoom */}
                             {/* Main Image with Lens + Right Side Zoom */}
-                            <div className="relative flex justify-center bg-gray-100">
+                            <div className="relative flex justify-center bg-site-bg">
 
                                 <div
-                                    className="relative w-full max-w-[500px] bg-gray-100 rounded-lg overflow-hidden"
+                                    className="relative w-full max-w-[500px] bg-site-bg rounded-lg overflow-hidden"
                                     onMouseEnter={() => setZoom(true)}
                                     onMouseLeave={() => setZoom(false)}
                                     onMouseMove={(e) => {
@@ -952,7 +952,7 @@ export default function Component() {
                                         <button aria-label="Button"
                                             key={i + 1}
                                             onClick={() => setSelectedImage(i + 1)}
-                                            className={`w-16 h-16 sm:w-20 sm:h-20 md:w-[90px] md:h-[90px] rounded-lg bg-gray-100 flex items-center justify-center shrink-0 ${selectedImage === i + 1
+                                            className={`w-16 h-16 sm:w-20 sm:h-20 md:w-[90px] md:h-[90px] rounded-lg bg-site-bg flex items-center justify-center shrink-0 ${selectedImage === i + 1
                                                     ? "ring-2 ring-indigo-300 ring-inset"
                                                     : ""
                                                 }`}
@@ -1002,7 +1002,7 @@ export default function Component() {
                             {/*            <button aria-label="Button"*/}
                             {/*                key={i + 1}*/}
                             {/*                onClick={() => setSelectedImage(i + 1)}*/}
-                            {/*                className={`w-16 h-16 sm:w-20 sm:h-20 md:w-[90px] md:h-[90px] rounded-lg bg-gray-100 flex items-center justify-center shrink-0 ${*/}
+                            {/*                className={`w-16 h-16 sm:w-20 sm:h-20 md:w-[90px] md:h-[90px] rounded-lg bg-site-bg flex items-center justify-center shrink-0 ${*/}
                             {/*                    selectedImage === i + 1*/}
                             {/*                        ? "ring-2 ring-indigo-300 ring-inset"*/}
                             {/*                        : ""*/}
@@ -1232,7 +1232,7 @@ export default function Component() {
                                         // onClick={() => setQuantity(Math.max(1, quantity - 1))}
                                         onClick={() => handleQuantity(productDetailData?.data?.product?.id, "decrement", quantity)}
 
-                                        className="border border-bio-green text-black-700 py-2 px-4 rounded-l-lg hover:bg-bio-green"
+                                        className="border border-bio-green text-black-700 py-2 px-4 rounded-l-lg hover:bg-bio-green hover:text-white"
                                     >
                                         -
                                     </button>
@@ -1260,7 +1260,7 @@ export default function Component() {
                                         onClick={() => handleQuantity(productDetailData?.data?.product?.id, "increment", quantity)}
 
 
-                                        className="border border-bio-green text-black-700 py-2 px-4 rounded-r-lg hover:bg-bio-green"
+                                        className="border border-bio-green text-black-700 py-2 px-4 rounded-r-lg hover:bg-bio-green hover:text-white"
                                     >
                                         +
                                     </button>
@@ -1290,7 +1290,7 @@ export default function Component() {
                             </div>
 
                             <button
-                                className="bg-bio-green text-white py-2 px-4 rounded-lg w-full hover:bg-bio-green"
+                                className="bg-bio-green text-white py-2 px-4 rounded-lg w-full hover:bg-bio-green hover:text-white"
                                 onClick={handleBuyItNowSubmit}
                             >
                                 Buy It Now
@@ -1311,7 +1311,7 @@ export default function Component() {
                             className="px-4 py-2 border border-gray-300 rounded-l outline-none"
                         />
                         <button
-                            className="px-8 py-2 bg-bio-green text-white rounded-r hover:bg-green-700"
+                            className="px-8 py-2 bg-bio-green text-white rounded-r hover:bg-[#375421] hover:text-white"
                             onClick={handleCheck}
                         >
                             Check
@@ -2105,10 +2105,10 @@ export default function Component() {
 //
 //                             {/* Main Image with Fully Working Zoom */}
 //                             {/* Main Image with Lens + Right Side Zoom */}
-//                             <div className="relative flex justify-center bg-gray-100">
+//                             <div className="relative flex justify-center bg-site-bg">
 //
 //                                 <div
-//                                     className="relative w-full max-w-[500px] bg-gray-100 rounded-lg overflow-hidden"
+//                                     className="relative w-full max-w-[500px] bg-site-bg rounded-lg overflow-hidden"
 //                                     onMouseEnter={() => setZoom(true)}
 //                                     onMouseLeave={() => setZoom(false)}
 //                                     onMouseMove={(e) => {
@@ -2192,7 +2192,7 @@ export default function Component() {
 //                                         <button
 //                                             key={i + 1}
 //                                             onClick={() => setSelectedImage(i + 1)}
-//                                             className={`w-16 h-16 sm:w-20 sm:h-20 md:w-[90px] md:h-[90px] rounded-lg bg-gray-100 flex items-center justify-center shrink-0 ${
+//                                             className={`w-16 h-16 sm:w-20 sm:h-20 md:w-[90px] md:h-[90px] rounded-lg bg-site-bg flex items-center justify-center shrink-0 ${
 //                                                 selectedImage === i + 1
 //                                                     ? "ring-2 ring-indigo-300 ring-inset"
 //                                                     : ""
@@ -2243,7 +2243,7 @@ export default function Component() {
 //                             {/*            <button*/}
 //                             {/*                key={i + 1}*/}
 //                             {/*                onClick={() => setSelectedImage(i + 1)}*/}
-//                             {/*                className={`w-16 h-16 sm:w-20 sm:h-20 md:w-[90px] md:h-[90px] rounded-lg bg-gray-100 flex items-center justify-center shrink-0 ${*/}
+//                             {/*                className={`w-16 h-16 sm:w-20 sm:h-20 md:w-[90px] md:h-[90px] rounded-lg bg-site-bg flex items-center justify-center shrink-0 ${*/}
 //                             {/*                    selectedImage === i + 1*/}
 //                             {/*                        ? "ring-2 ring-indigo-300 ring-inset"*/}
 //                             {/*                        : ""*/}
@@ -2479,7 +2479,7 @@ export default function Component() {
 //                                         // onClick={() => setQuantity(Math.max(1, quantity - 1))}
 //                                         onClick={() => handleQuantity(productDetailData?.data?.product?.id, "decrement", quantity)}
 //
-//                                         className="border border-bio-green text-black-700 py-2 px-4 rounded-l-lg hover:bg-bio-green"
+//                                         className="border border-bio-green text-black-700 py-2 px-4 rounded-l-lg hover:bg-bio-green hover:text-white"
 //                                     >
 //                                         -
 //                                     </button>
@@ -2507,7 +2507,7 @@ export default function Component() {
 //                                         onClick={() => handleQuantity(productDetailData?.data?.product?.id, "increment", quantity)}
 //
 //
-//                                         className="border border-bio-green text-black-700 py-2 px-4 rounded-r-lg hover:bg-bio-green"
+//                                         className="border border-bio-green text-black-700 py-2 px-4 rounded-r-lg hover:bg-bio-green hover:text-white"
 //                                     >
 //                                         +
 //                                     </button>
@@ -2537,7 +2537,7 @@ export default function Component() {
 //                             </div>
 //
 //                             <button
-//                                 className="bg-bio-green text-white py-2 px-4 rounded-lg w-full hover:bg-bio-green"
+//                                 className="bg-bio-green text-white py-2 px-4 rounded-lg w-full hover:bg-bio-green hover:text-white"
 //                                 onClick={handleBuyItNowSubmit}
 //                             >
 //                                 Buy It Now
@@ -2558,7 +2558,7 @@ export default function Component() {
 //                             className="px-4 py-2 border border-gray-300 rounded-l outline-none"
 //                         />
 //                         <button
-//                             className="px-8 py-2 bg-bio-green text-white rounded-r hover:bg-green-700"
+//                             className="px-8 py-2 bg-bio-green text-white rounded-r hover:bg-[#375421] hover:text-white"
 //                             onClick={handleCheck}
 //                         >
 //                             Check

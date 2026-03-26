@@ -3,13 +3,21 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
-import { TrashIcon } from "lucide-react";
+import { TrashIcon, ChevronLeft, ArrowLeft } from "lucide-react";
 import { useSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 import AddressForm from "@/components/Shared/AddressForm";
+import Breadcrumb from "../../../components/Shared/Breadcrumb";
+import { useRouter } from "next/navigation";
 
-const AddressSection = () => {
+const AddressSection = ({ onBack }) => {
+  const router = useRouter();
   const accessToken = useSelector(selectAccessToken);
+
+  const handleBackClick = () => {
+    if (onBack) onBack();
+    else router.push('/profile');
+  };
   const [address, setAddress] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
@@ -143,8 +151,31 @@ const AddressSection = () => {
 
   return (
     <>
-      <main className="p-8">
-        <div className="border p-6 rounded bg-white">
+      <div className="flex flex-col md:hidden bg-white shadow-sm sticky top-0 z-40 border-b">
+        <div className="px-4 pt-4 flex items-center justify-between">
+          <button
+            onClick={handleBackClick}
+            className="flex items-center text-[#375421] text-sm font-medium"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Profile
+          </button>
+        </div>
+
+        <div className="p-4 pt-2">
+          <h2 className="text-xl font-bold">Address</h2>
+        </div>
+      </div>
+
+      <div className="mt-0 md:hidden text-xs sm:text-sm">
+        <Breadcrumb 
+          items={[{ label: 'Profile', path: '/profile' }]} 
+          currentPage="Address" 
+        />
+      </div>
+
+      <main className="p-4 md:p-8">
+        <div className="border p-4 md:p-6 rounded bg-white mt-4">
           <h2 className="text-2xl font-bold mb-4">Address</h2>
           {address.map((address, index) => (
             <div key={index} className="p-4 mb-4 border rounded-lg ">

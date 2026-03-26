@@ -50,7 +50,7 @@ const ProductGrid = () => {
               {['Lower Price', 'Higher Price', 'Higher Rating', 'Lower Rating'].map((option) => (
                 <li
                   key={option}
-                  className="flex items-center justify-between px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  className="flex items-center justify-between px-4 py-2 hover:bg-site-bg cursor-pointer"
                   onClick={() => handleSortChange(option)}
                 >
                   <span>{option}</span>

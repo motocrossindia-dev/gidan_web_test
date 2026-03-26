@@ -16,11 +16,13 @@ import {
   XCircle,
   Truck,
   Package2,
-  Check
+  Check,
+  ChevronLeft
 } from 'lucide-react';
 import axiosInstance from '../../../Axios/axiosInstance';
 import { enqueueSnackbar } from 'notistack';
 import WriteAReview from '../ProductData/WriteAReview';
+import Breadcrumb from '../../../components/Shared/Breadcrumb';
 // Using your actual data structure
 
 
@@ -155,7 +157,7 @@ const MyOrders = () => {
       case 'CANCELLED':
         return 'text-red-600 bg-red-50';
       case 'DELIVERED':
-        return 'text-green-600 bg-green-50';
+        return 'text-[#375421] bg-green-50';
       case 'RETURNED':
         return 'text-bio-green bg-green-50';
       case 'PROCESSING':
@@ -165,7 +167,7 @@ const MyOrders = () => {
       case 'ORDER_CONFIRMED':
         return 'text-yellow-600 bg-yellow-50';
       default:
-        return 'text-gray-600 bg-gray-50';
+        return 'text-gray-600 bg-site-bg';
     }
   };
 
@@ -254,7 +256,7 @@ const MyOrders = () => {
               <span className="text-xs text-gray-600 capitalize">{order?.delivery_option}</span>
             </div>
             {order?.total_discount > 0 && (
-              <div className="text-xs text-green-600 mt-1">
+              <div className="text-xs text-[#375421] mt-1">
                 Saved ₹{Math.round(order?.total_discount || 0).toLocaleString()}
               </div>
             )}
@@ -263,8 +265,8 @@ const MyOrders = () => {
                 onClick={(e) => { e.stopPropagation(); setActiveReviewOrder(order); }}
                 className={`mt-2 w-full py-1.5 rounded-lg text-xs font-semibold transition-all border ${
                   order?.is_review || order?.is_reviewed
-                    ? 'border-green-600 text-green-700 hover:bg-green-50'
-                    : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                    ? 'border-[#375421] text-[#375421] hover:bg-green-50'
+                    : 'border-gray-300 text-gray-700 hover:bg-site-bg'
                 }`}
               >
                 {order?.is_review || order?.is_reviewed ? '✓ Edit Review' : 'Write Review'}
@@ -336,7 +338,7 @@ const MyOrders = () => {
               <div>
                 <span className="text-xl font-semibold text-gray-900">₹{Math.round(order?.grand_total).toLocaleString()}</span>
                 {order?.total_discount > 0 && (
-                  <div className="text-sm text-green-600">
+                  <div className="text-sm text-[#375421]">
                     Saved ₹{Math.round(order?.total_discount).toLocaleString()}
                   </div>
                 )}
@@ -348,8 +350,8 @@ const MyOrders = () => {
                     onClick={(e) => { e.stopPropagation(); setActiveReviewOrder(order); }}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
                       order?.is_review || order?.is_reviewed
-                        ? 'border-green-600 text-green-700 hover:bg-green-50'
-                        : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                        ? 'border-[#375421] text-[#375421] hover:bg-green-50'
+                        : 'border-gray-300 text-gray-700 hover:bg-site-bg'
                     }`}
                   >
                     {order?.is_review || order?.is_reviewed ? '✓ Edit Review' : 'Write Review'}
@@ -374,7 +376,7 @@ const MyOrders = () => {
           onChange={onChange}
         />
         <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all duration-200 ${checked
-          ? 'bg-green-600 border-green-600'
+          ? 'bg-[#375421] border-[#375421]'
           : 'bg-white border-gray-300 group-hover:border-green-400'
           }`}>
           {checked && (
@@ -491,7 +493,7 @@ const MyOrders = () => {
         )}
 
         <div
-          className={`bg-gray-50 rounded-xl p-6 h-fit ${
+          className={`bg-site-bg rounded-xl p-6 h-fit ${
             !isOverlay
               ? 'sticky top-4'
               : !isDraggable
@@ -517,7 +519,7 @@ const MyOrders = () => {
             <div className="flex items-center gap-2">
               <button
                 onClick={handleReset}
-                className="px-4 py-2 bg-gray-400 text-white text-sm font-medium rounded hover:bg-gray-500 transition-colors"
+                className="px-4 py-2 bg-gray-400 text-white text-sm font-medium rounded hover:bg-site-bg0 transition-colors"
               >
                 RESET
               </button>
@@ -575,7 +577,7 @@ const MyOrders = () => {
 
   if (!mounted) {
     return (
-      <div className="bg-gray-50 min-h-screen">
+      <div className="bg-site-bg min-h-screen">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
@@ -598,27 +600,39 @@ const MyOrders = () => {
   // ── Mobile layout ──────────────────────────────────────────────────
   if (isMobile) {
     return (
-      <div className="bg-gray-50 min-h-screen">
+      <div className="bg-site-bg min-h-screen">
         <div className="bg-white shadow-sm sticky top-0 z-40">
-          <div className="flex items-center justify-between p-4">
-            <div className="flex items-center gap-3">
+          <div className="flex flex-col border-b">
+            <div className="px-4 pt-4 flex items-center justify-between">
               <button
-                aria-label="Previous"
-                onClick={() => router.back()}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                onClick={() => router.push('/profile')}
+                className="flex items-center text-[#375421] text-sm font-medium"
               >
-                <ArrowLeft className="w-5 h-5" />
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Profile
               </button>
-              <h1 className="text-lg font-semibold">My Orders</h1>
+              <div className="flex items-center gap-4 text-xs font-medium text-[#375421]">
+                <button className="hover:underline">Help & Support</button>
+              </div>
             </div>
-            <button aria-label="Toggle filters"
-              onClick={() => setShowFilters(true)}
-              className="flex items-center gap-2 px-3 py-2 bg-green-50 text-bio-green rounded-lg hover:bg-green-100 transition-colors"
-            >
-              <Filter className="w-4 h-4" />
-              Filters
-            </button>
+
+            <div className="flex items-center justify-between p-4 pt-2">
+              <h1 className="text-xl font-bold">My Orders</h1>
+              <button aria-label="Toggle filters"
+                onClick={() => setShowFilters(true)}
+                className="flex items-center gap-2 px-3 py-2 bg-green-50 text-bio-green rounded-lg hover:bg-green-100 transition-colors"
+              >
+                <Filter className="w-4 h-4" />
+                <span className="hidden xs:inline">Filters</span>
+              </button>
+            </div>
           </div>
+        </div>
+        <div className="mt-0 md:hidden">
+          <Breadcrumb 
+            items={[{ label: 'Profile', path: '/profile' }]} 
+            currentPage="My Orders" 
+          />
         </div>
         <div className="p-4">
           {content}
@@ -640,7 +654,7 @@ const MyOrders = () => {
   // ── Tablet layout (768-1023 px) ────────────────────────────────────
   if (isTablet) {
     return (
-      <div className="bg-gray-50 min-h-screen">
+      <div className="bg-site-bg min-h-screen">
         <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="mb-6 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-900">My Orders</h1>
@@ -676,7 +690,7 @@ const MyOrders = () => {
         ← Back to Profile
       </Link>
 
-      <div className="bg-gray-50 min-h-screen">
+      <div className="bg-site-bg min-h-screen">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">My Orders</h1>
@@ -861,7 +875,7 @@ export default MyOrders;
 //       case 'CANCELLED':
 //         return 'text-red-600 bg-red-50';
 //       case 'DELIVERED':
-//         return 'text-green-600 bg-green-50';
+//         return 'text-[#375421] bg-green-50';
 //       case 'RETURNED':
 //         return 'text-bio-green bg-green-50';
 //       case 'PROCESSING':
@@ -871,7 +885,7 @@ export default MyOrders;
 //       case 'ORDER_CONFIRMED':
 //         return 'text-yellow-600 bg-yellow-50';
 //       default:
-//         return 'text-gray-600 bg-gray-50';
+//         return 'text-gray-600 bg-site-bg';
 //     }
 //   };
 //
@@ -957,7 +971,7 @@ export default MyOrders;
 //               <span className="text-xs text-gray-500 capitalize">{order?.delivery_option}</span>
 //             </div>
 //             {order?.total_discount > 0 && (
-//               <div className="text-xs text-green-600 mt-1">
+//               <div className="text-xs text-[#375421] mt-1">
 //                 Saved ₹{Math.round(order?.total_discount || 0).toLocaleString()}
 //               </div>
 //             )}
@@ -1023,7 +1037,7 @@ export default MyOrders;
 //             <div>
 //               <span className="text-xl font-semibold text-gray-900">₹{Math.round(order?.grand_total).toLocaleString()}</span>
 //               {order?.total_discount > 0 && (
-//                 <div className="text-sm text-green-600">
+//                 <div className="text-sm text-[#375421]">
 //                   Saved ₹{Math.round(order?.total_discount).toLocaleString()}
 //                 </div>
 //               )}
@@ -1047,7 +1061,7 @@ export default MyOrders;
 //         />
 //         <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all duration-200 ${
 //           checked
-//             ? 'bg-green-600 border-green-600'
+//             ? 'bg-[#375421] border-[#375421]'
 //             : 'bg-white border-gray-300 group-hover:border-green-400'
 //         }`}>
 //           {checked && (
@@ -1058,7 +1072,7 @@ export default MyOrders;
 //     </label>
 //   );
 //   const FilterSidebar = () => (
-//     <div className={`bg-gray-50 rounded-lg p-6 h-fit ${
+//     <div className={`bg-site-bg rounded-lg p-6 h-fit ${
 //       isMobile ? 'fixed inset-0 z-50 m-4 overflow-y-auto' : 'sticky top-4'
 //     }`}>
 //       {/* Header */}
@@ -1067,7 +1081,7 @@ export default MyOrders;
 //         <div className="flex items-center gap-2">
 //           <button
 //             onClick={handleReset}
-//             className="px-4 py-2 bg-gray-400 text-white text-sm font-medium rounded hover:bg-gray-500 transition-colors"
+//             className="px-4 py-2 bg-gray-400 text-white text-sm font-medium rounded hover:bg-site-bg0 transition-colors"
 //           >
 //             RESET
 //           </button>
@@ -1171,11 +1185,11 @@ export default MyOrders;
 //
 //   if (isMobile) {
 //     return (
-//       <div className="bg-gray-50 min-h-screen">
+//       <div className="bg-site-bg min-h-screen">
 //         <div className="bg-white shadow-sm sticky top-0 z-40">
 //           <div className="flex items-center justify-between p-4">
 //             <div className="flex items-center gap-3">
-//               <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+//               <button className="p-2 hover:bg-site-bg rounded-lg transition-colors">
 //                 <ArrowLeft className="w-5 h-5" />
 //               </button>
 //               <h1 className="text-lg font-semibold">My Orders</h1>
@@ -1208,7 +1222,7 @@ export default MyOrders;
 //   return (
 //       <>
 //         
-//     <div className="bg-gray-50 min-h-screen">
+//     <div className="bg-site-bg min-h-screen">
 //       <div className="max-w-7xl mx-auto px-4 py-6">
 //         <div className="mb-6">
 //           <h1 className="text-2xl font-bold text-gray-900 mb-2">My Orders</h1>

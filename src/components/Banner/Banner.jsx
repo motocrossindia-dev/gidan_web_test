@@ -12,7 +12,7 @@ const Banner = ({ home }) => {
     const router = useRouter();
 
     return (
-        <div className="w-full bg-gray-100">
+        <div className="w-full bg-site-bg">
             <div className="max-w-screen-xl mx-auto py-6">
                 <Swiper
                     modules={[Autoplay]}
@@ -64,16 +64,16 @@ const Banner = ({ home }) => {
 
                                 {/* Text Section */}
                                 <div className="w-full lg:w-1/2 mt-4 lg:mt-0 lg:pl-10 flex flex-col justify-center text-center lg:text-left">
-                                    <h2 className="text-sm md:text-lg lg:text-3xl text-green-800 mb-2">
+                                    <h2 className="text-sm md:text-lg lg:text-3xl text-[#051d18] mb-2">
                                         {banner.title}
                                     </h2>
-                                    <h3 className="text-sm md:text-xl lg:text-4xl font-semibold text-green-800 mb-4">
+                                    <h3 className="text-sm md:text-xl lg:text-4xl font-semibold text-[#051d18] mb-4">
                                         {banner.subtitle}
                                     </h3>
                                     {banner.button_text && (
                                         <Link
                                             href={getBannerCategoryUrl(banner)}
-                                            className="bg-bio-green text-white px-3 md:px-4 py-2 rounded-md w-fit mx-auto lg:mx-0 hover:bg-green-700 transition text-xs md:text-sm"
+                                            className="bg-bio-green text-white px-3 md:px-4 py-2 rounded-md w-fit mx-auto lg:mx-0 hover:bg-[#375421] hover:text-white transition text-xs md:text-sm"
                                         >
                                             {banner.button_text}
                                         </Link>

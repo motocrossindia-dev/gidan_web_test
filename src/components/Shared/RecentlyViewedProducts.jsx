@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from 'react';
+import { ArrowRight } from 'lucide-react';
 import ProductCard from "./ProductCard";
 import axiosInstance from '../../Axios/axiosInstance';
 import { getProductUrl } from "../../utils/urlHelper";
@@ -13,7 +14,7 @@ import { getProductUrl } from "../../utils/urlHelper";
  * Displays a grid of recently viewed products
  * Uses the reusable ProductCard component
  */
-const RecentlyViewedProducts = ({ title = "Recently Viewed" }) => {
+const RecentlyViewedProducts = ({ title = "You might also love" }) => {
   const [products, setProducts] = useState([]);
   const router = useRouter();
 
@@ -49,21 +50,25 @@ const RecentlyViewedProducts = ({ title = "Recently Viewed" }) => {
   }
 
   return (
-    <div className="mt-8 p-2 bg-white rounded-md md:ml-16 relative z-10">
-      <h2 className="md:text-2xl text-xl mb-4 text-left font-sans font-bold">
-        {title}
-      </h2>
+    <div className="mt-16 bg-white rounded-[2rem] border border-gray-100 shadow-sm p-8 max-w-6xl mx-auto mb-12">
+      <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-50">
+        <div className="flex items-center gap-3">
+          <h2 className="text-2xl font-serif text-gray-900 italic">
+            {title}
+          </h2>
+        </div>
+        <Link 
+          href="/shop" 
+          className="flex items-center gap-1.5 text-sm font-bold text-[#375421] hover:underline uppercase tracking-wider"
+        >
+          View all <ArrowRight size={16} />
+        </Link>
+      </div>
 
       {/* Product Grid - 4 columns layout matching ProductGrid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 justify-items-center font-sans">
-        {products.map((product) => (
-          <Link
-            key={product?.id}
-            href={getProductUrl(product)}
-            onClick={() => window.scrollTo(0, 0)}
-
-            className="cursor-pointer w-full"
-          >
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {products.slice(0, 4).map((product) => (
+          <div key={product?.id} className="w-full">
             <ProductCard
               name={product?.name}
               price={Math.round(product?.selling_price)}
@@ -73,10 +78,11 @@ const RecentlyViewedProducts = ({ title = "Recently Viewed" }) => {
               product={product}
               inCart={product?.is_cart}
               inWishlist={product?.is_wishlist}
+              getProducts={getProducts}
               mrp={Math.round(product?.mrp)}
               ribbon={product?.ribbon}
             />
-          </Link>
+          </div>
         ))}
       </div>
     </div>

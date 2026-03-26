@@ -145,7 +145,7 @@ const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInli
     return (
       <div className={isInline ? "w-full p-4 border rounded-xl mt-4" : "fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 font-sans"}>
         <div className={isInline ? "" : "bg-white p-6 rounded-lg shadow-xl w-11/12 max-w-md text-center"}>
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#375421] mx-auto mb-4"></div>
           <p className="text-gray-600">Loading your review...</p>
         </div>
       </div>
@@ -156,9 +156,9 @@ const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInli
     return (
       <div className={isInline ? "w-full p-4 border rounded-xl mt-4" : "fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 font-sans"}>
         <div className={isInline ? "" : "bg-white p-6 rounded-lg shadow-xl w-11/12 max-w-md text-center"}>
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#375421] mx-auto mb-4"></div>
           <p className="text-gray-600">Loading product information...</p>
-          <button onClick={onClose} className="mt-4 text-green-700 font-medium">Cancel</button>
+          <button onClick={onClose} className="mt-4 text-[#375421] font-medium">Cancel</button>
         </div>
       </div>
     );
@@ -177,7 +177,7 @@ const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInli
       <div className={containerClasses}>
         {/* Header with back button */}
         <div className="flex items-center gap-2 mb-4">
-          <button onClick={onClose} className="hover:bg-gray-100 p-1 rounded-full transition-colors">
+          <button onClick={onClose} className="hover:bg-site-bg p-1 rounded-full transition-colors">
             <ArrowBack className="text-gray-700" />
           </button>
           <h2 className="text-xl font-bold text-gray-800">
@@ -190,7 +190,7 @@ const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInli
         {/* Show existing review notice */}
         {hasExistingReview && (
           <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-green-800 text-sm font-medium">
+            <p className="text-[#051d18] text-sm font-medium">
               ✓ You have already reviewed this product. You can edit your review below.
             </p>
           </div>
@@ -221,7 +221,7 @@ const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInli
             id="review-title"
             type="text"
             maxLength="50"
-            className="w-full border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-green-500 outline-none transition-all"
+            className="w-full border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-[#375421] outline-none transition-all"
             placeholder="Summarize your experience (max 50 chars)"
             value={reviewTitle}
             onChange={(e) => setReviewTitle(e.target.value)}
@@ -236,7 +236,7 @@ const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInli
             id="comment"
             maxLength="300"
             rows="4"
-            className="w-full border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-green-500 outline-none transition-all"
+            className="w-full border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-[#375421] outline-none transition-all"
             placeholder="Tell us what you liked or disliked (max 300 chars)"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
@@ -255,9 +255,9 @@ const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInli
                 value="yes"
                 checked={recommend === 'yes'}
                 onChange={() => setRecommend('yes')}
-                className="w-4 h-4 accent-green-600"
+                className="w-4 h-4 accent-[#375421]"
               />
-              <span className={`font-medium ${recommend === 'yes' ? 'text-green-600' : 'text-gray-500 group-hover:text-gray-700'}`}>YES</span>
+              <span className={`font-medium ${recommend === 'yes' ? 'text-[#375421]' : 'text-gray-500 group-hover:text-gray-700'}`}>YES</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer group">
               <input
@@ -281,14 +281,14 @@ const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInli
           <div className="mt-8 flex gap-4">
             <button
               onClick={onClose}
-              className="flex-1 border border-gray-200 text-gray-600 font-bold py-3 rounded-xl hover:bg-gray-50 transition-all"
+              className="flex-1 border border-gray-200 text-gray-600 font-bold py-3 rounded-xl hover:bg-site-bg transition-all"
             >
               CANCEL
             </button>
             <button
               onClick={handleSubmit}
               disabled={rating === 0 || !reviewTitle || !comment || isSubmitting}
-              className="flex-1 bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-green-100 transition-all flex items-center justify-center gap-2"
+              className="flex-1 bg-[#375421] text-white font-bold py-3 rounded-xl hover:bg-[#375421] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-green-100 transition-all flex items-center justify-center gap-2"
             >
               {isSubmitting ? (
                 <>

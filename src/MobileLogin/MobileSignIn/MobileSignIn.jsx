@@ -56,7 +56,7 @@ const MobileSignIn = () => {
     return (
         <>
             
-        <div className="flex items-center justify-center bg-gray-50 p-4">
+        <div className="flex items-center justify-center bg-site-bg p-4">
             <div className="w-full max-w-md p-6 rounded-lg bg-white ">
                 <div className="flex justify-center mb-4">
                     <img name=" "    src={logo}  alt="logo" className="mx-auto w-[110px] h-[70px]" />
@@ -84,7 +84,7 @@ const MobileSignIn = () => {
                     <div>
                         <p className="text-center text-xs text-gray-500 mt-10 space-y-1">
                             <span>By clicking through, I agree with the </span>
-                            <span className="text-green-500 cursor-pointer">Terms of Service <span className="text-gray-500"> & </span>Privacy Policy</span>
+                            <span className="text-[#375421] cursor-pointer">Terms of Service <span className="text-gray-500"> & </span>Privacy Policy</span>
                         </p>
                     </div>
                 </form>

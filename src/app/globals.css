@@ -3,16 +3,42 @@
 /* ===== Biotechmaali Theme ===== */
 @theme inline {
   --font-sans: "Nunito Sans", sans-serif;
-  --color-bio-green: [#062e25];
-  --color-bio-green-text: [#062e25];
-  --color-green-600: [#062e25];
-  --color-green-700: [#062e25];
-  --color-emerald-600: [#062e25];
-  --color-emerald-700: [#062e25];
-  --color-emerald-800: [#062e25];
+  --color-bio-green: #375421;
+  --color-bio-green-text: #375421;
+  --color-green-600: #375421;
+  --color-green-700: #2d451b;
+  --color-emerald-600: #375421;
+  --color-emerald-700: #2d451b;
+  --color-emerald-800: #243615;
+  --color-site-bg: #f8f7f0;
 }
-
+@layer base {
+  body {
+    background-color: #f8f7f0;
+  }
+  .bg-bio-green {
+    background-color: #375421;
+  }
+  .text-bio-green {
+    color: #375421;
+  }
+  .border-bio-green {
+    border-color: #375421;
+  }
+  .hover\:bg-bio-green:hover {
+    background-color: #375421;
+  }
+}
 /* Apply font globally */
 body {
   font-family: var(--font-sans);
+}
+
+@keyframes slide-left {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.animate-slide-left {
+  animation: slide-left 0.3s ease-out;
 }

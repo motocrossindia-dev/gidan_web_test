@@ -411,7 +411,7 @@ function PlantFilter({
                         </Typography>
                         <button
                             onClick={() => setMobileOpen(true)}
-                            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md font-semibold text-sm hover:bg-green-700 transition-colors shadow-md"
+                            className="flex items-center gap-2 px-4 py-2 bg-[#375421] text-white rounded-md font-semibold text-sm hover:bg-[#375421] hover:text-white transition-colors shadow-md"
                         >
                             <FiFilter />
                             Filter
@@ -463,7 +463,7 @@ function PlantFilter({
                         />
                         {isSearching && (
                             <div className="flex justify-center py-8">
-                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#375421]"></div>
                             </div>
                         )}
                     </div>

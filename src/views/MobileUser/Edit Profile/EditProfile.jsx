@@ -8,6 +8,8 @@ import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 import HomepageSchema from "../../utilities/seo/HomepageSchema";
 import StoreSchema from "../../utilities/seo/StoreSchema";
+import Breadcrumb from "../../../components/Shared/Breadcrumb";
+import { ChevronLeft, ArrowLeft } from "lucide-react";
 
 
 const EditProfile = ({ onBack }) => {
@@ -73,17 +75,32 @@ const EditProfile = ({ onBack }) => {
 
   return (
     <>
-              {/* <Header />
-            <Navigation/> */}
-    <div className={`flex justify-center items-start min-h-screen ${isMounted && isMobile ? 'bg-gray-100' : 'bg-white'}`}>
-      <div className="w-full max-w-md bg-white p-4 shadow-md rounded-lg">
-        {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b">
-          <button onClick={handleBackClick} className="mr-3">
-            <FaArrowLeft className="text-gray-700 text-xl" />
+      <div className="flex flex-col md:hidden bg-white shadow-sm sticky top-0 z-40 border-b">
+        <div className="px-4 pt-4 flex items-center justify-between">
+          <button
+            onClick={handleBackClick}
+            className="flex items-center text-[#375421] text-sm font-medium"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Profile
           </button>
-          <h2 className="text-lg font-semibold flex-grow text-center">Edit Profile</h2>
         </div>
+
+        <div className="p-4 pt-2">
+          <h2 className="text-xl font-bold">Edit Profile</h2>
+        </div>
+      </div>
+
+      <div className="mt-0 text-xs sm:text-sm md:hidden">
+        <Breadcrumb 
+          items={[{ label: 'Profile', path: '/profile' }]} 
+          currentPage="Edit Profile" 
+        />
+      </div>
+
+      <div className={`flex justify-center items-start min-h-screen ${isMounted && isMobile ? 'bg-site-bg' : 'bg-white'} mt-2`}>
+        <div className="w-full max-w-md bg-white p-4 shadow-md rounded-lg">
+          {/* Header Removed as it is now in the sticky bar */}
 
         {/* Form */}
         <form className="space-y-4 mt-4" onSubmit={handleSubmit}>
@@ -192,7 +209,7 @@ const EditProfile = ({ onBack }) => {
           {/* Save Button */}
           <button
             type="submit"
-            className="w-full bg-green-600 text-white py-2 rounded-md text-lg font-semibold hover:bg-green-700"
+            className="w-full bg-[#375421] text-white py-2 rounded-md text-lg font-semibold hover:bg-[#375421] hover:text-white"
           >
             SAVE
           </button>

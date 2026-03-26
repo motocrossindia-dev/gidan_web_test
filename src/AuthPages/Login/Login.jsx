@@ -163,7 +163,7 @@ const Login = ({ onClose }) => {
             </div>
             <button
               type="submit"
-              className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full bg-[#375421] text-white py-2 rounded-md hover:bg-[#375421] hover:text-white focus:outline-none focus:ring-2 focus:ring-green-400"
             >
               Login
             </button>

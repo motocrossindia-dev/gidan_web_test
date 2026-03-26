@@ -83,6 +83,7 @@ const ProductFeaturedCard = ({
         );
         if (response.status === 200) {
           enqueueSnackbar("Product Removed from wishlist", { variant: "success" });
+          window.dispatchEvent(new Event("wishlistUpdated"));
         }
       } else {
         const response = await axios.post(
@@ -93,6 +94,7 @@ const ProductFeaturedCard = ({
         // fetchWishlistStatus();
         if (response.status === 200) {
           enqueueSnackbar("Added to wishlist", { variant: "success" });
+          window.dispatchEvent(new Event("wishlistUpdated"));
 
           // GA4: Track add_to_wishlist event
           trackAddToWishlist({ id: product, name });
@@ -125,6 +127,7 @@ const ProductFeaturedCard = ({
         if (response.status === 200) {
           enqueueSnackbar("Product Removed from cart", { variant: "success" });
           setIsAdded(!isAdded);
+          window.dispatchEvent(new Event("cartUpdated"));
 
           // GA4: Track remove_from_cart event
           trackRemoveFromCart({ id: product, name, selling_price: price });

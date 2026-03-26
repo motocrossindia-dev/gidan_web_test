@@ -20,7 +20,7 @@ export default function Breadcrumb({ items = [], currentPage }) {
     const pathname = usePathname();
 
     return (
-        <div className="py-3 px-4 bg-gray-50 border-b border-gray-200">
+        <div className="py-3 px-4 bg-site-bg border-b border-gray-200">
             <div className="container mx-auto">
                 <Breadcrumbs
                     separator={<NavigateNext fontSize="small" className="text-gray-400" />}
@@ -38,13 +38,23 @@ export default function Breadcrumb({ items = [], currentPage }) {
 
                     {/* Dynamic Breadcrumb Items */}
                     {items.map((item, index) => (
-                        <Link
-                            key={index}
-                            href={item.path}
-                            className="text-gray-600 hover:text-bio-green transition-colors capitalize"
-                        >
-                            {item.label}
-                        </Link>
+                        item.path ? (
+                            <Link
+                                key={index}
+                                href={item.path}
+                                className="text-gray-600 hover:text-bio-green transition-colors capitalize"
+                            >
+                                {item.label}
+                            </Link>
+                        ) : (
+                            <Typography
+                                key={index}
+                                color="text.secondary"
+                                className="text-gray-600 text-[14px] capitalize"
+                            >
+                                {item.label}
+                            </Typography>
+                        )
                     ))}
 
                     {/* Current Page (not linked) */}

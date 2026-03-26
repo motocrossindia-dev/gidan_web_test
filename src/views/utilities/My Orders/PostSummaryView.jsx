@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import {
     ArrowLeft,
+    ChevronLeft,
     Package,
     Download,
     RefreshCcw,
@@ -23,6 +24,7 @@ import { enqueueSnackbar } from 'notistack';
 import { motion } from "framer-motion";
 import WriteAReview from '../ProductData/WriteAReview';
 import { getProductUrl } from '../../../utils/urlHelper';
+import Breadcrumb from '../../../components/Shared/Breadcrumb';
 
 const PostSummaryView = () => {
     const router = useRouter();
@@ -109,9 +111,9 @@ const PostSummaryView = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <div className="min-h-screen flex items-center justify-center bg-site-bg">
                 <div className="flex flex-col items-center">
-                    <div className="w-12 h-12 border-4 border-[#062e25] border-t-transparent rounded-full animate-spin mb-4"></div>
+                    <div className="w-12 h-12 border-4 border-[#375421] border-t-transparent rounded-full animate-spin mb-4"></div>
                     <p className="text-gray-600 font-medium">Loading your order summary...</p>
                 </div>
             </div>
@@ -120,7 +122,7 @@ const PostSummaryView = () => {
 
     if (!orderData) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <div className="min-h-screen flex items-center justify-center bg-site-bg">
                 <div className="text-center p-8 bg-white rounded-2xl shadow-sm max-w-md">
                     <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                     <h2 className="text-xl font-bold text-gray-800 mb-2">Order not found</h2>
@@ -143,8 +145,28 @@ const PostSummaryView = () => {
     const latestTrackingStatus = orderData?.tracking_updates?.slice(-1)?.[0]?.status?.toUpperCase() || '';
     const isDelivered = latestTrackingStatus === 'DELIVERED';
 
+    const breadcrumbItems = [
+        { label: 'Profile', path: '/profile' },
+        { label: 'Orders', path: '/profile/orders' }
+    ];
+
     return (
         <div className="min-h-screen bg-white pb-20">
+            {/* Desktop/Back Section */}
+            <div className="max-w-6xl mx-auto px-4 pt-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <button
+                    onClick={() => router.push('/profile/orders')}
+                    className="flex items-center text-[#375421] hover:opacity-80 transition-opacity text-sm font-medium"
+                >
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Back to Your Orders
+                </button>
+            </div>
+
+            {/* Mobile Breadcrumb Section (Keep breadcrumb but remove old button) */}
+            <div className="md:hidden px-4 py-2 border-b bg-white sticky top-0 z-50">
+                <Breadcrumb items={breadcrumbItems} currentPage="Order Summary" />
+            </div>
 
             <div className="max-w-6xl mx-auto px-4 py-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
@@ -158,7 +180,7 @@ const PostSummaryView = () => {
 
                 {/* Main Summary Card */}
                 <div className="border rounded-lg overflow-hidden mb-8 shadow-sm">
-                    <div className="bg-gray-50 p-4 border-b grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-site-bg p-4 border-b grid grid-cols-1 md:grid-cols-3 gap-6">
                         {/* Shipping Address */}
                         <div>
                             <h3 className="text-sm font-bold text-gray-900 mb-2">Shipping Address</h3>
@@ -352,7 +374,7 @@ const PostSummaryView = () => {
                                 )}
 
                                 {/* Grand Total */}
-                                <div className="bg-gradient-to-r from-green-600 to-green-800 rounded-lg px-3 py-2 flex justify-between items-center mt-1">
+                                <div className="bg-gradient-to-r from-[#375421] to-[#051d18] rounded-lg px-3 py-2 flex justify-between items-center mt-1">
                                     <span className="text-white font-bold text-sm">Grand Total</span>
                                     <span className="text-white font-extrabold">₹{Number(orderData?.order?.grand_total ?? 0).toFixed(2)}</span>
                                 </div>
@@ -385,7 +407,7 @@ const PostSummaryView = () => {
 
                                 return (
                                     <div
-                                        className="absolute top-4 left-4 h-1 bg-green-500 -translate-y-1/2 z-0 transition-all duration-500"
+                                        className="absolute top-4 left-4 h-1 bg-[#375421] -translate-y-1/2 z-0 transition-all duration-500"
                                         style={{ width: progress }}
                                     ></div>
                                 );
@@ -400,7 +422,7 @@ const PostSummaryView = () => {
 
                                 return (
                                     <div key={step} className="flex flex-col items-center relative z-50 w-1/4">
-                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 ${isActive ? 'bg-green-500 border-green-100 text-white' : 'bg-white border-gray-200 text-gray-300'}`}>
+                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 ${isActive ? 'bg-[#375421] border-green-100 text-white' : 'bg-white border-gray-200 text-gray-300'}`}>
                                             {isActive ? <CheckCircle2 className="w-4 h-4" /> : <div className="w-2 h-2 rounded-full bg-gray-300"></div>}
                                         </div>
                                         <div className="mt-2 text-center w-full px-1">
@@ -420,12 +442,12 @@ const PostSummaryView = () => {
 
                 {/* Items Section */}
                 <div className="border rounded-lg overflow-hidden bg-white">
-                    <div className="bg-gray-50 p-4 border-b flex justify-between items-center">
+                    <div className="bg-site-bg p-4 border-b flex justify-between items-center">
                         <h2 className="text-lg font-bold text-gray-900">Items Ordered</h2>
                         {isDelivered && (
                             <button
                                 onClick={getInvoice}
-                                className="text-sm font-medium text-bio-green hover:text-green-800 hover:underline flex items-center gap-1"
+                                className="text-sm font-medium text-bio-green hover:text-[#051d18] hover:underline flex items-center gap-1"
                             >
                                 <Download className="w-4 h-4" />
                                 Invoice
@@ -438,7 +460,7 @@ const PostSummaryView = () => {
                             <div key={index} className="flex flex-col rounded-xl border border-gray-100 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
                                 {/* Product Image */}
                                 <div
-                                    className="aspect-square bg-gray-50 flex items-center justify-center p-3 cursor-pointer"
+                                    className="aspect-square bg-site-bg flex items-center justify-center p-3 cursor-pointer"
                                     onClick={() => router.push(getProductUrl(item))}
                                 >
                                     <img
@@ -458,7 +480,7 @@ const PostSummaryView = () => {
                                     </p>
 
                                     <div className="flex items-baseline gap-1.5 flex-wrap">
-                                        <span className="text-sm font-bold text-[#062e25]">₹{item?.selling_price}</span>
+                                        <span className="text-sm font-bold text-[#375421]">₹{item?.selling_price}</span>
                                         {Number(item?.mrp) > Number(item?.selling_price) && (
                                             <span className="text-[10px] text-gray-400 line-through">₹{item?.mrp}</span>
                                         )}
@@ -470,7 +492,7 @@ const PostSummaryView = () => {
                                     <div className="mt-auto pt-2 flex flex-col gap-1.5">
                                         <button
                                             onClick={() => router.push(getProductUrl(item))}
-                                            className="w-full bg-bio-green hover:bg-bio-green-text text-white py-1.5 rounded-lg text-[10px] font-semibold transition-all"
+                                            className="w-full bg-bio-green hover:bg-bio-green hover:text-white-text text-white py-1.5 rounded-lg text-[10px] font-semibold transition-all"
                                         >
                                             Buy Again
                                         </button>
@@ -478,7 +500,7 @@ const PostSummaryView = () => {
                                         {isDelivered && !(item.is_reviewed || item.is_review) && (
                                             <button
                                                 onClick={() => setActiveReviewProductId(item.product_id)}
-                                                className="w-full border border-gray-300 hover:bg-gray-50 text-gray-700 py-1.5 rounded-lg text-[10px] font-semibold transition-all"
+                                                className="w-full border border-gray-300 hover:bg-site-bg text-gray-700 py-1.5 rounded-lg text-[10px] font-semibold transition-all"
                                             >
                                                 Write Review
                                             </button>
@@ -487,7 +509,7 @@ const PostSummaryView = () => {
                                         {(item.is_reviewed || item.is_review) && isDelivered && (
                                             <button
                                                 onClick={() => setActiveReviewProductId(item.product_id)}
-                                                className="w-full border border-[#062e25] text-[#062e25] hover:bg-green-50 py-1.5 rounded-lg text-[10px] font-semibold transition-all flex items-center justify-center gap-1"
+                                                className="w-full border border-[#375421] text-[#375421] hover:bg-green-50 py-1.5 rounded-lg text-[10px] font-semibold transition-all flex items-center justify-center gap-1"
                                             >
                                                 <Check className="w-3 h-3" /> Edit Review
                                             </button>
@@ -513,20 +535,13 @@ const PostSummaryView = () => {
                 })()}
 
                 {/* Bottom Links */}
-                <div className="mt-8 flex flex-col md:flex-row gap-4 items-center justify-between text-sm">
-                    <button
-                        onClick={() => router.push('/profile/orders')}
-                        className="text-[#062e25] hover:underline flex items-center gap-1"
-                    >
-                        <ArrowLeft className="w-4 h-4" />
-                        Back to Your Orders
-                    </button>
-                    <div className="flex gap-4">
-                        <button onClick={() => router.push('/contact-us/')} className="text-[#062e25] hover:underline">Help & Support</button>
-                        <span className="text-gray-300">|</span>
-                        <button onClick={() => router.push('/shipping/')} className="text-[#062e25] hover:underline">Shipping Policies</button>
-                        <span className="text-gray-300">|</span>
-                        <button onClick={() => router.push('/return/')} className="text-[#062e25] hover:underline">Return & Refund Policy</button>
+                <div className="mt-12 mb-8 border-t pt-8">
+                    <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-sm font-bold text-[#375421]">
+                        <button onClick={() => router.push('/contact-us/')} className="hover:underline">Help & Support</button>
+                        <span className="text-gray-300 hidden md:inline font-normal">|</span>
+                        <button onClick={() => router.push('/shipping/')} className="hover:underline">Shipping Policies</button>
+                        <span className="text-gray-300 hidden md:inline font-normal">|</span>
+                        <button onClick={() => router.push('/return/')} className="hover:underline">Return & Refund Policy</button>
                     </div>
                 </div>
             </div>

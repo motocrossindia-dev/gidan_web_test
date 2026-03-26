@@ -23,7 +23,7 @@ const TrackOrderMobile = () => {
     <>
           {/* <Header />
         <Navigation/> */}
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4 relative">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-site-bg p-4 relative">
       {/* Back Button and Heading - Positioned at the top */}
       <div className="absolute top-4 left-4 flex items-center">
         <button onClick={handleBackClick} className="mr-3">
@@ -50,7 +50,7 @@ const TrackOrderMobile = () => {
           />
 
           {/* Track Button */}
-          <button className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition">
+          <button className="w-full bg-[#375421] text-white py-3 rounded-lg font-semibold hover:bg-[#375421] hover:text-white transition">
             Track
           </button>
         </div>

@@ -164,21 +164,21 @@ const SeasonalCard = ({
                             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-20">
                                 <button aria-label="Add to cart"
                                     onClickCapture={handleAddToCart}
-                                    className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                    className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
                                 >
                                     <MdOutlineShoppingBag className="w-4 h-4" />
                                 </button>
 
                                 <button aria-label="Add to wishlist"
                                     onClick={handleAddToWishlist}
-                                    className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                    className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
                                 >
                                     {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
                                 </button>
 
                                 <button aria-label="Quick view"
                                     onClick={handleQuickView}
-                                    className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+                                    className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
                                 >
                                     <FiEye className="w-4 h-4" />
                                 </button>
@@ -222,7 +222,7 @@ const SeasonalCard = ({
 
                                 {/* Discount */}
                                 {mrp && price && (mrp > price) && (
-                                    <span className="text-sm font-semibold text-green-600 mt-1">
+                                    <span className="text-sm font-semibold text-[#375421] mt-1">
                                         {Math.round(((mrp - price) / mrp) * 100)}% OFF
                                     </span>
                                 )}
@@ -339,7 +339,7 @@ const SeasonalCard = ({
 
                             {/* Discount */}
                             {mrp && price && (mrp > price) && (
-                                <span className="text-base font-semibold text-green-600 mt-1">
+                                <span className="text-base font-semibold text-[#375421] mt-1">
                                     {Math.round(((mrp - price) / mrp) * 100)}% OFF
                                 </span>
                             )}
@@ -527,21 +527,21 @@ export default memo(SeasonalCard, (prevProps, nextProps) => {
 //                             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-20">
 //                                 <button
 //                                     onClickCapture={handleAddToCart}
-//                                     className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+//                                     className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
 //                                 >
 //                                     <MdOutlineShoppingBag className="w-4 h-4" />
 //                                 </button>
 //
 //                                 <button
 //                                     onClick={handleAddToWishlist}
-//                                     className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+//                                     className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
 //                                 >
 //                                     {inWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
 //                                 </button>
 //
 //                                 <button
 //                                     onClick={handleQuickView}
-//                                     className="w-6 h-6 rounded-full bg-white hover:bg-green-600 hover:text-white flex items-center justify-center transition-colors duration-200"
+//                                     className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200"
 //                                 >
 //                                     <FiEye className="w-4 h-4" />
 //                                 </button>
@@ -585,7 +585,7 @@ export default memo(SeasonalCard, (prevProps, nextProps) => {
 //
 //                                 {/* Discount */}
 //                                 {mrp && price && (mrp>price) && (
-//                                     <span className="text-sm font-semibold text-green-600 mt-1">
+//                                     <span className="text-sm font-semibold text-[#375421] mt-1">
 //       {Math.round(((mrp - price) / mrp) * 100)}% OFF
 //     </span>
 //                                 )}
@@ -703,7 +703,7 @@ export default memo(SeasonalCard, (prevProps, nextProps) => {
 //
 //                             {/* Discount */}
 //                             {mrp && price && (mrp>price) && (
-//                                 <span className="text-base font-semibold text-green-600 mt-1">
+//                                 <span className="text-base font-semibold text-[#375421] mt-1">
 //       {Math.round(((mrp - price) / mrp) * 100)}% OFF
 //     </span>
 //                             )}

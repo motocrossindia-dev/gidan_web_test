@@ -168,7 +168,7 @@ const CategoryIcons = () => {
                         return (
                           <li
                             key={index}
-                            className="hover:text-green-600 cursor-pointer transition-colors duration-200"
+                            className="hover:text-[#375421] cursor-pointer transition-colors duration-200"
                           >
                             <Link
                               to={subcategoryUrl}
@@ -183,7 +183,7 @@ const CategoryIcons = () => {
                                   subcategory_slug: item.slug
                                 }
                               }}
-                              className="block py-1 px-2 rounded hover:bg-gray-50 text-xs sm:text-sm"
+                              className="block py-1 px-2 rounded hover:bg-site-bg text-xs sm:text-sm"
                             >
                               {item.name}
                             </Link>

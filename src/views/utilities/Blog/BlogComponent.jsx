@@ -81,7 +81,7 @@ function Blog() {
   return (
       <>
         
-        <div className="container mx-auto px-4 py-8 bg-gray-100">
+        <div className="container mx-auto px-4 py-8 bg-site-bg">
           <div className="text-center mb-8">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Our Blogs</h1>
             <p className="text-gray-600 max-w-2xl mx-auto">

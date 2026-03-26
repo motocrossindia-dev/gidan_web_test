@@ -98,7 +98,7 @@ const TrendingSection = ({ initialTrending, initialFeatured, initialBestseller }
                   <div className="h-3 bg-gray-200 rounded w-1/2" />
                   <div className="flex gap-2">
                     <div className="h-4 bg-gray-200 rounded w-16" />
-                    <div className="h-4 bg-gray-100 rounded w-12" />
+                    <div className="h-4 bg-site-bg rounded w-12" />
                   </div>
                 </div>
               </div>

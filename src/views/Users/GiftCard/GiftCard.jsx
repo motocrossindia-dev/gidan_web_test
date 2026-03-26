@@ -66,7 +66,7 @@ const TrackOrder = () => {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="w-[400px] h-[48px] py-2 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-md transition duration-300"
+              className="w-[400px] h-[48px] py-2 px-4 bg-[#375421] hover:bg-[#375421] hover:text-white text-white font-semibold rounded-md transition duration-300"
             >
              Apply
             </button>

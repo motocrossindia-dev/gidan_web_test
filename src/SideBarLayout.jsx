@@ -13,7 +13,7 @@ const SideBarLayout = () => {
     <div >
       <Header />
         <Navigation/>
-         <div className='px-8  bg-gray-100'> 
+         <div className='px-8  bg-site-bg'> 
       <div className='display flex  md:py-6 px-2'>
 
         <div className='   md:w-[290px] '>

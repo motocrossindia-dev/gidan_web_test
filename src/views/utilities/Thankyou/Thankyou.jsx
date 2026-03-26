@@ -27,11 +27,11 @@ function Thankyou() {
       <>
           
 
-          <div className="container mx-auto bg-gray-100 pt-6">
+          <div className="container mx-auto bg-site-bg pt-6">
               <Banner1 />
               <br />
               <div className="w-full">
-                  <Card className="bg-gray-100 w-full">
+                  <Card className="bg-site-bg w-full">
                       <h1 className="md:text-3xl text-xl font-bold  mb-4 w-full mt-6 md:pl-8 pl-4">
                           Plants
                       </h1>

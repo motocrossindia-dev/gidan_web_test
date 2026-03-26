@@ -20,7 +20,7 @@ const WalletHistory = () => {
   ];
 
   return (
-    <div className="max-w-md mx-auto min-h-screen bg-gray-100">
+    <div className="max-w-md mx-auto min-h-screen bg-site-bg">
       {/* Header */}
       <div className="flex items-center justify-between p-4 bg-white shadow-md">
         <button onClick={() => router.back()}>
@@ -41,7 +41,7 @@ const WalletHistory = () => {
             className="flex justify-between items-center p-3 bg-white shadow-sm rounded-md mb-3"
           >
             <p className="text-gray-700">{transaction.name}</p>
-            <p className={`font-bold ${transaction.type === "credit" ? "text-green-600" : "text-red-600"}`}>
+            <p className={`font-bold ${transaction.type === "credit" ? "text-[#375421]" : "text-red-600"}`}>
               {transaction.amount}
             </p>
           </div>

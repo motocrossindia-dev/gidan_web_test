@@ -155,15 +155,7 @@ const ProfileForm = () => {
             <EditProfile onBack={() => setMobileSection(null)} />
           )}
           {mobileSection === 'address' && (
-            <div>
-              <button
-                onClick={() => setMobileSection(null)}
-                className="flex items-center gap-2 p-4 text-bio-green font-medium"
-              >
-                ← Back
-              </button>
-              <AddressSection />
-            </div>
+            <AddressSection onBack={() => setMobileSection(null)} />
           )}
           {!mobileSection && <MobileSidebar onNavigate={setMobileSection} />}
         </>
@@ -353,7 +345,7 @@ const ProfileForm = () => {
                     <div className="mt-6">
                       <button
                         type="submit"
-                        className="bg-bio-green text-white px-4 py-2 rounded hover:bg-green-500"
+                        className="bg-bio-green text-white px-4 py-2 rounded hover:bg-[#375421] hover:text-white"
                       >
                         Save
                       </button>

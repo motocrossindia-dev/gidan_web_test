@@ -6,7 +6,7 @@ import { FaArrowLeft } from "react-icons/fa";
 
 const WalletMobile = () => {
   return (
-    <div className="max-w-md mx-auto min-h-screen bg-gray-100 p-4">
+    <div className="max-w-md mx-auto min-h-screen bg-site-bg p-4">
       {/* Header */}
       <div className="flex items-center p-4 bg-white shadow-md">
         <button onClick={() => window.history.back()} className="mr-3">
@@ -18,7 +18,7 @@ const WalletMobile = () => {
       {/* Wallet Balance */}
       <div className="bg-white shadow-md rounded-lg p-4 mt-4 text-center">
         <h2 className="text-gray-600">Total Wallet Balance</h2>
-        <p className="text-green-600 text-2xl font-bold">₹0</p>
+        <p className="text-[#375421] text-2xl font-bold">₹0</p>
       </div>
 
       {/* Top-Up Section */}
@@ -34,13 +34,13 @@ const WalletMobile = () => {
           <button className="bg-gray-200 text-gray-700 py-1 px-4 rounded">₹500</button>
           <button className="bg-gray-200 text-gray-700 py-1 px-4 rounded">₹1000</button>
         </div>
-        <button className="w-full mt-4 bg-green-600 text-white py-2 rounded-md text-lg font-semibold">
+        <button className="w-full mt-4 bg-[#375421] text-white py-2 rounded-md text-lg font-semibold">
           Proceed To Top-up
         </button>
       </div>
 
       {/* Wallet Transactions */}
-      <button className="w-full mt-4 bg-green-500 text-white py-2 rounded-md text-lg font-semibold">
+      <button className="w-full mt-4 bg-[#375421] text-white py-2 rounded-md text-lg font-semibold">
         Wallet Transactions History
       </button>
 
@@ -48,7 +48,7 @@ const WalletMobile = () => {
       <div className="bg-white shadow-md rounded-lg p-4 mt-4">
         <div className="flex justify-between">
           <h2 className="text-gray-700">Bitcoin Mash Rewards</h2>
-          <p className="text-green-600 font-bold">₹500</p>
+          <p className="text-[#375421] font-bold">₹500</p>
         </div>
         <p className="text-gray-500 text-sm">25% Cashback on Card Value</p>
       </div>

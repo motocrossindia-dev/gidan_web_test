@@ -18,7 +18,7 @@ const ProductCard = ({ product }) => {
       />
       <h3 className="text-sm font-medium">{product.name || "Unknown Product"}</h3>
       <p className="text-gray-500 text-sm">{product.price || "N/A"}</p>
-      <button className="bg-green-500 text-white text-sm py-1 px-3 rounded mt-2">
+      <button className="bg-[#375421] text-white text-sm py-1 px-3 rounded mt-2">
         Add to Cart
       </button>
     </div>

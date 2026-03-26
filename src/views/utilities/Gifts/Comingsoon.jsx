@@ -41,11 +41,11 @@ const Comingsoon = () => {
           </div>
 
           <div className="relative">
-            <h1 className="text-4xl md:text-5xl font-bold text-green-800 mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-[#051d18] mb-4">
               Plant Gifts Coming Soon
             </h1>
 
-            <p className="text-lg text-green-700 mb-8">
+            <p className="text-lg text-[#375421] mb-8">
               We're cultivating something special. Soon you'll be able to send the perfect plant gifts to your loved ones.
             </p>
 
@@ -53,23 +53,23 @@ const Comingsoon = () => {
 
             <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
               <div className="p-4">
-                <h3 className="font-semibold text-green-800 mb-2">Curated Selection</h3>
-                <p className="text-green-600">Handpicked plants perfect for gifting</p>
+                <h3 className="font-semibold text-[#051d18] mb-2">Curated Selection</h3>
+                <p className="text-[#375421]">Handpicked plants perfect for gifting</p>
               </div>
               <div className="p-4">
-                <h3 className="font-semibold text-green-800 mb-2">Expert Care Guides</h3>
-                <p className="text-green-600">Detailed care instructions included</p>
+                <h3 className="font-semibold text-[#051d18] mb-2">Expert Care Guides</h3>
+                <p className="text-[#375421]">Detailed care instructions included</p>
               </div>
               <div className="p-4">
-                <h3 className="font-semibold text-green-800 mb-2">Eco-Friendly</h3>
-                <p className="text-green-600">Sustainable packaging & practices</p>
+                <h3 className="font-semibold text-[#051d18] mb-2">Eco-Friendly</h3>
+                <p className="text-[#375421]">Sustainable packaging & practices</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <p className="mt-8 text-green-600 text-center">
+        <p className="mt-8 text-[#375421] text-center">
           © 2025 Plant Gifts. All rights reserved.
         </p>
       </div>

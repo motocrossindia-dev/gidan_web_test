@@ -28,12 +28,12 @@ function BlogDetail({ slug }) {
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <button
         onClick={() => router.back()}
-        className="mb-4 text-green-600 hover:text-green-700"
+        className="mb-4 text-[#375421] hover:text-[#375421]"
       >
         ← Back to Blogs
       </button>
       
-      <span className="text-sm text-green-600 font-semibold">{blog.category}</span>
+      <span className="text-sm text-[#375421] font-semibold">{blog.category}</span>
       <h1 className="text-4xl font-bold mt-2 mb-4">{blog.title}</h1>
       
       <div className="flex items-center gap-4 text-sm text-gray-600 mb-6">

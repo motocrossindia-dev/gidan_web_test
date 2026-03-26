@@ -133,7 +133,7 @@ const ServicePage = () => {
                   </div>
 
                   {/* Feature Cards */}
-                  {/* <div className="bg-gray-50 p-4 sm:p-6 rounded-lg">
+                  {/* <div className="bg-site-bg p-4 sm:p-6 rounded-lg">
                 <Heart className="text-[#2F4333] mb-2 sm:mb-4" size={isSmallScreen ? 20 : 24} />
                 <h3 className="text-md sm:text-lg font-medium mb-1 sm:mb-2">Passion in every work</h3>
                   <p className="text-gray-600 text-xs sm:text-sm">
@@ -141,7 +141,7 @@ const ServicePage = () => {
                   </p>
                 </div>
 
-                <div className="bg-gray-50 p-4 sm:p-6 rounded-lg">
+                <div className="bg-site-bg p-4 sm:p-6 rounded-lg">
                   <Link className="text-[#2F4333] mb-2 sm:mb-4" size={isSmallScreen ? 20 : 24} />
                   <h3 className="text-md sm:text-lg font-medium mb-1 sm:mb-2">Collaboration on top</h3>
                   <p className="text-gray-600 text-xs sm:text-sm">
@@ -149,7 +149,7 @@ const ServicePage = () => {
                   </p>
                 </div>
 
-                <div className="bg-gray-50 p-4 sm:p-6 rounded-lg">
+                <div className="bg-site-bg p-4 sm:p-6 rounded-lg">
                   <Leaf className="text-[#2F4333] mb-2 sm:mb-4" size={isSmallScreen ? 20 : 24} />
                   <h3 className="text-md sm:text-lg font-medium mb-1 sm:mb-2">Sustainability in check</h3>
                   <p className="text-gray-600 text-xs sm:text-sm">
@@ -157,7 +157,7 @@ const ServicePage = () => {
                   </p>
                 </div>
 
-                <div className="bg-gray-50 p-4 sm:p-6 rounded-lg">
+                <div className="bg-site-bg p-4 sm:p-6 rounded-lg">
                   <Sparkles className="text-[#2F4333] mb-2 sm:mb-4" size={isSmallScreen ? 20 : 24} />
                   <h3 className="text-md sm:text-lg font-medium mb-1 sm:mb-2">Creativity unleashed</h3>
                   <p className="text-gray-600 text-xs sm:text-sm">

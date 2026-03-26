@@ -82,7 +82,7 @@ const StoreDetail = ({ slug }) => {
 
           <button
             onClick={() => window.open(mapLink, "_blank")}
-            className="mt-6 bg-bio-green text-white px-6 py-3 rounded-md hover:bg-green-700 transition"
+            className="mt-6 bg-bio-green text-white px-6 py-3 rounded-md hover:bg-[#375421] hover:text-white transition"
           >
             Get Directions
           </button>

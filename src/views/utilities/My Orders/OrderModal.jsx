@@ -91,7 +91,7 @@
 //                       <div className="absolute left-4 top-0 h-full w-0.5 bg-gray-200"></div>
 //                       {reversedUpdates.map((update, index) => (
 //                         <div key={index} className="relative flex items-start mb-6">
-//                           <div className="absolute left-0 rounded-full border-2 border-green-500 bg-green-500 h-6 w-6 flex items-center justify-center">
+//                           <div className="absolute left-0 rounded-full border-2 border-[#375421] bg-[#375421] h-6 w-6 flex items-center justify-center">
 //                             <div className="h-2 w-2 rounded-full bg-white"></div>
 //                           </div>
 //                           <div className="ml-10">
@@ -137,7 +137,7 @@
 //                   <div className="flex gap-3 mt-6">
 //                     {orderid?.status === 'DELIVERED' && (
 //                       <button
-//                         className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50"
+//                         className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-site-bg"
 //                         onClick={getInvoice}
 //                       >
 //                         Download Invoice
@@ -146,7 +146,7 @@
 //                     {orderid?.status === 'DELIVERED' && orderid?.is_returnable && (
 //   <button
 //     onClick={() => setShowReturnPopup(true)}
-//     className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50"
+//     className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-site-bg"
 //   >
 //     Return
 //   </button>
@@ -248,7 +248,7 @@
 //                             setIsSubmitting(false);
 //                           }
 //                         }}
-//                         className="px-4 py-2 text-sm bg-bio-green text-white rounded-md hover:bg-bio-green disabled:opacity-50"
+//                         className="px-4 py-2 text-sm bg-bio-green text-white rounded-md hover:bg-bio-green hover:text-white disabled:opacity-50"
 //                       >
 //                         {isSubmitting ? 'Submitting...' : 'Submit Return Request'}
 //                       </button>
@@ -429,7 +429,7 @@ const response = await axiosInstance.post(
                       <div className="absolute left-4 top-0 h-full w-0.5 bg-gray-200"></div>
                       {reversedUpdates.map((update, index) => (
                         <div key={index} className="relative flex items-start mb-6">
-                          <div className="absolute left-0 rounded-full border-2 border-green-500 bg-green-500 h-6 w-6 flex items-center justify-center">
+                          <div className="absolute left-0 rounded-full border-2 border-[#375421] bg-[#375421] h-6 w-6 flex items-center justify-center">
                             <div className="h-2 w-2 rounded-full bg-white"></div>
                           </div>
                           <div className="ml-10">
@@ -476,7 +476,7 @@ const response = await axiosInstance.post(
                   <div className="flex gap-3 mt-6">
                     {orderid?.status === 'DELIVERED' && (
                       <button
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50"
+                        className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-site-bg"
                         onClick={getInvoice}
                       >
                         Download Invoice
@@ -485,7 +485,7 @@ const response = await axiosInstance.post(
                     {orderid?.status === 'DELIVERED' && orderid?.is_returnable && (
                       <button
                         onClick={() => setShowReturnPopup(true)}
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50"
+                        className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-site-bg"
                       >
                         Return
                       </button>
@@ -599,7 +599,7 @@ const response = await axiosInstance.post(
                       <button
                         disabled={isSubmitting || !returnReason}
                         onClick={handleSubmitReturn}
-                        className="px-4 py-2 text-sm bg-bio-green text-white rounded-md hover:bg-bio-green disabled:opacity-50"
+                        className="px-4 py-2 text-sm bg-bio-green text-white rounded-md hover:bg-bio-green hover:text-white disabled:opacity-50"
                       >
                         {isSubmitting ? 'Submitting...' : 'Submit Return Request'}
                       </button>

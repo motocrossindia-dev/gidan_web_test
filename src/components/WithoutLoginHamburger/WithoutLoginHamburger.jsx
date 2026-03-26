@@ -190,21 +190,21 @@ const WithoutLoginHamburger = () => {
         {/* Sidebar Menu */}
         {isOpen && (
           <div
-            className="fixed inset-0 bg-[rgba(0,0,0,0.5)] z-50 flex"
+            className="fixed inset-0 bg-[rgba(0,0,0,0.5)] z-50 flex justify-end"
             onClick={() => setIsOpen(false)}
           >
             <div
-              className="bg-white w-3/4 max-w-xs shadow-lg h-full relative flex flex-col"
+              className="bg-white w-3/4 max-w-xs shadow-lg h-full relative flex flex-col animate-slide-left"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="p-4 border-b border-gray-200 bg-gray-50">
+              <div className="p-4 border-b border-gray-200 bg-site-bg">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2 text-gray-800 font-semibold">
-                    <FaUser className="text-green-600" />
+                    <FaUser className="text-[#375421]" />
                     {userName && userName !== "Guest" ? (
                       <span
-                        className="cursor-pointer hover:text-green-700"
+                        className="cursor-pointer hover:text-[#375421]"
                         onClick={handleUserNameClick}
                       >
                         {userName.slice(0, 8)}
@@ -212,7 +212,7 @@ const WithoutLoginHamburger = () => {
                     ) : (
                       <Link
                         href="/mobile-signin"
-                        className="hover:text-green-700"
+                        className="hover:text-[#375421]"
                         onClick={(e) => {
                           e.stopPropagation();
                           setIsOpen(false);
@@ -261,7 +261,7 @@ const WithoutLoginHamburger = () => {
                                 setIsOpen(false);
                               }
                             }}
-                            className="flex items-center justify-between px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100"
+                            className="flex items-center justify-between px-4 py-3 hover:bg-site-bg cursor-pointer transition-colors border-b border-gray-100"
                           >
                             <span className="text-gray-800 font-medium text-sm">
                               {category.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')}
@@ -278,7 +278,7 @@ const WithoutLoginHamburger = () => {
                           {expandedCategory === category.id &&
                             category.subcategories &&
                             category.subcategories.length > 0 && (
-                              <div className="bg-gray-50 border-b border-gray-100">
+                              <div className="bg-site-bg border-b border-gray-100">
                                 {category.subcategories.map((subcategory) => (
                                   <Link
                                     key={subcategory.id}
@@ -306,7 +306,7 @@ const WithoutLoginHamburger = () => {
 
                 {/* INFORMATION SECTION */}
                 <div className="border-t border-gray-200 mt-2">
-                  <div className="px-4 py-2 bg-gray-50">
+                  <div className="px-4 py-2 bg-site-bg">
                     <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">
                       Information
                     </h3>
@@ -320,7 +320,7 @@ const WithoutLoginHamburger = () => {
                           e.stopPropagation();
                           setIsOpen(false);
                         }}
-                        className="block px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors text-sm border-b border-gray-100"
+                        className="block px-4 py-3 text-gray-700 hover:bg-site-bg transition-colors text-sm border-b border-gray-100"
                       >
                         {item.label}
                       </Link>
@@ -332,7 +332,7 @@ const WithoutLoginHamburger = () => {
                           e.stopPropagation();
                           navigateToSignup();
                         }}
-                        className="block px-4 py-3 text-green-600 font-semibold hover:bg-gray-50 transition-colors text-sm cursor-pointer border-b border-gray-100"
+                        className="block px-4 py-3 text-[#375421] font-semibold hover:bg-site-bg transition-colors text-sm cursor-pointer border-b border-gray-100"
                       >
                         Sign Up
                       </div>
@@ -343,10 +343,10 @@ const WithoutLoginHamburger = () => {
 
               {/* Logout Button */}
               {userName !== "Guest" && (
-                <div className="p-4 border-t border-gray-200 bg-gray-50">
+                <div className="p-4 border-t border-gray-200 bg-site-bg">
                   <button
                     onClick={handleLogoutClick}
-                    className="w-full py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                    className="w-full py-2 px-4 bg-[#375421] text-white rounded-lg hover:bg-[#375421] hover:text-white transition-colors font-medium"
                   >
                     Logout
                   </button>
@@ -354,13 +354,13 @@ const WithoutLoginHamburger = () => {
               )}
 
               {/* Social Media Footer */}
-              <div className="p-4 border-t border-gray-200 bg-gray-50">
+              <div className="p-4 border-t border-gray-200 bg-site-bg">
                 <div className="flex justify-center items-center space-x-6">
                   <a
                     href="https://www.facebook.com/thegidanstore/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-green-600 transition-colors"
+                    className="text-gray-600 hover:text-[#375421] transition-colors"
                   >
                     <FaFacebookF size={18} />
                   </a>
@@ -368,7 +368,7 @@ const WithoutLoginHamburger = () => {
                     href="https://www.instagram.com/thegidanstore/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-green-600 transition-colors"
+                    className="text-gray-600 hover:text-[#375421] transition-colors"
                   >
                     <FaInstagram size={18} />
                   </a>
@@ -376,7 +376,7 @@ const WithoutLoginHamburger = () => {
                     href="https://www.linkedin.com/company/thegidanstore/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-green-600 transition-colors"
+                    className="text-gray-600 hover:text-[#375421] transition-colors"
                   >
                     <FaLinkedin size={18} />
                   </a>
@@ -384,7 +384,7 @@ const WithoutLoginHamburger = () => {
                     href="https://www.youtube.com/@thegidanstore/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-green-600 transition-colors"
+                    className="text-gray-600 hover:text-[#375421] transition-colors"
                   >
                     <FaYoutube size={18} />
                   </a>
@@ -392,7 +392,7 @@ const WithoutLoginHamburger = () => {
                     href="https://whatsapp.com/channel/0029Vac6g6TB4hdL2NqaEc1f/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-green-600 transition-colors"
+                    className="text-gray-600 hover:text-[#375421] transition-colors"
                   >
                     <FaWhatsapp size={18} />
                   </a>
@@ -624,13 +624,13 @@ export default WithoutLoginHamburger;
 //               className="bg-white w-3/4 max-w-xs shadow-lg h-full relative flex flex-col"
 //               onClick={(e) => e.stopPropagation()}
 //             >
-//               <div className="p-5 border-b border-gray-100 bg-gray-50">
+//               <div className="p-5 border-b border-gray-100 bg-site-bg">
 //                 <div className="flex justify-between items-center mb-4">
 //                   <div className="flex items-center gap-2 text-gray-800 font-semibold">
-//                     <FaUser className="text-green-600" />
+//                     <FaUser className="text-[#375421]" />
 //                     {userName && userName !== "Guest" ? (
 //                       <span
-//                         className="cursor-pointer hover:text-green-700"
+//                         className="cursor-pointer hover:text-[#375421]"
 //                         onClick={handleUserNameClick}
 //                       >
 //                         {userName.slice(0, 8)}
@@ -638,7 +638,7 @@ export default WithoutLoginHamburger;
 //                     ) : (
 //                       <Link
 //                         to="/mobile-signin"
-//                         className="hover:text-green-700"
+//                         className="hover:text-[#375421]"
 //                         onClick={() => setIsOpen(false)}
 //                       >
 //                         Login or Signup
@@ -671,7 +671,7 @@ export default WithoutLoginHamburger;
 //                             onClick={() => handleCategoryClick(category)}
 //                             className="flex items-center justify-between p-3 rounded-lg hover:bg-green-50 cursor-pointer transition-colors group border-b border-gray-50"
 //                           >
-//                             <span className="text-gray-700 font-medium group-hover:text-green-700">
+//                             <span className="text-gray-700 font-medium group-hover:text-[#375421]">
 //                               {category.name}
 //                             </span>
 //                             {category.subcategories && category.subcategories.length > 0 ? (
@@ -686,14 +686,14 @@ export default WithoutLoginHamburger;
 //                           </div>
 // 
 //                           {expandedCategory === category.id && category.subcategories && category.subcategories.length > 0 && (
-//                             <div className="ml-4 mt-1 mb-2 space-y-1 bg-gray-50 rounded-lg p-2">
+//                             <div className="ml-4 mt-1 mb-2 space-y-1 bg-site-bg rounded-lg p-2">
 //                               {category.subcategories.map((subcategory) => (
 //                                 <div
 //                                   key={subcategory.id}
 //                                   onClick={() => handleSubcategoryClick(category, subcategory)}
 //                                   className="flex items-center justify-between p-2 pl-4 rounded-lg hover:bg-white cursor-pointer transition-colors group"
 //                                 >
-//                                   <span className="text-gray-600 text-sm group-hover:text-green-700">
+//                                   <span className="text-gray-600 text-sm group-hover:text-[#375421]">
 //                                     {subcategory.name}
 //                                   </span>
 //                                   {subcategory.product_count && (
@@ -721,7 +721,7 @@ export default WithoutLoginHamburger;
 //                         key={index}
 //                         to={item.path}
 //                         onClick={() => setIsOpen(false)}
-//                         className="block p-3 rounded-lg text-gray-600 hover:text-green-700 hover:bg-gray-50 transition-colors text-sm font-medium"
+//                         className="block p-3 rounded-lg text-gray-600 hover:text-[#375421] hover:bg-site-bg transition-colors text-sm font-medium"
 //                       >
 //                         {item.label}
 //                       </Link>
@@ -729,7 +729,7 @@ export default WithoutLoginHamburger;
 // 
 //                     <div
 //                       onClick={navigateToSignup}
-//                       className="block p-3 rounded-lg text-green-600 font-bold hover:bg-green-50 transition-colors text-sm cursor-pointer"
+//                       className="block p-3 rounded-lg text-[#375421] font-bold hover:bg-green-50 transition-colors text-sm cursor-pointer"
 //                     >
 //                       Sign Up
 //                     </div>
@@ -738,30 +738,30 @@ export default WithoutLoginHamburger;
 //               </div>
 // 
 //               {userName !== "Guest" && (
-//                 <div className="p-4 border-t border-gray-100 bg-gray-50">
+//                 <div className="p-4 border-t border-gray-100 bg-site-bg">
 //                   <button
 //                     onClick={handleLogoutClick}
-//                     className="w-full py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center justify-center gap-2"
+//                     className="w-full py-2 px-4 bg-[#375421] text-white rounded-lg hover:bg-[#375421] hover:text-white transition-colors font-medium flex items-center justify-center gap-2"
 //                   >
 //                     Logout
 //                   </button>
 //                 </div>
 //               )}
 // 
-//               <div className="p-6 border-t border-gray-100 bg-gray-50 flex justify-center items-center space-x-6">
-//                 <a href="https://www.facebook.com/thegidanstore/" target="_blank" rel="noopener noreferrer" className="text-black hover:text-green-500 transition-colors">
+//               <div className="p-6 border-t border-gray-100 bg-site-bg flex justify-center items-center space-x-6">
+//                 <a href="https://www.facebook.com/thegidanstore/" target="_blank" rel="noopener noreferrer" className="text-black hover:text-[#375421] transition-colors">
 //                   <FaFacebookF size={20} />
 //                 </a>
-//                 <a href="https://www.instagram.com/thegidanstore/" target="_blank" rel="noopener noreferrer" className="text-black hover:text-green-500 transition-colors">
+//                 <a href="https://www.instagram.com/thegidanstore/" target="_blank" rel="noopener noreferrer" className="text-black hover:text-[#375421] transition-colors">
 //                   <FaInstagram size={20} />
 //                 </a>
-//                 <a href="https://www.linkedin.com/company/thegidanstore/" target="_blank" rel="noopener noreferrer" className="text-black hover:text-green-500 transition-colors">
+//                 <a href="https://www.linkedin.com/company/thegidanstore/" target="_blank" rel="noopener noreferrer" className="text-black hover:text-[#375421] transition-colors">
 //                   <FaLinkedin size={20} />
 //                 </a>
-//                 <a href="https://www.youtube.com/@thegidanstore/" target="_blank" rel="noopener noreferrer" className="text-black hover:text-green-500 transition-colors">
+//                 <a href="https://www.youtube.com/@thegidanstore/" target="_blank" rel="noopener noreferrer" className="text-black hover:text-[#375421] transition-colors">
 //                   <FaYoutube size={20} />
 //                 </a>
-//                 <a href="https://whatsapp.com/channel/0029Vac6g6TB4hdL2NqaEc1f/" target="_blank" rel="noopener noreferrer" className="text-black hover:text-green-500 transition-colors">
+//                 <a href="https://whatsapp.com/channel/0029Vac6g6TB4hdL2NqaEc1f/" target="_blank" rel="noopener noreferrer" className="text-black hover:text-[#375421] transition-colors">
 //                   <FaWhatsapp size={20} />
 //                 </a>
 //               </div>

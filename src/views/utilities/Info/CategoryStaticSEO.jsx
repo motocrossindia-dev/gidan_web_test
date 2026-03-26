@@ -59,7 +59,7 @@ const CategoryStaticSEO = ({
                             {title}
                         </h1>
                         {subtitle && (
-                            <p className="text-xl text-green-600 font-medium mb-6">{subtitle}</p>
+                            <p className="text-xl text-[#375421] font-medium mb-6">{subtitle}</p>
                         )}
                     </div>
 
@@ -89,7 +89,7 @@ const CategoryStaticSEO = ({
                                 return (
                                     <div key={section.id} className="mb-12">
                                         {section.title && (
-                                            <h2 className="text-2xl font-bold text-gray-800 mb-3 border-l-4 border-green-500 pl-4">
+                                            <h2 className="text-2xl font-bold text-gray-800 mb-3 border-l-4 border-[#375421] pl-4">
                                                 {section.title}
                                             </h2>
                                         )}
@@ -103,9 +103,9 @@ const CategoryStaticSEO = ({
                                                 {section.items.map((item, i) => (
                                                     <div
                                                         key={i}
-                                                        className="bg-gray-50 p-6 rounded-xl border border-gray-100 hover:shadow-md transition-shadow"
+                                                        className="bg-site-bg p-6 rounded-xl border border-gray-100 hover:shadow-md transition-shadow"
                                                     >
-                                                        <h3 className="text-xl font-bold text-green-700 mb-3">
+                                                        <h3 className="text-xl font-bold text-[#375421] mb-3">
                                                             {item.title}
                                                         </h3>
                                                         <p className="text-gray-600 leading-relaxed text-sm">
@@ -121,7 +121,7 @@ const CategoryStaticSEO = ({
                                 return (
                                     <div key={section.id} className="mb-12">
                                         {section.title && (
-                                            <h2 className="text-2xl font-bold text-gray-800 mb-3 border-l-4 border-green-500 pl-4">
+                                            <h2 className="text-2xl font-bold text-gray-800 mb-3 border-l-4 border-[#375421] pl-4">
                                                 {section.title}
                                             </h2>
                                         )}
@@ -182,7 +182,7 @@ const CategoryStaticSEO = ({
                             {heroTitle}
                         </h1>
                         {heroSubtitle && (
-                            <p className="text-xl text-green-600 font-medium">{heroSubtitle}</p>
+                            <p className="text-xl text-[#375421] font-medium">{heroSubtitle}</p>
                         )}
                     </div>
                 )}
@@ -206,7 +206,7 @@ const CategoryStaticSEO = ({
                             return (
                                 <div key={section.id} className="mb-12">
                                     {section.title && (
-                                        <h2 className="text-2xl font-bold text-gray-800 mb-3 border-l-4 border-green-500 pl-4">
+                                        <h2 className="text-2xl font-bold text-gray-800 mb-3 border-l-4 border-[#375421] pl-4">
                                             {section.title}
                                         </h2>
                                     )}
@@ -220,9 +220,9 @@ const CategoryStaticSEO = ({
                                             {section.items.map((item, i) => (
                                                 <div
                                                     key={i}
-                                                    className="bg-gray-50 p-6 rounded-xl border border-gray-100 hover:shadow-md transition-shadow"
+                                                    className="bg-site-bg p-6 rounded-xl border border-gray-100 hover:shadow-md transition-shadow"
                                                 >
-                                                    <h3 className="text-xl font-bold text-green-700 mb-3">
+                                                    <h3 className="text-xl font-bold text-[#375421] mb-3">
                                                         {item.title}
                                                     </h3>
                                                     <p className="text-gray-600 leading-relaxed text-sm">
@@ -240,7 +240,7 @@ const CategoryStaticSEO = ({
                             return (
                                 <div key={section.id} className="mb-12">
                                     {section.title && (
-                                        <h2 className="text-2xl font-bold text-gray-800 mb-3 border-l-4 border-green-500 pl-4">
+                                        <h2 className="text-2xl font-bold text-gray-800 mb-3 border-l-4 border-[#375421] pl-4">
                                             {section.title}
                                         </h2>
                                     )}

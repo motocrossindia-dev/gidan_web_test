@@ -107,7 +107,7 @@ const FranchiseForm = () => {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Name"
-                  className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+                  className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-[#375421] outline-none"
                   required
               />
               <input
@@ -116,7 +116,7 @@ const FranchiseForm = () => {
                   value={formData.mobile}
                   onChange={handleChange}
                   placeholder="Contact Number"
-                  className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+                  className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-[#375421] outline-none"
                   required
               />
               <input
@@ -125,7 +125,7 @@ const FranchiseForm = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="Your Email"
-                  className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+                  className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-[#375421] outline-none"
                   required
               />
               <input
@@ -134,7 +134,7 @@ const FranchiseForm = () => {
                   value={formData.area}
                   onChange={handleChange}
                   placeholder="Area In Which You Want To Open"
-                  className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+                  className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-[#375421] outline-none"
                   required
               />
               <input
@@ -143,7 +143,7 @@ const FranchiseForm = () => {
                   value={formData.address}
                   onChange={handleChange}
                   placeholder="Address"
-                  className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+                  className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-[#375421] outline-none"
                   required
               />
               <textarea
@@ -151,14 +151,14 @@ const FranchiseForm = () => {
                   value={formData.message}
                   onChange={handleChange}
                   placeholder="Message"
-                  className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 outline-none resize-y"
+                  className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-[#375421] outline-none resize-y"
                   rows="5"
                   required
               />
 
               <button
                   type="submit"
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 shadow-md"
+                  className="w-full bg-[#375421] hover:bg-[#375421] hover:text-white text-white font-bold py-3 px-4 rounded-lg transition duration-300 shadow-md"
                   disabled={isSubmitting}
               >
                 {isSubmitting ? "Sending..." : "SEND"}

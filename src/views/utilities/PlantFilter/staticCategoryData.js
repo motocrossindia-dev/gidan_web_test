@@ -10,7 +10,7 @@ const staticCategoryData = {
             subtitle: "Buy Plants Online in India from Gidan.store",
             containerClass: "text-center mb-12",
             titleClass: "text-3xl md:text-4xl font-bold text-gray-800 mb-2",
-            subtitleClass: "text-xl md:text-2xl text-green-600 font-medium"
+            subtitleClass: "text-xl md:text-2xl text-[#375421] font-medium"
         },
         sections: [
             {
@@ -25,11 +25,11 @@ const staticCategoryData = {
                 title: "Choosing Plants Based on Your Space and Lifestyle",
                 description: "Selecting the right plants depends on factors such as available space, sunlight, maintenance level, and purpose. At Gidan.store, we help you choose plants that suit your indoor spaces, balconies, terraces, and gardens. Our collection is ideal for both beginners and experienced plant lovers.",
                 containerClass: "mb-10",
-                titleClass: "text-2xl font-bold text-gray-800 mb-4 border-l-4 border-green-500 pl-3",
+                titleClass: "text-2xl font-bold text-gray-800 mb-4 border-l-4 border-[#375421] pl-3",
                 gridConfig: {
                     cols: "grid grid-cols-1 md:grid-cols-3 gap-6 mt-6",
-                    cardClass: "bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow",
-                    titleClass: "text-xl font-bold text-gray-800 mb-2 text-green-700",
+                    cardClass: "bg-site-bg p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow",
+                    titleClass: "text-xl font-bold text-gray-800 mb-2 text-[#375421]",
                     textClass: "text-sm leading-relaxed"
                 },
                 items: [
@@ -53,7 +53,7 @@ const staticCategoryData = {
                 title: "Compare and Choose the Best Plants Online",
                 content: "With a wide variety of plants available, choosing the right one can be simple when you know your requirements. At Gidan.store, each plant comes with basic care information to help you make the right decision and ensure healthy growth.",
                 containerClass: "mb-10",
-                titleClass: "text-2xl font-bold text-gray-800 mb-4 border-l-4 border-green-500 pl-3"
+                titleClass: "text-2xl font-bold text-gray-800 mb-4 border-l-4 border-[#375421] pl-3"
             },
             {
                 id: 4,

@@ -144,8 +144,8 @@ const ProductGrid = ({
           onClick={() => currentPage > 1 && fetchPage(currentPage - 1)}
           disabled={currentPage === 1 || loading}
           className={`w-10 h-10 flex items-center justify-center rounded-md border transition-colors ${currentPage === 1 || loading
-            ? "bg-gray-50 text-gray-300 border-gray-200 cursor-not-allowed"
-            : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100 hover:text-green-700"
+            ? "bg-site-bg text-gray-300 border-gray-200 cursor-not-allowed"
+            : "bg-white text-gray-700 border-gray-300 hover:bg-site-bg hover:text-[#375421]"
             }`}
         >
           &lt;
@@ -157,10 +157,10 @@ const ProductGrid = ({
             onClick={() => typeof page === 'number' && fetchPage(page)}
             disabled={page === '...' || page === currentPage || loading}
             className={`w-10 h-10 rounded-md border text-sm font-medium transition-colors ${page === currentPage
-              ? "bg-green-600 text-white border-green-600"
+              ? "bg-[#375421] text-white border-[#375421]"
               : page === '...'
                 ? "bg-transparent text-gray-400 border-transparent cursor-default"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100 hover:text-green-700"
+                : "bg-white text-gray-700 border-gray-300 hover:bg-site-bg hover:text-[#375421]"
               }`}
           >
             {page}
@@ -172,8 +172,8 @@ const ProductGrid = ({
           onClick={() => currentPage < totalPages && fetchPage(currentPage + 1)}
           disabled={currentPage === totalPages || loading}
           className={`w-10 h-10 flex items-center justify-center rounded-md border transition-colors ${currentPage === totalPages || loading
-            ? "bg-gray-50 text-gray-300 border-gray-200 cursor-not-allowed"
-            : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100 hover:text-green-700"
+            ? "bg-site-bg text-gray-300 border-gray-200 cursor-not-allowed"
+            : "bg-white text-gray-700 border-gray-300 hover:bg-site-bg hover:text-[#375421]"
             }`}
         >
           &gt;
@@ -246,7 +246,7 @@ const ProductGrid = ({
       {/* Loading indicator */}
       {loading && (
         <div className="flex justify-center mt-8 mb-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#375421]"></div>
         </div>
       )}
     </div>
