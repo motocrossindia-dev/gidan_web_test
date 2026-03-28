@@ -15,8 +15,11 @@ const ProductGrid = ({
   setResults,
   query,
   filtersApplied = false,
+  getProducts,
   categorySlug: propCategorySlug,
   subcategorySlug: propSubcategorySlug,
+  bottomContent = null,
+  searchTerm = "",
 }) => {
 
   const router = useRouter();
@@ -24,6 +27,7 @@ const ProductGrid = ({
   const observer = useRef(null);
 
   const [loading, setLoading] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(null);
   const [nextUrl, setNextUrl] = useState(pagination?.next || null);
   const [prevUrl, setPrevUrl] = useState(pagination?.previous || null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -81,10 +85,13 @@ const ProductGrid = ({
   };
 
   // Fetch specific page and replace results
-  const fetchPage = useCallback(async (pageNumber) => {
+  const fetchPage = useCallback(async (pageNumber, isArrow = false) => {
     if (loading) return;
 
     setLoading(true);
+    if (!isArrow) {
+      setLoadingPage(pageNumber);
+    }
 
     try {
       // Construct URL based on current filters and page number
@@ -107,7 +114,19 @@ const ProductGrid = ({
           setNextUrl(res.data.next || null);
           setPrevUrl(res.data.previous || null);
           setCurrentPage(pageNumber);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          // Only scroll after updating state
+          setTimeout(() => {
+            const gridTop = document.getElementById('product-grid-container');
+            if (gridTop) {
+              const headerOffset = 150; // Adjust for your sticky header height
+              const elementPosition = gridTop.getBoundingClientRect().top;
+              const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+              window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+              });
+            }
+          }, 0);
         }
       }
     } catch (err) {
@@ -116,12 +135,14 @@ const ProductGrid = ({
       setPrevUrl(null);
     } finally {
       setLoading(false);
+      setLoadingPage(null);
     }
   }, [loading, setResults, query, pageSize]);
 
   // Compute "Showing X–Y of Z" display string
   const showingFrom = productDetails?.length > 0 ? (currentPage - 1) * pageSize + 1 : 0;
   const showingTo = (currentPage - 1) * pageSize + (productDetails?.length ?? 0);
+  const remainingCount = Math.max(0, totalCount - showingTo);
 
   const renderPagination = () => {
     const pages = [];
@@ -138,57 +159,77 @@ const ProductGrid = ({
     }
 
     return (
-      <div className="flex justify-center items-center gap-2 mt-8 mb-4">
-        {/* Previous Arrow */}
-        <button
-          onClick={() => currentPage > 1 && fetchPage(currentPage - 1)}
-          disabled={currentPage === 1 || loading}
-          className={`w-10 h-10 flex items-center justify-center rounded-md border transition-colors ${currentPage === 1 || loading
-            ? "bg-site-bg text-gray-300 border-gray-200 cursor-not-allowed"
-            : "bg-white text-gray-700 border-gray-300 hover:bg-site-bg hover:text-[#375421]"
-            }`}
-        >
-          &lt;
-        </button>
-
-        {pages.map((page, index) => (
+      <div className="flex flex-col items-center gap-8 mt-12 mb-8">
+        <div className="flex items-center gap-2 md:gap-3">
+          {/* Previous Arrow */}
           <button
-            key={index}
-            onClick={() => typeof page === 'number' && fetchPage(page)}
-            disabled={page === '...' || page === currentPage || loading}
-            className={`w-10 h-10 rounded-md border text-sm font-medium transition-colors ${page === currentPage
-              ? "bg-[#375421] text-white border-[#375421]"
-              : page === '...'
-                ? "bg-transparent text-gray-400 border-transparent cursor-default"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-site-bg hover:text-[#375421]"
-              }`}
-          >
-            {page}
-          </button>
-        ))}
-
-        {/* Next Arrow */}
-        <button
-          onClick={() => currentPage < totalPages && fetchPage(currentPage + 1)}
-          disabled={currentPage === totalPages || loading}
-          className={`w-10 h-10 flex items-center justify-center rounded-md border transition-colors ${currentPage === totalPages || loading
-            ? "bg-site-bg text-gray-300 border-gray-200 cursor-not-allowed"
-            : "bg-white text-gray-700 border-gray-300 hover:bg-site-bg hover:text-[#375421]"
+            onClick={() => currentPage > 1 && fetchPage(currentPage - 1, true)}
+            disabled={currentPage === 1 || loading}
+            className={`w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-full border-2 transition-all duration-300 relative ${
+              currentPage === 1 || loading
+              ? "border-gray-100 text-gray-300 cursor-not-allowed"
+              : "border-gray-200 text-gray-600 hover:border-[#375421] hover:text-[#375421] hover:scale-110"
             }`}
-        >
-          &gt;
-        </button>
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          {pages.map((page, index) => (
+            <button
+              key={index}
+              onClick={() => typeof page === 'number' && fetchPage(page, false)}
+              disabled={page === '...' || page === currentPage || loading}
+              className={`w-10 h-10 md:w-11 md:h-11 rounded-full border-2 text-sm font-bold transition-all duration-300 relative ${
+                page === currentPage
+                ? "bg-[#375421] text-white border-[#375421] shadow-lg shadow-[#375421]/30 scale-110"
+                : page === '...'
+                  ? "border-transparent text-gray-400 cursor-default"
+                  : "border-gray-100 text-gray-500 hover:border-[#375421] hover:text-[#375421] hover:bg-gray-50"
+              }`}
+            >
+              {loading && loadingPage === page ? (
+                <div className={`w-4 h-4 border-2 ${page === currentPage ? 'border-white' : 'border-[#375421]'} border-t-transparent rounded-full animate-spin mx-auto`}></div>
+              ) : (
+                page
+              )}
+            </button>
+          ))}
+
+          {/* Next Arrow */}
+          <button
+            onClick={() => currentPage < totalPages && fetchPage(currentPage + 1, true)}
+            disabled={currentPage === totalPages || loading}
+            className={`w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-full border-2 transition-all duration-300 relative ${
+              currentPage === totalPages || loading
+              ? "border-gray-100 text-gray-300 cursor-not-allowed"
+              : "border-gray-200 text-gray-600 hover:border-[#375421] hover:text-[#375421] hover:scale-110"
+            }`}
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
       </div>
     );
   };
 
   return (
-    <div className="mt-8 p-2 bg-white rounded-md md:ml-16 relative z-10">
-      <div className="flex justify-between items-center mb-4">
+    <div id="product-grid-container" className="mt-4 p-0 md:ml-4 lg:ml-8 pr-4 md:pr-8 lg:pr-12 relative w-full max-w-7xl mx-auto z-0">
+      <div className="flex justify-between items-center mb-4 px-2">
         <h2 className="text-xs md:text-lg text-gray-500 font-normal">
-          {productDetails?.length > 0
-            ? `Showing ${showingFrom}–${showingTo} of ${totalCount} products`
-            : "No products found"}
+          {productDetails?.length > 0 ? (
+            <>
+              Showing {showingFrom}–{showingTo} of {totalCount} products
+              {searchTerm && (
+                <> for <span className="text-[#375421] font-bold">"{searchTerm}"</span></>
+              )}
+            </>
+          ) : (
+            searchTerm ? `No products found for "${searchTerm}"` : "No products found"
+          )}
         </h2>
         {filtersApplied && productDetails?.length > 0 && (
           <span className="text-xs text-bio-green font-medium">
@@ -205,7 +246,7 @@ const ProductGrid = ({
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 justify-items-center font-sans">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8 xl:gap-12 justify-items-center font-sans font-medium">
           {productDetails?.map((product, index) => {
             const key = product?.prod_id || product?.id || index;
 
@@ -233,6 +274,7 @@ const ProductGrid = ({
                   ribbon={product?.ribbon}
                   inWishlist={product?.is_wishlist}
                   inCart={product?.is_cart}
+                  getProducts={getProducts || pagination?.fetchProducts}
                 />
               </Link>
             );
@@ -240,15 +282,14 @@ const ProductGrid = ({
         </div>
       )}
 
-      {/* Pagination Controls */}
-      {!loading && totalPages > 1 && renderPagination()}
+      {/* Trust Section and Bottom Content */}
+      <div className="mt-12">
+        {bottomContent}
+      </div>
 
-      {/* Loading indicator */}
-      {loading && (
-        <div className="flex justify-center mt-8 mb-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#375421]"></div>
-        </div>
-      )}
+      {/* Pagination Controls */}
+      {totalPages > 1 && renderPagination()}
+
     </div>
   );
 };

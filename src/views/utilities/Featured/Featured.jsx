@@ -37,18 +37,19 @@ function Featured() {
           </button>
         </div>
 
-        {/* --- CHANGE: Desktop Horizontal Filter - Full Width --- */}
-        {/* This is the main container for the horizontal filter bar */}
-        <div className="hidden md:block mt-4 overflow-visible relative z-50">
-          <FilterSidebar
-            setResults={setResults}
-            setShowMobileFilter={setShowMobileFilter} // Pass this to close mobile filter on apply
-          />
-        </div>
+        {/* Desktop Sidebar (Left) - Made Sticky */}
+        <div className="flex flex-col md:flex-row gap-8 items-start px-4 md:px-8 mt-4 relative">
+          <div className="hidden md:block w-[280px] flex-shrink-0 sticky top-[100px] self-start max-h-screen overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-200 z-30">
+            <FilterSidebar
+              setResults={setResults}
+              setShowMobileFilter={setShowMobileFilter}
+            />
+          </div>
 
-        {/* --- CHANGE: Product Grid now takes up the full width below the filter --- */}
-        <div className="px-4 mt-4">
-          <ProductGrid results={results} />
+          {/* Product Grid (Right) */}
+          <div className="flex-grow">
+            <ProductGrid results={results} />
+          </div>
         </div>
 
         {/* Additional Sections */}

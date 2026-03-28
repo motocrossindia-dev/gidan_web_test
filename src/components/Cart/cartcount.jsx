@@ -2,13 +2,15 @@
 
 import React, { useEffect, useState } from 'react';
 import { FiShoppingCart } from 'react-icons/fi';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axiosInstance from "../../Axios/axiosInstance";
 import { selectAccessToken } from "../../redux/User/verificationSlice";
+import { setCartItems } from "../../redux/Slice/cartSlice";
 
 const CartIconWithCount = () => {
     const [cartCount, setCartCount] = useState(0);
     const accessToken = useSelector(selectAccessToken);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchCartData = async () => {
@@ -22,7 +24,14 @@ const CartIconWithCount = () => {
             try {
                 // ADDED: Cache-busting timestamp to prevent stale browser/server responses
                 const response = await axiosInstance.get(`/order/cart/?t=${new Date().getTime()}`);
-                const cartItems = response.data?.data?.cart || [];
+                const cartData = response.data?.data;
+                const cartItems = cartData?.cart || [];
+                
+                // Update Redux state for real-time sync across ProductCards
+                if (Array.isArray(cartItems)) {
+                    dispatch(setCartItems(cartItems));
+                }
+
                 const totalQuantity = Array.isArray(cartItems) ? cartItems.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0) : 0;
                 setCartCount(totalQuantity);
             } catch (error) {

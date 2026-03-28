@@ -122,7 +122,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                 >
                     {/* Ribbon */}
                     {ribbon && (
-                        <div className="absolute top-3 right-3 z-20">
+                        <div className="absolute top-3 right-3">
                             <div className="bg-red-500 text-white px-3 py-1 text-xs font-bold rounded-md shadow-lg">
                                 {ribbon}
                             </div>
@@ -234,7 +234,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                 >
                     {/* Ribbon */}
                     {ribbon && (
-                        <div className="absolute top-2 right-2 z-20">
+                        <div className="absolute top-2 right-2">
                             <div className="bg-red-500 text-white px-2 py-0.5 text-[10px] font-bold rounded shadow-md">
                                 {ribbon}
                             </div>
@@ -245,7 +245,7 @@ const ProductCard = ({ name, price, imageUrl, product, userRating, inWishlist, i
                         {/* Image Section */}
                         <div className="relative w-full flex justify-center mb-3">
                             <img
-                                className="w-32 h-32 object-contain rounded-md transition-transform duration-300 relative z-50"
+                                className="w-32 h-32 object-contain rounded-md transition-transform duration-300 relative"
                                 src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
                                 alt={name}
                                 loading="lazy" width="400" height="400" style={{ aspectRatio: '1/1' }}

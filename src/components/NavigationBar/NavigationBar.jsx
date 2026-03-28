@@ -167,8 +167,8 @@ const NavBar = () => {
   const displayUsername = isMounted ? username : "Guest";
 
   return (
-    <div className="relative z-50">
-      <nav className="w-full px-4 py-3 bg-white font-sans border-b border-gray-100 sticky top-0 left-0 right-0">
+    <div className="relative">
+      <nav className="w-full px-4 py-3 bg-white font-sans border-b border-gray-100">
         <div className="max-w-[1920px] mx-auto">
           {/* MOBILE (Below 800px): LOGO, SEARCH, HAMBURGER in one row */}
           <div className="flex md:hidden items-center justify-between w-full h-[60px] gap-3 px-3">
@@ -261,7 +261,7 @@ const NavBar = () => {
                   </button>
 
                   {isMounted && isDropdownOpen && username !== "Guest" && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl py-2 z-[100]">
+                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl py-2 z-[11005]">
                       <div className="px-4 py-2 border-b border-gray-50 mb-1">
                         <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Welcome</p>
                         <p className="text-sm font-bold text-[#375421] truncate">{username}</p>
@@ -392,7 +392,7 @@ const NavBar = () => {
                 </button>
 
                 {isMounted && isDropdownOpen && username !== "Guest" && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl py-2 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl py-2 z-[11005] animate-in fade-in slide-in-from-top-2 duration-200">
                     <div className="px-4 py-2 border-b border-gray-50 mb-1">
                       <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Welcome</p>
                       <p className="text-sm font-bold text-[#375421] truncate">{username}</p>

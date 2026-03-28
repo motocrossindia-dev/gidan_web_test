@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronRight, Home } from 'lucide-react';
 
@@ -23,13 +23,7 @@ const PATH_LABELS: Record<string, string> = {
   'wishlist': 'Wishlist',
   'cart': 'Cart',
   'search': 'Search',
-  'bestseller': 'Best Sellers',
-  'featured': 'Featured',
-  'trending': 'Trending',
-  'seasonal': 'Seasonal Collection',
-  'latest': 'Latest',
   'flower': 'Flowers',
-  'gifts': 'Gifts',
   'outdoor': 'Outdoor Plants',
   'birthday': 'Birthday',
   'anniversary': 'Anniversary',
@@ -78,10 +72,23 @@ const HIDDEN_PREFIXES = [
   '/hamburger',
   '/carousel',
   '/productdata',
+  '/cart',
+  '/plants',
+  '/pots',
+  '/seeds',
+  '/plant-care',
+  '/gifts',
+  '/bestseller',
+  '/featured',
+  '/trending',
+  '/seasonal',
+  '/latest',
 ];
 
 export default function StaticBreadcrumb() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const query = searchParams.get('query');
 
   // Hide on home
   if (pathname === '/') return null;
@@ -104,7 +111,13 @@ export default function StaticBreadcrumb() {
   for (let i = 0; i < segments.length; i++) {
     const segment = segments[i];
     currentHref += `/${segment}`;
-    const staticLabel = PATH_LABELS[segment] || DYNAMIC_PARENTS[segment];
+    let staticLabel = PATH_LABELS[segment] || DYNAMIC_PARENTS[segment];
+    
+    // Dynamically append search query if segment is 'search'
+    if (segment === 'search' && query) {
+      staticLabel = `Search: ${query.toUpperCase()}`;
+    }
+
     if (staticLabel) {
       crumbs.push({ label: staticLabel, href: currentHref });
     } else if (i > 0 && DYNAMIC_PARENTS[segments[0]]) {

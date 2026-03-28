@@ -190,59 +190,63 @@ const WithoutLoginHamburger = () => {
         {/* Sidebar Menu */}
         {isOpen && (
           <div
-            className="fixed inset-0 bg-[rgba(0,0,0,0.5)] z-50 flex justify-end"
+            className="fixed inset-0 bg-black/50 z-[11010] flex justify-end"
             onClick={() => setIsOpen(false)}
           >
             <div
-              className="bg-white w-3/4 max-w-xs shadow-lg h-full relative flex flex-col animate-slide-left"
+              className="bg-white w-[85%] max-w-[320px] shadow-2xl h-full relative flex flex-col animate-slide-in-right transform transition-transform duration-300 ease-out"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Header */}
-              <div className="p-4 border-b border-gray-200 bg-site-bg">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2 text-gray-800 font-semibold">
-                    <FaUser className="text-[#375421]" />
-                    {userName && userName !== "Guest" ? (
-                      <span
-                        className="cursor-pointer hover:text-[#375421]"
-                        onClick={handleUserNameClick}
-                      >
-                        {userName.slice(0, 8)}
-                      </span>
-                    ) : (
-                      <Link
-                        href="/mobile-signin"
-                        className="hover:text-[#375421]"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setIsOpen(false);
-                        }}
-                      >
-                        Login or Signup
-                      </Link>
-                    )}
+              <div className="flex flex-col h-full">
+                {/* Header Section */}
+                <div className="p-5 bg-[#375421] text-white">
+                  <div className="flex justify-between items-center mb-6">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                        <FaUser className="text-xl" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-xs opacity-80">Welcome,</span>
+                        {userName && userName !== "Guest" ? (
+                          <span
+                            className="font-bold text-sm cursor-pointer hover:underline"
+                            onClick={handleUserNameClick}
+                          >
+                            {userName}
+                          </span>
+                        ) : (
+                          <Link
+                            href="/mobile-signin"
+                            className="font-bold text-sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setIsOpen(false);
+                            }}
+                          >
+                            Login / Signup
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setIsOpen(false)}
+                      className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors"
+                    >
+                      <FaTimes className="text-xl" />
+                    </button>
                   </div>
-                  <button
-                    onClick={() => setIsOpen(false)}
-                    className="text-gray-500 hover:text-red-500"
-                  >
-                    <FaTimes className="text-xl" />
-                  </button>
                 </div>
-              </div>
 
-              {/* Scrollable Content */}
-              <div className="flex-1 overflow-y-auto">
-                {/* CATEGORIES */}
-                <div className="py-2">
+                {/* Categories & Links Section - Scrollable */}
+                <div className="flex-1 overflow-y-auto bg-white">
                   {loading ? (
-                    <div className="px-4 space-y-2">
-                      {[1, 2, 3, 4].map((i) => (
-                        <div key={i} className="h-12 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="p-4 space-y-4">
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <div key={i} className="h-10 bg-gray-100 rounded animate-pulse" />
                       ))}
                     </div>
                   ) : (
-                    <div>
+                    <div className="divide-y divide-gray-50">
                       {categories.filter((category) => category.name !== "SERVICES").map((category) => (
                         <div key={category.id}>
                           {/* Main Category */}

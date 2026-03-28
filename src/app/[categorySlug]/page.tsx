@@ -13,10 +13,14 @@ async function getValidCategorySlugs(): Promise<Set<string>> {
     if (!res.ok) return new Set();
     const data = await res.json();
     const categories = data?.data?.categories || [];
-    return new Set(categories.map((c: any) => c.slug));
+    const slugs = new Set(categories.map((c: any) => c.slug));
+    // Manually add 'gifts' or 'gift' to support the gifts route
+    slugs.add('gifts');
+    slugs.add('gift');
+    return slugs;
   } catch (err) {
     console.error("Error fetching category slugs", err);
-    return new Set();
+    return new Set(['gifts', 'gift']); // Fallback to at least supporting gifts
   }
 }
 
@@ -60,17 +64,45 @@ export default async function CategoryPage({ params }: Props) {
     'gifts': 'gift'
   };
   const categorySlugLower = categorySlug.toLowerCase();
-  const typeKey = categoryToTypeMap[categorySlugLower] || "plant";
+  const typeKey = categoryToTypeMap[categorySlugLower] || (categorySlugLower === 'gifts' || categorySlugLower === 'gift' ? "gift" : "plant");
 
   const [category, subcategories] = await Promise.all([
     fetchCategoryBySlug(categorySlug),
     fetchSubcategories(categorySlug),
   ]);
 
+  const isGiftCategory = categorySlugLower === 'gifts' || categorySlugLower === 'gift';
+  // Handle 'gifts' specially if not in standard category API
+  if (!category && isGiftCategory) {
+    const giftCategoryData = {
+        id: "",
+        name: "Gifts",
+        slug: categorySlug,
+        subCategory: []
+    };
+    
+    // We can still try to fetch filters even without a category object
+    const filters = await fetchFilters(typeKey, "");
+    const initialData = await fetchProductsByFilters({
+        type: typeKey,
+        category_id: "",
+    });
+
+    return (
+        <Suspense fallback={<div className="flex justify-center p-8">Loading gifts...</div>}>
+            <PlantFilter
+                initialResults={initialData}
+                initialCategoryData={giftCategoryData}
+                initialFilterData={filters}
+                categorySlug={categorySlug}
+            />
+        </Suspense>
+    );
+  }
+
   if (!category) notFound();
 
   // Special handling for gifts - backend needs type='gift' and category_id=''
-  const isGiftCategory = categorySlugLower === 'gifts' || categorySlugLower === 'gift';
   const effectiveCategoryId = isGiftCategory ? "" : category.id;
 
   const filters = await fetchFilters(typeKey, category.id);

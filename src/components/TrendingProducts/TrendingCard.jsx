@@ -138,7 +138,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                 >
                     {/* Ribbon */}
                     {ribbon && (
-                        <div className="absolute top-3 right-3 z-20">
+                        <div className="absolute top-3 right-3">
                             <div className="bg-red-500 text-white px-3 py-1 text-xs font-bold rounded-md shadow-lg">
                                 {ribbon}
                             </div>
@@ -257,7 +257,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                 >
                     {/* Ribbon */}
                     {ribbon && (
-                        <div className="absolute top-2 right-2 z-20">
+                        <div className="absolute top-2 right-2">
                             <div className="bg-red-500 text-white px-2 py-0.5 text-[10px] font-bold rounded shadow-md">
                                 {ribbon}
                             </div>
@@ -274,7 +274,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
 
 
                             {/* ICONS INSIDE IMAGE AREA */}
-                            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+                            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
                                 <button aria-label="Add to cart"
                                     onClick={(e) => {
                                         e.preventDefault();

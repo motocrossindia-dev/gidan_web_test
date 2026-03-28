@@ -5,9 +5,9 @@ import Link from "next/link";
 const Header = () => {
 
   return (
-    <header className="bg-[#375421] font-poppins relative z-0">
+    <header className="bg-[#375421] font-poppins relative">
 
-      <div className="max-w-full px-4 md:px-8 py-2 flex flex-row items-center justify-between gap-2 m-auto">
+      <div className="max-w-full px-4 md:px-8 py-2 flex flex-row items-center justify-between gap-2 m-auto text-white">
 
         <div>
           <p className="text-white text-[11px] px-3 md:text-[13px]">

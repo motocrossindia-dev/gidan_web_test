@@ -22,10 +22,10 @@ const fetchHomeProducts = async (accessToken, filters = {}) => {
 
 export const useHomeProducts = (accessToken, filters = {}, initialData = undefined) => {
   return useQuery({
-    queryKey: ['homeProducts', filters, accessToken || 'guest'], // Unique key includes filters and auth state
+    queryKey: ['homeProducts', filters, accessToken ? 'auth' : 'guest'], // Simplified auth state key
     queryFn: () => fetchHomeProducts(accessToken, filters),
-    staleTime: 5 * 60 * 1000,
-    cacheTime: 10 * 60 * 1000,
+    staleTime: 0, // Disable staleTime to force fresh data for highlights
+    gcTime: 10 * 60 * 1000, // Replaces cacheTime in newer TanStack Query versions
     enabled: true,
     initialData: initialData,
   });

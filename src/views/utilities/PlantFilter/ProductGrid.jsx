@@ -120,7 +120,7 @@ const ProductGrid = ({
   );
 
   return (
-    <div className="mt-8 p-2 bg-white rounded-md md:ml-16 relative z-50">
+    <div className="mt-8 p-2 bg-white rounded-md md:ml-16 relative">
       <div className="flex justify-between items-center mb-4">
         <div className="text-xs md:text-lg text-gray-500 font-normal">
           <h2 className="sr-only">

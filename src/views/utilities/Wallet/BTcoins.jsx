@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { Sprout, Gift, Users, History, HelpCircle, ChevronLeft, ArrowLeft } from "lucide-react";
+import { Sprout, Gift, Users, History, HelpCircle, ChevronLeft } from "lucide-react";
 import axiosInstace from "../../../Axios/axiosInstance";
 import Breadcrumb from "../../../components/Shared/Breadcrumb";
 
@@ -32,7 +32,13 @@ const GDCoins = () => {
   }
 
   const getTransactionHistory = async () => {
-    router.push('/profile/history');
+    try {
+      const response = await axiosInstace.get(`/btcoins/btcoinsTransactions/`)
+      if (response.status === 200) {
+        router.push('/profile/history', { state: { resourse: response?.data?.data, data: data } })
+      }
+
+    } catch (error) { }
   }
 
 

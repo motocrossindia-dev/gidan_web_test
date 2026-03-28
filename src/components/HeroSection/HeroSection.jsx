@@ -37,7 +37,7 @@ const HeroSection = ({ hero }) => {
   };
 
   return (
-   <div className="relative w-full overflow-hidden mt-4 z-0">
+   <div className="relative w-full overflow-hidden mt-4">
       {hero && hero.length > 0 ? (
         <div className="relative w-full">
 
@@ -87,7 +87,7 @@ const HeroSection = ({ hero }) => {
             className="absolute left-3 top-1/2 -translate-y-1/2
                   bg-black/50 hover:bg-black/70 text-white
                   w-10 h-10 rounded-full flex items-center justify-center
-                  text-xl font-bold z-20"
+                  text-xl font-bold"
           >
             ‹
           </button>
@@ -99,13 +99,13 @@ const HeroSection = ({ hero }) => {
             className="absolute right-3 top-1/2 -translate-y-1/2
                   bg-black/50 hover:bg-black/70 text-white
                   w-10 h-10 rounded-full flex items-center justify-center
-                  text-xl font-bold z-20"
+                  text-xl font-bold"
           >
             ›
           </button>
 
           {/* Dots */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
             {hero.map((_, index) => (
               <button
                 key={index}

@@ -2,12 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import { FiHeart } from 'react-icons/fi';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axiosInstance from "../../../Axios/axiosInstance";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
+import { setWishlistItems } from "../../../redux/Slice/addtowishlistSlice";
 
 const WishlistIconWithCount = () => {
     const accessToken = useSelector(selectAccessToken);
+    const dispatch = useDispatch();
     const [wishlistCount, setWishlistCount] = useState(0);
 
     useEffect(() => {
@@ -21,10 +23,40 @@ const WishlistIconWithCount = () => {
 
             try {
                 // ADDED: Cache-busting timestamp to prevent stale browser/server responses
-                const response = await axiosInstance.get(`/order/wishlist/?t=${new Date().getTime()}`);
-                const wishlistItems = response?.data?.data?.wishlists || [];
-                setWishlistCount(Array.isArray(wishlistItems) ? wishlistItems.length : 0);
+                const response = await axiosInstance.get(`/order/wishlist/`, {
+                    params: { t: new Date().getTime() },
+                    validateStatus: function (status) {
+                        return status >= 200 && status < 500; // Accept 500 locally to handle it
+                    },
+                });
+
+                if (response.status === 500) {
+                    return;
+                }
+                
+                // Flexible parsing to handle different backend response structures
+                const data = response?.data;
+                let actualItems = [];
+                
+                if (Array.isArray(data)) {
+                    actualItems = data;
+                } else if (data?.data && Array.isArray(data.data)) {
+                    actualItems = data.data;
+                } else if (data?.data?.wishlists && Array.isArray(data.data.wishlists)) {
+                    actualItems = data.data.wishlists;
+                } else if (data?.wishlists && Array.isArray(data.wishlists)) {
+                    actualItems = data.wishlists;
+                }
+                
+                // Update Redux state for real-time sync across ProductCards
+                dispatch(setWishlistItems(actualItems));
+
+                setWishlistCount(actualItems.length);
             } catch (error) {
+                if (error.response?.status === 500) {
+                    // Silently handle backend 500 errors to prevent console noise
+                    return;
+                }
                 console.error('Failed to fetch wishlist count', error);
             }
         };

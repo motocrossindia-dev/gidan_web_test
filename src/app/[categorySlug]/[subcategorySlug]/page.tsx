@@ -12,14 +12,17 @@ async function getValidCategorySlugs(): Promise<Set<string>> {
     const res = await fetch(`${apiUrl}/category/`, { next: { revalidate: 300 } });
     if (!res.ok) return new Set();
     const data = await res.json();
-    return new Set(data?.data?.categories?.map((c: any) => c.slug) || []);
+    const slugs = new Set(data?.data?.categories?.map((c: any) => c.slug) || []);
+    slugs.add('gifts');
+    slugs.add('gift');
+    return slugs;
   } catch (err) {
-    return new Set();
+    return new Set(['gifts', 'gift']);
   }
 }
 
-// Fetch valid subcategory slugs for a given category
 async function getValidSubcategorySlugs(categorySlug: string): Promise<Set<string>> {
+  if (categorySlug === 'gifts' || categorySlug === 'gift') return new Set(); // Gifts don't have standard subcategory validation in this context
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store";
     const res = await fetch(`${apiUrl}/category/categoryWiseSubCategory/${categorySlug}/`, { next: { revalidate: 300 } });
@@ -72,18 +75,50 @@ export default async function SubcategoryPage({ params }: Props) {
     'pots': 'pot',
     'seeds': 'seed',
     'plant-care': 'plantcare',
-    'gift': 'gift'
+    'gift': 'gift',
+    'gifts': 'gift'
   };
-  const typeKey = categoryToTypeMap[categorySlug.toLowerCase()] || "plant";
+  const categorySlugLower = categorySlug.toLowerCase();
+  const typeKey = categoryToTypeMap[categorySlugLower] || "plant";
 
-  const [category, subcategory, subcategoriesList, filters] = await Promise.all([
+  const [category, subcategory, subcategoriesList] = await Promise.all([
     fetchCategoryBySlug(categorySlug),
     fetchSubcategoryBySlug(categorySlug, subcategorySlug),
     fetchSubcategories(categorySlug),
-    fetchFilters(typeKey, (await fetchCategoryBySlug(categorySlug))?.id)
   ]);
 
+  if (!category && (categorySlugLower === 'gifts' || categorySlugLower === 'gift')) {
+    const giftCategoryData = {
+        id: "",
+        name: "Gifts",
+        slug: categorySlug,
+        subCategory: []
+    };
+    
+    // We can still try to fetch filters even without a category object
+    const filters = await fetchFilters(typeKey, "");
+    const initialData = await fetchProductsByFilters({
+        type: typeKey,
+        category_id: "",
+        subcategory_id: "", 
+    });
+
+    return (
+        <Suspense fallback={<div className="flex justify-center p-8">Loading gifts...</div>}>
+            <PlantFilter
+                initialResults={initialData}
+                initialCategoryData={giftCategoryData}
+                initialFilterData={filters}
+                categorySlug={categorySlug}
+                subcategorySlug={subcategorySlug}
+            />
+        </Suspense>
+    );
+  }
+
   if (!category || !subcategory) notFound();
+
+  const filters = await fetchFilters(typeKey, category.id);
 
   // Attach subcategories for the filter sidebar and crawlers
   const categoryWithSubs = {

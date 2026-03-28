@@ -21,7 +21,7 @@ const SideBarLayout = () => {
         <SideBar/>
         </div>
 
-        <div className='w-screen' >
+        <div className='w-screen relative z-0' >
         {/* Outlet removed - use Next.js layout children */}
         </div>
         </div>

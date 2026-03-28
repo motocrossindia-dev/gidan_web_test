@@ -13,6 +13,7 @@ import StaticBreadcrumb from "@/components/Shared/StaticBreadcrumb";
 import MobileBottomNav from "@/components/Shared/MobileBottomNav";
 import TawkChat from "@/components/Shared/TawkChat";
 import CartWishlistSidebar from "@/components/Shared/CartWishlistSidebar";
+import React, { Suspense } from "react";
 
 import Verify from "@/Services/Services/Verify";
 
@@ -166,14 +167,16 @@ export default function RootLayout({
           <ScrollToTop />
           <DownloadAppPopup />
           <TawkChat />
-          <div className="landing-page-layout w-full min-h-screen flex flex-col overflow-x-hidden">
-            <div className="sticky top-0 left-0 w-full z-10">
+          <div className="landing-page-layout w-full min-h-screen flex flex-col">
+            <div className="sticky top-0 left-0 w-full z-[10001]">
               <Header />
               <NavBar />
             </div>
             <main className="main-content w-full">
               <div className="hidden md:block">
-                <StaticBreadcrumb />
+                <Suspense fallback={null}>
+                  <StaticBreadcrumb />
+                </Suspense>
               </div>
               {children}
               <DownloadApp />
