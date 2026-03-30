@@ -8,9 +8,10 @@ import DynamicSection from '../Shared/Sections/DynamicSection';
 import CategoryIcons from '../../components/Category/CategoryIcons';
 import Banner from '../../components/Banner/Banner';
 import { TrendingSection } from '../../components/TrendingProducts/TrendingSection';
+import { SeasonalSection } from '../../components/Seasonal/SeasonalSection';
 
-const Home = ({ initialBanners, initialCategories, initialSections, initialTrending }) => {
-  const { data: homeData, isLoading } = useHomepageData(initialSections);
+const Home = ({ initialBanners, initialCategories }) => {
+  const { data: homeData, isLoading } = useHomepageData();
 
   const banners = initialBanners || [];
   const homeImages = banners.filter(b => b.type === 'Home' && b.is_visible);
@@ -42,9 +43,14 @@ const Home = ({ initialBanners, initialCategories, initialSections, initialTrend
             <>
               <CategoryIcons initialData={initialCategories} />
               <div className="mt-8">
-                <TrendingSection initialTrending={initialTrending} />
+                <TrendingSection />
               </div>
             </>
+          )}
+          {section.id === 2 && (
+            <div className="mt-8">
+              <SeasonalSection />
+            </div>
           )}
         </LazyLoadWrapper>
       ))}

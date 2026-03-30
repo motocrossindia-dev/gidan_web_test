@@ -1,15 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/Axios/axiosInstance";
 
-const useHomepageData = (initialData) => {
+const useHomepageData = () => {
     return useQuery({
         queryKey: ["homepageData"],
         queryFn: async () => {
             const response = await axiosInstance.get("/home/");
+            // Returning the full response object, which now contains a "sections" array
             return response.data;
         },
-        initialData: initialData,
-        staleTime: 5 * 60 * 1000,
+        staleTime: 5 * 60 * 1000, // 5 minutes
     });
 };
 

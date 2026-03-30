@@ -82,10 +82,10 @@ export default async function CategoryPage({ params }: Props) {
     };
     
     // We can still try to fetch filters even without a category object
-    const filters = await fetchFilters(typeKey, null);
+    const filters = await fetchFilters(typeKey, undefined);
     const initialData = await fetchProductsByFilters({
         type: typeKey,
-        category_id: "",
+        category_id: undefined,
     });
 
     return (

@@ -22,15 +22,15 @@ async function getValidCategorySlugs(): Promise<Set<string>> {
 }
 
 async function getValidSubcategorySlugs(categorySlug: string): Promise<Set<string>> {
-  if (categorySlug === 'gifts' || categorySlug === 'gift') return new Set(); // Gifts don't have standard subcategory validation in this context
+  if (categorySlug === 'gifts' || categorySlug === 'gift') return new Set<string>(); // Gifts don't have standard subcategory validation in this context
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store";
     const res = await fetch(`${apiUrl}/category/categoryWiseSubCategory/${categorySlug}/`, { next: { revalidate: 300 } });
-    if (!res.ok) return new Set();
+    if (!res.ok) return new Set<string>();
     const data = await res.json();
-    return new Set(data?.data?.subCategorys?.map((sc: any) => sc.slug) || []);
+    return new Set<string>(data?.data?.subCategorys?.map((sc: any) => sc.slug) || []);
   } catch (err) {
-    return new Set();
+    return new Set<string>();
   }
 }
 
@@ -96,11 +96,11 @@ export default async function SubcategoryPage({ params }: Props) {
     };
     
     // We can still try to fetch filters even without a category object
-    const filters = await fetchFilters(typeKey, null);
+    const filters = await fetchFilters(typeKey, undefined);
     const initialData = await fetchProductsByFilters({
         type: typeKey,
-        category_id: "",
-        subcategory_id: "", 
+        category_id: undefined,
+        subcategory_id: undefined, 
     });
 
     return (
