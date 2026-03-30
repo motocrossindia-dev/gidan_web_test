@@ -43,6 +43,33 @@ async function getInitialCategories() {
   }
 }
 
+// Pre-fetch homepage sections data
+async function getHomepageData() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/home/`, { next: { revalidate: 300 } });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.error("Failed to fetch homepage data on server", err);
+    return null;
+  }
+}
+
+// Pre-fetch product collections
+async function getProductsByFilter(filterQuery: string) {
+  try {
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/filters/main_productsFilter/?${filterQuery}&page_size=20&limit=20&page=1`;
+    const res = await fetch(url, { next: { revalidate: 300 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data?.results || data?.products || data?.data?.results || data?.data?.products || [];
+  } catch (err) {
+    console.error(`Failed to fetch products for ${filterQuery} on server`, err);
+    return [];
+  }
+}
+
 export const metadata: Metadata = {
   title: "Gidan - Plants, Seeds & Gardening Store Online India",
   description: "Buy plants, seeds, pots, soil and gardening tools online at Gidan. Expert landscaping, terrace gardening and vertical garden services across India.",
@@ -67,10 +94,20 @@ export const metadata: Metadata = {
 export default async function HomePage() {
   const [
     initialBanners,
-    initialCategories
+    initialCategories,
+    initialHomeData,
+    initialTrending,
+    initialFeatured,
+    initialBestseller,
+    initialSeasonal
   ] = await Promise.all([
     getInitialBanners(),
-    getInitialCategories()
+    getInitialCategories(),
+    getHomepageData(),
+    getProductsByFilter('is_trending=true'),
+    getProductsByFilter('is_featured=true'),
+    getProductsByFilter('is_best_seller=true'),
+    getProductsByFilter('is_seasonal_collection=true')
   ]);
 
   // Generate preload link for LCP banner image server-side
@@ -98,7 +135,13 @@ export default async function HomePage() {
       <Home
         initialBanners={initialBanners}
         initialCategories={initialCategories}
+        initialHomeData={initialHomeData}
+        initialTrending={initialTrending}
+        initialFeatured={initialFeatured}
+        initialBestseller={initialBestseller}
+        initialSeasonal={initialSeasonal}
       />
     </>
   );
 }
+

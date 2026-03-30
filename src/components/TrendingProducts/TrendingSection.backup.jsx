@@ -22,20 +22,20 @@ const TrendingSection = () => {
     try {
       if (accessToken) {
         const response = await axiosInstance.get(
-            `${process.env.REACT_APP_API_URL}/product/homeProducts/`,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }
+          `${process.env.REACT_APP_API_URL}/product/homeProducts/`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
         );
         if (response.status === 200) {
           setProductsDetails(response?.data?.data?.products);
         }
       } else {
         const response = await axiosInstance.get(
-            `${process.env.REACT_APP_API_URL}/product/homeProducts/`);
+          `${process.env.REACT_APP_API_URL}/product/homeProducts/`);
         if (response.status === 200) {
           setProductsDetails(response?.data?.data?.products);
         }
@@ -57,11 +57,11 @@ const TrendingSection = () => {
     navigate(`/${category_slug}/${sub_category_slug}/${product.slug}/`, {
       state: {
         product_id: product.slug,
-        category_slug:category_slug,
-        sub_category_slug:sub_category_slug
+        category_slug: category_slug,
+        sub_category_slug: sub_category_slug
       }
     });
-    
+
     // Scroll to top when navigating to product
     window.scrollTo(0, 0);
   }, [navigate]);
@@ -103,12 +103,12 @@ const TrendingSection = () => {
   const ViewAll = useCallback(async () => {
     try {
       const response = await axiosInstance.get(
-          `${process.env.REACT_APP_API_URL}/product/viewAll`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
+        `${process.env.REACT_APP_API_URL}/product/viewAll`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
       if (response.status === 200) {
         setProductsDetails(response?.data?.data?.products);
@@ -119,80 +119,80 @@ const TrendingSection = () => {
   }, []);
 
   return (
-      <div className="p-4 rounded-md font-sans md:bg-white">
-        <h2 className="md:text-2xl text-xl mb-4 text-center md:font-bold font-semibold">Trending Products</h2>
+    <div className="p-4 rounded-md font-sans md:bg-white">
+      <h2 className="md:text-2xl text-xl mb-4 text-center md:font-bold font-semibold">Trending Products</h2>
 
-        <div className="flex justify-center mb-8">
-          <button aria-label="Button"
-                  onClick={() => setSelectedTab("")}
-                  className={`px-2 py-1 md:px-4 md:py-2 border-2 ${selectedTab === "" ? "bg-bio-green text-white border-bio-green" : "border-bio-green"} rounded mx-1`}
-          >
-            All
-          </button>
-          <button aria-label="Button"
-                  onClick={() => setSelectedTab("featured")}
-                  className={`px-2 py-1 md:px-4 md:py-2 border-2 ${selectedTab === "featured" ? "bg-bio-green text-white border-bio-green" : "text-black border-bio-green"} rounded mx-1`}
-          >
-            Featured
-          </button>
-          <button aria-label="Button"
-                  onClick={() => setSelectedTab("latest")}
-                  className={`px-2 py-1 md:px-4 md:py-2 border-2 ${selectedTab === "latest" ? "bg-bio-green text-white border-bio-green" : "border-bio-green"} rounded mx-1`}
-          >
-            Latest
-          </button>
-          <button aria-label="Button"
-                  onClick={() => setSelectedTab("bestseller")}
-                  className={`px-2 py-1 md:px-4 md:py-2 border-2 ${selectedTab === "bestseller" ? "bg-bio-green text-white border-bio-green" : "border-bio-green"} rounded mx-1`}
-          >
-            Bestseller
-          </button>
-        </div>
+      <div className="flex justify-center mb-8">
+        <button aria-label="Button"
+          onClick={() => setSelectedTab("")}
+          className={`px-2 py-1 md:px-4 md:py-2 border-2 ${selectedTab === "" ? "bg-bio-green text-white border-bio-green" : "border-bio-green"} rounded mx-1`}
+        >
+          All
+        </button>
+        <button aria-label="Button"
+          onClick={() => setSelectedTab("featured")}
+          className={`px-2 py-1 md:px-4 md:py-2 border-2 ${selectedTab === "featured" ? "bg-bio-green text-white border-bio-green" : "text-black border-bio-green"} rounded mx-1`}
+        >
+          Featured
+        </button>
+        <button aria-label="Button"
+          onClick={() => setSelectedTab("latest")}
+          className={`px-2 py-1 md:px-4 md:py-2 border-2 ${selectedTab === "latest" ? "bg-bio-green text-white border-bio-green" : "border-bio-green"} rounded mx-1`}
+        >
+          Latest
+        </button>
+        <button aria-label="Button"
+          onClick={() => setSelectedTab("bestseller")}
+          className={`px-2 py-1 md:px-4 md:py-2 border-2 ${selectedTab === "bestseller" ? "bg-bio-green text-white border-bio-green" : "border-bio-green"} rounded mx-1`}
+        >
+          Bestseller
+        </button>
+      </div>
 
-        <div className="max-w-7xl mx-auto px-3">
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 lg:mx-10 gap-4 lg:gap-2 justify-items-center">
-            {visibleProducts.map((product, index) => (
-                <div
-                    key={index}
-                    onClick={() => handleProductClick(product)}
-                    className="cursor-pointer"
-                >
-                  <TrendingCard
-                      index={index}
-                      name={product?.name}
-                      price={Math.round(product?.selling_price)}
-                      oldPrice={Math.round(product?.oldPrice)}
-                      imageUrl={product?.image}
-                      product={product}
-                      userRating={product?.product_rating?.avg_rating}
-                      ratingNumber={product?.product_rating?.num_ratings}
-                      inWishlist={product?.is_wishlist}
-                      inCart={product?.is_cart}
-                      getProducts={getProducts}
-                      mrp={Math.round(product?.mrp)}
-                      ribbon={product.ribbon}
-                  />
-                </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex justify-center mt-4">
-          <button aria-label="View all"
-                  onClick={() => {
-                    const route =
-                      selectedTab === "featured" ? "/featured/" :
-                      selectedTab === "bestseller" ? "/bestseller/" :
-                      selectedTab === "latest" ? "/latest/" :
-                      "/trending/";
-                    navigate(route);
-                  }}
-                  className="bg-white text-bio-green w-[94px] h-[34px] border border-bio-green rounded mx-1"
-          >
-            View All
-          </button>
+      <div className="max-w-7xl mx-auto px-3">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 lg:mx-10 gap-4 lg:gap-2 justify-items-center">
+          {visibleProducts.map((product, index) => (
+            <div
+              key={index}
+              onClick={() => handleProductClick(product)}
+              className="cursor-pointer"
+            >
+              <TrendingCard
+                index={index}
+                name={product?.name}
+                price={Math.round(product?.selling_price)}
+                oldPrice={Math.round(product?.oldPrice)}
+                imageUrl={product?.image}
+                product={product}
+                userRating={product?.product_rating?.avg_rating}
+                ratingNumber={product?.product_rating?.num_ratings}
+                inWishlist={product?.is_wishlist}
+                inCart={product?.is_cart}
+                getProducts={getProducts}
+                mrp={Math.round(product?.mrp)}
+                ribbon={product.ribbon}
+              />
+            </div>
+          ))}
         </div>
       </div>
+
+      <div className="flex justify-center mt-4">
+        <button aria-label="View all"
+          onClick={() => {
+            const route =
+              selectedTab === "featured" ? "/featured/" :
+                selectedTab === "bestseller" ? "/bestseller/" :
+                  selectedTab === "latest" ? "/latest/" :
+                    "/trending/";
+            navigate(route);
+          }}
+          className="bg-white text-bio-green w-[94px] h-[34px] border border-bio-green rounded mx-1"
+        >
+          View All
+        </button>
+      </div>
+    </div>
   );
 };
 

@@ -1,30 +1,33 @@
 'use client';
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import TrendingCard from "../Shared/ProductCard";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../redux/User/verificationSlice";
 import { useHomeProducts } from "../../hooks/useHomeProducts";
-import { getProductUrl } from "../../utils/urlHelper";
+import TrendingCard from "../Shared/ProductCard";
 
+/**
+ * TrendingSection Component
+ * Displays trending, featured, and bestseller products with tab switching.
+ * Uses the main filter endpoint via useHomeProducts hook.
+ */
 export const TrendingSection = ({ initialTrending, initialFeatured, initialBestseller }) => {
   const [selectedTab, setSelectedTab] = useState("latest");
   const accessToken = useSelector(selectAccessToken);
   const [visibleCount, setVisibleCount] = useState(12);
 
-  // Map selected tab to API filters
+  // Map selected tab to API filters using boolean flags supported by main_productsFilter
   const currentFilters = useMemo(() => {
-    if (selectedTab === "featured") return { flag: "Featured" };
-    if (selectedTab === "latest") return { flag: "Latest" };
-    if (selectedTab === "bestseller") return { flag: "Bestsellers" };
-    return { flag: "Trending" };
+    if (selectedTab === "featured") return { is_featured: true };
+    if (selectedTab === "bestseller") return { is_best_seller: true };
+    // Default to trending for 'latest' or 'all'
+    return { is_trending: true };
   }, [selectedTab]);
 
   const initialDataForTab = useMemo(() => {
     if (selectedTab === "featured") return initialFeatured;
-    if (selectedTab === "latest") return initialTrending;
     if (selectedTab === "bestseller") return initialBestseller;
     return initialTrending;
   }, [selectedTab, initialTrending, initialFeatured, initialBestseller]);
