@@ -10,14 +10,14 @@ async function getValidCategorySlugs(): Promise<Set<string>> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store";
     const res = await fetch(`${apiUrl}/category/`, { next: { revalidate: 300 } });
-    if (!res.ok) return new Set();
+    if (!res.ok) return new Set<string>();
     const data = await res.json();
-    const slugs = new Set(data?.data?.categories?.map((c: any) => c.slug) || []);
+    const slugs = new Set<string>(data?.data?.categories?.map((c: any) => c.slug) || []);
     slugs.add('gifts');
     slugs.add('gift');
     return slugs;
   } catch (err) {
-    return new Set(['gifts', 'gift']);
+    return new Set<string>(['gifts', 'gift']);
   }
 }
 
@@ -96,7 +96,7 @@ export default async function SubcategoryPage({ params }: Props) {
     };
     
     // We can still try to fetch filters even without a category object
-    const filters = await fetchFilters(typeKey, "");
+    const filters = await fetchFilters(typeKey, null);
     const initialData = await fetchProductsByFilters({
         type: typeKey,
         category_id: "",
