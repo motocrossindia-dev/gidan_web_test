@@ -13,6 +13,7 @@ import { FiFilter } from "react-icons/fi";
 import axiosInstance from "../../../Axios/axiosInstance";
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
+import CategoryStaticSEO from "../Info/CategoryStaticSEO";
 import { Typography, SwipeableDrawer, Box, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -39,27 +40,51 @@ const INFO_CARDS = [
 
 const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-function PlantCare() {
+function PlantCare({ initialResults, initialFilterData, initialSEOData }) {
   const searchParams = useSearchParams();
   const query = searchParams.get('query') || '';
 
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [products, setProducts] = useState({ count: 0, next: null, previous: null });
-  const [results, setResults] = useState([]);
+  // Normalize initialResults: could be an array or an object
+  const normalizedInitialResults = useMemo(() => {
+    if (!initialResults) return { results: [], count: 0, next: null, previous: null };
+    if (Array.isArray(initialResults)) {
+      return { results: initialResults, count: initialResults.length, next: null, previous: null };
+    }
+    return initialResults;
+  }, [initialResults]);
+
+  const [products, setProducts] = useState({
+    count: normalizedInitialResults.count || 0,
+    next: normalizedInitialResults.next || null,
+    previous: normalizedInitialResults.previous || null,
+  });
+  const [results, setResults] = useState(normalizedInitialResults.results || []);
   const [isSearching, setIsSearching] = useState(false);
-  const [filtersApplied, setFiltersApplied] = useState(false);
+  const [filtersApplied, setFiltersApplied] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      return params.has('query') || params.has('color_id') || params.has('min_price') || params.has('max_price');
+    }
+    return false;
+  });
   const [currentQuery, setCurrentQuery] = useState("");
   const [selectedPublicFlag, setSelectedPublicFlag] = useState(null);
-  const [currentFilterType, setCurrentFilterType] = useState("plant");
+  const [currentFilterType, setCurrentFilterType] = useState("");
+  const [categoryData, setCategoryData] = useState(initialSEOData || normalizedInitialResults.category_info?.category_info || null);
+  const [seoData, setSeoData] = useState(initialSEOData || normalizedInitialResults.category_info?.category_info || null);
+  const [isSubcategorySEO, setIsSubcategorySEO] = useState(() => {
+    const info = initialSEOData || normalizedInitialResults.category_info?.category_info;
+    return !!info?.subcategory_name;
+  });
 
   // Construct dynamic SEO/Hero data for search results
   const searchSeoData = useMemo(() => ({
-    category_info: {
-      category_name: `SEARCH: ${query?.toUpperCase()}`,
-      category_description: query ? `Browse our collection of products matching your search for "${query}".` : `Explore our collection of premium plants and garden essentials.`,
-      category_image: "https://gidan-web.s3.ap-south-1.amazonaws.com/category-hero/search-hero.webp",
-      cat_mob_image: "https://gidan-web.s3.ap-south-1.amazonaws.com/category-hero/search-mobile.webp",
-    }
+    // CategoryHero reads directly from data properties
+    heading_before: `SEARCH: ${query?.toUpperCase() || ''}`,
+    description: query ? `Browse our collection of products matching your search for "${query}".` : `Explore our collection of premium plants and garden essentials.`,
+    tags: [],
+    stats: []
   }), [query]);
 
   const toggleDrawer = (open) => (event) => {
@@ -72,8 +97,9 @@ function PlantCare() {
   const getInitialProducts = useCallback(async () => {
     setIsSearching(true);
     try {
+      const typeParam = currentFilterType ? `&type=${currentFilterType}` : '';
       const response = await axiosInstance.get(
-        `/filters/main_productsFilter/?search=${query}&page_size=12`
+        `/filters/main_productsFilter/?search=${query}${typeParam}&page_size=12`
       );
       if (response.status === 200) {
         setResults(response.data.results || []);
@@ -82,6 +108,12 @@ function PlantCare() {
           next: response.data.next,
           previous: response.data.previous,
         });
+        const newCategoryInfo = response.data?.category_info?.category_info || null;
+        setCategoryData(newCategoryInfo);
+        if (newCategoryInfo) {
+          setSeoData(newCategoryInfo);
+          setIsSubcategorySEO(!!newCategoryInfo.subcategory_name);
+        }
         setCurrentQuery(`search=${query}`);
       }
     } catch (error) {
@@ -89,20 +121,29 @@ function PlantCare() {
     } finally {
       setIsSearching(false);
     }
-  }, [query]);
+  }, [query, currentFilterType]);
 
   useEffect(() => {
+    if (filtersApplied) return;
+
+    // Hydration guard: If we already have results from server that match current query, skip initial fetch
+    const hasInitialData = normalizedInitialResults.results && normalizedInitialResults.results.length > 0;
+    const isMatchingData = results.length === normalizedInitialResults.results.length;
+    if (hasInitialData && isMatchingData) {
+      return;
+    }
+
     getInitialProducts();
     window.scrollTo(0, 0);
-  }, [getInitialProducts]);
+  }, [getInitialProducts, filtersApplied, normalizedInitialResults, results.length]);
 
   return (
     <>
       <CategoryHero 
-        data={searchSeoData} 
+        data={seoData || searchSeoData} 
         breadcrumb={{
           items: [],
-          currentPage: `SEARCH: ${query?.toUpperCase()}`
+          currentPage: seoData?.title || seoData?.subcategory_name || seoData?.category_name || `SEARCH: ${query?.toUpperCase()}`
         }}
       />
 
@@ -130,19 +171,22 @@ function PlantCare() {
                   setResults={setResults}
                   setProducts={setProducts}
                   setFiltersApplied={setFiltersApplied}
-                  typeKey={currentFilterType}
+                  typeKey={""}
                   setCurrentFilterType={setCurrentFilterType}
                   setIsSearching={setIsSearching}
                   setCurrentQuery={setCurrentQuery}
                   selectedPublicFlag={selectedPublicFlag}
                   setSelectedPublicFlag={setSelectedPublicFlag}
                   searchQuery={query}
+                  setCategoryData={setCategoryData}
+                  setSeoData={setSeoData}
+                  setIsSubcategorySEO={setIsSubcategorySEO}
                 />
               </div>
             </div>
 
-            {/* Main Content (Right) */}
-            <div className="flex-grow">
+            {/* Main Content (Right) - min-w-0 prevents flex items from overflowing their container */}
+            <div className="flex-grow min-w-0 max-w-full">
               {/* Public Flags Interactive Pills - Parallel to Filter Sidebar */}
               <div className="mb-8 mt-4">
                 <PublicFlags 
@@ -157,11 +201,23 @@ function PlantCare() {
                   pagination={products}
                   setResults={setResults}
                   filtersApplied={filtersApplied}
-                  typeKey={currentFilterType}
+                  typeKey={""}
                   query={currentQuery}
                   searchTerm={query}
                   getProducts={getInitialProducts}
-                  bottomContent={<InfoCards cards={INFO_CARDS} />}
+                  bottomContent={
+                    <>
+                      <InfoCards cards={categoryData?.info_cards || INFO_CARDS} />
+                      {seoData && (
+                        <CategoryStaticSEO 
+                          categoryDataFromAPI={seoData} 
+                          isSubcategory={isSubcategorySEO} 
+                        />
+                      )}
+                      <RecentlyViewedProducts />
+                      <CheckoutStores />
+                    </>
+                  }
                 />
                 {isSearching && (
                   <div className="flex justify-center py-8">
@@ -170,10 +226,8 @@ function PlantCare() {
                 )}
               </div>
 
-              {/* Additional Sections */}
               <div className="mt-16 space-y-16">
-                <RecentlyViewedProducts />
-                <CheckoutStores />
+                {/* Content moved to bottomContent of ProductGrid */}
               </div>
             </div>
           </div>
@@ -211,7 +265,7 @@ function PlantCare() {
             setProducts={setProducts}
             setFiltersApplied={setFiltersApplied}
             setShowMobileFilter={setMobileOpen}
-            typeKey={currentFilterType}
+            typeKey={""}
             setCurrentFilterType={setCurrentFilterType}
             setIsSearching={setIsSearching}
             setCurrentQuery={setCurrentQuery}
@@ -219,6 +273,9 @@ function PlantCare() {
             setSelectedPublicFlag={setSelectedPublicFlag}
             isMobile={true}
             searchQuery={query}
+            setCategoryData={setCategoryData}
+            setSeoData={setSeoData}
+            setIsSubcategorySEO={setIsSubcategorySEO}
           />
         </Box>
       </SwipeableDrawer>

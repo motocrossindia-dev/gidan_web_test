@@ -1,12 +1,12 @@
 'use client';
 
-
 import React, { useState } from "react";
-import SeasonalCard from "./SeasonalCard";
-import plantImage from "../../../Assets/Gift/Gift3.webp"; // Adjust path as necessary
-import __gift34 from "../../../Assets/Gift/Gift1.webp";
-const _gift34 = typeof __gift34 === 'string' ? __gift34 : __gift34?.src || __gift34;
-const gift34 = typeof _gift34 === 'string' ? _gift34 : _gift34?.src || _gift34;
+import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
+import giftImage from "../../../Assets/Gift/Gift1.webp";
+
+// Helper to handle Next.js image imports safely
+const gift34 = typeof giftImage === 'string' ? giftImage : giftImage?.src || giftImage;
+
 const CorporateGiftingForm = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState({
@@ -32,93 +32,85 @@ const CorporateGiftingForm = () => {
 
   if (isSubmitted) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-16 text-center">
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">
-          Thank you for submitting your corporate query
+      <div className="max-w-3xl mx-auto px-4 py-20 text-center bg-white rounded-[40px] shadow-sm mb-12">
+        <h2 className="text-3xl font-serif italic text-[#1a1f14] mb-6">
+          Thank you for choosing Gidan
         </h2>
-        <p className="text-gray-600 mb-2">
-          Our corporate gift specialist will surely get back to you soon!
+        <p className="text-[#4a4a4a] text-lg mb-8 max-w-md mx-auto leading-relaxed">
+          Our corporate gifting specialist will get back to you shortly to help cultivate your perfect order.
         </p>
-        <p className="text-gray-600">
-          For more details, you can reach out to us at{' '}
-          <a 
-            href="mailto:kiran@biotechmagii.com" 
-            className="text-[#375421] hover:text-[#375421]"
-          >
-            kiran@biotechmagii.com
-          </a>
-          {' '}or call us at{' '}
-          <a 
-            href="tel:8884981840" 
-            className="text-[#375421] hover:text-[#375421]"
-          >
-            8884981840
-          </a>
-        </p>
+        <div className="flex flex-col items-center gap-2 text-sm font-bold text-[#2d5a1b] uppercase tracking-widest">
+           <a href="mailto:kiran@biotechmagii.com" className="hover:underline">kiran@biotechmagii.com</a>
+           <a href="tel:8884981840" className="hover:underline">+91 8884981840</a>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">
-          Corporate Gifting / Bulk Order
+    <div className="max-w-3xl mx-auto px-8 py-12 bg-white rounded-[50px] shadow-sm border border-gray-100 mb-20 animate-fade-in">
+      <div className="text-center mb-12">
+        <h1 className="text-3xl lg:text-4xl font-serif font-bold text-[#1a1f14] mb-4">
+          Corporate Gifting
         </h1>
-        <p className="text-gray-600">
-          Have any questions about our services? Let us know and we'll get back to you!
+        <p className="text-[#4a4a4a] italic opacity-70">
+          Tailored botanical solutions for your business environment and gifting needs.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          placeholder="Name"
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#375421]"
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          placeholder="Email"
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#375421]"
-          required
-        />
-        <input
-          type="tel"
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          placeholder="Phone"
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#375421]"
-          required
-        />
-        <input
-          type="text"
-          name="company"
-          value={formData.company}
-          onChange={handleChange}
-          placeholder="Company"
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#375421]"
-        />
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Full Name"
+            className="w-full px-6 py-4 bg-[#f9f9f9] border-none rounded-2xl focus:ring-2 focus:ring-[#a8e070] transition-all"
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Work Email"
+            className="w-full px-6 py-4 bg-[#f9f9f9] border-none rounded-2xl focus:ring-2 focus:ring-[#a8e070] transition-all"
+            required
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <input
+            type="tel"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            placeholder="Phone Number"
+            className="w-full px-6 py-4 bg-[#f9f9f9] border-none rounded-2xl focus:ring-2 focus:ring-[#a8e070] transition-all"
+            required
+          />
+          <input
+            type="text"
+            name="company"
+            value={formData.company}
+            onChange={handleChange}
+            placeholder="Company Name"
+            className="w-full px-6 py-4 bg-[#f9f9f9] border-none rounded-2xl focus:ring-2 focus:ring-[#a8e070] transition-all"
+          />
+        </div>
         <textarea
           name="message"
           value={formData.message}
           onChange={handleChange}
-          placeholder="Message"
+          placeholder="How can we help you? (Bulk orders, office decor, etc.)"
           rows={4}
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#375421]"
+          className="w-full px-6 py-4 bg-[#f9f9f9] border-none rounded-2xl focus:ring-2 focus:ring-[#a8e070] transition-all"
         />
         <button
           type="submit"
-          className="w-full bg-[#375421] text-white py-3 rounded-md hover:bg-[#375421] hover:text-white transition duration-200"
+          className="w-full bg-[#1a1f14] text-white py-5 rounded-2xl text-[13px] font-bold tracking-[0.2em] uppercase hover:bg-[#2d5a1b] transition-all shadow-xl hover:shadow-[#a8e070]/20"
         >
-          Send
+          Send Inquiry
         </button>
       </form>
     </div>
@@ -126,79 +118,27 @@ const CorporateGiftingForm = () => {
 };
 
 const CorporateGiftingPage = () => {
-  const recentlyViewed = [
-    {
-      name: "Indoor Plant",
-      price: 499,
-      oldPrice: 650,
-      imageUrl: plantImage,
-      rating: 4,
-    },
-    {
-      name: "Peace Lily",
-      price: 499,
-      oldPrice: 650,
-      imageUrl: plantImage,
-      rating: 4.5,
-    },
-    {
-      name: "Bonsai Plant",
-      price: 499,
-      oldPrice: 650,
-      imageUrl: plantImage,
-      rating: 5,
-    },
-    {
-      name: "Succulent Plant",
-      price: 499,
-      oldPrice: 650,
-      imageUrl: plantImage,
-      rating: 3.5,
-    },
-    {
-      name: "Cactus Plant",
-      price: 499,
-      oldPrice: 650,
-      imageUrl: plantImage,
-      rating: 4,
-    },
-  ];
-
   return (
-      <>
-        
-        <div className="min-h-screen p-4 mt-6 bg-white">
+      <div className="min-h-screen pt-10 pb-20 bg-[#faf9f6]">
+        <div className="max-w-7xl mx-auto px-4 lg:px-8">
           {/* Hero Section */}
-          <div className="relative h-48 md:h-64 overflow-hidden">
-            <img name=" "
+          <div className="relative h-64 md:h-[450px] overflow-hidden rounded-[60px] shadow-2xl mb-20 group">
+            <img 
                 src={gift34}
                 loading="lazy"
                 alt="Corporate Gifting"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
           </div>
 
           {/* Form Section */}
           <CorporateGiftingForm />
 
-          {/* Recently Viewed Section */}
-          <div className="w-full px-4 py-8">
-            <h2 className="text-xl font-semibold text-gray-800 mb-6">Recently Viewed</h2>
-            <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-5 gap-4">
-              {recentlyViewed.map((product, index) => (
-                  <SeasonalCard
-                      key={index}
-                      name={product.name}
-                      price={Math.round(product.selling_price)}
-                      oldPrice={Math.round(product.oldPrice)}
-                      imageUrl={product.imageUrl}
-                      rating={product.rating}
-                  />
-              ))}
-            </div>
-          </div>
+          {/* Recently Viewed Section - Category Card Style */}
+          <RecentlyViewedProducts title="Recently Viewed" />
         </div>
-      </>
+      </div>
   );
 };
 

@@ -148,7 +148,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                     <div className="relative w-full flex justify-center mb-2">
                         <div className="relative rounded-lg flex justify-center items-center w-full">
                             <img name=" "
-                                className="w-40 h-43 sm:w-48 sm:h-53 lg:h-[260px] mt-4 lg:w-[226px] object-contain transition-transform duration-300 rounded-[2rem] scale-100 hover:scale-105"
+                                className="w-32 h-32 sm:w-36 sm:h-36 lg:h-[200px] mt-4 lg:w-[200px] object-contain transition-transform duration-300 rounded-[2rem] scale-100 hover:scale-105"
                                 src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
                                 alt={name} loading="lazy" width="400" height="400" style={{ aspectRatio: '1/1' }} />
 
@@ -268,7 +268,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                         {/* IMAGE WRAPPER */}
                         <div className="relative w-full bg-white overflow-hidden">
                             <img
-                                className="w-full h-40 object-cover"
+                                className="w-full h-32 object-contain p-2"
                                 src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
                                 alt={product.name} loading="lazy" width="400" height="400" style={{ aspectRatio: '1/1' }} />
 

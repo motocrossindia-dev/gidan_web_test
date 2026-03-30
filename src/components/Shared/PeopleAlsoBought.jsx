@@ -36,21 +36,33 @@ const PeopleAlsoBought = ({ title = "People also bought" }) => {
     }
 
     return (
-        <div className="my-8 p-4 bg-white rounded-md">
-            <h2 className="md:text-2xl text-xl mb-4 text-center font-sans font-bold">{title}</h2>
-            <div className="max-w-7xl mx-auto px-3">
+        <div className="my-8 px-4 md:px-8 lg:px-12 bg-[#faf9f6]">
+            <div className="max-w-6xl mx-auto py-8">
+                <div className="flex justify-between items-end mb-6">
+                    <h2 className="text-2xl md:text-3xl font-serif text-gray-900 leading-tight">
+                        {title}
+                    </h2>
+                    <Link 
+                        href="/featured" 
+                        className="text-[11px] font-bold text-[#2d4a22] hover:underline flex items-center gap-1 group transition-all uppercase tracking-wider"
+                    >
+                        View all <span className="group-hover:translate-x-1 transition-transform">→</span>
+                    </Link>
+                </div>
+
                 <div className="grid gap-4 justify-items-center font-sans grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
                     {products.slice(0, 4).map((product) => (
                         <Link
                             key={product.id}
                             href={getProductUrl(product)}
                             onClick={() => window.scrollTo(0, 0)}
-                            className="w-full sm:max-w-xs cursor-pointer block"
+                            className="w-full sm:max-w-xs cursor-pointer block group"
                         >
                             {/* Small Screens */}
                             <div className="sm:hidden">
                                 <Paper
                                     elevation={0}
+                                    className="group-hover:shadow-xl transition-all duration-500"
                                     sx={{
                                         display: "flex",
                                         flexDirection: "column",
@@ -59,71 +71,46 @@ const PeopleAlsoBought = ({ title = "People also bought" }) => {
                                         position: "relative",
                                         overflow: "hidden",
                                         backgroundColor: "white",
-                                        borderRadius: "8px",
-                                        border: "1px solid transparent",
+                                        borderRadius: "20px",
+                                        border: "1px solid #f0f0f0",
                                         transition: "all 0.3s ease",
-                                        "&:hover": {
-                                            boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.1)",
-                                            transform: "translateY(-5px)",
-                                            backgroundColor: "#C2FFC7",
-                                            border: "1px solid #e5e7eb",
-                                        },
                                     }}
                                 >
                                     <div className="relative w-full flex flex-col items-center p-2">
-                                        <div className="relative w-full flex justify-center mb-3">
+                                        <div className="relative w-full flex justify-center mb-3 aspect-[4/5]">
                                             <img
-                                                className="w-full h-40 object-cover rounded-lg transition-transform duration-300 relative z-10"
+                                                className="w-full h-full object-cover rounded-xl transition-transform duration-700 group-hover:scale-105"
                                                 src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
                                                 alt={product.name}
                                             />
                                         </div>
 
-                                        {/* Action Icons */}
-                                        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 transition-all duration-300 z-20 opacity-0 hover:opacity-100 hover:translate-y-0">
-                                            <button className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200">
-                                                <MdOutlineShoppingBag className="w-4 h-4" />
-                                            </button>
-                                            <button className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200">
-                                                <FaRegHeart className="w-4 h-4" />
-                                            </button>
-                                            <button className="w-6 h-6 rounded-full bg-white hover:bg-[#375421] hover:text-white flex items-center justify-center transition-colors duration-200">
-                                                <FiEye className="w-4 h-4" />
-                                            </button>
-                                        </div>
-
-                                        <div className="flex flex-col p-2 w-full text-center gap-2">
-                                            <div className="flex justify-center">
-                                                <ReactStars
-                                                    count={5}
-                                                    value={product?.product_rating?.avg_rating || product?.rating || 0}
-                                                    edit={false}
-                                                    size={10}
-                                                    activeColor="#0D2164"
-                                                    char={<FaStar />}
-                                                />
-                                            </div>
-
-                                            <Typography sx={{ typography: { xs: "caption", md: "subtitle2" } }} style={{ fontWeight: "bold", color: "black", fontSize: "0.9rem" }}>
+                                        <div className="flex flex-col p-3 w-full text-left gap-1">
+                                            <Typography style={{ fontWeight: "600", color: "#111", fontSize: "0.95rem", marginBottom: "4px" }}>
                                                 {product.name}
                                             </Typography>
+                                            
+                                            <div className="flex items-center gap-1 mb-2">
+                                                <div className="flex text-amber-400">
+                                                    <ReactStars
+                                                        count={5}
+                                                        value={product?.product_rating?.avg_rating || product?.rating || 0}
+                                                        edit={false}
+                                                        size={12}
+                                                        activeColor="#fbbf24"
+                                                        char={<FaStar />}
+                                                    />
+                                                </div>
+                                                <span className="text-[10px] text-gray-400">({product?.product_rating?.num_ratings || 0})</span>
+                                            </div>
 
-                                            <div className="flex items-center gap-2">
-                                                <p className="text-base font-semibold text-black mt-1">
+                                            <div className="flex items-center justify-between mt-auto">
+                                                <p className="text-lg font-bold text-gray-900">
                                                     ₹{Math.round(product?.selling_price)}
                                                 </p>
-
-                                                {product?.mrp && (product?.mrp > product?.selling_price) && (
-                                                    <span className="text-base text-gray-400 line-through mt-1">
-                                                        ₹{Math.round(product?.mrp)}
-                                                    </span>
-                                                )}
-
-                                                {product?.mrp && (product?.mrp > product?.selling_price) && (
-                                                    <span className="text-sm font-semibold text-[#375421] mt-1">
-                                                        {Math.round(((product.mrp - product.selling_price) / product.mrp) * 100)}% OFF
-                                                    </span>
-                                                )}
+                                                <div className="bg-[#f3f6f1] text-[#2d4a22] px-3 py-1 rounded-lg text-xs font-bold border border-[#2d4a22]/5">
+                                                    + Add
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -131,15 +118,17 @@ const PeopleAlsoBought = ({ title = "People also bought" }) => {
                             </div>
 
                             {/* Desktop View (md and above) */}
-                            <div className="hidden sm:block">
-                                <TrendingCard
-                                    name={product?.name}
-                                    price={Math.round(product?.selling_price)}
-                                    mrp={Math.round(product?.mrp)}
-                                    imageUrl={product?.image}
-                                    rating={product?.product_rating?.avg_rating || 0}
-                                    product={product}
-                                />
+                            <div className="hidden sm:block transition-all duration-500 group-hover:-translate-y-2">
+                                <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden p-0 h-full">
+                                    <TrendingCard
+                                        name={product?.name}
+                                        price={Math.round(product?.selling_price)}
+                                        mrp={Math.round(product?.mrp)}
+                                        imageUrl={product?.image}
+                                        rating={product?.product_rating?.avg_rating || 0}
+                                        product={product}
+                                    />
+                                </div>
                             </div>
                         </Link>
                     ))}

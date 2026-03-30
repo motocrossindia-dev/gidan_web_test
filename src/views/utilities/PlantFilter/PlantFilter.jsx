@@ -72,12 +72,14 @@ function PlantFilter({
     const searchParams = useSearchParams();
     const path = pathname;
     const { categorySlug, subcategorySlug } = useParams();
-    const routeBasedFilters = {
+    const routeBasedFilters = useMemo(() => ({
         isSeasonalCollection: path === '/seasonal' || path === '/seasonal/',
         isTrending: path === '/trending' || path === '/trending/' || path === '/latest' || path === '/latest/',
         isFeatured: path === '/featured' || path === '/featured/',
         isBestSeller: path === '/bestseller' || path === '/bestseller/'
-    };
+    }), [path]);
+
+    const query = searchParams.get('query') || "";
 
     // Extract query parameters for boolean filters (fallback)
     const queryIsSeasonalCollection = searchParams.get('is_seasonal_collection') === 'true';
@@ -171,15 +173,17 @@ function PlantFilter({
         previous: normalizedInitialResults.previous || null,
     });
     const [results, setResults] = useState(normalizedInitialResults.results || []);
-    const [categoryData, setCategoryData] = useState(initialCategoryData || normalizedInitialResults.category_info?.category_info || null);
+    // SEO Data: Prioritize initialSEOData prop, then fallback to initialCategoryData or initialResults
+    const [categoryData, setCategoryData] = useState(initialSEOData || initialCategoryData || normalizedInitialResults.category_info?.category_info || null);
     // Construct the initial query string to match getInitialProducts logic
     const initialQueryString = useMemo(() => {
         const params = new URLSearchParams();
-        const finalType = typeKey || (isSeasonalCollection || isTrending || isFeatured || isBestSeller ? "plant" : "");
+        const finalType = currentFilterType || typeKey || (isSeasonalCollection || isTrending || isFeatured || isBestSeller ? "plant" : "");
         params.append("type", finalType);
-        params.append("category_id", resolvedCategoryId || "");
+        // Clear category preference when searching to "handle all types"
+        params.append("category_id", query ? "" : (resolvedCategoryId || ""));
         params.append("subcategory_id", resolvedSubcategoryId || "");
-        params.append("search", "");
+        params.append("search", query || "");
         params.append("min_price", "");
         params.append("max_price", "");
         params.append("color_id", "");
@@ -204,7 +208,14 @@ function PlantFilter({
     }, [typeKey, resolvedCategoryId, resolvedSubcategoryId, isFeatured, isBestSeller, isSeasonalCollection, isTrending]);
 
     const [currentQuery, setCurrentQuery] = useState(initialQueryString);
-    const [filtersApplied, setFiltersApplied] = useState(false);
+    const [filtersApplied, setFiltersApplied] = useState(() => {
+        // Initialize as true if there are search parameters or active filters in the URL
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search);
+            return params.has('query') || params.has('color_id') || params.has('min_price') || params.has('max_price');
+        }
+        return false;
+    });
     const [isSearching, setIsSearching] = useState(false);
 
     // Function to re-fetch products (useful for cart/wishlist updates)
@@ -239,8 +250,11 @@ function PlantFilter({
     }, [initialQueryString, filtersApplied]);
 
     // SEO state — initialised from server-fetched data, updates reactively on subcategory filter changes
-    const [seoData, setSeoData] = useState(initialSEOData || null);
-    const [isSubcategorySEO, setIsSubcategorySEO] = useState(!!propSubcategorySlug);
+    const [seoData, setSeoData] = useState(initialSEOData || initialCategoryData || normalizedInitialResults.category_info?.category_info || null);
+    const [isSubcategorySEO, setIsSubcategorySEO] = useState(() => {
+        const info = initialSEOData || initialCategoryData || normalizedInitialResults.category_info?.category_info;
+        return !!(info?.subcategory_name || propSubcategorySlug);
+    });
 
     // iOS Swipeable Drawer patch to prevent body bounce
     const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -266,9 +280,13 @@ function PlantFilter({
     // Reset products only when category Slug actually changes (fundamental context change)
     useEffect(() => {
         if (effectiveCategorySlug) {
+            // Only reset if we are NOT in the middle of a sidebar interaction (which handles its own result updates)
+            if (filtersApplied) return;
+            
             setFiltersApplied(false);
         }
-    }, [effectiveCategorySlug]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [effectiveCategorySlug]); 
 
     // (SEO sync is now handled directly by FilterSidebar via setSeoData prop)
 
@@ -337,9 +355,10 @@ function PlantFilter({
                 const queryParams = new URLSearchParams();
                 const finalType = typeKey || (isSeasonalCollection || isTrending || isFeatured || isBestSeller ? "plant" : "");
                 queryParams.append("type", finalType);
-                queryParams.append("category_id", resolvedCategoryId || "");
+                // Clear category preference when searching to "handle all types"
+                queryParams.append("category_id", query ? "" : (resolvedCategoryId || ""));
                 queryParams.append("subcategory_id", resolvedSubcategoryId || "");
-                queryParams.append("search", "");
+                queryParams.append("search", query || "");
                 queryParams.append("min_price", "");
                 queryParams.append("max_price", "");
                 queryParams.append("color_id", "");
@@ -414,16 +433,18 @@ function PlantFilter({
 
         if (!isResolvingIds && (resolvedCategoryId || isSpecialRoute)) {
             if (filtersApplied) return;
+
+            // Hydration guard: If we already have results from server, skip initial fetch
             const hasInitialData = normalizedInitialResults.results && normalizedInitialResults.results.length > 0;
             const isMatchingData = results.length === normalizedInitialResults.results.length;
 
-            if (hasInitialData && isMatchingData) {
+            if (hasInitialData && isMatchingData && seoData) {
                 return;
             }
             setIsSearching(true);
             getInitialProducts();
         }
-    }, [path, typeKey, resolvedCategoryId, resolvedSubcategoryId, isResolvingIds, isSeasonalCollection, isTrending, isFeatured, isBestSeller, normalizedInitialResults, filtersApplied]);
+    }, [path, typeKey, currentFilterType, resolvedCategoryId, resolvedSubcategoryId, isResolvingIds, isSeasonalCollection, isTrending, isFeatured, isBestSeller, normalizedInitialResults, results.length, seoData, filtersApplied]);
 
     const getDisplayName = () => {
         if (categoryData?.meta_title) return categoryData.meta_title;
@@ -546,12 +567,13 @@ function PlantFilter({
                                     setCurrentQuery={setCurrentQuery}
                                     selectedPublicFlag={selectedPublicFlag}
                                     setSelectedPublicFlag={setSelectedPublicFlag}
+                                    searchQuery={query}
                                 />
                             </div>
                         </div>
 
-                        {/* Main Content (Right) */}
-                        <div className="flex-grow">
+                        {/* Main Content (Right) - flex-grow with min-w-0 prevents grid overflow */}
+                        <div className="flex-grow min-w-0 max-w-full">
                             {/* Public Flags Interactive Pills - Parallel to Filter Sidebar */}
                             <div className="mb-8 mt-4">
                                 <PublicFlags 
@@ -573,7 +595,17 @@ function PlantFilter({
                                     hasSubcategory={!!resolvedSubcategoryId}
                                     query={currentQuery}
                                     getProducts={getProducts}
-                                    bottomContent={<InfoCards cards={INFO_CARDS} />}
+                                    bottomContent={
+                                        <>
+                                            <InfoCards cards={categoryData?.info_cards || INFO_CARDS} />
+                                            {seoData && (
+                                                <CategoryStaticSEO 
+                                                    categoryDataFromAPI={seoData} 
+                                                    isSubcategory={isSubcategorySEO} 
+                                                />
+                                            )}
+                                        </>
+                                    }
                                 />
                                 {isSearching && (
                                     <div className="flex justify-center py-8">
@@ -641,6 +673,7 @@ function PlantFilter({
                         setCurrentQuery={setCurrentQuery}
                         selectedPublicFlag={selectedPublicFlag}
                         setSelectedPublicFlag={setSelectedPublicFlag}
+                        searchQuery={query}
                         isMobile={true}
                     />
                 </Box>

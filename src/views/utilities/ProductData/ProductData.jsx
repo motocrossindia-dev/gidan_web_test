@@ -110,7 +110,7 @@ export default function ProductData({ initialProductData }) {
     const [selectedPlanterSize, setSelectedPlanterSize] = useState("");
     const [selectedPlanter, setSelectedPlanter] = useState("");
     const [selectedColor, setSelectedColor] = useState("");
-    const [addOnData, setAddOnData] = useState([]);
+    const [addOnData, setAddOnData] = useState(initialProductData?.data?.product_add_ons || []);
     const [quantity, setQuantity] = useState(1);
     const stockCheckTimer = useRef(null);
     const [inWishlist, setInWishlist] = useState(null)
@@ -617,6 +617,9 @@ export default function ProductData({ initialProductData }) {
             setsubcategory_slug(data?.data?.product?.sub_category_slug);
             setImageThumbnails(images);
             setProductDetailData(data);
+            if (data?.data?.product_add_ons) {
+                setAddOnData(data.data.product_add_ons);
+            }
 
             // You can update state or perform additional actions with the filtered products
         } catch (error) {// Handle error scenarios
@@ -654,6 +657,9 @@ export default function ProductData({ initialProductData }) {
             setcategory_slug(data?.data?.product?.category_slug);
             setsubcategory_slug(data?.data?.product?.sub_category_slug);
             setProductDetailData(data);
+            if (data?.data?.product_add_ons) {
+                setAddOnData(data.data.product_add_ons);
+            }
         } catch (error) { }
     };
 
@@ -1188,10 +1194,49 @@ export default function ProductData({ initialProductData }) {
                                 {productDetailData?.data?.product?.description || ""}
                             </p>
                             {productDetailData?.data?.product?.whats_included && (
-                                <p className="text-sm text-gray-600 mb-4 italic">
+                                <p className="text-sm text-gray-600 mb-4 italic leading-relaxed">
                                     <span className="font-bold">What's included:</span> {productDetailData.data.product.whats_included}
                                 </p>
                             )}
+
+                            {/* Product Highlights & Real-time Info */}
+                            <div className="mb-6 space-y-4">
+                                {productDetailData?.data?.care_guides?.length > 0 && (
+                                    <div className="grid grid-cols-2 gap-y-2 gap-x-4">
+                                        {productDetailData.data.care_guides.map((guide, index) => (
+                                            <div key={guide.id || index} className="flex items-center gap-2 text-sm text-gray-700">
+                                                {guide.icon ? (
+                                                    <img src={guide.icon} alt="" className="w-5 h-5 object-contain" />
+                                                ) : (
+                                                    <span className="text-bio-green">✨</span>
+                                                )}
+                                                {guide.title}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                <div className="flex flex-col gap-1 py-3 border-y border-gray-200/60">
+                                    <div className="flex items-center gap-2">
+                                        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                        <span className="text-sm font-bold text-green-600">
+                                            {productDetailData?.data?.product?.stock_word === "OutOfStock" ? "Out of Stock" : `In stock (${productDetailData?.data?.product?.stock || 0})`}
+                                        </span>
+                                        {productDetailData?.data?.product?.stock > 0 && (
+                                            <span className="text-sm text-gray-500">— Only {productDetailData.data.product.stock} left</span>
+                                        )}
+                                    </div>
+                                    {productDetailData?.data?.product?.viewing_count > 0 && (
+                                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                                            <span className="text-orange-500">🔥</span>
+                                            <span className="font-medium text-orange-600">
+                                                {productDetailData.data.product.viewing_count} people
+                                            </span> viewing right now
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
                             <div className="flex items-center gap-4 mb-4">
                                 <p className="text-black-600 text-sm">
                                     {Array.from({ length: 5 }).map((_, i) => {
@@ -1533,15 +1578,18 @@ export default function ProductData({ initialProductData }) {
 
                         </div>
                     </div>
-                    <AddOnProduct addOnData={addOnData} />
-
                 </div>
+            </div>
+            <div className="bg-white p-4">
+                <AboutTheProducts 
+                    productDetailData={productDetailData} 
+                    ratingData={ratingData}
+                    reviewData={reviewData}
+                    onWriteReview={handleWriteReviewClick}
+                />
             </div>
             <div className="bg-white pt-4">
                 <PeopleAlsoBought title="People Also Bought" />
-            </div>
-            <div className="bg-white p-4">
-                <AboutTheProducts productDetailData={productDetailData} />
             </div>
             {isReviewModalOpen && (
                 <div id="write-review-section" className="bg-white px-4 md:px-20">
@@ -1552,15 +1600,6 @@ export default function ProductData({ initialProductData }) {
                         productId={productDetailData?.data?.product?.id || productDetailData?.product?.id}
                     />
                 </div>
-            )}
-            {(productDetailData?.data?.product || productDetailData?.product) && (
-                <ProductReviews
-                    product_Rating={ratingData}
-                    total_Rating={reviewData}
-                    productId={productDetailData?.data?.product?.id || productDetailData?.product?.id}
-                    onWriteReview={handleWriteReviewClick}
-                    productDetailData={productDetailData}
-                />
             )}
 
             <ProductFeatured />

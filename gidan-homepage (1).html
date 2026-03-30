@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gidan.store — Buy Plants, Seeds & Planters Online India | India-Climate Tested</title>
+<meta name="description" content="Buy 200+ India-climate tested plants, seeds, and planters online. Free shipping on ₹2,000+. Bangalore expertise, pan-India delivery. Expert care guides included.">
+<meta name="keywords" content="buy plants online india, indoor plants, seeds online india, planters online, gardening supplies india, bangalore plants">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Store","name":"Gidan","description":"India-climate tested plants, seeds, planters and gardening supplies","url":"https://gidan.store","aggregateRating":{"@type":"AggregateRating","ratingValue":"4.8","reviewCount":"12847"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --ink:#1a1f14; --ink-light:#4a5240; --ink-muted:#7a8a6a;
+  --cream:#f9f6f0; --cream-dark:#f0ece2; --cream-mid:#f5f1e8;
+  --green:#2d5a1b; --green-mid:#3e7a26; --green-light:#5fa832;
+  --green-pale:#eef5e8; --green-pale2:#d8ecc8;
+  --amber:#c87429; --amber-pale:#fdf3e8; --amber-bright:#f5a623;
+  --coral:#d45f3c; --coral-pale:#fdf0ec;
+  --forest:#1a3d0a;
+  --border:rgba(45,90,27,.12); --border-mid:rgba(45,90,27,.2);
+  --shadow-sm:0 2px 12px rgba(26,61,10,.08);
+  --shadow-md:0 8px 32px rgba(26,61,10,.12);
+  --shadow-lg:0 20px 64px rgba(26,61,10,.18);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+button{cursor:pointer;font-family:'DM Sans',sans-serif;}
+
+/* ── TOPBAR (matches category + PDP) ── */
+.topbar{background:var(--green);color:rgba(255,255,255,.9);text-align:center;padding:9px 16px;font-size:13px;}
+.topbar strong{color:#a8e070;}
+.topbar a{color:#a8e070;text-decoration:underline;}
+
+/* ── NAV (matches category + PDP exactly) ── */
+nav{background:white;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;box-shadow:0 2px 16px rgba(0,0,0,.06);}
+.nav-inner{max-width:1320px;margin:0 auto;padding:0 28px;height:66px;display:flex;align-items:center;gap:18px;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--green);letter-spacing:-.5px;flex-shrink:0;display:flex;align-items:center;gap:8px;text-decoration:none;}
+.search-wrap{flex:1;max-width:480px;position:relative;}
+.search-wrap input{width:100%;padding:10px 44px 10px 16px;border:1.5px solid var(--border);border-radius:28px;background:var(--cream);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;transition:border-color .2s,box-shadow .2s;}
+.search-wrap input:focus{border-color:var(--green-mid);box-shadow:0 0 0 3px rgba(62,122,38,.1);}
+.search-wrap input::placeholder{color:var(--ink-muted);}
+.search-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;color:var(--green);cursor:pointer;}
+.nav-links{display:flex;align-items:center;gap:2px;margin-left:auto;}
+.nav-link{padding:7px 13px;border-radius:8px;font-size:14px;color:var(--ink-light);text-decoration:none;transition:background .15s,color .15s;white-space:nowrap;}
+.nav-link:hover{background:var(--green-pale);color:var(--green);}
+.nav-icon{width:40px;height:40px;border-radius:10px;border:1.5px solid var(--border);background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--ink-light);text-decoration:none;position:relative;transition:all .15s;}
+.nav-icon:hover{border-color:var(--green-mid);color:var(--green);}
+.cart-badge{position:absolute;top:-5px;right:-5px;background:var(--green);color:white;font-size:10px;font-weight:500;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid white;}
+.wa-btn{background:#25D366;color:white;border:none;padding:9px 16px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .15s;white-space:nowrap;}
+.wa-btn:hover{background:#1fba58;}
+
+/* ── PLANT IMAGE PLACEHOLDERS ── */
+/* Each variety gets a unique botanical gradient + emoji */
+.plant-img{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:8px;
+  font-size:56px;
+  position:relative;overflow:hidden;
+}
+.plant-img::before{
+  content:'';position:absolute;inset:0;
+  background:inherit;
+  filter:blur(0);
+}
+.pi-monstera{background:radial-gradient(ellipse at 30% 70%,#b5d99c,#6aaa3e,#2d6e15);}
+.pi-snake{background:radial-gradient(ellipse at 60% 40%,#cee8a0,#7aaa50,#2d5a1b);}
+.pi-pothos{background:radial-gradient(ellipse at 40% 60%,#d4e8a0,#88b84e,#3a6b1c);}
+.pi-zz{background:radial-gradient(ellipse at 50% 50%,#c8e090,#5a9e2a,#1f5010);}
+.pi-succulent{background:radial-gradient(ellipse at 35% 65%,#e8c4a0,#c4875a,#8b4513);}
+.pi-rubber{background:radial-gradient(ellipse at 40% 60%,#6b4444,#8b2020,#1a0a0a);}
+.pi-kitchen{background:radial-gradient(ellipse at 45% 55%,#d4e890,#88c030,#3a6b10);}
+.pi-bop{background:radial-gradient(ellipse at 30% 70%,#c8e8b0,#4a9a20,#1a4a08);}
+.pi-african{background:radial-gradient(ellipse at 50% 40%,#e8b0d0,#c04080,#601030);}
+.pi-jasmine{background:radial-gradient(ellipse at 50% 50%,#fffff0,#e8e890,#a8a830);}
+.pi-hibiscus{background:radial-gradient(ellipse at 50% 40%,#ffe0e0,#e84040,#801010);}
+.pi-peace{background:radial-gradient(ellipse at 50% 50%,#e8f0e8,#90b890,#2a5a2a);}
+.pi-nursery{background:radial-gradient(ellipse at 30% 40%,#c8e8a0,#6aaa3e,#2d6015);}
+.pi-blog1{background:radial-gradient(ellipse at 40% 60%,#d0e8a0,#78aa38,#2a5a10);}
+.pi-blog2{background:radial-gradient(ellipse at 50% 40%,#c0dce0,#60a0a8,#205060);}
+.pi-blog3{background:radial-gradient(ellipse at 60% 50%,#ffe8c0,#e8a030,#804010);}
+.pi-store1{background:radial-gradient(ellipse at 40% 60%,#c8e0b0,#70a050,#305020);}
+.pi-store2{background:radial-gradient(ellipse at 50% 50%,#d0e8c0,#68a848,#284818);}
+.pi-gift{background:radial-gradient(ellipse at 40% 60%,#e8d0c0,#c09060,#805030);}
+.pi-leaf-bg{background:radial-gradient(ellipse at 35% 65%,#b8d890,#4a9020,#1a4808);}
+
+.plant-img .pi-emoji{position:relative;z-index:2;line-height:1;filter:drop-shadow(0 4px 8px rgba(0,0,0,.2));}
+.plant-img .pi-label{position:relative;z-index:2;font-size:11px;font-weight:500;color:rgba(255,255,255,.85);background:rgba(0,0,0,.2);padding:3px 8px;border-radius:20px;}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(135deg,var(--forest) 0%,#2d5a1b 55%,#3e7a26 100%);
+  position:relative;overflow:hidden;
+  padding:0;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 20% 60%,rgba(95,168,50,.12) 0%,transparent 55%),
+    radial-gradient(ellipse at 85% 20%,rgba(168,224,112,.07) 0%,transparent 45%);
+  pointer-events:none;
+}
+/* leaf texture */
+.hero::after{
+  content:'🌿';font-size:420px;line-height:1;
+  position:absolute;right:-80px;bottom:-60px;
+  opacity:.04;pointer-events:none;
+}
+.hero-inner{
+  max-width:1320px;margin:0 auto;padding:0 28px;
+  display:grid;grid-template-columns:1fr 1fr;
+  min-height:88vh;align-items:center;gap:48px;
+  position:relative;z-index:1;
+}
+.hero-left{padding:80px 0;}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(168,224,112,.13);border:1px solid rgba(168,224,112,.28);
+  color:#a8e070;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+  padding:7px 16px;border-radius:32px;margin-bottom:24px;width:fit-content;
+}
+.hero-pulse{width:7px;height:7px;border-radius:50%;background:#a8e070;animation:hpulse 1.8s infinite;}
+@keyframes hpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.3)}}
+.hero-h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(40px,5vw,68px);font-weight:600;color:white;
+  line-height:1.05;letter-spacing:-1.5px;margin-bottom:8px;
+}
+.hero-h1 em{font-style:italic;color:#a8e070;}
+.hero-sub{
+  font-size:16px;color:rgba(255,255,255,.68);line-height:1.75;
+  max-width:460px;margin-bottom:36px;
+}
+.hero-sub strong{color:rgba(255,255,255,.92);}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:44px;}
+.btn-primary{
+  background:linear-gradient(135deg,#5fa832,#3e7a26);color:white;border:none;
+  padding:15px 30px;border-radius:13px;font-size:15px;font-weight:500;
+  display:inline-flex;align-items:center;gap:8px;
+  transition:all .2s;box-shadow:0 8px 28px rgba(45,90,27,.5);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(45,90,27,.6);}
+.btn-outline{
+  background:rgba(255,255,255,.1);color:white;
+  border:1.5px solid rgba(255,255,255,.25);
+  padding:15px 26px;border-radius:13px;font-size:15px;
+  display:inline-flex;align-items:center;gap:8px;transition:all .2s;
+  backdrop-filter:blur(6px);
+}
+.btn-outline:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4);}
+.hero-sp{
+  display:flex;align-items:center;gap:18px;
+  padding-top:28px;border-top:1px solid rgba(255,255,255,.1);
+}
+.sp-avatars{display:flex;}
+.sp-av{
+  width:34px;height:34px;border-radius:50%;
+  border:2px solid var(--forest);margin-left:-9px;
+  background:var(--green-mid);color:white;
+  font-size:12px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;
+}
+.sp-av:first-child{margin-left:0;}
+.sp-stars{color:#f59e0b;font-size:13px;letter-spacing:1px;}
+.sp-copy{font-size:12px;color:rgba(255,255,255,.55);margin-top:1px;}
+.sp-copy strong{color:rgba(255,255,255,.85);}
+
+/* hero right plant mosaic */
+.hero-right{
+  display:grid;grid-template-columns:1fr 1fr;
+  grid-template-rows:1fr 1fr;gap:12px;
+  height:540px;padding:40px 0;
+}
+.hm-card{
+  border-radius:18px;overflow:hidden;position:relative;
+  transition:transform .3s ease;
+}
+.hm-card:hover{transform:scale(1.02);}
+.hm-card.tall{grid-row:1/3;}
+.hm-card .plant-img{font-size:80px;}
+.hm-card.tall .plant-img{font-size:100px;}
+.hm-float{
+  position:absolute;background:rgba(255,255,255,.92);
+  backdrop-filter:blur(8px);border-radius:12px;
+  padding:10px 14px;box-shadow:var(--shadow-md);
+}
+.hf-top{top:16px;right:16px;}
+.hf-bottom{bottom:16px;left:16px;}
+.hf-icon{font-size:17px;margin-bottom:3px;}
+.hf-val{font-weight:600;font-size:14px;color:var(--ink);}
+.hf-lbl{font-size:10px;color:var(--ink-muted);}
+
+/* ── TRUST BAR ── */
+.trust-bar{background:white;border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);}
+.tbi{
+  max-width:1320px;margin:0 auto;padding:0 28px;
+  display:grid;grid-template-columns:repeat(5,1fr);
+}
+.ti{
+  padding:18px 22px;border-right:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;
+  transition:background .15s;
+}
+.ti:first-child{border-left:1px solid var(--border);}
+.ti:hover{background:var(--green-pale);}
+.ti-ico{
+  width:42px;height:42px;border-radius:11px;
+  background:var(--green-pale);
+  display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;
+}
+.ti-t{font-size:13px;font-weight:500;color:var(--ink);}
+.ti-d{font-size:11px;color:var(--ink-muted);margin-top:1px;line-height:1.4;}
+
+/* ── CAT PILLS ── */
+.cat-bar{background:var(--cream-dark);border-bottom:1px solid var(--border);}
+.cat-bar-inner{max-width:1320px;margin:0 auto;padding:20px 28px;display:flex;gap:10px;flex-wrap:wrap;}
+.cp{
+  background:white;border:1.5px solid var(--border);
+  border-radius:100px;padding:10px 20px;
+  display:flex;align-items:center;gap:9px;
+  font-size:13.5px;color:var(--ink-light);
+  transition:all .2s;cursor:pointer;
+}
+.cp:hover,.cp.active{
+  background:var(--green);color:white;border-color:var(--green);
+  box-shadow:0 5px 18px rgba(45,90,27,.3);transform:translateY(-1px);
+}
+.cp-ico{font-size:18px;}
+.cp-cnt{
+  font-size:11px;color:var(--ink-muted);
+  background:var(--cream-dark);padding:2px 7px;border-radius:20px;transition:all .2s;
+}
+.cp:hover .cp-cnt,.cp.active .cp-cnt{background:rgba(255,255,255,.25);color:rgba(255,255,255,.85);}
+
+/* ── SECTION COMMONS ── */
+.section{max-width:1320px;margin:0 auto;padding:72px 28px;}
+.sh{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:36px;flex-wrap:wrap;gap:14px;}
+.s-eye{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--green-mid);margin-bottom:5px;}
+.s-title{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3vw,36px);font-weight:600;color:var(--ink);letter-spacing:-.3px;line-height:1.15;}
+.s-title em{font-style:italic;color:var(--green);}
+.s-desc{font-size:14px;color:var(--ink-muted);line-height:1.7;max-width:440px;margin-top:5px;}
+.s-link{
+  font-size:13px;font-weight:500;color:var(--green);
+  padding:9px 18px;border:1.5px solid var(--green-pale2);
+  border-radius:9px;background:var(--green-pale);
+  display:inline-flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap;
+}
+.s-link:hover{background:var(--green-pale2);}
+
+/* ── PRODUCT GRID ── */
+.pg{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+.pc{
+  background:white;border-radius:16px;border:1px solid var(--border);
+  overflow:hidden;transition:transform .25s ease,box-shadow .25s ease;position:relative;
+  animation:fadeUp .4s ease both;
+}
+.pc:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.pc:nth-child(1){animation-delay:.05s}.pc:nth-child(2){animation-delay:.1s}
+.pc:nth-child(3){animation-delay:.15s}.pc:nth-child(4){animation-delay:.2s}
+.pc:nth-child(5){animation-delay:.25s}.pc:nth-child(6){animation-delay:.3s}
+.pc:nth-child(7){animation-delay:.35s}.pc:nth-child(8){animation-delay:.4s}
+
+.pc-img-wrap{aspect-ratio:1/1.08;overflow:hidden;position:relative;}
+.pc-img-wrap .plant-img{font-size:62px;transition:transform .4s ease;}
+.pc:hover .pc-img-wrap .plant-img{transform:scale(1.06);}
+.pc-badges{position:absolute;top:11px;left:11px;display:flex;flex-direction:column;gap:4px;}
+.badge{font-size:10px;font-weight:500;padding:4px 8px;border-radius:6px;
+  backdrop-filter:blur(5px);border:1px solid rgba(255,255,255,.25);
+  display:inline-flex;align-items:center;gap:3px;}
+.b-new{background:rgba(26,61,10,.88);color:white;}
+.b-sale{background:rgba(212,95,60,.9);color:white;}
+.b-best{background:rgba(182,150,46,.9);color:white;}
+.b-test{background:rgba(255,255,255,.88);color:var(--green);}
+.pc-wish{
+  position:absolute;top:11px;right:11px;
+  width:31px;height:31px;border-radius:50%;
+  background:rgba(255,255,255,.88);border:none;font-size:15px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.12);
+}
+.pc-wish:hover{transform:scale(1.12);background:white;}
+.pc-care{position:absolute;bottom:9px;left:9px;display:flex;gap:4px;}
+.pct{background:rgba(255,255,255,.88);backdrop-filter:blur(4px);border-radius:6px;padding:3px 7px;font-size:10px;color:var(--ink-light);display:flex;align-items:center;gap:2px;}
+.pc-body{padding:13px 15px 15px;}
+.pc-cat{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-muted);margin-bottom:3px;}
+.pc-name{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;color:var(--ink);line-height:1.2;margin-bottom:1px;}
+.pc-sci{font-size:10.5px;color:var(--ink-muted);font-style:italic;margin-bottom:7px;}
+.pc-rating{display:flex;align-items:center;gap:4px;margin-bottom:9px;}
+.pc-stars{display:flex;gap:1px;}
+.ps{font-size:11px;}.psf{color:#f59e0b;}.pse{color:#e5e7eb;}
+.pc-rs{font-size:11.5px;font-weight:500;color:var(--ink);}
+.pc-rc{font-size:11px;color:var(--ink-muted);}
+.pc-footer{display:flex;align-items:flex-end;justify-content:space-between;gap:6px;}
+.pc-price .cur{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--ink);line-height:1;}
+.pc-price .was{font-size:11.5px;color:var(--ink-muted);text-decoration:line-through;}
+.pc-price .save{font-size:10px;color:var(--coral);font-weight:500;}
+.pc-atc{
+  background:var(--green);color:white;border:none;
+  padding:9px 13px;border-radius:9px;
+  font-size:12px;font-weight:500;
+  display:flex;align-items:center;gap:4px;
+  transition:all .18s;white-space:nowrap;
+}
+.pc-atc:hover{background:var(--green-mid);transform:scale(1.04);}
+.pc-stock{margin-top:7px;display:flex;align-items:center;gap:5px;}
+.sb{flex:1;height:3px;background:#e5e7eb;border-radius:2px;overflow:hidden;}
+.sf-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#f59e0b,#e53e3e);}
+.st{font-size:10px;color:var(--coral);font-weight:500;white-space:nowrap;}
+
+/* ── TESTED BANNER ── */
+.tested-bg{background:var(--green);}
+.tested-inner{
+  max-width:1320px;margin:0 auto;padding:60px 28px;
+  display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center;
+}
+.tb-text .tb-eye{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:rgba(168,224,112,.8);font-weight:500;margin-bottom:10px;}
+.tb-title{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,3vw,40px);font-weight:600;color:white;letter-spacing:-.3px;line-height:1.15;margin-bottom:12px;}
+.tb-title em{font-style:italic;color:#a8e070;}
+.tb-desc{font-size:14px;color:rgba(255,255,255,.68);line-height:1.75;margin-bottom:22px;max-width:420px;}
+.tb-feats{display:flex;flex-direction:column;gap:10px;margin-bottom:26px;}
+.tb-feat{display:flex;align-items:center;gap:10px;font-size:13.5px;color:rgba(255,255,255,.82);}
+.tb-feat::before{content:'✓';color:#a8e070;font-weight:600;width:20px;height:20px;border-radius:50%;background:rgba(168,224,112,.15);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+.tb-cta{background:white;color:var(--green);border:none;padding:13px 26px;border-radius:11px;font-size:14px;font-weight:500;display:inline-flex;align-items:center;gap:7px;transition:all .2s;}
+.tb-cta:hover{background:var(--cream);transform:translateY(-2px);}
+.tb-visual{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.tv-card{border-radius:14px;overflow:hidden;aspect-ratio:1/1;}
+.tv-card:first-child{grid-row:1/3;aspect-ratio:auto;}
+.tv-card .plant-img{font-size:56px;}
+
+/* ── SEASONAL OFFERS ── */
+.offers-bg{background:var(--cream-mid);}
+.offers-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:16px;}
+.oc{
+  border-radius:18px;overflow:hidden;position:relative;
+  min-height:260px;cursor:pointer;
+}
+.oc-bg{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:80px;
+  position:absolute;inset:0;
+  transition:transform .5s ease;
+}
+.oc:hover .oc-bg{transform:scale(1.06);}
+.oc-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,30,5,.85) 0%,rgba(10,30,5,.25) 60%,transparent 100%);}
+.oc-body{position:absolute;bottom:0;left:0;right:0;padding:22px 20px;}
+.oc-tag{display:inline-block;background:rgba(168,224,112,.2);border:1px solid rgba(168,224,112,.4);color:#a8e070;font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-bottom:7px;}
+.oc-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:white;line-height:1.2;margin-bottom:4px;}
+.oc-title.sm{font-size:16px;}
+.oc-sub{font-size:12px;color:rgba(255,255,255,.65);margin-bottom:10px;}
+.oc-btn{display:inline-flex;align-items:center;gap:5px;background:white;color:var(--forest);font-size:12px;font-weight:500;padding:7px 13px;border-radius:7px;transition:all .15s;}
+.oc:hover .oc-btn{background:var(--green-pale);color:var(--green);}
+
+/* ── GIFTING ── */
+.gift-bg{background:linear-gradient(135deg,var(--forest) 0%,#2d5a1b 100%);position:relative;overflow:hidden;}
+.gift-bg::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 10Q50 20 40 30Q30 20 40 10Z M10 40Q20 30 30 40Q20 50 10 40Z M70 40Q60 30 50 40Q60 50 70 40Z M40 70Q50 60 40 50Q30 60 40 70Z' fill='rgba(168,224,112,0.04)'/%3E%3C/svg%3E") repeat;pointer-events:none;}
+.gift-inner{max-width:1320px;margin:0 auto;padding:72px 28px;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;position:relative;z-index:1;}
+.gv{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:12px;}
+.gv-card{border-radius:14px;overflow:hidden;position:relative;cursor:pointer;}
+.gv-card .plant-img{font-size:56px;height:160px;}
+.gv-card.tall{grid-row:1/3;}.gv-card.tall .plant-img{height:100%;font-size:76px;}
+.gv-lbl{position:absolute;bottom:9px;left:9px;background:rgba(255,255,255,.9);border-radius:7px;padding:5px 9px;font-size:11px;font-weight:500;color:var(--ink);}
+.gv-lbl .glp{color:var(--green);font-weight:600;}
+.gt-eye{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:rgba(168,224,112,.8);font-weight:500;margin-bottom:10px;}
+.gt-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3.5vw,46px);font-weight:600;color:white;letter-spacing:-.5px;line-height:1.1;margin-bottom:12px;}
+.gt-title em{font-style:italic;color:#a8e070;}
+.gt-desc{font-size:14px;color:rgba(255,255,255,.65);line-height:1.75;margin-bottom:26px;}
+.gift-items{display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
+.gi{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:11px;padding:13px 16px;display:flex;align-items:center;gap:13px;transition:all .2s;}
+.gi:hover{background:rgba(255,255,255,.13);}
+.gi-ico{font-size:22px;flex-shrink:0;}
+.gi-name{font-size:13.5px;font-weight:500;color:white;}
+.gi-price{font-size:12px;color:rgba(255,255,255,.5);}
+.gi-tag{margin-left:auto;background:rgba(168,224,112,.15);border:1px solid rgba(168,224,112,.28);color:#a8e070;font-size:10px;font-weight:500;padding:3px 8px;border-radius:20px;white-space:nowrap;}
+.gift-ctas{display:flex;gap:11px;flex-wrap:wrap;}
+.bg-primary{background:linear-gradient(135deg,#a8e070,#5fa832);color:var(--forest);border:none;padding:13px 26px;border-radius:11px;font-size:14px;font-weight:600;display:flex;align-items:center;gap:7px;transition:all .2s;}
+.bg-primary:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(168,224,112,.4);}
+.bg-secondary{background:transparent;color:white;border:1.5px solid rgba(255,255,255,.25);padding:13px 22px;border-radius:11px;font-size:14px;display:flex;align-items:center;gap:7px;transition:all .2s;}
+.bg-secondary:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.07);}
+
+/* ── WHY GIDAN ── */
+.why-bg{background:white;}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;}
+.why-visual{position:relative;}
+.why-main{border-radius:22px;overflow:hidden;aspect-ratio:4/5;}
+.why-main .plant-img{font-size:120px;background:radial-gradient(ellipse at 35% 65%,#b5d99c,#4a9020,#1a4808);}
+.wf1{position:absolute;bottom:-16px;right:-16px;width:170px;background:white;border-radius:14px;box-shadow:var(--shadow-lg);padding:14px 16px;}
+.wf2{position:absolute;top:20px;right:-24px;width:148px;background:white;border-radius:14px;box-shadow:var(--shadow-lg);padding:14px 16px;}
+.wf-ico{font-size:22px;margin-bottom:6px;}
+.wf-val{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--green);line-height:1;}
+.wf-lbl{font-size:11px;color:var(--ink-muted);margin-top:2px;}
+.why-feats{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px;}
+.wf-card{background:var(--green-pale);border-radius:13px;padding:18px;border:1px solid var(--green-pale2);transition:all .2s;}
+.wf-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+.wfc-ico{font-size:24px;margin-bottom:8px;display:block;}
+.wfc-t{font-size:13.5px;font-weight:500;color:var(--ink);margin-bottom:4px;}
+.wfc-d{font-size:12px;color:var(--ink-muted);line-height:1.6;}
+
+/* ── BLOG / GUIDES ── */
+.blog-bg{background:var(--cream-mid);}
+.blog-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:18px;}
+.bc{background:white;border-radius:16px;overflow:hidden;border:1px solid var(--border);transition:transform .2s,box-shadow .2s;cursor:pointer;}
+.bc:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);}
+.bc-img{overflow:hidden;}
+.bc-img .plant-img{height:180px;font-size:52px;}
+.bc.featured .bc-img .plant-img{height:260px;font-size:70px;}
+.bc-body{padding:16px 18px 18px;}
+.bc-tag{display:inline-block;background:var(--green-pale);color:var(--green);font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;padding:3px 9px;border-radius:20px;margin-bottom:8px;}
+.bc-title{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--ink);line-height:1.35;margin-bottom:7px;}
+.bc.featured .bc-title{font-size:20px;}
+.bc-excerpt{font-size:12.5px;color:var(--ink-muted);line-height:1.65;margin-bottom:12px;}
+.bc-meta{display:flex;align-items:center;justify-content:space-between;font-size:11.5px;color:var(--ink-muted);padding-top:11px;border-top:1px solid var(--border);}
+.bc-read{color:var(--green);font-weight:500;display:flex;align-items:center;gap:3px;}
+
+/* ── REVIEWS ── */
+.reviews-bg{background:var(--cream-dark);}
+.rv-hdr{display:flex;align-items:center;gap:40px;margin-bottom:36px;flex-wrap:wrap;}
+.rv-score-big{font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:600;color:var(--green);line-height:1;}
+.rv-stars-big{display:flex;gap:3px;margin:4px 0;}
+.rvs{font-size:20px;color:#f59e0b;}
+.rv-count{font-size:13px;color:var(--ink-muted);}
+.rv-sep{width:1px;height:72px;background:var(--border);}
+.rv-badges{display:flex;flex-wrap:wrap;gap:8px;}
+.rvb{background:white;border:1px solid var(--border);border-radius:10px;padding:8px 14px;font-size:12.5px;color:var(--ink-light);display:flex;align-items:center;gap:7px;}
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.rvc{background:white;border:1px solid var(--border);border-radius:14px;padding:18px 20px;transition:transform .2s,box-shadow .2s;}
+.rvc:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+.rvc-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;}
+.rvc-user{display:flex;align-items:center;gap:9px;}
+.rvc-av{width:38px;height:38px;border-radius:50%;background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--green);flex-shrink:0;}
+.rvc-name{font-size:13.5px;font-weight:500;color:var(--ink);}
+.rvc-meta{font-size:11px;color:var(--ink-muted);}
+.rvc-st{display:flex;gap:1px;}
+.rvcst{font-size:12px;color:#f59e0b;}
+.rvc-body{font-size:13px;color:var(--ink-light);line-height:1.65;margin-bottom:10px;}
+.rvc-tags{display:flex;gap:5px;flex-wrap:wrap;}
+.rvct{font-size:10.5px;padding:3px 8px;border-radius:20px;background:var(--green-pale);color:var(--green);}
+.verified{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--green);font-weight:500;margin-top:9px;}
+
+/* ── SUBSCRIPTION ── */
+.sub-bg{background:linear-gradient(135deg,var(--forest) 0%,#2d5a1b 100%);position:relative;overflow:hidden;}
+.sub-bg::after{content:'🌿';font-size:300px;position:absolute;right:-40px;top:50%;transform:translateY(-50%);opacity:.04;pointer-events:none;line-height:1;}
+.sub-inner{max-width:1320px;margin:0 auto;padding:72px 28px;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;position:relative;z-index:1;}
+.sub-eye{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:rgba(168,224,112,.75);font-weight:500;margin-bottom:10px;}
+.sub-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3.5vw,44px);font-weight:600;color:white;letter-spacing:-.4px;line-height:1.1;margin-bottom:12px;}
+.sub-title em{font-style:italic;color:#a8e070;}
+.sub-desc{font-size:14px;color:rgba(255,255,255,.65);line-height:1.75;margin-bottom:22px;max-width:420px;}
+.sub-perks{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:26px;}
+.sub-perk{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.8);font-size:12px;padding:5px 13px;border-radius:20px;display:flex;align-items:center;gap:4px;}
+.sub-form{display:flex;gap:9px;max-width:400px;}
+.sub-input{flex:1;padding:12px 16px;border:1.5px solid rgba(255,255,255,.2);border-radius:11px;background:rgba(255,255,255,.1);font-family:'DM Sans',sans-serif;font-size:14px;color:white;outline:none;transition:all .2s;}
+.sub-input::placeholder{color:rgba(255,255,255,.4);}
+.sub-input:focus{border-color:rgba(168,224,112,.6);background:rgba(255,255,255,.15);}
+.sub-submit{background:linear-gradient(135deg,#a8e070,#5fa832);color:var(--forest);border:none;padding:12px 20px;border-radius:11px;font-size:14px;font-weight:600;white-space:nowrap;transition:all .2s;}
+.sub-submit:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(168,224,112,.4);}
+.sub-legal{font-size:11px;color:rgba(255,255,255,.3);margin-top:7px;}
+.plan-cards{display:flex;flex-direction:column;gap:10px;}
+.plan{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .2s;}
+.plan:hover,.plan.sel{background:rgba(168,224,112,.1);border-color:rgba(168,224,112,.33);}
+.plan-radio{width:19px;height:19px;border-radius:50%;border:2px solid rgba(255,255,255,.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.plan.sel .plan-radio{border-color:#a8e070;background:rgba(168,224,112,.18);}
+.plan.sel .plan-radio::after{content:'';width:7px;height:7px;border-radius:50%;background:#a8e070;}
+.plan-ico{font-size:22px;flex-shrink:0;}
+.plan-name{font-size:13.5px;font-weight:500;color:white;}
+.plan-desc{font-size:11.5px;color:rgba(255,255,255,.48);}
+.plan-right{margin-left:auto;text-align:right;}
+.plan-amt{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:#a8e070;}
+.plan-per{font-size:10.5px;color:rgba(255,255,255,.38);}
+.plan-save{font-size:10px;color:var(--amber-bright);background:rgba(245,166,35,.15);padding:2px 7px;border-radius:20px;margin-top:2px;display:inline-block;}
+
+/* ── REFER & EARN ── */
+.refer-bg{background:white;}
+.refer-inner{max-width:1320px;margin:0 auto;padding:72px 28px;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;}
+.refer-vis{background:linear-gradient(135deg,var(--amber-pale),#fff8ed);border-radius:22px;padding:36px;text-align:center;position:relative;overflow:hidden;}
+.refer-vis::before{content:'💰';font-size:200px;position:absolute;right:-28px;bottom:-28px;opacity:.06;line-height:1;pointer-events:none;}
+.rv-amt{font-family:'Cormorant Garamond',serif;font-size:68px;font-weight:600;color:var(--amber);line-height:1;margin-bottom:4px;}
+.rv-lbl{font-size:15px;color:var(--ink-light);}
+.rv-steps{display:flex;flex-direction:column;gap:14px;margin-top:24px;}
+.rvs-item{display:flex;align-items:center;gap:12px;background:white;border-radius:11px;padding:13px 16px;border:1px solid rgba(200,116,41,.14);}
+.rvs-num{width:30px;height:30px;border-radius:50%;background:var(--amber);color:white;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.rvs-t{font-size:13px;color:var(--ink-light);}
+.refer-code{background:var(--amber-pale);border:2px dashed var(--amber);border-radius:13px;padding:18px 22px;margin:20px 0;display:flex;align-items:center;justify-content:space-between;}
+.rc-lbl{font-size:12px;color:var(--ink-muted);margin-bottom:4px;}
+.rc-code{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--amber);letter-spacing:2px;}
+.rc-copy{background:var(--amber);color:white;border:none;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:500;transition:all .15s;}
+.rc-copy:hover{background:#a8650f;}
+
+/* ── STORES ── */
+.store-bg{background:var(--cream);}
+.store-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:36px;}
+.sc{background:white;border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:transform .2s,box-shadow .2s;}
+.sc:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+.sc-img{height:160px;overflow:hidden;position:relative;}
+.sc-img .plant-img{height:100%;font-size:56px;}
+.sc-status{position:absolute;top:11px;left:11px;background:rgba(255,255,255,.92);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:500;display:flex;align-items:center;gap:4px;}
+.sdot{width:7px;height:7px;border-radius:50%;background:#22c55e;animation:sdot 1.5s infinite;}
+@keyframes sdot{0%,100%{opacity:1}50%{opacity:.3;transform:scale(1.2)}}
+.sc-body{padding:16px 18px 18px;}
+.sc-name{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--ink);margin-bottom:5px;}
+.sc-addr{font-size:12.5px;color:var(--ink-muted);line-height:1.6;margin-bottom:10px;}
+.sc-hrs{font-size:11.5px;background:var(--green-pale);color:var(--green);padding:5px 10px;border-radius:7px;display:inline-flex;align-items:center;gap:4px;margin-bottom:13px;}
+.sc-btns{display:flex;gap:7px;}
+.sc-btn{flex:1;padding:9px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;text-align:center;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px;}
+.scb-p{background:var(--green);color:white;border:none;}
+.scb-p:hover{background:var(--green-mid);}
+.scb-s{background:white;color:var(--ink-light);border:1.5px solid var(--border);}
+.scb-s:hover{border-color:var(--green-mid);color:var(--green);}
+
+/* ── APP ── */
+.app-bg{background:var(--forest);}
+.app-inner{max-width:1320px;margin:0 auto;padding:64px 28px;display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;}
+.app-eye{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:rgba(168,224,112,.75);font-weight:500;margin-bottom:9px;}
+.app-title{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3vw,38px);font-weight:600;color:white;letter-spacing:-.3px;line-height:1.15;margin-bottom:11px;}
+.app-title em{font-style:italic;color:#a8e070;}
+.app-desc{font-size:14px;color:rgba(255,255,255,.58);line-height:1.7;margin-bottom:22px;max-width:420px;}
+.app-perks{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:22px;}
+.app-perk{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.72);font-size:12px;padding:5px 12px;border-radius:20px;display:flex;align-items:center;gap:4px;}
+.app-btns{display:flex;gap:10px;flex-wrap:wrap;}
+.asb{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.18);color:white;padding:11px 20px;border-radius:11px;display:flex;align-items:center;gap:9px;transition:all .2s;}
+.asb:hover{background:rgba(255,255,255,.17);}
+.asb-ico{font-size:22px;}
+.asb-l1{font-size:10px;opacity:.58;display:block;}
+.asb-l2{font-size:14px;font-weight:500;}
+.app-stats{display:flex;gap:28px;flex-wrap:wrap;}
+.app-st .num{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:#a8e070;}
+.app-st .lbl{font-size:11px;color:rgba(255,255,255,.45);}
+
+/* ── FOOTER (matches category + PDP) ── */
+footer{background:var(--ink);}
+.footer-inner{max-width:1320px;margin:0 auto;padding:56px 28px 40px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:28px;}
+.footer-brand{}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:#a8e070;margin-bottom:10px;display:block;}
+.footer-tagline{font-size:13px;line-height:1.75;max-width:240px;color:rgba(255,255,255,.5);}
+.footer-seal{display:inline-flex;align-items:center;gap:6px;background:rgba(168,224,112,.1);border:1px solid rgba(168,224,112,.2);color:#a8e070;padding:6px 12px;border-radius:8px;font-size:12px;margin-top:14px;display:block;max-width:240px;}
+.footer-col h4{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.35);margin-bottom:14px;}
+.footer-col a{display:block;font-size:13px;color:rgba(255,255,255,.6);margin-bottom:9px;transition:color .15s;}
+.footer-col a:hover{color:white;}
+.footer-bottom{max-width:1320px;margin:0 auto;padding:18px 28px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;color:rgba(255,255,255,.3);}
+.pay-row{display:flex;gap:5px;}
+.pay-p{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);padding:4px 9px;border-radius:6px;font-size:11px;color:rgba(255,255,255,.4);}
+/* seo footer text */
+.footer-seo{max-width:1320px;margin:0 auto;padding:0 28px 24px;font-size:11.5px;color:rgba(255,255,255,.22);line-height:1.8;}
+
+/* ── FLOAT WA ── */
+.float-wa{position:fixed;bottom:26px;right:26px;background:#25D366;color:white;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;border:none;z-index:300;box-shadow:0 4px 20px rgba(37,211,102,.5);transition:transform .2s;}
+.float-wa:hover{transform:scale(1.08);}
+
+/* ── REVEAL ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.rd1{transition-delay:.1s}.rd2{transition-delay:.18s}.rd3{transition-delay:.26s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1060px){.pg{grid-template-columns:repeat(3,1fr);}.footer-inner{grid-template-columns:1fr 1fr 1fr;}}
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;min-height:auto;}.hero-right{display:none;}.hero-left{padding:56px 0;}
+  .tbi{grid-template-columns:repeat(2,1fr);}.pg{grid-template-columns:repeat(2,1fr);}
+  .tested-inner{grid-template-columns:1fr;}.offers-grid{grid-template-columns:1fr;}
+  .gift-inner{grid-template-columns:1fr;gap:36px;}.gv{order:-1;}
+  .why-grid{grid-template-columns:1fr;}.blog-grid{grid-template-columns:1fr 1fr;}
+  .sub-inner{grid-template-columns:1fr;}.refer-inner{grid-template-columns:1fr;}
+  .store-grid{grid-template-columns:1fr;}.reviews-grid{grid-template-columns:1fr 1fr;}
+  .nav-links{display:none;}.footer-inner{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:600px){
+  .pg{grid-template-columns:repeat(2,1fr);gap:10px;}
+  .blog-grid{grid-template-columns:1fr;}.reviews-grid{grid-template-columns:1fr;}
+  .cat-bar-inner{gap:7px;}.cp{padding:8px 14px;font-size:12.5px;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  🌿 <strong>Free shipping on orders above ₹2,000</strong> · Use code <strong>GET10</strong> for 10% off your first order · <a href="#">Download App →</a>
+</div>
+
+<!-- NAV — identical to category & PDP pages -->
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">🌿 Gidan</a>
+    <div class="search-wrap">
+      <input type="search" placeholder="Search plants, seeds, planters...">
+      <button class="search-icon">🔍</button>
+    </div>
+    <div class="nav-links">
+      <a href="/plants" class="nav-link">Plants</a>
+      <a href="/seeds" class="nav-link">Seeds</a>
+      <a href="/planters" class="nav-link">Planters</a>
+      <a href="/supplies" class="nav-link">Supplies</a>
+      <a href="/gifts" class="nav-link">Gifts 🎁</a>
+      <a href="/blog" class="nav-link">Guides</a>
+    </div>
+    <a href="/wishlist" class="nav-icon">🤍</a>
+    <a href="/cart" class="nav-icon">🛒<span class="cart-badge">2</span></a>
+    <button class="wa-btn">💬 Help</button>
+  </div>
+</nav>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow"><span class="hero-pulse"></span> New arrivals · Monsoon 2026</div>
+      <h1 class="hero-h1">
+        Buy plants that<br>
+        <em>actually thrive</em><br>
+        in Indian homes.
+      </h1>
+      <p class="hero-sub">
+        Every plant in our collection is <strong>India-climate tested</strong> in Bangalore — heat, humidity, and all. 200+ varieties delivered to your door, healthy and ready to grow.
+      </p>
+      <div class="hero-ctas">
+        <a href="/plants" class="btn-primary">🌿 Shop All Plants</a>
+        <a href="/kitchen-garden" class="btn-outline">🍅 Kitchen Garden Kits</a>
+      </div>
+      <div class="hero-sp">
+        <div class="sp-avatars">
+          <div class="sp-av">P</div><div class="sp-av">R</div>
+          <div class="sp-av">A</div><div class="sp-av">S</div>
+          <div class="sp-av">+</div>
+        </div>
+        <div>
+          <div class="sp-stars">★★★★★</div>
+          <div class="sp-copy"><strong>12,847 happy gardeners</strong> across India</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hm-card tall">
+        <div class="plant-img pi-monstera">
+          <span class="pi-emoji">🌿</span>
+          <span class="pi-label">Monstera · ₹799</span>
+        </div>
+        <div class="hm-float hf-top">
+          <div class="hf-icon">⭐</div>
+          <div class="hf-val">4.8/5</div>
+          <div class="hf-lbl">12,847 reviews</div>
+        </div>
+      </div>
+      <div class="hm-card">
+        <div class="plant-img pi-snake">
+          <span class="pi-emoji">🪴</span>
+          <span class="pi-label">Snake Plant · ₹349</span>
+        </div>
+      </div>
+      <div class="hm-card">
+        <div class="plant-img pi-succulent">
+          <span class="pi-emoji">🌵</span>
+          <span class="pi-label">Succulents · ₹199</span>
+        </div>
+        <div class="hm-float hf-bottom">
+          <div class="hf-icon">🚚</div>
+          <div class="hf-val">Free ship</div>
+          <div class="hf-lbl">on ₹2,000+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="tbi">
+    <div class="ti"><div class="ti-ico">🌡️</div><div><div class="ti-t">India-Climate Tested</div><div class="ti-d">Every plant tested in Bangalore heat &amp; humidity</div></div></div>
+    <div class="ti"><div class="ti-ico">🚚</div><div><div class="ti-t">Free Delivery ₹2,000+</div><div class="ti-d">Pan-India. Same-day in Bangalore</div></div></div>
+    <div class="ti"><div class="ti-ico">🛡️</div><div><div class="ti-t">7-Day Guarantee</div><div class="ti-d">Plant doesn't survive? We reship free.</div></div></div>
+    <div class="ti"><div class="ti-ico">💬</div><div><div class="ti-t">WhatsApp Support</div><div class="ti-d">Real plant experts. Mon–Sat 9AM–7PM</div></div></div>
+    <div class="ti"><div class="ti-ico">📦</div><div><div class="ti-t">99.2% Arrive Healthy</div><div class="ti-d">Expert packaging. Safe every time.</div></div></div>
+  </div>
+</div>
+
+<!-- CATEGORY PILLS -->
+<div class="cat-bar">
+  <div class="cat-bar-inner">
+    <button class="cp active" onclick="setPill(this)"><span class="cp-ico">🌿</span> All Plants <span class="cp-cnt">200+</span></button>
+    <button class="cp" onclick="setPill(this)"><span class="cp-ico">🏠</span> Indoor <span class="cp-cnt">87</span></button>
+    <button class="cp" onclick="setPill(this)"><span class="cp-ico">🍅</span> Kitchen Garden <span class="cp-cnt">43</span></button>
+    <button class="cp" onclick="setPill(this)"><span class="cp-ico">🌵</span> Succulents <span class="cp-cnt">32</span></button>
+    <button class="cp" onclick="setPill(this)"><span class="cp-ico">💨</span> Air Purifying <span class="cp-cnt">28</span></button>
+    <button class="cp" onclick="setPill(this)"><span class="cp-ico">🌸</span> Flowering <span class="cp-cnt">45</span></button>
+    <button class="cp" onclick="setPill(this)"><span class="cp-ico">🌱</span> Seeds <span class="cp-cnt">120+</span></button>
+    <button class="cp" onclick="setPill(this)"><span class="cp-ico">🎁</span> Gift Sets <span class="cp-cnt">18</span></button>
+  </div>
+</div>
+
+<!-- ═══════════════ TRENDING PRODUCTS ═══════════════ -->
+<section>
+  <div class="section">
+    <div class="sh reveal">
+      <div>
+        <div class="s-eye">Bestsellers this week</div>
+        <h2 class="s-title">Trending <em>right now</em></h2>
+        <p class="s-desc">India's most-loved plants — chosen by 12,000+ happy gardeners.</p>
+      </div>
+      <a href="/plants" class="s-link">View all plants →</a>
+    </div>
+    <div class="pg">
+
+      <article class="pc">
+        <div class="pc-img-wrap">
+          <div class="pc-badges"><span class="badge b-best">🏆 #1 Bestseller</span><span class="badge b-test">🌡️ Tested</span></div>
+          <button class="pc-wish" onclick="toggleWish(this)">🤍</button>
+          <div class="plant-img pi-monstera"><span class="pi-emoji">🌿</span></div>
+          <div class="pc-care"><span class="pct">💧 Weekly</span><span class="pct">☀️ Indirect</span></div>
+        </div>
+        <div class="pc-body">
+          <div class="pc-cat">Foliage · Indoor</div>
+          <h3 class="pc-name">Monstera Deliciosa</h3>
+          <div class="pc-sci">Swiss Cheese Plant</div>
+          <div class="pc-rating">
+            <div class="pc-stars"><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span></div>
+            <span class="pc-rs">4.9</span><span class="pc-rc">(284)</span>
+          </div>
+          <div class="pc-footer">
+            <div class="pc-price"><div class="cur">₹799</div><div class="was">₹999</div><div class="save">Save ₹200</div></div>
+            <button class="pc-atc" onclick="addCart(this)">🛒 Add</button>
+          </div>
+          <div class="pc-stock"><div class="sb"><div class="sf-fill" style="width:18%"></div></div><span class="st">Only 9 left</span></div>
+        </div>
+      </article>
+
+      <article class="pc">
+        <div class="pc-img-wrap">
+          <div class="pc-badges"><span class="badge b-new">New</span></div>
+          <button class="pc-wish" onclick="toggleWish(this)">🤍</button>
+          <div class="plant-img pi-snake"><span class="pi-emoji">🪴</span></div>
+          <div class="pc-care"><span class="pct">💧 Low</span><span class="pct">🌑 Low light</span></div>
+        </div>
+        <div class="pc-body">
+          <div class="pc-cat">Air Purifying · Indoor</div>
+          <h3 class="pc-name">Snake Plant</h3>
+          <div class="pc-sci">Sansevieria trifasciata</div>
+          <div class="pc-rating">
+            <div class="pc-stars"><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span></div>
+            <span class="pc-rs">4.8</span><span class="pc-rc">(147)</span>
+          </div>
+          <div class="pc-footer">
+            <div class="pc-price"><div class="cur">₹349</div><div class="was">₹449</div><div class="save">Save ₹100</div></div>
+            <button class="pc-atc" onclick="addCart(this)">🛒 Add</button>
+          </div>
+          <div class="pc-stock"><div class="sb"><div class="sf-fill" style="width:22%"></div></div><span class="st">8 left</span></div>
+        </div>
+      </article>
+
+      <article class="pc">
+        <div class="pc-img-wrap">
+          <div class="pc-badges"><span class="badge b-best">Bestseller</span></div>
+          <button class="pc-wish" onclick="toggleWish(this)">🤍</button>
+          <div class="plant-img pi-pothos"><span class="pi-emoji">🍃</span></div>
+          <div class="pc-care"><span class="pct">🌱 Easy</span></div>
+        </div>
+        <div class="pc-body">
+          <div class="pc-cat">Beginner Friendly · Trailing</div>
+          <h3 class="pc-name">Golden Pothos</h3>
+          <div class="pc-sci">Epipremnum aureum</div>
+          <div class="pc-rating">
+            <div class="pc-stars"><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span></div>
+            <span class="pc-rs">4.9</span><span class="pc-rc">(312)</span>
+          </div>
+          <div class="pc-footer">
+            <div class="pc-price"><div class="cur">₹199</div><div class="save">Free care guide</div></div>
+            <button class="pc-atc" onclick="addCart(this)">🛒 Add</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="pc">
+        <div class="pc-img-wrap">
+          <div class="pc-badges"><span class="badge b-sale">−25% OFF</span></div>
+          <button class="pc-wish" onclick="toggleWish(this)">🤍</button>
+          <div class="plant-img pi-zz"><span class="pi-emoji">🌳</span></div>
+          <div class="pc-care"><span class="pct">🏜️ Drought</span><span class="pct">🌡️ Heat OK</span></div>
+        </div>
+        <div class="pc-body">
+          <div class="pc-cat">Low Maintenance · Foliage</div>
+          <h3 class="pc-name">ZZ Plant</h3>
+          <div class="pc-sci">Zamioculcas zamiifolia</div>
+          <div class="pc-rating">
+            <div class="pc-stars"><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span></div>
+            <span class="pc-rs">4.9</span><span class="pc-rc">(201)</span>
+          </div>
+          <div class="pc-footer">
+            <div class="pc-price"><div class="cur">₹499</div><div class="was">₹649</div><div class="save">Save ₹150</div></div>
+            <button class="pc-atc" onclick="addCart(this)">🛒 Add</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="pc">
+        <div class="pc-img-wrap">
+          <div class="pc-badges"><span class="badge b-new">🎁 Gift Ready</span></div>
+          <button class="pc-wish" onclick="toggleWish(this)">🤍</button>
+          <div class="plant-img pi-succulent"><span class="pi-emoji">🌵</span></div>
+          <div class="pc-care"><span class="pct">🏜️ Minimal</span><span class="pct">✨ Set of 3</span></div>
+        </div>
+        <div class="pc-body">
+          <div class="pc-cat">Succulent · Gift Set</div>
+          <h3 class="pc-name">Succulent Trio Set</h3>
+          <div class="pc-sci">3 plants + ceramic planters</div>
+          <div class="pc-rating">
+            <div class="pc-stars"><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span></div>
+            <span class="pc-rs">4.9</span><span class="pc-rc">(178)</span>
+          </div>
+          <div class="pc-footer">
+            <div class="pc-price"><div class="cur">₹599</div><div class="was">₹799</div><div class="save">Set saves ₹200</div></div>
+            <button class="pc-atc" onclick="addCart(this)">🛒 Add</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="pc">
+        <div class="pc-img-wrap">
+          <div class="pc-badges"><span class="badge b-test">🌡️ Summer-tested</span></div>
+          <button class="pc-wish" onclick="toggleWish(this)">🤍</button>
+          <div class="plant-img pi-rubber"><span class="pi-emoji">🍁</span></div>
+          <div class="pc-care"><span class="pct">🌳 Statement</span></div>
+        </div>
+        <div class="pc-body">
+          <div class="pc-cat">Statement · Indoor</div>
+          <h3 class="pc-name">Rubber Plant</h3>
+          <div class="pc-sci">Ficus elastica 'Burgundy'</div>
+          <div class="pc-rating">
+            <div class="pc-stars"><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps pse">★</span></div>
+            <span class="pc-rs">4.7</span><span class="pc-rc">(56)</span>
+          </div>
+          <div class="pc-footer">
+            <div class="pc-price"><div class="cur">₹649</div><div class="was">₹799</div></div>
+            <button class="pc-atc" onclick="addCart(this)">🛒 Add</button>
+          </div>
+          <div class="pc-stock"><div class="sb"><div class="sf-fill" style="width:14%"></div></div><span class="st">Only 6 left!</span></div>
+        </div>
+      </article>
+
+      <article class="pc">
+        <div class="pc-img-wrap">
+          <div class="pc-badges"><span class="badge b-new">🌿 New</span></div>
+          <button class="pc-wish" onclick="toggleWish(this)">🤍</button>
+          <div class="plant-img pi-kitchen"><span class="pi-emoji">🍅</span></div>
+          <div class="pc-care"><span class="pct">🍅 Edible</span><span class="pct">🌱 Beginner</span></div>
+        </div>
+        <div class="pc-body">
+          <div class="pc-cat">Seeds · Kitchen Garden</div>
+          <h3 class="pc-name">Kitchen Garden Starter</h3>
+          <div class="pc-sci">8 varieties + tray + soil</div>
+          <div class="pc-rating">
+            <div class="pc-stars"><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span></div>
+            <span class="pc-rs">4.8</span><span class="pc-rc">(93)</span>
+          </div>
+          <div class="pc-footer">
+            <div class="pc-price"><div class="cur">₹899</div><div class="was">₹1,099</div><div class="save">Kit saves ₹200</div></div>
+            <button class="pc-atc" onclick="addCart(this)">🛒 Add</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="pc">
+        <div class="pc-img-wrap">
+          <div class="pc-badges"><span class="badge b-best">🌸 Trending</span></div>
+          <button class="pc-wish" onclick="toggleWish(this)">🤍</button>
+          <div class="plant-img pi-bop"><span class="pi-emoji">🌴</span></div>
+          <div class="pc-care"><span class="pct">🌴 Tropical</span></div>
+        </div>
+        <div class="pc-body">
+          <div class="pc-cat">Statement · Tropical</div>
+          <h3 class="pc-name">Bird of Paradise</h3>
+          <div class="pc-sci">Strelitzia nicolai</div>
+          <div class="pc-rating">
+            <div class="pc-stars"><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span><span class="ps psf">★</span></div>
+            <span class="pc-rs">4.8</span><span class="pc-rc">(93)</span>
+          </div>
+          <div class="pc-footer">
+            <div class="pc-price"><div class="cur">₹1,199</div><div class="save">Free ceramic pot</div></div>
+            <button class="pc-atc" onclick="addCart(this)">🛒 Add</button>
+          </div>
+        </div>
+      </article>
+
+    </div><!-- /pg -->
+  </div>
+</section>
+
+<!-- ═══════════════ INDIA-TESTED BANNER ═══════════════ -->
+<div class="tested-bg">
+  <div class="tested-inner reveal">
+    <div class="tb-text">
+      <div class="tb-eye">Why Gidan is different</div>
+      <h2 class="tb-title">Plants tested for <em>Indian climate</em><br>before they reach you</h2>
+      <p class="tb-desc">Most online plant stores ship plants grown in controlled European nurseries — they wilt within weeks in Indian heat. Every Gidan plant is acclimatised to Bangalore conditions before shipping.</p>
+      <div class="tb-feats">
+        <div class="tb-feat">Tested in 32–40°C Bangalore summer heat</div>
+        <div class="tb-feat">Acclimatised to 60–80% Indian humidity</div>
+        <div class="tb-feat">Quality-checked before every dispatch</div>
+        <div class="tb-feat">Expert plant care guidance included free</div>
+      </div>
+      <a href="/about" class="tb-cta">Read our plant story →</a>
+    </div>
+    <div class="tb-visual">
+      <div class="tv-card">
+        <div class="plant-img pi-nursery"><span class="pi-emoji" style="font-size:90px">🏡</span><span class="pi-label">Bangalore Nursery</span></div>
+      </div>
+      <div class="tv-card">
+        <div class="plant-img pi-leaf-bg"><span class="pi-emoji">🌿</span><span class="pi-label">Quality check</span></div>
+      </div>
+      <div class="tv-card">
+        <div class="plant-img pi-pothos"><span class="pi-emoji">📦</span><span class="pi-label">Expert packaging</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SEASONAL OFFERS ═══════════════ -->
+<div class="offers-bg">
+  <div class="section">
+    <div class="sh reveal">
+      <div>
+        <div class="s-eye">Limited time</div>
+        <h2 class="s-title">Seasonal <em>deals &amp; collections</em></h2>
+        <p class="s-desc">Handpicked collections for every kind of plant lover and every budget.</p>
+      </div>
+      <a href="/offers" class="s-link">All offers →</a>
+    </div>
+    <div class="offers-grid reveal">
+      <div class="oc">
+        <div class="oc-bg plant-img pi-leaf-bg"><span style="font-size:100px">🌧️</span></div>
+        <div class="oc-overlay"></div>
+        <div class="oc-body">
+          <div class="oc-tag">Monsoon Season</div>
+          <div class="oc-title">The Ultimate Monsoon Grow Kit</div>
+          <div class="oc-sub">Best time to plant in India — everything you need to start.</div>
+          <a href="/monsoon" class="oc-btn">Shop collection →</a>
+        </div>
+      </div>
+      <div class="oc">
+        <div class="oc-bg plant-img pi-succulent"><span style="font-size:80px">🌵</span></div>
+        <div class="oc-overlay"></div>
+        <div class="oc-body">
+          <div class="oc-tag">Extra 5% off · SHPLOOK02</div>
+          <div class="oc-title oc-title-sm" style="font-size:16px">Succulent Shop-the-Look Sets</div>
+          <div class="oc-sub">From ₹1,434</div>
+          <a href="/succulents" class="oc-btn">Shop →</a>
+        </div>
+      </div>
+      <div class="oc">
+        <div class="oc-bg plant-img pi-bop"><span style="font-size:80px">🏠</span></div>
+        <div class="oc-overlay"></div>
+        <div class="oc-body">
+          <div class="oc-tag">Combo Offer · Up to 20% off</div>
+          <div class="oc-title oc-title-sm" style="font-size:16px">Indoor Plant Combos</div>
+          <div class="oc-sub">From ₹2,114</div>
+          <a href="/combos" class="oc-btn">Shop →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ GIFTING ═══════════════ -->
+<section class="gift-bg">
+  <div class="gift-inner">
+    <div class="gv reveal">
+      <div class="gv-card tall">
+        <div class="plant-img pi-gift" style="height:100%;font-size:80px"><span class="pi-emoji">🎁</span><span class="pi-label">Gift sets from ₹499</span></div>
+        <div class="gv-lbl"><span class="glp">🎁 Gift Ready</span></div>
+      </div>
+      <div class="gv-card">
+        <div class="plant-img pi-succulent" style="height:160px;font-size:52px"><span class="pi-emoji">🌵</span></div>
+        <div class="gv-lbl"><span>₹499+</span></div>
+      </div>
+      <div class="gv-card">
+        <div class="plant-img pi-nursery" style="height:160px;font-size:52px"><span class="pi-emoji">🏢</span></div>
+        <div class="gv-lbl"><span>Corporate</span></div>
+      </div>
+    </div>
+    <div class="reveal rd2">
+      <div class="gt-eye">🎁 Gifting vertical</div>
+      <h2 class="gt-title">Give the gift<br>that <em>grows.</em></h2>
+      <p class="gt-desc">Skip the candles. Send a living, breathing plant — a gift that keeps growing. Curated gift sets include eco-friendly packaging, handwritten cards, and plants that survive Indian homes.</p>
+      <div class="gift-items">
+        <div class="gi"><div class="gi-ico">🌿</div><div><div class="gi-name">Plant + Planter Gift Set</div><div class="gi-price">From ₹499</div></div><div class="gi-tag">Most Popular</div></div>
+        <div class="gi"><div class="gi-ico">🏢</div><div><div class="gi-name">Corporate Plant Gifting</div><div class="gi-price">Custom bulk pricing</div></div><div class="gi-tag">Bulk ₹2,999+</div></div>
+        <div class="gi"><div class="gi-ico">📦</div><div><div class="gi-name">Subscription Box</div><div class="gi-price">₹599/month</div></div><div class="gi-tag">Recurring</div></div>
+      </div>
+      <div class="gift-ctas">
+        <a href="/gifts" class="bg-primary">🎁 Shop Gift Sets</a>
+        <a href="/corporate" class="bg-secondary">🏢 Corporate Enquiry</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ WHY GIDAN ═══════════════ -->
+<section class="why-bg">
+  <div class="section">
+    <div class="why-grid">
+      <div class="why-visual reveal">
+        <div class="why-main">
+          <div class="plant-img" style="background:radial-gradient(ellipse at 35% 65%,#b5d99c,#4a9020,#1a4808);height:100%;font-size:120px">
+            <span class="pi-emoji">🌿</span><span class="pi-label">Education-first gardening</span>
+          </div>
+        </div>
+        <div class="wf1">
+          <div class="wf-ico">🌿</div>
+          <div class="wf-val">200+</div>
+          <div class="wf-lbl">Plant varieties in stock</div>
+        </div>
+        <div class="wf2">
+          <div class="wf-ico">⭐</div>
+          <div class="wf-val">4.8/5</div>
+          <div class="wf-lbl">12,847 verified reviews</div>
+        </div>
+      </div>
+      <div class="reveal rd2">
+        <div class="s-eye">Education-first gardening</div>
+        <h2 class="s-title">We don't just sell plants.<br><em>We grow gardeners.</em></h2>
+        <p class="s-desc">Founded in Bangalore with a deep belief that every Indian home deserves living greenery — and every plant deserves a gardener who knows how to care for it.</p>
+        <div class="why-feats">
+          <div class="wf-card"><span class="wfc-ico">🌡️</span><div class="wfc-t">India-Climate Tested</div><div class="wfc-d">Every plant acclimatised to Indian heat, humidity and sun before shipping.</div></div>
+          <div class="wf-card"><span class="wfc-ico">📚</span><div class="wfc-t">Expert Grow Guides</div><div class="wfc-d">Every order includes detailed care instructions for Indian conditions.</div></div>
+          <div class="wf-card"><span class="wfc-ico">🛡️</span><div class="wfc-t">Survival Guarantee</div><div class="wfc-d">7-day guarantee — if your plant doesn't thrive, we reship for free.</div></div>
+          <div class="wf-card"><span class="wfc-ico">💬</span><div class="wfc-t">Plant Community</div><div class="wfc-d">Join 12,000+ plant parents in our WhatsApp community for daily tips.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ BLOG / GUIDES ═══════════════ -->
+<section class="blog-bg">
+  <div class="section">
+    <div class="sh reveal">
+      <div>
+        <div class="s-eye">Free plant knowledge</div>
+        <h2 class="s-title">Grow guides <em>for Indian homes</em></h2>
+        <p class="s-desc">Expert articles written specifically for Indian gardeners — climate, seasons, and local conditions.</p>
+      </div>
+      <a href="/blog" class="s-link">All grow guides →</a>
+    </div>
+    <div class="blog-grid reveal">
+      <article class="bc featured">
+        <div class="bc-img"><div class="plant-img pi-blog1"><span class="pi-emoji" style="font-size:70px">🍅</span><span class="pi-label">Kitchen Garden Guide · 8 min read</span></div></div>
+        <div class="bc-body">
+          <span class="bc-tag">Kitchen Garden</span>
+          <h3 class="bc-title">The Complete Kitchen Garden Guide for Indian Homes (2026)</h3>
+          <p class="bc-excerpt">Grow tomatoes, coriander, spinach and chillies on your balcony with our step-by-step seasonal guide for Bangalore, Mumbai and Delhi climates.</p>
+          <div class="bc-meta"><span>📅 March 2026 · 8 min read</span><span class="bc-read">Read →</span></div>
+        </div>
+      </article>
+      <article class="bc">
+        <div class="bc-img"><div class="plant-img pi-blog2"><span class="pi-emoji" style="font-size:52px">💨</span><span class="pi-label">Air Purifying Plants · 5 min</span></div></div>
+        <div class="bc-body">
+          <span class="bc-tag">Indoor Plants</span>
+          <h3 class="bc-title">10 Best Air Purifying Plants for Indian Apartments</h3>
+          <p class="bc-excerpt">NASA-tested plants that actually improve air quality in Indian homes — and survive without AC.</p>
+          <div class="bc-meta"><span>📅 Feb 2026 · 5 min</span><span class="bc-read">Read →</span></div>
+        </div>
+      </article>
+      <article class="bc">
+        <div class="bc-img"><div class="plant-img pi-blog3"><span class="pi-emoji" style="font-size:52px">☀️</span><span class="pi-label">Summer Care Guide · 6 min</span></div></div>
+        <div class="bc-body">
+          <span class="bc-tag">Summer Care</span>
+          <h3 class="bc-title">Keeping Plants Alive Through Indian Summer (40°C Guide)</h3>
+          <p class="bc-excerpt">Protect your plants from peak Indian summer heat. Watering schedules, shade strategies, and heat-resistant species.</p>
+          <div class="bc-meta"><span>📅 Mar 2026 · 6 min</span><span class="bc-read">Read →</span></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ REVIEWS ═══════════════ -->
+<section class="reviews-bg">
+  <div class="section">
+    <div class="sh reveal">
+      <div>
+        <div class="s-eye">Verified customer reviews</div>
+        <h2 class="s-title">What India's plant <em>parents say</em></h2>
+      </div>
+      <a href="/reviews" class="s-link">All 12,847 reviews →</a>
+    </div>
+    <div class="rv-hdr reveal">
+      <div>
+        <div class="rv-score-big">4.8</div>
+        <div class="rv-stars-big"><span class="rvs">★</span><span class="rvs">★</span><span class="rvs">★</span><span class="rvs">★</span><span class="rvs">★</span></div>
+        <div class="rv-count">Based on 12,847 verified reviews</div>
+      </div>
+      <div class="rv-sep"></div>
+      <div class="rv-badges">
+        <div class="rvb">✓ Plants arrive healthy (98%)</div>
+        <div class="rvb">✓ Accurate descriptions</div>
+        <div class="rvb">✓ Expert packaging</div>
+        <div class="rvb">✓ Fast dispatch</div>
+        <div class="rvb">✓ Helpful care guides</div>
+      </div>
+    </div>
+    <div class="reviews-grid reveal">
+      <div class="rvc">
+        <div class="rvc-hdr">
+          <div class="rvc-user"><div class="rvc-av">P</div><div><div class="rvc-name">Priya Sharma</div><div class="rvc-meta">Mumbai · Monstera buyer</div></div></div>
+          <div class="rvc-st"><span class="rvcst">★</span><span class="rvcst">★</span><span class="rvcst">★</span><span class="rvcst">★</span><span class="rvcst">★</span></div>
+        </div>
+        <p class="rvc-body">"Absolutely gorgeous plant! My Monstera arrived in perfect condition after a 3-day journey from Bangalore to Mumbai. It's been thriving for 6 weeks now. The care card was incredibly helpful for a first-time plant parent."</p>
+        <div class="rvc-tags"><span class="rvct">📦 Great packaging</span><span class="rvct">🌱 Easy care</span></div>
+        <div class="verified">✓ Verified Purchase · 3 weeks ago</div>
+      </div>
+      <div class="rvc">
+        <div class="rvc-hdr">
+          <div class="rvc-user"><div class="rvc-av">R</div><div><div class="rvc-name">Rahul Mehta</div><div class="rvc-meta">Bangalore · Regular customer</div></div></div>
+          <div class="rvc-st"><span class="rvcst">★</span><span class="rvcst">★</span><span class="rvcst">★</span><span class="rvcst">★</span><span class="rvcst">★</span></div>
+        </div>
+        <p class="rvc-body">"Ordered the gifting collection for our office and every single person loved their plant. The corporate gifting team was incredibly responsive on WhatsApp — handled our bulk order of 40 plants perfectly."</p>
+        <div class="rvc-tags"><span class="rvct">🏢 Corporate</span><span class="rvct">💬 Great support</span></div>
+        <div class="verified">✓ Verified Purchase · 1 month ago</div>
+      </div>
+      <div class="rvc">
+        <div class="rvc-hdr">
+          <div class="rvc-user"><div class="rvc-av">A</div><div><div class="rvc-name">Ananya Krishnan</div><div class="rvc-meta">Chennai · Kitchen garden</div></div></div>
+          <div class="rvc-st"><span class="rvcst">★</span><span class="rvcst">★</span><span class="rvcst">★</span><span class="rvcst">★</span><span class="rvcst">★</span></div>
+        </div>
+        <p class="rvc-body">"Started with the kitchen garden starter kit as a complete beginner. I'm now harvesting fresh coriander and cherry tomatoes every week! The climate-specific instructions made all the difference."</p>
+        <div class="rvc-tags"><span class="rvct">🍅 Kitchen garden</span><span class="rvct">🌡️ Survives Chennai</span></div>
+        <div class="verified">✓ Verified Purchase · 2 months ago</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ SUBSCRIPTION ═══════════════ -->
+<section class="sub-bg">
+  <div class="sub-inner">
+    <div class="reveal">
+      <div class="sub-eye">Monthly plant box</div>
+      <h2 class="sub-title">Grow your collection.<br><em>Every month.</em></h2>
+      <p class="sub-desc">Subscribe and receive a curated plant, seasonal seeds, and an expert grow guide every month. Cancel anytime.</p>
+      <div class="sub-perks">
+        <span class="sub-perk">🌿 New plant monthly</span>
+        <span class="sub-perk">🌱 Seasonal seeds</span>
+        <span class="sub-perk">📚 Expert grow guide</span>
+        <span class="sub-perk">💰 10% off all purchases</span>
+        <span class="sub-perk">💬 Community access</span>
+      </div>
+      <div class="sub-form">
+        <input class="sub-input" type="email" placeholder="Enter your email address">
+        <button class="sub-submit">Get Started →</button>
+      </div>
+      <div class="sub-legal">No spam. Unsubscribe anytime. 12,847 subscribers growing with us.</div>
+    </div>
+    <div class="plan-cards reveal rd2">
+      <div class="plan sel" onclick="selPlan(this)">
+        <div class="plan-radio"></div><div class="plan-ico">🌿</div>
+        <div><div class="plan-name">Starter Box</div><div class="plan-desc">1 plant + care guide + seeds</div></div>
+        <div class="plan-right"><div class="plan-amt">₹499</div><div class="plan-per">/month</div></div>
+      </div>
+      <div class="plan" onclick="selPlan(this)">
+        <div class="plan-radio"></div><div class="plan-ico">🌳</div>
+        <div><div class="plan-name">Garden Box</div><div class="plan-desc">2 plants + planters + seeds + guide</div></div>
+        <div class="plan-right"><div class="plan-amt">₹849</div><div class="plan-per">/month</div><div class="plan-save">Save 15%</div></div>
+      </div>
+      <div class="plan" onclick="selPlan(this)">
+        <div class="plan-radio"></div><div class="plan-ico">🏢</div>
+        <div><div class="plan-name">Corporate Plan</div><div class="plan-desc">Monthly plants for your office</div></div>
+        <div class="plan-right"><div class="plan-amt">₹2,999</div><div class="plan-per">/month</div><div class="plan-save">5 plants</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ REFER & EARN ═══════════════ -->
+<section class="refer-bg">
+  <div class="refer-inner">
+    <div class="refer-vis reveal">
+      <div class="rv-amt">₹150</div>
+      <div class="rv-lbl">earned per successful referral</div>
+      <div class="rv-steps">
+        <div class="rvs-item"><div class="rvs-num">1</div><div class="rvs-t">Share your referral code with friends and family</div></div>
+        <div class="rvs-item"><div class="rvs-num">2</div><div class="rvs-t">They place their first order on Gidan.store</div></div>
+        <div class="rvs-item"><div class="rvs-num">3</div><div class="rvs-t">You both earn ₹150 credit — automatically!</div></div>
+      </div>
+    </div>
+    <div class="reveal rd2">
+      <div class="s-eye">Refer &amp; Earn</div>
+      <h2 class="s-title">Share plants.<br><em>Earn rewards.</em></h2>
+      <p class="s-desc" style="margin-bottom:0">Turn your love for plants into cash. Every friend you refer earns you both ₹150 store credit — no limit.</p>
+      <div class="refer-code">
+        <div><div class="rc-lbl">Your referral code</div><div class="rc-code">GIDAN150</div></div>
+        <button class="rc-copy" onclick="copyRef()">📋 Copy</button>
+      </div>
+      <p style="font-size:13px;color:var(--ink-muted);line-height:1.7;">Share via WhatsApp, Instagram, or email. When your friend makes their first purchase, you both get credited automatically. Valid for unlimited referrals.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ STORE LOCATOR ═══════════════ -->
+<section class="store-bg">
+  <div class="section">
+    <div class="sh reveal">
+      <div>
+        <div class="s-eye">Visit us in person</div>
+        <h2 class="s-title">Our <em>Bangalore stores</em></h2>
+        <p class="s-desc">Walk in and experience 200+ plant varieties. Our plant experts are here to help you pick the perfect plant.</p>
+      </div>
+      <a href="/stores" class="s-link">All store info →</a>
+    </div>
+    <div class="store-grid reveal">
+      <div class="sc">
+        <div class="sc-img">
+          <div class="plant-img pi-store1"><span class="pi-emoji" style="font-size:56px">🏡</span><span class="pi-label">Kaggadasapura Store</span></div>
+          <div class="sc-status"><span class="sdot"></span> Open now</div>
+        </div>
+        <div class="sc-body">
+          <div class="sc-name">Kaggadasapura Road</div>
+          <div class="sc-addr">Kanatab Kaggalipura, Yenekanooru Main Road, Opp 8-341, Near Bangalore 562130</div>
+          <div class="sc-hrs">🕘 Open: 09:00 – 19:00 daily</div>
+          <div class="sc-btns">
+            <a href="https://maps.google.com" class="sc-btn scb-p">📍 Get Directions</a>
+            <a href="tel:+918000000000" class="sc-btn scb-s">📞 Call Store</a>
+          </div>
+        </div>
+      </div>
+      <div class="sc">
+        <div class="sc-img">
+          <div class="plant-img pi-store2"><span class="pi-emoji" style="font-size:56px">🏬</span><span class="pi-label">Jayanagar Store</span></div>
+          <div class="sc-status"><span class="sdot"></span> Open now</div>
+        </div>
+        <div class="sc-body">
+          <div class="sc-name">Jayanagar, Bengaluru</div>
+          <div class="sc-addr">18/C, First Floor, 20th Main, 5th Block, Jayanagar, Bangalore 560041</div>
+          <div class="sc-hrs">🕘 Open: 09:00 – 19:00 daily</div>
+          <div class="sc-btns">
+            <a href="https://maps.google.com" class="sc-btn scb-p">📍 Get Directions</a>
+            <a href="tel:+918000000000" class="sc-btn scb-s">📞 Call Store</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ APP DOWNLOAD ═══════════════ -->
+<section class="app-bg">
+  <div class="app-inner">
+    <div class="reveal">
+      <div class="app-eye">Download the app</div>
+      <h2 class="app-title">Your garden,<br><em>in your pocket.</em></h2>
+      <p class="app-desc">App-only deals, live order tracking, plant care reminders, and seamless shopping — always just a tap away.</p>
+      <div class="app-perks">
+        <span class="app-perk">📲 App-only deals</span>
+        <span class="app-perk">📦 Live order tracking</span>
+        <span class="app-perk">⏰ Care reminders</span>
+        <span class="app-perk">🌿 Plant journal</span>
+      </div>
+      <div class="app-btns">
+        <a href="#" class="asb"><span class="asb-ico">🍎</span><div><span class="asb-l1">Download on the</span><span class="asb-l2">App Store</span></div></a>
+        <a href="#" class="asb"><span class="asb-ico">▶️</span><div><span class="asb-l1">Get it on</span><span class="asb-l2">Google Play</span></div></a>
+      </div>
+    </div>
+    <div class="app-stats reveal rd2">
+      <div class="app-st"><div class="num">50K+</div><div class="lbl">App downloads</div></div>
+      <div class="app-st"><div class="num">4.7★</div><div class="lbl">App store rating</div></div>
+      <div class="app-st"><div class="num">200+</div><div class="lbl">Plant varieties</div></div>
+      <div class="app-st"><div class="num">12K+</div><div class="lbl">Happy gardeners</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FOOTER (matches category + PDP) ═══════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="footer-logo">🌿 Gidan</span>
+      <p class="footer-tagline">India's most trusted online plant store. Every plant is sourced, tested, and shipped with care from Bangalore to your doorstep across India.</p>
+      <div class="footer-seal">🌡️ India-Climate Tested · Bangalore Grown</div>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <a href="/plants">Indoor Plants</a>
+      <a href="/outdoor">Outdoor Plants</a>
+      <a href="/seeds">Seeds Online</a>
+      <a href="/planters">Planters & Pots</a>
+      <a href="/gifts">Gift Sets 🎁</a>
+      <a href="/combos">Combo Offers</a>
+      <a href="/subscription">Subscriptions</a>
+    </div>
+    <div class="footer-col">
+      <h4>Learn</h4>
+      <a href="/blog">Grow Guides</a>
+      <a href="/plant-care">Plant Care Blog</a>
+      <a href="/seasonal">Seasonal Calendar</a>
+      <a href="/ask">Ask an Expert</a>
+      <a href="/community">Plant Community</a>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="/whatsapp">WhatsApp Us</a>
+      <a href="/track">Track Order</a>
+      <a href="/returns">Returns Policy</a>
+      <a href="/shipping">Shipping Info</a>
+      <a href="/franchise">Franchise Enquiry</a>
+      <a href="/contact">Contact Us</a>
+    </div>
+  </div>
+  <div class="footer-seo">
+    Popular searches: buy plants online India · indoor plants online · seeds online India · planters online · air purifying plants · kitchen garden seeds · succulent plants India · plant gifts India · corporate plant gifting Bangalore.
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Gidan.store — By Ronak Modi, Bangalore, India</span>
+    <div class="pay-row">
+      <span class="pay-p">UPI</span><span class="pay-p">Visa</span>
+      <span class="pay-p">Mastercard</span><span class="pay-p">COD</span>
+      <span class="pay-p">RazorPay</span><span class="pay-p">PhonePe</span>
+    </div>
+  </div>
+</footer>
+
+<button class="float-wa" title="Chat on WhatsApp">💬</button>
+
+<script>
+// Nav scroll shadow
+window.addEventListener('scroll',()=>document.querySelector('nav').style.boxShadow=window.scrollY>10?'0 4px 24px rgba(0,0,0,.1)':'0 2px 16px rgba(0,0,0,.06)');
+
+// Scroll reveal
+const ro=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+// Category pill
+function setPill(el){document.querySelectorAll('.cp').forEach(p=>p.classList.remove('active'));el.classList.add('active');}
+
+// Wishlist
+function toggleWish(btn){btn.classList.toggle('active');btn.textContent=btn.classList.contains('active')?'❤️':'🤍';}
+
+// Add to cart
+function addCart(btn){const o=btn.innerHTML;btn.innerHTML='✅ Added!';btn.style.background='#27ae60';setTimeout(()=>{btn.innerHTML=o;btn.style.background='';},1800);}
+
+// Subscription plan
+function selPlan(el){document.querySelectorAll('.plan').forEach(p=>p.classList.remove('sel'));el.classList.add('sel');}
+
+// Copy referral
+function copyRef(){navigator.clipboard&&navigator.clipboard.writeText('GIDAN150').then(()=>{const b=document.querySelector('.rc-copy');const o=b.innerHTML;b.innerHTML='✅ Copied!';setTimeout(()=>b.innerHTML=o,1800);});}
+</script>
+</body>
+</html>

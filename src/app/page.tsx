@@ -18,13 +18,11 @@ async function getInitialBanners() {
 // Pre-fetch categories for SEO/Crawlability
 async function getInitialCategories() {
   try {
-    // 1. Fetch main categories
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category/`, { next: { revalidate: 300 } });
     if (!res.ok) return [];
     const data = await res.json();
     const categories = data?.data?.categories || [];
 
-    // 2. Fetch subcategories for each category to hydrate the full tree
     const categoriesWithSubs = await Promise.all(
       categories.map(async (cat: any) => {
         try {
@@ -39,6 +37,30 @@ async function getInitialCategories() {
     return categoriesWithSubs;
   } catch (err) {
     console.error("Failed to fetch categories on server", err);
+    return [];
+  }
+}
+
+async function getHomeSections() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/home/`, { next: { revalidate: 300 } });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data?.data || null;
+  } catch (err) {
+    console.error("Failed to fetch home sections on server", err);
+    return null;
+  }
+}
+
+async function getInitialTrending() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/?flag=Latest`, { next: { revalidate: 300 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data?.data || [];
+  } catch (err) {
+    console.error("Failed to fetch trending products on server", err);
     return [];
   }
 }
@@ -67,14 +89,17 @@ export const metadata: Metadata = {
 export default async function HomePage() {
   const [
     initialBanners,
-    initialCategories
+    initialCategories,
+    initialSections,
+    initialTrending
   ] = await Promise.all([
     getInitialBanners(),
-    getInitialCategories()
+    getInitialCategories(),
+    getHomeSections(),
+    getInitialTrending()
   ]);
 
   // Generate preload link for LCP banner image server-side
-  // This tells the browser to fetch the image immediately from HTML, before JS runs
   const firstHomeBanner = initialBanners?.find(
     (b: any) => b.type === 'Home' && b.is_visible
   );
@@ -98,6 +123,8 @@ export default async function HomePage() {
       <Home
         initialBanners={initialBanners}
         initialCategories={initialCategories}
+        initialSections={initialSections}
+        initialTrending={initialTrending}
       />
     </>
   );

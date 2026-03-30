@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import React, { Suspense } from 'react';
 import PlantCare from '@/views/utilities/PlantCare/PlantCare';
-
+import { fetchProductsByFilters, fetchFilters } from "@/utils/serverApi";
 
 export const metadata: Metadata = {
   title: "Search Plants and Products | Gidan",
@@ -23,12 +24,28 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-import React, { Suspense } from 'react';
+export default async function SearchPage({ searchParams }: { searchParams: Promise<{ query?: string; type?: string }> }) {
+  const { query = "", type = "" } = await searchParams;
 
-export default function SearchPage() {
+  // 1. Fetch initial search results and filters on the server
+  // We fetch at most 100 for SEO/Initial paint, client-side pagination handles the rest
+  const [initialData, initialFilters] = await Promise.all([
+    fetchProductsByFilters({ search: query, type: type || "" }),
+    fetchFilters(type || "plant"), // Default to plant for general filters if no type selected
+  ]);
+
+  // Extract initial SEO data from the products call
+  const initialSEOData = (initialData as any)?.category_info?.category_info || null;
+
   return (
-    <Suspense fallback={<div>Loading search...</div>}>
-      <PlantCare />
+    <Suspense fallback={<div className="flex justify-center p-12">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#375421]"></div>
+    </div>}>
+      <PlantCare
+        initialResults={initialData}
+        initialFilterData={initialFilters}
+        initialSEOData={initialSEOData}
+      />
     </Suspense>
   );
 }

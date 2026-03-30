@@ -10,11 +10,9 @@ import { getProductUrl } from "../../utils/urlHelper";
 
 
 /**
- * Reusable Recently Viewed Products Component
- * Displays a grid of recently viewed products
- * Uses the reusable ProductCard component
+ * Reusable Recently Viewed Products Component - Universal List-Style Card
  */
-const RecentlyViewedProducts = ({ title = "You might also love" }) => {
+const RecentlyViewedProducts = ({ title = "Recently Viewed" }) => {
   const [products, setProducts] = useState([]);
   const router = useRouter();
 
@@ -31,56 +29,38 @@ const RecentlyViewedProducts = ({ title = "You might also love" }) => {
     getProducts();
   }, []);
 
-  const handleProductClick = (product) => {
-    router.push(getProductUrl(product), {
-      state: {
-        product_id: product?.slug,
-        category_slug: product?.category_slug,
-        sub_category_slug: product?.sub_category_slug
-      }
-    });
-
-    // Scroll to top when navigating to product
-    window.scrollTo(0, 0);
-  };
-
 
   if (products.length === 0) {
-    return null; // Don't render if no products
+    return null;
   }
 
   return (
-    <div className="mt-16 bg-white rounded-[2rem] border border-gray-100 shadow-sm p-8 max-w-6xl mx-auto mb-12">
-      <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-50">
-        <div className="flex items-center gap-3">
-          <h2 className="text-2xl font-serif text-gray-900 italic">
-            {title}
-          </h2>
-        </div>
+    <div className="mt-20 px-4 md:px-8 max-w-full mx-auto mb-20 animate-fade-in overflow-hidden">
+      <div className="flex items-center justify-between mb-8 md:mb-12">
+        <h2 className="text-[24px] md:text-[32px] font-serif font-bold text-[#1a1f14]">
+          {title}
+        </h2>
         <Link 
           href="/shop" 
-          className="flex items-center gap-1.5 text-sm font-bold text-[#375421] hover:underline uppercase tracking-wider"
+          className="text-[11px] font-bold text-[#2d5a1b] hover:gap-2 flex items-center gap-1 tracking-widest transition-all uppercase"
         >
-          View all <ArrowRight size={16} />
+          View all <ArrowRight size={14} />
         </Link>
       </div>
 
-      {/* Product Grid - 4 columns layout matching ProductGrid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products.slice(0, 4).map((product) => (
-          <div key={product?.id} className="w-full">
+      <div className="flex items-stretch gap-4 md:gap-8 overflow-x-auto pb-8 scrollbar-hide px-1">
+        {products.slice(0, 12).map((product) => (
+          <div key={product?.id} className="shrink-0 w-[220px] xs:w-[240px] sm:w-[280px] md:w-[300px]">
             <ProductCard
               name={product?.name}
               price={Math.round(product?.selling_price)}
-              imageUrl={product?.image || "/fallback-image.jpg"}
-              userRating={product?.product_rating?.avg_rating || 0}
+              imageUrl={product?.image}
+              userRating={product?.product_rating?.avg_rating}
               ratingNumber={product?.product_rating?.num_ratings}
               product={product}
-              inCart={product?.is_cart}
-              inWishlist={product?.is_wishlist}
-              getProducts={getProducts}
               mrp={Math.round(product?.mrp)}
               ribbon={product?.ribbon}
+              getProducts={getProducts}
             />
           </div>
         ))}
@@ -88,5 +68,7 @@ const RecentlyViewedProducts = ({ title = "You might also love" }) => {
     </div>
   );
 };
+
+
 
 export default RecentlyViewedProducts;

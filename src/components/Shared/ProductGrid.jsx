@@ -217,9 +217,9 @@ const ProductGrid = ({
   };
 
   return (
-    <div id="product-grid-container" className="mt-4 p-0 md:ml-4 lg:ml-8 pr-4 md:pr-8 lg:pr-12 relative w-full max-w-7xl mx-auto z-0">
-      <div className="flex justify-between items-center mb-4 px-2">
-        <h2 className="text-xs md:text-lg text-gray-500 font-normal">
+    <div id="product-grid-container" className="mt-4 p-0 md:px-2 lg:px-4 relative w-full max-w-full mx-auto z-0 overflow-x-hidden">
+      <div className="flex justify-between items-center mb-6 px-1 md:px-2 w-full">
+        <h2 className="text-[10px] md:text-sm lg:text-base text-gray-500 font-medium">
           {productDetails?.length > 0 ? (
             <>
               Showing {showingFrom}–{showingTo} of {totalCount} products
@@ -232,7 +232,7 @@ const ProductGrid = ({
           )}
         </h2>
         {filtersApplied && productDetails?.length > 0 && (
-          <span className="text-xs text-bio-green font-medium">
+          <span className="text-[10px] md:text-xs text-bio-green font-bold uppercase tracking-wider">
             Filters Active
           </span>
         )}
@@ -240,13 +240,13 @@ const ProductGrid = ({
 
       {productDetails?.length === 0 ? (
         <div className="flex justify-center items-center h-64">
-          <div className="text-center">
+          <div className="text-center w-full px-4">
             <p className="text-gray-500 text-lg mb-2">No products match your filters</p>
             <p className="text-gray-400 text-sm">Try adjusting your filter criteria</p>
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8 xl:gap-12 justify-items-center font-sans font-medium">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4 md:gap-5 lg:gap-8 justify-items-center font-sans w-full max-w-full">
           {productDetails?.map((product, index) => {
             const key = product?.prod_id || product?.id || index;
 

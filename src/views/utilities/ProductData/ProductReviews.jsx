@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 import { Star } from "lucide-react";
 import { FaStarHalfAlt, FaStar } from "react-icons/fa";
 import WriteAReview from "./WriteAReview";
@@ -9,34 +10,27 @@ const RatingsAndReviews = ({ product_Rating, total_Rating, productId, onWriteRev
   const reviews = total_Rating || [];
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Handle case where product_Rating might be missing or empty
   const hasValidRatingSummary = product_Rating && (
     (product_Rating.num_ratings && Number(product_Rating.num_ratings) > 0) ||
     (product_Rating.avg_rating && Number(product_Rating.avg_rating) > 0)
   );
 
   const num_ratings = hasValidRatingSummary ? Number(product_Rating.num_ratings) : reviews.length;
-
-  // Robust average calculation
-  let avg_rating = 0;
-  if (hasValidRatingSummary) {
-    avg_rating = Number(product_Rating.avg_rating) || 0;
-  } else if (reviews.length > 0) {
+  let avg_rating = hasValidRatingSummary ? (Number(product_Rating.avg_rating) || 0) : 0;
+  
+  if (!hasValidRatingSummary && reviews.length > 0) {
     const total = reviews.reduce((acc, curr) => acc + (Number(curr.latest_rating) || Number(curr.product_rating) || 0), 0);
     avg_rating = total / reviews.length;
   }
 
-  // Robust stars_given breakdown
-  let stars_given = [];
   const starLevels = [5, 4, 3, 2, 1];
+  let stars_given = [];
 
   if (hasValidRatingSummary && product_Rating.stars_given && product_Rating.stars_given.length > 0) {
     const countsMap = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
     product_Rating.stars_given.forEach(item => {
       const star = Math.round(item.stars || item.rounded_rating);
-      if (star >= 1 && star <= 5) {
-        countsMap[star] = Number(item.count) || 0;
-      }
+      if (star >= 1 && star <= 5) countsMap[star] = Number(item.count) || 0;
     });
 
     stars_given = starLevels.map(star => ({
@@ -173,7 +167,7 @@ const RatingsAndReviews = ({ product_Rating, total_Rating, productId, onWriteRev
         </div>
       </div>
 
-      {/* Write a Review Modal (Legacy fallback) */}
+
       {isModalOpen && !onWriteReview && (
         <WriteAReview
           onClose={() => setIsModalOpen(false)}

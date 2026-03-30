@@ -1,26 +1,19 @@
 'use client';
 
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-// ========== NEW CODE (Feb 16, 2026) - With TanStack Query ==========
+import { Leaf } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import { useCategories } from "../../hooks/useCategories";
 
 const CategoryIcons = ({ initialData }) => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   // Use TanStack Query hook for categories
   const { data: categoryData = [], isLoading } = useCategories(initialData);
-
-  // Map categories to type_choices
-  const categoryToTypeMap = {
-    'PLANTS': 'plant',
-    'POTS': 'pot',
-    'SEEDS': 'seed',
-    'PLANT CARE': 'plantcare'
-  };
 
   const publishedCategoryData = useMemo(() => {
     return categoryData.filter((category) => category?.is_published === true);
@@ -37,7 +30,6 @@ const CategoryIcons = ({ initialData }) => {
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
   }, [openDropdown]);
-
 
   // Desktop Hover Handlers
   const handleCategoryHover = (categoryId, hasSubcategories) => {
@@ -64,96 +56,121 @@ const CategoryIcons = ({ initialData }) => {
 
   return (
     <>
-      <div className="max-w-full mx-auto px-4 md:px-8 pt-4 md:pt-6 pb-0 relative z-0">
+      <div className="max-w-full mx-auto px-4 md:px-8 pt-4 md:pt-6 pb-0 relative z-[50]">
         {/* Category Container */}
         <div
           id="category-scroll-container"
-          className="flex items-start gap-4 sm:gap-6 md:gap-8 px-2 sm:px-4 mt-6 w-full overflow-x-auto scrollbar-hide md:flex-wrap md:justify-evenly md:overflow-visible pb-2"
+          className="flex items-center gap-3 sm:gap-4 px-2 sm:px-4 mt-2 w-full overflow-x-auto md:overflow-visible md:flex-wrap scrollbar-hide pb-4 pt-1"
         >
-          {publishedCategoryData.map((category, idx) => (
-            <div
-              key={idx}
-              className="relative shrink-0 flex flex-col items-center mb-2 min-w-0 text-center category-item"
-              onMouseEnter={() => handleCategoryHover(
-                category.id,
-                category.subCategory && category.subCategory.length > 0
-              )}
-              onMouseLeave={handleCategoryLeave}
+          {/* "All" Badge */}
+          <div className="relative shrink-0">
+            <Link
+              href="/plants/"
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-full transition-all duration-300 shadow-sm border ${
+                pathname === '/plants/' 
+                  ? 'bg-[#2d5a1b] border-[#2d5a1b] text-white shadow-md active-category' 
+                  : 'bg-white border-gray-100 text-[#1a1f14] hover:border-gray-200 hover:shadow-md'
+              }`}
             >
-              <div className="flex flex-col items-center">
-                <Link
-                  href={
-                    category.name === "GIFTS" ? "/gifts/" :
-                      category.name === "SERVICES" ? "/services/" :
-                        category.name === "OFFERS" ? "/offer/" :
-                          `/${category.slug}/`
-                  }
-                  className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 lg:w-20 lg:h-20 xl:w-22 xl:h-22 border-2 border-gray-400 hover:border-gray-500 rounded-full flex items-center justify-center bg-white shadow-md overflow-hidden transition-all duration-200 hover:shadow-lg cursor-pointer"
-                >
-                  <Image
-                    src={`${process.env.NEXT_PUBLIC_API_URL}${category.image}`}
-                    alt={category.name || "Category"}
-                    className="w-full h-full object-contain rounded-full"
-                    loading="lazy"
-                    width={88}
-                    height={88}
-                    sizes="(max-width: 640px) 64px, (max-width: 768px) 72px, 88px"
-                  />
-                </Link>
-                <Link
-                  href={
-                    category.name === "GIFTS" ? "/gifts/" :
-                      category.name === "SERVICES" ? "/services/" :
-                        category.name === "OFFERS" ? "/offer/" :
-                          `/${category.slug}/`
-                  }
-                >
-                  <h2 className="mt-2 text-center text-xs sm:text-sm md:text-base font-medium text-gray-800 max-w-[70px] xs:max-w-[80px] sm:max-w-[90px] md:max-w-[100px] lg:max-w-[110px] leading-tight hover:text-bio-green transition-colors">
-                    {category.name}
-                  </h2>
-                </Link>
-              </div>
+              <Leaf size={18} className={pathname === '/plants/' ? 'text-white' : 'text-[#375421]'} />
+              <span className="text-[14px] font-semibold whitespace-nowrap">All</span>
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                pathname === '/plants/' ? 'bg-white/20 text-white' : 'bg-black/5 text-black/40'
+              }`}>
+                200+
+              </span>
+            </Link>
+          </div>
 
-              {/* Dropdown - Desktop only, smart positioning to prevent overflow */}
+          {publishedCategoryData.map((category, idx) => {
+            const isActive = pathname === `/${category.slug}/` || (category.name === "GIFTS" && pathname === "/gifts/");
+            const hasSub = category.subCategory && category.subCategory.length > 0;
+
+            return (
               <div
-                className={`hidden md:block absolute top-full pt-2 w-[220px] z-[9999] transition-all duration-200 
-                  ${openDropdown === category.id ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}
-                  ${idx >= publishedCategoryData.length - 2 ? 'right-0' : 'left-0'}`}
-                onMouseEnter={() => setOpenDropdown(category.id)}
+                key={idx}
+                className="relative shrink-0 category-item"
+                onMouseEnter={() => handleCategoryHover(category.id, hasSub)}
                 onMouseLeave={handleCategoryLeave}
               >
-                <div className="bg-white border border-gray-300 shadow-xl rounded-lg p-3 sm:p-4">
-                  <h3 className="text-bio-green font-bold mb-2 text-sm sm:text-base">
-                    {category.name}
-                  </h3>
-                  {category.subCategory && category.subCategory.length > 0 ? (
-                    <ul className="text-gray-700 space-y-1">
-                      {category.subCategory.map((item, index) => {
-                        const subcategoryUrl = `/${category.slug}/${item.slug}/`;
-                        return (
-                          <li
-                            key={index}
-                            className="hover:text-[#375421] cursor-pointer transition-colors duration-200"
-                          >
-                            <Link
-                              href={subcategoryUrl}
-                              className="block py-1 px-2 rounded hover:bg-site-bg text-xs sm:text-sm"
-                            >
-                              {item.name}
-                            </Link>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  ) : (
-                    <p className="text-gray-600 text-xs sm:text-sm whitespace-normal">
-                      More subcategories will be added soon
-                    </p>
+                <Link
+                  href={
+                    category.name === "GIFTS" ? "/gifts/" :
+                      category.name === "SERVICES" ? "/services/" :
+                        category.name === "OFFERS" ? "/offer/" :
+                          `/${category.slug}/`
+                  }
+                  className={`flex items-center gap-3 px-4 py-2.5 rounded-full transition-all duration-300 shadow-sm border ${
+                    isActive 
+                      ? 'bg-[#2d5a1b] border-[#2d5a1b] text-white shadow-md' 
+                      : 'bg-white border-gray-100 text-[#1a1f14] hover:border-gray-200 hover:shadow-md'
+                  }`}
+                >
+                  {/* Category Icon/Image */}
+                  <div className="w-6 h-6 shrink-0 flex items-center justify-center overflow-hidden">
+                    <Image
+                      src={`${process.env.NEXT_PUBLIC_API_URL}${category.image}`}
+                      alt={category.name || "Category"}
+                      className="w-full h-full object-contain"
+                      width={24}
+                      height={24}
+                      loading="lazy"
+                    />
+                  </div>
+                  
+                  {/* Category Name */}
+                  <span className="text-[14px] font-semibold whitespace-nowrap">
+                    {category.name.replace(/plants/gi, "").trim()}
+                  </span>
+
+                  {/* Product Count */}
+                  {(category.product_count !== undefined || category.count !== undefined) && (
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                      isActive ? 'bg-white/20 text-white' : 'bg-black/5 text-black/40'
+                    }`}>
+                      {category.product_count || category.count || "12"}
+                    </span>
                   )}
-                </div>
+                </Link>
+
+                {/* Sub-category Dropdown (Desktop Only) */}
+                {hasSub && (
+                  <div
+                    className={`hidden md:block absolute top-[90%] left-0 pt-4 w-[240px] z-[100] transition-all duration-300 ease-out
+                      ${openDropdown === category.id ? 'opacity-100 translate-y-0 visible' : 'opacity-0 translate-y-2 invisible pointer-events-none'}
+                      ${idx >= publishedCategoryData.length - 2 ? 'right-0 left-auto' : 'left-0'}`}
+                    onMouseEnter={() => setOpenDropdown(category.id)}
+                    onMouseLeave={handleCategoryLeave}
+                  >
+                    <div className="bg-white border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.08)] rounded-[20px] p-4 backdrop-blur-xl relative overflow-hidden">
+                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#8cb369] to-[#375421] opacity-60" />
+                      <h3 className="text-[#375421] font-black text-[10px] uppercase tracking-widest mb-4 opacity-50">
+                        Explore {category.name.replace(/plants/gi, "").trim()}
+                      </h3>
+                      <ul className="text-gray-700 space-y-1">
+                        {category.subCategory.map((item, index) => {
+                          const subcategoryUrl = `/${category.slug}/${item.slug}/`;
+                          return (
+                            <li
+                              key={index}
+                              className="hover:text-[#375421] cursor-pointer transition-colors duration-200"
+                            >
+                              <Link
+                                href={subcategoryUrl}
+                                className="block py-1 px-2 rounded hover:bg-site-bg text-xs sm:text-sm"
+                              >
+                                {item.name}
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Custom Scrollbar CSS */}
@@ -165,6 +182,18 @@ const CategoryIcons = ({ initialData }) => {
           .scrollbar-hide::-webkit-scrollbar {
             display: none;
           }
+          @keyframes slide-in {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+          }
+          .active-category {
+            animation: pulse-border 2s infinite;
+          }
+          @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(45, 90, 27, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(45, 90, 27, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(45, 90, 27, 0); }
+          }
         `}</style>
       </div>
     </>
@@ -172,223 +201,3 @@ const CategoryIcons = ({ initialData }) => {
 };
 
 export default CategoryIcons;
-
-// ========== OLD CODE (Before Feb 16, 2026 - TanStack Query) - COMMENTED OUT ==========
-// import { useState, useEffect } from "react";
-// // import axiosInstance from "../../Axios/axiosInstance";
-//
-// const CategoryIcons = () => {
-//   const [categoryData, setCategoryData] = useState([]);
-//   const [openDropdown, setOpenDropdown] = useState(null);
-//   const router = useRouter();
-//
-//   // Map categories to type_choices
-//   const categoryToTypeMap = {
-//     'PLANTS': 'plant',
-//     'POTS': 'pot',
-//     'SEEDS': 'seed',
-//     'PLANT CARE': 'plantcare'
-//   };
-//
-//   const publishedCategoryData = categoryData.filter(
-//     (category) => category?.is_published === true
-//   );
-//
-//   const getCategory = async () => {
-//     try {
-//       const response = await axiosInstance.get(`/category/`);
-//       const categories = response?.data?.data?.categories;
-//       if (categories?.length > 0) {
-//         const updatedCategories = await Promise.all(
-//           categories.map(async (category) => {
-//             if (category?.id) {
-//               const subCategory = await getSubCategory(category?.slug);
-//               const typeKey = categoryToTypeMap[category.name] || '';
-//               return { ...category, subCategory, typeKey };
-//             }
-//             return category;
-//           })
-//         );
-//         setCategoryData(updatedCategories);
-//       }
-//     } catch (error) {
-//       console.error("Error fetching categories:", error);
-//     }
-//   };
-//
-//   const getSubCategory = async (categorySlug) => {
-//     try {
-//       const response = await axiosInstance.get(
-//         `/category/categoryWiseSubCategory/${categorySlug}/`
-//       );
-//       if (response.status === 200) {
-//         return response?.data?.data?.subCategorys || [];
-//       }
-//     } catch (error) {
-//       return [];
-//     }
-//   };
-//
-//   useEffect(() => {
-//     getCategory();
-//
-//     // Close dropdown when clicking outside
-//     const handleClickOutside = (event) => {
-//       if (openDropdown !== null && !event.target.closest('.category-item')) {
-//         setOpenDropdown(null);
-//       }
-//     };
-//
-//     document.addEventListener('click', handleClickOutside);
-//     return () => document.removeEventListener('click', handleClickOutside);
-//   }, [openDropdown]);
-//
-//   const getCategorywiseProduct = (id, categoryname, slug, typeKey) => {
-//     // Always navigate directly on mobile (no dropdown toggle)
-//     if (categoryname === "GIFTS") {
-//       router.push(`/gift/`);
-//     } else if (categoryname === "SERVICES") {
-//       router.push(`/services/`);
-//     } else if (categoryname === "OFFERS") {
-//       router.push(`/offer/`);
-//     } else {
-//       router.push(`/${slug}/`, {
-//         state: {
-//           categoryId: id,
-//           categoryName: categoryname,
-//           category_slug: slug,
-//           typeKey: typeKey || ''
-//         }
-//       });
-//     }
-//   };
-//
-//   // Desktop Hover Handlers
-//   const handleCategoryHover = (categoryId, hasSubcategories) => {
-//     if (window.innerWidth >= 768 && hasSubcategories) {
-//       setOpenDropdown(categoryId);
-//     }
-//   };
-//
-//   const handleCategoryLeave = () => {
-//     if (window.innerWidth >= 768) {
-//       setOpenDropdown(null);
-//     }
-//   };
-//
-//   return (
-//     <>
-//       <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-5 relative z-10">
-//         {/* Category Container */}
-//         <div
-//           id="category-scroll-container"
-//           className="flex items-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 px-2 sm:px-4 mt-4 w-full overflow-x-auto scrollbar-hide md:flex-wrap md:justify-center pb-2"
-//         >
-//           {publishedCategoryData.map((category, idx) => (
-//             <div
-//               key={idx}
-//               className="relative shrink-0 flex flex-col items-center mb-2 min-w-0 text-center category-item"
-//               onMouseEnter={() => handleCategoryHover(
-//                 category.id,
-//                 category.subCategory && category.subCategory.length > 0
-//               )}
-//               onMouseLeave={handleCategoryLeave}
-//             >
-//               <div className="flex flex-col items-center">
-//                 <div
-//                   className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 lg:w-20 lg:h-20 xl:w-22 xl:h-22 border-2 border-gray-400 hover:border-gray-500 rounded-full flex items-center justify-center bg-white shadow-md overflow-hidden transition-all duration-200 hover:shadow-lg cursor-pointer"
-//                   onClick={(e) => {
-//                     e.stopPropagation();
-//                     getCategorywiseProduct(
-//                       category.id,
-//                       category.name,
-//                       category.slug,
-//                       category.typeKey || categoryToTypeMap[category.name] || ''
-//                     );
-//                   }}
-//                 >
-//                   <img
-//                     src={`${process.env.NEXT_PUBLIC_API_URL}${category.image}`}
-//                     alt={category.name || "Category"}
-//                     className="w-full h-full object-contain rounded-full"
-//                     loading="lazy"
-//                     width="200"
-//                     height="200"
-//                     style={{ aspectRatio: '1/1' }}
-//                   />
-//                 </div>
-//                 <h2 className="mt-2 text-center text-xs sm:text-sm md:text-base font-medium text-gray-800 max-w-[70px] xs:max-w-[80px] sm:max-w-[90px] md:max-w-[100px] lg:max-w-[110px] leading-tight">
-//                   {category.name}
-//                 </h2>
-//               </div>
-//
-//               {/* Dropdown - Desktop only, smart positioning to prevent overflow */}
-//               <div
-//                 className={`hidden md:block absolute top-full pt-2 w-[220px] z-[9999] transition-all duration-200 
-//                   ${openDropdown === category.id ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}
-//                   ${idx >= publishedCategoryData.length - 2 ? 'right-0' : 'left-0'}`}
-//                 onMouseEnter={() => setOpenDropdown(category.id)}
-//                 onMouseLeave={handleCategoryLeave}
-//               >
-//                 <div className="bg-white border border-gray-300 shadow-xl rounded-lg p-3 sm:p-4">
-//                   <h3 className="text-bio-green font-bold mb-2 text-sm sm:text-base">
-//                     {category.name}
-//                   </h3>
-//                   {category.subCategory && category.subCategory.length > 0 ? (
-//                     <ul className="text-gray-700 space-y-1">
-//                       {category.subCategory.map((item, index) => {
-//                         const subcategoryUrl = `/${category.slug}/${item.slug}/`;
-//                         return (
-//                           <li
-//                             key={index}
-//                             className="hover:text-[#375421] cursor-pointer transition-colors duration-200"
-//                           >
-//                             <Link
-//                               to={subcategoryUrl}
-//                               state={{
-//                                 categoryId: category.id,
-//                                 categoryName: category.name,
-//                                 category_slug: category.slug,
-//                                 typeKey: category.typeKey || '',
-//                                 subcategoryID: item.id,
-//                                 subCategory: {
-//                                   name: item.name,
-//                                   subcategory_slug: item.slug
-//                                 }
-//                               }}
-//                               className="block py-1 px-2 rounded hover:bg-site-bg text-xs sm:text-sm"
-//                             >
-//                               {item.name}
-//                             </Link>
-//                           </li>
-//                         );
-//                       })}
-//                     </ul>
-//                   ) : (
-//                     <p className="text-gray-600 text-xs sm:text-sm whitespace-normal">
-//                       More subcategories will be added soon
-//                     </p>
-//                   )}
-//                 </div>
-//               </div>
-//             </div>
-//           ))}
-//         </div>
-//
-//         {/* Custom Scrollbar CSS */}
-//         <style jsx>{`
-//           .scrollbar-hide {
-//             -ms-overflow-style: none;
-//             scrollbar-width: none;
-//           }
-//           .scrollbar-hide::-webkit-scrollbar {
-//             display: none;
-//           }
-//         `}</style>
-//       </div>
-//     </>
-//   );
-// };
-//
-// export default CategoryIcons;
-// ========== END OLD CODE ==========

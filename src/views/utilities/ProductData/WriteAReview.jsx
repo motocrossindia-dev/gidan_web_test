@@ -1,16 +1,15 @@
-'use client';
-
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from 'react';
 import { ArrowBack } from '@mui/icons-material';
 import { enqueueSnackbar } from 'notistack';
 import axiosInstance from '../../../Axios/axiosInstance';
+import { motion, AnimatePresence } from "framer-motion";
 
 const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInline = false }) => {
   const product = productDetailData?.data?.product || productDetailData?.product || productDetailData;
 
-
   const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
   const [reviewTitle, setReviewTitle] = useState('');
   const [comment, setComment] = useState('');
   const [recommend, setRecommend] = useState('yes');
@@ -21,19 +20,15 @@ const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInli
   const [hasExistingReview, setHasExistingReview] = useState(false);
   const router = useRouter();
 
-  // Close modal when clicking outside (only if not inline)
   useEffect(() => {
     if (isInline) return;
     const handleOutsideClick = (event) => {
-      if (event.target.id === 'modal-overlay') {
-        onClose();
-      }
+      if (event.target.id === 'modal-overlay') onClose();
     };
     window.addEventListener('click', handleOutsideClick);
     return () => window.removeEventListener('click', handleOutsideClick);
   }, [onClose, isInline]);
 
-  // Fetch existing review if it exists
   useEffect(() => {
     const fetchExistingReview = async () => {
       if (!productId) {
@@ -45,7 +40,6 @@ const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInli
         const response = await axiosInstance.get(`/product/ratingAndReviews/${productId}/`);
         const reviewData = response.data?.data || response.data;
         
-        // Check for user's existing review in different possible response structures
         const userReview = reviewData?.user_review || 
                           reviewData?.current_user_review ||
                           reviewData?.reviews?.find(review => review.is_current_user) ||
@@ -60,10 +54,7 @@ const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInli
           setHasExistingReview(true);
         }
       } catch (error) {
-        // 404 = no review yet, other errors also treated as no existing review
-        if (error?.response?.status !== 404) {
-          console.error("Error fetching existing review:", error);
-        }
+        if (error?.response?.status !== 404) console.error("Error fetching existing review:", error);
       } finally {
         setIsLoadingExisting(false);
       }
@@ -71,17 +62,13 @@ const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInli
     fetchExistingReview();
   }, [productId]);
 
-  // Submit review function
   const handleSubmit = async () => {
     setSubmissionError(null);
     setIsSubmitting(true);
-    if (!productId || isNaN(productId)) {
-      enqueueSnackbar('Invalid product ID. Please refresh the page.', { variant: 'error' });
-      return;
-    }
-
+    
     if (rating === 0) {
-      enqueueSnackbar('Please select a rating before submitting.');
+      enqueueSnackbar('Please select a rating before submitting.', { variant: 'warning' });
+      setIsSubmitting(false);
       return;
     }
 
@@ -93,49 +80,16 @@ const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInli
     formData.append('main_product_id', productId);
 
     try {
-      const response = await axiosInstance.post(
-        `/product/ratingAndReviews/${productId}/`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
+      const response = await axiosInstance.post(`/product/ratingAndReviews/${productId}/`, formData);
       if (response.status === 200 || response.status === 201) {
-        const successMessage = hasExistingReview ? 'Review updated successfully!' : 'Review submitted successfully!';
-        enqueueSnackbar(successMessage, { variant: 'success' });
+        enqueueSnackbar(hasExistingReview ? 'Review updated successfully!' : 'Review submitted successfully!', { variant: 'success' });
         if (onSuccess) onSuccess();
         onClose();
       }
-
     } catch (error) {
-      console.error('Error submitting review:', error);
-
-      let errorMsg = 'Failed to submit review. ';
-
-      if (error.response) {
-        const status = error.response.status;
-        const serverMsg = error.response.data?.message || error.response.data?.error;
-
-        if (status === 500) {
-          errorMsg = "Internal Server Error (500): We're having trouble on our end. Please try again in a few minutes.";
-        } else if (status === 401 || status === 403) {
-          errorMsg = "Authentication Error: Please sign in again to submit a review.";
-        } else if (status === 400) {
-          errorMsg = serverMsg || "Invalid submission. Please check your review details.";
-        } else if (serverMsg) {
-          errorMsg = serverMsg;
-        }
-      } else if (error.request) {
-        errorMsg = "Network Error: Please check your internet connection.";
-      }
-
+      let errorMsg = error.response?.data?.message || "Failed to submit review. Please try again.";
       setSubmissionError(errorMsg);
-      enqueueSnackbar(errorMsg, {
-        variant: 'error',
-        autoHideDuration: 6000
-      });
+      enqueueSnackbar(errorMsg, { variant: 'error' });
     } finally {
       setIsSubmitting(false);
     }
@@ -143,22 +97,10 @@ const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInli
 
   if (isLoadingExisting) {
     return (
-      <div className={isInline ? "w-full p-4 border rounded-xl mt-4" : "fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 font-sans"}>
-        <div className={isInline ? "" : "bg-white p-6 rounded-lg shadow-xl w-11/12 max-w-md text-center"}>
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#375421] mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your review...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!product) {
-    return (
-      <div className={isInline ? "w-full p-4 border rounded-xl mt-4" : "fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 font-sans"}>
-        <div className={isInline ? "" : "bg-white p-6 rounded-lg shadow-xl w-11/12 max-w-md text-center"}>
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#375421] mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading product information...</p>
-          <button onClick={onClose} className="mt-4 text-[#375421] font-medium">Cancel</button>
+      <div className={isInline ? "w-full p-12 text-center" : "fixed inset-0 z-[100] flex items-center justify-center bg-black/20 backdrop-blur-sm"}>
+        <div className="pdp-wrapper p-8 rounded-3xl bg-white shadow-xl">
+          <div className="w-12 h-12 border-4 border-bio-green/20 border-t-bio-green rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-sm font-bold text-gray-500">Cultivating your review...</p>
         </div>
       </div>
     );
@@ -184,8 +126,6 @@ const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInli
             {isEditing ? 'Edit your review' : 'Write a Review'}
           </h2>
         </div>
-
-
 
         {/* Show existing review notice */}
         {hasExistingReview && (
@@ -305,5 +245,6 @@ const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInli
     </div>
   );
 };
+
 
 export default WriteAReview;

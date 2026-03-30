@@ -380,8 +380,8 @@ const FilterSidebar = ({
       'gift': '',
     };
 
-    // Clear route IDs on type switch so the old category isn't sent
-    let finalCategoryId = forceResetIds ? "" : (categoryId || categoryIdFromSlug || "");
+    // Clear route IDs on type switch or when a search query is active so we search across all categories
+    let finalCategoryId = (forceResetIds || searchQuery) ? "" : (categoryId || categoryIdFromSlug || "");
 
     // If we're on a type change, default to the correct category ID for that type.
     if (isTypeMismatch && !forceResetIds) {
@@ -421,21 +421,22 @@ const FilterSidebar = ({
     params.append("max_price", pr.max || "");
 
     // All filter IDs (send value or empty string)
-    params.append("color_id", filtersObj.color || "");
-    params.append("size_id", filtersObj.size || "");
-    params.append("planter_size_id", filtersObj.planter_size || "");
-    params.append("planter_id", filtersObj.planter || "");
-    params.append("weight_id", filtersObj.weights || "");
-    params.append("pot_type_id", filtersObj.pot_type || "");
-    params.append("litre_id", filtersObj.litre || "");
+    // We check both singular and plural versions of keys to handle inconsistent backend data
+    params.append("color_id", filtersObj.color || filtersObj.colors || "");
+    params.append("size_id", filtersObj.size || filtersObj.sizes || "");
+    params.append("planter_size_id", filtersObj.planter_size || filtersObj.planter_sizes || "");
+    params.append("planter_id", filtersObj.planter || filtersObj.planters || "");
+    params.append("weight_id", filtersObj.weight || filtersObj.weights || "");
+    params.append("pot_type_id", filtersObj.pot_type || filtersObj.pot_types || "");
+    params.append("litre_id", filtersObj.litre || filtersObj.litres || "");
 
     // Standardizing to singular keys for better backend compatibility
-    params.append("space_and_light_id", filtersObj.space_and_light || "");
-    params.append("special_filter_id", filtersObj.special_filters || "");
-    params.append("care_guide_id", filtersObj.care_guides || "");
+    params.append("space_and_light_id", filtersObj.space_and_light || filtersObj.space_and_lights || "");
+    params.append("special_filter_id", filtersObj.special_filter || filtersObj.special_filters || "");
+    params.append("care_guide_id", filtersObj.care_guide || filtersObj.care_guides || "");
 
     // min_rating handling (ensure only numeric value is sent)
-    params.append("min_rating", filtersObj.rating_options || "");
+    params.append("min_rating", filtersObj.rating_option || filtersObj.rating_options || "");
 
     // Prioritize selectedPublicFlag prop from Parent component
     const effectiveFlag = selectedPublicFlag || filtersObj.flags || "";
@@ -521,6 +522,12 @@ const FilterSidebar = ({
       if (setFiltersApplied) {
         setFiltersApplied(true);
       }
+
+      // RESET interaction flag after a successful apply to prevent URL-driven re-renders from looping
+      // We use a small timeout to ensure the current render cycle completes
+      setTimeout(() => {
+        userInteracted.current = false;
+      }, 100);
 
       const catInfo = res.data?.category_info?.category_info || null;
       if (setCategoryData) {
@@ -631,9 +638,9 @@ const FilterSidebar = ({
     setFetchedSubcategoryName,
     setSeoData,
     setIsSubcategorySEO,
-    setCurrentQuery,
     typeKey,
-    selectedPublicFlag
+    selectedPublicFlag,
+    searchQuery
   ]);
 
   // AUTO-APPLY: whenever selectedFilters, selectedFilterType, or priceRange changes after user interaction, apply immediately
@@ -645,7 +652,7 @@ const FilterSidebar = ({
       applyFilters();
     }, 500);
     return () => clearTimeout(timer);
-  }, [selectedFiltersSync, selectedFilterType, priceRangeSync, selectedPublicFlag, applyFilters]);
+  }, [selectedFiltersSync, selectedFilterType, priceRangeSync, selectedPublicFlag, searchQuery, applyFilters]);
 
   // AUTO-APPLY LOGIC for ID-based navigation (Legacy support)
   useEffect(() => {
@@ -671,26 +678,34 @@ const FilterSidebar = ({
     setPriceRange({ min: "", max: "" });
     setOpenFilters({});
     if (setFiltersApplied) setFiltersApplied(false);
-    if (setCurrentFilterType) {
-      setCurrentFilterType(null);
+    // We no longer reset currentFilterType to null, as it should stay on the current category context.
+    if (setSelectedPublicFlag) {
+      setSelectedPublicFlag(null);
+    }
+
+    // Clear filters from URL while preserving the base context (search page query/type)
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      // We explicitly clear the "search" query from the URL if it was previously present
+      url.searchParams.delete('query');
+      
+      // We remove specific faceted filters but keep the "type" if we are on the search page
+      // On category routes, the type is part of the path, so this is safe.
+      const filtersToClear = ['color_id', 'size_id', 'min_price', 'max_price', 'planter_size_id', 'planter_id', 'weight_id', 'pot_type_id', 'litre_id', 'space_and_light_id', 'special_filter_id', 'care_guide_id', 'min_rating', 'flag'];
+      filtersToClear.forEach(f => url.searchParams.delete(f));
+      
+      window.history.replaceState(null, '', url.pathname + url.search);
+      window.dispatchEvent(new PopStateEvent('popstate'));
     }
 
     // Re-fetch unfiltered products using complete API format
     try {
       const params = new URLSearchParams();
+      // Use strictly the route context for reset so breadcrumb and data revert to default
+      const finalCategoryId = categoryId || categoryIdFromSlug || "";
+      const finalSubcategoryId = subcategoryID || "";
 
-      const isTypeMismatch = typeKey && selectedFilterType &&
-        selectedFilterType.toLowerCase() !== typeKey.toLowerCase();
-
-      let finalCategoryId = categoryId || categoryIdFromSlug || "";
-      let finalSubcategoryId = subcategoryID || "";
-
-      if (isTypeMismatch) {
-        finalCategoryId = "";
-        finalSubcategoryId = "";
-      }
-
-      params.append("type", selectedFilterType || "");
+      params.append("type", selectedFilterType || typeKey || "");
       params.append("category_id", finalCategoryId);
       params.append("subcategory_id", finalSubcategoryId);
       params.append("search", "");
@@ -722,10 +737,17 @@ const FilterSidebar = ({
       if (setCategoryData) {
         setCategoryData(res.data?.category_info?.category_info || null);
       }
+      if (setSeoData) {
+        setSeoData(res.data?.category_info?.category_info || null);
+      }
+      if (setIsSubcategorySEO) {
+        setIsSubcategorySEO(false);
+      }
+
     } catch (err) {
       console.error("Reset filters fetch error:", err);
     }
-  }, [setFiltersApplied, setCurrentFilterType, selectedFilterType, categoryId, categoryIdFromSlug, subcategoryID, setResults, setProducts, setCategoryData, isSeasonalCollection, isTrending, isFeatured, isBestSeller]);
+  }, [setFiltersApplied, selectedFilterType, categoryId, categoryIdFromSlug, subcategoryID, setResults, setProducts, setCategoryData, setSeoData, setIsSubcategorySEO, isSeasonalCollection, isTrending, isFeatured, isBestSeller, typeKey]);
 
   const removeFilter = useCallback((filter, value) => {
     userInteracted.current = true; // trigger auto-apply after removal
@@ -786,8 +808,12 @@ const FilterSidebar = ({
 
         {options.length > 6 ? (
           /* Dropdown for > 6 options (Standard for Color, Planter Size) */
-          <div className="relative group">
+          <div 
+            className="relative group"
+            ref={(el) => (dropdownContainerRefs.current[filter] = el)}
+          >
             <button
+              ref={(el) => (dropdownButtonRefs.current[filter] = el)}
               onClick={() => handleFilterToggle(filter)}
               className="w-full flex justify-between items-center px-4 py-3 border border-gray-200 rounded-xl text-xs font-bold bg-white hover:border-[#375421] transition-all shadow-sm"
             >
