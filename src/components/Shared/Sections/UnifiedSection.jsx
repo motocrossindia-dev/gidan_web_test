@@ -11,7 +11,7 @@ import {
 import ProductCard from '../ProductCard';
 
 const processUrl = (url) => {
-    if (!url || typeof url !== 'string') return "/static/logo/gidan.png";
+    if (!url || typeof url !== 'string') return "/logo.png";
     if (url.startsWith('http') || url.startsWith('data:') || url.startsWith('/static')) return url;
     return url.startsWith('/') ? `${process.env.NEXT_PUBLIC_API_URL || ''}${url}` : `${process.env.NEXT_PUBLIC_API_URL || ''}/${url}`;
 };

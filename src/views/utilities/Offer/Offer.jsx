@@ -2,26 +2,26 @@
 
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { ShoppingCart } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { enqueueSnackbar } from "notistack";
+import { isMobile } from "react-device-detect";
 import axiosInstance from "../../../Axios/axiosInstance";
-import { addToCart } from "../../../redux/Slice/cartSlice";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
-import ProductCard from "../PlantFilter/ProductCard";
-import { getProductUrl } from "../../../utils/urlHelper";
+import ProductCard from "@/components/Shared/ProductCard";
+import PageHeader from "@/components/Shared/PageHeader";
+import OfferTabs from "./OfferTabs";
+import ModernComboCard from "../ComboOffer/ModernComboCard";
 
 function Offer({ initialOffers = [] }) {
+  const [activeTab, setActiveTab] = useState('products');
   const [offers, setOffers] = useState(initialOffers);
-  const [cartItems, setCartItems] = useState([]);
+  const [comboOffers, setComboOffers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  
   const router = useRouter();
-  const dispatch = useDispatch();
-
-  // ✅ Auth states
-  const [token] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('token') : null);
   const accessToken = useSelector(selectAccessToken);
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
-  // ✅ Fetch Offer Products
   const getOfferProducts = async () => {
     try {
       const response = await axiosInstance.get(`/product/offerProducts/`);
@@ -33,68 +33,148 @@ function Offer({ initialOffers = [] }) {
     }
   };
 
+  const getComboOffers = async () => {
+    try {
+      const response = await axiosInstance.get(`/combo/combo_offers_list/`);
+      if (response.status === 200) {
+        setComboOffers(response.data.data?.combo_offers || []);
+      }
+    } catch (error) {
+      console.error("Error fetching combos:", error);
+    }
+  };
+
   useEffect(() => {
     if (initialOffers.length === 0) {
       getOfferProducts();
     }
-  }, [initialOffers.length]);
+    getComboOffers();
+  }, [initialOffers]);
 
-  const handleAddToCartSubmit = (offer) => {
-    // This is now handled internally by ProductCard
-    // but we can keep it as a fallback or if we need custom logic
+  const handleBuyCombo = async (id) => {
+    if (!isAuthenticated) {
+      enqueueSnackbar("Please Login or Signup to Buy Our Products.");
+      if (isMobile) {
+        router.push("/mobile-signin", { replace: true });
+      } else {
+        router.push("/?modal=signIn", { replace: true });
+      }
+      return;
+    }
+
+    const product_data = {
+      order_source: "combo",
+      combo_id: id,
+      quantity: 1
+    };
+
+    try {
+      setIsLoading(true);
+      const response = await axiosInstance.post(`/order/placeOrder/`, product_data, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.status === 200) {
+        const ordersummary = response?.data?.data;
+        const selectedOffer = comboOffers.find((o) => o.id === id) || null;
+
+        if (selectedOffer) {
+          sessionStorage.setItem("selected_combo_offer", JSON.stringify(selectedOffer));
+          sessionStorage.setItem("checkout_combo_offer", JSON.stringify(selectedOffer));
+        }
+        sessionStorage.setItem('checkout_ordersummary', JSON.stringify(ordersummary));
+        router.push("/checkout");
+      }
+    } catch (error) {
+      console.error("Error placing combo order:", error);
+      enqueueSnackbar(error.response?.data?.message || "Failed to place order.", { variant: "error" });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const [wishlistUpdated, setWishlistUpdated] = useState(0);
-  const [cartUpdated, setCartUpdated] = useState(0);
-
-  useEffect(() => {
-    const handleWishlistUpdate = () => setWishlistUpdated(prev => prev + 1);
-    const handleCartUpdate = () => setCartUpdated(prev => prev + 1);
-
-    window.addEventListener('wishlistUpdated', handleWishlistUpdate);
-    window.addEventListener('cartUpdated', handleCartUpdate);
-
-    return () => {
-      window.removeEventListener('wishlistUpdated', handleWishlistUpdate);
-      window.removeEventListener('cartUpdated', handleCartUpdate);
-    };
-  }, []);
-
-  // Re-fetch or refresh states when wishlist/cart changes
-  useEffect(() => {
-    getOfferProducts();
-  }, [wishlistUpdated, cartUpdated]);
-
   return (
-    <div className="container mx-auto md:px-4 px-0 py-8">
-      <h2 className="md:text-3xl text-xl text-center font-bold mb-4">Special Offers</h2>
-      <p className="text-gray-600 mb-8 md:text-xl text-center">
-        Don’t miss out on these exclusive offers!
-      </p>
+    <div className="min-h-screen bg-[#faf9f6]">
+      <PageHeader 
+        title="Exclusive Deals & Offers" 
+        subtitle="Unbeatable savings on nature's finest selection" 
+      />
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 justify-items-center">
-        {offers?.map((offer, index) => (
-          <div
-            key={`offer-${offer.id}-${index}`}
-            className="w-full cursor-pointer"
-            onClick={() => router.push(getProductUrl(offer))}
-          >
-            <ProductCard
-              name={offer?.name}
-              price={Math.round(offer?.selling_price)}
-              imageUrl={offer?.image}
-              userRating={offer?.product_rating?.avg_rating || 0}
-              ratingNumber={offer?.product_rating?.num_ratings || 0}
-              product={offer}
-              mrp={offer?.mrp && offer?.mrp > offer?.selling_price ? Math.round(offer?.mrp) : null}
-              ribbon={offer?.ribbon || "OFFER"}
-              inWishlist={offer?.is_wishlist}
-              inCart={offer?.is_cart}
-            />
-          </div>
-        ))}
+      <div className="container mx-auto px-4 py-12">
+        {/* Tab Selection */}
+        <OfferTabs activeTab={activeTab} setTab={setActiveTab} />
+
+        {/* Content Section */}
+        <div className="max-w-7xl mx-auto">
+          {activeTab === 'products' ? (
+            <div className="space-y-8">
+              <div className="flex flex-col items-center text-center mb-10">
+                <span className="text-[#A7D949] font-black uppercase tracking-[0.3em] text-xs mb-2">Individual Deals</span>
+                <h2 className="text-4xl font-serif text-[#173113]">Special Products</h2>
+                <p className="text-gray-500 mt-2 font-serif">Handpicked plant deals</p>
+                <div className="w-24 h-1 bg-[#A7D949] mt-4 rounded-full" />
+              </div>
+              
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                {offers?.map((offer, index) => (
+                  <ProductCard
+                    key={`prod-offer-${offer.id}-${index}`}
+                    product={offer}
+                    priority={true}
+                  />
+                ))}
+              </div>
+              
+              {offers.length === 0 && (
+                <div className="py-20 text-center">
+                  <p className="text-lg text-gray-400 font-serif">No individual offers available at the moment.</p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="space-y-8">
+               <div className="flex flex-col items-center text-center mb-10">
+                <span className="text-[#A7D949] font-black uppercase tracking-[0.3em] text-xs mb-2">Value Bundles</span>
+                <h2 className="text-4xl font-serif text-[#173113]">Specially Curated Combos</h2>
+                <div className="w-24 h-1 bg-[#A7D949] mt-4 rounded-full" />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {comboOffers?.map((offer, index) => (
+                  <div key={`combo-offer-${offer.id}-${index}`} onClick={() => handleBuyCombo(offer.id)}>
+                    <ModernComboCard offer={offer} />
+                  </div>
+                ))}
+              </div>
+
+              {comboOffers.length === 0 && (
+                <div className="py-20 text-center">
+                  <p className="text-lg text-gray-400 font-serif">No combo deals available at the moment.</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Trust & Policy Section */}
+        <div className="mt-24 pt-16 border-t border-[#173113]/5">
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+             {[
+               { title: 'Quality Guarantee', desc: 'Each plant is hand-selected and inspected before shipping.' },
+               { title: 'Safe Transit', desc: 'Custom botanical packaging ensures healthy arrival.' },
+               { title: 'Care Support', desc: 'Lifetime support and digital care guides for every purchase.' }
+             ].map((item, i) => (
+               <div key={i} className="text-center">
+                 <h4 className="font-serif text-xl text-[#173113] mb-2">{item.title}</h4>
+                 <p className="text-gray-500 text-sm">{item.desc}</p>
+               </div>
+             ))}
+           </div>
+        </div>
       </div>
-
     </div>
   );
 }

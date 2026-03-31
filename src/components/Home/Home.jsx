@@ -11,22 +11,17 @@ import Blog from '../../components/Blog/Blog';
 import ReferralSection from '../../components/Home/ReferralSection';
 import StoreSection from '../../components/Home/StoreSection';
 import GlobalReviews from '../../components/Home/GlobalReviews';
-import { Suspense } from 'react';
+import ShopTheLook from '../../components/ShopTheLook/ShopTheLook';
+import React, { Suspense } from 'react';
 
 
 const Home = ({ 
   initialBanners, 
   initialCategories, 
   initialHomeData,
-  initialTrending,
-  initialFeatured,
-  initialBestseller,
-  initialSeasonal,
-  initialSeasonalTrending,
-  initialSeasonalFeatured,
-  initialSeasonalBestseller,
-  initialLatest,
-  initialGlobalReviews,
+  trendingSection,
+  seasonalSection,
+  reviewsSection,
   publicFlags = []
 }) => {
 
@@ -43,50 +38,37 @@ const Home = ({
 
       {homeData?.sections?.map((section, index) => (
         <LazyLoadWrapper key={section.id} height="600px">
-          <Suspense fallback={<LoadingFallback />}>
+          <Suspense key={`dynamic-suspense-${section.id}`} fallback={<LoadingFallback />}>
             <DynamicSection section={section} />
           </Suspense>
           
           {/* Inject TrustBadges, CategoryIcons and TrendingSection after the 1st section */}
           {index === 0 && (
-            <>
-              <TrustBadges />
+            <React.Fragment key={`section-0-injections-${section.id}`}>
+              <TrustBadges variant="row" />
               <CategoryIcons initialData={initialCategories} />
-              <div className="mt-8">
-                <TrendingSection 
-                  initialTrending={initialTrending}
-                  initialFeatured={initialFeatured}
-                  initialBestseller={initialBestseller}
-                  initialLatest={initialLatest}
-                  publicFlags={publicFlags}
-                />
-              </div>
-            </>
+              {trendingSection}
+            </React.Fragment>
           )}
 
           {/* Inject SeasonalSection after the 2nd section */}
           {index === 1 && (
-            <div className="mt-8">
-              <SeasonalSection 
-                initialSeasonal={initialSeasonal} 
-                initialSeasonalTrending={initialSeasonalTrending}
-                initialSeasonalFeatured={initialSeasonalFeatured}
-                initialSeasonalBestseller={initialSeasonalBestseller}
-                publicFlags={publicFlags}
-              />
-            </div>
+             <React.Fragment key={`section-1-injections-${section.id}`}>
+                {seasonalSection}
+             </React.Fragment>
           )}
 
           {/* Inject Blog section and GlobalReviews after the 4th section */}
           {index === 3 && (
-            <>
+            <React.Fragment key={`section-3-injections-${section.id}`}>
               <div className="mt-8">
                 <Blog />
               </div>
               <div className="mt-8">
-                <GlobalReviews initialGlobalReviews={initialGlobalReviews} />
+                <ShopTheLook />
               </div>
-            </>
+              {reviewsSection}
+            </React.Fragment>
           )}
 
           {/* Inject Referral section after the 5th section */}

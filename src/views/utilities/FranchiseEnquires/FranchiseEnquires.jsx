@@ -1,26 +1,29 @@
 'use client';
 
 import React, { useEffect } from "react";
-import HeroSection from "./HeroSection";
+import PageHeader from "@/components/Shared/PageHeader";
 import FranchiseForm from "./FranchiseForm";
 import WhyWeRockSection from "./WhyWeRock";
 import StoreLocations from "./StoreLocations";
+
 function FranchiseEnquires() {
   useEffect(() => {
     window.scrollTo(0, 0); // Scroll to the top
   }, []);
-  return (
-    <>
-      
 
-      <div className="space-y-10 bg-site-bg mt-10 px-4 md:px-0 mb-2">
-        <HeroSection />
+  return (
+    <main className="font-sans text-[#173113] bg-[#faf9f6] min-h-screen">
+      <PageHeader 
+        title="Grow with Gidan" 
+        subtitle="Join our network of sustainable gardening partners and cultivate success."
+      />
+      
+      <div className="space-y-24 bg-[#faf9f6] pb-24">
         <FranchiseForm />
         <WhyWeRockSection />
         <StoreLocations />
       </div>
-    </>
-
+    </main>
   );
 }
 

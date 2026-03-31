@@ -49,7 +49,7 @@ useEffect(() => {
   const fetchServices = async () => {
     try {
       const res = await axios.get(
-        "https://backend.gidan.store/services/publicservice_list/"
+        `${process.env.NEXT_PUBLIC_API_URL}/services/publicservice_list/`
       );
 
       // show only visible services
@@ -99,7 +99,7 @@ useEffect(() => {
              {services.map((service) => (
   <SwiperSlide key={service.id}>
     <ServiceCard
-      image={`https://backend.gidan.store${service.Image}`}
+      image={`${process.env.NEXT_PUBLIC_API_URL}${service.Image}`}
       title={service.title}
       heading={service.Heading}
     />
@@ -137,7 +137,7 @@ useEffect(() => {
             {services.map((service) => (
   <SwiperSlide key={service.id}>
     <ServiceCard
-      image={`https://backend.gidan.store${service.Image}`}
+      image={`${process.env.NEXT_PUBLIC_API_URL}${service.Image}`}
       title={service.title}
       heading={service.Heading}
     />

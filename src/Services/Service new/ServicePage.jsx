@@ -12,26 +12,25 @@ const service = typeof _service === 'string' ? _service : _service?.src || _serv
 import axiosInstance from "../../Axios/axiosInstance";
 import axios from "axios";
 
-const ServicesPage = () => {
-
-  const [services, setServices] = useState([]);
+const ServicesPage = ({ initialServices = [] }) => {
+  const [services, setServices] = useState(initialServices);
 
   useEffect(() => {
+    if (initialServices.length > 0) return; // Skip if already have data from SSR
+
     const fetchServices = async () => {
       try {
         const res = await axios.get(
-          "https://backend.gidan.store/services/publicservice_list/"
+          `${process.env.NEXT_PUBLIC_API_URL}/services/publicservice_list/`
         );
-
         const visibleServices = res.data.filter(item => item.Visible);
         setServices(visibleServices);
       } catch (error) {
         console.error(error);
       }
     };
-
     fetchServices();
-  }, []);
+  }, [initialServices]);
 
 
   const [formData, setFormData] = useState({
@@ -83,8 +82,16 @@ const ServicesPage = () => {
   return (
     <>
       <div className="bg-white min-h-screen">
-        <header className="bg-site-bg text-black py-3 md:py-4 px-8 mt-4">
-          <h1 className="text-2xl md:text-3xl  font-bold text-center">Services We Provide</h1>
+        <header className="py-12 md:py-20 text-center max-w-4xl mx-auto px-4">
+          <span className="inline-block px-3 py-1 rounded-full bg-[#375421]/5 text-[#375421] text-[10px] font-black uppercase tracking-[0.25em] mb-4">
+            Our Offerings
+          </span>
+          <h1 className="text-4xl md:text-6xl font-serif text-[#1a1f14] leading-tight ">
+            Services We <span className="italic text-[#375421]">Provide</span>
+          </h1>
+          <p className="text-gray-500 max-w-xl mx-auto font-medium leading-relaxed mt-6">
+            Professional gardening and landscaping solutions tailored to your unique green vision.
+          </p>
         </header>
 
         <main className="container mx-auto px-4 py-2 md:py-8">
@@ -102,7 +109,7 @@ const ServicesPage = () => {
                 <div className="w-full bg-white rounded-lg p-4">
                   <img
                     className="w-full h-60 object-cover rounded-lg mb-4"
-                    src={`https://backend.gidan.store${service.Image}`}
+                    src={`${process.env.NEXT_PUBLIC_API_URL}${service.Image}`}
                     alt={service.Heading}
                   />
                   <h3 className="text-xl font-semibold text-center text-gray-800">
@@ -118,8 +125,15 @@ const ServicesPage = () => {
 
 
 
-          <div className="flex flex-col items-center my-6 p-3 bg-white rounded-md ">
-            <h2 className="text-xl md:text-2xl font-bold mb-6 text-center">How it Works</h2>
+          <div className="flex flex-col items-center my-12 md:my-20 p-6 bg-[#fafafa] rounded-[40px] md:rounded-[60px] border border-gray-100/50">
+            <div className="text-center mb-10 md:mb-16">
+              <span className="inline-block px-3 py-1 rounded-full bg-[#375421]/5 text-[#375421] text-[10px] font-black uppercase tracking-[0.25em] mb-4">
+                The Process
+              </span>
+              <h2 className="text-3xl md:text-5xl font-serif text-[#1a1f14] leading-tight">
+                How it <span className="italic text-[#375421]">Works</span>
+              </h2>
+            </div>
             <div className="grid grid-cols-4 gap-4 w-full">
               <div className="flex flex-col items-center">
                 <FaHandPointer className="text-[#0e1b47]" size={24} />
@@ -151,8 +165,13 @@ const ServicesPage = () => {
                   className="w-full h-full object-cover rounded-lg hover:scale-105 transition duration-500"
                 />
               </div>
-              <div className="md:w-1/2 w-full md:bg-white  md:p-6 rounded-lg md:shadow-lg">
-                <h2 className="text-xl text-center md:text-3xl font-semibold mb-6 text-black-600">Gidan Service</h2>
+              <div className="md:w-1/2 w-full md:bg-white  md:p-10 rounded-[30px] md:shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
+                <h2 className="text-2xl md:text-4xl font-serif text-[#1a1f14] mb-3 text-center">
+                  Book a <span className="italic text-[#375421]">Visit</span>
+                </h2>
+                <p className="text-gray-500 text-center mb-8 font-medium max-w-md mx-auto text-sm">
+                  Transform your space with Gidan's expert touch. Fill out the form below and we'll reach out shortly.
+                </p>
 
                 {/* Show success/error comment */}
                 {comment && (

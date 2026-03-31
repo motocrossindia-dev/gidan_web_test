@@ -265,12 +265,12 @@ const ProductGrid = ({
               >
                 <ProductCard
                   name={product?.name}
-                  price={Math.round(product?.selling_price)}
+                  price={product?.selling_price}
                   imageUrl={product?.image}
                   userRating={product?.product_rating?.avg_rating}
                   ratingNumber={product?.product_rating?.num_ratings}
                   product={product}
-                  mrp={Math.round(product?.mrp)}
+                  mrp={product?.mrp}
                   ribbon={product?.ribbon}
                   inWishlist={product?.is_wishlist}
                   inCart={product?.is_cart}

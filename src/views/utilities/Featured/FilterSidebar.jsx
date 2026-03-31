@@ -577,6 +577,7 @@ const FilterSidebar = ({
             subtitle: info.subtitle || `${name} - Buy Online in India from Gidan.store`,
             description: info.description || info.intro_text || info.content || "",
             sections: info.sections || [],
+            info_cards: info.info_cards || []
           });
 
           if (matchedSub?.sub_category_info?.description || matchedSub?.sub_category_info?.sections?.length) {
@@ -596,11 +597,11 @@ const FilterSidebar = ({
             if (setIsSubcategorySEO) setIsSubcategorySEO(true);
 
             if (finalSubcategorySlug && categorySegment) {
-              // Fire-and-forget: fetch rich SEO then update once resolved
+              const endpoint = categorySegment === 'offers' ? '/product/offerProducts/' : `/category/categoryWiseSubCategory/${categorySegment}/`;
               axiosInstance
-                .get(`/category/categoryWiseSubCategory/${categorySegment}/`)
+                .get(endpoint)
                 .then(subRes => {
-                  const subcats = subRes.data?.data?.subCategorys || [];
+                  const subcats = subRes.data?.data?.subCategorys || subRes.data?.products || [];
                   const found = subcats.find(s =>
                     s.slug === finalSubcategorySlug ||
                     s.id == finalSubcategoryId
@@ -615,7 +616,12 @@ const FilterSidebar = ({
           }
         } else {
           // No subcategory — revert to category-level SEO from API response
-          if (catInfo) setSeoData(catInfo);
+          if (catInfo) {
+            setSeoData({ 
+              ...catInfo, 
+              info_cards: catInfo.info_cards || catInfo.category_info?.info_cards || []
+            });
+          }
           if (setIsSubcategorySEO) setIsSubcategorySEO(false);
         }
       }

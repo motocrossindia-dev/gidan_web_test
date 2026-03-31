@@ -15,10 +15,11 @@ export async function fetchCategoryBySlug(slug) {
 
 export async function fetchSubcategories(categorySlug) {
     try {
-        const res = await fetch(`${API_URL}/category/categoryWiseSubCategory/${categorySlug}/`, { next: { revalidate: 300 } });
+        const endpoint = categorySlug === 'offers' ? '/product/offerProducts/' : `/category/categoryWiseSubCategory/${categorySlug}/`;
+        const res = await fetch(`${API_URL}${endpoint}`, { next: { revalidate: 300 } });
         if (!res.ok) return [];
         const data = await res.json();
-        return data?.data?.subCategorys || [];
+        return data?.data?.subCategorys || data?.products || [];
     } catch (err) {
         console.error("Error fetching subcategories", err);
         return [];
@@ -138,5 +139,35 @@ export async function fetchPublicFlags() {
     } catch (err) {
         console.error("Error fetching public flags", err);
         return [];
+    }
+}
+
+/**
+ * Fetch the complete list of public services from the backend.
+ */
+export async function fetchServicesList() {
+    try {
+        const res = await fetch(`${API_URL}/services/publicservice_list/`, { next: { revalidate: 3600 } });
+        if (!res.ok) return [];
+        const data = await res.json();
+        return Array.isArray(data) ? data.filter((s) => s.Visible) : [];
+    } catch (err) {
+        console.error("Error fetching services list", err);
+        return [];
+    }
+}
+
+/**
+ * Identify a specific service by its slugified Heading.
+ */
+export async function getServiceBySlug(slug) {
+    try {
+        const services = await fetchServicesList();
+        return services.find((s) => 
+            s.Heading.replace(/\s+/g, "").toLowerCase() === slug.toLowerCase()
+        ) || null;
+    } catch (err) {
+        console.error("Error finding service by slug", err);
+        return null;
     }
 }

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Star, Truck, Heart, Thermometer, ChevronRight, Home } from 'lucide-react';
+import { Star, Truck, Heart, Thermometer, ChevronRight, Home, Leaf, Sun, ShieldCheck, Droplets, Package, Smartphone } from 'lucide-react';
 import Link from 'next/link';
 
 /**
@@ -19,7 +19,8 @@ const CategoryHero = ({ data, breadcrumb }) => {
         heading_after = "",
         description = "",
         tags = [],
-        stats = []
+        stats = [],
+        info_cards = []
     } = data;
 
     // Use a clean fallback if no dynamic heading parts are provided
@@ -34,6 +35,17 @@ const CategoryHero = ({ data, breadcrumb }) => {
         if (lower.includes('delivery')) return <Truck className="w-3.5 h-3.5" />;
         if (lower.includes('guarantee')) return <Heart className="w-3.5 h-3.5" />;
         return <Star className="w-3.5 h-3.5" />;
+    };
+
+    // Helper to map icons based on info card titles (since icons are null in API)
+    const getInfoCardIcon = (title) => {
+        const lower = title.toLowerCase();
+        if (lower.includes('resistant') || lower.includes('sun')) return <Sun className="w-5 h-5 text-[#C4E4B5]" />;
+        if (lower.includes('eco') || lower.includes('sustainable') || lower.includes('material')) return <Leaf className="w-5 h-5 text-[#C4E4B5]" />;
+        if (lower.includes('drainage') || lower.includes('water') || lower.includes('root')) return <Droplets className="w-5 h-5 text-[#C4E4B5]" />;
+        if (lower.includes('size') || lower.includes('range')) return <Package className="w-5 h-5 text-[#C4E4B5]" />;
+        if (lower.includes('whatsapp') || lower.includes('support')) return <Smartphone className="w-5 h-5 text-[#C4E4B5]" />;
+        return <ShieldCheck className="w-5 h-5 text-[#C4E4B5]" />;
     };
 
     return (
@@ -73,16 +85,16 @@ const CategoryHero = ({ data, breadcrumb }) => {
                     </motion.nav>
                 )}
 
-                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mt-auto">
+                <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-10 mt-6 md:mt-8">
                     
                     {/* Left Side: Messaging */}
-                    <div className="max-w-4xl pb-2">
+                    <div className="max-w-3xl">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8 }}
                         >
-                            <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.1] tracking-tight">
+                            <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white leading-[1.05] tracking-tight">
                                 {hasDynamicHeading ? (
                                     <>
                                         {heading_before}{" "}
@@ -96,23 +108,23 @@ const CategoryHero = ({ data, breadcrumb }) => {
                             </h1>
                             
                             {description && (
-                                <p className="mt-4 text-[11px] md:text-xs text-white/70 leading-relaxed max-w-xl font-medium tracking-wide">
+                                <p className="mt-5 text-sm md:text-base text-white/70 leading-relaxed max-w-xl font-medium tracking-wide">
                                     {description}
                                 </p>
                             )}
 
                             {/* Trust Tags - Cinematic Glassmode */}
                             {tags && tags.length > 0 && (
-                                <div className="mt-5 flex flex-wrap gap-2">
+                                <div className="mt-6 flex flex-wrap gap-2.5">
                                     {tags.map((tag, idx) => (
                                         <div 
                                             key={idx}
-                                            className="flex items-center gap-1 px-2.5 py-1 bg-white/10 hover:bg-white/15 backdrop-blur-md border border-white/20 rounded-full transition-all cursor-default"
+                                            className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/15 backdrop-blur-md border border-white/20 rounded-full transition-all cursor-default"
                                         >
                                             <div className="text-[#C4E4B5]">
                                                 {getTagIcon(tag.label)}
                                             </div>
-                                            <span className="text-[7.5px] md:text-[8px] font-bold text-white uppercase tracking-[0.1em]">
+                                            <span className="text-[8px] md:text-[9px] font-bold text-white uppercase tracking-[0.12em]">
                                                 {tag.label}
                                             </span>
                                         </div>
@@ -122,26 +134,28 @@ const CategoryHero = ({ data, breadcrumb }) => {
                         </motion.div>
                     </div>
 
-                    {/* Right Side: Bottom-Anchored Stats Wide Bar */}
+                    {/* Removed Info Cards from here as they are now centralized at the bottom */}
+
+                    {/* Bottom-Anchored Stats Bar (positioned absolute to the section) */}
                     {stats && stats.length > 0 && (
                         <motion.div 
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.3 }}
+                            transition={{ duration: 0.8, delay: 0.4 }}
                             className="absolute bottom-0 left-0 right-0 z-20 flex justify-center lg:justify-end px-4 md:px-16"
                         >
-                            <div className="bg-black/20 backdrop-blur-3xl border-x border-t border-white/10 p-3.5 md:p-5 lg:p-7 rounded-t-[2.5rem] flex items-center justify-around md:justify-center gap-5 md:gap-10 lg:gap-14 shadow-2xl w-full max-w-screen-xl lg:max-w-none lg:w-auto">
+                            <div className="bg-black/30 backdrop-blur-3xl border-x border-t border-white/10 p-4 md:p-6 lg:p-8 rounded-t-[3rem] flex items-center justify-around md:justify-center gap-6 md:gap-12 lg:gap-16 shadow-2xl w-full max-w-screen-xl lg:max-w-none lg:w-auto">
                                 {stats.map((stat, idx) => (
                                     <div key={idx} className="flex flex-col items-center">
-                                        <div className="flex items-center gap-1">
-                                            <span className="text-xl md:text-2xl font-extrabold text-white tracking-tighter">
+                                        <div className="flex items-center gap-1.5">
+                                            <span className="text-2xl md:text-3xl font-extrabold text-white tracking-tighter">
                                                 {stat.value.replace('★', '')}
                                             </span>
                                             {stat.value.includes('★') && (
-                                                <Star className="w-3.5 h-3.5 text-yellow-500 fill-current" />
+                                                <Star className="w-4 h-4 text-yellow-500 fill-current" />
                                             )}
                                         </div>
-                                        <span className="text-[6.5px] md:text-[7.5px] font-bold uppercase tracking-[0.2em] text-[#C4E4B5] mt-1 text-center whitespace-nowrap">
+                                        <span className="text-[7px] md:text-[8px] font-black uppercase tracking-[0.25em] text-[#C4E4B5] mt-1.5 text-center whitespace-nowrap">
                                             {stat.label}
                                         </span>
                                     </div>
@@ -149,7 +163,6 @@ const CategoryHero = ({ data, breadcrumb }) => {
                             </div>
                         </motion.div>
                     )}
-
                 </div>
             </div>
 

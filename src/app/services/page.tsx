@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
+import { fetchServicesList } from "@/utils/serverApi";
 import ServicePage from '@/Services/Service new/ServicePage';
-
 
 export const metadata: Metadata = {
   title: "Services | Gidan Plants",
@@ -23,6 +23,10 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export default function ServicesPage() {
-  return <ServicePage />;
+export const revalidate = 3600; // Revalidate every hour
+
+export default async function ServicesListingPage() {
+  const initialServices: any[] = await fetchServicesList();
+  
+  return <ServicePage {...({ initialServices } as any)} />;
 }

@@ -1,0 +1,69 @@
+'use client';
+
+import React from 'react';
+import { Sparkles, Package } from 'lucide-react';
+
+const OfferTabs = ({ activeTab, setTab }) => {
+  const tabs = [
+    { 
+      id: 'products', 
+      label: 'Special Products', 
+      icon: Sparkles,
+      description: 'Handpicked plant deals'
+    },
+    { 
+      id: 'combos', 
+      label: 'Value Combos', 
+      icon: Package,
+      description: 'Curated plant sets & Savings'
+    }
+  ];
+
+  return (
+    <div className="flex flex-col md:flex-row justify-center items-stretch gap-4 mb-12 px-4">
+      {tabs.map((tab) => {
+        const Icon = tab.icon;
+        const isActive = activeTab === tab.id;
+        
+        return (
+          <button
+            key={tab.id}
+            onClick={() => setTab(tab.id)}
+            className={`flex-1 flex items-start gap-4 p-6 rounded-2xl text-left transition-all duration-300 border-2 ${
+              isActive 
+                ? 'bg-[#173113] border-[#173113] shadow-xl shadow-[#173113]/10 translate-y-[-4px]' 
+                : 'bg-white border-gray-100 hover:border-[#A7D949]/30 hover:bg-[#faf9f6]'
+            }`}
+          >
+            <div className={`p-3 rounded-xl transition-colors ${
+              isActive ? 'bg-[#A7D949] text-[#173113]' : 'bg-[#faf9f6] text-[#173113]'
+            }`}>
+              <Icon className="w-6 h-6" />
+            </div>
+            
+            <div>
+              <p className={`text-sm font-black uppercase tracking-widest ${
+                isActive ? 'text-[#A7D949]' : 'text-[#375421]'
+              }`}>
+                {tab.label}
+              </p>
+              <p className={`text-sm ${
+                isActive ? 'text-white/60' : 'text-gray-500'
+              }`}>
+                {tab.description}
+              </p>
+            </div>
+            
+            {isActive && (
+              <div className="ml-auto mt-1">
+                <div className="w-2 h-2 rounded-full bg-[#A7D949] animate-pulse" />
+              </div>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
+export default OfferTabs;

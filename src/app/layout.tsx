@@ -12,6 +12,7 @@ import StaticBreadcrumb from "@/components/Shared/StaticBreadcrumb";
 import MobileBottomNav from "@/components/Shared/MobileBottomNav";
 import TawkChat from "@/components/Shared/TawkChat";
 import CartWishlistSidebar from "@/components/Shared/CartWishlistSidebar";
+import TopLoader from "@/components/Shared/TopLoader";
 import React, { Suspense } from "react";
 
 import Verify from "@/Services/Services/Verify";
@@ -161,6 +162,9 @@ export default function RootLayout({
         </noscript>
 
         <Providers>
+          <Suspense fallback={null}>
+            <TopLoader />
+          </Suspense>
           <Verify />
           <CartWishlistSidebar />
           <ScrollToTop />

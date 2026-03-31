@@ -126,9 +126,12 @@ function ShopTheLook() {
     return (
       <div className="w-full">
         <div className="px-4 py-6">
-          <h2 className="text-xl md:text-2xl lg:text-3xl mb-4 text-center font-semibold md:font-bold">
-            Shop The Look
+        <div className="flex flex-col items-start text-left mb-10 md:mb-16">
+          <div className="h-4 w-32 bg-gray-100 animate-pulse rounded mb-4" />
+          <h2 className="text-[32px] md:text-5xl lg:text-6xl font-serif text-[#1a1f14] leading-tight tracking-tight opacity-20">
+            Shop <span className="italic font-normal">The Look</span>
           </h2>
+        </div>
           <div className="w-full h-64 bg-gray-200 animate-pulse rounded-lg flex items-center justify-center">
             <span className="text-gray-500">Loading...</span>
           </div>
@@ -141,10 +144,18 @@ function ShopTheLook() {
 
   return (
     <div className="w-full">
-      <div className="px-4 py-6">
-        <h2 className="text-xl md:text-2xl lg:text-3xl mb-4 text-center font-semibold md:font-bold">
-          Shop The Look
-        </h2>
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-12 md:py-20">
+        <div className="flex flex-col items-start text-left mb-10 md:mb-16">
+          <span className="inline-block text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-[#375421] opacity-60 mb-3 md:mb-4">
+            Curated Inspiration
+          </span>
+          <h2 className="text-[32px] md:text-5xl lg:text-6xl font-serif text-[#1a1f14] leading-tight tracking-tight">
+            Shop <span className="italic font-normal text-[#375421]">The Look</span>
+          </h2>
+          <p className="text-[14px] md:text-[16px] text-[#1a1f14]/60 font-medium max-w-xl mt-4">
+            Complete sets handpicked by our expert stylists for your specific space.
+          </p>
+        </div>
 
         <button
           aria-label="Shop the Look"

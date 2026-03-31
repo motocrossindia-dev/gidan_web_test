@@ -64,6 +64,8 @@ import { fetchCategoryBySlug, fetchSubcategoryBySlug, fetchProductsByFilters, fe
 import CategoryStaticSEO from "@/views/utilities/Info/CategoryStaticSEO";
 import RecentlyViewedProducts from "@/components/Shared/RecentlyViewedProducts";
 import CollectionSchema from "@/views/utilities/seo/CollectionSchema";
+import CategoryHero from "@/components/Shared/CategoryHero";
+import TrustBadges from "@/components/Shared/TrustBadges";
 
 export default async function SubcategoryPage({ params }: Props) {
   const { categorySlug, subcategorySlug } = await params;
@@ -134,11 +136,31 @@ export default async function SubcategoryPage({ params }: Props) {
   // Backend returns sub_category_info.{ title, subtitle, description } on each subcategory object
   // Passed as initialSEOData to PlantFilter for SSR first paint + reactive client-side updates
   const subInfo = (subcategory as any).sub_category_info;
+  const catInfo = (category as any).category_info?.category_info || (category as any).category_info;
+  
+  // Extract info_cards correctly from subcategory or fallback to category
+  const subInfoCards = (subcategory as any).info_cards || subInfo?.info_cards;
+  const catInfoCards = catInfo?.info_cards || [];
+
   const initialSEOData = {
     title: subInfo?.title || subcategory.name,
     subtitle: subInfo?.subtitle || `${subcategory.name} - Buy Online in India from Gidan.store`,
     description: subInfo?.description || "",
+    info_cards: (subInfoCards && subInfoCards.length > 0) ? subInfoCards : catInfoCards,
+    tags: subInfo?.tags || [],
+    stats: subInfo?.stats || [],
+    heading_before: subInfo?.heading_before || "",
+    italic_text: subInfo?.italic_text || "",
+    heading_after: subInfo?.heading_after || ""
   };
+
+  const breadcrumbItems: { label: string; path: string }[] = [
+    {
+        label: category.name,
+        path: `/${category.slug}/`
+    }
+  ];
+  const breadcrumbPage = subcategory.name;
 
   return (
     <>
@@ -147,7 +169,28 @@ export default async function SubcategoryPage({ params }: Props) {
         subcategory={{ name: subcategory.name, slug: subcategory.slug }}
         products={initialData?.results || []}
       />
-      <Suspense fallback={<div className="flex justify-center p-8">Loading products...</div>}>
+      
+      <CategoryHero 
+        data={initialSEOData as any} 
+        breadcrumb={{
+            items: breadcrumbItems,
+            currentPage: breadcrumbPage
+        }}
+      />
+
+      <div className="bg-white border-b border-gray-100">
+        <TrustBadges variant="row" />
+      </div>
+
+      <Suspense fallback={
+         <div className="max-w-7xl mx-auto px-4 md:px-8 py-12">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                {[1,2,3,4,5,6,7,8].map(i => (
+                    <div key={i} className="aspect-[3/4] bg-gray-50 animate-pulse rounded-[32px]" />
+                ))}
+            </div>
+        </div>
+      }>
         <PlantFilter
           initialResults={initialData as any}
           initialCategoryData={categoryWithSubs as any}
@@ -156,6 +199,7 @@ export default async function SubcategoryPage({ params }: Props) {
           subcategorySlug={subcategorySlug as any}
           subcategoryName={subcategory.name as any}
           initialSEOData={initialSEOData as any}
+          hideHeader={true}
         />
       </Suspense>
 

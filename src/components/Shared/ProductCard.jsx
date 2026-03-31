@@ -53,6 +53,7 @@ const ProductCard = ({
     customFlag,
     hideFlags = false,
     variant = 'default',
+    priority = false,
     extra = {}
 }) => {
     const isBento = variant === 'bento' || variant === 'bento-large';
@@ -252,8 +253,8 @@ const ProductCard = ({
         const imageList = product?.image || [];
 
         const processUrl = (url) => {
-            if (!url || typeof url !== 'string' || url === "") return "/static/logo/gidan.png";
-            if (url.startsWith('http') || url.startsWith('data:') || url.startsWith('/static')) return url;
+            if (!url || typeof url !== 'string' || url === "") return "/logo.png";
+            if (url.startsWith('http') || url.startsWith('data:')) return url;
             return url.startsWith('/') ? `${process.env.NEXT_PUBLIC_API_URL || ''}${url}` : `${process.env.NEXT_PUBLIC_API_URL || ''}/${url}`;
         };
 
@@ -569,7 +570,7 @@ const ProductCard = ({
                             fill
                             onError={() => setImgError(true)}
                             sizes="(max-width: 1024px) 50vw, 33vw"
-                            priority={false}
+                            priority={priority}
                             className={`object-contain p-8 md:p-10 lg:p-12 transition-all duration-700 ease-out group-hover:scale-110 ${isHovered && productImages.hover !== productImages.main ? "opacity-0 scale-95" : "opacity-100 scale-100"
                                 } ${isOutOfStock ? "grayscale opacity-40" : ""}`}
                         />
@@ -718,6 +719,7 @@ const ProductCard = ({
                             fill
                             onError={() => setImgError(true)}
                             sizes="50vw"
+                            priority={priority}
                             className={`object-contain p-6 ${isOutOfStock ? "grayscale opacity-40" : ""}`}
                         />
                     </div>

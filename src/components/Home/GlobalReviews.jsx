@@ -3,6 +3,7 @@
 import React from 'react';
 import { Star, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
+import { getProductUrl } from '@/utils/urlHelper';
 
 export const GlobalReviews = ({ initialGlobalReviews }) => {
   if (!initialGlobalReviews || !initialGlobalReviews.reviews || initialGlobalReviews.reviews.length === 0) {
@@ -121,7 +122,7 @@ export const GlobalReviews = ({ initialGlobalReviews }) => {
 
               {review.product_name && review.product_slug && (
                 <div className="mt-auto pt-4 border-t border-dashed border-gray-100 pb-1">
-                  <Link href={`/product/${review.product_slug}`} className="group/link flex items-center gap-2">
+                  <Link href={getProductUrl(review)} className="group/link flex items-center gap-2">
                     <span className="text-[10px] font-bold text-[#1a1f14]/50 uppercase tracking-widest shrink-0">Purchased</span>
                     <span className="text-[11px] font-semibold text-[#375421] line-clamp-1 group-hover/link:underline">{review.product_name}</span>
                   </Link>

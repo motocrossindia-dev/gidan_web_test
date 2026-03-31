@@ -12,6 +12,7 @@ import Breadcrumb from "../../../components/Shared/Breadcrumb";
 import TrustBadges from "../../../components/Shared/TrustBadges";
 import CategoryHero from "../../../components/Shared/CategoryHero";
 import PublicFlags from "../../../components/Shared/PublicFlags";
+import { Sun, Leaf, Droplets, Package, Smartphone, ShieldCheck, Heart } from "lucide-react";
 // Schemas moved to Server Component (page.tsx) for better SSR/SEO
 
 import Link from "next/link";
@@ -49,6 +50,7 @@ function PlantFilter({
     subcategoryName: propSubcategoryName = null,
     initialSEOData = null,
     initialFlags = null,
+    hideHeader = false,
 } = {}) {
 
     const pathname = usePathname();
@@ -269,11 +271,11 @@ function PlantFilter({
         if (effectiveCategorySlug) {
             // Only reset if we are NOT in the middle of a sidebar interaction (which handles its own result updates)
             if (filtersApplied) return;
-            
+
             setFiltersApplied(false);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [effectiveCategorySlug]); 
+    }, [effectiveCategorySlug]);
 
     // (SEO sync is now handled directly by FilterSidebar via setSeoData prop)
 
@@ -313,8 +315,9 @@ function PlantFilter({
 
             setIsResolvingIds(true);
             try {
-                const subRes = await axiosInstance.get(`/category/categoryWiseSubCategory/${effectiveCategorySlug}/`);
-                const subcategories = subRes.data?.data?.subCategorys || [];
+                const endpoint = effectiveCategorySlug === 'offers' ? '/product/offerProducts/' : `/category/categoryWiseSubCategory/${effectiveCategorySlug}/`;
+                const subRes = await axiosInstance.get(endpoint);
+                const subcategories = subRes.data?.data?.subCategorys || subRes.data?.products || [];
                 const foundSub = subcategories.find(s => s.slug === effectiveSubcategorySlug);
                 if (foundSub) {
                     setResolvedSubcategoryId(foundSub.id);
@@ -386,22 +389,39 @@ function PlantFilter({
                         next: response.data.next,
                         previous: response.data.previous,
                     });
-                    
-                    const newCategoryInfo = response.data?.category_info?.category_info || null;
-                    if (newCategoryInfo) {
-                        setCategoryData(newCategoryInfo);
-                        const hasSubcategory = !!newCategoryInfo.subcategory_name;
+
+                    const newCategoryInfo = response.data?.category_info?.category_info || response.data?.category_info || null;
+                    const newSubcategoryInfo = response.data?.subcategory_info || null;
+                    const activeInfo = newSubcategoryInfo || newCategoryInfo;
+
+                    if (activeInfo) {
+                        setCategoryData(activeInfo);
+                        const hasSubcategory = !!(newSubcategoryInfo || activeInfo.subcategory_name);
                         setIsSubcategorySEO(hasSubcategory);
+                        
                         if (hasSubcategory) {
                             setSeoData({
-                                ...newCategoryInfo,
-                                title: newCategoryInfo.subcategory_name,
-                                subtitle: newCategoryInfo.subtitle || `${newCategoryInfo.subcategory_name} - Buy Online in India from Gidan.store`,
-                                description: newCategoryInfo.intro_text || newCategoryInfo.description || newCategoryInfo.content || "",
-                                sections: newCategoryInfo.sections || [],
+                                ...activeInfo,
+                                title: activeInfo.subcategory_name || activeInfo.name || activeInfo.title,
+                                subtitle: activeInfo.subtitle || `${activeInfo.subcategory_name || activeInfo.name} - Buy Online in India from Gidan.store`,
+                                description: activeInfo.intro_text || activeInfo.description || activeInfo.content || "",
+                                heading_before: activeInfo.heading_before || activeInfo.sub_category_info?.heading_before || "",
+                                italic_text: activeInfo.italic_text || activeInfo.sub_category_info?.italic_text || "",
+                                heading_after: activeInfo.heading_after || activeInfo.sub_category_info?.heading_after || "",
+                                tags: activeInfo.tags || activeInfo.sub_category_info?.tags || [],
+                                stats: activeInfo.stats || activeInfo.sub_category_info?.stats || [],
+                                sections: (activeInfo.sections && activeInfo.sections.length > 0) ? activeInfo.sections : (initialSEOData?.sections || []),
+                                info_cards: (activeInfo.info_cards && activeInfo.info_cards.length > 0) ? activeInfo.info_cards : (activeInfo.sub_category_info?.info_cards || initialSEOData?.info_cards || [])
                             });
                         } else {
-                            setSeoData(newCategoryInfo);
+                            // Main category case: preserve info_cards/sections if missing in new data
+                            setSeoData({
+                                ...activeInfo,
+                                tags: activeInfo.tags || activeInfo.category_info?.tags || [],
+                                stats: activeInfo.stats || activeInfo.category_info?.stats || [],
+                                sections: (activeInfo.sections && activeInfo.sections.length > 0) ? activeInfo.sections : (initialSEOData?.sections || []),
+                                info_cards: (activeInfo.info_cards && activeInfo.info_cards.length > 0) ? activeInfo.info_cards : (activeInfo.category_info?.info_cards || initialSEOData?.info_cards || [])
+                            });
                             setIsSubcategorySEO(false);
                         }
                     }
@@ -422,10 +442,10 @@ function PlantFilter({
             // 1. If server already provided results and we haven't manually changed anything, skip.
             // 2. We use normalizedInitialResults which is a memoized version of the SSR prop.
             const hasInitialResults = normalizedInitialResults.results && normalizedInitialResults.results.length > 0;
-            
+
             // Check if current state results still exactly match the initial SSR results
-            const isShowingInitialData = results === normalizedInitialResults.results || 
-                                       (results.length === normalizedInitialResults.results.length && results.length > 0);
+            const isShowingInitialData = results === normalizedInitialResults.results ||
+                (results.length === normalizedInitialResults.results.length && results.length > 0);
 
             if (hasInitialResults && isShowingInitialData && seoData) {
                 // If we have SSR data, only fetch if the route has actually changed but the data hasn't
@@ -493,18 +513,32 @@ function PlantFilter({
         return categoryName || fetchedCategoryName || canonicalCategorySlug;
     }, [canonicalSubcategorySlug, subCategoryName, fetchedSubcategoryName, categoryName, fetchedCategoryName, canonicalCategorySlug]);
 
+    // Helper for Bottom Info Cards Icon Mapping
+    const getBottomInfoCardIcon = (title) => {
+        const lower = title.toLowerCase();
+        if (lower.includes('low light') || lower.includes('sun') || lower.includes('shade')) return <Sun className="w-5 h-5 text-[#86a86d]" />;
+        if (lower.includes('air purifying') || lower.includes('health') || lower.includes('toxin')) return <Leaf className="w-5 h-5 text-[#86a86d]" />;
+        if (lower.includes('maintenance') || lower.includes('care') || lower.includes('easy')) return <ShieldCheck className="w-5 h-5 text-[#86a86d]" />;
+        if (lower.includes('pet safe') || lower.includes('animal') || lower.includes('non-toxic')) return <Heart className="w-5 h-5 text-[#86a86d]" />;
+        if (lower.includes('eco') || lower.includes('sustainable') || lower.includes('material')) return <Leaf className="w-5 h-5 text-[#86a86d]" />;
+        if (lower.includes('drainage') || lower.includes('water') || lower.includes('root')) return <Droplets className="w-5 h-5 text-[#86a86d]" />;
+        if (lower.includes('size') || lower.includes('range')) return <Package className="w-5 h-5 text-[#86a86d]" />;
+        if (lower.includes('whatsapp') || lower.includes('support')) return <Smartphone className="w-5 h-5 text-[#86a86d]" />;
+        return <ShieldCheck className="w-5 h-5 text-[#86a86d]" />;
+    };
+
     return (
         <>
-            {!seoData && (canonicalCategorySlug || canonicalSubcategorySlug) && (
+            {!hideHeader && !seoData && (canonicalCategorySlug || canonicalSubcategorySlug) && (
                 <Breadcrumb
                     items={breadcrumbItems}
                     currentPage={breadcrumbPage}
                 />
             )}
 
-            {seoData && (
-                <CategoryHero 
-                    data={seoData} 
+            {!hideHeader && seoData && (
+                <CategoryHero
+                    data={seoData}
                     breadcrumb={{
                         items: breadcrumbItems,
                         currentPage: breadcrumbPage
@@ -512,7 +546,7 @@ function PlantFilter({
                 />
             )}
 
-<div className="w-full overflow-visible py-8 md:py-12">
+            <div className="w-full overflow-visible py-8 md:py-12">
                 <div className="container mx-auto px-4 md:px-8 max-w-full">
                     {/* Mobile Filter Trigger */}
                     <div className="flex md:hidden sticky top-[160px] z-40 bg-white/95 backdrop-blur-md justify-between items-center p-4 rounded-xl border border-gray-100 mt-4 mb-4 shadow-sm">
@@ -569,9 +603,9 @@ function PlantFilter({
                         <div className="flex-grow min-w-0 max-w-full">
                             {/* Public Flags Interactive Pills - Parallel to Filter Sidebar */}
                             <div className="mb-8 mt-4">
-                                <PublicFlags 
-                                    selectedFlag={selectedPublicFlag} 
-                                    onSelectFlag={setSelectedPublicFlag} 
+                                <PublicFlags
+                                    selectedFlag={selectedPublicFlag}
+                                    onSelectFlag={setSelectedPublicFlag}
                                     initialFlags={initialFlags}
                                 />
                             </div>
@@ -590,17 +624,15 @@ function PlantFilter({
                                     query={currentQuery}
                                     getProducts={getProducts}
                                     bottomContent={
-                                        <>
-                                            <div className="py-8">
-                                                <TrustBadges />
-                                            </div>
-                                            {seoData && (
-                                                <CategoryStaticSEO 
-                                                    categoryDataFromAPI={seoData} 
-                                                    isSubcategory={isSubcategorySEO} 
+                                        seoData && (
+                                            <div className="flex flex-col gap-12">
+                                                <CategoryStaticSEO
+                                                    categoryDataFromAPI={seoData}
+                                                    isSubcategory={isSubcategorySEO}
+                                                    info_cards={(seoData?.info_cards?.length > 0 ? seoData.info_cards : initialSEOData?.info_cards || [])}
                                                 />
-                                            )}
-                                        </>
+                                            </div>
+                                        )
                                     }
                                 />
                                 {isSearching && (
@@ -675,8 +707,6 @@ function PlantFilter({
                     />
                 </Box>
             </SwipeableDrawer>
-
-            {/* Schemas moved to Server Component */}
         </>
     );
 }

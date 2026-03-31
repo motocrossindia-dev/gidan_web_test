@@ -27,11 +27,10 @@ const categoryToTypeMap = {
 // Fetch subcategories for a specific category
 const fetchSubCategory = async (categorySlug) => {
   try {
-    const response = await axiosInstance.get(
-      `/category/categoryWiseSubCategory/${categorySlug}/`
-    );
+    const endpoint = categorySlug === 'offers' ? '/product/offerProducts/' : `/category/categoryWiseSubCategory/${categorySlug}/`;
+    const response = await axiosInstance.get(endpoint);
     if (response.status === 200) {
-      return response?.data?.data?.subCategorys || [];
+      return response?.data?.data?.subCategorys || response?.data?.products || [];
     }
   } catch (error) {
     return [];

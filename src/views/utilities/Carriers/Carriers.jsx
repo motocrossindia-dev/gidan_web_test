@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../../Axios/axiosInstance';
+import PageHeader from "@/components/Shared/PageHeader";
+import { Briefcase, ChevronRight, MapPin, Search, Terminal, Users } from "lucide-react";
+
 const Carriers = () => {
   const [activeTab, setActiveTab] = useState('non-tech');
   const [expanded, setExpanded] = useState(null);
@@ -11,7 +14,6 @@ const Carriers = () => {
     setExpanded(expanded === id ? null : id);
   };
 
-  // Fetch data from backend (using GET method with environment variable for API URL)
   useEffect(() => {
     const fetchJobs = async () => {
       try {
@@ -24,133 +26,159 @@ const Carriers = () => {
         console.log(error.message);
       }
     };
-
     fetchJobs();
   }, []);
 
-
-  // Filter job listings based on the active tab
   const filteredJobs = jobListings.filter(
     (job) =>
       (activeTab === 'non-tech' && job.categories === 'Non-Tech Positions') ||
       (activeTab === 'tech' && job.categories === 'Tech Positions')
   );
 
-
   return (
-    <>
-      
+    <main className="font-sans text-[#173113] bg-[#faf9f6] min-h-screen pb-24">
+      {/* Premium Header */}
+      <PageHeader 
+        title="Join Gidan" 
+        subtitle="Help us build a greener future, one plant at a time."
+      />
 
-      <div className="min-h-screen flex flex-col items-center justify-between p-4">
-        <div className="w-full border-b">
-          {/* Header Title */}
-          <div className="text-center py-4 border-b">
-            <h1 className="text-xl font-semibold text-gray-800">
-              Shape the Future with Gidan
-            </h1>
-          </div>
-
-          {/* Navigation Tabs */}
-          <div className="flex justify-center">
+      <div className="max-w-7xl mx-auto px-6 lg:px-16 mt-12 md:mt-20">
+        
+        {/* Navigation Tabs - Modern Pill Style */}
+        <div className="flex justify-center mb-16">
+          <div className="bg-white/50 backdrop-blur-sm p-1.5 rounded-2xl border border-[#173113]/5 flex shadow-sm">
             <button
               onClick={() => setActiveTab('non-tech')}
-              className={`px-8 py-3 relative ${activeTab === 'non-tech' ? 'text-gray-800' : 'text-gray-500'
-                }`}
+              className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold transition-all duration-300 ${
+                activeTab === 'non-tech' 
+                  ? 'bg-[#173113] text-white shadow-lg' 
+                  : 'text-[#173113]/60 hover:text-[#173113]'
+              }`}
             >
-              Non -Tech Positions
-              {activeTab === 'non-tech' && (
-                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#375421]"></div>
-              )}
+              <Users className="w-4 h-4" />
+              Non-Tech
             </button>
             <button
               onClick={() => setActiveTab('tech')}
-              className={`px-8 py-3 relative ${activeTab === 'tech' ? 'text-gray-800' : 'text-gray-500'
-                }`}
+              className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold transition-all duration-300 ${
+                activeTab === 'tech' 
+                  ? 'bg-[#173113] text-white shadow-lg' 
+                  : 'text-[#173113]/60 hover:text-[#173113]'
+              }`}
             >
-              Technology Positions
-              {activeTab === 'tech' && (
-                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#375421]"></div>
-              )}
+              <Terminal className="w-4 h-4" />
+              Technology
             </button>
           </div>
         </div>
 
-        {/* Content */}
-        <div className="flex-grow w-full mt-6">
+        {/* Content Section */}
+        <div className="w-full">
           {filteredJobs.length === 0 ? (
-            <div className="text-center py-12">
-              <h3 className="text-lg font-medium mb-2">Sorry, no positions available</h3>
-              <p className="text-gray-500">Stay tuned for new openings!</p>
+            <div className="bg-white rounded-[3rem] py-24 px-8 text-center border border-[#173113]/5 shadow-sm">
+              <div className="w-20 h-20 bg-[#faf9f6] rounded-full flex items-center justify-center mx-auto mb-6">
+                <Search className="w-8 h-8 text-[#A7D949]" />
+              </div>
+              <h3 className="text-2xl font-serif text-[#173113] mb-3">No Current Openings</h3>
+              <p className="text-[#173113]/60 font-medium max-w-sm mx-auto">
+                We're always growing! Check back soon for new opportunities in this category.
+              </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredJobs.map((job) => (
                 <div
                   key={job.id}
-                  className="border rounded-xl p-6 shadow-md hover:shadow-xl transition-transform transform hover:-translate-y-1 bg-white"
+                  className="group relative bg-white border border-[#173113]/5 rounded-[2.5rem] p-8 shadow-sm hover:shadow-2xl transition-all duration-500 hover:translate-y-[-8px] flex flex-col h-full"
                 >
-                  {/* Header */}
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h2 className="text-lg font-semibold text-gray-800">{job.position_name}</h2>
-                      <p className="text-sm text-gray-500">{job.categories}</p>
+                  {/* Job Header */}
+                  <div className="mb-6 flex-grow">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="px-3 py-1 bg-[#A7D949]/20 text-[#173113] text-[10px] font-bold uppercase tracking-wider rounded-full">
+                        {job.categories === 'Tech Positions' ? 'Engineering' : 'Creative / Sales'}
+                      </span>
                     </div>
+                    <h2 className="text-2xl font-serif text-[#173113] mb-4 group-hover:text-[#A7D949] transition-colors leading-tight">
+                      {job.position_name}
+                    </h2>
+                    
+                    <div className="flex items-center gap-4 text-[#173113]/50 text-sm font-medium">
+                      <div className="flex items-center gap-1.5">
+                        <MapPin className="w-4 h-4 text-[#A7D949]" /> Bangalore, KA
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Briefcase className="w-4 h-4 text-[#A7D949]" /> Full-time
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Apply Button & Expand */}
+                  <div className="flex items-center justify-between mt-auto pt-6 border-t border-[#173113]/5">
+                    <button
+                      onClick={() => handleExpand(job.id)}
+                      className="text-sm font-bold text-[#173113]/60 hover:text-[#173113] transition-colors flex items-center gap-1"
+                    >
+                      {expanded === job.id ? "Minimize" : "Details"}
+                      <ChevronRight className={`w-4 h-4 transition-transform duration-300 ${expanded === job.id ? '-rotate-90' : ''}`} />
+                    </button>
+
                     {job.google_form && (
                       <a
                         href={job.google_form}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-4 py-2 text-sm font-medium text-white bg-bio-green rounded-lg hover:bg-bio-green hover:text-white transition"
+                        className="px-6 py-2.5 text-xs font-bold text-[#173113] bg-[#A7D949] rounded-xl hover:bg-[#173113] hover:text-white transition-all duration-300 shadow-md active:scale-95"
                       >
                         Apply Now
                       </a>
                     )}
                   </div>
 
-                  {/* Expand/Collapse */}
-                  <button
-                    onClick={() => handleExpand(job.id)}
-                    className="mt-4 text-sm font-medium text-bio-green hover:underline"
-                  >
-                    {expanded === job.id ? "Hide Details ▲" : "View Details ▼"}
-                  </button>
-
-                  {/* Details (with animation) */}
-                  {/* Details (with animation) */}
+                  {/* Dynamic Details Area */}
                   <div
-                    className={`overflow-hidden transition-all duration-300 ease-in-out ${expanded === job.id ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"
-                      }`}
+                    className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                      expanded === job.id ? "max-h-[1000px] opacity-100 mt-8" : "max-h-0 opacity-0"
+                    }`}
                   >
-                    <div className="space-y-4 text-gray-700 text-sm">
-                      {/* Row with Job Summary + Responsibilities */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <span className="font-medium">Job Summary: </span>
-                          <p>{job.job_summary}</p>
-                        </div>
-                        <div>
-                          <span className="font-medium">Responsibilities: </span>
-                          <p className="whitespace-pre-line">{job.responsibilities}</p>
-                        </div>
+                    <div className="space-y-8 pt-8 border-t border-[#173113]/10">
+                      <div>
+                        <h4 className="text-xs font-bold text-[#173113] uppercase tracking-widest mb-3 flex items-center gap-2">
+                          <div className="w-1.5 h-1.5 bg-[#A7D949] rounded-full" /> Job Summary
+                        </h4>
+                        <p className="text-[#173113]/70 text-sm leading-relaxed font-medium">
+                          {job.job_summary}
+                        </p>
                       </div>
 
-                      {/* Desired Skills below full width */}
                       <div>
-                        <span className="font-medium">Desired Skills: </span>
-                        <p>{job.desired_skills}</p>
+                        <h4 className="text-xs font-bold text-[#173113] uppercase tracking-widest mb-3 flex items-center gap-2">
+                          <div className="w-1.5 h-1.5 bg-[#A7D949] rounded-full" /> Responsibilities
+                        </h4>
+                        <p className="text-[#173113]/70 text-sm leading-relaxed font-medium whitespace-pre-line">
+                          {job.responsibilities}
+                        </p>
                       </div>
+
+                      {job.desired_skills && (
+                        <div>
+                          <h4 className="text-xs font-bold text-[#173113] uppercase tracking-widest mb-3 flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 bg-[#A7D949] rounded-full" /> Desired Skills
+                          </h4>
+                          <p className="text-[#173113]/70 text-sm leading-relaxed font-medium">
+                            {job.desired_skills}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
-
                 </div>
               ))}
             </div>
-
-
           )}
         </div>
       </div>
-    </>
+    </main>
   );
 };
 

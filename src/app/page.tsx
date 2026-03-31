@@ -3,6 +3,13 @@ import Home from '@/components/Home/Home';
 import DownloadApp from "@/components/DownloadApp/DownloadApp";
 import HomepageSchema from "@/views/utilities/seo/HomepageSchema";
 import GlobalIdentitySchema from "@/views/utilities/seo/GlobalIdentitySchema";
+import { Suspense } from "react";
+import PageSkeleton from "@/components/Shared/PageSkeleton";
+
+// Streaming Sections
+import TrendingSectionServer from "./sections/TrendingSectionServer";
+import SeasonalSectionServer from "./sections/SeasonalSectionServer";
+import ReviewsSectionServer from "./sections/ReviewsSectionServer";
 // Server-side fetching for LCP optimization
 async function getInitialBanners() {
   try {
@@ -19,25 +26,15 @@ async function getInitialBanners() {
 // Pre-fetch categories for SEO/Crawlability
 async function getInitialCategories() {
   try {
-    // 1. Fetch main categories
+    // 1. Fetch main categories ONLY on the server to keep navigation fast
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category/`, { next: { revalidate: 300 } });
     if (!res.ok) return [];
     const data = await res.json();
     const categories = data?.data?.categories || [];
-
-    // 2. Fetch subcategories for each category to hydrate the full tree
-    const categoriesWithSubs = await Promise.all(
-      categories.map(async (cat: any) => {
-        try {
-          const subRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category/categoryWiseSubCategory/${cat.slug}/`, { next: { revalidate: 300 } });
-          const subData = await subRes.json();
-          return { ...cat, subCategory: subData?.data?.subCategorys || [] };
-        } catch (e) {
-          return { ...cat, subCategory: [] };
-        }
-      })
-    );
-    return categoriesWithSubs;
+    
+    // We return these without subcategories. The client-side useCategories hook 
+    // will hydrate the full tree including subcategories without blocking the initial page paint.
+    return categories;
   } catch (err) {
     console.error("Failed to fetch categories on server", err);
     return [];
@@ -47,7 +44,7 @@ async function getInitialCategories() {
 // Pre-fetch homepage sections data
 async function getHomepageData() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/home/`, { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/home/`, { next: { revalidate: 3600 } });
     if (!res.ok) return null;
     const data = await res.json();
     return data;
@@ -60,7 +57,7 @@ async function getHomepageData() {
 // Pre-fetch public flags
 async function getPublicFlags() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/product/public-flags/`, { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/product/public-flags/`, { next: { revalidate: 3600 } });
     if (!res.ok) return [];
     const data = await res.json();
     return data?.flags || [];
@@ -73,7 +70,7 @@ async function getPublicFlags() {
 // Pre-fetch global reviews
 async function getGlobalReviews() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/product/globalReviews/`, { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/product/globalReviews/`, { next: { revalidate: 3600 } });
     if (!res.ok) return null;
     const data = await res.json();
     return data?.data || null; // Returns { avg_rating, total_ratings, reviews: [...] }
@@ -87,7 +84,7 @@ async function getGlobalReviews() {
 async function getProductsByFilter(filterQuery: string) {
   try {
     const url = `${process.env.NEXT_PUBLIC_API_URL}/filters/main_productsFilter/?${filterQuery}&page_size=20&limit=20&page=1`;
-    const res = await fetch(url, { cache: 'no-store' });
+    const res = await fetch(url, { next: { revalidate: 3600 } });
     if (!res.ok) return [];
     const data = await res.json();
     return data?.results || data?.products || data?.data?.results || data?.data?.products || [];
@@ -137,28 +134,10 @@ export default async function HomePage() {
     initialBanners,
     initialCategories,
     initialHomeData,
-    initialTrending,
-    initialFeatured,
-    initialBestseller,
-    initialSeasonal,
-    initialSeasonalTrending,
-    initialSeasonalFeatured,
-    initialSeasonalBestseller,
-    initialLatest,
-    initialGlobalReviews
   ] = await Promise.all([
     getInitialBanners(),
     getInitialCategories(),
     getHomepageData(),
-    getProductsByFilter(trendingQuery),
-    getProductsByFilter(featuredQuery),
-    getProductsByFilter(bestsellerQuery),
-    getProductsByFilter(seasonalQuery),
-    getProductsByFilter(`${seasonalQuery}&${trendingQuery}`),
-    getProductsByFilter(`${seasonalQuery}&${featuredQuery}`),
-    getProductsByFilter(`${seasonalQuery}&${bestsellerQuery}`),
-    getProductsByFilter(latestQuery),
-    getGlobalReviews()
   ]);
 
 
@@ -188,16 +167,34 @@ export default async function HomePage() {
         initialBanners={initialBanners}
         initialCategories={initialCategories}
         initialHomeData={initialHomeData}
-        initialTrending={initialTrending}
-        initialFeatured={initialFeatured}
-        initialBestseller={initialBestseller}
-        initialSeasonal={initialSeasonal}
-        initialSeasonalTrending={initialSeasonalTrending}
-        initialSeasonalFeatured={initialSeasonalFeatured}
-        initialSeasonalBestseller={initialSeasonalBestseller}
-        initialLatest={initialLatest}
-        initialGlobalReviews={initialGlobalReviews}
         publicFlags={flags}
+        trendingSection={
+          <Suspense key="trending-suspense-root" fallback={<div className="h-96 w-full animate-pulse bg-gray-50 rounded-3xl mt-8" />}>
+            <TrendingSectionServer 
+              trendingQuery={trendingQuery}
+              featuredQuery={featuredQuery}
+              bestsellerQuery={bestsellerQuery}
+              latestQuery={latestQuery}
+              publicFlags={flags}
+            />
+          </Suspense>
+        }
+        seasonalSection={
+          <Suspense key="seasonal-suspense-root" fallback={<div className="h-96 w-full animate-pulse bg-gray-50 rounded-3xl mt-8" />}>
+            <SeasonalSectionServer 
+              seasonalQuery={seasonalQuery}
+              trendingQuery={trendingQuery}
+              featuredQuery={featuredQuery}
+              bestsellerQuery={bestsellerQuery}
+              publicFlags={flags}
+            />
+          </Suspense>
+        }
+        reviewsSection={
+          <Suspense key="reviews-suspense-root" fallback={<div className="h-48 w-full animate-pulse bg-gray-50 rounded-3xl mt-8" />}>
+            <ReviewsSectionServer />
+          </Suspense>
+        }
       />
       <DownloadApp />
     </>

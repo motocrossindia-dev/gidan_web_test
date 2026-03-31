@@ -4,7 +4,7 @@ import { Star, Smartphone, Package, Clock, Leaf } from "lucide-react";
 
 const DownloadApp = () => {
     return (
-        <section className="relative w-full bg-[#173113] py-16 lg:py-0 lg:h-[480px] xl:h-[520px] px-6 lg:px-16 overflow-hidden flex items-center" style={{ backgroundColor: "#173113" }}>
+        <section className="relative w-full bg-[#173113] py-12 lg:py-0 lg:h-[440px] xl:h-[480px] px-6 lg:px-16 overflow-hidden flex items-center" style={{ backgroundColor: "#173113" }}>
 
             <div className="w-full max-w-7xl mx-auto relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8 h-full">
                 {/* Left Content */}
@@ -12,16 +12,16 @@ const DownloadApp = () => {
                     <span className="text-[10px] text-[#A7D949] tracking-[0.2em] uppercase font-bold mb-3">
                         Download the app
                     </span>
-                    
+
                     <h2 className="text-4xl md:text-5xl lg:text-[44px] xl:text-[52px] text-white font-serif tracking-tight mb-4 !leading-[1.1]">
                         Your garden, <br className="hidden md:block" />
                         <span className="italic text-[#A7D949]">in your pocket.</span>
                     </h2>
-                    
+
                     <p className="text-white/70 text-sm max-w-[420px] mb-8 leading-relaxed font-medium">
                         App-only deals, live order tracking, plant care reminders, and seamless shopping — always just a tap away.
                     </p>
-                    
+
                     {/* Feature Pills (Matches User Screenshot Style) */}
                     <div className="flex flex-wrap gap-2.5 mb-8">
                         <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/20 bg-transparent text-[11px] text-white/90">
@@ -37,24 +37,41 @@ const DownloadApp = () => {
                             <Leaf className="w-3.5 h-3.5 text-[#A7D949]" /> Plant journal
                         </div>
                     </div>
-                    
-                    {/* Green CTA Buttons */}
-                    <div className="flex flex-wrap items-center gap-4">
-                        <a href="#" className="group flex items-center gap-3 px-5 py-3 rounded-xl bg-[#A7D949] hover:bg-[#b0e352] text-[#173113] transition-all transform hover:-translate-y-1 shadow-[0_6px_20px_-5px_rgba(167,217,73,0.4)]">
-                            <Image src="/appstore.svg" alt="App Store Logo" width={24} height={24} className="w-[1.5rem] h-[1.5rem]" />
-                            <div className="flex flex-col items-start justify-center">
-                                <span className="text-[10px] opacity-80 leading-tight font-bold tracking-wide">Download on the</span>
-                                <span className="text-[14px] font-black leading-tight mt-0.5">App Store</span>
-                            </div>
+
+                    {/* Full Logo Badge Buttons - Horizontal & Massive - Reduced Gap */}
+                    <div className="flex flex-row flex-wrap items-center justify-center lg:justify-start gap-4 w-full">
+                        {/* Google Play - Full Badge */}
+                        <a
+                            href="#"
+                            className="group transition-all duration-300 hover:scale-105 active:scale-95 block h-[120px] md:h-[150px] min-w-[200px]"
+                        >
+                            <Image
+                                src="/playstore.svg"
+                                alt="Get it on Google Play"
+                                width={400}
+                                height={150}
+                                className="h-full w-auto object-contain"
+                                priority
+                            />
                         </a>
-                        <a href="#" className="group flex items-center gap-3 px-5 py-3 rounded-xl bg-[#A7D949] hover:bg-[#b0e352] text-[#173113] transition-all transform hover:-translate-y-1 shadow-[0_6px_20px_-5px_rgba(167,217,73,0.4)]">
-                            <Image src="/playstore.svg" alt="Google Play Logo" width={24} height={24} className="w-[1.5rem] h-[1.5rem]" />
-                            <div className="flex flex-col items-start justify-center">
-                                <span className="text-[10px] opacity-80 leading-tight font-bold tracking-wide">Get it on</span>
-                                <span className="text-[14px] font-black leading-tight mt-0.5">Google Play</span>
-                            </div>
+
+                        {/* App Store - Full Badge */}
+                        <a
+                            href="#"
+                            className="group transition-all duration-300 hover:scale-105 active:scale-95 block h-[120px] md:h-[150px] min-w-[200px]"
+                        >
+                            <Image
+                                src="/appstore.svg"
+                                alt="Download on the App Store"
+                                width={400}
+                                height={150}
+                                className="h-full w-auto object-contain"
+                                priority
+                            />
                         </a>
                     </div>
+
+                    {/* Maybe Later (Secondary Action) */}
                 </div>
 
                 {/* Right Content - Stats Grid */}

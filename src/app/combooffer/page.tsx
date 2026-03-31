@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+import { redirect } from "next/navigation";
+
 export default function ComboOfferPage() {
-  return <ComboOffer />;
+  redirect("/offer");
 }

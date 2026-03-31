@@ -5,15 +5,14 @@ import React, { useEffect, useState } from "react";
 import __contactus from "../../../Assets/contactus.webp";
 const _contactus = typeof __contactus === 'string' ? __contactus : __contactus?.src || __contactus;
 const contactus = typeof _contactus === 'string' ? _contactus : _contactus?.src || _contactus;
-import { useSnackbar } from "notistack"; // Import useSnackbar hook
-// Import useNavigate for navigation
+import { useSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 import StoreSection from "../../../components/Home/StoreSection";
 import ContactUsSchema from "../seo/ContactUsSchema";
-
+import PageHeader from "@/components/Shared/PageHeader";
+import { Mail, Phone, MapPin, Send, MessageSquare, User, Smartphone, Globe, ArrowRight } from "lucide-react";
 
 const ContactUs = () => {
-  // State for form inputs
   const [formData, setFormData] = useState({
     name: "",
     mobile: "",
@@ -21,45 +20,14 @@ const ContactUs = () => {
     message: "",
   });
 
-  const { enqueueSnackbar } = useSnackbar(); // Access enqueueSnackbar function
-
-  const [loading, setLoading] = useState(true); // State to track loading status
-  const [error, setError] = useState(null); // State to handle errors
-  const [stores, setStores] = useState([]); // State for stores list
-  const router = useRouter(); // Initialize useNavigate hook
-
-  // Fetch stores from API when component mounts
-  const fetchStores = async () => {
-    try {
-      const response = await axiosInstance.get(`/store/store_list/`);
-      if (response.status === 200) {
-        setStores(response?.data?.data?.stores || []); // Set the stores if the response is an array
-
-      }
-    } catch (error) {
-      setError("Error fetching store data");
-    } finally {
-      setLoading(false); // Set loading to false once data is fetched or error occurs
-    }
-  };
+  const { enqueueSnackbar } = useSnackbar();
+  const [loading, setLoading] = useState(false); 
+  const router = useRouter();
 
   useEffect(() => {
-    fetchStores();
-  }, []); // Empty dependency array ensures this runs only once when component mounts
+    window.scrollTo(0, 0);
+  }, []);
 
-  // Handle loading and error states
-  if (loading) {
-    return <div>Loading stores...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-
-  // Show only the first 3 stores
-  const storesToDisplay = stores.slice(0, 3);
-
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -68,204 +36,199 @@ const ContactUs = () => {
     }));
   };
 
-  // Validate form fields before submitting
   const validateForm = () => {
     const { name, mobile, email, message } = formData;
-
-    // Name field should contain only alphabets
     if (!/^[a-zA-Z\s]+$/.test(name)) {
       enqueueSnackbar("Name should contain only alphabets.", { variant: "error" });
       return false;
     }
-
-    // Mobile number should be exactly 10 digits
     if (!/^\d{10}$/.test(mobile)) {
       enqueueSnackbar("Phone number should be 10 digits.", { variant: "error" });
       return false;
     }
-
-    // Ensure all fields are filled
     if (!name || !mobile || !email || !message) {
       enqueueSnackbar("All fields are required.", { variant: "error" });
       return false;
     }
-
     return true;
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form behavior
-
-    if (!validateForm()) {
-      return; // Don't submit if validation fails
-    }
+    e.preventDefault();
+    if (!validateForm()) return;
 
     setLoading(true);
-
     try {
-
       const response = await axiosInstance.post('/promotion/contactUs/', formData);
-
       if (response?.status === 201) {
-        const result = await response?.data
-
-        enqueueSnackbar(result.message || "Form submitted successfully!", {
-          variant: "success", // Success Snackbar
-        });
-        setFormData({
-          name: "",
-          mobile: "",
-          email: "",
-          message: "",
-        });
+        enqueueSnackbar("Message sent successfully! We'll get back to you soon.", { variant: "success" });
+        setFormData({ name: "", mobile: "", email: "", message: "" });
       } else {
-        enqueueSnackbar("Something went wrong. Please try again.", {
-          variant: "error", // Error Snackbar
-        });
+        enqueueSnackbar("Something went wrong. Please try again.", { variant: "error" });
       }
     } catch (error) {
-      console.error("Error:", error);
-      enqueueSnackbar("Failed to connect to the server. Please try again.", {
-        variant: "error", // Error Snackbar
-      });
+      enqueueSnackbar("Failed to connect to the server. Please try again.", { variant: "error" });
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
-  const handleClick = () => {
+
+  const handleFranchiseClick = () => {
     router.push('/franchise-enquiry');
   };
+
   return (
+    <main className="bg-[#faf9f6] min-h-screen font-sans text-[#173113]">
+      <PageHeader 
+        title="Let's Talk" 
+        subtitle="Have a question? We're here to help your garden thrive."
+      />
 
-    <>
-      
-
-
-      <div className="font-sans text-gray-800">
-        {/* Header Section */}
-        <header className="bg-red-200 text-center py-10 w-full">
-          <h1 className="text-4xl font-bold text-white">Let's Talk</h1>
-          <p className="text-xl text-bio-green font-semibold">We're Here</p>
-        </header>
-
-        {/* Contact Form Section */}
-        <section className="p-6 bg-white shadow-md rounded-lg w-full my-8">
-          <div className="flex flex-col md:flex-row items-stretch w-full">
-            {/* Image */}
-            <div className="w-full md:w-1/2">
-              <img name=" "
-                src={contactus}
-                loading="lazy"
-                alt="Contact Illustration"
-                className="h-full object-cover rounded"
-              />
+      <div className="max-w-7xl mx-auto px-6 py-16 md:py-24">
+        {/* Main Contact Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+          
+          {/* Left Side: Visual & Info */}
+          <div className="space-y-12">
+            <div>
+              <h2 className="text-3xl md:text-5xl font-serif text-[#173113] mb-6 leading-tight">We're just a message away.</h2>
+              <p className="text-[#173113]/70 font-medium text-lg leading-relaxed">
+                Whether you're looking for plant care advice, tracking an order, or exploring business opportunities, our team is ready to assist.
+              </p>
             </div>
-            {/* Form */}
-            <div className="w-full md:w-2/3 px-4 flex items-center">
-              <div className="w-full">
-                <h2 className="text-2xl font-semibold mb-4">Get in touch</h2>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  {/* Name */}
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="p-2 border border-gray-300 rounded w-full"
-                  />
 
-                  {/* Contact Number and Email Side by Side */}
-                  <div className="flex flex-col md:flex-row gap-4">
-                    <div className="w-full md:w-1/2">
-                      <input
-                        type="tel"
-                        name="mobile"
-                        placeholder="Contact Number"
-                        value={formData.mobile}
-                        onChange={handleChange}
-                        required
-                        className="p-2 border border-gray-300 rounded w-full"
-                      />
-                    </div>
-                    <div className="w-full md:w-1/2">
-                      <input
-                        type="email"
-                        name="email"
-                        placeholder="Email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                        className="p-2 border border-gray-300 rounded w-full"
-                      />
-                    </div>
-                  </div>
-                  {/* Message */}
-                  <textarea
-                    name="message"
-                    placeholder="Message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    rows="4"
-                    required
-                    className="p-2 border border-gray-300 rounded w-full"
-                  />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-[#173113]/5 group hover:bg-[#173113] transition-all duration-500">
+                <div className="w-12 h-12 bg-[#A7D949]/20 rounded-2xl flex items-center justify-center mb-6 border border-[#A7D949]/20 group-hover:bg-[#A7D949] transition-colors">
+                  <MapPin className="w-6 h-6 text-[#173113]" />
+                </div>
+                <h3 className="text-xl font-serif mb-2 group-hover:text-white transition-colors">Head Office</h3>
+                <p className="text-[#173113]/60 text-sm font-medium leading-relaxed group-hover:text-white/60 transition-colors">Jaynagar, Bengaluru, KA</p>
+                <p className="text-[#173113] font-bold mt-4 group-hover:text-[#A7D949] transition-colors">+91 7483316150</p>
+              </div>
 
-                  {/* Submit Button */}
-                  <button
-                    type="submit"
-                    className="bg-bio-green text-white px-16 py-2 rounded hover:bg-[#375421] hover:text-white w-full md:w-auto"
-                    disabled={loading}
-                  >
-                    {loading ? "Submitting..." : "Submit"}
-                  </button>
-                </form>
+              <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-[#173113]/5 group hover:bg-[#173113] transition-all duration-500">
+                 <div className="w-12 h-12 bg-[#A7D949]/20 rounded-2xl flex items-center justify-center mb-6 border border-[#A7D949]/20 group-hover:bg-[#A7D949] transition-colors">
+                  <Globe className="w-6 h-6 text-[#173113]" />
+                </div>
+                <h3 className="text-xl font-serif mb-2 group-hover:text-white transition-colors">Nursery Store</h3>
+                <p className="text-[#173113]/60 text-sm font-medium leading-relaxed group-hover:text-white/60 transition-colors">Kanakapura Road, Bengaluru</p>
+                <p className="text-[#173113] font-bold mt-4 group-hover:text-[#A7D949] transition-colors">+91 8971710854</p>
               </div>
             </div>
-          </div>
-        </section>
-        {/* Inquiry Section */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full p-6 bg-site-bg">
-          {/* First Box: Bulk/Corporate Inquiry */}
-          <div className="p-4 border border-fuchsia-200 bg-white rounded w-full">
-            <h3 className="">Head Office, Jaynagar</h3>
-            <p>Contact Person - Sujith</p>
-            <p>Contact No - +91 7483316150</p>
-            <p>Email - info@gidan.store</p>
+
+            <div className="relative rounded-[3rem] overflow-hidden group shadow-2xl h-[400px]">
+               <img src={contactus} alt="Contact Gidan" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
+               <div className="absolute inset-0 bg-gradient-to-t from-[#173113]/80 via-transparent to-transparent flex items-end p-10">
+                  <p className="text-white font-serif text-2xl italic">Creating green spaces, one home at a time.</p>
+               </div>
+            </div>
           </div>
 
-          {/* Second Box: Gardening Services Enquiry */}
-          <div className="p-4 border border-fuchsia-200 bg-white rounded w-full">
-            <h3 className="">Nursery Store</h3>
-            <p>Contact Person - Kiran</p>
-            <p>Contact No - +91 8971710854</p>
-            <p>Email - info@gidan.store</p>
+          {/* Right Side: Form */}
+          <div className="bg-white rounded-[3rem] p-8 md:p-12 shadow-2xl border border-[#173113]/5">
+            <div className="mb-10">
+              <h2 className="text-3xl font-serif text-[#173113] mb-2">Send a Message</h2>
+              <p className="text-[#173113]/50 font-medium">Expected response time: within 24 hours.</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="relative">
+                <User className="absolute left-4 top-4 w-5 h-5 text-[#173113]/20" />
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Full Name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-12 pr-6 py-4 bg-[#faf9f6] border border-transparent rounded-2xl focus:border-[#A7D949] focus:bg-white transition-all outline-none text-[#173113] font-medium"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="relative">
+                  <Smartphone className="absolute left-4 top-4 w-5 h-5 text-[#173113]/20" />
+                  <input
+                    type="tel"
+                    name="mobile"
+                    placeholder="Phone Number"
+                    value={formData.mobile}
+                    onChange={handleChange}
+                    required
+                    className="w-full pl-12 pr-6 py-4 bg-[#faf9f6] border border-transparent rounded-2xl focus:border-[#A7D949] focus:bg-white transition-all outline-none text-[#173113] font-medium"
+                  />
+                </div>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-4 w-5 h-5 text-[#173113]/20" />
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email Address"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full pl-12 pr-6 py-4 bg-[#faf9f6] border border-transparent rounded-2xl focus:border-[#A7D949] focus:bg-white transition-all outline-none text-[#173113] font-medium"
+                  />
+                </div>
+              </div>
+
+              <div className="relative">
+                <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-[#173113]/20" />
+                <textarea
+                  name="message"
+                  placeholder="How can we help?"
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows="6"
+                  required
+                  className="w-full pl-12 pr-6 py-4 bg-[#faf9f6] border border-transparent rounded-2xl focus:border-[#A7D949] focus:bg-white transition-all outline-none text-[#173113] font-medium resize-none"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-[#173113] text-white py-5 rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-[#173113]/90 hover:scale-[1.02] active:scale-100 transition-all shadow-xl shadow-[#173113]/20 disabled:opacity-50"
+              >
+                {loading ? "Sending..." : "Send Message"}
+                {!loading && <Send className="w-5 h-5" />}
+              </button>
+            </form>
           </div>
-        </section>
+        </div>
 
-        {/* Franchise Consultation Section */}
-        <section className="text-center my-8 w-full p-6 bg-site-bg">
-          <h2 className="text-xl font-semibold mb-4">
-            Request A Free Franchise Consultation
-          </h2>
-          <button
-            className="bg-bio-green text-white px-4 py-2 rounded hover:bg-[#375421] hover:text-white"
-            onClick={handleClick}
-          >
-            Apply Now
-          </button>
-        </section>
+        {/* Franchise CTA */}
+        <div className="mt-24 md:mt-32">
+           <div className="bg-[#A7D949] rounded-[3rem] p-10 md:p-16 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 text-[#173113]/5 -mr-20 -mt-20">
+                 <Globe className="w-full h-full" />
+              </div>
+              <div className="relative z-10 max-w-xl">
+                 <h2 className="text-3xl md:text-4xl font-serif text-[#173113] mb-4">Interested in Partnering?</h2>
+                 <p className="text-[#173113]/70 font-bold">Request a free Franchise Consultation and join India's fastest growing gardening brand.</p>
+              </div>
+              <button 
+                onClick={handleFranchiseClick}
+                className="relative z-10 bg-[#173113] text-white px-10 py-5 rounded-2xl font-black uppercase tracking-widest flex items-center gap-3 hover:scale-105 transition-transform group"
+              >
+                Apply for Franchise
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+           </div>
+        </div>
 
-        {/* Store Locations */}
-
-        <StoreSection />
-
+        {/* Local Stores */}
+        <div className="mt-32">
+           <div className="text-center mb-16">
+              <span className="text-[10px] text-[#A7D949] font-black uppercase tracking-[0.3em] mb-4 block">Visit Us</span>
+              <h2 className="text-3xl md:text-5xl font-serif text-[#173113]">Our Store Locations</h2>
+           </div>
+           <StoreSection />
+        </div>
       </div>
       <ContactUsSchema />
-    </>
-
+    </main>
   );
 };
 

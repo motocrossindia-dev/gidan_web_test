@@ -205,46 +205,52 @@ const DownloadAppPopup = () => {
           <div className="absolute inset-0 z-[5]" style={{ background: "linear-gradient(to bottom, rgba(30,70,30,0.55) 0%, rgba(30,70,30,0.45) 100%)" }} />
 
           {/* Centered content */}
-          <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 py-10">
-            <div className="w-20 h-20 rounded-2xl overflow-hidden bg-white shadow-lg border-2 border-white/50 mb-5 flex items-center justify-center">
+          <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 py-6 lg:py-8">
+            <div className="w-16 h-16 rounded-2xl overflow-hidden bg-white shadow-lg border-2 border-white/50 mb-3 flex items-center justify-center">
               <Image
                 src="/logo.webp"
                 alt="Gidan Logo"
-                width={80}
-                height={80}
+                width={64}
+                height={64}
                 className="w-full h-full object-contain p-1"
               />
             </div>
-            <h2 className="text-[26px] font-bold text-white leading-tight drop-shadow">
+            <h2 className="text-[24px] font-bold text-white leading-tight drop-shadow">
               Get the Gidan App
             </h2>
-            <p className="text-white/80 text-sm mt-1">
+            <p className="text-white/80 text-xs mt-1">
               Plants &amp; gifts, delivered to your door
             </p>
           </div>
         </div>
 
-        {/* Dark Green CTA section */}
-        <div className="px-6 py-6 flex flex-col items-center gap-5 bg-[#173113]" style={{ backgroundColor: "#173113" }}>
+        {/* Dark Green CTA section - Reduced Padding */}
+        <div className="px-6 py-4 flex flex-col items-center gap-4 bg-[#173113]" style={{ backgroundColor: "#173113" }}>
           <p className="text-center text-white/90 text-sm font-medium leading-relaxed">
             Shop 1000+ plants, get app-only deals &amp;<br />track orders in real-time.
           </p>
 
           <div className="flex flex-col items-center gap-3 w-full mt-2">
-            <a href="#" className="flex items-center w-full max-w-[200px] justify-center gap-3 px-5 py-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all transform hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(0,0,0,0.1)]">
-              <Image src="/playstore.svg" alt="Google Play" width={20} height={20} className="w-5 h-5" />
-              <div className="flex flex-col items-start justify-center text-white">
-                  <span className="text-[9px] text-white/70 leading-tight">Get it on</span>
-                  <span className="text-[13px] font-bold leading-tight mt-0.5">Google Play</span>
-              </div>
+            <a href="#" className="group transition-all duration-300 hover:scale-105 active:scale-95 block h-[90px] md:h-[110px]">
+              <Image 
+                src="/playstore.svg" 
+                alt="Get it on Google Play" 
+                width={300} 
+                height={110} 
+                className="h-full w-auto object-contain" 
+                priority
+              />
             </a>
 
-            <a href="#" className="flex items-center w-full max-w-[200px] justify-center gap-3 px-5 py-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all transform hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(0,0,0,0.1)]">
-              <Image src="/appstore.svg" alt="App Store" width={20} height={20} className="w-5 h-5" />
-              <div className="flex flex-col items-start justify-center text-white">
-                  <span className="text-[9px] text-white/70 leading-tight">Download on the</span>
-                  <span className="text-[13px] font-bold leading-tight mt-0.5">App Store</span>
-              </div>
+            <a href="#" className="group transition-all duration-300 hover:scale-105 active:scale-95 block h-[90px] md:h-[110px]">
+              <Image 
+                src="/appstore.svg" 
+                alt="Download on the App Store" 
+                width={300} 
+                height={110} 
+                className="h-full w-auto object-contain" 
+                priority
+              />
             </a>
           </div>
 
@@ -252,7 +258,7 @@ const DownloadAppPopup = () => {
             type="button"
             onClick={dismiss}
             onTouchEnd={(e) => { e.preventDefault(); dismiss(e); }}
-            className="text-xs text-white/50 hover:text-white/80 transition-colors underline underline-offset-2 cursor-pointer relative z-10 p-2"
+            className="text-xs text-white/50 hover:text-white/80 transition-colors underline underline-offset-2 cursor-pointer relative z-10 p-1"
           >
             Maybe later
           </button>

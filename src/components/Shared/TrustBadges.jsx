@@ -8,7 +8,7 @@ import Image from 'next/image';
  * Displays a row of value propositions (badges) fetched from the API.
  * Designed with a premium, clean aesthetic using the site's color palette.
  */
-const TrustBadges = ({ isGrid = false }) => {
+const TrustBadges = ({ variant = "scroll" }) => {
     const [badges, setBadges] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -22,38 +22,12 @@ const TrustBadges = ({ isGrid = false }) => {
                 }
             } catch (err) {
                 console.error("Failed to fetch trust badges", err);
-                // Fallback data provided by user in case of API failure during dev
+                // Fallback data
                 setBadges([
-                    {
-                        id: 1,
-                        icon: "https://gidanbackendtest.mymotokart.in/media/trust_badges/ChatGPT_Image_Mar_30_2026_12_40_39_PM.gif",
-                        title: "India-Climate Tested",
-                        subtitle: "Every plant tested in Bangalore heat & humidity"
-                    },
-                    {
-                        id: 2,
-                        icon: "https://gidanbackendtest.mymotokart.in/media/trust_badges/Free_delivery_with_2000_purchase.gif",
-                        title: "Free Delivery ₹2,000+",
-                        subtitle: "Pan-India. Same-day in Bangalore"
-                    },
-                    {
-                        id: 3,
-                        icon: "https://gidanbackendtest.mymotokart.in/media/trust_badges/ChatGPT_Image_Mar_30_2026_12_41_22_PM.gif",
-                        title: "7-Day Guarantee",
-                        subtitle: "Plant doesn't survive? We reship free."
-                    },
-                    {
-                        id: 4,
-                        icon: "https://gidanbackendtest.mymotokart.in/media/trust_badges/ChatGPT_Image_Mar_30_2026_12_42_19_PM.gif",
-                        title: "WhatsApp Support",
-                        subtitle: "Real plant experts. Mon–Sat 9AM–7PM"
-                    },
-                    {
-                        id: 5,
-                        icon: "https://gidanbackendtest.mymotokart.in/media/trust_badges/ChatGPT_Image_Mar_30_2026_12_44_25_PM.gif",
-                        title: "99.2% Arrive Healthy",
-                        subtitle: "Expert packaging. Safe every time."
-                    }
+                    { id: 1, icon: "https://gidanbackendtest.mymotokart.in/media/trust_badges/ChatGPT_Image_Mar_30_2026_12_40_39_PM.gif", title: "India-Climate Tested", subtitle: "Every plant tested in Bangalore conditions" },
+                    { id: 3, icon: "https://gidanbackendtest.mymotokart.in/media/trust_badges/ChatGPT_Image_Mar_30_2026_12_41_22_PM.gif", title: "7-Day Survival Guarantee", subtitle: "Plant doesn't survive? We reship, free." },
+                    { id: 5, icon: "https://gidanbackendtest.mymotokart.in/media/trust_badges/ChatGPT_Image_Mar_30_2026_12_44_25_PM.gif", title: "Expert Packaging", subtitle: "Plants arrive healthy — 99.2% success rate" },
+                    { id: 4, icon: "https://gidanbackendtest.mymotokart.in/media/trust_badges/ChatGPT_Image_Mar_30_2026_12_42_19_PM.gif", title: "WhatsApp Plant Support", subtitle: "Real experts. Mon–Sat, 9AM–7PM" }
                 ]);
             } finally {
                 setIsLoading(false);
@@ -65,55 +39,102 @@ const TrustBadges = ({ isGrid = false }) => {
 
     if (isLoading && badges.length === 0) return null;
 
-    if (isGrid) {
+    const filteredBadges = badges.filter(b => b.is_active !== false);
+
+    // --- Cinematic Grid Variant (Category Page / Reference Image) ---
+    if (variant === "grid") {
         return (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-                {badges.filter(b => b.is_active !== false).map((badge) => (
-                    <div 
-                        key={badge.id}
-                        className="flex flex-col p-4 bg-white border border-gray-100 rounded-xl hover:shadow-sm transition-all group"
-                    >
-                        <div className="flex items-center gap-3 mb-2">
-                            <div className="w-10 h-10 shrink-0 bg-[#ecf3e8] rounded-xl flex items-center justify-center overflow-hidden">
-                                <Image src={badge.icon} alt={badge.title} width={24} height={24} className="object-contain" />
+            <div className="w-full max-w-4xl mx-auto border border-[#173113]/5 rounded-3xl bg-white/50 backdrop-blur-sm overflow-hidden">
+                <div className="grid grid-cols-1 md:grid-cols-2">
+                    {filteredBadges.slice(0, 4).map((badge, idx) => (
+                        <div 
+                            key={badge.id}
+                            className={`flex flex-col items-center text-center p-8 md:p-12 transition-all group hover:bg-[#A7D949]/5
+                                ${idx === 0 ? "border-b md:border-r border-[#173113]/5" : ""}
+                                ${idx === 1 ? "border-b border-[#173113]/5" : ""}
+                                ${idx === 2 ? "md:border-r border-[#173113]/5" : ""}
+                            `}
+                        >
+                            <div className="w-14 h-14 mb-6 relative group-hover:scale-110 transition-transform duration-500">
+                                <Image 
+                                    src={badge.icon} 
+                                    alt={badge.title} 
+                                    fill 
+                                    className="object-contain"
+                                    unoptimized // For GIFs
+                                />
                             </div>
-                            <h3 className="text-xs font-black text-[#1a1f14] group-hover:underline">{badge.title}</h3>
+                            <h3 className="text-sm md:text-base font-serif font-bold text-[#173113] mb-2 px-2">
+                                {badge.title}
+                            </h3>
+                            <p className="text-[10px] md:text-xs text-gray-500 font-medium leading-relaxed max-w-[200px]">
+                                {badge.subtitle}
+                            </p>
                         </div>
-                        <p className="text-[10px] font-bold text-gray-500 leading-tight">
-                            {badge.subtitle}
-                        </p>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
         );
     }
 
+    // --- Centered Row Variant (Home / Landing Page / Below Category Hero) ---
+    if (variant === "row") {
+        return (
+            <div className="w-full bg-white border-b border-gray-100 overflow-x-auto scrollbar-hide">
+                <div className="container mx-auto px-4">
+                    <div className="flex items-center justify-start lg:justify-center py-4 md:py-6 gap-0">
+                        {filteredBadges.map((badge, idx) => (
+                            <div 
+                                key={badge.id} 
+                                className={`flex items-center shrink-0 gap-3 md:gap-4 px-6 md:px-10 ${
+                                    idx !== filteredBadges.length - 1 ? "border-r border-gray-100" : ""
+                                } hover:bg-gray-50/50 transition-colors`}
+                            >
+                                <div className="relative shrink-0 w-8 md:w-10 h-8 md:h-10 flex items-center justify-center overflow-hidden">
+                                    <Image src={badge.icon} alt={badge.title} width={28} height={28} className="object-contain" unoptimized />
+                                </div>
+                                <div className="flex flex-col text-left">
+                                    <h3 className="text-[11px] md:text-[13px] font-bold text-[#1a1f14] leading-tight whitespace-nowrap tracking-tight">
+                                        {badge.title}
+                                    </h3>
+                                    <p className="text-[9px] md:text-[10px] font-medium text-[#1a1f14]/40 leading-tight mt-0.5 max-w-[140px] whitespace-nowrap lg:whitespace-normal">
+                                        {badge.subtitle}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <style jsx>{`
+                    .scrollbar-hide {
+                        -ms-overflow-style: none;
+                        scrollbar-width: none;
+                    }
+                    .scrollbar-hide::-webkit-scrollbar {
+                        display: none;
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
+    // --- Standard Scroll Variant (Minimal Default) ---
     return (
-        <div className="w-full bg-white border-y border-gray-100 overflow-x-auto scrollbar-hide">
-            <div className="flex min-w-[max-content] lg:w-full items-stretch">
-                {badges.filter(b => b.is_active !== false).map((badge, idx) => (
+        <div className="w-full bg-white border-y border-gray-100 overflow-x-auto scrollbar-hide py-4">
+            <div className="flex min-w-[max-content] lg:w-full items-stretch justify-center">
+                {filteredBadges.map((badge) => (
                     <div 
                         key={badge.id} 
-                        className={`flex items-center gap-3 md:gap-4 px-4 md:px-6 py-4 md:py-5 border-r border-gray-100 last:border-r-0 transition-colors duration-300 hover:bg-gray-50/50 
-                            ${badge.title.includes("7-Day") ? "bg-[#ebf4e6]/60" : ""}`}
+                        className="flex items-center gap-3 md:gap-4 px-6 md:px-10 border-r border-gray-100 last:border-r-0 hover:bg-gray-50/50 transition-colors"
                     >
-                        {/* Icon Container */}
-                        <div className="relative shrink-0 w-10 h-10 md:w-12 md:h-12 bg-[#ecf3e8] rounded-xl flex items-center justify-center overflow-hidden">
-                            <Image 
-                                src={badge.icon} 
-                                alt={badge.title}
-                                width={28}
-                                height={28}
-                                className="object-contain"
-                            />
+                        <div className="relative shrink-0 w-10 h-10 bg-[#ecf3e8] rounded-xl flex items-center justify-center overflow-hidden p-2">
+                            <Image src={badge.icon} alt={badge.title} width={24} height={24} className="object-contain" unoptimized />
                         </div>
-
-                        {/* Text Content */}
-                        <div className="flex flex-col text-left shrink-0">
+                        <div className="flex flex-col text-left">
                             <h3 className="text-[11px] md:text-[13px] font-black text-[#1a1f14] leading-tight whitespace-nowrap">
                                 {badge.title}
                             </h3>
-                            <p className="text-[9px] md:text-[10px] font-medium text-[#1a1f14]/50 leading-tight mt-0.5 max-w-[120px] md:max-w-[140px]">
+                            <p className="text-[9px] md:text-[10px] font-medium text-[#1a1f14]/50 leading-tight mt-0.5 max-w-[120px]">
                                 {badge.subtitle}
                             </p>
                         </div>

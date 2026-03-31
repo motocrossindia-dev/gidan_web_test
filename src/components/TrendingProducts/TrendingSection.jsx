@@ -139,17 +139,19 @@ export const TrendingSection = ({
         </div>
       </div>
 
-      {/* Modern Editorial Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-12">
-        {visibleProducts.map((product, index) => (
-          <div
-            key={product?.id || index}
-            className="animate-fade-in-up"
-            style={{ animationDelay: `${(index + 1) * 100}ms` }}
-          >
-            <ProductCard product={product} />
-          </div>
-        ))}
+      {/* Standardized Grid Layout Container */}
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 mb-12">
+          {visibleProducts.map((product, index) => (
+            <div
+              key={product?.id || index}
+              className="animate-fade-in-up"
+              style={{ animationDelay: `${(index + 1) * 100}ms` }}
+            >
+              <ProductCard product={product} priority={index === 0} />
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="flex justify-center mt-8">

@@ -12,7 +12,8 @@ const ProductGrid = ({
   setResults,
   query,
   filtersApplied = false,
-  categoryName = ""
+  categoryName = "",
+  bottomContent = null
 }) => {
   const router = useRouter();
   const observer = useRef(null);
@@ -175,7 +176,6 @@ const ProductGrid = ({
         </div>
       )}
 
-      {/* Loading indicator - only show if no filters applied */}
       {
         loading && !filtersApplied && (
           <div className="flex justify-center mt-4">
@@ -183,6 +183,11 @@ const ProductGrid = ({
           </div>
         )
       }
+
+      {/* Dynamic bottom content (e.g. Info Cards, SEO blocks) */}
+      <div className="mt-12 mb-8">
+        {bottomContent}
+      </div>
 
       {/* End of results indicator */}
       {

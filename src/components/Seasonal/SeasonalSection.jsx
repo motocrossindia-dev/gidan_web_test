@@ -125,6 +125,7 @@ export const SeasonalSection = ({
                   mrp={Math.round(product?.mrp)}
                   ribbon={product.ribbon}
                   getProducts={refetch}
+                  priority={index === 0}
                 />
               </div>
             ))}
