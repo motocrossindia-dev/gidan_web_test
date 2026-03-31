@@ -624,15 +624,12 @@ function PlantFilter({
                                     query={currentQuery}
                                     getProducts={getProducts}
                                     bottomContent={
-                                        seoData && (
-                                            <div className="flex flex-col gap-12">
-                                                <CategoryStaticSEO
-                                                    categoryDataFromAPI={seoData}
-                                                    isSubcategory={isSubcategorySEO}
-                                                    info_cards={(seoData?.info_cards?.length > 0 ? seoData.info_cards : initialSEOData?.info_cards || [])}
-                                                />
-                                            </div>
-                                        )
+                                        <div className="flex flex-col gap-12">
+                                            <CategoryStaticSEO
+                                                isLoading={isSearching}
+                                                info_cards={(seoData?.info_cards?.length > 0 ? seoData.info_cards : initialSEOData?.info_cards || [])}
+                                            />
+                                        </div>
                                     }
                                 />
                                 {isSearching && (
