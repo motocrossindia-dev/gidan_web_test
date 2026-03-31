@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { 
   CheckCircle2, 
   Package, 
@@ -27,16 +27,66 @@ import {
   Search,
   X,
   Mail,
-  ArrowUpRight
+  ArrowUpRight,
+  Loader2
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FaInstagram, FaWhatsapp, FaEnvelope } from "react-icons/fa";
 import axiosInstance from '../../../Axios/axiosInstance';
 import { enqueueSnackbar } from 'notistack';
 import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
 import { getProductUrl } from '../../../utils/urlHelper';
 
-const Successpage = () => {
+
+
+// ── SKELETON COMPONENTS ──
+const StatusSkeleton = () => (
+  <div className="space-y-8 animate-pulse">
+    {[1, 2, 3, 4].map(i => (
+      <div key={i} className="flex gap-4 items-start">
+        <div className="w-10 h-10 bg-gray-100 rounded-full shrink-0" />
+        <div className="flex-1 space-y-2 py-1">
+          <div className="h-4 bg-gray-100 rounded w-1/3" />
+          <div className="h-3 bg-gray-50 rounded w-2/3" />
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+const ItemSkeleton = () => (
+  <div className="space-y-6 animate-pulse">
+    {[1, 2].map(i => (
+      <div key={i} className="flex gap-6">
+        <div className="w-24 h-24 bg-gray-100 rounded-3xl shrink-0" />
+        <div className="flex-1 space-y-3 py-2">
+          <div className="h-4 bg-gray-100 rounded w-1/2" />
+          <div className="h-3 bg-gray-50 rounded w-1/3" />
+          <div className="h-4 bg-gray-100 rounded w-1/4" />
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+const SummarySkeleton = () => (
+  <div className="space-y-4 animate-pulse pt-6">
+    {[1, 2, 3].map(i => (
+      <div key={i} className="flex justify-between">
+        <div className="h-4 bg-gray-100 rounded w-1/4" />
+        <div className="h-4 bg-gray-100 rounded w-1/6" />
+      </div>
+    ))}
+    <div className="pt-6 border-t border-gray-50 flex justify-between">
+      <div className="h-6 bg-gray-100 rounded w-1/3" />
+      <div className="h-8 bg-gray-100 rounded w-1/4" />
+    </div>
+  </div>
+);
+
+const SuccesspageContent = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [orderDetails, setOrderDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
@@ -47,8 +97,10 @@ const Successpage = () => {
     setMounted(true);
     const fetchOrderData = async () => {
       try {
-        const orderId = sessionStorage.getItem('recent_order_id');
-        if (!orderId) {
+        const orderId = searchParams.get('order_id') || sessionStorage.getItem('recent_order_id');
+        const hasPermission = sessionStorage.getItem('recent_payment_success') === 'true';
+
+        if (!orderId || !hasPermission) {
           router.replace('/');
           return;
         }
@@ -57,6 +109,9 @@ const Successpage = () => {
         const response = await axiosInstance.get(`/order/orderHistoryItems/${orderId}`);
         if (response.status === 200) {
           setOrderDetails(response.data.data);
+          // ── CONSUME PERMISSION ──
+          // Once successfully viewed, we remove the success permission so it's not revisited via history/direct link
+          sessionStorage.removeItem('recent_payment_success');
         }
       } catch (error) {
         console.error('Error fetching order details:', error);
@@ -140,15 +195,9 @@ const Successpage = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white px-4">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-[#375421] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-500 font-medium">Securing your order details...</p>
-        </div>
-      </div>
-    );
+  if (loading && !orderDetails) {
+    // We render the shell even if loading, but handle it inside sections.
+    // However, if we have absolutely no data and are loading, let's show a very refined minimal pulse
   }
 
   const { order, order_items = [], delivery_address = {}, care_guides = [] } = orderDetails || {};
@@ -222,12 +271,20 @@ const Successpage = () => {
               onClick={() => handleCopyOrderId(orderIdDisplay)}
               className="group flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gray-50 border border-gray-100 cursor-pointer active:scale-95 transition-all"
             >
-              <span className="text-xs font-black text-gray-800 tracking-tight uppercase">Order #{orderIdDisplay}</span>
-              <div className="w-px h-3 bg-gray-200 mx-1" />
-              <div className="flex items-center gap-1.5 text-[#375421]">
-                {copied ? <Check size={14} /> : <Copy size={12} />}
-                <span className="text-[10px] font-bold uppercase tracking-widest">{copied ? 'Copied' : 'tap to copy'}</span>
-              </div>
+              {loading && !orderDetails ? (
+                <div className="flex items-center gap-2 animate-pulse">
+                  <div className="h-3 w-24 bg-gray-200 rounded" />
+                </div>
+              ) : (
+                <>
+                  <span className="text-xs font-black text-gray-800 tracking-tight uppercase">Order #{orderIdDisplay}</span>
+                  <div className="w-px h-3 bg-gray-200 mx-1" />
+                  <div className="flex items-center gap-1.5 text-[#375421]">
+                    {copied ? <Check size={14} /> : <Copy size={12} />}
+                    <span className="text-[10px] font-bold uppercase tracking-widest">{copied ? 'Copied' : 'tap to copy'}</span>
+                  </div>
+                </>
+              )}
             </div>
 
             <div className="flex gap-3 mt-4 w-full md:w-auto">
@@ -263,130 +320,143 @@ const Successpage = () => {
                   <h3 className="text-xl font-bold text-gray-900">Order status</h3>
                 </div>
                 <span className="text-sm font-semibold text-gray-500">
-                  Est. delivery: <span className="text-[#375421]">{order?.expected_delivery_date ? new Date(order.expected_delivery_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : 'Thu 22 – Sat 24 Mar'}</span>
+                  Est. delivery: <span className="text-[#375421]">{order?.expected_delivery_date ? new Date(order.expected_delivery_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : 'Processing...'}</span>
                 </span>
               </div>
 
-              <div className="space-y-0 relative pl-12 before:absolute before:left-5 before:top-2 before:bottom-2 before:w-[2px] before:bg-gray-100">
-                {/* 1. PROCESSING */}
-                <div className="relative pb-12 group">
-                  <div className={`absolute -left-[2.75rem] top-0 w-10 h-10 ${stepProcessing.completed ? 'bg-[#375421]' : 'bg-gray-50'} rounded-full flex items-center justify-center z-10 border-4 border-white shadow-sm transition-transform group-hover:scale-105`}>
-                    <Clock size={18} className={stepProcessing.completed ? "text-white" : "text-gray-300"} />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className={`text-base font-bold ${stepProcessing.completed ? 'text-gray-900' : 'text-gray-400'}`}>Processing</h4>
-                      <div className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${stepProcessing.completed ? 'text-[#375421] bg-green-50' : 'text-gray-400 bg-gray-50'}`}>
-                        {stepProcessing.completed ? '✓ Completed' : 'Started'}
+              <AnimatePresence mode="wait">
+                {loading && !orderDetails ? (
+                  <motion.div key="status-skeleton" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <StatusSkeleton />
+                  </motion.div>
+                ) : (
+                  <motion.div 
+                    key="status-content" 
+                    initial={{ opacity: 0 }} 
+                    animate={{ opacity: 1 }}
+                    className="space-y-0 relative pl-12 before:absolute before:left-5 before:top-2 before:bottom-2 before:w-[2px] before:bg-gray-100"
+                  >
+                    {/* 1. PROCESSING */}
+                    <div className="relative pb-12 group">
+                      <div className={`absolute -left-[2.75rem] top-0 w-10 h-10 ${stepProcessing.completed ? 'bg-[#375421]' : 'bg-gray-50'} rounded-full flex items-center justify-center z-10 border-4 border-white shadow-sm transition-transform group-hover:scale-105`}>
+                        <Clock size={18} className={stepProcessing.completed ? "text-white" : "text-gray-300"} />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center justify-between">
+                          <h4 className={`text-base font-bold ${stepProcessing.completed ? 'text-gray-900' : 'text-gray-400'}`}>Processing</h4>
+                          <div className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${stepProcessing.completed ? 'text-[#375421] bg-green-50' : 'text-gray-400 bg-gray-50'}`}>
+                            {stepProcessing.completed ? '✓ Completed' : 'Started'}
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-500 font-medium">Order received & being verified</p>
+                        <div className="flex items-center gap-1.5 text-xs text-gray-400 font-semibold mt-1">
+                          {stepProcessing.time ? (
+                            <><Clock size={12} /> {stepProcessing.time}</>
+                          ) : 'Just now'}
+                        </div>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-500 font-medium">Order received & being verified</p>
-                    <div className="flex items-center gap-1.5 text-xs text-gray-400 font-semibold mt-1">
-                       {stepProcessing.time ? (
-                         <><Clock size={12} /> {stepProcessing.time}</>
-                       ) : 'Just now'}
-                    </div>
-                  </div>
-                </div>
 
-                {/* 2. ORDER CONFIRMED */}
-                <div className="relative pb-12 group">
-                  <div className={`absolute -left-[2.75rem] top-0 w-10 h-10 ${stepConfirmed.completed ? 'bg-[#375421]' : 'bg-gray-50'} rounded-full flex items-center justify-center z-10 border-4 border-white shadow-sm`}>
-                    {stepConfirmed.completed ? <Check size={20} className="text-white" strokeWidth={3} /> : <Zap size={18} className="text-gray-300" />}
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className={`text-base font-bold ${stepConfirmed.completed ? 'text-gray-900' : 'text-gray-400'}`}>Order confirmed</h4>
-                      {stepConfirmed.completed && (
-                        <div className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-[#375421] bg-green-50">✓ Completed</div>
-                      )}
+                    {/* 2. ORDER CONFIRMED */}
+                    <div className="relative pb-12 group">
+                      <div className={`absolute -left-[2.75rem] top-0 w-10 h-10 ${stepConfirmed.completed ? 'bg-[#375421]' : 'bg-gray-50'} rounded-full flex items-center justify-center z-10 border-4 border-white shadow-sm`}>
+                        {stepConfirmed.completed ? <Check size={20} className="text-white" strokeWidth={3} /> : <Zap size={18} className="text-gray-300" />}
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center justify-between">
+                          <h4 className={`text-base font-bold ${stepConfirmed.completed ? 'text-gray-900' : 'text-gray-400'}`}>Order confirmed</h4>
+                          {stepConfirmed.completed && (
+                            <div className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-[#375421] bg-green-50">✓ Completed</div>
+                          )}
+                        </div>
+                        <p className={`text-sm font-medium ${stepConfirmed.completed ? 'text-gray-500' : 'text-gray-300'}`}>Payment received · ₹{Number(order?.grand_total || 0).toFixed(0)} via {order?.payment_method || 'Razorpay'}</p>
+                        {stepConfirmed.time && (
+                          <div className="flex items-center gap-1.5 text-xs text-gray-400 font-semibold mt-1">
+                            <Clock size={12} /> {stepConfirmed.time}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <p className={`text-sm font-medium ${stepConfirmed.completed ? 'text-gray-500' : 'text-gray-300'}`}>Payment received · ₹{Number(order?.grand_total || 0).toFixed(0)} via {order?.payment_method || 'Razorpay'}</p>
-                    {stepConfirmed.time && (
-                      <div className="flex items-center gap-1.5 text-xs text-gray-400 font-semibold mt-1">
-                        <Clock size={12} /> {stepConfirmed.time}
+
+                    {/* 3. DISPATCHED */}
+                    <div className="relative pb-12 group">
+                      <div className={`absolute -left-[2.75rem] top-0 w-10 h-10 ${stepDispatched.completed ? 'bg-[#375421]' : 'bg-gray-50'} rounded-full flex items-center justify-center z-10 border-4 border-white shadow-sm`}>
+                        {stepDispatched.completed ? <Check size={20} className="text-white" strokeWidth={3} /> : <span className="text-base font-bold text-gray-300">3</span>}
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center justify-between">
+                          <h4 className={`text-base font-bold ${stepDispatched.completed ? 'text-gray-900' : 'text-gray-400'}`}>Dispatched</h4>
+                          <div className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${stepDispatched.completed ? 'text-[#375421] bg-green-50' : 'text-gray-300 bg-gray-50'}`}>
+                            {stepDispatched.completed ? '✓ Completed' : 'Upcoming'}
+                          </div>
+                        </div>
+                        <p className={`text-sm font-medium ${stepDispatched.completed ? 'text-gray-500' : 'text-gray-300'}`}>Your plants will be handed to our delivery partner with a live tracking link.</p>
+                        {stepDispatched.time && (
+                          <div className="flex items-center gap-1.5 text-xs text-gray-400 font-semibold mt-1">
+                            <Clock size={12} /> {stepDispatched.time}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* 4. ON THE WAY */}
+                    {stepOnTheWay.completed && (
+                      <div className="relative pb-12 group">
+                        <div className="absolute -left-[2.75rem] top-0 w-10 h-10 bg-[#375421] rounded-full flex items-center justify-center z-10 border-4 border-white shadow-sm">
+                          <Truck size={18} className="text-white" />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-center justify-between">
+                            <h4 className="text-base font-bold text-gray-900">On the way</h4>
+                            <div className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-[#375421] bg-green-50">✓ Ongoing</div>
+                          </div>
+                          <p className="text-sm font-medium text-gray-500">Your order is currently in transit to your city.</p>
+                          <div className="flex items-center gap-1.5 text-xs text-gray-400 font-semibold mt-1">
+                            <Clock size={12} /> {stepOnTheWay.time}
+                          </div>
+                        </div>
                       </div>
                     )}
-                  </div>
-                </div>
 
-                {/* 3. DISPATCHED */}
-                <div className="relative pb-12 group">
-                  <div className={`absolute -left-[2.75rem] top-0 w-10 h-10 ${stepDispatched.completed ? 'bg-[#375421]' : 'bg-gray-50'} rounded-full flex items-center justify-center z-10 border-4 border-white shadow-sm`}>
-                    {stepDispatched.completed ? <Check size={20} className="text-white" strokeWidth={3} /> : <span className="text-base font-bold text-gray-300">3</span>}
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className={`text-base font-bold ${stepDispatched.completed ? 'text-gray-900' : 'text-gray-400'}`}>Dispatched</h4>
-                      <div className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${stepDispatched.completed ? 'text-[#375421] bg-green-50' : 'text-gray-300 bg-gray-50'}`}>
-                        {stepDispatched.completed ? '✓ Completed' : 'Upcoming'}
+                    {/* 5. OUT FOR DELIVERY */}
+                    <div className="relative pb-12 group">
+                      <div className={`absolute -left-[2.75rem] top-0 w-10 h-10 ${stepOutForDelivery.completed ? 'bg-[#375421]' : 'bg-gray-50'} rounded-full flex items-center justify-center z-10 border-4 border-white shadow-sm`}>
+                        {stepOutForDelivery.completed ? <Check size={20} className="text-white" strokeWidth={3} /> : <span className="text-base font-bold text-gray-300">{stepOnTheWay.completed ? '5' : '4'}</span>}
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center justify-between">
+                          <h4 className={`text-base font-bold ${stepOutForDelivery.completed ? 'text-gray-900' : 'text-gray-400'}`}>Out for delivery</h4>
+                          <div className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${stepOutForDelivery.completed ? 'text-[#375421] bg-green-50' : 'text-gray-300 bg-gray-50'}`}>
+                            {stepOutForDelivery.completed ? '✓ Completed' : 'Upcoming'}
+                          </div>
+                        </div>
+                        <p className={`text-sm font-medium ${stepOutForDelivery.completed ? 'text-gray-500' : 'text-gray-300'}`}>Your order will be on the way to {delivery_address?.address?.slice(0, 40)}...</p>
                       </div>
                     </div>
-                    <p className={`text-sm font-medium ${stepDispatched.completed ? 'text-gray-500' : 'text-gray-300'}`}>Your plants will be handed to our delivery partner with a live tracking link.</p>
-                    {stepDispatched.time && (
-                      <div className="flex items-center gap-1.5 text-xs text-gray-400 font-semibold mt-1">
-                        <Clock size={12} /> {stepDispatched.time}
-                      </div>
-                    )}
-                  </div>
-                </div>
 
-                {/* 4. ON THE WAY */}
-                {stepOnTheWay.completed && (
-                  <div className="relative pb-12 group">
-                    <div className="absolute -left-[2.75rem] top-0 w-10 h-10 bg-[#375421] rounded-full flex items-center justify-center z-10 border-4 border-white shadow-sm">
-                      <Truck size={18} className="text-white" />
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center justify-between">
-                        <h4 className="text-base font-bold text-gray-900">On the way</h4>
-                        <div className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-[#375421] bg-green-50">✓ Ongoing</div>
+                    {/* 6. DELIVERED */}
+                    <div className="relative group">
+                      <div className={`absolute -left-[2.75rem] top-0 w-10 h-10 ${stepDelivered.completed ? 'bg-[#375421]' : 'bg-gray-50'} rounded-full flex items-center justify-center z-10 border-4 border-white shadow-sm`}>
+                        {stepDelivered.completed ? <Check size={20} className="text-white" strokeWidth={3} /> : <span className="text-base font-bold text-gray-300">{stepOnTheWay.completed ? '6' : '5'}</span>}
                       </div>
-                      <p className="text-sm font-medium text-gray-500">Your order is currently in transit to your city.</p>
-                      <div className="flex items-center gap-1.5 text-xs text-gray-400 font-semibold mt-1">
-                        <Clock size={12} /> {stepOnTheWay.time}
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center justify-between">
+                          <h4 className={`text-base font-bold ${stepDelivered.completed ? 'text-gray-900' : 'text-gray-400'}`}>Delivered</h4>
+                          <div className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${stepDelivered.completed ? 'text-[#375421] bg-green-50' : 'text-gray-300 bg-gray-50'}`}>
+                            {stepDelivered.completed ? '✓ Completed' : 'Upcoming'}
+                          </div>
+                        </div>
+                        <p className={`text-sm font-medium ${stepDelivered.completed ? 'text-gray-500' : 'text-gray-300'}`}>Your plants arrive healthy, ready to grow. Remember your 7-day survival guarantee starts here.</p>
+                        {stepDelivered.time && (
+                          <div className="flex items-center gap-1.5 text-xs text-gray-400 font-semibold mt-1">
+                            <Clock size={12} /> {stepDelivered.time}
+                          </div>
+                        )}
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 )}
-
-                {/* 5. OUT FOR DELIVERY */}
-                <div className="relative pb-12 group">
-                  <div className={`absolute -left-[2.75rem] top-0 w-10 h-10 ${stepOutForDelivery.completed ? 'bg-[#375421]' : 'bg-gray-50'} rounded-full flex items-center justify-center z-10 border-4 border-white shadow-sm`}>
-                    {stepOutForDelivery.completed ? <Check size={20} className="text-white" strokeWidth={3} /> : <span className="text-base font-bold text-gray-300">{stepOnTheWay.completed ? '5' : '4'}</span>}
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className={`text-base font-bold ${stepOutForDelivery.completed ? 'text-gray-900' : 'text-gray-400'}`}>Out for delivery</h4>
-                      <div className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${stepOutForDelivery.completed ? 'text-[#375421] bg-green-50' : 'text-gray-300 bg-gray-50'}`}>
-                        {stepOutForDelivery.completed ? '✓ Completed' : 'Upcoming'}
-                      </div>
-                    </div>
-                    <p className={`text-sm font-medium ${stepOutForDelivery.completed ? 'text-gray-500' : 'text-gray-300'}`}>Your order will be on the way to {delivery_address?.address?.slice(0, 40)}...</p>
-                  </div>
-                </div>
-
-                {/* 6. DELIVERED */}
-                <div className="relative group">
-                  <div className={`absolute -left-[2.75rem] top-0 w-10 h-10 ${stepDelivered.completed ? 'bg-[#375421]' : 'bg-gray-50'} rounded-full flex items-center justify-center z-10 border-4 border-white shadow-sm`}>
-                    {stepDelivered.completed ? <Check size={20} className="text-white" strokeWidth={3} /> : <span className="text-base font-bold text-gray-300">{stepOnTheWay.completed ? '6' : '5'}</span>}
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className={`text-base font-bold ${stepDelivered.completed ? 'text-gray-900' : 'text-gray-400'}`}>Delivered</h4>
-                      <div className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${stepDelivered.completed ? 'text-[#375421] bg-green-50' : 'text-gray-300 bg-gray-50'}`}>
-                        {stepDelivered.completed ? '✓ Completed' : 'Upcoming'}
-                      </div>
-                    </div>
-                    <p className={`text-sm font-medium ${stepDelivered.completed ? 'text-gray-500' : 'text-gray-300'}`}>Your plants arrive healthy, ready to grow. Remember your 7-day survival guarantee starts here.</p>
-                    {stepDelivered.time && (
-                      <div className="flex items-center gap-1.5 text-xs text-gray-400 font-semibold mt-1">
-                        <Clock size={12} /> {stepDelivered.time}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
+              </AnimatePresence>
             </section>
 
             {/* ── NEW ORDER SUMMARY SECTION (LEFT BELOW STATUS) ── */}
@@ -400,49 +470,58 @@ const Successpage = () => {
               </div>
 
               <div className="divide-y divide-gray-100">
-                {order_items.map((item, idx) => (
-                  <div key={idx} className="py-8 first:pt-0 last:pb-0">
-                    <div className="flex flex-col sm:flex-row gap-6">
-                      <div 
-                        onClick={() => router.push(getProductUrl(item))}
-                        className="w-full sm:w-28 h-28 bg-[#f8fbf6] rounded-3xl overflow-hidden border border-gray-50 flex items-center justify-center relative group flex-shrink-0 cursor-pointer"
-                      >
-                        <img 
-                          src={`${axiosInstance.defaults.baseURL}${item.image}`} 
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                          alt="" 
-                        />
-                        <div className="absolute top-2 left-2 bg-white/95 backdrop-blur-sm w-7 h-7 rounded-xl flex items-center justify-center text-[10px] font-black text-[#375421] shadow-sm border border-green-50">{item.quantity}</div>
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center">
-                            <ArrowUpRight className="text-white opacity-0 group-hover:opacity-100 transition-all scale-50 group-hover:scale-100" size={24} />
-                        </div>
-                      </div>
-                      <div className="flex-1">
-                        <div className="group cursor-pointer" onClick={() => router.push(getProductUrl(item))}>
-                          <p className="text-[10px] font-bold text-[#375421] uppercase tracking-widest mb-1 group-hover:underline">Evergreen Pot</p>
-                          <h4 className="text-[16px] font-black text-gray-900 uppercase leading-none mb-2 group-hover:text-[#375421] transition-colors">{item.product_name}</h4>
-                          <p className="text-[11px] text-gray-400 font-bold uppercase tracking-tight mb-4">Swiss Cheese Plant · Regular size · No planter</p>
-                          
-                          <div className="flex flex-wrap gap-2 mb-4">
-                            <span className="px-2.5 py-1 bg-[#f4f7f1] text-[9px] font-black text-[#375421] rounded-lg uppercase tracking-tight flex items-center gap-1.5">CLIMATE TESTED</span>
-                            <span className="px-2.5 py-1 bg-[#f4f7f1] text-[9px] font-black text-[#375421] rounded-lg uppercase tracking-tight flex items-center gap-1.5">EASY CARE</span>
-                          </div>
-                        </div>
+                <AnimatePresence mode="wait">
+                  {loading && !orderDetails ? (
+                    <motion.div key="item-skeleton" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                      <ItemSkeleton />
+                    </motion.div>
+                  ) : (
+                    <motion.div key="item-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                      {order_items.map((item, idx) => (
+                        <div key={idx} className="py-8 first:pt-0 last:pb-0">
+                          <div className="flex flex-col sm:flex-row gap-6">
+                            <div 
+                              onClick={() => router.push(getProductUrl(item))}
+                              className="w-full sm:w-28 h-28 bg-[#f8fbf6] rounded-3xl overflow-hidden border border-gray-50 flex items-center justify-center relative group flex-shrink-0 cursor-pointer"
+                            >
+                              <img 
+                                src={`${axiosInstance.defaults.baseURL}${item.image}`} 
+                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                                alt="" 
+                              />
+                              <div className="absolute top-2 left-2 bg-white/95 backdrop-blur-sm w-7 h-7 rounded-xl flex items-center justify-center text-[10px] font-black text-[#375421] shadow-sm border border-green-50">{item.quantity}</div>
+                              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center">
+                                  <ArrowUpRight className="text-white opacity-0 group-hover:opacity-100 transition-all scale-50 group-hover:scale-100" size={24} />
+                              </div>
+                            </div>
+                            <div className="flex-1">
+                              <div className="group cursor-pointer" onClick={() => router.push(getProductUrl(item))}>
+                                <p className="text-[10px] font-bold text-[#375421] uppercase tracking-widest mb-1 group-hover:underline">Evergreen Pot</p>
+                                <h4 className="text-[16px] font-black text-gray-900 uppercase leading-none mb-2 group-hover:text-[#375421] transition-colors">{item.product_name}</h4>
+                                <p className="text-[11px] text-gray-400 font-bold uppercase tracking-tight mb-4">Swiss Cheese Plant · Regular size · No planter</p>
+                                
+                                <div className="flex flex-wrap gap-2 mb-4">
+                                  <span className="px-2.5 py-1 bg-[#f4f7f1] text-[9px] font-black text-[#375421] rounded-lg uppercase tracking-tight flex items-center gap-1.5">CLIMATE TESTED</span>
+                                  <span className="px-2.5 py-1 bg-[#f4f7f1] text-[9px] font-black text-[#375421] rounded-lg uppercase tracking-tight flex items-center gap-1.5">EASY CARE</span>
+                                </div>
+                              </div>
 
-                        {/* Render individual care guides for this specific item if available */}
-                        <div className="flex items-center justify-between mt-2 pt-4 border-t border-gray-50">
-                          <div className="flex items-center gap-3">
-                            <span className="text-lg font-black text-gray-900 leading-none">₹{Number(item.selling_price).toFixed(0)}</span>
-                            <span className="text-[12px] text-gray-300 font-bold line-through">₹{Number(item.mrp).toFixed(0)}</span>
+                              <div className="flex items-center justify-between mt-2 pt-4 border-t border-gray-50">
+                                <div className="flex items-center gap-3">
+                                  <span className="text-lg font-black text-gray-900 leading-none">₹{Number(item.selling_price).toFixed(0)}</span>
+                                  <span className="text-[12px] text-gray-300 font-bold line-through">₹{Number(item.mrp).toFixed(0)}</span>
+                                </div>
+                                <button className="flex items-center gap-1.5 text-[10px] font-black text-[#375421] uppercase hover:underline">
+                                  <Star size={12} className="fill-current" /> Write a review
+                                </button>
+                              </div>
+                            </div>
                           </div>
-                          <button className="flex items-center gap-1.5 text-[10px] font-black text-[#375421] uppercase hover:underline">
-                            <Star size={12} className="fill-current" /> Write a review
-                          </button>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Delivery & Payment Sub-sections */}
@@ -493,71 +572,81 @@ const Successpage = () => {
 
               {/* Final Totals Breakdown (Unified Table Style) */}
               <div className="border-t border-gray-100 p-8 pt-10 space-y-4">
-                 <div className="flex justify-between items-center text-[14px] font-medium text-gray-600">
-                   <span>Taxable Value</span>
-                   <span className="text-gray-900 font-black">₹{Number(order?.taxable_value || 0).toFixed(2)}</span>
-                 </div>
-
-                 {/* GST Breakdown Summary with Disclosure/Dropdown */}
-                 {order?.gst_breakdown?.summary && Object.entries(order.gst_breakdown.summary).map(([key, value]) => {
-                   if (value.total > 0) {
-                     const rate = key.replace('gst_', '');
-                     return (
-                       <div key={key} className="space-y-1">
-                         <details className="group cursor-pointer">
-                           <summary className="flex justify-between items-center text-[14px] font-medium text-gray-600 list-none">
-                             <div className="flex items-center gap-1.5 hover:text-gray-900 transition-colors">
-                               <ChevronDown size={14} className="text-gray-400 group-open:rotate-180 transition-transform" />
-                               <span>GST ({rate}%)</span>
-                             </div>
-                             <span className="text-gray-900 font-black">₹{Number(value.total).toFixed(2)}</span>
-                           </summary>
-                           <div className="mt-2 space-y-1.5 transition-all">
-                             <div className="flex justify-between items-center text-[13px] font-medium text-gray-400 pl-6 border-l border-gray-100 ml-1.5">
-                               <span>CGST ({Number(rate)/2}%)</span>
-                               <span>₹{Number(value.cgst).toFixed(2)}</span>
-                             </div>
-                             <div className="flex justify-between items-center text-[13px] font-medium text-gray-400 pl-6 border-l border-gray-100 ml-1.5">
-                               <span>SGST ({Number(rate)/2}%)</span>
-                               <span>₹{Number(value.sgst).toFixed(2)}</span>
-                             </div>
-                           </div>
-                         </details>
+                <AnimatePresence mode="wait">
+                  {loading && !orderDetails ? (
+                    <motion.div key="summary-skeleton" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                      <SummarySkeleton />
+                    </motion.div>
+                  ) : (
+                    <motion.div key="summary-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+                       <div className="flex justify-between items-center text-[14px] font-medium text-gray-600">
+                         <span>Taxable Value</span>
+                         <span className="text-gray-900 font-black">₹{Number(order?.taxable_value || 0).toFixed(2)}</span>
                        </div>
-                     );
-                   }
-                   return null;
-                 })}
 
-                 <div className="flex justify-between items-center text-[14px] font-medium text-gray-600 border-t border-gray-50 pt-4">
-                   <span>Subtotal ({order_items.length} items)</span>
-                   <span className="text-gray-900 font-black">₹{Number(order?.total_price || 0).toFixed(0)}</span>
-                 </div>
-                 {Number(order?.coupon_discount || 0) > 0 && (
-                   <div className="flex justify-between items-center text-[14px] font-medium text-gray-600">
-                     <span>Coupon discount</span>
-                     <span className="text-emerald-600 font-black">−₹{Number(order.coupon_discount).toFixed(0)}</span>
-                   </div>
-                 )}
-                 <div className="flex justify-between items-center text-[14px] font-medium text-gray-600">
-                   <span>Delivery</span>
-                   <span className="text-emerald-600 font-black tracking-widest">
-                    {Number(order?.shipping_charge || 0) > 0 ? `₹${Number(order.shipping_charge).toFixed(0)}` : 'FREE'}
-                   </span>
-                 </div>
-                 
-                 <div className="pt-8 flex flex-col gap-6">
-                   <div className="flex justify-between items-end border-t border-dashed border-gray-200 pt-6">
-                     <span className="text-[18px] font-black text-gray-900">Total paid</span>
-                     <span className="text-3xl font-serif text-gray-900 italic">₹{Number(order?.grand_total || 0).toFixed(0)}</span>
-                   </div>
+                       {/* GST Breakdown Summary with Disclosure/Dropdown */}
+                       {order?.gst_breakdown?.summary && Object.entries(order.gst_breakdown.summary).map(([key, value]) => {
+                         if (value.total > 0) {
+                           const rate = key.replace('gst_', '');
+                           return (
+                             <div key={key} className="space-y-1">
+                               <details className="group cursor-pointer">
+                                 <summary className="flex justify-between items-center text-[14px] font-medium text-gray-600 list-none">
+                                   <div className="flex items-center gap-1.5 hover:text-gray-900 transition-colors">
+                                     <ChevronDown size={14} className="text-gray-400 group-open:rotate-180 transition-transform" />
+                                     <span>GST ({rate}%)</span>
+                                   </div>
+                                   <span className="text-gray-900 font-black">₹{Number(value.total).toFixed(2)}</span>
+                                 </summary>
+                                 <div className="mt-2 space-y-1.5 transition-all">
+                                   <div className="flex justify-between items-center text-[13px] font-medium text-gray-400 pl-6 border-l border-gray-100 ml-1.5">
+                                     <span>CGST ({Number(rate)/2}%)</span>
+                                     <span>₹{Number(value.cgst).toFixed(2)}</span>
+                                   </div>
+                                   <div className="flex justify-between items-center text-[13px] font-medium text-gray-400 pl-6 border-l border-gray-100 ml-1.5">
+                                     <span>SGST ({Number(rate)/2}%)</span>
+                                     <span>₹{Number(value.sgst).toFixed(2)}</span>
+                                   </div>
+                                 </div>
+                               </details>
+                             </div>
+                           );
+                         }
+                         return null;
+                       })}
 
-                   <div className="bg-[#f4f7f1] px-6 py-4 rounded-xl border border-[#e8efe2] flex items-center justify-center">
-                      <p className="text-[11px] font-black uppercase text-[#2d4a1e] tracking-[0.1em]">
-                        You saved ₹{Number(order?.total_discount || 0) + Number(order?.coupon_discount || 0)} on this order · Nice one!
-                      </p>
-                   </div>
-                 </div>
+                       <div className="flex justify-between items-center text-[14px] font-medium text-gray-600 border-t border-gray-50 pt-4">
+                         <span>Subtotal ({order_items.length} items)</span>
+                         <span className="text-gray-900 font-black">₹{Number(order?.total_price || 0).toFixed(0)}</span>
+                       </div>
+                       {Number(order?.coupon_discount || 0) > 0 && (
+                         <div className="flex justify-between items-center text-[14px] font-medium text-gray-600">
+                           <span>Coupon discount</span>
+                           <span className="text-emerald-600 font-black">−₹{Number(order.coupon_discount).toFixed(0)}</span>
+                         </div>
+                       )}
+                       <div className="flex justify-between items-center text-[14px] font-medium text-gray-600">
+                         <span>Delivery</span>
+                         <span className="text-emerald-600 font-black tracking-widest">
+                          {Number(order?.shipping_charge || 0) > 0 ? `₹${Number(order.shipping_charge).toFixed(0)}` : 'FREE'}
+                         </span>
+                       </div>
+                       
+                       <div className="pt-8 flex flex-col gap-6">
+                         <div className="flex justify-between items-end border-t border-dashed border-gray-200 pt-6">
+                           <span className="text-[18px] font-black text-gray-900">Total paid</span>
+                           <span className="text-3xl font-serif text-gray-900 italic">₹{Number(order?.grand_total || 0).toFixed(0)}</span>
+                         </div>
+
+                         <div className="bg-[#f4f7f1] px-6 py-4 rounded-xl border border-[#e8efe2] flex items-center justify-center">
+                            <p className="text-[11px] font-black uppercase text-[#2d4a1e] tracking-[0.1em]">
+                              You saved ₹{Number(order?.total_discount || 0) + Number(order?.coupon_discount || 0)} on this order · Nice one!
+                            </p>
+                         </div>
+                       </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </section>
           </div>
@@ -782,6 +871,21 @@ const Successpage = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const Successpage = () => {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-white px-4">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-[#375421] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-gray-500 font-medium">Preparing your success story...</p>
+        </div>
+      </div>
+    }>
+      <SuccesspageContent />
+    </Suspense>
   );
 };
 

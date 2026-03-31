@@ -1202,7 +1202,7 @@ const CheckoutPage = () => {
           sessionStorage.removeItem('selected_combo_offer');
           sessionStorage.setItem('recent_payment_success', 'true');
           sessionStorage.setItem('recent_order_id', String(orderId));
-          router.replace('/successpage');
+          router.replace(`/successpage?order_id=${orderId}`);
           return;
         }
         // CASE 2: Partial wallet + Razorpay
@@ -1240,7 +1240,7 @@ const CheckoutPage = () => {
                 sessionStorage.removeItem('selected_combo_offer');
                 sessionStorage.setItem('recent_payment_success', 'true');
                 sessionStorage.setItem('recent_order_id', String(orderId));
-                router.replace('/successpage');
+                router.replace(`/successpage?order_id=${orderId}`);
               } else {
                 enqueueSnackbar('Payment verification failed.', { variant: 'error' });
               }

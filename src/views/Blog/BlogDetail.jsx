@@ -9,10 +9,11 @@ import {
   Calendar, 
   Clock, 
   Share2, 
-  Bookmark,
-  ArrowRight
+  ArrowRight,
+  Check
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { enqueueSnackbar } from "notistack";
 
 function BlogDetail({ slug }) {
   const [blog, setBlog] = useState(null);
@@ -43,6 +44,25 @@ function BlogDetail({ slug }) {
     };
     if (slug) fetchBlogData();
   }, [slug]);
+
+  const handleShare = async () => {
+    const shareData = {
+      title: blog.title,
+      text: blog.short_description,
+      url: window.location.href,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        enqueueSnackbar("Link copied to clipboard!", { variant: "success" });
+      }
+    } catch (err) {
+      console.error("Error sharing:", err);
+    }
+  };
 
   if (loading) {
     return (
@@ -76,11 +96,11 @@ function BlogDetail({ slug }) {
               Return to Archive
             </button>
             <div className="flex gap-3">
-              <button className="p-3 bg-black/20 backdrop-blur-md rounded-full border border-white/20 hover:bg-white/20 transition-all">
+              <button 
+                onClick={handleShare}
+                className="p-3 bg-black/20 backdrop-blur-md rounded-full border border-white/20 hover:bg-white/20 transition-all"
+              >
                 <Share2 className="w-4 h-4" />
-              </button>
-              <button className="p-3 bg-black/20 backdrop-blur-md rounded-full border border-white/20 hover:bg-white/20 transition-all">
-                <Bookmark className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -148,7 +168,10 @@ function BlogDetail({ slug }) {
               <div className="flex items-center gap-4">
                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Share this study</span>
                 <div className="flex gap-2">
-                  <div className="w-10 h-10 rounded-full border border-gray-100 flex items-center justify-center hover:bg-site-bg cursor-pointer transition-all">
+                  <div 
+                    onClick={handleShare}
+                    className="w-10 h-10 rounded-full border border-gray-100 flex items-center justify-center hover:bg-site-bg cursor-pointer transition-all"
+                  >
                     <Share2 className="w-4 h-4 text-gray-600" />
                   </div>
                 </div>
