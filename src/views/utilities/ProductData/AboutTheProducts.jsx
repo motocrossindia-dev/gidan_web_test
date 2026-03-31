@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { enqueueSnackbar } from "notistack";
 import { Sparkles, ShoppingCart, Loader2 } from "lucide-react";
 import axiosInstance from "../../../Axios/axiosInstance";
+import { savePendingCartItem } from "../../../utils/pendingAction";
 import RatingsAndReviews from "./ProductReviews";
 
 /**
@@ -100,6 +101,19 @@ const AboutProduct = ({ productDetailData, ratingData, reviewData, onWriteReview
           addOnData.reduce((acc, curr) => acc + (curr.mrp || 0), 0)
         );
 
+        // Helper to get product name from various potential structures
+        const getSafeName = (p) => {
+          if (!p) return "";
+          const name = p.name || p.main_product_name || "";
+          if (name) return name;
+          // Fallback to slug if name is missing
+          const slug = p.slug || "";
+          if (slug) {
+            return slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+          }
+          return "";
+        };
+
         return (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="pdp-bundle-content">
             <div className="bg-white p-6 md:p-8 rounded-[32px] border border-gray-100 shadow-sm relative overflow-hidden group">
@@ -126,7 +140,9 @@ const AboutProduct = ({ productDetailData, ratingData, reviewData, onWriteReview
                       />
                     </div>
                     <div className="space-y-1 text-center">
-                      <p className="text-[10px] font-black text-bio-green uppercase tracking-wider">Current Item</p>
+                      <p className="text-[10px] font-black text-bio-green uppercase tracking-wider line-clamp-1 w-24 mx-auto">
+                        {getSafeName(productData?.data?.product) || "Current Item"}
+                      </p>
                       <p className="text-sm font-black text-gray-900">₹{Math.round(productData?.data?.product?.selling_price || 0)}</p>
                     </div>
                   </div>
@@ -246,18 +262,18 @@ const AboutProduct = ({ productDetailData, ratingData, reviewData, onWriteReview
                         ? {
                             prod_id: mainId,
                             quantity: 1,
-                            name: productData.name,
-                            price: productData.selling_price,
-                            mrp: productData.mrp,
-                            product_image: productData.product_image || (productData.images && productData.images[0]?.image)
+                            name: getSafeName(productData?.data?.product) || "Product",
+                            price: productData?.data?.product?.selling_price || 0,
+                            mrp: productData?.data?.product?.mrp || 0,
+                            product_image: productData?.data?.product?.product_image || (productData?.data?.product?.images && productData.data.product.images[0]?.image) || ""
                           }
                         : {
                             prod_id: item.prod_id,
                             quantity: 1,
-                            name: item.data.name,
-                            price: item.data.price,
-                            mrp: item.data.mrp,
-                            product_image: item.data.imageUrl || item.data.image
+                            name: item.data?.name || "Add-on",
+                            price: item.data?.selling_price || 0,
+                            mrp: item.data?.mrp || 0,
+                            product_image: item.data?.image || ""
                           };
                       savePendingCartItem(payload);
                     }

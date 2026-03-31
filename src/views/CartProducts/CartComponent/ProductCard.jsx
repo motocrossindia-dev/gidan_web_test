@@ -105,11 +105,11 @@ const ProductCard = ({ product, handleRemove, handleQuantityChange }) => {
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <p className="text-xl font-black text-gray-900">
-                ₹{Math.round(product.selling_price)}
+                ₹{Math.round(Number(product.selling_price) || 0)}
               </p>
-              {product.mrp && product.mrp > product.selling_price && (
+              {product.mrp && Number(product.mrp) > Number(product.selling_price) && (
                 <p className="text-sm font-bold line-through text-gray-400 decoration-red-400/50">
-                  ₹{Math.round(product.mrp)}
+                  ₹{Math.round(Number(product.mrp) || 0)}
                 </p>
               )}
             </div>

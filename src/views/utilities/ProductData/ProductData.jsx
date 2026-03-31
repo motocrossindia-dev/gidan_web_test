@@ -159,6 +159,7 @@ export default function ProductData({ initialProductData }) {
     const accessToken = useSelector(selectAccessToken);
 
     // ========== Free Shipping PDP Progress Logic (Synced with Cart)
+    const [isMounted, setIsMounted] = useState(false);
     const cartItems = useSelector(state => state.cart.items) || [];
     const [freeShippingThreshold, setFreeShippingThreshold] = useState(2000);
 
@@ -169,11 +170,14 @@ export default function ProductData({ initialProductData }) {
                 dispatch(setCartItems(response.data.data.cart));
             }
         } catch (err) {
-            console.error("Error fetching cart for PDP sync:", err);
+            if (err.response?.status !== 401) {
+                console.error("Error fetching cart for PDP sync:", err);
+            }
         }
     };
 
     useEffect(() => {
+        setIsMounted(true);
         const fetchThreshold = async () => {
             try {
                 const response = await axiosInstance.get(`/utils/freeShipping/`);
@@ -501,8 +505,11 @@ export default function ProductData({ initialProductData }) {
 
             try {
                 const payload = { 
-                    prod_id: productId, 
-                    quantity
+                    order_source: "product",
+                    products: [{ 
+                        prod_id: productId, 
+                        quantity 
+                    }]
                 };
                 if (appliedCouponInfo?.coupon_code) {
                     payload.coupon_code = appliedCouponInfo.coupon_code;
@@ -575,7 +582,15 @@ export default function ProductData({ initialProductData }) {
             enqueueSnackbar("Added to wishlist (Guest)", {
                 variant: "success",
             });
-            savePendingWishlistItem({ prod_id: productDetailData?.data?.product?.id });
+            savePendingWishlistItem({
+                prod_id: productDetailData?.data?.product?.id,
+                name: productDetailData?.data?.product?.name,
+                price: productDetailData?.data?.product?.selling_price,
+                selling_price: productDetailData?.data?.product?.selling_price,
+                mrp: productDetailData?.data?.product?.mrp,
+                product_image: productDetailData?.data?.product?.product_image 
+                    || (productDetailData?.data?.product?.images && productDetailData?.data?.product?.images[0]?.image),
+            });
             window.dispatchEvent(new Event("wishlistUpdated"));
         }
     };
@@ -609,8 +624,10 @@ export default function ProductData({ initialProductData }) {
 
             const product_data = {
                 order_source: "product",
-                prod_id: productId,
-                quantity: quantity,
+                products: [{
+                    prod_id: productId,
+                    quantity: quantity,
+                }]
             };
 
             if (appliedCouponInfo?.coupon_code) {
@@ -1488,7 +1505,7 @@ export default function ProductData({ initialProductData }) {
                                                     onClick={() => handleSizeClick(size, productDetailData?.data?.product)}
                                                     className={`px-5 py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${selectedSize?.size === size?.size
                                                         ? "border-[#375421] text-[#375421] bg-[#375421]/5"
-                                                        : "border-gray-100 text-gray-500 hover:border-gray-200 hover:bg-gray-50"
+                                                        : "border-gray-200 text-gray-500 hover:border-gray-300 hover:bg-gray-50"
                                                         }`}
                                                 >
                                                     {size?.size} {diff > 0 && <span className="text-[10px] opacity-60 ml-1">(+₹{Math.round(diff)})</span>}
@@ -1511,7 +1528,7 @@ export default function ProductData({ initialProductData }) {
                                                     onClick={() => handlePlanterSizeClick(size, productDetailData?.data?.product)}
                                                     className={`px-5 py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${selectedPlanterSize?.size === size?.size
                                                         ? "border-[#375421] text-[#375421] bg-[#375421]/5"
-                                                        : "border-gray-100 text-gray-500 hover:border-gray-200 hover:bg-gray-50"
+                                                        : "border-gray-200 text-gray-500 hover:border-gray-300 hover:bg-gray-50"
                                                         }`}
                                                 >
                                                     {size?.size} {diff > 0 && <span className="text-[10px] opacity-60 ml-1">(+₹{Math.round(diff)})</span>}
@@ -1534,7 +1551,7 @@ export default function ProductData({ initialProductData }) {
                                                     onClick={() => handlePlanterClick(planter, productDetailData?.data?.product)}
                                                     className={`px-5 py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${selectedPlanter?.id === planter?.id
                                                         ? "border-[#375421] text-[#375421] bg-[#375421]/5"
-                                                        : "border-gray-100 text-gray-500 hover:border-gray-200 hover:bg-gray-50"
+                                                        : "border-gray-200 text-gray-500 hover:border-gray-300 hover:bg-gray-50"
                                                         }`}
                                                 >
                                                     {planter?.name} {diff > 0 && <span className="text-[10px] opacity-60 ml-1">(+₹{Math.round(diff)})</span>}
@@ -1547,25 +1564,28 @@ export default function ProductData({ initialProductData }) {
 
                             {productDetailData?.data?.product_colors?.length > 0 && (
                                 <div className="mb-4">
-                                    <span className="font-bold text-gray-700">Recommended Planter Color:</span>
+                                    <span className="font-bold text-gray-700 flex items-center gap-1.5 uppercase tracking-wider text-[10px]">
+                                        Recommended Planter Color:
+                                        {selectedColor?.name && (
+                                            <span className="text-bio-green font-black animate-in fade-in slide-in-from-left-1 duration-300">
+                                                {selectedColor.name}
+                                            </span>
+                                        )}
+                                    </span>
                                     {/* Select Box - color name with code dot */}
-                                    <div className="relative mt-2">
-                                        <div className="flex flex-wrap gap-2">
+                                    <div className="relative mt-3">
+                                        <div className="flex flex-wrap gap-4 px-1.5">
                                             {productDetailData?.data?.product_colors?.map((color, idx) => (
                                                 <button
                                                     key={color?.id || color?.color_code || idx}
                                                     onClick={() => handlePlanterColorClick(color, productDetailData?.data?.product)}
-                                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg border-2 transition-all ${selectedColor?.id === color?.id
-                                                        ? "border-bio-green bg-green-50 shadow-sm"
-                                                        : "border-gray-200 hover:border-gray-300"
+                                                    className={`relative w-10 h-10 rounded-full transition-all duration-300 border-2 ${selectedColor?.id === color?.id
+                                                        ? "border-bio-green ring-2 ring-bio-green/20 ring-offset-2 scale-110 shadow-lg"
+                                                        : "border-transparent hover:border-gray-200 hover:scale-105 shadow-sm"
                                                         }`}
-                                                >
-                                                    <span
-                                                        className="w-4 h-4 rounded-full border border-gray-200"
-                                                        style={{ backgroundColor: color?.color_code }}
-                                                    />
-                                                    <span className="text-sm font-medium text-gray-700">{color?.name}</span>
-                                                </button>
+                                                    style={{ backgroundColor: color?.color_code }}
+                                                    title={color?.name}
+                                                />
                                             ))}
                                         </div>
                                     </div>
@@ -1592,31 +1612,31 @@ export default function ProductData({ initialProductData }) {
                                                 <Truck className="w-4 h-4 text-orange-600" />
                                             </div>
                                             <span className="text-[13px] font-black text-gray-900 leading-tight uppercase tracking-tight">
-                                                {amountToFreeShipping > 0
+                                                {isMounted && (amountToFreeShipping > 0
                                                     ? `Add ₹${Math.round(amountToFreeShipping).toLocaleString()} more for FREE shipping`
-                                                    : "This order qualifies for FREE shipping!"}
+                                                    : "This order qualifies for FREE shipping!")}
                                             </span>
                                         </div>
                                         <div className="text-right">
-                                            <span className="text-[14px] font-black text-[#375421] whitespace-nowrap">₹{Math.round(combinedTotal).toLocaleString()} <span className="text-gray-300 text-[10px] font-bold">/ ₹{freeShippingThreshold.toLocaleString()}</span></span>
+                                            <span className="text-[14px] font-black text-[#375421] whitespace-nowrap">₹{isMounted ? Math.round(combinedTotal).toLocaleString() : "..."} <span className="text-gray-300 text-[10px] font-bold">/ ₹{freeShippingThreshold.toLocaleString()}</span></span>
                                         </div>
                                     </div>
                                     
                                     {/* Breakdown Tooltip/Label */}
                                     <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400 italic">
                                         <div className="flex items-center gap-1">
-                                            <span className="text-gray-500">Cart: ₹{Math.round(otherItemsTotal).toLocaleString()}</span>
+                                            <span className="text-gray-500">Cart: ₹{isMounted ? Math.round(otherItemsTotal).toLocaleString() : "..."}</span>
                                             <span className="text-gray-300">+</span>
-                                            <span className="text-[#375421]">This item: ₹{Math.round(currentItemContribution).toLocaleString()}</span>
+                                            <span className="text-[#375421]">This item: ₹{isMounted ? Math.round(currentItemContribution).toLocaleString() : "..."}</span>
                                         </div>
-                                        {amountToFreeShipping > 0 && <span className="text-orange-500 ml-auto">Free at ₹{freeShippingThreshold.toLocaleString()}</span>}
+                                        {isMounted && amountToFreeShipping > 0 && <span className="text-orange-500 ml-auto">Free at ₹{freeShippingThreshold.toLocaleString()}</span>}
                                     </div>
                                 </div>
 
                                 <div className="relative h-2 w-full bg-gray-100 rounded-full overflow-hidden shadow-inner flex shrink-0 border border-gray-200/50">
                                     <div
                                         className="h-full bg-[#375421] transition-all duration-1000 ease-out rounded-full shadow-sm"
-                                        style={{ width: `${freeShippingProgress}%` }}
+                                        style={{ width: `${isMounted ? freeShippingProgress : 0}%` }}
                                     />
                                 </div>
                             </div>

@@ -44,8 +44,10 @@ const CouponSection = ({
                 setCoupons(fetchedCoupons);
             }
         } catch (error) {
-            console.error("Failed to fetch coupons:", error);
-            // Non-blocking error for UI
+            // 401/403 is expected for guest users — silently ignore
+            if (error.response?.status !== 401 && error.response?.status !== 403) {
+                console.error("Failed to fetch coupons:", error);
+            }
         } finally {
             setIsFetching(false);
         }

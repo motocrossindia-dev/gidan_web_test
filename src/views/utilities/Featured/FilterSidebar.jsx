@@ -271,7 +271,9 @@ const FilterSidebar = ({
         });
       }
     } catch (err) {
-      console.error("FilterSidebar fetchData error:", err);
+      if (err.response?.status !== 401 && err.response?.status !== 403) {
+        console.error("FilterSidebar fetchData error:", err);
+      }
     }
   }, [selectedFilterType, searchQuery, categoryId]);
 
@@ -635,7 +637,9 @@ const FilterSidebar = ({
         setShowMobileFilter(false);
       }
     } catch (err) {
-      console.error("Filter apply error:", err);
+      if (err.response?.status !== 401 && err.response?.status !== 403) {
+        console.error("Filter apply error:", err);
+      }
     } finally {
       if (setIsSearching) setIsSearching(false);
     }

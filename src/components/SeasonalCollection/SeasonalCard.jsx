@@ -37,7 +37,15 @@ const SeasonalCard = ({
 
     const handleAddToWishlist = useCallback(async () => {
         if (!isAuthenticated) {
-            savePendingWishlistItem({ main_prod_id: product });
+            savePendingWishlistItem({
+                main_prod_id: product,
+                prod_id: product,
+                name: name,
+                price: price,
+                selling_price: price,
+                mrp: mrp || price,
+                product_image: imageUrl,
+            });
             enqueueSnackbar("Please sign in to add to wishlist", { variant: "error" });
             router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
             return;
@@ -68,7 +76,16 @@ const SeasonalCard = ({
 
     const handleAddToCart = useCallback(async (e) => {
         if (!isAuthenticated) {
-            savePendingCartItem({ main_prod_id: product });
+            savePendingCartItem({
+                main_prod_id: product,
+                prod_id: product,
+                quantity: 1,
+                name: name,
+                price: price,
+                selling_price: price,
+                mrp: mrp || price,
+                product_image: imageUrl,
+            });
             router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
             return;
         }

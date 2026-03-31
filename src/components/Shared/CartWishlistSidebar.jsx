@@ -126,11 +126,12 @@ const CartWishlistSidebar = () => {
     const mappedItems = guestItems.map((item, idx) => ({
       id: item.id || item.prod_id || idx,
       prod_id: item.prod_id || item.id,
-      name: item.name,
-      price: item.price || item.mrp,
-      mrp: item.mrp || item.price,
-      quantity: item.quantity || 1,
-      image: item.product_image || item.image || item.product_img || (item.images && item.images[0]?.image)
+      name: item.name || 'Product',
+      price: Number(item.price) || Number(item.selling_price) || Number(item.mrp) || 0,
+      selling_price: Number(item.price) || Number(item.selling_price) || Number(item.mrp) || 0,
+      mrp: Number(item.mrp) || Number(item.price) || Number(item.selling_price) || 0,
+      quantity: Number(item.quantity) || 1,
+      image: item.product_image || item.image || item.product_img || (item.images && item.images[0]?.image) || ''
     }));
     
     setItems(mappedItems);

@@ -29,7 +29,9 @@ const PublicFlags = ({ selectedFlag, onSelectFlag, initialFlags = [] }) => {
                     setFlags(res.data.flags);
                 }
             } catch (err) {
-                console.error('Error fetching public flags:', err);
+                if (err.response?.status !== 401 && err.response?.status !== 403) {
+                    console.error('Error fetching public flags:', err);
+                }
             } finally {
                 setLoading(false);
             }

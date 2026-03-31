@@ -54,7 +54,10 @@ const DownloadAppPopup = () => {
     };
   }, [visible]);
 
-  const dismiss = () => {
+  const dismiss = (e) => {
+    if (e) {
+      e.stopPropagation();
+    }
     setAnimating(false);
     setTimeout(() => setVisible(false), 350);
   };
@@ -114,9 +117,11 @@ const DownloadAppPopup = () => {
       >
         {/* Close button */}
         <button
+          type="button"
           onClick={dismiss}
+          onTouchEnd={(e) => { e.preventDefault(); dismiss(e); }}
           aria-label="Close"
-          className="absolute top-4 right-4 z-20 bg-white/20 hover:bg-white/40 text-white rounded-full w-8 h-8 flex items-center justify-center transition-colors"
+          className="absolute top-4 right-4 z-50 bg-white/20 hover:bg-white/40 text-white rounded-full w-8 h-8 flex items-center justify-center transition-colors cursor-pointer"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
             <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -244,8 +249,10 @@ const DownloadAppPopup = () => {
           </div>
 
           <button
+            type="button"
             onClick={dismiss}
-            className="text-xs text-white/50 hover:text-white/80 transition-colors underline underline-offset-2"
+            onTouchEnd={(e) => { e.preventDefault(); dismiss(e); }}
+            className="text-xs text-white/50 hover:text-white/80 transition-colors underline underline-offset-2 cursor-pointer relative z-10 p-2"
           >
             Maybe later
           </button>

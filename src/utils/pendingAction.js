@@ -16,14 +16,34 @@ export const savePendingCartItem = (payload) => {
     let cart = existing ? JSON.parse(existing) : [];
     if (!Array.isArray(cart)) cart = [];
 
+    // Normalize price fields so downstream consumers never see undefined
+    const sellingPrice = Number(payload.price) || Number(payload.selling_price) || Number(payload.mrp) || 0;
+    const mrpPrice = Number(payload.mrp) || Number(payload.price) || Number(payload.selling_price) || 0;
+
+    const enriched = {
+      ...payload,
+      price: sellingPrice,
+      selling_price: sellingPrice,
+      mrp: mrpPrice,
+      quantity: Number(payload.quantity) || 1,
+      name: payload.name || 'Product',
+      product_image: payload.product_image || payload.image || payload.product_img || '',
+    };
+
     // Check if item already exists to update quantity instead of duplicate
-    const id = payload.prod_id || payload.main_prod_id || payload.id;
+    const id = enriched.prod_id || enriched.main_prod_id || enriched.id;
     const index = cart.findIndex(item => (item.prod_id || item.main_prod_id || item.id) === id);
 
     if (index > -1) {
-      cart[index].quantity = (cart[index].quantity || 1) + (payload.quantity || 1);
+      cart[index].quantity = (Number(cart[index].quantity) || 1) + (Number(enriched.quantity) || 1);
+      // Also update price info in case it changed (e.g. variant switch)
+      cart[index].price = enriched.price;
+      cart[index].selling_price = enriched.selling_price;
+      cart[index].mrp = enriched.mrp;
+      cart[index].name = enriched.name;
+      cart[index].product_image = enriched.product_image;
     } else {
-      cart.push(payload);
+      cart.push(enriched);
     }
 
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
@@ -40,9 +60,22 @@ export const savePendingWishlistItem = (payload) => {
     let wishlist = existing ? JSON.parse(existing) : [];
     if (!Array.isArray(wishlist)) wishlist = [];
 
-    const id = payload.prod_id || payload.main_prod_id || payload.id;
+    // Normalize price fields so downstream consumers never see undefined
+    const sellingPrice = Number(payload.price) || Number(payload.selling_price) || Number(payload.mrp) || 0;
+    const mrpPrice = Number(payload.mrp) || Number(payload.price) || Number(payload.selling_price) || 0;
+
+    const enriched = {
+      ...payload,
+      price: sellingPrice,
+      selling_price: sellingPrice,
+      mrp: mrpPrice,
+      name: payload.name || 'Product',
+      product_image: payload.product_image || payload.image || payload.product_img || '',
+    };
+
+    const id = enriched.prod_id || enriched.main_prod_id || enriched.id;
     if (!wishlist.find(item => (item.prod_id || item.main_prod_id || item.id) === id)) {
-      wishlist.push(payload);
+      wishlist.push(enriched);
     }
 
     localStorage.setItem(WISHLIST_KEY, JSON.stringify(wishlist));

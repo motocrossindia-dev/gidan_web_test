@@ -19,7 +19,10 @@ const StoreSection = () => {
                     setStores(response?.data?.data?.stores?.slice(0, 3) || []);
                 }
             } catch (error) {
-                console.error('Error fetching stores:', error);
+                // 401 is expected for guest users — silently hide the section
+                if (error.response?.status !== 401) {
+                    console.error('Error fetching stores:', error);
+                }
             } finally {
                 setLoading(false);
             }

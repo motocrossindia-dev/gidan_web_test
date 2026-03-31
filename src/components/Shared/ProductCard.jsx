@@ -100,7 +100,15 @@ const ProductCard = ({
     const handleAddToWishlist = useCallback(async () => {
         if (!isAuthenticated) {
             dispatch(setPendingWishlistItem(product));
-            savePendingWishlistItem({ main_prod_id: product?.id });
+            savePendingWishlistItem({
+                main_prod_id: product?.id,
+                prod_id: product?.id,
+                name: name,
+                price: price,
+                selling_price: price,
+                mrp: originalPrice,
+                product_image: productImages.main,
+            });
             enqueueSnackbar("Added to wishlist (Guest)", { variant: "success" });
             window.dispatchEvent(new Event("wishlistUpdated"));
             return;
@@ -135,7 +143,16 @@ const ProductCard = ({
     const handleAddToCart = useCallback(async (e) => {
         if (!isAuthenticated) {
             dispatch(setPendingCartItem(product));
-            savePendingCartItem({ main_prod_id: product?.id });
+            savePendingCartItem({
+                main_prod_id: product?.id,
+                prod_id: product?.id,
+                quantity: 1,
+                name: name,
+                price: price,
+                selling_price: price,
+                mrp: originalPrice,
+                product_image: productImages.main,
+            });
             enqueueSnackbar("Added to cart (Guest)", { variant: "success" });
             window.dispatchEvent(new Event("cartUpdated"));
             return;

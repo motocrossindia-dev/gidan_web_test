@@ -136,7 +136,7 @@ const CartSummary = ({
           <div className="pt-6 border-t-2 border-dashed border-gray-100 flex justify-between items-end">
             <div>
               <span className="text-xs font-black text-gray-400 uppercase tracking-widest block mb-1">TotalAmount</span>
-              <span className="text-3xl font-black text-gray-900">₹{Math.round(totalSellingPrice + (amountToFreeShipping > 0 ? 99 : 0) - (couponData?.discount_amount || 0))}</span>
+              <span className="text-3xl font-black text-gray-900">₹{Math.round((Number(totalSellingPrice) || 0) + (amountToFreeShipping > 0 ? 99 : 0) - (Number(couponData?.discount_amount) || 0))}</span>
             </div>
           </div>
 

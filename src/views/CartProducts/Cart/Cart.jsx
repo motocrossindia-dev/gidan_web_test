@@ -56,11 +56,11 @@ const Cart = () => {
       const mappedItems = guestItems.map((item, idx) => ({
         id: item.id || item.prod_id || idx,
         product_id: item.prod_id || item.id,
-        name: item.name,
-        mrp: item.mrp || item.price,
-        selling_price: item.price || item.mrp,
-        quantity: item.quantity || 1,
-        image: item.product_image || item.image,
+        name: item.name || 'Product',
+        mrp: Number(item.mrp) || Number(item.price) || Number(item.selling_price) || 0,
+        selling_price: Number(item.price) || Number(item.selling_price) || Number(item.mrp) || 0,
+        quantity: Number(item.quantity) || 1,
+        image: item.product_image || item.image || item.product_img || '',
         stock_status: true // Default for guest as we don't have real-time check here
       }));
       setProducts(mappedItems);
@@ -216,9 +216,9 @@ const Cart = () => {
   };
 
   // Calculate total items and amount
-  const totalItems = products.reduce((acc, product) => acc + product.quantity, 0);
-  const totalAmount = products.reduce((acc, product) => acc + product.mrp * product.quantity, 0);
-  const totalSellingPrice = products.reduce((acc, product) => acc + product.selling_price * product.quantity, 0);
+  const totalItems = products.reduce((acc, product) => acc + (Number(product.quantity) || 0), 0);
+  const totalAmount = products.reduce((acc, product) => acc + (Number(product.mrp) || 0) * (Number(product.quantity) || 0), 0);
+  const totalSellingPrice = products.reduce((acc, product) => acc + (Number(product.selling_price) || 0) * (Number(product.quantity) || 0), 0);
   const discount = totalAmount - totalSellingPrice;
 
   const amountToFreeShipping = Math.max(0, freeShippingThreshold - totalSellingPrice);
