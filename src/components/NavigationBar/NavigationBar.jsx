@@ -171,7 +171,7 @@ const NavBar = () => {
                     <Link
                       key={idx}
                       href={href}
-                      className={`relative font-medium text-[14px] lg:text-[15px] px-2 py-1 transition-all duration-300 group
+                      className={`relative font-medium text-[13px] lg:text-[14px] px-1.5 py-1 transition-all duration-300 group
                         ${isActive ? 'text-[#375421]' : 'text-[#334155] hover:text-[#375421]'}
                       `}
                     >
@@ -293,7 +293,7 @@ const NavBar = () => {
                   <Link
                     key={idx}
                     href={href}
-                    className={`relative text-lg px-4 py-2 transition-all duration-300 font-normal group
+                    className={`relative text-[16px] px-3 py-2 transition-all duration-300 font-medium group
                       ${isActive ? 'text-[#375421]' : 'text-[#334155] hover:text-[#375421]'}
                     `}
                   >
