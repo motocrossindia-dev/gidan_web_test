@@ -33,7 +33,7 @@ const RewardClub = () => {
     if (!isAuthenticated) {
       enqueueSnackbar("Please sign in to get a referral code", { variant: "error" });
       navigate(
-          window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn",
+          window.innerWidth <= 640 ? "/login" : "/login",
           { replace: true }
       );
       return;

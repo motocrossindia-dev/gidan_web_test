@@ -33,7 +33,6 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                 product_image: imageUrl || product?.image,
             });
             enqueueSnackbar("Please sign in to add to wishlist", { variant: "info" });
-            router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
             return;
         }
 
@@ -72,7 +71,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                 mrp: mrp || product?.mrp || price,
                 product_image: imageUrl || product?.image,
             });
-            router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+            router.push(window.innerWidth <= 640 ? "/login" : "/login", { replace: true });
             return;
         }
 
@@ -428,7 +427,7 @@ export default memo(TrendingCard, (prevProps, nextProps) => {
 //     const handleAddToWishlist = async () => {
 //         if (!isAuthenticated) {
 //             enqueueSnackbar("Please sign..", { variant: "info" });
-//             router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+//             router.push(window.innerWidth <= 640 ? "/login" : "/login", { replace: true });
 //             return;
 //         }
 //
@@ -459,7 +458,7 @@ export default memo(TrendingCard, (prevProps, nextProps) => {
 //
 //     const handleAddToCart = async (e) => {
 //         if (!isAuthenticated) {
-//             router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+//             router.push(window.innerWidth <= 640 ? "/login" : "/login", { replace: true });
 //             return;
 //         }
 //

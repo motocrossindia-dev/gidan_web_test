@@ -167,7 +167,7 @@ const MobileLoginPage = () => {
           </button>
         </form>
 
-        <p className="text-center text-sm text-[#375421] mt-5 cursor-pointer" onClick={() => router.push("/mobile-signin")}>
+        <p className="text-center text-sm text-[#375421] mt-5 cursor-pointer" onClick={() => router.push("/login")}>
           Back to sign-in
         </p>
       </div>

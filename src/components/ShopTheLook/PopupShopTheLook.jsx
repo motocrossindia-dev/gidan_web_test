@@ -47,9 +47,9 @@ const PopupShopTheLook = ({ onClose }) => {
     if (!isAuthenticated) {
       enqueueSnackbar("Please Login or Signup to add products to cart.");
       if (isMobile) {
-        router.push("/mobile-signin", { replace: true });
+        router.push("/login", { replace: true });
       } else {
-        router.push("/?modal=signIn", { replace: true });
+        router.push("/login", { replace: true });
       }
       return;
     }
@@ -98,9 +98,9 @@ const PopupShopTheLook = ({ onClose }) => {
     if (!isAuthenticated) {
       enqueueSnackbar("Please Login or Signup to place order.");
       if (isMobile) {
-        router.push("/mobile-signin", { replace: true });
+        router.push("/login", { replace: true });
       } else {
-        router.push("/?modal=signIn", { replace: true });
+        router.push("/login", { replace: true });
       }
       return;
     }

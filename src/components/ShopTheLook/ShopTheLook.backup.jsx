@@ -68,9 +68,9 @@ function ShopTheLook() {
     } else {
       enqueueSnackbar("Please Login or Signup to Buy Our Products.");
       if (isMobile) {
-        navigate("/mobile-signin", { replace: true });
+        navigate("/login", { replace: true });
       } else {
-        navigate("/?modal=signIn", { replace: true });
+        navigate("/login", { replace: true });
       }
     }
   };

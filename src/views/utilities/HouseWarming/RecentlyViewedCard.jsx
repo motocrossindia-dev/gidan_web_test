@@ -63,9 +63,9 @@ const RecentlyViewedCard = ({
     try {
       if (!isAuthenticated) {
         if (window.innerWidth <= 640) {
-          router.push("/mobile-signin", { replace: true });
+          router.push("/login", { replace: true });
         } else {
-          router.push("/?modal=signIn", { replace: true });
+          router.push("/login", { replace: true });
         }
         return;
       }
@@ -92,9 +92,9 @@ const RecentlyViewedCard = ({
 
     if (!isAuthenticated) {
       if (window.innerWidth <= 640) { // Matches Tailwind's `sm` breakpoint
-        router.push("/mobile-signin", { replace: true });
+        router.push("/login", { replace: true });
       } else {
-        router.push("/?modal=signIn", { replace: true });
+        router.push("/login", { replace: true });
       }
       return;
     }

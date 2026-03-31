@@ -29,7 +29,7 @@ const Footer = () => {
 
     const handleWalletClick = () => {
         if (username === "Guest") {
-            setIsSignInOpen(true);
+            router.push(`/login?redirect=${isMobile ? '/mobilesidebar/walletmobile' : '/profile/wallet'}`);
         } else {
             if (isMobile) {
                 router.push('/mobilesidebar/walletmobile')
@@ -41,7 +41,7 @@ const Footer = () => {
 
     const handleClick = () => {
         if (username === "Guest") {
-            setIsSignInOpen(true);
+            router.push(`/login?redirect=/profile/referal`);
         } else {
             router.push("/profile/referal");
         }
@@ -49,7 +49,7 @@ const Footer = () => {
 
     const handleClickorder = () => {
         if (username === "Guest") {
-            setIsSignInOpen(true);
+            router.push(`/login?redirect=/profile/trackorder`);
         } else {
             router.push("/profile/trackorder");
         }
@@ -58,15 +58,6 @@ const Footer = () => {
     // Toggle function to manage dropdown visibility
     const toggleSection = (section) => {
         setOpenSection(openSection === section ? "" : section);
-    };
-
-    const handleGetOtpClick = () => {
-        setIsSignInOpen(false);
-    };
-
-    const handleLoginSuccess = () => {
-        setIsSignInOpen(false);
-        router.push("/wishlist");
     };
 
     const handleSubmit = async (e) => {
@@ -314,14 +305,6 @@ const Footer = () => {
             <div className="mt-6 text-left text-xs text-gray-600">
                 <p>© FARM AMMINO AGRITECH PRIVATE LIMITED. All rights reserved.</p>
             </div>
-
-            {isSignInOpen && (
-                <SignIn
-                    onClose={() => setIsSignInOpen(false)}
-                    onGetOtpClick={handleGetOtpClick}
-                    onLoginSuccess={handleLoginSuccess}
-                />
-            )}
         </footer>
     );
 };

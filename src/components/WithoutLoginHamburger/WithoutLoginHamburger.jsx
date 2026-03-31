@@ -84,7 +84,7 @@ const WithoutLoginHamburger = () => {
 
   const navigateToSignup = () => {
     setIsOpen(false);
-    router.push("/mobile-signin");
+    router.push("/login");
   };
 
   const handleCategoryClick = (category) => {
@@ -181,7 +181,7 @@ const WithoutLoginHamburger = () => {
                         </span>
                       ) : (
                         <Link
-                          href="/mobile-signin"
+                          href="/login"
                           className="font-black text-lg hover:text-orange-200 transition-colors"
                           onClick={(e) => {
                             e.stopPropagation();
@@ -283,7 +283,7 @@ const WithoutLoginHamburger = () => {
                         ))}
                         {userName === "Guest" && (
                           <Link
-                            href="/mobile-signin"
+                            href="/login"
                             onClick={() => setIsOpen(false)}
                             className="flex items-center gap-3 py-2 text-[#375421] font-black text-sm transition-all group"
                           >
@@ -496,7 +496,7 @@ export default WithoutLoginHamburger;
 // 
 //   const navigateToSignup = () => {
 //     setIsOpen(false);
-//     router.push("/mobile-signin");
+//     router.push("/login");
 //   };
 // 
 //   const handleCategoryClick = (category) => {
@@ -582,7 +582,7 @@ export default WithoutLoginHamburger;
 //                       </span>
 //                     ) : (
 //                       <Link
-//                         to="/mobile-signin"
+//                         to="/login"
 //                         className="hover:text-[#375421]"
 //                         onClick={() => setIsOpen(false)}
 //                       >

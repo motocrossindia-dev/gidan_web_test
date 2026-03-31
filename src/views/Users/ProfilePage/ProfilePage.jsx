@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { useSnackbar } from "notistack";
 import { useMediaQuery } from 'react-responsive';
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import DeactivationConfirmation from "../Deactivation/Deactivation";
 import AddressSection from "./AddressSection";
 import FAQSection from "./FAQSection";
@@ -17,6 +19,7 @@ import EditProfile from '../../MobileUser/Edit Profile/EditProfile';
 
 const ProfileForm = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const isMobileView = useMediaQuery({ query: '(max-width: 780px)' });
   const [mounted, setMounted] = useState(false);
@@ -160,194 +163,180 @@ const ProfileForm = () => {
           {!mobileSection && <MobileSidebar onNavigate={setMobileSection} />}
         </>
       ) : (
-        <div>
+        <div className="bg-site-bg min-h-screen">
+          <div className="flex flex-col md:hidden bg-white shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] sticky top-0 z-40 border-b border-gray-100">
+            <div className="px-5 pt-5 pb-2 flex items-center justify-between">
+              <button
+                onClick={() => router.push('/profile')}
+                className="flex items-center text-[#375421] text-xs font-black uppercase tracking-tight"
+              >
+                <ArrowLeft className="w-3.5 h-3.5 mr-2" />
+                Profile
+              </button>
+              <div className="flex items-center gap-4 text-[10px] font-black text-[#375421] uppercase tracking-widest">
+                 <button className="hover:underline">Settings</button>
+              </div>
+            </div>
+            <div className="px-5 pb-4">
+              <h1 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Account</h1>
+            </div>
+          </div>
           {showDeactivation ? (
             <DeactivationConfirmation
               onCancel={() => setShowDeactivation(false)}
             />
           ) : (
-            <main className="bg-white p-8">
-              <div className="border p-6 rounded-md shadow-md bg-white">
-                {/* Title */}
-                <div className="flex justify-between items-center">
-                  <h2 className="text-xl font-bold">Personal Information </h2>
-                  {/* Edit Button */}
-                  <div>
-                    {!isEditing ? (
-                      <p
-                        className="text-bio-green font-semibold cursor-pointer"
-                        onClick={handleEditClick}
-                      >
-                        Edit
-                      </p>
-                    ) : (
-                      <p
-                        className="text-red-600 font-semibold cursor-pointer"
-                        onClick={handleCancelClick}
-                      >
-                        Cancel
-                      </p>
-                    )}
+            <main className="p-4 md:py-6 lg:py-8">
+              <div className="bg-white shadow-[0_20px_50px_-20px_rgba(0,0,0,0.08)] p-6 sm:p-10 rounded-[32px] border border-gray-100">
+                {/* Profile Header Summary */}
+                <div className="flex flex-col md:flex-row items-center gap-6 pb-8 mb-8 border-b border-gray-50">
+                  <div className="w-16 h-16 rounded-full bg-site-bg flex items-center justify-center border border-gray-100 shadow-sm relative group overflow-hidden">
+                     <span className="text-xl font-black text-[#375421] uppercase">{userName?.charAt(0) || "U"}</span>
+                     <div className="absolute inset-0 bg-[#375421]/0 group-hover:bg-[#375421]/5 transition-colors cursor-pointer"></div>
                   </div>
+                  <div className="text-center md:text-left flex-1">
+                     <div className="flex flex-col">
+                        <span className="text-[9px] font-black text-[#375421] uppercase tracking-[0.2em] mb-0.5">Authenticated Account</span>
+                        <h2 className="text-xl font-black text-gray-900 uppercase tracking-tight">{userName} {lastUserName}</h2>
+                     </div>
+                     <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">{userEmail} • Verified Member</p>
+                  </div>
+                  <div className="flex gap-3">
+                     {!isEditing ? (
+                       <button
+                         onClick={handleEditClick}
+                         className="px-5 py-2.5 bg-gray-900 text-white text-[9px] font-black uppercase tracking-[0.2em] rounded-lg hover:bg-[#375421] transition-all"
+                       >
+                         Edit Profile
+                       </button>
+                     ) : (
+                       <button
+                         onClick={handleCancelClick}
+                         className="px-5 py-2.5 bg-site-bg text-red-600 text-[9px] font-black uppercase tracking-[0.2em] rounded-lg hover:bg-red-50 transition-all border border-red-100"
+                       >
+                         Discard
+                       </button>
+                     )}
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <h3 className="text-[9px] font-black text-[#375421] uppercase tracking-[0.3em] mb-6">Personal Information</h3>
                 </div>
 
                 {/* Form Fields */}
                 <form onSubmit={handleProfileSubmit}>
                   {/* Name Fields */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
-                      <label className="block font-semibold">First Name</label>
+                      <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2.5 block">First Name</label>
                       <input
                         type="text"
-                        placeholder="Enter your First Name"
-                        className="p-3 border rounded w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        placeholder="Botanist Name"
+                        className={`w-full bg-gray-50/50 border border-transparent px-4 py-3 rounded-xl text-[13px] font-bold text-gray-900 transition-all placeholder:text-gray-300 focus:outline-none ${isEditing ? 'border-gray-200 bg-white ring-2 ring-gray-50' : 'cursor-not-allowed opacity-80'}`}
                         disabled={!isEditing}
                         value={userName}
-                        onChange={(e) => setUserName(e.target.value)} // Update state
+                        onChange={(e) => setUserName(e.target.value)}
                         required
                       />
                     </div>
                     <div>
-                      <label className="block font-semibold">Last Name</label>
+                      <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2.5 block">Last Name</label>
                       <input
                         type="text"
-                        placeholder="Enter your Last Name"
-                        className="p-3 border rounded w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        placeholder="Family Name"
+                        className={`w-full bg-gray-50/50 border border-transparent px-4 py-3 rounded-xl text-[13px] font-bold text-gray-900 transition-all placeholder:text-gray-300 focus:outline-none ${isEditing ? 'border-gray-200 bg-white ring-2 ring-gray-50' : 'cursor-not-allowed opacity-80'}`}
                         disabled={!isEditing}
                         value={lastUserName}
-                        onChange={(e) => setLastUserName(e.target.value)} // Update state
+                        onChange={(e) => setLastUserName(e.target.value)}
                         required
                       />
                     </div>
                   </div>
 
                   {/* Gender & Date of Birth Section */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
                     <div>
-                      <label className="block font-semibold">Gender</label>
-                      <div className="flex space-x-4 mt-2">
-                        <label>
-                          <input
-                            type="radio"
-                            name="gender"
-                            value="Male"
-                            checked={gender === "Male"}
-                            onChange={(e) => setGender(e.target.value)}
-                            className="mr-2"
-                            disabled={!isEditing}
-                            required
-                          />{" "}
-                          Male
-                        </label>
-                        <label>
-                          <input
-                            type="radio"
-                            name="gender"
-                            value="Female"
-                            checked={gender === "Female"}
-                            onChange={(e) => setGender(e.target.value)}
-                            className="mr-2"
-                            disabled={!isEditing}
-                            required
-                          />{" "}
-                          Female
-                        </label>
-                        <label>
-                          <input
-                            type="radio"
-                            name="gender"
-                            value="Other"
-                            checked={gender === "Other"}
-                            onChange={(e) => setGender(e.target.value)}
-                            className="mr-2"
-                            disabled={!isEditing}
-                            required
-                          />{" "}
-                          Others
-                        </label>
+                      <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-4 block">Gender Selection</label>
+                      <div className="flex space-x-5">
+                        {["Male", "Female", "Other"].map((gen) => (
+                          <label key={gen} className="flex items-center group cursor-pointer">
+                            <div className="relative flex items-center justify-center mr-2.5">
+                              <input
+                                type="radio"
+                                name="gender"
+                                value={gen}
+                                checked={gender === gen}
+                                onChange={(e) => setGender(e.target.value)}
+                                className="w-4 h-4 appearance-none border-2 border-gray-200 rounded-full checked:border-[#375421] transition-all"
+                                disabled={!isEditing}
+                                required
+                              />
+                              {gender === gen && <div className="absolute w-2 h-2 bg-[#375421] rounded-full scale-100 animate-in zoom-in-50 duration-300"></div>}
+                            </div>
+                            <span className={`text-[11px] font-black uppercase tracking-tight transition-colors ${gender === gen ? 'text-gray-900' : 'text-gray-400 group-hover:text-gray-600'}`}>{gen}</span>
+                          </label>
+                        ))}
                       </div>
                     </div>
                     <div>
-                      <label
-                        htmlFor="dateOfBirth"
-                        className="block text-md font-semibold text-gray-700"
-                      >
-                        Date of Birth
-                        <input
-                          id="dateOfBirth"
-                          type="date"
-                          value={dateOfBirth}
-                          onChange={(e) => setDateOfBirth(e.target.value)}
-                          className="p-3 border rounded w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 mt-2"
-                          max={new Date().toISOString().split("T")[0]} // Set max date to today
-                          disabled={!isEditing}
-                        />
-                        {dateOfBirth ===
-                          new Date().toISOString().split("T")[0] && (
-                            <p className="text-red-500 text-sm mt-2">
-                              Valid date of birth required
-                            </p>
-                          )}
-                      </label>
+                      <label htmlFor="dateOfBirth" className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2.5 block">Date of Birth</label>
+                      <input
+                        id="dateOfBirth"
+                        type="date"
+                        value={dateOfBirth}
+                        onChange={(e) => setDateOfBirth(e.target.value)}
+                        className={`w-full bg-gray-50/50 border border-transparent px-4 py-3 rounded-xl text-[13px] font-bold text-gray-900 transition-all focus:outline-none ${isEditing ? 'border-gray-200 bg-white ring-2 ring-gray-50' : 'cursor-not-allowed opacity-80'}`}
+                        max={new Date().toISOString().split("T")[0]}
+                        disabled={!isEditing}
+                      />
                     </div>
                   </div>
 
-                  {/* Other Fields */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                  {/* Contact Fields */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
                     <div>
-                      <label className="block font-semibold">Email ID</label>
+                      <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2.5 block">Email Protocol</label>
                       <input
                         type="email"
-                        placeholder="Enter your Email ID"
-                        className="p-3 border rounded w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className={`w-full bg-gray-50/50 border border-transparent px-4 py-3 rounded-xl text-[13px] font-bold text-gray-900 transition-all focus:outline-none ${isEditing ? 'border-gray-200 bg-white ring-2 ring-gray-0' : 'cursor-not-allowed opacity-80'}`}
                         disabled={!isEditing}
                         value={userEmail}
-                        onChange={(e) => setUserEmail(e.target.value)} // Update state
+                        onChange={(e) => setUserEmail(e.target.value)}
                         required
                       />
                     </div>
                     <div>
-                      <label className="block font-semibold">
-                        Mobile Number
-                      </label>
+                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 block">Mobile Access</label>
                       <input
                         type="tel"
-                        placeholder="Enter your Mobile Number"
-                        className="p-3 border rounded w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        // disabled={true}
-                        disabled={!isEditing}
+                        className={`w-full bg-gray-50/50 border border-transparent px-4 py-3 rounded-xl text-[13px] font-bold text-gray-900 transition-all focus:outline-none opacity-80 cursor-not-allowed`}
+                        disabled={true}
                         value={userMobile}
-                        onChange={(e) => setUserMobile(e.target.value)} // Update state
                         required
                       />
                     </div>
-
-
                     <div>
-                      <label className="block font-semibold">
-                        GST Number (Optional)
-                      </label>
+                      <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2.5 block">GST Registration</label>
                       <input
                         type="text"
-                        placeholder="Enter your GST Number"
-                        className="p-3 border rounded w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        // disabled={true}
+                        placeholder="GST Identification (Optional)"
+                        className={`w-full bg-gray-50/50 border border-transparent px-4 py-3 rounded-xl text-[13px] font-bold text-gray-900 transition-all focus:outline-none ${isEditing ? 'border-gray-200 bg-white ring-2 ring-gray-0' : 'cursor-not-allowed opacity-80'}`}
                         disabled={!isEditing}
                         value={gst}
-                        onChange={handleGstChange} // Update state
-
+                        onChange={handleGstChange}
                       />
                     </div>
                   </div>
 
                   {/* Save Button */}
                   {isEditing && (
-                    <div className="mt-6">
+                    <div className="mt-10">
                       <button
                         type="submit"
-                        className="bg-bio-green text-white px-4 py-2 rounded hover:bg-[#375421] hover:text-white"
+                        className="w-full sm:w-auto bg-gray-900 text-white px-10 py-3 rounded-lg text-[9px] font-black uppercase tracking-[0.2em] hover:bg-[#375421] transition-all shadow-lg shadow-gray-200"
                       >
-                        Save
+                        Save Profile
                       </button>
                     </div>
                   )}

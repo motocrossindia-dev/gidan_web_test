@@ -1,5 +1,6 @@
 import BlogDetail from "../../../views/Blog/BlogDetail";
 
-export default function BlogDetailPage({ params }: { params: { slug: string } }) {
-  return <BlogDetail slug={params.slug} />;
+export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = await params;
+    return <BlogDetail slug={slug} />;
 }

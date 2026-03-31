@@ -162,22 +162,22 @@ const Wallet = () => {
   }, []);
   return (
     <>
-      <div className="flex flex-col md:hidden bg-white shadow-sm sticky top-0 z-40 border-b">
-        <div className="px-4 pt-4 flex items-center justify-between">
+      <div className="flex flex-col md:hidden bg-white shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] sticky top-0 z-40 border-b border-gray-100">
+        <div className="px-5 pt-5 pb-2 flex items-center justify-between">
           <button
             onClick={() => router.push('/profile')}
-            className="flex items-center text-[#375421] text-sm font-medium"
+            className="flex items-center text-[#375421] text-xs font-black uppercase tracking-tight"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Profile
+            <ArrowLeft className="w-3.5 h-3.5 mr-2" />
+            Profile
           </button>
-          <div className="flex items-center gap-4 text-xs font-medium text-[#375421]">
-            <button className="hover:underline">Help & Support</button>
+          <div className="flex items-center gap-4 text-[10px] font-black text-[#375421] uppercase tracking-widest">
+            <button className="hover:underline">Support</button>
           </div>
         </div>
 
-        <div className="p-4 pt-2">
-          <h1 className="text-xl font-bold">My Wallet</h1>
+        <div className="px-5 pb-4">
+          <h1 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Wallet</h1>
         </div>
       </div>
 
@@ -188,56 +188,85 @@ const Wallet = () => {
         />
       </div>
 
-      <div className="flex justify-center sm:justify-start px-4 sm:px-6 mt-2 bg-site-bg min-h-screen w-full">
-        <div className="w-full sm:w-full md:w-4/5 lg:w-full xl:w-full h-auto bg-white shadow-lg p-4 sm:p-6 rounded-lg">
+      <div className="flex justify-center sm:justify-start px-4 sm:px-6 bg-site-bg min-h-screen w-full mt-2">
+        <div className="w-full sm:w-full md:w-4/5 lg:w-full xl:w-full h-auto bg-white shadow-[0_20px_50px_-20px_rgba(0,0,0,0.08)] p-8 sm:p-12 rounded-[32px] border border-gray-100">
           {/* Total Wallet Balance */}
-          <h2 className="text-lg font-semibold mb-2">Gidan Wallet</h2>
-          <div className="bg-site-bg p-4 rounded-lg mb-6">
-            <div className="flex flex-col justify-between items-center space-y-5">
-              <span className="text-gray-700 font-semibold">Total Wallet Balance</span>
-              <span className="text-2xl font-bold text-[#375421]">₹{wallet?.balance}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <div>{/* Placeholder to fill the left side */}
-                <button onClick={getTransactions} className="text-md font-semibold text-lime-600 self-end">
-                  Wallet Transaction History
+          <div className="flex items-center justify-between mb-8">
+             <div className="flex flex-col">
+                <span className="text-[10px] font-black text-[#375421] uppercase tracking-[0.2em] mb-2">Stored Balance</span>
+                <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Gidan Wallet</h2>
+             </div>
+             <div className="w-12 h-12 rounded-full border border-gray-100 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-[#375421]/10 flex items-center justify-center">
+                   <div className="w-4 h-4 rounded-full bg-[#375421]"></div>
+                </div>
+             </div>
+          </div>
+
+          <div className="bg-site-bg rounded-[24px] p-8 mb-10 border border-gray-100 relative overflow-hidden group">
+            <div className="absolute -right-16 -top-16 w-48 h-48 bg-[#375421]/5 rounded-full blur-3xl group-hover:bg-[#375421]/10 transition-colors duration-500"></div>
+            
+            <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
+              <div className="flex items-center gap-6">
+                 <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center shadow-lg shadow-green-100/50">
+                    <span className="text-4xl text-[#375421] font-black leading-none">₹</span>
+                 </div>
+                 <div className="flex flex-col">
+                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Available Credits</span>
+                    <span className="text-5xl font-black text-[#375421] tracking-tighter">
+                       {wallet?.balance || 0}
+                    </span>
+                 </div>
+              </div>
+
+              <div className="flex flex-col items-center md:items-end w-full md:w-auto">
+                <button
+                  onClick={getTransactions}
+                  className="px-6 py-3 bg-white text-[10px] font-black text-gray-900 uppercase tracking-[0.2em] rounded-xl shadow-sm border border-gray-100 hover:bg-[#375421] hover:text-white transition-all flex items-center gap-2"
+                >
+                  History
                 </button>
               </div>
             </div>
           </div>
 
           {/* Top Up Wallet */}
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold mb-2">Top Up Wallet</h2>
-
-            <div className="flex space-x-2 mb-4">
-              <input
-                type="text"
-                value={amount}
-                onChange={handleInputChange}
-                placeholder="₹1000"
-                className="w-full p-3 border font-semibold rounded-lg text-[#375421] focus:outline-none focus:border-[#375421]"
-              />
+          <div className="mb-12">
+            <h3 className="text-[10px] font-black text-[#375421] uppercase tracking-[0.2em] mb-4">Recharge Credits</h3>
+            
+            <div className="bg-gray-50 rounded-2xl p-2 flex flex-col sm:flex-row gap-2 max-w-full border border-gray-100 mb-4">
+              <div className="flex-1 relative flex items-center">
+                 <span className="absolute left-5 text-gray-400 font-black text-sm">₹</span>
+                 <input
+                   type="text"
+                   value={amount}
+                   onChange={handleInputChange}
+                   placeholder="1000"
+                   className="w-full bg-transparent border-none pl-10 pr-5 py-4 focus:ring-0 text-sm font-bold text-gray-900 placeholder:text-gray-400 placeholder:font-medium"
+                 />
+              </div>
+              <button
+                onClick={handleTopUp}
+                className="bg-gray-900 text-white px-10 py-4 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-[#375421] transition-all active:scale-[0.98] shadow-lg shadow-gray-200"
+              >
+                Proceed To Pay
+              </button>
             </div>
 
-            <div className="flex space-x-4 justify-center sm:justify-start mb-4">
+            <div className="flex flex-wrap gap-2">
               {presetAmounts.map((amt, idx) => (
                 <button
                   key={idx}
                   onClick={() => handlePresetClick(amt)}
-                  className="w-1/3 sm:w-1/4 md:w-1/5 border border-md border-gray-300 font-semibold text-center text-[#375421] py-2 px-2 rounded-md hover:border-[#375421] active:bg-border-[#375421]"
+                  className={`px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all border ${
+                    amount === amt.replace("₹", "")
+                      ? 'bg-[#375421] text-white border-[#375421]'
+                      : 'bg-white text-gray-400 border-gray-100 hover:border-gray-200 hover:text-gray-600'
+                  }`}
                 >
                   {amt}
                 </button>
               ))}
-            </div>
-
-            <div className="text-center sm:text-left">
-              <button
-                onClick={handleTopUp}
-                className="w-full mb-6 bg-lime-600 text-white px-4 py-4 rounded-md hover:bg-[#375421] hover:text-white">
-                Proceed To Top-Up
-              </button>
             </div>
           </div>
 
@@ -248,27 +277,31 @@ const Wallet = () => {
         </div> */}
 
           {/* Rewards and Credits */}
-          <div className="mb-6">
-            <div className="bg-transparent border border-black-100 p-4 rounded-lg flex flex-col sm:flex-row justify-between mb-2 items-center">
-              <div className="flex flex-col items-center sm:items-start">
-                <span>Gidan Rewards</span>
-                <span className="flex items-center">
-                  25% Utilization On Cart Value
-                  <FiAlertCircle className="ml-1" />
-                </span>
-              </div>
-              <span className="text-[#375421] font-semibold mt-2 sm:mt-0">₹500</span>
-            </div>
-            <div className="bg-transparent border border-black-100 p-4 rounded-lg flex flex-col sm:flex-row justify-between items-center">
-              <div className="flex flex-col items-center sm:items-start">
-                <span>Refund & Gift Credits</span>
-                <span className="flex items-center">
-                  100% Utilization
-                  <FiAlertCircle className="ml-1" />
-                </span>
-              </div>
-              <span className="text-[#375421] font-semibold mt-2 sm:mt-0">₹0</span>
-            </div>
+          <div className="mb-12">
+             <h3 className="text-[10px] font-black text-[#375421] uppercase tracking-[0.2em] mb-6">Wallet Sub-Balances</h3>
+             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+               <div className="bg-white border border-gray-100 rounded-[24px] p-6 flex items-start justify-between group hover:shadow-lg transition-all duration-500">
+                 <div>
+                    <div className="flex items-center gap-2 mb-1">
+                       <h4 className="text-[12px] font-black text-gray-900 uppercase tracking-tight">Gidan Rewards</h4>
+                       <FiAlertCircle className="text-gray-300 w-3 h-3 group-hover:text-[#375421] transition-colors" />
+                    </div>
+                    <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest leading-tight">25% Utilization Limit</p>
+                 </div>
+                 <span className="text-lg font-black text-[#375421] uppercase">₹500</span>
+               </div>
+
+               <div className="bg-white border border-gray-100 rounded-[24px] p-6 flex items-start justify-between group hover:shadow-lg transition-all duration-500">
+                 <div>
+                    <div className="flex items-center gap-2 mb-1">
+                       <h4 className="text-[12px] font-black text-gray-900 uppercase tracking-tight">Gift Credits</h4>
+                       <FiAlertCircle className="text-gray-300 w-3 h-3 group-hover:text-[#375421] transition-colors" />
+                    </div>
+                    <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest leading-tight">100% High Utility</p>
+                 </div>
+                 <span className="text-lg font-black text-[#375421] uppercase">₹0</span>
+               </div>
+             </div>
           </div>
 
           {/* FAQs Section */}

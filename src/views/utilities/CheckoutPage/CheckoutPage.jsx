@@ -1148,6 +1148,7 @@ const CheckoutPage = () => {
           : latestOrderData;
 
         sessionStorage.setItem('payment_order_data', JSON.stringify({ resource: finalOrderData, order_id: data.order.id }));
+        router.prefetch('/successpage'); // Preload the success page for instant transition
         setShowPaymentStep(true);
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
       }
@@ -1193,7 +1194,7 @@ const CheckoutPage = () => {
         const razorpayOrder = response?.data?.razorpay_order;
         // CASE 1: Full wallet payment
         if (!razorpayOrder) {
-          enqueueSnackbar(response?.data?.message || 'Payment Successful via Wallet', { variant: 'success' });
+          // enqueueSnackbar(response?.data?.message || 'Payment Successful via Wallet', { variant: 'success' });
           trackPurchase({ transaction_id: orderId, value: activeOrder?.grand_total || 0, items: activeItems || [], shipping: activeOrder?.shipping_charge || 0, payment_type: 'Wallet' });
           sessionStorage.removeItem('payment_order_data');
           sessionStorage.removeItem('checkout_ordersummary');
@@ -1201,7 +1202,7 @@ const CheckoutPage = () => {
           sessionStorage.removeItem('selected_combo_offer');
           sessionStorage.setItem('recent_payment_success', 'true');
           sessionStorage.setItem('recent_order_id', String(orderId));
-          router.push('/successpage');
+          router.replace('/successpage');
           return;
         }
         // CASE 2: Partial wallet + Razorpay
@@ -1231,7 +1232,7 @@ const CheckoutPage = () => {
                 }
               );
               if (verifyRes.data.message === 'Payment successful') {
-                enqueueSnackbar('Payment completed successfully!', { variant: 'success' });
+                // enqueueSnackbar('Payment completed successfully!', { variant: 'success' });
                 trackPurchase({ transaction_id: orderId, value: razorpayOrder.amount / 100, items: activeItems || [], shipping: activeOrder?.shipping_charge || 0 });
                 sessionStorage.removeItem('payment_order_data');
                 sessionStorage.removeItem('checkout_ordersummary');
@@ -1239,7 +1240,7 @@ const CheckoutPage = () => {
                 sessionStorage.removeItem('selected_combo_offer');
                 sessionStorage.setItem('recent_payment_success', 'true');
                 sessionStorage.setItem('recent_order_id', String(orderId));
-                router.push('/successpage');
+                router.replace('/successpage');
               } else {
                 enqueueSnackbar('Payment verification failed.', { variant: 'error' });
               }

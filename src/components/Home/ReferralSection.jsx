@@ -41,7 +41,7 @@ const ReferralSection = () => {
     const handleCopy = () => {
         if (!isAuthenticated) {
             enqueueSnackbar("Please sign in to view and copy your referral code", { variant: "info" });
-            router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn");
+            router.push(window.innerWidth <= 640 ? "/login" : "/login");
             return;
         }
 

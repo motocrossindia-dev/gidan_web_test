@@ -151,265 +151,129 @@ const PostSummaryView = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-white pb-20">
-            {/* Desktop/Back Section */}
-            <div className="max-w-6xl mx-auto px-4 pt-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <button
-                    onClick={() => router.push('/profile/orders')}
-                    className="flex items-center text-[#375421] hover:opacity-80 transition-opacity text-sm font-medium"
-                >
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Back to Your Orders
-                </button>
+        <div className="min-h-screen bg-white pb-24 font-sans">
+            {/* Mobile Header Redesign - Professional Minimalist */}
+            <div className="flex flex-col md:hidden bg-white shadow-sm sticky top-0 z-40 border-b">
+                <div className="px-4 pt-4 pb-2 flex items-center justify-between">
+                    <button
+                        onClick={() => router.push('/profile/orders')}
+                        className="flex items-center text-[#375421] text-sm font-medium"
+                    >
+                        <ArrowLeft className="w-4 h-4 mr-2" />
+                        Orders
+                    </button>
+                    <div className="flex items-center gap-4 text-[11px] font-bold text-[#375421] uppercase tracking-wider">
+                        <button className="hover:underline">Support</button>
+                    </div>
+                </div>
+                <div className="px-4 pb-3">
+                    <h1 className="text-xl font-bold text-gray-900 leading-tight">Order Details</h1>
+                </div>
             </div>
 
-            {/* Mobile Breadcrumb Section (Keep breadcrumb but remove old button) */}
-            <div className="md:hidden px-4 py-2 border-b bg-white sticky top-0 z-50">
-                <Breadcrumb items={breadcrumbItems} currentPage="Order Summary" />
-            </div>
-
-            <div className="max-w-6xl mx-auto px-4 py-6">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                    <h1 className="text-3xl font-bold text-gray-900">Order Summary</h1>
-                    <div className="flex items-center gap-4 text-sm">
-                        <p className="text-gray-700">Ordered on {formatDate(orderDate)}</p>
-                        <span className="text-gray-300">|</span>
-                        <p className="text-gray-700">Order# <span className="font-bold">{orderIdToDisplay}</span></p>
+            <div className="max-w-5xl mx-auto px-4 py-6 md:py-10">
+                {/* Desktop Header - Amazon Style */}
+                <div className="hidden md:block mb-8">
+                    <h1 className="text-2xl font-bold text-gray-900 mb-6">Order Details</h1>
+                    <div className="flex flex-wrap items-center justify-between gap-4 py-3 px-5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600">
+                        <div className="flex items-center gap-4">
+                            <span className="font-medium whitespace-nowrap">Ordered on {formatDate(orderDate)}</span>
+                            <span className="text-gray-300">|</span>
+                            <span>Order# <span className="font-bold text-gray-900">{orderIdToDisplay}</span></span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                           {isDelivered && (
+                               <button onClick={getInvoice} className="hover:underline text-[#375421] font-bold">Download Invoice</button>
+                           )}
+                        </div>
                     </div>
                 </div>
 
-                {/* Main Summary Card */}
-                <div className="border rounded-lg overflow-hidden mb-8 shadow-sm">
-                    <div className="bg-site-bg p-4 border-b grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {/* Shipping Address */}
-                        <div>
-                            <h3 className="text-sm font-bold text-gray-900 mb-2">Shipping Address</h3>
-                            <div className="text-sm text-gray-700">
-                                <p className="font-bold">{orderData?.delivery_address?.first_name} {orderData?.delivery_address?.last_name}</p>
-                                <p>{orderData?.delivery_address?.address}</p>
-                                <p>{orderData?.delivery_address?.city}, {orderData?.delivery_address?.state} {orderData?.delivery_address?.pincode}</p>
-                                <p>India</p>
-                            </div>
+                {/* Amazon-Style Fulfillment Section (3-Column Card) */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-gray-200 rounded-lg overflow-hidden mb-10 shadow-sm">
+                    {/* Shipping Address */}
+                    <div className="p-6 border-b md:border-b-0 md:border-r border-gray-200">
+                        <h3 className="text-sm font-bold text-gray-900 mb-3">Shipping Address</h3>
+                        <div className="text-[12.5px] text-gray-600 leading-normal font-medium">
+                            <p className="font-bold text-gray-900 mb-1">{orderData?.delivery_address?.first_name} {orderData?.delivery_address?.last_name}</p>
+                            <p>{orderData?.delivery_address?.address}</p>
+                            <p>{orderData?.delivery_address?.city}, {orderData?.delivery_address?.state} {orderData?.delivery_address?.pincode}</p>
+                            <p>India</p>
+                            <p className="mt-3 text-xs text-gray-400">Phone: {orderData?.delivery_address?.mobile}</p>
                         </div>
+                    </div>
 
-                        {/* Payment Method */}
-                        <div>
-                            <h3 className="text-sm font-bold text-gray-900 mb-2">Payment Method</h3>
-                            <div className="text-sm text-gray-700 flex items-center gap-2">
-                                <CreditCard className="w-4 h-4 text-gray-400" />
-                                <span>{orderData?.order?.payment_method || 'Online Payment'}</span>
+                    {/* Payment Mode */}
+                    <div className="p-6 border-b md:border-b-0 md:border-r border-gray-200 bg-gray-50/30">
+                        <h3 className="text-sm font-bold text-gray-900 mb-3">Payment Method</h3>
+                        <div className="text-[12.5px] text-gray-600 font-medium">
+                            <div className="flex items-center gap-2 mb-2">
+                                <span className="px-2 py-0.5 bg-white border border-gray-300 rounded text-[10px] font-bold text-gray-700">Online</span>
+                                <span className="font-bold text-gray-900">{orderData?.order?.payment_method || 'Selection'}</span>
                             </div>
                             {orderData?.order?.transfer_details?.method && (
-                                <p className="text-xs text-gray-500 mt-1 ml-6 uppercase">{orderData.order.transfer_details.method} • {orderData.order.transfer_details.bank || 'Captured'}</p>
+                                <p className="text-xs text-gray-400">Account: {orderData.order.transfer_details.bank || 'Verified'}</p>
                             )}
                         </div>
+                    </div>
 
-                        {/* Order Price Breakdown (Checkout Style) */}
-                        <div>
-                            <h3 className="text-sm font-bold text-gray-900 mb-3">Order Summary</h3>
-                            <div className="space-y-2 text-sm">
-
-                                {/* MRP Total — only if items have mrp */}
-                                {(orderData?.order_items || []).some(i => Number(i.mrp) > 0) && (
-                                    <div className="flex justify-between text-gray-600">
-                                        <span>Price ({(orderData?.order_items || []).length} item{(orderData?.order_items || []).length !== 1 ? 's' : ''})</span>
-                                        <span>₹{(orderData?.order_items || []).reduce((s, i) => s + Number(i.mrp) * i.quantity, 0).toFixed(2)}</span>
-                                    </div>
-                                )}
-
-                                {/* Product Discount */}
-                                {Number(orderData?.order?.total_discount ?? 0) > 0 && (
-                                    <div className="flex justify-between text-emerald-600 font-medium">
-                                        <span>Discount</span>
-                                        <span>-₹{Number(orderData.order.total_discount).toFixed(2)}</span>
-                                    </div>
-                                )}
-
-                                {/* Coupon Discount */}
-                                {orderData?.order?.coupon_applied && Number(orderData?.order?.coupon_discount ?? 0) > 0 && (
-                                    <div className="flex justify-between text-emerald-600 font-medium">
-                                        <span className="flex items-center gap-1">
-                                            🏷️ Coupon
-                                            {orderData.order.coupon_value > 0 && (
-                                                <span className="text-[10px] bg-emerald-50 border border-emerald-200 rounded px-1 py-0.5 font-semibold">
-                                                    {orderData.order.coupon_type === "%" ? `${Number(orderData.order.coupon_value).toFixed(0)}%` : `₹${Number(orderData.order.coupon_value).toFixed(2)}`}
-                                                </span>
-                                            )}
-                                        </span>
-                                        <span>-₹{Number(orderData.order.coupon_discount).toFixed(2)}</span>
-                                    </div>
-                                )}
-
-                                {/* Delivery Charges (base + GST) */}
-                                {(() => {
-                                    const base = Number(orderData?.order?.shipping_charge ?? 0);
-                                    const gst  = Number(orderData?.order?.shipping_gst   ?? 0);
-                                    const total = base + gst;
-                                    const isFree = total === 0;
-                                    return (
-                                        <div>
-                                            <div className="flex justify-between text-gray-600">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => !isFree && setShowShippingDetail(v => !v)}
-                                                    className="flex items-center gap-1 text-gray-600 hover:text-gray-900"
-                                                >
-                                                    Delivery Charges
-                                                    {!isFree && <span className="text-[10px] text-gray-400">{showShippingDetail ? '▲' : '▼'}</span>}
-                                                </button>
-                                                <span className={isFree ? 'text-emerald-600 font-semibold' : ''}>
-                                                    {isFree ? 'FREE' : `₹${total.toFixed(2)}`}
-                                                </span>
-                                            </div>
-                                            {!isFree && showShippingDetail && (
-                                                <div className="ml-2 mt-1 border border-gray-100 rounded p-2 space-y-1 text-xs text-gray-500">
-                                                    <div className="flex justify-between">
-                                                        <span>Base Shipping</span>
-                                                        <span>₹{base.toFixed(2)}</span>
-                                                    </div>
-                                                    {gst > 0 && (
-                                                        <>
-                                                            <div className="flex justify-between font-medium text-gray-600">
-                                                                <span>Shipping GST ({Number(orderData.order.shipping_cgst_value ?? 9) + Number(orderData.order.shipping_sgst_value ?? 9)}%)</span>
-                                                                <span>₹{gst.toFixed(2)}</span>
-                                                            </div>
-                                                            <div className="flex justify-between pl-2">
-                                                                <span>CGST {orderData.order.shipping_cgst_value ?? '9.00'}%</span>
-                                                                <span>₹{Number(orderData.order.shipping_cgst).toFixed(2)}</span>
-                                                            </div>
-                                                            <div className="flex justify-between pl-2">
-                                                                <span>SGST {orderData.order.shipping_sgst_value ?? '9.00'}%</span>
-                                                                <span>₹{Number(orderData.order.shipping_sgst).toFixed(2)}</span>
-                                                            </div>
-                                                        </>
-                                                    )}
-                                                    <div className="flex justify-between font-semibold text-gray-700 border-t pt-1">
-                                                        <span>Total Delivery</span>
-                                                        <span>₹{total.toFixed(2)}</span>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    );
-                                })()}
-
-                                {/* Product GST Toggle */}
-                                {(Number(orderData?.order?.gst_amount_5 ?? 0) > 0 || Number(orderData?.order?.gst_amount_18 ?? 0) > 0 || (orderData?.order?.gst_breakdown?.summary && Object.values(orderData.order.gst_breakdown.summary).some(v => v.total > 0))) && (
-                                    <div>
-                                        <button type="button" onClick={() => setShowGstDetail(v => !v)}
-                                            className="w-full flex items-center justify-between text-[10px] uppercase font-bold text-gray-400 tracking-widest py-1">
-                                            <span>Product Tax (GST)</span>
-                                            <span>{showGstDetail ? "▲" : "▼"}</span>
-                                        </button>
-                                        {showGstDetail && (
-                                            <div className="space-y-1 text-xs mt-1">
-                                                {/* Old fields fallback */}
-                                                {!orderData?.order?.gst_breakdown?.summary && (
-                                                    <>
-                                                        {Number(orderData?.order?.gst_amount_5 ?? 0) > 0 && (
-                                                            <div className="border border-gray-200 rounded p-2 space-y-0.5">
-                                                                <div className="flex justify-between font-medium text-gray-700"><span>GST @ 5%</span><span>₹{Number(orderData.order.gst_amount_5).toFixed(2)}</span></div>
-                                                                <div className="flex justify-between text-gray-400 pl-2"><span>CGST 2.5%</span><span>₹{Number(orderData.order.cgst_amount_5).toFixed(2)}</span></div>
-                                                                <div className="flex justify-between text-gray-400 pl-2"><span>SGST 2.5%</span><span>₹{Number(orderData.order.sgst_amount_5).toFixed(2)}</span></div>
-                                                            </div>
-                                                        )}
-                                                        {Number(orderData?.order?.gst_amount_18 ?? 0) > 0 && (
-                                                            <div className="border border-gray-200 rounded p-2 space-y-0.5">
-                                                                <div className="flex justify-between font-medium text-gray-700"><span>GST @ 18%</span><span>₹{Number(orderData.order.gst_amount_18).toFixed(2)}</span></div>
-                                                                <div className="flex justify-between text-gray-400 pl-2"><span>CGST 9%</span><span>₹{Number(orderData.order.cgst_amount_18).toFixed(2)}</span></div>
-                                                                <div className="flex justify-between text-gray-400 pl-2"><span>SGST 9%</span><span>₹{Number(orderData.order.sgst_amount_18).toFixed(2)}</span></div>
-                                                            </div>
-                                                        )}
-                                                    </>
-                                                )}
-
-                                                {/* New gst_breakdown.summary field */}
-                                                {orderData?.order?.gst_breakdown?.summary && Object.entries(orderData.order.gst_breakdown.summary).map(([key, value]) => {
-                                                    if (value.total > 0) {
-                                                        const rate = key.split('_')[1];
-                                                        const taxValue = value.total / 2;
-                                                        const taxRate = (parseFloat(rate) / 2).toFixed(1);
-
-                                                        return (
-                                                            <div key={key} className="border border-gray-200 rounded p-2 space-y-1">
-                                                                <div className="flex justify-between font-medium text-gray-700">
-                                                                    <span>GST @ {rate}%</span>
-                                                                    <span>₹{value.total.toFixed(2)}</span>
-                                                                </div>
-                                                                {value.igst > 0 ? (
-                                                                    <div className="flex justify-between text-gray-400 pl-2 text-[10px]">
-                                                                        <span>IGST {rate}%</span>
-                                                                        <span>₹{value.igst.toFixed(2)}</span>
-                                                                    </div>
-                                                                ) : (
-                                                                    <>
-                                                                        <div className="flex justify-between text-gray-400 pl-2 text-[10px]">
-                                                                            <span>CGST {taxRate}%</span>
-                                                                            <span>₹{taxValue.toFixed(2)}</span>
-                                                                        </div>
-                                                                        <div className="flex justify-between text-gray-400 pl-2 text-[10px]">
-                                                                            <span>SGST {taxRate}%</span>
-                                                                            <span>₹{taxValue.toFixed(2)}</span>
-                                                                        </div>
-                                                                    </>
-                                                                )}
-                                                            </div>
-                                                        );
-                                                    }
-                                                    return null;
-                                                })}
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-
-
-
-                                {/* GD Coins */}
-                                {Number(orderData?.order?.gd_coin ?? 0) > 0 && (
-                                    <div className="flex items-center justify-between pt-1">
-                                        <div className="flex items-center gap-1.5"><span>🪙</span><span className="text-xs text-gray-600">GD Coins Earned</span></div>
-                                        <span className="font-bold text-orange-500">+{orderData.order.gd_coin}</span>
-                                    </div>
-                                )}
-
-                                {/* Grand Total */}
-                                <div className="bg-gradient-to-r from-[#375421] to-[#051d18] rounded-lg px-3 py-2 flex justify-between items-center mt-1">
-                                    <span className="text-white font-bold text-sm">Grand Total</span>
-                                    <span className="text-white font-extrabold">₹{Number(orderData?.order?.grand_total ?? 0).toFixed(2)}</span>
-                                </div>
+                    {/* Pricing Summary */}
+                    <div className="p-6 bg-gray-50/50">
+                        <h3 className="text-sm font-bold text-gray-900 mb-4">Order Summary</h3>
+                        <div className="space-y-2.5 text-[12.5px] font-medium text-gray-600">
+                            <div className="flex justify-between items-baseline">
+                                <span>Items:</span>
+                                <span>₹{(orderData?.order_items || []).reduce((s, i) => s + Number(i.selling_price) * i.quantity, 0).toFixed(2)}</span>
                             </div>
+                            <div className="flex justify-between items-baseline">
+                                <span>Shipping:</span>
+                                <span>₹{(Number(orderData?.order?.shipping_charge || 0) + Number(orderData?.order?.shipping_gst || 0)).toFixed(2)}</span>
+                            </div>
+                            {Number(orderData?.order?.total_discount || 0) > 0 && (
+                                <div className="flex justify-between items-baseline">
+                                    <span>Promotion Applied:</span>
+                                    <span className="text-emerald-700">-₹{Number(orderData.order.total_discount).toFixed(2)}</span>
+                                </div>
+                            )}
+                            <div className="flex justify-between items-baseline pt-3 border-t border-gray-200">
+                                <span className="text-sm font-bold text-gray-900">Total:</span>
+                                <span className="text-base font-bold text-gray-900">₹{Number(orderData?.order?.grand_total || 0).toFixed(2)}</span>
+                            </div>
+                            {Number(orderData?.order?.gd_coin ?? 0) > 0 && (
+                                <div className="flex justify-between items-center text-[11px] text-[#375421] font-bold pt-2 uppercase tracking-wide">
+                                    <span>🪙 GDC Earned</span>
+                                    <span>+{orderData.order.gd_coin}</span>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
 
-                {/* Tracking Progress Section */}
-                <div className="mb-8 bg-white border rounded-lg p-6">
-                    <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
-                        <Truck className="w-5 h-5 text-gray-700" />
-                        Delivery Status
-                    </h2>
+                {/* Amazon Status Dashboard */}
+                <div className="border border-gray-200 rounded-lg p-6 mb-10 bg-white shadow-sm overflow-hidden">
+                    <div className="flex items-center gap-4 mb-8">
+                       <Truck className="w-5 h-5 text-gray-400" />
+                       <h3 className="text-lg font-bold text-gray-900">{latestTrackingStatus === 'DELIVERED' ? 'Delivered successfully' : `Shipment Status: ${latestTrackingStatus.replace(/_/g, ' ')}`}</h3>
+                    </div>
 
-                    <div className="relative">
-                        {/* Status bar */}
-                        <div className="flex justify-between items-start relative mb-4">
-                            {/* Background Line */}
-                            <div className="absolute top-4 left-4 right-4 h-1 bg-gray-200 -translate-y-1/2 z-0"></div>
-
-                            {/* Active Line (Calculated based on status) */}
+                    {/* Clean Progress Bar */}
+                    <div className="relative pt-2 pb-6 px-4">
+                        <div className="flex justify-between items-start relative">
+                            {/* Track Lines */}
+                            <div className="absolute top-4 left-0 right-0 h-1 bg-gray-100 z-0 mx-[12.5%]" />
                             {(() => {
                                 const status = latestTrackingStatus;
                                 let progress = '0%';
-                                if (status === 'PROCESSING') progress = '25%';
-                                if (status === 'ORDER_CONFIRMED') progress = '50%';
-                                if (status === 'ON_THE_WAY') progress = '75%';
+                                if (status === 'PROCESSING') progress = '0%';
+                                if (status === 'ORDER_CONFIRMED') progress = '33.33%';
+                                if (status === 'ON_THE_WAY') progress = '66.66%';
                                 if (status === 'DELIVERED') progress = '100%';
 
                                 return (
                                     <div
-                                        className="absolute top-4 left-4 h-1 bg-[#375421] -translate-y-1/2 z-0 transition-all duration-500"
+                                        className="absolute top-4 left-0 h-1 bg-[#375421] z-0 transition-all duration-700 ease-in-out mx-[12.5%]"
                                         style={{ width: progress }}
-                                    ></div>
+                                    />
                                 );
                             })()}
 
@@ -417,20 +281,27 @@ const PostSummaryView = () => {
                                 const steps = ['PROCESSING', 'ORDER_CONFIRMED', 'ON_THE_WAY', 'DELIVERED'];
                                 const currentIndex = steps.indexOf(latestTrackingStatus);
                                 const isActive = index <= currentIndex;
-                                const isCurrent = index === currentIndex;
                                 const stepUpdate = orderData?.tracking_updates?.find(u => u.status.toUpperCase() === step);
 
                                 return (
-                                    <div key={step} className="flex flex-col items-center relative z-50 w-1/4">
-                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 ${isActive ? 'bg-[#375421] border-green-100 text-white' : 'bg-white border-gray-200 text-gray-300'}`}>
-                                            {isActive ? <CheckCircle2 className="w-4 h-4" /> : <div className="w-2 h-2 rounded-full bg-gray-300"></div>}
+                                    <div key={step} className="flex flex-col items-center relative z-10 w-1/4">
+                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-500
+                                            ${isActive
+                                              ? 'bg-[#375421] border-[#375421] text-white shadow shadow-green-100'
+                                              : 'bg-white border-gray-200 text-gray-200'}
+                                        `}>
+                                            {isActive ? <Check className="w-4 h-4" strokeWidth={3} /> : <div className="w-2 h-2 rounded-full bg-gray-200" />}
                                         </div>
-                                        <div className="mt-2 text-center w-full px-1">
-                                            <p className={`text-[10px] font-bold leading-tight break-words ${isActive ? 'text-gray-900' : 'text-gray-400'}`}>
+                                        <div className="mt-4 text-center">
+                                            <p className={`text-[12px] font-bold leading-tight tracking-tight
+                                                ${isActive ? 'text-gray-900' : 'text-gray-400'}
+                                            `}>
                                                 {step.replace(/_/g, ' ')}
                                             </p>
-                                            {isCurrent && stepUpdate?.timestamp && (
-                                                <p className="text-[9px] text-gray-500 mt-0.5">{new Date(stepUpdate.timestamp).toLocaleDateString()}</p>
+                                            {isActive && stepUpdate?.timestamp && (
+                                                <p className="text-[10px] text-gray-400 mt-1 font-medium italic">
+                                                    {new Date(stepUpdate.timestamp).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}
+                                                </p>
                                             )}
                                         </div>
                                     </div>
@@ -440,78 +311,70 @@ const PostSummaryView = () => {
                     </div>
                 </div>
 
-                {/* Items Section */}
-                <div className="border rounded-lg overflow-hidden bg-white">
-                    <div className="bg-site-bg p-4 border-b flex justify-between items-center">
-                        <h2 className="text-lg font-bold text-gray-900">Items Ordered</h2>
-                        {isDelivered && (
-                            <button
-                                onClick={getInvoice}
-                                className="text-sm font-medium text-bio-green hover:text-[#051d18] hover:underline flex items-center gap-1"
-                            >
-                                <Download className="w-4 h-4" />
-                                Invoice
-                            </button>
-                        )}
-                    </div>
-
-                    <div className="p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                {/* Amazon-Style Item Registry (Row Based) */}
+                <div className="border border-gray-200 rounded-lg bg-white overflow-hidden mb-12 shadow-sm">
+                    <div className="p-10 space-y-12">
                         {orderData?.order_items?.map((item, index) => (
-                            <div key={index} className="flex flex-col rounded-xl border border-gray-100 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
-                                {/* Product Image */}
+                            <div key={index} className="flex flex-col md:flex-row gap-10 items-start pb-12 border-b border-gray-100 last:border-0 last:pb-0">
+                                {/* Amazon Product Image */}
                                 <div
-                                    className="aspect-square bg-site-bg flex items-center justify-center p-3 cursor-pointer"
+                                    className="w-40 h-40 flex-shrink-0 cursor-pointer mx-auto md:mx-0"
                                     onClick={() => router.push(getProductUrl(item))}
                                 >
                                     <img
                                         src={item?.image?.startsWith('http') ? item.image : `${process.env.NEXT_PUBLIC_API_URL}${item?.image}`}
                                         alt={item?.product_name}
-                                        className="max-w-full max-h-full object-contain mix-blend-multiply"
+                                        className="w-full h-full object-contain mix-blend-multiply transition-transform hover:scale-105"
                                     />
                                 </div>
 
-                                {/* Details */}
-                                <div className="p-3 flex flex-col gap-1.5 flex-1">
-                                    <p
-                                        onClick={() => router.push(getProductUrl(item))}
-                                        className="text-xs font-semibold text-gray-800 leading-tight line-clamp-2 cursor-pointer hover:text-bio-green transition-colors"
-                                    >
-                                        {item?.product_name}
-                                    </p>
-
-                                    <div className="flex items-baseline gap-1.5 flex-wrap">
-                                        <span className="text-sm font-bold text-[#375421]">₹{item?.selling_price}</span>
-                                        {Number(item?.mrp) > Number(item?.selling_price) && (
-                                            <span className="text-[10px] text-gray-400 line-through">₹{item?.mrp}</span>
-                                        )}
+                                {/* Amazon Product Info & Standard Actions */}
+                                <div className="flex-1 flex flex-col md:flex-row justify-between gap-10">
+                                    <div className="flex-1">
+                                        <p
+                                            onClick={() => router.push(getProductUrl(item))}
+                                            className="text-[17px] font-bold text-gray-900 hover:text-[#375421] transition-colors leading-snug cursor-pointer mb-3"
+                                        >
+                                            {item?.product_name}
+                                        </p>
+                                        <div className="flex items-center gap-4 text-sm font-medium text-gray-500 mb-4">
+                                           <span>Qty: {item.quantity || 1}</span>
+                                           <span className="text-gray-200">|</span>
+                                           <span className="text-[#375421] font-bold">₹{item?.selling_price}</span>
+                                        </div>
+                                        
+                                        <div className="flex flex-col sm:flex-row gap-3">
+                                            <button
+                                                onClick={() => router.push(getProductUrl(item))}
+                                                className="px-6 py-2 bg-[#FFD814] hover:bg-[#F7CA00] border border-[#FCD200] text-gray-900 text-sm font-medium rounded-full shadow-sm shadow-gray-100 transition-all active:scale-95 text-center min-w-[140px]"
+                                            >
+                                                Buy it again
+                                            </button>
+                                            <button
+                                                onClick={() => router.push(getProductUrl(item))}
+                                                className="px-6 py-2 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 text-sm font-medium rounded-full shadow-sm transition-all active:scale-95 text-center min-w-[140px]"
+                                            >
+                                                Track package
+                                            </button>
+                                        </div>
                                     </div>
 
-                                    <p className="text-[10px] text-gray-500">Qty: {item.quantity || 1}</p>
-
-                                    {/* Actions */}
-                                    <div className="mt-auto pt-2 flex flex-col gap-1.5">
-                                        <button
-                                            onClick={() => router.push(getProductUrl(item))}
-                                            className="w-full bg-bio-green hover:bg-bio-green hover:text-white-text text-white py-1.5 rounded-lg text-[10px] font-semibold transition-all"
-                                        >
-                                            Buy Again
-                                        </button>
-
+                                    {/* Amazon Secondary Vertical Actions */}
+                                    <div className="flex flex-col gap-3 w-full md:w-56 mt-4 md:mt-0">
                                         {isDelivered && !(item.is_reviewed || item.is_review) && (
                                             <button
                                                 onClick={() => setActiveReviewProductId(item.product_id)}
-                                                className="w-full border border-gray-300 hover:bg-site-bg text-gray-700 py-1.5 rounded-lg text-[10px] font-semibold transition-all"
+                                                className="w-full px-4 py-2 text-sm font-medium text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 text-center shadow-sm"
                                             >
-                                                Write Review
+                                                Write a product review
                                             </button>
                                         )}
-
                                         {(item.is_reviewed || item.is_review) && isDelivered && (
                                             <button
                                                 onClick={() => setActiveReviewProductId(item.product_id)}
-                                                className="w-full border border-[#375421] text-[#375421] hover:bg-green-50 py-1.5 rounded-lg text-[10px] font-semibold transition-all flex items-center justify-center gap-1"
+                                                className="w-full px-4 py-2 text-sm font-medium text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-50 text-center shadow-sm flex items-center justify-center gap-2"
                                             >
-                                                <Check className="w-3 h-3" /> Edit Review
+                                                <Check className="w-4 h-4 text-emerald-600" /> Reviewed
                                             </button>
                                         )}
                                     </div>
@@ -534,15 +397,13 @@ const PostSummaryView = () => {
                     );
                 })()}
 
-                {/* Bottom Links */}
-                <div className="mt-12 mb-8 border-t pt-8">
-                    <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-sm font-bold text-[#375421]">
-                        <button onClick={() => router.push('/contact-us/')} className="hover:underline">Help & Support</button>
-                        <span className="text-gray-300 hidden md:inline font-normal">|</span>
-                        <button onClick={() => router.push('/shipping/')} className="hover:underline">Shipping Policies</button>
-                        <span className="text-gray-300 hidden md:inline font-normal">|</span>
-                        <button onClick={() => router.push('/return/')} className="hover:underline">Return & Refund Policy</button>
-                    </div>
+                {/* Amazon Minimalist Bottom Links */}
+                <div className="mt-16 mb-12 pt-8 flex items-center justify-center gap-10 text-[13px] font-medium text-gray-500">
+                    <button onClick={() => router.push('/contact-us/')} className="hover:text-[#375421] transition-colors">Help</button>
+                    <span className="text-gray-200">|</span>
+                    <button onClick={() => router.push('/shipping/')} className="hover:text-[#375421] transition-colors">Shipping Policies</button>
+                    <span className="text-gray-200">|</span>
+                    <button onClick={() => router.push('/return/')} className="hover:text-[#375421] transition-colors">Returns & Refunds</button>
                 </div>
             </div>
         </div>

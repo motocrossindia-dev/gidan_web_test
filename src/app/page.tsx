@@ -13,7 +13,7 @@ import ReviewsSectionServer from "./sections/ReviewsSectionServer";
 // Server-side fetching for LCP optimization
 async function getInitialBanners() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/promotion/banner/`, { next: { revalidate: 300 } });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/promotion/banner/`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const data = await res.json();
     return data?.data?.banners || null;
@@ -27,7 +27,7 @@ async function getInitialBanners() {
 async function getInitialCategories() {
   try {
     // 1. Fetch main categories ONLY on the server to keep navigation fast
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category/`, { next: { revalidate: 300 } });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category/`, { next: { revalidate: 60 } });
     if (!res.ok) return [];
     const data = await res.json();
     const categories = data?.data?.categories || [];
@@ -44,7 +44,7 @@ async function getInitialCategories() {
 // Pre-fetch homepage sections data
 async function getHomepageData() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/home/`, { next: { revalidate: 3600 } });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/home/`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const data = await res.json();
     return data;

@@ -54,30 +54,33 @@ export const toAbsoluteUrl = (path) => {
     return `${cleanBaseUrl}${normalizedPath}`;
 };
 
-/**
- * Generates a standardized, crawlable 3-segment product URL.
-
- * Pattern: /:category/:subcategory/:productSlug/?variant=ID
- * 
- * @param {Object} product - Product data object
- * @param {boolean} [includeVariant=false] - Whether to include the ?variant= query parameter
- * @returns {string} - Formatted URL
- */
 export const getProductUrl = (product, includeVariant = false) => {
     if (!product) return "/";
 
     // 1. Extract Category Slug
-    const category_slug = toSlugString(product.category_slug || product.category);
+    // Priority: category_slug > category (as object or name) > default 'all'
+    let catVal = product.category_slug || product.category;
+    let category_slug = toSlugString(catVal);
+    if (!category_slug) category_slug = "all";
 
-    // 2. Extract Subcategory Slug (default to 'all' if missing)
-    let sub_category_slug = toSlugString(product.sub_category_slug || product.subcategory || product.sub_category);
+    // 2. Extract Subcategory Slug
+    // Priority: sub_category_slug > subcategory > sub_category > default 'all'
+    let subCatVal = product.sub_category_slug || product.subcategory || product.sub_category;
+    let sub_category_slug = toSlugString(subCatVal);
     if (!sub_category_slug) sub_category_slug = "all";
 
-    // 3. Extract Product Slug - Using ONLY the provided slug field
-    const product_slug = toSlugString(product.slug);
+    // 3. Extract Product Slug
+    // Priority: slug > product_slug > product_name (slugified name as ultimate fallback)
+    let pSlug = product.slug || product.product_slug;
+    let product_slug = toSlugString(pSlug);
+    
+    // Ultimate fallback for order items that only have a name
+    if (!product_slug) {
+        product_slug = toSlugString(product.product_name || product.name);
+    }
 
+    // 4. Return formatted URL or extreme fallback
     if (!category_slug || !product_slug) {
-        // Fallback to numeric ID if slugs are missing
         const productId = product.product_id || product.id || product.variant_id;
         if (productId) return `/productdata/${productId}/`;
         return "/";

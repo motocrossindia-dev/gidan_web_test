@@ -69,7 +69,7 @@ const ProductFeaturedCard = ({
   const handleAddToWishlist = async () => {
     if (!isAuthenticated) {
       enqueueSnackbar("Please sign in to add to wishlist", { variant: "error" });
-      router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+      router.push(window.innerWidth <= 640 ? "/login" : "/login", { replace: true });
       return;
     }
 
@@ -109,7 +109,7 @@ const ProductFeaturedCard = ({
   const handleAddToCart = async (e) => {
     // e.stopPropagation();
     if (!isAuthenticated) {
-      router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+      router.push(window.innerWidth <= 640 ? "/login" : "/login", { replace: true });
       return;
     }
 

@@ -59,7 +59,7 @@ const HIDDEN_PREFIXES = [
   '/successpage',
   '/thankyou',
   '/mobile-login',
-  '/mobile-signin',
+  '/login',
   '/mobile-verification',
   '/mobilesidebar',
   '/add-address',

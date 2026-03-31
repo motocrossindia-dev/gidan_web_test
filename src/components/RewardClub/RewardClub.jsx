@@ -22,7 +22,7 @@ const RewardClub = () => {
     if (!isAuthenticated) {
       enqueueSnackbar("Please sign in to get a referral code", { variant: "error" });
       router.push(
-        window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn",
+        window.innerWidth <= 640 ? "/login" : "/login",
         { replace: true }
       );
       return;
@@ -121,7 +121,7 @@ export default RewardClub;
 //     if (!isAuthenticated) {
 //       enqueueSnackbar("Please sign in to get a referral code", { variant: "error" });
 //       router.push(
-//           window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn",
+//           window.innerWidth <= 640 ? "/login" : "/login",
 //           { replace: true }
 //       );
 //       return;

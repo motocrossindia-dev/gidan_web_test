@@ -21,8 +21,8 @@ import {
 } from 'lucide-react';
 import axiosInstance from '../../../Axios/axiosInstance';
 import { enqueueSnackbar } from 'notistack';
-import WriteAReview from '../ProductData/WriteAReview';
 import Breadcrumb from '../../../components/Shared/Breadcrumb';
+import PeopleAlsoBought from '../../../components/Shared/PeopleAlsoBought';
 // Using your actual data structure
 
 
@@ -34,8 +34,6 @@ const MyOrders = () => {
   const [isTablet, setIsTablet] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
-  const [filterPos, setFilterPos] = useState({ x: null, y: null });
-  const [activeReviewOrder, setActiveReviewOrder] = useState(null);
 
   const [statusFilters, setStatusFilters] = useState({
     'PROCESSING': true,
@@ -97,11 +95,6 @@ const MyOrders = () => {
     return () => window.removeEventListener('resize', checkViewport);
   }, []);
 
-  // Reset drag position when filter closes
-  useEffect(() => {
-    if (!showFilters) setFilterPos({ x: null, y: null });
-  }, [showFilters]);
-
   const handleOrderClick = (order) => {
     router.push(`/profile/orders/postsummary/${order.order_id}`);
   };
@@ -137,13 +130,22 @@ const MyOrders = () => {
     return new Date(dateString).getFullYear().toString();
   };
 
-  const filteredOrders = allOrders.filter((order) => {
-    const statusMatch = statusFilters[order.status];
-    const orderYear = getOrderYear(order.date);
-    const isLast30Days = isWithinLast30Days(order.date);
+  const filteredOrders = allOrders?.filter((order) => {
+    // Status matching - normalize underscores and casing
+    const currentStatus = order.status?.toUpperCase().replace(/\s+/g, '_');
+    const statusMatch = statusFilters[currentStatus] ?? true;
+
+    // Time matching logic
+    const orderDate = new Date(order.order_date || order.date || Date.now());
+    const orderYear = orderDate.getFullYear().toString();
+    
+    const now = new Date();
+    const diffTime = Math.abs(now - orderDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const isWithin30 = diffDays <= 30;
 
     const timeMatch =
-      (timeFilters['Last 30 Days'] && isLast30Days) ||
+      (timeFilters['Last 30 Days'] && isWithin30) ||
       (timeFilters['2026'] && orderYear === '2026') ||
       (timeFilters['2025'] && orderYear === '2025') ||
       (timeFilters['2024'] && orderYear === '2024') ||
@@ -155,19 +157,19 @@ const MyOrders = () => {
   const getStatusColor = (status) => {
     switch (status?.toUpperCase()) {
       case 'CANCELLED':
-        return 'text-red-600 bg-red-50';
+        return 'text-red-700 bg-red-100/50 border-red-200';
       case 'DELIVERED':
-        return 'text-[#375421] bg-green-50';
+        return 'text-[#375421] bg-green-100/50 border-green-200';
       case 'RETURNED':
-        return 'text-bio-green bg-green-50';
+        return 'text-bio-green bg-green-100/50 border-green-200';
       case 'PROCESSING':
-        return 'text-orange-600 bg-orange-50';
+        return 'text-orange-700 bg-orange-100/50 border-orange-200';
       case 'ON_THE_WAY':
-        return 'text-purple-600 bg-purple-50';
+        return 'text-indigo-700 bg-indigo-100/50 border-indigo-200';
       case 'ORDER_CONFIRMED':
-        return 'text-yellow-600 bg-yellow-50';
+        return 'text-emerald-700 bg-emerald-100/50 border-emerald-200';
       default:
-        return 'text-gray-600 bg-site-bg';
+        return 'text-gray-600 bg-gray-100 border-gray-200';
     }
   };
 
@@ -208,75 +210,64 @@ const MyOrders = () => {
         setTimeout(() => setCopied(false), 2000); // reset after 2s
       });
     };
-    return (<div
-      className="bg-white rounded-lg shadow-sm border border-gray-100 mb-4 overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
-      onClick={() => handleOrderClick(order)}
-    >
-      <div className="p-4 border-b border-gray-100">
-        <div className="flex justify-between items-start mb-2">
-          <div className="flex items-center gap-2">
-            {getStatusIcon(order?.status)}
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(order?.status)}`}>
+    return (
+      <div
+        className="bg-white rounded-[24px] shadow-sm border border-gray-100 mb-5 overflow-hidden transition-all active:scale-[0.98] cursor-pointer"
+        onClick={() => handleOrderClick(order)}
+      >
+        <div className="p-4 flex items-center justify-between bg-gray-50/50 border-b border-gray-100">
+          <div className="flex items-center gap-2.5">
+            <div className={`p-1.5 rounded-full ${getStatusColor(order?.status).split(' ')[1]}`}>
+              {getStatusIcon(order?.status)}
+            </div>
+            <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${getStatusColor(order?.status)}`}>
               {order?.status.replace(/_/g, ' ')}
             </span>
           </div>
           <span
-            className="text-sm text-gray-600 cursor-pointer hover:text-black transition"
+            className="text-[10px] font-black text-gray-400 uppercase tracking-widest"
             onClick={handleCopy}
-            title={copied ? "Copied!" : "Click to copy"}
           >
-            #{order?.order_id}
+            {copied ? "COPIED" : `#${order?.order_id}`}
           </span>
         </div>
-        <div className="text-xs text-gray-600">{formatDate(order?.date)}</div>
-      </div>
 
-      <div className="p-4">
-        <div className="flex gap-3">
-          <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+        <div className="p-4 flex gap-4">
+          <div className="w-20 h-24 rounded-2xl overflow-hidden flex-shrink-0 bg-site-bg border border-gray-100 p-1">
             <img
               src={`${process.env.NEXT_PUBLIC_API_URL}${order?.product_details?.product_image}`}
               loading="lazy"
-              alt={order?.product_details?.product_name}
-              className="w-full h-full object-cover"
-              width="400"
-              height="300"
-              style={{ aspectRatio: '4/3' }}
+              alt={order?.product_details?.product_name || "Order Product"}
+              className="w-full h-full object-contain"
               onError={(e) => {
                 e.target.src = 'https://images.pexels.com/photos/1649771/pexels-photo-1649771.jpeg?auto=compress&cs=tinysrgb&w=400';
               }}
             />
           </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-sm font-medium text-gray-900 mb-1 line-clamp-2">
-              {order?.product_details?.product_name}
-            </h3>
-            <div className="flex justify-between items-center">
-              <span className="text-lg font-semibold text-gray-900">₹{Math.round(order?.grand_total).toLocaleString()}</span>
-              <span className="text-xs text-gray-600 capitalize">{order?.delivery_option}</span>
-            </div>
-            {order?.total_discount > 0 && (
-              <div className="text-xs text-[#375421] mt-1">
-                Saved ₹{Math.round(order?.total_discount || 0).toLocaleString()}
+          <div className="flex-1 min-w-0 flex flex-col justify-between">
+            <div>
+              <div className="text-[9px] text-gray-400 font-black uppercase tracking-[0.2em] mb-1">
+                {formatDate(order?.date)}
               </div>
-            )}
-            {order?.status === 'DELIVERED' && (
-              <button
-                onClick={(e) => { e.stopPropagation(); setActiveReviewOrder(order); }}
-                className={`mt-2 w-full py-1.5 rounded-lg text-xs font-semibold transition-all border ${
-                  order?.is_review || order?.is_reviewed
-                    ? 'border-[#375421] text-[#375421] hover:bg-green-50'
-                    : 'border-gray-300 text-gray-700 hover:bg-site-bg'
-                }`}
-              >
-                {order?.is_review || order?.is_reviewed ? '✓ Edit Review' : 'Write Review'}
-              </button>
-            )}
+              <h3 className="text-sm font-bold text-gray-900 leading-snug line-clamp-2">
+                {order?.product_details?.product_name}
+              </h3>
+            </div>
+            <div className="flex justify-between items-end mt-2">
+              <div>
+                <span className="text-lg font-black text-gray-900 leading-none">₹{Math.round(order?.grand_total).toLocaleString()}</span>
+                {order?.total_discount > 0 && (
+                  <div className="text-[9px] bg-green-50 text-[#375421] px-1.5 py-0.5 rounded font-black uppercase tracking-wider inline-block mt-1">
+                    Saved ₹{Math.round(order?.total_discount || 0).toLocaleString()}
+                  </div>
+                )}
+              </div>
+              <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">{order?.delivery_option}</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    )
+    );
   };
 
   const DesktopOrderCard = ({ order }) => {
@@ -292,73 +283,67 @@ const MyOrders = () => {
 
     return (
       <div
-        className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md hover:border-green-200 transition-all duration-200"
+        className="bg-white rounded-[32px] overflow-hidden cursor-pointer border border-transparent hover:border-[#375421]/10 hover:shadow-[0_20px_50px_-15px_rgba(55,84,33,0.1)] transition-all duration-500 group mb-6"
         onClick={() => handleOrderClick(order)}
       >
-        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              {getStatusIcon(order?.status)}
-              <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order?.status)}`}>
-                {order?.status.replace(/_/g, ' ')}
-              </span>
+        <div className="px-8 py-5 flex items-center justify-between bg-gray-50/50">
+          <div className="flex items-center gap-6">
+            <div className="flex flex-col">
+              <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Status</span>
+              <div className="flex items-center gap-2">
+                <span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${getStatusColor(order?.status)} shadow-sm`}>
+                  {order?.status.replace(/_/g, ' ')}
+                </span>
+                <span className="text-[11px] font-bold text-gray-400 ml-4">{formatDate(order?.date)}</span>
+              </div>
             </div>
-            <span className="text-sm text-gray-600">{formatDate(order?.date)}</span>
           </div>
-          <span
-            className="text-sm text-gray-600 cursor-pointer hover:text-black transition"
-            onClick={handleCopy}
-            title={copied ? "Copied!" : "Click to copy"}
-          >
-            #{order?.order_id}
-          </span>
-
+          <div className="text-right">
+             <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1">Order ID</span>
+             <span
+               className="text-[11px] font-black text-gray-900 group-hover:text-[#375421] transition-colors"
+               onClick={handleCopy}
+             >
+               {copied ? "COPIED" : `#${order?.order_id}`}
+             </span>
+          </div>
         </div>
 
-        <div className="p-6 flex items-center gap-6">
-          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+        <div className="px-8 py-6 flex items-center gap-8">
+          <div className="w-24 h-28 rounded-3xl overflow-hidden flex-shrink-0 bg-site-bg p-2 border border-gray-100 group-hover:scale-105 transition-transform duration-700">
             <img
               src={`${process.env.NEXT_PUBLIC_API_URL}${order?.product_details?.product_image}`}
               loading="lazy"
-              alt={order?.product_details?.product_name}
-              className="w-full h-full object-cover"
-              width="400"
-              height="300"
-              style={{ aspectRatio: '4/3' }}
+              alt={order?.product_details?.product_name || "Order Image"}
+              className="w-full h-full object-contain"
               onError={(e) => {
                 e.target.src = '';
               }}
             />
           </div>
-          <div className="flex-1">
-            <h3 className="text-base font-medium text-gray-900 mb-2">
-              {order?.product_details?.product_name}
-            </h3>
-            <div className="flex justify-between items-center">
-              <div>
-                <span className="text-xl font-semibold text-gray-900">₹{Math.round(order?.grand_total).toLocaleString()}</span>
+          <div className="flex-1 flex justify-between items-center">
+            <div className="max-w-md">
+              <span className="text-[9px] font-black text-[#375421] uppercase tracking-[0.2em] mb-2 block">Premium Collection</span>
+              <h3 className="text-xl font-bold text-gray-900 group-hover:underline underline-offset-4 decoration-1 decoration-[#375421]/20 transition-all">
+                {order?.product_details?.product_name}
+              </h3>
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2">Delivery: <span className="text-gray-900">{order?.delivery_option}</span></p>
+            </div>
+            
+            <div className="text-right">
+              <div className="flex flex-col items-end">
+                <span className="text-2xl font-black text-gray-900">₹{Math.round(order?.grand_total).toLocaleString()}</span>
                 {order?.total_discount > 0 && (
-                  <div className="text-sm text-[#375421]">
+                  <div className="text-[10px] text-[#375421] font-black uppercase tracking-widest bg-green-50 px-2 py-1 rounded-lg mt-1">
                     Saved ₹{Math.round(order?.total_discount).toLocaleString()}
                   </div>
                 )}
               </div>
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-600 capitalize">{order?.delivery_option}</span>
-                {order?.status === 'DELIVERED' && (
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setActiveReviewOrder(order); }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
-                      order?.is_review || order?.is_reviewed
-                        ? 'border-[#375421] text-[#375421] hover:bg-green-50'
-                        : 'border-gray-300 text-gray-700 hover:bg-site-bg'
-                    }`}
-                  >
-                    {order?.is_review || order?.is_reviewed ? '✓ Edit Review' : 'Write Review'}
-                  </button>
-                )}
-              </div>
             </div>
+          </div>
+          
+          <div className="w-12 h-12 rounded-full border border-gray-100 flex items-center justify-center text-gray-300 group-hover:border-[#375421] group-hover:text-[#375421] transition-all">
+             <ChevronLeft className="w-5 h-5 rotate-180" />
           </div>
         </div>
       </div>
@@ -366,8 +351,8 @@ const MyOrders = () => {
   };
 
   const CustomCheckbox = ({ checked, onChange, label }) => (
-    <label className="flex items-center justify-between cursor-pointer py-2 group">
-      <span className="text-sm text-gray-800 font-medium">{label}</span>
+    <label className="flex items-center justify-between cursor-pointer py-3 px-4 rounded-2xl transition-all duration-300 group hover:bg-gray-50 active:scale-[0.98]">
+      <span className={`text-[11px] font-bold uppercase tracking-tight transition-colors ${checked ? 'text-gray-900' : 'text-gray-500'}`}>{label}</span>
       <div className="relative">
         <input
           type="checkbox"
@@ -375,164 +360,145 @@ const MyOrders = () => {
           checked={checked}
           onChange={onChange}
         />
-        <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all duration-200 ${checked
-          ? 'bg-[#375421] border-[#375421]'
-          : 'bg-white border-gray-300 group-hover:border-green-400'
+        <div className={`w-10 h-6 rounded-full transition-all duration-500 flex items-center px-1 ${checked
+          ? 'bg-[#375421]'
+          : 'bg-gray-200'
           }`}>
-          {checked && (
-            <Check className="w-4 h-4 text-white" strokeWidth={3} />
-          )}
+          <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-all duration-500 ${checked ? 'translate-x-4' : 'translate-x-0'}`} />
         </div>
       </div>
     </label>
   );
+
   const FilterSidebar = () => {
     const isOverlay = isMobile || isTablet;
-    const isDraggable = isTablet; // tablet only – drag handle
-    const isDraggingRef = useRef(false);
-    const dragStartRef = useRef({ x: 0, y: 0 });
 
-    const getInitialXY = () => ({
-      x: filterPos.x !== null ? filterPos.x : window.innerWidth / 2 - 150,
-      y: filterPos.y !== null ? filterPos.y : window.innerHeight / 2 - 200,
+    const filteredOrders = allOrders.filter(order => {
+      // Status filtering
+      const statusMatched = statusFilters[order.status?.toUpperCase().replace(/\s/g, '_')] ?? true;
+
+      // Time filtering logic
+      let timeMatched = false;
+      const orderDate = new Date(order.order_date || Date.now());
+      const now = new Date();
+      const diffTime = Math.abs(now - orderDate);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (timeFilters['Last 30 Days'] && diffDays <= 30) timeMatched = true;
+      if (timeFilters[orderDate.getFullYear().toString()]) timeMatched = true;
+
+      return statusMatched && timeMatched;
     });
 
-    const handleHeaderMouseDown = (e) => {
-      if (!isDraggable) return;
-      isDraggingRef.current = true;
-      const { x, y } = getInitialXY();
-      dragStartRef.current = { x: e.clientX - x, y: e.clientY - y };
+    const StatusTile = ({ status, checked, onChange }) => {
+      const getIcon = () => {
+        switch (status) {
+          case 'DELIVERED': return <CheckCircle className="w-4 h-4" />;
+          case 'PROCESSING': return <Clock className="w-4 h-4" />;
+          case 'CANCELLED': return <XCircle className="w-4 h-4" />;
+          case 'SHIPPED':
+          case 'ON_THE_WAY': return <Truck className="w-4 h-4" />;
+          case 'RETURNED': return <XCircle className="w-4 h-4" />;
+          default: return <Package2 className="w-4 h-4" />;
+        }
+      };
 
-      const onMove = (ev) => {
-        if (!isDraggingRef.current) return;
-        setFilterPos({ x: ev.clientX - dragStartRef.current.x, y: ev.clientY - dragStartRef.current.y });
-      };
-      const onUp = () => {
-        isDraggingRef.current = false;
-        window.removeEventListener('mousemove', onMove);
-        window.removeEventListener('mouseup', onUp);
-      };
-      window.addEventListener('mousemove', onMove);
-      window.addEventListener('mouseup', onUp);
-      e.preventDefault();
+      const colorClass = 'border-[#375421] text-[#375421] bg-[#375421]/5';
+
+      return (
+        <button 
+          onClick={onChange}
+          className={`flex flex-col items-center justify-center gap-2 p-4 rounded-[20px] border transition-all duration-300 ${
+            checked 
+              ? `${colorClass} shadow-[0_10px_20px_-10px_#375421]/20 ring-1 ring-[#375421]/30 ring-offset-2 ring-offset-white` 
+              : 'border-gray-100 text-gray-400 hover:border-gray-200'
+          }`}
+        >
+          {getIcon()}
+          <span className="text-[10px] font-black uppercase tracking-tight leading-none h-4 flex items-center">{status.replace(/_/g, ' ')}</span>
+        </button>
+      );
     };
-
-    const handleHeaderTouchStart = (e) => {
-      if (!isDraggable) return;
-      isDraggingRef.current = true;
-      const touch = e.touches[0];
-      const { x, y } = getInitialXY();
-      dragStartRef.current = { x: touch.clientX - x, y: touch.clientY - y };
-
-      const onMove = (ev) => {
-        if (!isDraggingRef.current) return;
-        const t = ev.touches[0];
-        setFilterPos({ x: t.clientX - dragStartRef.current.x, y: t.clientY - dragStartRef.current.y });
-      };
-      const onEnd = () => {
-        isDraggingRef.current = false;
-        window.removeEventListener('touchmove', onMove);
-        window.removeEventListener('touchend', onEnd);
-      };
-      window.addEventListener('touchmove', onMove, { passive: true });
-      window.addEventListener('touchend', onEnd);
-    };
-
-    const draggableStyle = isDraggable ? {
-      position: 'fixed',
-      left: filterPos.x !== null ? `${filterPos.x}px` : '50%',
-      top: filterPos.y !== null ? `${filterPos.y}px` : '50%',
-      transform: filterPos.x !== null ? 'none' : 'translate(-50%, -50%)',
-      zIndex: 50,
-      width: '300px',
-      maxHeight: '82vh',
-      overflowY: 'auto',
-      boxShadow: '0 12px 40px rgba(0,0,0,0.18)',
-    } : {};
-
-    const FilterContent = () => (
-      <div className="space-y-8">
-        <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Order status</h3>
-          <div className="space-y-1">
-            {Object.entries(statusFilters).map(([status, checked]) => (
-              <CustomCheckbox
-                key={status}
-                checked={checked}
-                label={status.replace(/_/g, ' ')}
-                onChange={() => setStatusFilters((prev) => ({ ...prev, [status]: !prev[status] }))}
-              />
-            ))}
-          </div>
-        </div>
-        <div className="border-b border-gray-300"></div>
-        <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Order time</h3>
-          <div className="space-y-1">
-            {Object.entries(timeFilters).map(([time, checked]) => (
-              <CustomCheckbox
-                key={time}
-                checked={checked}
-                label={time}
-                onChange={() => setTimeFilters((prev) => ({ ...prev, [time]: !prev[time] }))}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
 
     return (
       <>
-        {/* Backdrop for any overlay */}
         {isOverlay && (
-          <div
-            className="fixed inset-0 bg-black/30 z-40"
-            onClick={() => setShowFilters(false)}
-          />
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[99]" onClick={() => setShowFilters(false)} />
         )}
 
-        <div
-          className={`bg-site-bg rounded-xl p-6 h-fit ${
-            !isOverlay
-              ? 'sticky top-4'
-              : !isDraggable
-              ? 'fixed inset-0 z-50 m-4 overflow-y-auto'
-              : ''
-          }`}
-          style={draggableStyle}
-        >
-          {/* Header / drag handle */}
-          <div
-            className={`flex justify-between items-center mb-6 ${
-              isDraggable ? 'cursor-grab active:cursor-grabbing select-none' : ''
-            }`}
-            onMouseDown={handleHeaderMouseDown}
-            onTouchStart={handleHeaderTouchStart}
-          >
-            <div className="flex items-center gap-2">
-              {isDraggable && (
-                <span className="text-gray-400 text-base leading-none">⠿</span>
-              )}
-              <h2 className="text-xl font-semibold text-gray-900">Filter</h2>
+        <div className={`bg-white p-8 h-fit border border-gray-100 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.12)] transition-all duration-500 overflow-y-auto ${
+          !isOverlay 
+            ? 'sticky top-4 rounded-[32px] w-full' 
+            : 'fixed bottom-0 left-0 right-0 z-[100] rounded-t-[40px] max-h-[85vh] animate-in slide-in-from-bottom duration-500'
+        }`}>
+          {/* Header */}
+          <div className="flex justify-between items-start mb-10">
+            <div className="flex flex-col">
+              <h2 className="text-2xl font-black uppercase tracking-tight text-gray-900 italic">Refine <span className="text-[#375421] font-extrabold not-italic">View</span></h2>
+              <div className="flex items-center gap-2 mt-1">
+                <div className="h-0.5 w-8 bg-[#375421] rounded-full"></div>
+                <p className="text-[9px] text-gray-400 font-black uppercase tracking-[0.2em]">Filter your orders</p>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleReset}
-                className="px-4 py-2 bg-gray-400 text-white text-sm font-medium rounded hover:bg-site-bg0 transition-colors"
-              >
-                RESET
+            {isOverlay && (
+              <button onClick={() => setShowFilters(false)} className="w-10 h-10 flex items-center justify-center bg-gray-50 hover:bg-gray-100 rounded-full transition-colors border border-gray-100">
+                <X className="w-5 h-5 text-gray-400" />
               </button>
-              {isOverlay && (
-                <button aria-label="Close" onClick={() => setShowFilters(false)} className="p-1 hover:bg-gray-200 rounded-lg">
-                  <X className="w-5 h-5" />
-                </button>
-              )}
-            </div>
+            )}
           </div>
 
-          <div className="border-b border-gray-300 mb-6"></div>
-          <FilterContent />
+          <div className="space-y-12">
+            {/* Status Section */}
+            <div>
+               <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-[10px] font-black text-[#375421] uppercase tracking-[0.3em]">Status Categories</h3>
+                  <button onClick={() => setStatusFilters(Object.fromEntries(Object.keys(statusFilters).map(k => [k, true])))} className="text-[9px] font-black text-gray-400 uppercase hover:text-[#375421] transition-colors tracking-widest">Select All</button>
+               </div>
+               <div className="grid grid-cols-2 xs:grid-cols-3 gap-3">
+                 {Object.entries(statusFilters).map(([status, checked]) => (
+                   <StatusTile 
+                     key={status} 
+                     status={status} 
+                     checked={checked} 
+                     onChange={() => setStatusFilters(p => ({ ...p, [status]: !p[status] }))}
+                   />
+                 ))}
+               </div>
+            </div>
+
+            {/* Time Section */}
+            <div>
+               <h3 className="text-[10px] font-black text-[#375421] uppercase tracking-[0.3em] mb-6">Temporal Window</h3>
+               <div className="flex flex-wrap gap-2">
+                 {Object.entries(timeFilters).map(([time, checked]) => (
+                   <button
+                     key={time}
+                     onClick={() => setTimeFilters(p => ({ ...p, [time]: !p[time] }))}
+                     className={`px-5 py-3 rounded-full text-[10px] font-black uppercase tracking-tight transition-all duration-300 border ${
+                       checked 
+                         ? 'bg-[#375421] text-white border-[#375421] shadow-lg shadow-[#375421]/20' 
+                         : 'bg-gray-50 text-gray-400 border-gray-50 hover:border-gray-200 hover:text-gray-600'
+                     }`}
+                   >
+                     {time}
+                   </button>
+                 ))}
+               </div>
+            </div>
+
+            {/* Reset Action */}
+            <div className="pt-4">
+              <button
+                onClick={() => {
+                   setStatusFilters(Object.fromEntries(Object.keys(statusFilters).map(k => [k, true])));
+                   setTimeFilters(Object.fromEntries(Object.keys(timeFilters).map(k => [k, true])));
+                }}
+                className="w-full py-5 bg-gray-900 text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-[24px] hover:bg-[#375421] transition-all duration-500 active:scale-[0.98] shadow-xl group border border-gray-100"
+              >
+                Reset <span className="group-hover:translate-x-1 inline-block transition-transform ml-1">Filters</span>
+              </button>
+            </div>
+          </div>
         </div>
       </>
     );
@@ -637,16 +603,8 @@ const MyOrders = () => {
         <div className="p-4">
           {content}
         </div>
+        <PeopleAlsoBought title="Curated Selection for You" />
         {showFilters && <FilterSidebar />}
-        {activeReviewOrder && (
-          <WriteAReview
-            isInline={false}
-            onClose={() => setActiveReviewOrder(null)}
-            onSuccess={() => setActiveReviewOrder(null)}
-            productId={activeReviewOrder?.product_details?.id}
-            productDetailData={activeReviewOrder?.product_details}
-          />
-        )}
       </div>
     );
   }
@@ -703,16 +661,8 @@ const MyOrders = () => {
             {content}
           </div>
         </div>
+        <PeopleAlsoBought title="Curated Selection for You" />
       </div>
-      {activeReviewOrder && (
-        <WriteAReview
-          isInline={false}
-          onClose={() => setActiveReviewOrder(null)}
-          onSuccess={() => setActiveReviewOrder(null)}
-          productId={activeReviewOrder?.product_details?.id}
-          productDetailData={activeReviewOrder?.product_details}
-        />
-      )}
     </>
   );
 };

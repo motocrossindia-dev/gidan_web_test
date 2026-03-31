@@ -19,6 +19,24 @@ const processUrl = (url) => {
 /**
  * SHARED UTILITIES
  */
+const getLuminance = (hex) => {
+    if (!hex || typeof hex !== 'string') return 0;
+    let cleanHex = hex.replace('#', '');
+    if (cleanHex.length === 3) {
+        cleanHex = cleanHex.split('').map(char => char + char).join('');
+    }
+    const r = parseInt(cleanHex.substring(0, 2), 16);
+    const g = parseInt(cleanHex.substring(2, 4), 16);
+    const b = parseInt(cleanHex.substring(4, 6), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness;
+};
+
+const getIsDark = (hex) => {
+    if (!hex) return null;
+    const luminance = getLuminance(hex);
+    return luminance < 128; // Standard threshold
+};
 
 const SectionHeader = ({ data, config, isDark, type }) => {
     // Basic bolding for design match
@@ -73,7 +91,10 @@ const SectionHeader = ({ data, config, isDark, type }) => {
                     {data.italic_text}
                 </span> {data.heading_suffix}
             </h2>
-            <p className={`text-base lg:text-lg ${isDark ? 'text-white/70' : 'text-black/60'} leading-relaxed max-w-[600px]`}>
+            <p 
+                className={`text-base lg:text-lg leading-relaxed max-w-[600px] ${!data.extra?.text_color && (isDark ? 'text-white/70' : 'text-black/60')}`}
+                style={data.extra?.text_color ? { color: data.extra.text_color } : {}}
+            >
                 {renderDescription(data.description)}
             </p>
         </div>
@@ -91,23 +112,25 @@ const ActionButtons = ({ data, config, isDark, type }) => {
 
     const btnPrimaryColor = data.extra?.btn_primary_color;
     const btnSecondaryColor = data.extra?.btn_secondary_color;
+    const btnPrimaryTextColor = btnPrimaryColor ? (getIsDark(btnPrimaryColor) ? '#ffffff' : '#000000') : (isDark ? '#1a3d0a' : '#ffffff');
+    const btnSecondaryTextColor = btnSecondaryColor ? (getIsDark(btnSecondaryColor) ? '#ffffff' : '#000000') : (isDark ? '#ffffff' : '#1a3d0a');
 
     return (
         <div className="flex flex-wrap gap-5 pt-10">
             {data.btn1_text && (
                 <a 
                     href={data.btn1_link} 
-                    className="bg-white text-[#1a3d0a] px-10 py-5 rounded-[24px] text-[16px] font-extrabold flex items-center gap-3 group transition-all hover:scale-105 shadow-xl hover:shadow-white/10"
-                    style={btnPrimaryColor ? { backgroundColor: btnPrimaryColor, color: '#fff' } : {}}
+                    className={`px-10 py-5 rounded-[24px] text-[16px] font-extrabold flex items-center gap-3 group transition-all hover:scale-105 shadow-xl ${!btnPrimaryColor && (isDark ? 'bg-white text-[#1a3d0a] hover:shadow-white/10' : 'bg-[#1a3d0a] text-white shadow-black/10')}`}
+                    style={btnPrimaryColor ? { backgroundColor: btnPrimaryColor, color: btnPrimaryTextColor } : {}}
                 >
-                    {cleanButtonText(data.btn1_text)} {isClimateStory && <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />}
+                    {cleanButtonText(data.btn1_text)} {(isClimateStory || type === 'hero') && <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />}
                 </a>
             )}
             {data.btn2_text && (
                 <a 
                     href={data.btn2_link} 
-                    className="px-10 py-5 rounded-[24px] text-[16px] font-bold flex items-center gap-2 transition-all hover:bg-white/10 border border-white/30 text-white backdrop-blur-md shadow-lg"
-                    style={btnSecondaryColor ? { backgroundColor: btnSecondaryColor, borderColor: 'transparent' } : {}}
+                    className={`px-10 py-5 rounded-[24px] text-[16px] font-bold flex items-center gap-2 transition-all backdrop-blur-md shadow-lg border ${!btnSecondaryColor && (isDark ? 'hover:bg-white/10 border-white/30 text-white' : 'hover:bg-black/5 border-black/10 text-black')}`}
+                    style={btnSecondaryColor ? { backgroundColor: btnSecondaryColor, color: btnSecondaryTextColor, borderColor: 'transparent' } : {}}
                 >
                     {cleanButtonText(data.btn2_text)}
                 </a>
@@ -148,7 +171,10 @@ const StatsRenderer = ({ data, isDark }) => {
                             />
                         ))}
                     </div>
-                    <p className={`text-[15px] font-medium ${isDark ? 'text-white/80' : 'text-black/70'}`}>
+                    <p 
+                        className={`text-[15px] font-medium ${!data.extra?.text_color && (isDark ? 'text-white/80' : 'text-black/70')}`}
+                        style={data.extra?.text_color ? { color: data.extra.text_color } : {}}
+                    >
                         <span className="font-bold">{statCount}</span> <span>{statLabel}</span>
                     </p>
                 </div>
@@ -157,7 +183,7 @@ const StatsRenderer = ({ data, isDark }) => {
     );
 };
 
-const ItemsRenderer = ({ items, isDark }) => {
+const ItemsRenderer = ({ items, isDark, data }) => {
     const checklists = items.filter(i => i.item_type === 'checklist');
     const listItems = items.filter(i => i.item_type === 'list_item');
 
@@ -168,7 +194,10 @@ const ItemsRenderer = ({ items, isDark }) => {
                     {checklists.map((item) => (
                         <div key={item.id} className="flex items-center gap-4 group transition-all">
                             <Check size={20} className="text-[#a8e070] flex-shrink-0" strokeWidth={3} />
-                            <h4 className={`text-[16px] lg:text-[17px] font-normal leading-relaxed ${isDark ? 'text-white/90' : 'text-[#1a1f14]'}`}>
+                            <h4 
+                                className={`text-[16px] lg:text-[17px] font-normal leading-relaxed ${!data?.extra?.text_color && (isDark ? 'text-white/90' : 'text-[#1a1f14]')}`}
+                                style={data?.extra?.text_color ? { color: data.extra.text_color } : {}}
+                            >
                                 {item.name}
                             </h4>
                         </div>
@@ -180,8 +209,14 @@ const ItemsRenderer = ({ items, isDark }) => {
                     {listItems.map((item) => (
                         <div key={item.id} className={`flex items-center justify-between p-5 rounded-[24px] ${isDark ? 'bg-white/5 border-white/10 hover:bg-white/10 shadow-sm' : 'bg-white border-[#e2efe0] hover:bg-black/5'} border backdrop-blur-md transition-all`}>
                             <div className="space-y-1">
-                                <h4 className={`text-[16px] font-bold ${isDark ? 'text-white' : 'text-[#1a1f14]'}`}>{item.name}</h4>
-                                <p className={`text-[12px] ${isDark ? 'text-white/40' : 'text-black/40'} italic`}>{item.subtitle}{item.price && ` - ₹${item.price}`}</p>
+                                <h4 
+                                    className={`text-[16px] font-bold ${!data?.extra?.text_color && (isDark ? 'text-white' : 'text-[#1a1f14]')}`}
+                                    style={data?.extra?.text_color ? { color: data.extra.text_color } : {}}
+                                >{item.name}</h4>
+                                <p 
+                                    className={`text-[12px] italic ${!data?.extra?.text_color && (isDark ? 'text-white/40' : 'text-black/40')}`}
+                                    style={data?.extra?.text_color ? { color: data.extra.text_color, opacity: 0.6 } : {}}
+                                >{item.subtitle}{item.price && ` - ₹${item.price}`}</p>
                             </div>
                             {item.tag && (
                                 <span className={`px-4 py-1.5 rounded-full text-[10px] font-bold tracking-tight border ${isDark ? 'border-white/20 text-white/60' : 'border-[#9ed36a]/30 text-[#2d5a1b] bg-[#f0f9ea]'}`}>
@@ -196,20 +231,32 @@ const ItemsRenderer = ({ items, isDark }) => {
     );
 };
 
-const SubscriptionForm = ({ data, config }) => (
+const SubscriptionForm = ({ data, config, isDark }) => (
     <div className="relative overflow-hidden group space-y-10">
         <form className="relative">
-            <div className="absolute left-7 top-1/2 -translate-y-1/2 text-[#a8e070]"><Mail size={22} /></div>
-            <input type="email" placeholder="Enter your email" className="w-full bg-white/5 border border-white/20 rounded-3xl py-7 pl-16 pr-44 text-white focus:outline-none focus:border-[#a8e070]/50 transition-all placeholder:text-white/30 shadow-inner" />
-            <button type="submit" className="absolute right-3 top-3 bottom-3 bg-[#a8e070] text-[#1a3d0a] px-8 rounded-2xl text-[14px] font-extrabold flex items-center gap-3 hover:bg-white transition-all">JOIN <ArrowRight size={18} /></button>
+            <div className={`absolute left-7 top-1/2 -translate-y-1/2 ${isDark ? 'text-[#a8e070]' : 'text-[#2d5a1b]'}`}><Mail size={22} /></div>
+            <input 
+                type="email" 
+                placeholder="Enter your email" 
+                className={`w-full border rounded-3xl py-7 pl-16 pr-44 transition-all shadow-inner focus:outline-none ${isDark ? 'bg-white/5 border-white/20 text-white focus:border-[#a8e070]/50 placeholder:text-white/30' : 'bg-black/5 border-black/10 text-black focus:border-[#2d5a1b]/50 placeholder:text-black/30'}`} 
+            />
+            <button 
+                type="submit" 
+                className={`absolute right-3 top-3 bottom-3 px-8 rounded-2xl text-[14px] font-extrabold flex items-center gap-3 transition-all ${isDark ? 'bg-[#a8e070] text-[#1a3d0a] hover:bg-white' : 'bg-[#1a3d0a] text-white hover:bg-black'}`}
+            >
+                JOIN <ArrowRight size={18} />
+            </button>
         </form>
-        {data.extra?.disclaimer && <p className="text-[11px] text-white/40 tracking-wide">{data.extra.disclaimer}</p>}
+        {data.extra?.disclaimer && <p className={`text-[11px] tracking-wide ${isDark ? 'text-white/40' : 'text-black/40'}`}>{data.extra.disclaimer}</p>}
     </div>
 );
 
 const StaticImageGrid = ({ data, isDark }) => (
     <div className="grid grid-cols-2 gap-5 h-[400px] lg:h-[640px] animate-fade-in relative">
-        <div className="relative bg-[#cee8a0] rounded-[60px] overflow-hidden row-span-2 shadow-2xl group border-8 border-white/10">
+        <div 
+            className="relative bg-[#cee8a0] rounded-[60px] overflow-hidden row-span-2 shadow-2xl group border-8 border-white/10"
+            style={data.extra?.product_card_color ? { backgroundColor: data.extra.product_card_color } : {}}
+        >
             <Image src={processUrl(data.image)} alt="V1" fill className="object-cover transition-transform group-hover:scale-110 duration-1000" />
             <div className="absolute inset-x-0 bottom-0 p-8 pt-20 bg-gradient-to-t from-black/60 to-transparent">
                 <span className="text-[10px] font-bold tracking-[0.2em] text-white uppercase">{data.extra?.sub_badge_text || "PREMIUM"}</span>
@@ -221,16 +268,22 @@ const StaticImageGrid = ({ data, isDark }) => (
                 </div>
             )}
         </div>
-        <div className="relative bg-[#cee8a0] rounded-[40px] overflow-hidden shadow-2xl group hover:scale-[1.02] transition-transform">
+        <div 
+            className="relative bg-[#cee8a0] rounded-[40px] overflow-hidden shadow-2xl group hover:scale-[1.02] transition-transform"
+            style={data.extra?.product_card_color ? { backgroundColor: data.extra.product_card_color } : {}}
+        >
             <Image src={processUrl(data.image_secondary || data.image)} alt="V2" fill className="object-cover" />
         </div>
-        <div className="relative bg-[#d4e8a0] rounded-[40px] overflow-hidden shadow-2xl group hover:scale-[1.02] transition-transform">
+        <div 
+            className="relative bg-[#d4e8a0] rounded-[40px] overflow-hidden shadow-2xl group hover:scale-[1.02] transition-transform"
+            style={data.extra?.product_card_color ? { backgroundColor: data.extra.product_card_color } : {}}
+        >
             <Image src={processUrl(data.image_tertiary || data.image)} alt="V3" fill className="object-cover" />
         </div>
     </div>
 );
 
-const BentoProductGrid = ({ products, isDark }) => {
+const BentoProductGrid = ({ products, isDark, data }) => {
     const [activeIdx, setActiveIdx] = useState(0);
     const rotatorProducts = products.slice(2);
 
@@ -253,7 +306,10 @@ const BentoProductGrid = ({ products, isDark }) => {
                 {products[1] ? (
                     <ProductCard product={products[1].product_data || products[1]} variant="bento" />
                 ) : (
-                    <div className={`w-full h-full rounded-[40px] ${isDark ? 'bg-white/5' : 'bg-black/5'} border border-dashed border-white/10`} />
+                    <div 
+                        className={`w-full h-full rounded-[40px] border border-dashed ${isDark ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/10'}`} 
+                        style={data?.extra?.product_card_color ? { backgroundColor: data.extra.product_card_color, borderColor: 'transparent' } : {}}
+                    />
                 )}
             </div>
             <div className="col-span-1 lg:row-span-1 relative">
@@ -266,7 +322,10 @@ const BentoProductGrid = ({ products, isDark }) => {
                         ))}
                     </div>
                 ) : (
-                    <div className={`w-full h-full rounded-[40px] ${isDark ? 'bg-white/5' : 'bg-black/5'} border border-dashed border-white/10`} />
+                    <div 
+                        className={`w-full h-full rounded-[40px] border border-dashed ${isDark ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/10'}`} 
+                        style={data?.extra?.product_card_color ? { backgroundColor: data.extra.product_card_color, borderColor: 'transparent' } : {}}
+                    />
                 )}
             </div>
         </div>
@@ -299,8 +358,12 @@ const UnifiedSection = ({ data }) => {
         subscription: { bg: "bg-[#111111]", title: "text-white", highlight: "text-[#a8e070]", accent: "bg-[#a8e070] text-[#1a3d0a]", isDark: true }
     };
     
+    // API Priority Styles
+    const apiBgColor = data.extra?.bg_color;
+    const apiIsDark = data.extra?.is_dark !== undefined ? data.extra.is_dark : getIsDark(apiBgColor);
+    
     const config = styleConfig[type] || styleConfig.hero;
-    const isDark = config.isDark;
+    const isDark = apiIsDark !== null ? apiIsDark : config.isDark;
 
     return (
         <section 
@@ -315,10 +378,10 @@ const UnifiedSection = ({ data }) => {
                     <div className={`w-full lg:w-[42%] space-y-10 animate-fade-in ${isReversed ? 'lg:pl-16' : 'lg:pr-10'}`}>
                         <SectionHeader data={data} config={config} isDark={isDark} type={type} />
                         
-                        {type === 'subscription' && <SubscriptionForm data={data} config={config} />}
+                        {type === 'subscription' && <SubscriptionForm data={data} config={config} isDark={isDark} />}
                         
                         {/* Items on left only if products are present on right */}
-                        {hasItems && hasProducts && <ItemsRenderer items={items} isDark={isDark} />}
+                        {hasItems && hasProducts && <ItemsRenderer items={items} isDark={isDark} data={data} />}
                         
                         <ActionButtons data={data} config={config} isDark={isDark} type={type} />
                         
@@ -328,10 +391,13 @@ const UnifiedSection = ({ data }) => {
                     {/* Visual Column: Bento Grid or Items or Static Images */}
                     <div className="w-full lg:w-[58%] animate-fade-in mt-12 lg:mt-0">
                         {hasProducts ? (
-                            <BentoProductGrid products={products} isDark={isDark} />
+                            <BentoProductGrid products={products} isDark={isDark} data={data} />
                         ) : hasItems ? (
-                            <div className={`p-8 lg:p-12 rounded-[64px] ${isDark ? 'bg-white/5 border-white/10' : 'bg-black/[0.02] border-black/[0.05]'} border backdrop-blur-xl animate-fade-in`}>
-                                <ItemsRenderer items={items} isDark={isDark} />
+                            <div 
+                                className={`p-8 lg:p-12 rounded-[64px] border backdrop-blur-xl animate-fade-in ${isDark ? 'bg-white/5 border-white/10' : 'bg-black/[0.02] border-black/[0.05]'}`}
+                                style={data.extra?.product_card_color ? { backgroundColor: `${data.extra.product_card_color}1a`, borderColor: `${data.extra.product_card_color}33` } : {}}
+                            >
+                                <ItemsRenderer items={items} isDark={isDark} data={data} />
                             </div>
                         ) : (
                             <StaticImageGrid data={data} isDark={isDark} />
@@ -346,8 +412,14 @@ const UnifiedSection = ({ data }) => {
                             <Image src={processUrl(data.image)} alt="Secondary Visual" fill className="object-cover" />
                         </div>
                         <div className="w-full lg:w-1/2 space-y-10">
-                            <h3 className={`text-3xl lg:text-[48px] font-serif font-bold ${config.title} leading-tight`}>{data.heading_secondary}</h3>
-                            <p className={`${isDark ? 'text-white/60' : 'text-[#4a5f3a]'} text-[17px] leading-loose border-l-4 border-[#8dbd64]/20 pl-8 italic`}>{data.description_secondary}</p>
+                            <h3 
+                                className={`text-3xl lg:text-[48px] font-serif font-bold leading-tight ${!data.extra?.color && config.title}`}
+                                style={data.extra?.color ? { color: data.extra.color } : {}}
+                            >{data.heading_secondary}</h3>
+                            <p 
+                                className={`text-[17px] leading-loose border-l-4 border-[#8dbd64]/20 pl-8 italic ${!data.extra?.text_color && (isDark ? 'text-white/60' : 'text-[#4a5f3a]')}`}
+                                style={data.extra?.text_color ? { color: data.extra.text_color, opacity: 0.8 } : {}}
+                            >{data.description_secondary}</p>
                         </div>
                     </div>
                 )}

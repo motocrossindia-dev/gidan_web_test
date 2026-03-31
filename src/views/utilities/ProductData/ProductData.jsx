@@ -272,7 +272,7 @@ export default function ProductData({ initialProductData }) {
     const handleWriteReviewClick = async () => {
         if (!isAuthenticated) {
             enqueueSnackbar("Please sign in to write a review.", { variant: "info" });
-            router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+            router.push(window.innerWidth <= 640 ? "/login" : "/login", { replace: true });
             return;
         }
 
@@ -599,7 +599,7 @@ export default function ProductData({ initialProductData }) {
     const handleBuyItNowSubmit = async () => {
         if (!isAuthenticated && !isAuthenticatedMobile) {
             enqueueSnackbar("Please login to proceed with checkout", { variant: "info" });
-            router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn");
+            router.push(window.innerWidth <= 640 ? "/login" : "/login");
             return;
         }
 
@@ -1186,16 +1186,16 @@ export default function ProductData({ initialProductData }) {
                 }
             />
 
-            <div className="w-full" style={{ backgroundColor: "whitesmoke" }}>
+            <div className="w-full overflow-x-clip" style={{ backgroundColor: "whitesmoke" }}>
                 <div className="container mx-auto px-3 py-4 font-sans md:px-8">
                     <div className="flex flex-col md:flex-row -mx-4 relative items-start">
                         {/* LEFT COLUMN: STATIC / STICKY IMAGE GALLERY & ACTIONS */}
                         <div 
-                            className="md:flex-1 px-4 lg:sticky lg:top-24 h-fit z-30"
+                            className="md:flex-1 px-4 lg:sticky lg:top-24 h-fit z-30 min-w-0"
                         >
                             {/* Main Image with Fully Working Zoom */}
                             <div 
-                                className="relative cursor-crosshair group z-40 bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm aspect-square"
+                                className="relative cursor-crosshair group z-40 bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm aspect-square w-full max-w-full lg:max-h-[600px] xl:max-h-[700px] flex items-center justify-center"
                                 onMouseMove={(e) => {
                                     const rect = e.currentTarget.getBoundingClientRect();
                                     const x = e.clientX - rect.left;
@@ -1253,10 +1253,10 @@ export default function ProductData({ initialProductData }) {
                                 )}
                             </div>
 
-                            {/* ZOOM BOX ON RIGHT */}
+                            {/* ZOOM BOX ON RIGHT - Only on larger desktop screens to prevent overflow */}
                             {zoom && (
                                 <div
-                                    className="absolute top-0 right-0 translate-x-[110%] w-[500px] h-[500px] hidden md:block border border-gray-300 rounded-lg bg-white z-50 shadow-lg"
+                                    className="absolute top-0 left-full ml-4 w-[400px] xl:w-[500px] h-[400px] xl:h-[500px] hidden lg:block border border-gray-300 rounded-lg bg-white z-50 shadow-lg"
                                     style={{
                                         backgroundImage: `url(${
                                             (() => {
@@ -1267,7 +1267,7 @@ export default function ProductData({ initialProductData }) {
                                                 return `${process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store"}${cleanPath}`;
                                             })()
                                         })`,
-                                        backgroundPosition: `${-position.x * 2.5 + 250}px ${-position.y * 2.5 + 250}px`,
+                                        backgroundPosition: `${-position.x * 2.5 + 200}px ${-position.y * 2.5 + 200}px`, // Adjusted for 400px default width
                                         backgroundSize: `1250px 1250px`,
                                         backgroundRepeat: "no-repeat",
                                     }}
@@ -1322,7 +1322,7 @@ export default function ProductData({ initialProductData }) {
                             </div>
                         </div>
 
-                        <div className="md:flex-1 px-4 font-sans mt-8">
+                        <div className="md:flex-1 px-4 font-sans mt-8 min-w-0">
                             <h1 className="text-xl md:text-3xl font-bold mb-2">
                                 {(() => {
                                     const p = productDetailData?.data?.product;

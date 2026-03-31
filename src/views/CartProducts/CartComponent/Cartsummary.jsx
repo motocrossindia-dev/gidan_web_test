@@ -37,7 +37,7 @@ const CartSummary = ({
     
     if (!accessToken && !isAuthenticatedMobile) {
       enqueueSnackbar("Please login to proceed with your order", { variant: "info" });
-      router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn");
+      router.push(window.innerWidth <= 640 ? "/login" : "/login");
       return;
     }
 

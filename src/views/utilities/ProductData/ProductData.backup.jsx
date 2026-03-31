@@ -261,9 +261,9 @@ export default function Component() {
             enqueueSnackbar("Please sign..", { variant: "info" });
 
             if (isMobile) {
-                navigate("/mobile-signin", { replace: true });
+                navigate("/login", { replace: true });
             } else {
-                navigate("/?modal=signIn", { replace: true });
+                navigate("/login", { replace: true });
             }
         }
 
@@ -299,9 +299,9 @@ export default function Component() {
                 variant: "info",
             }); // Show login message
             if (isMobile) {
-                navigate("/mobile-signin", { replace: true });
+                navigate("/login", { replace: true });
             } else {
-                navigate("/?modal=signIn", { replace: true });
+                navigate("/login", { replace: true });
             }
         }
     };
@@ -356,9 +356,9 @@ export default function Component() {
             // If not authenticated, redirect based on device type
             enqueueSnackbar("Please Login or Signup to Buy Our Products.", { variant: 'info' });
             if (isMobile) {
-                navigate("/mobile-signin", { replace: true });
+                navigate("/login", { replace: true });
             } else {
-                navigate("/?modal=signIn", { replace: true });
+                navigate("/login", { replace: true });
             }
         }
     };
@@ -1604,9 +1604,9 @@ export default function Component() {
 //             enqueueSnackbar("Please sign..", {variant: "info"});
 //
 //             if (isMobile) {
-//                 navigate("/mobile-signin", {replace: true});
+//                 navigate("/login", {replace: true});
 //             } else {
-//                 navigate("/?modal=signIn", {replace: true});
+//                 navigate("/login", {replace: true});
 //             }
 //         }
 //
@@ -1642,9 +1642,9 @@ export default function Component() {
 //                 variant: "info",
 //             }); // Show login message
 //             if (isMobile) {
-//                 navigate("/mobile-signin", {replace: true});
+//                 navigate("/login", {replace: true});
 //             } else {
-//                 navigate("/?modal=signIn", {replace: true});
+//                 navigate("/login", {replace: true});
 //             }
 //         }
 //     };
@@ -1699,9 +1699,9 @@ export default function Component() {
 //             // If not authenticated, redirect based on device type
 //             enqueueSnackbar("Please Login or Signup to Buy Our Products.", {variant: 'info'});
 //             if (isMobile) {
-//                 navigate("/mobile-signin", {replace: true});
+//                 navigate("/login", {replace: true});
 //             } else {
-//                 navigate("/?modal=signIn", {replace: true});
+//                 navigate("/login", {replace: true});
 //             }
 //         }
 //     };

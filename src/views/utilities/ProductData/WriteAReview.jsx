@@ -1,9 +1,9 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from 'react';
-import { ArrowBack } from '@mui/icons-material';
 import { enqueueSnackbar } from 'notistack';
 import axiosInstance from '../../../Axios/axiosInstance';
 import { motion, AnimatePresence } from "framer-motion";
+import { Star, X, Check, ArrowLeft, Send, Sparkles } from "lucide-react";
 
 const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInline = false }) => {
   const product = productDetailData?.data?.product || productDetailData?.product || productDetailData;
@@ -82,12 +82,12 @@ const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInli
     try {
       const response = await axiosInstance.post(`/product/ratingAndReviews/${productId}/`, formData);
       if (response.status === 200 || response.status === 201) {
-        enqueueSnackbar(hasExistingReview ? 'Review updated successfully!' : 'Review submitted successfully!', { variant: 'success' });
+        enqueueSnackbar(hasExistingReview ? 'Quality Registry updated!' : 'Quality Registry submitted!', { variant: 'success' });
         if (onSuccess) onSuccess();
         onClose();
       }
     } catch (error) {
-      let errorMsg = error.response?.data?.message || "Failed to submit review. Please try again.";
+      let errorMsg = error.response?.data?.message || "Protocol Failure. Please try again.";
       setSubmissionError(errorMsg);
       enqueueSnackbar(errorMsg, { variant: 'error' });
     } finally {
@@ -98,153 +98,188 @@ const WriteAReview = ({ onClose, onSuccess, productId, productDetailData, isInli
   if (isLoadingExisting) {
     return (
       <div className={isInline ? "w-full p-12 text-center" : "fixed inset-0 z-[100] flex items-center justify-center bg-black/20 backdrop-blur-sm"}>
-        <div className="pdp-wrapper p-8 rounded-3xl bg-white shadow-xl">
-          <div className="w-12 h-12 border-4 border-bio-green/20 border-t-bio-green rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-sm font-bold text-gray-500">Cultivating your review...</p>
+        <div className="p-12 rounded-[32px] bg-white shadow-2xl flex flex-col items-center">
+          <div className="w-12 h-12 border-4 border-[#375421]/10 border-t-[#375421] rounded-full animate-spin mb-6" />
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em]">Cultivating Registry</p>
         </div>
       </div>
     );
   }
 
   const containerClasses = isInline
-    ? "w-full bg-white border border-gray-100 rounded-2xl p-6 mt-4 shadow-sm"
-    : "bg-white p-6 rounded-lg shadow-xl w-11/12 max-w-md overflow-y-auto max-h-[90vh]";
+    ? "w-full bg-white border border-gray-100 rounded-[32px] p-6 mt-4 shadow-sm"
+    : "bg-white p-6 sm:p-10 rounded-[30px] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] w-11/12 max-w-lg overflow-y-auto max-h-[85vh] relative z-20";
 
   const wrapperClasses = isInline
     ? "font-sans"
-    : "fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 font-sans";
+    : "fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-[2px] font-sans px-4";
 
   return (
     <div id={isInline ? "" : "modal-overlay"} className={wrapperClasses}>
-      <div className={containerClasses}>
-        {/* Header with back button */}
-        <div className="flex items-center gap-2 mb-4">
-          <button onClick={onClose} className="hover:bg-site-bg p-1 rounded-full transition-colors">
-            <ArrowBack className="text-gray-700" />
+      <motion.div 
+        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        className={containerClasses}
+      >
+        {/* Boutique Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            {!isInline && (
+                <button onClick={onClose} className="w-9 h-9 rounded-full border border-gray-100 flex items-center justify-center hover:bg-gray-50 transition-all active:scale-90">
+                <ArrowLeft className="w-3.5 h-3.5 text-gray-400" />
+                </button>
+            )}
+            <div>
+                <span className="text-[8px] font-black text-[#375421] uppercase tracking-[0.3em] block mb-1">Quality Protocol</span>
+                <h2 className="text-xl font-black text-gray-900 uppercase tracking-tight leading-none">
+                {isEditing ? 'Update Review' : 'Write a Review'}
+                </h2>
+            </div>
+          </div>
+          <button onClick={onClose} className="text-gray-300 hover:text-gray-900 transition-colors">
+            <X className="w-5 h-5" />
           </button>
-          <h2 className="text-xl font-bold text-gray-800">
-            {isEditing ? 'Edit your review' : 'Write a Review'}
-          </h2>
         </div>
 
-        {/* Show existing review notice */}
+        {/* Status Notice */}
         {hasExistingReview && (
-          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-[#051d18] text-sm font-medium">
-              ✓ You have already reviewed this product. You can edit your review below.
+          <div className="mb-6 p-3 bg-site-bg border border-[#375421]/10 rounded-2xl flex items-center gap-3">
+            <div className="w-7 h-7 rounded-full bg-[#375421] flex items-center justify-center text-white shadow-sm flex-shrink-0">
+                <Check className="w-3.5 h-3.5" />
+            </div>
+            <p className="text-[#375421] text-[9px] font-black uppercase tracking-widest leading-normal flex-1">
+              Registry verified. Synchronize updated attributes.
             </p>
           </div>
         )}
 
-        <div className="mt-6">
-          <p className="font-semibold text-gray-700 mb-2">
-            {hasExistingReview ? 'Update your rating*' : 'Please give rating*'}
-          </p>
-          <div className="flex space-x-2">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <span
-                key={star}
-                onClick={() => setRating(star)}
-                className={`cursor-pointer text-4xl transition-all ${rating >= star ? 'text-yellow-400 scale-110' : 'text-gray-300 hover:text-gray-400'}`}
-              >
-                ★
-              </span>
-            ))}
+        <div className="space-y-6">
+          {/* Star Selection */}
+          <div>
+            <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-3">Quality Rating*</label>
+            <div className="flex justify-between items-center bg-gray-50 p-4 rounded-xl border border-gray-100">
+                <div className="flex gap-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                    <motion.button
+                        key={star}
+                        whileHover={{ scale: 1.2 }}
+                        whileTap={{ scale: 0.9 }}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(0)}
+                        onClick={() => setRating(star)}
+                        className={`transition-all duration-300 ${ (hoverRating || rating) >= star ? 'text-[#375421]' : 'text-gray-200 hover:text-gray-300'}`}
+                    >
+                        <Star className={`w-7 h-7 ${ (hoverRating || rating) >= star ? 'fill-current' : ''}`} strokeWidth={1.5} />
+                    </motion.button>
+                ))}
+                </div>
+                <div className="text-[10px] font-black text-[#375421] uppercase tracking-widest bg-white px-2 py-1 rounded-lg border border-gray-100 shadow-sm">
+                    {rating || 0} / 5
+                </div>
+            </div>
           </div>
-        </div>
 
-        <div className="mt-4">
-          <label className="font-semibold text-gray-700 block mb-2" htmlFor="review-title">
-            {hasExistingReview ? 'Update Review Title*' : 'Review Title*'}
-          </label>
-          <input
-            id="review-title"
-            type="text"
-            maxLength="50"
-            className="w-full border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-[#375421] outline-none transition-all"
-            placeholder="Summarize your experience (max 50 chars)"
-            value={reviewTitle}
-            onChange={(e) => setReviewTitle(e.target.value)}
-          />
-        </div>
-
-        <div className="mt-4">
-          <label className="font-semibold text-gray-700 block mb-2" htmlFor="comment">
-            {hasExistingReview ? 'Update Comment*' : 'Comment*'}
-          </label>
-          <textarea
-            id="comment"
-            maxLength="300"
-            rows="4"
-            className="w-full border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-[#375421] outline-none transition-all"
-            placeholder="Tell us what you liked or disliked (max 300 chars)"
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-          ></textarea>
-        </div>
-
-        <div className="mt-6">
-          <p className="font-semibold text-gray-700 mb-2">
-            {hasExistingReview ? 'Update recommendation*' : 'Will you recommend this product?*'}
-          </p>
-          <div className="flex items-center gap-6">
-            <label className="flex items-center gap-2 cursor-pointer group">
-              <input
-                type="radio"
-                name="recommend"
-                value="yes"
-                checked={recommend === 'yes'}
-                onChange={() => setRecommend('yes')}
-                className="w-4 h-4 accent-[#375421]"
-              />
-              <span className={`font-medium ${recommend === 'yes' ? 'text-[#375421]' : 'text-gray-500 group-hover:text-gray-700'}`}>YES</span>
+          {/* Title Input */}
+          <div className="group">
+            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2 transition-colors group-focus-within:text-[#375421]" htmlFor="review-title">
+              {hasExistingReview ? 'Update Title*' : 'Review Title*'}
             </label>
-            <label className="flex items-center gap-2 cursor-pointer group">
-              <input
-                type="radio"
-                name="recommend"
-                value="no"
-                checked={recommend === 'no'}
-                onChange={() => setRecommend('no')}
-                className="w-4 h-4 accent-red-600"
-              />
-              <span className={`font-medium ${recommend === 'no' ? 'text-red-600' : 'text-gray-500 group-hover:text-gray-700'}`}>No</span>
+            <input
+              id="review-title"
+              type="text"
+              maxLength="50"
+              className="w-full bg-white border border-gray-200 rounded-2xl p-4 text-sm font-medium focus:ring-2 focus:ring-[#375421]/20 focus:border-[#375421] outline-none transition-all placeholder:text-gray-300"
+              placeholder="Primary experience summary..."
+              value={reviewTitle}
+              onChange={(e) => setReviewTitle(e.target.value)}
+            />
+          </div>
+
+          {/* Comment Input */}
+          <div className="group">
+            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2 transition-colors group-focus-within:text-[#375421]" htmlFor="comment">
+              {hasExistingReview ? 'Update Attributes*' : 'Quality Attributes*'}
             </label>
+            <textarea
+              id="comment"
+              maxLength="300"
+              rows="5"
+              className="w-full bg-white border border-gray-200 rounded-2xl p-4 text-sm font-medium focus:ring-2 focus:ring-[#375421]/20 focus:border-[#375421] outline-none transition-all placeholder:text-gray-300 resize-none"
+              placeholder="Describe your botanical journey with this selection..."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            ></textarea>
+            <p className="text-[9px] text-gray-300 font-bold uppercase tracking-widest mt-2 ml-1">{comment.length} / 300 characters</p>
+          </div>
+
+          {/* Recommendation Toggle */}
+          <div>
+            <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-3">Botanical Recommendation*</label>
+            <div className="flex gap-3">
+               <button 
+                 onClick={() => setRecommend('yes')}
+                 className={`flex-1 py-3 px-4 rounded-xl border-2 transition-all flex items-center justify-center gap-2.5 active:scale-95
+                   ${recommend === 'yes' 
+                     ? 'bg-[#375421] border-[#375421] text-white shadow-lg shadow-[#375421]/20' 
+                     : 'bg-white border-gray-100 text-gray-400 hover:border-gray-200'}`}
+               >
+                 <Sparkles className="w-3.5 h-3.5" />
+                 <span className="text-[10px] font-black uppercase tracking-widest">Highly Advise</span>
+               </button>
+               <button 
+                 onClick={() => setRecommend('no')}
+                 className={`flex-1 py-3 px-4 rounded-xl border-2 transition-all flex items-center justify-center gap-2.5 active:scale-95
+                   ${recommend === 'no' 
+                     ? 'bg-red-600 border-red-600 text-white shadow-lg shadow-red-100' 
+                     : 'bg-white border-gray-100 text-gray-400 hover:border-red-100/50'}`}
+               >
+                 <X className="w-3.5 h-3.5" />
+                 <span className="text-[10px] font-black uppercase tracking-widest">Not Advised</span>
+               </button>
+            </div>
           </div>
 
           {submissionError && (
-            <div className="mt-4 p-3 bg-red-50 border border-red-100 rounded-xl flex items-center gap-2 text-red-600 text-sm animate-pulse">
-              <span className="font-bold">Error:</span> {submissionError}
-            </div>
+            <motion.div 
+                initial={{ opacity: 0, x: -10 }} 
+                animate={{ opacity: 1, x: 0 }}
+                className="p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-3 text-red-600 text-[10px] font-black uppercase tracking-widest"
+            >
+              <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
+              Protocol Synchronization Failed: {submissionError}
+            </motion.div>
           )}
 
-          <div className="mt-8 flex gap-4">
+          {/* Boutique Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 pt-6">
             <button
               onClick={onClose}
-              className="flex-1 border border-gray-200 text-gray-600 font-bold py-3 rounded-xl hover:bg-site-bg transition-all"
+              className="flex-1 h-14 text-gray-300 hover:text-gray-900 text-[11px] font-black uppercase tracking-[0.2em] transition-colors bg-white sm:bg-transparent"
             >
-              CANCEL
+              Protocol Cancel
             </button>
             <button
               onClick={handleSubmit}
               disabled={rating === 0 || !reviewTitle || !comment || isSubmitting}
-              className="flex-1 bg-[#375421] text-white font-bold py-3 rounded-xl hover:bg-[#375421] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-green-100 transition-all flex items-center justify-center gap-2"
+              className="flex-1 h-14 bg-[#375421] text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-black disabled:bg-gray-100 disabled:text-gray-300 disabled:shadow-none shadow-xl shadow-[#375421]/15 transition-all flex items-center justify-center gap-3 active:scale-95 group"
             >
               {isSubmitting ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  SUBMITTING...
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  Synchronizing...
                 </>
               ) : (
-                hasExistingReview ? 'UPDATE REVIEW' : 'SUBMIT REVIEW'
+                <>
+                  <Send className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  {hasExistingReview ? 'Update Registry' : 'Commit Registry'}
+                </>
               )}
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
-
 
 export default WriteAReview;

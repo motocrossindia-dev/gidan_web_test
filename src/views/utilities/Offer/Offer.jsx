@@ -55,9 +55,9 @@ function Offer({ initialOffers = [] }) {
     if (!isAuthenticated) {
       enqueueSnackbar("Please Login or Signup to Buy Our Products.");
       if (isMobile) {
-        router.push("/mobile-signin", { replace: true });
+        router.push("/login", { replace: true });
       } else {
-        router.push("/?modal=signIn", { replace: true });
+        router.push("/login", { replace: true });
       }
       return;
     }

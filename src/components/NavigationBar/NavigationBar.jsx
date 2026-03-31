@@ -11,11 +11,6 @@ import { TbCurrentLocation } from "react-icons/tb";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/Slice/userSlice";
 import { Popper, Box, Fade } from "@mui/material";
-import dynamic from "next/dynamic";
-
-const SignIn = dynamic(() => import("../../AuthPages/SignIn/Signin"), { ssr: false });
-const Verification = dynamic(() => import("../../AuthPages/Verification/Verification"), { ssr: false });
-const Login = dynamic(() => import("../../AuthPages/Login/Login"), { ssr: false });
 
 import __logo from "../../Assets/Gidan_logo.webp";
 const _logo = typeof __logo === 'string' ? __logo : __logo?.src || __logo;
@@ -36,27 +31,11 @@ import WishlistIconWithCount from "../../views/utilities/WishList/wishlistcount"
 import { trackSearch } from "../../utils/ga4Ecommerce";
 import { useCategories } from "../../hooks/useCategories";
 
-const NavigationModalParams = ({ setIsSignInOpen, setIsVerificationOpen, setIsLoginOpen }) => {
-  const searchParams = useSearchParams();
-  useEffect(() => {
-    const modal = searchParams.get("modal");
-    if (modal === "signIn") setIsSignInOpen(true);
-    if (modal === "verification") setIsVerificationOpen(true);
-    if (modal === "login") setIsLoginOpen(true);
-  }, [searchParams, setIsSignInOpen, setIsVerificationOpen, setIsLoginOpen]);
-  return null;
-};
-
 const NavBar = () => {
-  const [isSignInOpen, setIsSignInOpen] = useState(false);
-  const [isVerificationOpen, setIsVerificationOpen] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
   const [openPopper, setOpenPopper] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [isAnchorEl, setIsAnchorEl] = useState(null);
-  const [isCartOpen, setIsCartOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   const { data: categoryData = [], isLoading } = useCategories();
@@ -74,23 +53,11 @@ const NavBar = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-
-
-  const handleGetOtpClick = () => {
-    setIsSignInOpen(false);
-    setIsVerificationOpen(true);
-  };
-
-  const handleVerificationSubmit = () => {
-    setIsVerificationOpen(false);
-    setIsLoginOpen(true);
-  };
-
   const toggleDropdown = () => {
     if (username !== "Guest") {
       setIsDropdownOpen(!isDropdownOpen);
     } else {
-      setIsSignInOpen(true);
+      router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
     }
   };
 
@@ -121,12 +88,7 @@ const NavBar = () => {
 
   const handleSignIn = () => {
     setOpenPopper(false);
-    setIsSignInOpen(true);
-  };
-
-  const handleLoginSuccess = () => {
-    setIsSignInOpen(false);
-    router.push("/wishlist");
+    router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
   };
 
   const handleCartClick = () => {
@@ -322,7 +284,7 @@ const NavBar = () => {
               />
             </div>
 
-            <div className="flex items-center justify-center flex-[5] gap-2 whitespace-nowrap h-full">
+            <div className="flex items-center justify-center flex-[5] gap-2 whitespace-nowrap h-full overflow-x-auto no-scrollbar scroll-smooth">
               {publishedCategories.map((category, idx) => {
                 const href = `/${category.slug}/`;
                 const isActive = pathname === href;
@@ -408,24 +370,6 @@ const NavBar = () => {
           </div>
         </div>
       </nav>
-
-      {/* Modals */}
-      <Suspense fallback={null}>
-        <NavigationModalParams
-          setIsSignInOpen={setIsSignInOpen}
-          setIsVerificationOpen={setIsVerificationOpen}
-          setIsLoginOpen={setIsLoginOpen}
-        />
-      </Suspense>
-
-      {isSignInOpen && <SignIn onClose={() => setIsSignInOpen(false)} onGetOtpClick={handleGetOtpClick} onLoginSuccess={handleLoginSuccess} />}
-
-      {isVerificationOpen && <Verification onClose={() => setIsVerificationOpen(false)} onSubmit={handleVerificationSubmit} />}
-
-      {isLoginOpen && <Login onClose={() => setIsLoginOpen(false)} />}
-
-
-
 
       {/* Logout Modal */}
       {isLogoutDialogOpen && (

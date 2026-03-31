@@ -151,19 +151,19 @@ const AddressSection = ({ onBack }) => {
 
   return (
     <>
-      <div className="flex flex-col md:hidden bg-white shadow-sm sticky top-0 z-40 border-b">
-        <div className="px-4 pt-4 flex items-center justify-between">
+      <div className="flex flex-col md:hidden bg-white shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] sticky top-0 z-40 border-b border-gray-100">
+        <div className="px-5 pt-5 pb-2 flex items-center justify-between">
           <button
             onClick={handleBackClick}
-            className="flex items-center text-[#375421] text-sm font-medium"
+            className="flex items-center text-[#375421] text-xs font-black uppercase tracking-tight"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Profile
+            <ArrowLeft className="w-3.5 h-3.5 mr-2" />
+            Profile
           </button>
         </div>
 
-        <div className="p-4 pt-2">
-          <h2 className="text-xl font-bold">Address</h2>
+        <div className="px-5 pb-4">
+          <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Address</h2>
         </div>
       </div>
 
@@ -174,84 +174,112 @@ const AddressSection = ({ onBack }) => {
         />
       </div>
 
-      <main className="p-4 md:p-8">
-        <div className="border p-4 md:p-6 rounded bg-white mt-4">
-          <h2 className="text-2xl font-bold mb-4">Address</h2>
-          {address.map((address, index) => (
-            <div key={index} className="p-4 mb-4 border rounded-lg ">
-              {address.isEditing ? (
-                <div>
-                  <p className="font-bold text-lg mb-3">{address.id ? "Edit Address" : "New Address"}</p>
-                  <AddressForm
-                    variant="profile"
-                    formIndex={index}
-                    initialValues={{
-                      firstName: address.first_name || "",
-                      lastName: address.last_name || "",
-                      address: address.address || "",
-                      city: address.city || "",
-                      state: address.state || "",
-                      pinCode: String(address.pincode || ""),
-                      phone: address.phone || "",
-                      addressType: address.address_type || "Home",
-                    }}
-                    onSave={(formData) =>
-                      address.id
-                        ? handleSaveEditChanges(index, formData)
-                        : handleSaveEdit(index, formData)
-                    }
-                    onCancel={() => handleCancelEdit(index)}
-                  />
-                </div>
-              ) : (
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="radio"
-                        name="defaultAddress"
-                        checked={address.is_default}
-                        onChange={() => handleDefaultAddressChange(address.id)}
-                        className="w-4 h-4 text-bio-green"
-                      />
-                      <span className="font-bold">{`${address.first_name} ${address.last_name}`}</span>
-                    </div>
-                    <div className="flex justify-end space-x-4">
-                      <button
-                        className="text-bio-green hover:text-bio-green font-semibold"
-                        onClick={() => handleEdit(index)}
-                      >
-                        Edit
-                      </button>
-                      {!address.is_default && (
+      <main className="p-4 md:py-6 lg:py-8">
+        <div className="bg-white shadow-[0_20px_50px_-20px_rgba(0,0,0,0.08)] p-6 sm:p-10 rounded-[32px] border border-gray-100">
+          <div className="flex items-center justify-between mb-8">
+             <div className="flex flex-col">
+                <span className="text-[9px] font-black text-[#375421] uppercase tracking-[0.3em] mb-1.5">Saved Locations</span>
+                <h2 className="text-xl font-black text-gray-900 uppercase tracking-tight">Address Book</h2>
+             </div>
+             <button
+               onClick={handleAddNewAddress}
+               className="hidden sm:flex items-center gap-2 px-5 py-2.5 bg-gray-900 text-white text-[9px] font-black uppercase tracking-[0.2em] rounded-lg hover:bg-[#375421] transition-all"
+             >
+               + New Address
+             </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {address.map((address, index) => (
+              <div key={index} className={`relative p-6 rounded-[28px] border transition-all duration-500 ${address.is_default ? 'bg-site-bg/50 border-[#375421]/20 ring-1 ring-[#375421]/10 shadow-lg' : 'bg-white border-gray-100 hover:border-gray-200 hover:shadow-md'}`}>
+                {address.isEditing ? (
+                  <div className="animate-in fade-in zoom-in-95 duration-500">
+                    <h3 className="text-[9px] font-black text-[#375421] uppercase tracking-[0.2em] mb-5">{address.id ? "Modify Entry" : "Entry Registration"}</h3>
+                    <AddressForm
+                      variant="profile"
+                      formIndex={index}
+                      initialValues={{
+                        firstName: address.first_name || "",
+                        lastName: address.last_name || "",
+                        address: address.address || "",
+                        city: address.city || "",
+                        state: address.state || "",
+                        pinCode: String(address.pincode || ""),
+                        phone: address.phone || "",
+                        addressType: address.address_type || "Home",
+                      }}
+                      onSave={(formData) =>
+                        address.id
+                          ? handleSaveEditChanges(index, formData)
+                          : handleSaveEdit(index, formData)
+                      }
+                      onCancel={() => handleCancelEdit(index)}
+                    />
+                  </div>
+                ) : (
+                  <div className="flex flex-col h-full">
+                    <div className="flex justify-between items-start mb-5">
+                      <div className="flex items-center gap-3">
+                        <div className="relative flex items-center justify-center">
+                          <input
+                            type="radio"
+                            name="defaultAddress"
+                            checked={address.is_default}
+                            onChange={() => handleDefaultAddressChange(address.id)}
+                            className="w-4 h-4 appearance-none border-2 border-gray-200 rounded-full checked:border-[#375421] transition-all cursor-pointer"
+                          />
+                          {address.is_default && <div className="absolute w-2 h-2 bg-[#375421] rounded-full"></div>}
+                        </div>
+                        <span className="text-[10px] font-black text-gray-900 uppercase tracking-widest">{address.address_type}</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-2">
                         <button
-                          className="text-red-600 hover:text-red-700 font-semibold flex items-center space-x-2"
-                          onClick={() => handleDelete(index, address.id)}
+                          className="w-7 h-7 flex items-center justify-center rounded-full bg-white border border-gray-100 text-gray-400 hover:text-[#375421] hover:border-[#375421]/20 transition-all shadow-sm"
+                          onClick={() => handleEdit(index)}
                         >
-                          <TrashIcon className="h-5 w-5" />
+                          <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
                         </button>
-                      )}
+                        {!address.is_default && (
+                          <button
+                            className="w-7 h-7 flex items-center justify-center rounded-full bg-white border border-gray-100 text-gray-100 hover:text-red-500 hover:border-red-100 transition-all shadow-sm"
+                            onClick={() => handleDelete(index, address.id)}
+                          >
+                            <TrashIcon className="w-3 h-3" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex-1 space-y-0.5">
+                       <h4 className="text-[15px] font-black text-gray-900 uppercase tracking-tight">{address.first_name} {address.last_name}</h4>
+                       <p className="text-[10px] text-gray-500 font-bold leading-tight uppercase tracking-tight">{address.address}</p>
+                       <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{address.city}, {address.state} — {address.pincode}</p>
+                    </div>
+                    
+                    <div className="mt-5 pt-5 border-t border-gray-50 flex items-center justify-between">
+                       <div className="flex items-center text-[9px] font-black text-[#375421] uppercase tracking-widest">
+                          {address.phone}
+                       </div>
+                       {address.is_default && (
+                         <span className="bg-[#375421] text-white text-[7px] font-black uppercase tracking-[0.2em] px-2.5 py-0.5 rounded-full">Primary</span>
+                       )}
                     </div>
                   </div>
-                  <p>{address.phone}</p>
-                  <p>{address.address}</p>
-                  <p>{`${address.city}, ${address.state} - ${address.pincode}`}</p>
-                  <p>{`Type: ${address.address_type}`}</p>
-                  {address.is_default && (
-                    <p className="text-bio-green font-semibold mt-2">
-                      Default Address
-                    </p>
-                  )}
-                </div>
-              )}
-            </div>
-          ))}
-          <button
-            onClick={handleAddNewAddress}
-            className="flex items-center gap-2 mt-4  p-4 mb-4 border rounded-lg  text-bio-green font-semibold hover:text-bio-green"
-          >
-            <span className="text-2xl font-bold">+</span> Add New Address
-          </button>
+                )}
+              </div>
+            ))}
+            
+            <button
+              onClick={handleAddNewAddress}
+              className="group h-full min-h-[180px] rounded-[28px] border border-dashed border-gray-200 p-6 flex flex-col items-center justify-center gap-3 hover:border-[#375421]/30 hover:bg-site-bg transition-all duration-500"
+            >
+              <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-[#375421] group-hover:text-white transition-all shadow-sm">
+                <span className="text-xl font-black">+</span>
+              </div>
+              <span className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] group-hover:text-[#375421]">New Registration</span>
+            </button>
+          </div>
         </div>
       </main>
     </>

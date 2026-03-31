@@ -26,12 +26,14 @@ import {
   ShieldCheck,
   Search,
   X,
-  Mail
+  Mail,
+  ArrowUpRight
 } from 'lucide-react';
 import { FaInstagram, FaWhatsapp, FaEnvelope } from "react-icons/fa";
 import axiosInstance from '../../../Axios/axiosInstance';
 import { enqueueSnackbar } from 'notistack';
 import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
+import { getProductUrl } from '../../../utils/urlHelper';
 
 const Successpage = () => {
   const router = useRouter();
@@ -79,6 +81,39 @@ const Successpage = () => {
     };
     fetchReferralData();
   }, []);
+
+  // ── TRIGGER PURCHASE CONVERSION TAG ──
+  useEffect(() => {
+    if (orderDetails && orderDetails.order && orderDetails.order.order_id) {
+      const { order, order_items = [] } = orderDetails;
+      
+      // Use sessionStorage to prevent duplicate triggers on page refresh
+      const lastTriggeredId = sessionStorage.getItem('last_gtm_purchase_id');
+      if (lastTriggeredId === order.order_id) return;
+
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'CE - purchase',
+        ecommerce: {
+          transaction_id: order.order_id,
+          value: parseFloat(order.grand_total),
+          tax: parseFloat(order.total_gst || 0),
+          shipping: parseFloat(order.shipping_charge || 0),
+          currency: 'INR',
+          items: order_items.map((item, index) => ({
+            item_id: item.product_id || item.id,
+            item_name: item.product_name,
+            index: index,
+            price: parseFloat(item.selling_price),
+            quantity: item.quantity
+          }))
+        }
+      });
+
+      sessionStorage.setItem('last_gtm_purchase_id', order.order_id);
+      console.log('Ecommerce Purchase Event Triggered:', order.order_id);
+    }
+  }, [orderDetails]);
 
   const handleCopyOrderId = (id) => {
     if (!id) return;
@@ -368,18 +403,24 @@ const Successpage = () => {
                 {order_items.map((item, idx) => (
                   <div key={idx} className="py-8 first:pt-0 last:pb-0">
                     <div className="flex flex-col sm:flex-row gap-6">
-                      <div className="w-full sm:w-28 h-28 bg-[#f8fbf6] rounded-3xl overflow-hidden border border-gray-50 flex items-center justify-center relative group flex-shrink-0">
+                      <div 
+                        onClick={() => router.push(getProductUrl(item))}
+                        className="w-full sm:w-28 h-28 bg-[#f8fbf6] rounded-3xl overflow-hidden border border-gray-50 flex items-center justify-center relative group flex-shrink-0 cursor-pointer"
+                      >
                         <img 
                           src={`${axiosInstance.defaults.baseURL}${item.image}`} 
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
                           alt="" 
                         />
                         <div className="absolute top-2 left-2 bg-white/95 backdrop-blur-sm w-7 h-7 rounded-xl flex items-center justify-center text-[10px] font-black text-[#375421] shadow-sm border border-green-50">{item.quantity}</div>
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center">
+                            <ArrowUpRight className="text-white opacity-0 group-hover:opacity-100 transition-all scale-50 group-hover:scale-100" size={24} />
+                        </div>
                       </div>
                       <div className="flex-1">
-                        <div>
-                          <p className="text-[10px] font-bold text-[#375421] uppercase tracking-widest mb-1">Evergreen Pot</p>
-                          <h4 className="text-[16px] font-black text-gray-900 uppercase leading-none mb-2">{item.product_name}</h4>
+                        <div className="group cursor-pointer" onClick={() => router.push(getProductUrl(item))}>
+                          <p className="text-[10px] font-bold text-[#375421] uppercase tracking-widest mb-1 group-hover:underline">Evergreen Pot</p>
+                          <h4 className="text-[16px] font-black text-gray-900 uppercase leading-none mb-2 group-hover:text-[#375421] transition-colors">{item.product_name}</h4>
                           <p className="text-[11px] text-gray-400 font-bold uppercase tracking-tight mb-4">Swiss Cheese Plant · Regular size · No planter</p>
                           
                           <div className="flex flex-wrap gap-2 mb-4">

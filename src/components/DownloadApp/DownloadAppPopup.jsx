@@ -230,24 +230,24 @@ const DownloadAppPopup = () => {
             Shop 1000+ plants, get app-only deals &amp;<br />track orders in real-time.
           </p>
 
-          <div className="flex flex-col items-center gap-3 w-full mt-2">
-            <a href="#" className="group transition-all duration-300 hover:scale-105 active:scale-95 block h-[90px] md:h-[110px]">
+          <div className="flex flex-row items-center justify-center gap-3 w-full mt-2">
+            <a href="#" className="group transition-all duration-300 hover:scale-105 active:scale-95 block h-[45px] md:h-[55px]">
               <Image 
                 src="/playstore.svg" 
                 alt="Get it on Google Play" 
-                width={300} 
-                height={110} 
+                width={160} 
+                height={55} 
                 className="h-full w-auto object-contain" 
                 priority
               />
             </a>
 
-            <a href="#" className="group transition-all duration-300 hover:scale-105 active:scale-95 block h-[90px] md:h-[110px]">
+            <a href="#" className="group transition-all duration-300 hover:scale-105 active:scale-95 block h-[45px] md:h-[55px]">
               <Image 
                 src="/appstore.svg" 
                 alt="Download on the App Store" 
-                width={300} 
-                height={110} 
+                width={160} 
+                height={55} 
                 className="h-full w-auto object-contain" 
                 priority
               />

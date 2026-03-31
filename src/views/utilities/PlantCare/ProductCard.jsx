@@ -29,9 +29,9 @@ const ProductCard = ({ name, price, oldPrice, imageUrl, rating ,product,mrp}) =>
   
       if (!isAuthenticated) {
         if (isMobile) {
-          router.push("/mobile-signin", { replace: true });
+          router.push("/login", { replace: true });
         } else {
-          router.push("/?modal=signIn", { replace: true });
+          router.push("/login", { replace: true });
         }
         return;
       }
@@ -58,7 +58,7 @@ const ProductCard = ({ name, price, oldPrice, imageUrl, rating ,product,mrp}) =>
  
     const handleAddToWishlist = async () => {
       if (!isAuthenticated) {
-        router.push(isMobile ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+        router.push(isMobile ? "/login" : "/login", { replace: true });
         return;
       }
     

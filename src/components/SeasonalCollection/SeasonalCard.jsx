@@ -47,7 +47,6 @@ const SeasonalCard = ({
                 product_image: imageUrl,
             });
             enqueueSnackbar("Please sign in to add to wishlist", { variant: "error" });
-            router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
             return;
         }
 
@@ -86,7 +85,7 @@ const SeasonalCard = ({
                 mrp: mrp || price,
                 product_image: imageUrl,
             });
-            router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+            router.push(window.innerWidth <= 640 ? "/login" : "/login", { replace: true });
             return;
         }
 
@@ -419,7 +418,7 @@ export default memo(SeasonalCard, (prevProps, nextProps) => {
 //     const handleAddToWishlist = async () => {
 //         if (!isAuthenticated) {
 //             enqueueSnackbar("Please sign in to add to wishlist", { variant: "error" });
-//             router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+//             router.push(window.innerWidth <= 640 ? "/login" : "/login", { replace: true });
 //             return;
 //         }
 //
@@ -450,7 +449,7 @@ export default memo(SeasonalCard, (prevProps, nextProps) => {
 //
 //     const handleAddToCart = async (e) => {
 //         if (!isAuthenticated) {
-//             router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+//             router.push(window.innerWidth <= 640 ? "/login" : "/login", { replace: true });
 //             return;
 //         }
 //

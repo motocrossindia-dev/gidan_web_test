@@ -53,7 +53,7 @@ const RecentlyViewedCard = ({ name, price, oldPrice, imageUrl, rating, isNewArri
   }, [product?.id, isAuthenticated, accessToken]);
   const handleAddToWishlist = async () => {
     if (!isAuthenticated) {
-      router.push(isMobile ? "/mobile-signin" : "/?modal=signIn", { replace: true });
+      router.push(isMobile ? "/login" : "/login", { replace: true });
       return;
     }
 
@@ -77,9 +77,9 @@ const RecentlyViewedCard = ({ name, price, oldPrice, imageUrl, rating, isNewArri
     // Check if the user is authenticated
     if (!isAuthenticated) {
       if (isMobile) {
-        router.push("/mobile-signin", { replace: true });
+        router.push("/login", { replace: true });
       } else {
-        router.push("/?modal=signIn", { replace: true });
+        router.push("/login", { replace: true });
       }
       return;
     }

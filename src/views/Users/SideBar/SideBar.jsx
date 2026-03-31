@@ -33,67 +33,68 @@ const SideBar = () => {
   };
 
   return (
-    <div className="bg-site-bg hidden md:block shadow-lg"> {/* Sidebar container */}
-      <div className="w-[270px] h-screen font-sans flex flex-col">
+    <div className="hidden md:block transition-all duration-300">
+      <div className="w-[290px] font-sans flex flex-col bg-white rounded-[32px] border border-gray-100 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.1)] overflow-hidden">
 
         {/* Header Section */}
-        <div className="h-[80px] px-4 bg-white flex items-center space-x-3 border-b shadow-sm">
-          <div className="w-12 h-12 rounded-full bg-[#375421] flex items-center justify-center">
-            <span className="text-2xl font-semibold text-white">
+        <div className="px-6 py-8 bg-gray-50/50 flex flex-col items-center text-center border-b border-gray-100">
+          <div className="w-20 h-20 rounded-full bg-[#375421] flex items-center justify-center mb-4 shadow-lg shadow-green-100 border-4 border-white">
+            <span className="text-3xl font-black text-white leading-none">
               {hasMounted ? userName?.charAt(0).toUpperCase() : ""}
             </span>
           </div>
           <div>
-            <div className="text-sm text-gray-500">Hello,</div>
-            <div className="text-md font-bold text-gray-900">
-              {hasMounted ? userName : ""}
-            </div>
+            <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-widest mb-1">Welcome back,</p>
+            <h2 className="text-xl font-black text-gray-900 leading-tight">
+              {hasMounted ? userName : "Member"}
+            </h2>
           </div>
         </div>
 
         {/* Sidebar Content */}
-        <div className="bg-white mt-6 flex-grow overflow-y-auto">
-          <div className="h-[580px] pt-4 px-2">
-            <Link
-              href="/profile/orders"
-              className="flex items-center justify-between bg-white p-4 rounded shadow-sm hover:bg-site-bg transition"
-            >
-              {/* Left: Icon and Text */}
-              <div className="flex items-center gap-3">
-                <IoReorderThree className="text-[#375421] text-xl" />
-                <span className="text-gray-700 font-medium">MY ORDERS</span>
-              </div>
+        <div className="bg-white pb-8 overflow-y-auto">
+          <MenuSection title="MY ACCOUNT">
+            <MenuItem 
+              icon={<IoReorderThree className="text-[#375421]" />} 
+              text="My Orders" 
+              to="/profile/orders" 
+            />
+            <MenuItem 
+              icon={<MdOutlinePerson className="text-[#375421]" />} 
+              text="My Profile" 
+              to="/profile" 
+            />
+          </MenuSection>
 
-              {/* Right: Arrow Icon */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-gray-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
+          <MenuSection title="TRACKING">
+            <MenuItem 
+              icon={<IoLocationOutline className="text-[#375421]" />} 
+              text="Track Order" 
+              to="/profile/trackorder" 
+            />
+          </MenuSection>
 
+          <MenuSection title="WALLET">
+            <MenuItem 
+              icon={<CiWallet className="text-[#375421] text-2xl" />} 
+              text="Gidan Wallet" 
+              to="/profile/wallet" 
+            />
+            <MenuItem 
+              icon={<CiBitcoin className="text-[#375421] text-2xl" />} 
+              text="GD Coins" 
+              to="/profile/btcoins" 
+            />
+          </MenuSection>
 
-            <MenuSection title="ACCOUNT SETTINGS">
-              <MenuItem icon={<MdOutlinePerson className="text-[#375421]" />} text="My Profile" to="/profile" />
-              <MenuItem icon={<IoLocationOutline className="text-[#375421]" />} text="Track Order" to="/profile/trackorder" />
-              {/* <MenuItem icon={<MdOutlineNotificationsActive className="text-[#375421]" />} text="Notifications" to="/profile/notification" /> */}
-            </MenuSection>
+          <MenuSection title="LOYALTY">
+            <MenuItem icon={<TbGiftCard className="text-[#375421]" />} text="Gift Cards" to="/profile/giftcard" />
+            <MenuItem icon={<GoCrossReference className="text-[#375421]" />} text="My Referrals" to="/profile/referal" />
+          </MenuSection>
 
-            <MenuSection title="PAYMENTS">
-              <MenuItem icon={<CiBitcoin className="text-[#375421]" />} text="GD Coins" to="/profile/btcoins" />
-            </MenuSection>
-
-            <MenuSection title="MY STUFF">
-              <MenuItem icon={<TbGiftCard className="text-[#375421]" />} text="Add A Gift Card" to="/profile/giftcard" />
-              <MenuItem icon={<GoCrossReference className="text-[#375421]" />} text="My Referrals" to="/profile/referal" />
-            </MenuSection>
-
-            {/* Logout Button */}
+          <div className="mt-6 pt-4 border-t border-dashed border-gray-100">
             <MenuItem icon={<IoLogOutOutline className="text-red-500" />} text="Logout" onClick={handleLogoutClick} />
+          </div>
 
             {/* Logout Confirmation Modal */}
             {isLogoutDialogOpen && (
@@ -122,27 +123,39 @@ const SideBar = () => {
           </div>
         </div>
       </div>
-    </div>
   );
 };
 
 /* Section Header Component */
 const MenuSection = ({ title, children }) => (
-  <div className="mt-4">
-    <div className="text-gray-600 text-sm font-semibold uppercase px-2 py-2 border-b">{title}</div>
-    {children}
+  <div className="px-3">
+    <div className="text-[9px] text-[#375421] font-black uppercase tracking-[0.2em] px-4 pt-6 pb-2">{title}</div>
+    <div className="space-y-0.5">
+      {children}
+    </div>
   </div>
 );
 
 /* Sidebar Menu Item Component */
 const MenuItem = ({ icon, text, to, onClick }) => (
   <div
-    className="flex items-center justify-between px-4 py-3 rounded-md hover:bg-site-bg transition cursor-pointer"
+    className="group"
     onClick={onClick}
   >
-    <Link href={to || "#"} className="flex items-center space-x-3 w-full">
-      {icon && <span className="text-xl">{icon}</span>}
-      <span className="text-md font-medium text-gray-700">{text}</span>
+    <Link href={to || "#"} className="flex items-center justify-between px-4 py-3 rounded-2xl hover:bg-gray-50 transition-all active:scale-[0.98]">
+      <div className="flex items-center gap-3">
+        {icon && <span className="text-xl group-hover:scale-110 transition-transform">{icon}</span>}
+        <span className="text-[12px] font-extrabold text-gray-700 group-hover:text-gray-900 transition-colors uppercase tracking-tight">{text}</span>
+      </div>
+      <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-3 w-3 text-gray-300 group-hover:text-[#375421] transition-all transform group-hover:translate-x-1"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
+        </svg>
     </Link>
   </div>
 );
