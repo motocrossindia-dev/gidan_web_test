@@ -24,15 +24,16 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-import { fetchProductsByFilters, fetchFilters } from "@/utils/serverApi";
+import { fetchProductsByFilters, fetchFilters, fetchPublicFlags } from "@/utils/serverApi";
 import CollectionSchema from "@/views/utilities/seo/CollectionSchema";
 import StoreSchema from "@/views/utilities/seo/StoreSchema";
 
 
 export default async function TrendingPage() {
-  const [initialData, filters] = await Promise.all([
+  const [initialData, filters, publicFlags] = await Promise.all([
     fetchProductsByFilters({ is_trending: true }),
-    fetchFilters("plant")
+    fetchFilters("plant"),
+    fetchPublicFlags()
   ]);
 
   return (
@@ -43,8 +44,13 @@ export default async function TrendingPage() {
       />
       <StoreSchema />
       <Suspense fallback={<div className="flex justify-center p-8">Loading products...</div>}>
-        <PlantFilter initialResults={initialData} initialFilterData={filters} />
+        <PlantFilter 
+            initialResults={initialData as any} 
+            initialFilterData={filters as any} 
+            initialFlags={publicFlags as any}
+        />
       </Suspense>
     </>
   );
 }
+

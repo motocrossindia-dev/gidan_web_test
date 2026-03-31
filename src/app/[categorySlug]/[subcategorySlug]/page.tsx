@@ -63,7 +63,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 import { fetchCategoryBySlug, fetchSubcategoryBySlug, fetchProductsByFilters, fetchSubcategories, fetchFilters } from "@/utils/serverApi";
 import CategoryStaticSEO from "@/views/utilities/Info/CategoryStaticSEO";
 import RecentlyViewedProducts from "@/components/Shared/RecentlyViewedProducts";
-import CheckoutStores from "@/views/utilities/PlantFilter/CheckoutStores";
 import CollectionSchema from "@/views/utilities/seo/CollectionSchema";
 
 export default async function SubcategoryPage({ params }: Props) {
@@ -106,11 +105,11 @@ export default async function SubcategoryPage({ params }: Props) {
     return (
         <Suspense fallback={<div className="flex justify-center p-8">Loading gifts...</div>}>
             <PlantFilter
-                initialResults={initialData}
-                initialCategoryData={giftCategoryData}
-                initialFilterData={filters}
-                categorySlug={categorySlug}
-                subcategorySlug={subcategorySlug}
+                initialResults={initialData as any}
+                initialCategoryData={giftCategoryData as any}
+                initialFilterData={filters as any}
+                categorySlug={categorySlug as any}
+                subcategorySlug={subcategorySlug as any}
             />
         </Suspense>
     );
@@ -149,21 +148,19 @@ export default async function SubcategoryPage({ params }: Props) {
         products={initialData?.results || []}
       />
       <Suspense fallback={<div className="flex justify-center p-8">Loading products...</div>}>
-        {/* @ts-ignore */}
         <PlantFilter
-          initialResults={initialData}
-          initialCategoryData={categoryWithSubs}
-          initialFilterData={filters}
-          categorySlug={categorySlug}
-          subcategorySlug={subcategorySlug}
-          subcategoryName={subcategory.name}
-          initialSEOData={initialSEOData}
+          initialResults={initialData as any}
+          initialCategoryData={categoryWithSubs as any}
+          initialFilterData={filters as any}
+          categorySlug={categorySlug as any}
+          subcategorySlug={subcategorySlug as any}
+          subcategoryName={subcategory.name as any}
+          initialSEOData={initialSEOData as any}
         />
       </Suspense>
 
       <div className="space-y-12 mt-12 mb-8">
         <RecentlyViewedProducts />
-        <CheckoutStores />
       </div>
     </>
   );

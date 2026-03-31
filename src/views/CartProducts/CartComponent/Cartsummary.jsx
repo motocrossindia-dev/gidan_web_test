@@ -1,13 +1,12 @@
 'use client';
 
-import { useRouter } from "next/navigation";
-import React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
-import { useEffect } from "react";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { useSnackbar } from "notistack";
-import { Tag, Sparkles, Lock, ChevronRight, ShieldCheck, Truck, RefreshCcw, Smartphone, CreditCard } from "lucide-react";
+import { Tag, Sparkles, Lock, ChevronRight, ShieldCheck, Truck, RefreshCcw, Smartphone, CreditCard, X, Loader2 } from "lucide-react";
 
 const CartSummary = ({
   totalItems,
@@ -19,12 +18,58 @@ const CartSummary = ({
 }) => {
   const accessToken = useSelector(selectAccessToken);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { enqueueSnackbar } = useSnackbar();
 
+  const [couponCode, setCouponCode] = useState("");
+  const [couponData, setCouponData] = useState(null);
+  const [isApplying, setIsApplying] = useState(false);
 
   useEffect(() => {
-    window.scrollTo(0, 0); // Scroll to the top
-  }, []);
+    window.scrollTo(0, 0);
+    
+    // Auto-apply coupon from URL if present
+    const couponFromUrl = searchParams.get('coupon');
+    if (couponFromUrl) {
+      setCouponCode(couponFromUrl);
+      applyCoupon(couponFromUrl);
+    }
+  }, [searchParams]);
+
+  const applyCoupon = async (code) => {
+    const activeCode = code || couponCode;
+    if (!activeCode) return;
+
+    setIsApplying(true);
+    try {
+      const response = await axiosInstance.post(`/order/previewCoupon/`, {
+        coupon_code: activeCode.toUpperCase(),
+        order_source: "cart",
+        products: products.map(p => ({
+          prod_id: p.product_id,
+          quantity: p.quantity
+        }))
+      });
+
+      if (response.data?.status === "success" || response.data?.message === "success") {
+        setCouponData(response.data.data);
+        enqueueSnackbar("Coupon applied!", { variant: "success" });
+      } else {
+        enqueueSnackbar(response.data?.message || "Invalid coupon code", { variant: "error" });
+      }
+    } catch (err) {
+      console.error("Coupon error:", err);
+      enqueueSnackbar(err.response?.data?.message || "Failed to apply coupon", { variant: "error" });
+    } finally {
+      setIsApplying(false);
+    }
+  };
+
+  const removeCoupon = () => {
+    setCouponData(null);
+    setCouponCode("");
+    enqueueSnackbar("Coupon removed", { variant: "info" });
+  };
   // Prepare the cart data to be sent
 
 
@@ -62,13 +107,19 @@ const CartSummary = ({
   };
 
   const prepareCartData = () => {
-    return {
+    const data = {
       order_source: "cart",
       products: products.map((product) => ({
         prod_id: product.product_id,
         quantity: product.quantity,
       })),
     };
+    
+    if (couponData?.coupon_code) {
+      data.coupon_code = couponData.coupon_code;
+    }
+    
+    return data;
   };
 
   return (
@@ -82,28 +133,61 @@ const CartSummary = ({
              <Tag className="w-4 h-4 text-green-700" />
              <span className="text-xs font-bold text-gray-700 uppercase tracking-tight">Apply Coupon Code</span>
           </div>
-          <div className="flex gap-2">
-            <div className="relative flex-1">
-              <input 
-                type="text" 
-                placeholder="Enter code (try GET10)" 
-                className="w-full pl-4 pr-4 py-3 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm font-bold focus:bg-white focus:border-green-600 outline-none transition-all placeholder:text-gray-400"
-              />
+          
+          {!couponData ? (
+            <div className="space-y-3">
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <input 
+                    type="text" 
+                    placeholder="Enter code (try GET10)" 
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                    className="w-full pl-4 pr-4 py-3 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm font-bold focus:bg-white focus:border-green-600 outline-none transition-all placeholder:text-gray-400"
+                  />
+                </div>
+                <button 
+                  onClick={() => applyCoupon()}
+                  disabled={isApplying || !couponCode}
+                  className="px-6 py-3 bg-gray-900 text-white rounded-xl text-sm font-black hover:bg-green-800 transition-all shadow-sm active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {isApplying ? <Loader2 className="w-4 h-4 animate-spin" /> : "Apply"}
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {["GET10", "SAVE15"].map(code => (
+                  <div 
+                    key={code}
+                    onClick={() => { setCouponCode(code); applyCoupon(code); }}
+                    className="flex items-center gap-2 px-3 py-2 bg-green-50 rounded-xl border border-green-100/50 cursor-pointer hover:bg-green-100 transition-colors"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-green-700" />
+                    <span className="text-[10px] font-black text-green-800 tracking-tighter uppercase">{code} for {code === "GET10" ? "10%" : "15%"} off</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <button className="px-6 py-3 bg-gray-900 text-white rounded-xl text-sm font-black hover:bg-green-800 transition-all shadow-sm active:scale-95">
-              Apply
-            </button>
-          </div>
-          <div className="mt-4 flex flex-wrap gap-2">
-             <div className="flex items-center gap-2 px-3 py-2 bg-green-50 rounded-xl border border-green-100/50 cursor-pointer hover:bg-green-100 transition-colors">
-                <Sparkles className="w-3.5 h-3.5 text-green-700" />
-                <span className="text-[10px] font-black text-green-800 tracking-tighter uppercase">GET10 for 10% off</span>
-             </div>
-             <div className="flex items-center gap-2 px-3 py-2 bg-orange-50 rounded-xl border border-orange-100/50 cursor-pointer hover:bg-orange-100 transition-colors">
-                <Sparkles className="w-3.5 h-3.5 text-orange-700" />
-                <span className="text-[10px] font-black text-orange-800 tracking-tighter uppercase">SAVE15 for 15% off</span>
-             </div>
-          </div>
+          ) : (
+            <div className="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-2xl relative overflow-hidden group">
+              <div className="relative z-10">
+                 <div className="flex items-center gap-2 mb-1">
+                    <span className="text-sm font-black text-green-800 tracking-widest uppercase">{couponData.coupon_code}</span>
+                    <div className="px-1.5 py-0.5 bg-green-600 text-white text-[8px] font-black rounded uppercase">Applied</div>
+                 </div>
+                  <p className="text-[11px] text-green-700 font-bold tracking-tight">Saved ₹{Math.round(couponData.discount_amount)} extra on this order!</p>
+                  {couponData.redemption_message && (
+                    <p className="text-[9px] text-green-600/70 font-medium leading-tight mt-1">{couponData.redemption_message}</p>
+                  )}
+              </div>
+              <button 
+                onClick={removeCoupon}
+                className="relative z-10 w-8 h-8 rounded-xl bg-white/50 flex items-center justify-center text-green-800 hover:bg-red-50 hover:text-red-600 transition-all group-hover:scale-110"
+              >
+                <X className="w-4 h-4" />
+              </button>
+              <Sparkles className="absolute -right-2 -bottom-2 w-16 h-16 text-green-100 opacity-50" />
+            </div>
+          )}
         </div>
 
         <div className="space-y-4 pt-4 border-t border-gray-50">
@@ -129,10 +213,17 @@ const CartSummary = ({
             </div>
           </div>
 
+          {couponData && (
+            <div className="flex justify-between items-center text-sm font-bold text-green-600 pt-2 border-t border-gray-50">
+              <span className="flex items-center gap-1.5"><Sparkles className="w-3.5 h-3.5" /> Coupon discount ({couponData.coupon_code})</span>
+              <span>-₹{Math.round(couponData.discount_amount)}</span>
+            </div>
+          )}
+
           <div className="pt-6 border-t-2 border-dashed border-gray-100 flex justify-between items-end">
             <div>
               <span className="text-xs font-black text-gray-400 uppercase tracking-widest block mb-1">TotalAmount</span>
-              <span className="text-3xl font-black text-gray-900">₹{Math.round(totalSellingPrice + (amountToFreeShipping > 0 ? 99 : 0))}</span>
+              <span className="text-3xl font-black text-gray-900">₹{Math.round(totalSellingPrice + (amountToFreeShipping > 0 ? 99 : 0) - (couponData?.discount_amount || 0))}</span>
             </div>
           </div>
 

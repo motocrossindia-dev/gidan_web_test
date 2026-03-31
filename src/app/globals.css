@@ -51,6 +51,6 @@ body {
 /* Tawk.to mobile override to dodge bottom navigation bar */
 @media (max-width: 768px) {
   iframe[title="chat widget"] {
-    bottom: 85px !important;
+    bottom: 110px !important;
   }
 }

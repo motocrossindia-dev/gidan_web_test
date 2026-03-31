@@ -49,7 +49,6 @@ import React, { useEffect, useState } from "react";
 import ProductGrid from "../../../components/Shared/ProductGrid";
 import FAQSection from "../PlantFilter/FAQSection";
 import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
-import CheckoutStores from "../PlantFilter/CheckoutStores";
 import axios from "axios";
 function CarouselData() {
     const [results, setResults] = useState([]);
@@ -97,7 +96,6 @@ function CarouselData() {
                 <div className="px-4 md:px-8 mt-8">
                     <RecentlyViewedProducts />
                     <FAQSection />
-                    <CheckoutStores />
                 </div>
             </div>
         </>

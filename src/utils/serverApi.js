@@ -54,12 +54,16 @@ export async function fetchProductsByFilters(filters = {}) {
             weight_id: filters.weight_id || "",
             pot_type_id: filters.pot_type_id || "",
             litre_id: filters.litre_id || "",
-            is_featured: filters.is_featured ? "true" : "unknown",
-            is_best_seller: filters.is_best_seller ? "true" : "unknown",
-            is_seasonal_collection: filters.is_seasonal_collection ? "true" : "unknown",
-            is_trending: filters.is_trending ? "true" : "unknown",
+            is_featured: (filters.is_featured || filters.flag == 2) ? "true" : "unknown",
+            is_best_seller: (filters.is_best_seller || filters.flag == 4) ? "true" : "unknown",
+            is_seasonal_collection: (filters.is_seasonal_collection || filters.flag == 5) ? "true" : "unknown",
+            is_trending: (filters.is_trending || filters.flag == 6) ? "true" : "unknown",
+            is_latest: (filters.is_latest || filters.flag == 3) ? "true" : "unknown",
+            flag: filters.flag || "",
             ordering: filters.ordering || ""
         };
+
+
 
         Object.entries(defaults).forEach(([key, value]) => {
             queryParams.append(key, value);
@@ -122,6 +126,17 @@ export async function fetchOfferProducts() {
         return data?.products || [];
     } catch (err) {
         console.error("Error fetching offer products", err);
+        return [];
+    }
+}
+export async function fetchPublicFlags() {
+    try {
+        const res = await fetch(`${API_URL}/product/public-flags/`, { next: { revalidate: 300 } });
+        if (!res.ok) return [];
+        const data = await res.json();
+        return data?.flags || [];
+    } catch (err) {
+        console.error("Error fetching public flags", err);
         return [];
     }
 }

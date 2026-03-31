@@ -56,11 +56,11 @@ const CategoryIcons = ({ initialData }) => {
 
   return (
     <>
-      <div className="max-w-full mx-auto px-4 md:px-8 pt-4 md:pt-6 pb-0 relative z-[50]">
+      <div className="max-w-full mx-auto px-4 md:px-8 pt-4 md:pt-6 pb-0 relative">
         {/* Category Container */}
         <div
           id="category-scroll-container"
-          className="flex items-center gap-3 sm:gap-4 px-2 sm:px-4 mt-2 w-full overflow-x-auto md:overflow-visible md:flex-wrap scrollbar-hide pb-4 pt-1"
+          className="flex items-center justify-center flex-wrap gap-3 sm:gap-4 px-2 sm:px-4 mt-2 w-full pt-2 relative z-[50] overflow-visible"
         >
           {/* "All" Badge */}
           <div className="relative shrink-0">
@@ -120,8 +120,9 @@ const CategoryIcons = ({ initialData }) => {
                   
                   {/* Category Name */}
                   <span className="text-[14px] font-semibold whitespace-nowrap">
-                    {category.name.replace(/plants/gi, "").trim()}
+                    {category.name.replace(/plants/gi, "").trim() || category.name}
                   </span>
+
 
                   {/* Product Count */}
                   {(category.product_count !== undefined || category.count !== undefined) && (

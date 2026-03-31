@@ -6,7 +6,6 @@ import FilterSidebarMobile from "./FilterSidebarMobile"; // Mobile version of Fi
 import ProductGrid from "../../../components/Shared/ProductGrid";
 import FAQSection from "./FAQSection";
 import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
-import CheckoutStores from "./CheckoutStores";
 import Banner1 from "./Banner1";
 import { Card } from "@mui/material";
 import { FiFilter } from "react-icons/fi";
@@ -62,8 +61,6 @@ function BirthdayGifts() {
               {/* FAQ Section */}
               <div className="md:ml-16 overflow-x-hidden md:mr-12 ">
                   <FAQSection />
-
-                  <CheckoutStores />
               </div>
               {/* Mobile Filter Sidebar */}
               {showMobileFilter && (

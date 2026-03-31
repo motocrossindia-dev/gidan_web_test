@@ -42,7 +42,6 @@ const MobileSidebar = ({ onNavigate }) => {
     { label: "Refer A Friend", icon: <MdPeople />, link: "/profile/referal" },
     { label: "Add Gift Card", icon: <MdCardGiftcard />, link: "/profile/giftcard" },
     { label: "GD Coins", icon: <MdMonetizationOn />, link: "/profile/btcoins" },
-    { label: "Wallet", icon: <MdAccountBalanceWallet />, link: "/profile/wallet" },
   ];
 
   const handleEditClick = () => {

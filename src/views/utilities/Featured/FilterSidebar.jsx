@@ -68,7 +68,16 @@ const DropdownMenu = ({ isOpen, filter, options, selectedFilters, handleFilterSe
   );
 };
 
+const FLAG_MAP = {
+    is_featured: 2,
+    is_latest: 3,
+    is_best_seller: 4,
+    is_seasonal_collection: 5,
+    is_trending: 6
+};
+
 const FilterSidebar = ({
+
   setResults,
   setProducts,
   setFiltersApplied,
@@ -84,6 +93,7 @@ const FilterSidebar = ({
   setCurrentFilterType,
   isSeasonalCollection,
   isTrending,
+  isLatest,
   isFeatured,
   isBestSeller,
   categoryIdFromSlug,
@@ -107,7 +117,7 @@ const FilterSidebar = ({
   const userInteracted = useRef(false);
   const router = useRouter();
 
-  const [selectedFilterType, setSelectedFilterType] = useState(typeKey || "plant");
+  const [selectedFilterType, setSelectedFilterType] = useState(typeKey || "");
   const [userHasSelectedType, setUserHasSelectedType] = useState(false);
 
   const [openFilters, setOpenFilters] = useState({});
@@ -228,17 +238,23 @@ const FilterSidebar = ({
   const fetchData = useCallback(async () => {
     try {
       const params = new URLSearchParams();
-      params.append("type", selectedFilterType || "");
+      if (selectedFilterType) {
+        params.append("type", selectedFilterType);
+      }
+      
       if (searchQuery) {
         params.append("search", searchQuery);
       }
 
       // Initial results fetch for faceted sidebars often need the base category
-      if (categoryId && !userInteracted.current) {
+      if (categoryId && !userInteracted.current && categoryId !== "undefined") {
         params.append("category_id", String(categoryId));
       }
 
-      const res = await axiosInstance.get(`${API_URL}?${params.toString()}`);
+      const queryString = params.toString();
+      const requestUrl = queryString ? `${API_URL}?${queryString}` : API_URL;
+      
+      const res = await axiosInstance.get(requestUrl);
       const filters = res.data?.filters || {};
 
       setFilterData(prev => {
@@ -265,7 +281,8 @@ const FilterSidebar = ({
 
   // Handle Type change logic: switch to correct category_id based on type mapping
   const handleTypeChange = (newType) => {
-    if (selectedFilterType === newType) return;
+    if (selectedFilterType === newType && newType !== "") return;
+
 
     // 1. Immediately update visual state
     setSelectedFilterType(newType);
@@ -361,13 +378,13 @@ const FilterSidebar = ({
     params.append("type", finalType || "");
     // When the user switches the Type dropdown, the route's typeKey (from the URL) and the
     // selected type will differ — we call this a "type mismatch".
-    const isTypeMismatch = typeKey && finalType &&
-      finalType.toLowerCase() !== typeKey.toLowerCase();
+    const isTypeMismatch = typeKey && (finalType === "" || (finalType && finalType.toLowerCase() !== typeKey.toLowerCase()));
 
     // Ensure that if we are on a gift route and the user switches to another type,
     // we clear the category IDs to avoid showing products from different categories.
     const isGiftRoute = typeKey?.toLowerCase() === "gift" || window.location.pathname.includes("/gifts") || window.location.pathname.includes("/gift");
     const forceResetIds = isTypeMismatch || (isGiftRoute && finalType.toLowerCase() !== "gift");
+
 
     // Use available_types from API if it contains category_id mapping or just use the current type matching
     // If the API filters/filters_n/ doesn't provide explicit mapping, we keep a fallback or better, use 
@@ -381,7 +398,10 @@ const FilterSidebar = ({
     };
 
     // Clear route IDs on type switch or when a search query is active so we search across all categories
-    let finalCategoryId = (forceResetIds || searchQuery) ? "" : (categoryId || categoryIdFromSlug || "");
+    let baseCategoryId = categoryId || categoryIdFromSlug || "";
+    if (baseCategoryId === "undefined" || baseCategoryId === "null") baseCategoryId = "";
+    
+    let finalCategoryId = (forceResetIds || searchQuery) ? "" : baseCategoryId;
 
     // If we're on a type change, default to the correct category ID for that type.
     if (isTypeMismatch && !forceResetIds) {
@@ -442,13 +462,14 @@ const FilterSidebar = ({
     const effectiveFlag = selectedPublicFlag || filtersObj.flags || "";
     params.append("flag", effectiveFlag);
 
-    // Boolean flags mapping (mapping names like "is_featured" from flags data to Boolean params)
-    const selectedFlag = effectiveFlag;
-    params.append("is_featured", (selectedFlag === "is_featured" || isFeatured) ? "true" : "unknown");
-    params.append("is_best_seller", (selectedFlag === "is_best_seller" || isBestSeller) ? "true" : "unknown");
-    params.append("is_seasonal_collection", (selectedFlag === "is_seasonal_collection" || isSeasonalCollection) ? "true" : "unknown");
-    params.append("is_trending", (selectedFlag === "is_trending" || isTrending) ? "true" : "unknown");
-    params.append("is_latest", (selectedFlag === "is_latest") ? "true" : "unknown");
+    // Boolean flags mapping (mapping numeric IDs from flags data to Boolean params)
+    const selectedFlag = Number(effectiveFlag);
+    params.append("is_featured", (selectedFlag === FLAG_MAP.is_featured || isFeatured) ? "true" : "unknown");
+    params.append("is_best_seller", (selectedFlag === FLAG_MAP.is_best_seller || isBestSeller) ? "true" : "unknown");
+    params.append("is_seasonal_collection", (selectedFlag === FLAG_MAP.is_seasonal_collection || isSeasonalCollection) ? "true" : "unknown");
+    params.append("is_trending", (selectedFlag === FLAG_MAP.is_trending || isTrending) ? "true" : "unknown");
+    params.append("is_latest", (selectedFlag === FLAG_MAP.is_latest || isLatest) ? "true" : "unknown");
+
 
     // Ordering (empty for now)
     params.append("ordering", "");
@@ -505,7 +526,10 @@ const FilterSidebar = ({
         if (setCategoryData) setCategoryData(null);
       }
 
-      const res = await axiosInstance.get(`/filters/main_productsFilter/?${params}&page_size=12`);
+      params.append("page_size", "12");
+      const requestUrl = `/filters/main_productsFilter/?${params.toString()}`;
+      const res = await axiosInstance.get(requestUrl);
+      
       if (setCurrentQuery) setCurrentQuery(params.toString());
       setResults(res.data.results);
 
@@ -631,8 +655,11 @@ const FilterSidebar = ({
     setShowMobileFilter,
     isSeasonalCollection,
     isTrending,
+    isLatest,
     isFeatured,
     isBestSeller,
+
+
     setIsSearching,
     setFetchedCategoryName,
     setFetchedSubcategoryName,
@@ -722,7 +749,9 @@ const FilterSidebar = ({
       params.append("is_best_seller", isBestSeller ? "true" : "unknown");
       params.append("is_seasonal_collection", isSeasonalCollection ? "true" : "unknown");
       params.append("is_trending", isTrending ? "true" : "unknown");
+      params.append("is_latest", isLatest ? "true" : "unknown");
       params.append("ordering", "");
+
 
       const res = await axiosInstance.get(`/filters/main_productsFilter/?${params}&page_size=12`);
       if (setCurrentQuery) setCurrentQuery(params.toString());
@@ -747,7 +776,8 @@ const FilterSidebar = ({
     } catch (err) {
       console.error("Reset filters fetch error:", err);
     }
-  }, [setFiltersApplied, selectedFilterType, categoryId, categoryIdFromSlug, subcategoryID, setResults, setProducts, setCategoryData, setSeoData, setIsSubcategorySEO, isSeasonalCollection, isTrending, isFeatured, isBestSeller, typeKey]);
+  }, [setFiltersApplied, selectedFilterType, categoryId, categoryIdFromSlug, subcategoryID, setResults, setProducts, setCategoryData, setSeoData, setIsSubcategorySEO, isSeasonalCollection, isTrending, isLatest, isFeatured, isBestSeller, typeKey]);
+
 
   const removeFilter = useCallback((filter, value) => {
     userInteracted.current = true; // trigger auto-apply after removal
@@ -898,6 +928,15 @@ const FilterSidebar = ({
           <div className="mb-6">
             <h3 className="text-gray-900 font-bold mb-4">Type</h3>
             <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => handleTypeChange("")}
+                className={`px-4 py-2 rounded-full border text-sm font-medium transition-all ${!selectedFilterType
+                  ? "bg-[#375421] text-white border-[#375421] shadow-md"
+                  : "bg-white text-gray-700 border-gray-200"
+                  }`}
+              >
+                All Collection
+              </button>
               {availableTypes.map((type) => {
                 const isSelected = selectedFilterType === type;
                 return (
@@ -964,6 +1003,16 @@ const FilterSidebar = ({
         <div className="mb-8">
           <h3 className="text-gray-900 font-bold mb-4 text-sm">Type</h3>
           <div className="flex flex-wrap gap-2">
+            {/* Manual 'All Collection' option */}
+            <button
+              onClick={() => handleTypeChange("")}
+              className={`px-3 py-1.5 rounded-full border text-xs font-medium transition-all ${!selectedFilterType
+                ? "bg-[#375421] text-white border-[#375421] shadow-sm transform scale-105"
+                : "bg-white text-gray-700 border-gray-200 hover:border-[#375421]"
+                }`}
+            >
+              All Collection
+            </button>
             {availableTypes.map((type) => {
               const isSelected = selectedFilterType === type;
               return (

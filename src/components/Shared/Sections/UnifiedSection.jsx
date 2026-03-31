@@ -32,27 +32,48 @@ const SectionHeader = ({ data, config, isDark, type }) => {
 
     const isHero = type === 'hero';
 
+    const labelText = data.extra?.badge_text || data.label;
+    const headingColor = data.extra?.color;
+    const italicTextColor = data.extra?.italic_text_color;
+    const italicBgColor = data.extra?.italic_bg_color;
+
     return (
         <div className="space-y-6">
-            {data.label && (
+            {labelText && (
                 <div className="animate-fade-in">
                     {isHero ? (
-                        <span className={`inline-block px-5 py-2 rounded-full border ${isDark ? 'border-[#a8e070]/30 text-[#a8e070] bg-[#a8e070]/5' : 'bg-black/5 text-black/40 border-black/5'} text-[11px] font-bold tracking-[0.25em] uppercase backdrop-blur-sm`}>
-                            <span className="inline-block w-2 h-2 rounded-full bg-[#a8e070] mr-2" />
-                            {data.label}
+                        <span 
+                            className={`inline-block px-5 py-2 rounded-full border ${isDark ? 'border-[#a8e070]/30 text-[#a8e070] bg-[#a8e070]/5' : 'bg-black/5 text-black/40 border-black/5'} text-[11px] font-bold tracking-[0.25em] uppercase backdrop-blur-sm`}
+                            style={data.extra?.italic_text_color ? { borderColor: `${data.extra.italic_text_color}33`, color: data.extra.italic_text_color } : {}}
+                        >
+                            <span className="inline-block w-2 h-2 rounded-full bg-[#a8e070] mr-2" style={data.extra?.italic_text_color ? { backgroundColor: data.extra.italic_text_color } : {}} />
+                            {labelText}
                         </span>
                     ) : (
-                        <span className="text-[12px] font-bold tracking-[0.15em] uppercase text-[#a8e070]">
-                            {data.label}
+                        <span 
+                            className="text-[12px] font-bold tracking-[0.15em] uppercase text-[#a8e070]"
+                            style={data.extra?.italic_text_color ? { color: data.extra.italic_text_color } : {}}
+                        >
+                            {labelText}
                         </span>
                     )}
                 </div>
             )}
-            <h2 className={`${isHero ? 'text-5xl lg:text-[72px]' : 'text-3xl lg:text-[48px]'} font-serif font-medium ${isDark ? 'text-white' : 'text-[#1a1f14]'} leading-[1.05] tracking-tight`}>
+            <h2 
+                className={`${isHero ? 'text-4xl lg:text-6xl' : 'text-2xl lg:text-4xl'} font-serif font-medium ${isDark ? 'text-white' : 'text-[#1a1f14]'} leading-[1.05] tracking-tight`}
+                style={headingColor ? { color: headingColor } : {}}
+            >
                 {data.heading} <br className="hidden sm:block" />
-                <span className="italic font-normal text-[#a8e070]">{data.italic_text}</span> {data.heading_suffix}
+                <span 
+                    className="italic font-normal text-[#a8e070]"
+                    style={{ 
+                        color: italicTextColor || undefined
+                    }}
+                >
+                    {data.italic_text}
+                </span> {data.heading_suffix}
             </h2>
-            <p className={`text-[16px] lg:text-[18px] ${isDark ? 'text-white/70' : 'text-black/60'} leading-relaxed max-w-[600px]`}>
+            <p className={`text-base lg:text-lg ${isDark ? 'text-white/70' : 'text-black/60'} leading-relaxed max-w-[600px]`}>
                 {renderDescription(data.description)}
             </p>
         </div>
@@ -68,12 +89,16 @@ const ActionButtons = ({ data, config, isDark, type }) => {
         return text.replace(/\s*(->|→|=>|>)\s*$/, "").trim();
     };
 
+    const btnPrimaryColor = data.extra?.btn_primary_color;
+    const btnSecondaryColor = data.extra?.btn_secondary_color;
+
     return (
         <div className="flex flex-wrap gap-5 pt-10">
             {data.btn1_text && (
                 <a 
                     href={data.btn1_link} 
                     className="bg-white text-[#1a3d0a] px-10 py-5 rounded-[24px] text-[16px] font-extrabold flex items-center gap-3 group transition-all hover:scale-105 shadow-xl hover:shadow-white/10"
+                    style={btnPrimaryColor ? { backgroundColor: btnPrimaryColor, color: '#fff' } : {}}
                 >
                     {cleanButtonText(data.btn1_text)} {isClimateStory && <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />}
                 </a>
@@ -82,6 +107,7 @@ const ActionButtons = ({ data, config, isDark, type }) => {
                 <a 
                     href={data.btn2_link} 
                     className="px-10 py-5 rounded-[24px] text-[16px] font-bold flex items-center gap-2 transition-all hover:bg-white/10 border border-white/30 text-white backdrop-blur-md shadow-lg"
+                    style={btnSecondaryColor ? { backgroundColor: btnSecondaryColor, borderColor: 'transparent' } : {}}
                 >
                     {cleanButtonText(data.btn2_text)}
                 </a>
@@ -90,33 +116,46 @@ const ActionButtons = ({ data, config, isDark, type }) => {
     );
 };
 
-const StatsRenderer = ({ data, isDark }) => (
-    <div className="pt-12 mt-12 border-t border-white/10">
-        <div className="flex flex-wrap items-center gap-6">
-            {/* Profile Bubbles */}
-            <div className="flex -space-x-3">
-                {['P', 'R', 'A', 'S'].map((char, i) => (
-                    <div key={i} className={`w-11 h-11 rounded-full ${isDark ? 'bg-[#2d5a1b] border-2 border-[#1a3d0a]' : 'bg-[#f0f9ea] border-2 border-white'} flex items-center justify-center text-[13px] font-bold text-white shadow-lg`}>
-                        {char}
-                    </div>
-                ))}
-                <div className={`w-11 h-11 rounded-full ${isDark ? 'bg-[#4a8a2a] border-2 border-[#1a3d0a]' : 'bg-[#d4e8a0] border-2 border-white'} flex items-center justify-center text-[13px] font-bold text-white shadow-lg`}>
-                    +
-                </div>
-            </div>
+const StatsRenderer = ({ data, isDark }) => {
+    const statCount = data.extra?.stat_count || "12,847";
+    const statLabel = data.extra?.stat_label || "happy gardeners across India";
+    const statRating = parseFloat(data.extra?.stat_rating || "4.8");
 
-            {/* Stars & Text */}
-            <div className="space-y-1">
-                <div className="flex gap-1 text-orange-400">
-                    {[1, 2, 3, 4, 5].map((s) => <Star key={s} size={16} fill="currentColor" />)}
+    return (
+        <div className="pt-12 mt-12 border-t border-white/10">
+            <div className="flex flex-wrap items-center gap-6">
+                {/* Profile Bubbles */}
+                <div className="flex -space-x-3">
+                    {['P', 'R', 'A', 'S'].map((char, i) => (
+                        <div key={i} className={`w-11 h-11 rounded-full ${isDark ? 'bg-[#2d5a1b] border-2 border-[#1a3d0a]' : 'bg-[#f0f9ea] border-2 border-white'} flex items-center justify-center text-[13px] font-bold text-white shadow-lg`}>
+                            {char}
+                        </div>
+                    ))}
+                    <div className={`w-11 h-11 rounded-full ${isDark ? 'bg-[#4a8a2a] border-2 border-[#1a3d0a]' : 'bg-[#d4e8a0] border-2 border-white'} flex items-center justify-center text-[13px] font-bold text-white shadow-lg`}>
+                        +
+                    </div>
                 </div>
-                <p className={`text-[15px] font-medium ${isDark ? 'text-white/80' : 'text-black/70'}`}>
-                    <span className="font-bold">{data.extra?.stat_count || "12,847"} happy gardeners</span> <span className={isDark ? 'text-white/40' : 'text-black/40'}>across India</span>
-                </p>
+
+                {/* Stars & Text */}
+                <div className="space-y-1">
+                    <div className="flex gap-1 text-orange-400">
+                        {[1, 2, 3, 4, 5].map((s) => (
+                            <Star 
+                                key={s} 
+                                size={16} 
+                                fill={s <= Math.round(statRating) ? "currentColor" : "none"} 
+                                className={s <= Math.round(statRating) ? "" : "text-white/20"}
+                            />
+                        ))}
+                    </div>
+                    <p className={`text-[15px] font-medium ${isDark ? 'text-white/80' : 'text-black/70'}`}>
+                        <span className="font-bold">{statCount}</span> <span>{statLabel}</span>
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 const ItemsRenderer = ({ items, isDark }) => {
     const checklists = items.filter(i => i.item_type === 'checklist');
@@ -169,7 +208,7 @@ const SubscriptionForm = ({ data, config }) => (
 );
 
 const StaticImageGrid = ({ data, isDark }) => (
-    <div className="grid grid-cols-2 gap-5 h-[400px] lg:h-[640px] animate-fade-in relative z-10">
+    <div className="grid grid-cols-2 gap-5 h-[400px] lg:h-[640px] animate-fade-in relative">
         <div className="relative bg-[#cee8a0] rounded-[60px] overflow-hidden row-span-2 shadow-2xl group border-8 border-white/10">
             <Image src={processUrl(data.image)} alt="V1" fill className="object-cover transition-transform group-hover:scale-110 duration-1000" />
             <div className="absolute inset-x-0 bottom-0 p-8 pt-20 bg-gradient-to-t from-black/60 to-transparent">
@@ -177,7 +216,7 @@ const StaticImageGrid = ({ data, isDark }) => (
                 <p className="text-white text-[15px] font-bold mt-1">{data.extra?.image_caption || "Curated Selection"}</p>
             </div>
             {data.extra?.badge_text && (
-                <div className="absolute top-10 right-10 bg-white/90 backdrop-blur-md px-6 py-2 rounded-full shadow-lg z-30">
+                <div className="absolute top-10 right-10 bg-white/90 backdrop-blur-md px-6 py-2 rounded-full shadow-lg z-[2]">
                     <span className="text-[10px] font-bold tracking-[0.2em] text-[#2d5a1b]">{data.extra.badge_text}</span>
                 </div>
             )}
@@ -206,22 +245,22 @@ const BentoProductGrid = ({ products, isDark }) => {
     if (!products.length) return null;
 
     return (
-        <div className="grid grid-cols-2 grid-rows-2 gap-5 h-[450px] lg:h-[600px] animate-fade-in relative z-10">
-            <div className="col-span-1 row-span-2 relative transform transition-transform duration-700 hover:scale-[1.02]">
+        <div className="grid grid-cols-2 lg:grid-rows-2 gap-4 md:gap-5 h-[550px] md:h-[600px] lg:h-[600px] animate-fade-in relative">
+            <div className="col-span-2 lg:col-span-1 lg:row-span-2 relative transform transition-transform duration-700 hover:scale-[1.02]">
                 <ProductCard product={products[0].product_data || products[0]} variant="bento-large" />
             </div>
-            <div className="col-span-1 row-span-1 relative transform transition-transform duration-700 hover:scale-[1.02]">
+            <div className="col-span-1 lg:row-span-1 relative transform transition-transform duration-700 hover:scale-[1.02]">
                 {products[1] ? (
                     <ProductCard product={products[1].product_data || products[1]} variant="bento" />
                 ) : (
                     <div className={`w-full h-full rounded-[40px] ${isDark ? 'bg-white/5' : 'bg-black/5'} border border-dashed border-white/10`} />
                 )}
             </div>
-            <div className="col-span-1 row-span-1 relative">
+            <div className="col-span-1 lg:row-span-1 relative">
                 {rotatorProducts.length > 0 ? (
                     <div className="relative w-full h-full overflow-hidden rounded-[40px]">
                         {rotatorProducts.map((p, idx) => (
-                            <div key={p.id} className={`absolute inset-0 transition-all duration-1000 ease-in-out transform ${idx === activeIdx ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}>
+                            <div key={p.id} className={`absolute inset-0 transition-all duration-1000 ease-in-out transform ${idx === activeIdx ? "opacity-100 scale-100 z-[1]" : "opacity-0 scale-95 pointer-events-none z-0"}`}>
                                 <ProductCard product={p.product_data || p} variant="bento" extra={{ is_brown_variant: idx % 2 === 1 }} />
                             </div>
                         ))}
@@ -264,10 +303,13 @@ const UnifiedSection = ({ data }) => {
     const isDark = config.isDark;
 
     return (
-        <section className={`py-20 lg:py-32 ${config.bg} relative overflow-hidden`}>
+        <section 
+            className={`py-20 lg:py-32 ${config.bg} relative overflow-hidden`}
+            style={data.extra?.bg_color ? { backgroundColor: data.extra.bg_color } : {}}
+        >
             {isDark && <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-black/20 to-transparent pointer-events-none" />}
             
-            <div className="max-w-[1440px] mx-auto px-6 lg:px-16 relative z-10">
+            <div className="max-w-[1440px] mx-auto px-6 lg:px-16 relative">
                 <div className={`flex flex-col lg:flex-row gap-10 lg:gap-16 lg:items-center ${isReversed ? 'lg:flex-row-reverse' : ''}`}>
                     {/* Header Column: Title and Description */}
                     <div className={`w-full lg:w-[42%] space-y-10 animate-fade-in ${isReversed ? 'lg:pl-16' : 'lg:pr-10'}`}>

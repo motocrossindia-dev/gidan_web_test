@@ -219,41 +219,33 @@ const DownloadAppPopup = () => {
           </div>
         </div>
 
-        {/* White bottom section */}
-        <div className="px-6 py-6 flex flex-col items-center gap-5">
-          <p className="text-center text-gray-700 text-sm font-medium leading-relaxed">
+        {/* Dark Green CTA section */}
+        <div className="px-6 py-6 flex flex-col items-center gap-5 bg-[#173113]" style={{ backgroundColor: "#173113" }}>
+          <p className="text-center text-white/90 text-sm font-medium leading-relaxed">
             Shop 1000+ plants, get app-only deals &amp;<br />track orders in real-time.
           </p>
 
-          <div className="flex flex-col items-center gap-3 w-full">
-            <a
-              href="https://play.google.com/store/apps/details?id=com.biotechmaali.app&pcampaignid=web_share"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={dismiss}
-              aria-label="Get it on Google Play"
-            >
-              <img
-                src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
-                alt="Get it on Google Play"
-                className="h-14 w-auto hover:opacity-90 transition-opacity"
-              />
-            </a>
-            {/* iOS – Coming Soon */}
-            <div className="flex items-center gap-2 bg-white/10 border border-white/20 rounded-xl px-4 py-2 cursor-not-allowed" aria-label="App Store – Coming Soon">
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-gray-500" viewBox="0 0 814 1000" fill="currentColor">
-                <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-37.5-155.5-127.4C46 790.7 0 663 0 541.8c0-207.1 134.7-316.6 267.7-316.6 68.7 0 126.2 45.2 169.6 45.2 41.5 0 106.5-47.7 183.5-47.7 37.9 0 138.4 3.2 207.9 100.3zm-159.3-113.9c31.4-37.9 53.6-90.5 53.6-143.1 0-7.7-.6-15.4-1.9-21.7-50.6 1.9-110.8 33.7-147.1 75.8-28.5 32.4-55.1 84.9-55.1 138.3 0 8.3 1.3 16.6 1.9 19.2 3.2.6 8.3 1.3 13.5 1.3 45.2 0 102.1-30.1 135.1-69.8z"/>
-              </svg>
-              <div className="leading-tight">
-                <p className="text-[10px] text-gray-500 uppercase tracking-wide font-medium">Coming Soon on</p>
-                <p className="text-sm font-semibold text-gray-700">App Store</p>
+          <div className="flex flex-col items-center gap-3 w-full mt-2">
+            <a href="#" className="flex items-center w-full max-w-[200px] justify-center gap-3 px-5 py-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all transform hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(0,0,0,0.1)]">
+              <Image src="/playstore.svg" alt="Google Play" width={20} height={20} className="w-5 h-5" />
+              <div className="flex flex-col items-start justify-center text-white">
+                  <span className="text-[9px] text-white/70 leading-tight">Get it on</span>
+                  <span className="text-[13px] font-bold leading-tight mt-0.5">Google Play</span>
               </div>
-            </div>
+            </a>
+
+            <a href="#" className="flex items-center w-full max-w-[200px] justify-center gap-3 px-5 py-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all transform hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(0,0,0,0.1)]">
+              <Image src="/appstore.svg" alt="App Store" width={20} height={20} className="w-5 h-5" />
+              <div className="flex flex-col items-start justify-center text-white">
+                  <span className="text-[9px] text-white/70 leading-tight">Download on the</span>
+                  <span className="text-[13px] font-bold leading-tight mt-0.5">App Store</span>
+              </div>
+            </a>
           </div>
 
           <button
             onClick={dismiss}
-            className="text-xs text-gray-400 hover:text-gray-600 transition-colors underline underline-offset-2"
+            className="text-xs text-white/50 hover:text-white/80 transition-colors underline underline-offset-2"
           >
             Maybe later
           </button>

@@ -112,6 +112,7 @@ import Link from "next/link";
 
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../Axios/axiosInstance";
+import StoreCard from "../../components/Shared/StoreCard";
 const Stores = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -158,39 +159,13 @@ const Stores = () => {
           Checkout Our Stores
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {stores && Array.isArray(stores) && stores.length > 0 ? (
             stores.map((store, index) => (
-              <Link
-                key={index}
-                href={`/stores/${store.slug}`}
-                className="p-4 border-2 border-bio-green rounded-md shadow-md bg-white w-full md:w-auto cursor-pointer hover:shadow-lg transition"
-              >
-                {store.image && (
-                  <img
-                    src={`https://backend.gidan.store${store.image}`}
-                    alt={store.location}
-                    className="w-full h-48 object-cover rounded-md mb-3"
-                  />
-                )}
-
-                <h3 className="text-lg font-semibold mb-2">
-                  {store.location}
-                </h3>
-
-                <p className="text-sm mb-2">
-                  <strong>Address:</strong> {store.address}
-                </p>
-                <p className="text-sm mb-2">
-                  <strong>Contact number:</strong> {store.contact}
-                </p>
-                <p className="text-sm">
-                  <strong>Time:</strong> {store.time_period}
-                </p>
-              </Link>
+              <StoreCard key={index} store={store} />
             ))
           ) : (
-            <div>No stores available</div>
+            <div className="col-span-full text-center py-20 text-gray-500 font-medium">No stores available</div>
           )}
         </div>
 

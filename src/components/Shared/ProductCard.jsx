@@ -50,6 +50,8 @@ const ProductCard = ({
     ratingNumber,
     mrp: propMrp,
     ribbon: propRibbon,
+    customFlag,
+    hideFlags = false,
     variant = 'default',
     extra = {}
 }) => {
@@ -250,6 +252,8 @@ const ProductCard = ({
     };
 
     const productImages = getImages();
+    const [imgError, setImgError] = useState(false);
+    const placeholderImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23a8e070' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 3.5 1.5 8.2-1.2 5.3-3.04 8.1-9.5 9.8Z'%3E%3C/path%3E%3Cpath d='M11 20A14.53 14.53 0 0 1 5 13'%3E%3C/path%3E%3C/svg%3E";
 
     // Badge Logic - Returns up to 5 badges based on user request
     const getBadges = () => {
@@ -261,10 +265,22 @@ const ProductCard = ({
         }
 
         // 2. Flags (Now Top Left) - e.g. "TRENDING"
-        const flags = product?.flags || flagsData || {};
-        const activeFlags = Object.entries(flags)
-            .filter(([_, value]) => value === true)
-            .map(([key]) => key.replace("is_", "").replace(/_/g, " ").toUpperCase());
+        let activeFlags = [];
+        
+        if (customFlag) {
+            activeFlags = [customFlag];
+        } else if (!hideFlags) {
+            const flags = product?.flags || flagsData || [];
+            if (Array.isArray(flags)) {
+                // New API format: ["Best Seller", "trending"]
+                activeFlags = flags.map(f => f.toUpperCase());
+            } else if (typeof flags === 'object' && flags !== null) {
+                // Legacy / Fallback format: { is_trending: true }
+                activeFlags = Object.entries(flags)
+                    .filter(([_, value]) => value === true)
+                    .map(([key]) => key.replace("is_", "").replace(/_/g, " ").toUpperCase());
+            }
+        }
 
         if (activeFlags.length > 0) {
             // Cycle through flags if multiple
@@ -301,77 +317,74 @@ const ProductCard = ({
 
     const badges = getBadges();
     if (isBentoLarge) {
+        const cardBg = extra.product_card_color || "#f3f6f0";
         return (
-            <Link href={productUrl} className="relative flex flex-col w-full h-full bg-gradient-to-br from-[#7fb35d] to-[#4b7a33] overflow-hidden group rounded-[50px] shadow-2xl transition-all duration-700 hover:scale-[1.01]">
-                {/* Floating Rating Badge (Top Left) */}
-                {avgRating > 0 && (
-                    <div className="absolute top-5 left-5 z-30 bg-white/95 backdrop-blur-md p-2 rounded-2xl shadow-xl animate-fade-in border border-white flex flex-col items-center">
-                        <div className="flex items-center gap-1 text-[#204516]">
-                            <FaStar size={11} className="text-[#EAB308]" />
-                            <span className="text-[12px] font-extrabold leading-tight">{avgRating.toFixed(1)}</span>
-                        </div>
-                        <div className="text-[6.5px] text-[#1a3d0a]/40 font-bold uppercase tracking-[0.1em] leading-none mt-1">
-                            {ratingsCount} {ratingsCount === 1 ? "review" : "reviews"}
-                        </div>
-                    </div>
-                )}
-
-                {/* Floating Badges (Top Right) */}
-                <div className="absolute top-5 right-5 z-30 flex flex-col items-end gap-1.5">
-                    {ribbon && (
-                        <span className="bg-[#fa8e4c] text-white text-[9px] font-bold px-3 py-1 rounded-full shadow-lg tracking-widest uppercase animate-fade-in">
-                            {ribbon}
-                        </span>
-                    )}
-                    {pData.is_latest && (
-                        <span className="bg-[#a8e070] text-[#1a3d0a] text-[9px] font-bold px-3 py-1 rounded-full shadow-lg tracking-widest uppercase animate-fade-in">
-                            New Arrival
-                        </span>
-                    )}
-                </div>
-
-                {/* Image Container (Flex-Grow) */}
-                <div className="flex-grow relative w-full flex items-center justify-center p-8 pt-16">
-                    <div className="relative w-full h-[85%] transform group-hover:scale-110 transition-transform duration-1000">
+            <Link href={productUrl} className="relative flex flex-row lg:flex-col w-full h-full overflow-hidden group rounded-[32px] md:rounded-[40px] shadow-2xl transition-all duration-700 hover:scale-[1.01]" style={{ backgroundColor: cardBg }}>
+                {/* Top Image Container (Fills space, pushes info down) */}
+                <div className="relative w-[60%] lg:w-full flex-grow overflow-hidden flex items-center justify-center p-3 md:p-6 min-h-[160px] lg:min-h-[200px]">
+                    {!imgError ? (
                         <Image
                             src={productImages.main}
                             alt={name}
                             fill
-                            className="object-contain drop-shadow-[0_45px_45px_rgba(0,0,0,0.25)]"
+                            onError={() => setImgError(true)}
+                            className="object-contain p-2 md:p-4 transition-transform duration-[2000ms] group-hover:scale-110"
                         />
-                    </div>
+                    ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gray-50/50">
+                            <div className="w-16 h-16 opacity-20">
+                                <img src={placeholderImg} alt="placeholder" className="w-full h-full object-contain" />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Floating Rating Badge (Top Left) */}
+                    {avgRating > 0 && (
+                        <div className="absolute top-4 left-4 z-2 bg-white/95 backdrop-blur-md px-2 py-1.5 rounded-xl shadow-xl border border-white flex items-center gap-1.5">
+                            <FaStar size={10} className="text-[#EAB308]" />
+                            <span className="text-[10px] md:text-[11px] font-black leading-tight text-[#1a1f14]">{avgRating.toFixed(1)}</span>
+                        </div>
+                    )}
                 </div>
 
-                {/* Info Panel (Bottom: flex-shrink-0) */}
-                <div className="flex-shrink-0 p-6 lg:p-7 pt-0">
-                    <div className="bg-white/95 backdrop-blur-xl border border-white p-6 lg:p-7 rounded-[40px] text-[#1a1f14] shadow-2xl transition-all group-hover:bg-white">
-                        <div className="flex flex-col gap-0.5 mb-2.5">
-                            <span className="text-[8px] lg:text-[9px] font-bold text-[#2d5a1b] opacity-40 uppercase tracking-[0.25em]">
+                {/* Info Panel UI (Bottom Portion - Fixed/Shrink) */}
+                <div className="shrink-0 w-[40%] lg:w-full bg-white p-2.5 md:p-3 md:p-5 relative z-1 flex flex-col justify-start gap-4 lg:justify-between border-l lg:border-l-0 lg:border-t border-gray-50 min-h-[160px] lg:min-h-[35%]">
+                    <div className="flex flex-col gap-1 md:gap-1.5 lg:gap-1">
+                        <div className="flex items-center justify-between gap-1 flex-wrap">
+                            <span className="text-[7.5px] md:text-[8px] lg:text-[10px] font-bold text-[#2d5a1b] opacity-40 uppercase tracking-[0.2em] md:tracking-[0.25em]">
                                 {subcategory || category || "Gidan Selection"}
                             </span>
-                            <h3 className="text-[14px] lg:text-[16px] font-bold tracking-tight uppercase line-clamp-1">
-                                {name}
-                            </h3>
-                            {stockStatus && (
-                                <div className="flex items-center gap-1 mt-0.5">
-                                    <div className={`w-1 h-1 rounded-full animate-pulse`} style={{ backgroundColor: stockConfig.color }} />
-                                    <span className="text-[7.5px] font-bold uppercase tracking-wider opacity-60" style={{ color: stockConfig.color }}>
-                                        {stockStatus}
-                                    </span>
-                                </div>
+                            {ribbon && (
+                                <span className="bg-[#fa8e4c] text-white text-[7px] md:text-[8px] lg:text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow-sm tracking-wide uppercase">
+                                    {ribbon}
+                                </span>
                             )}
                         </div>
+                        <h3 className="text-[11px] md:text-sm lg:text-lg font-bold tracking-tight uppercase leading-[1.1] text-[#1a1f14] line-clamp-2">
+                            {name}
+                        </h3>
+                        {stockStatus && (
+                            <div className="flex items-center gap-1 mt-0.5">
+                                <div className={`w-1.5 h-1.5 rounded-full animate-pulse`} style={{ backgroundColor: stockConfig.color }} />
+                                <span className="text-[7.5px] md:text-[8px] lg:text-[10px] font-bold uppercase tracking-wider opacity-60" style={{ color: stockConfig.color }}>
+                                    {stockStatus}
+                                </span>
+                            </div>
+                        )}
+                    </div>
 
-                        <div className="flex items-center justify-between border-t border-black/5 pt-3">
-                            <div className="flex flex-col">
-                                <span className="text-[18px] lg:text-[20px] font-black text-[#1a1f14] leading-tight tracking-tight">₹{Math.round(price)}</span>
-                                {originalPrice > price && (
-                                    <span className="text-[10px] lg:text-[11px] text-[#4a4a4a] opacity-40 line-through decoration-[1.5px] decoration-black/10">MRP: ₹{Math.round(originalPrice)}</span>
-                                )}
-                            </div>
-                            <div className="text-[9px] font-black text-[#2d5a1b] flex items-center gap-1 tracking-[0.1em] hover:opacity-70 transition-all uppercase">
-                                DETAILS <ArrowRight size={11.5} strokeWidth={3} />
-                            </div>
+                    <div className="pt-2 md:pt-4 border-t border-black/5 flex flex-col sm:flex-row items-start sm:items-center justify-between mt-0 lg:mt-auto gap-2 md:gap-3">
+                        <div className="flex flex-col">
+                            <span className="text-sm md:text-base lg:text-xl font-bold text-[#1a1f14] leading-tight flex items-baseline gap-0.5">
+                                <span className="text-[9px] opacity-30 font-bold">₹</span>
+                                {Math.round(price)}
+                            </span>
+                            {originalPrice > price && (
+                                <span className="text-[7.5px] md:text-[8px] lg:text-[11px] text-gray-400 line-through font-medium opacity-60 uppercase">₹{Math.round(originalPrice)}</span>
+                            )}
+                        </div>
+                        <div className="bg-[#375421] text-white px-3 py-1.5 md:px-4 md:py-2 md:px-5 md:py-2.5 rounded-full text-[7.5px] md:text-[8px] lg:text-[11px] font-black flex items-center gap-1 tracking-[0.1em] hover:bg-[#2d451b] transition-all uppercase shadow-md shadow-[#375421]/20">
+                            DETAILS <ArrowRight size={10} strokeWidth={3} className="md:w-3 md:h-3 lg:w-3.5 lg:h-3.5" />
                         </div>
                     </div>
                 </div>
@@ -389,10 +402,29 @@ const ProductCard = ({
             : "from-[#8cb369] to-[#6a8d4c]";
 
         return (
-            <Link href={productUrl} className={`relative flex flex-col w-full h-full bg-gradient-to-br ${bgGradient} overflow-hidden group rounded-[50px] shadow-xl transition-all duration-700 hover:scale-[1.02]`}>
+            <Link href={productUrl} className={`relative flex flex-col w-full h-full bg-[#f3f6f0] overflow-hidden group rounded-[32px] md:rounded-[40px] shadow-xl transition-all duration-700 hover:scale-[1.02]`}>
+                {/* Full-Card Background Image */}
+                <div className="absolute inset-0 z-0">
+                    {!imgError ? (
+                        <Image
+                            src={productImages.main}
+                            alt={name}
+                            fill
+                            onError={() => setImgError(true)}
+                            className="object-cover transition-transform duration-[2000ms] group-hover:scale-110 shadow-inner"
+                        />
+                    ) : (
+                        <div className="w-full h-full flex items-center justify-center opacity-10 bg-gray-100">
+                            <img src={placeholderImg} alt="placeholder" className="w-24 h-24 object-contain" />
+                        </div>
+                    )}
+                    {/* Light Overlay to harmonize with page */}
+                    <div className="absolute inset-0 bg-black/[0.03] group-hover:bg-black/0 transition-colors duration-700" />
+                </div>
+
                 {/* Rating Overlay (Top Left) */}
                 {avgRating > 0 && (
-                    <div className="absolute top-4 left-4 z-30 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20 flex items-center gap-1 animate-fade-in text-[#204516]">
+                    <div className="absolute top-4 left-4 z-2 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20 flex items-center gap-1 animate-fade-in text-[#204516]">
                         <FaStar size={8} className="text-[#EAB308]" />
                         <span className="text-[9px] font-bold leading-tight">{avgRating.toFixed(1)}</span>
                     </div>
@@ -400,49 +432,40 @@ const ProductCard = ({
 
                 {/* Floating Ribbon (Top Right) */}
                 {ribbon && (
-                    <div className="absolute top-4 right-4 z-30">
-                        <span className="bg-white/90 backdrop-blur-md text-[#fa8e4c] text-[7.5px] font-bold px-2 px-1 rounded-full shadow-sm tracking-[0.15em] uppercase">
+                    <div className="absolute top-4 right-4 z-2">
+                        <span className="bg-white/90 backdrop-blur-md text-[#fa8e4c] text-[7.5px] font-bold px-3 py-1 rounded-full shadow-sm tracking-[0.15em] uppercase">
                             {ribbon}
                         </span>
                     </div>
                 )}
 
-                {/* Image Container (Flex-Grow) */}
-                <div className="flex-grow relative w-full flex items-center justify-center p-10 pt-14">
-                    <div className="relative w-full h-[90%] transform group-hover:scale-110 transition-transform duration-1000">
-                        <Image
-                            src={productImages.main}
-                            alt={name}
-                            fill
-                            className="object-contain drop-shadow-[0_25px_25px_rgba(0,0,0,0.15)]"
-                        />
-                    </div>
-                </div>
+                {/* Spacer (Replaces Image Container) */}
+                <div className="flex-grow z-10" />
 
                 {/* Compact Info Panel (Bottom: flex-shrink-0) */}
-                <div className="flex-shrink-0 p-4 pt-0">
-                    <div className="bg-white/95 backdrop-blur-xl border border-white p-4 lg:p-5 rounded-[32px] text-[#1a1f14] transition-all group-hover:bg-white shadow-lg">
+                <div className="flex-shrink-0 p-3 md:p-4 pt-0 z-1">
+                    <div className="bg-white/95 backdrop-blur-xl border border-white p-2.5 md:p-3.5 lg:p-4 rounded-[20px] md:rounded-[28px] text-[#1a1f14] transition-all group-hover:bg-white shadow-lg">
                         <div className="flex flex-col gap-0 mb-1">
-                            <span className="text-[7px] font-bold text-[#2d5a1b] opacity-40 uppercase tracking-[0.15em] line-clamp-1">
+                            <span className="text-[6.5px] md:text-[7px] font-bold text-[#2d5a1b] opacity-40 uppercase tracking-[0.1em] md:tracking-[0.15em] line-clamp-1">
                                 {subcategory || category || "Gidan Selection"}
                             </span>
-                            <h4 className="text-[11px] lg:text-[12px] font-bold leading-tight truncate uppercase">
+                            <h4 className="text-[10px] md:text-xs font-bold leading-tight truncate uppercase">
                                 {name}
                             </h4>
                             {stockStatus && (
-                                <span className="text-[7.5px] font-bold opacity-30 uppercase tracking-tight mt-0.5" style={{ color: stockConfig.color }}>
+                                <span className="text-[7px] md:text-[7.5px] font-bold opacity-30 uppercase tracking-tight mt-0.5" style={{ color: stockConfig.color }}>
                                     {stockStatus}
                                 </span>
                             )}
                         </div>
-                        <div className="flex items-center justify-between border-t border-black/5 pt-2.5">
+                        <div className="flex items-center justify-between border-t border-black/5 pt-2 md:pt-2.5 gap-1">
                             <div className="flex flex-col">
-                                <span className="text-[14px] lg:text-[15px] font-black text-[#1a1f14] leading-tight">₹{Math.round(price)}</span>
+                                <span className="text-xs md:text-sm font-bold text-[#1a1f14] leading-tight">₹{Math.round(price)}</span>
                                 {originalPrice > price && (
-                                    <span className="text-[8.5px] text-[#4a4a4a] opacity-30 line-through decoration-[1px]">₹{Math.round(originalPrice)}</span>
+                                    <span className="text-[8px] md:text-[8.5px] text-[#4a4a4a] opacity-30 line-through decoration-[1px]">₹{Math.round(originalPrice)}</span>
                                 )}
                             </div>
-                            <div className="text-[8.5px] font-black text-[#2d5a1b] hover:opacity-70 transition-opacity uppercase tracking-wider">
+                            <div className="text-[7.5px] md:text-[8.5px] font-black text-[#2d5a1b] hover:opacity-70 transition-opacity uppercase tracking-wider whitespace-nowrap">
                                 DETAILS
                             </div>
                         </div>
@@ -461,11 +484,12 @@ const ProductCard = ({
                     onClick={() => router.push(productUrl)}
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}
-                    className="group relative flex flex-col items-start text-left transition-all duration-500 bg-white rounded-[2.5rem] border border-gray-100/60 overflow-hidden cursor-pointer hover:shadow-[0_22px_50px_rgba(0,0,0,0.06)] hover:-translate-y-2"
+                    className="group relative flex flex-col items-start text-left transition-all duration-500 bg-white rounded-[2.5rem] border border-gray-100/60 overflow-hidden cursor-pointer hover:shadow-[0_22px_50px_rgba(0,0,0,0.06)] hover:-translate-y-2 isolation-isolate transform-gpu"
+                    style={{ isolation: 'isolate', transform: 'translateZ(0)', WebkitMaskImage: '-webkit-radial-gradient(white, white)' }}
                 >
                     {/* Premium Diagonal Ribbon (Top Right) */}
                     {badges.filter(b => b.position === "top-right-float").map((badge, idx) => (
-                        <div key={idx} className="absolute top-0 right-0 z-30 overflow-hidden w-28 h-28 pointer-events-none">
+                        <div key={idx} className="absolute top-0 right-0 z-[1] overflow-hidden w-28 h-28 pointer-events-none rounded-tr-[2.5rem]">
                             <div className="absolute top-0 right-0 w-[150%] min-h-[34px] bg-gradient-to-r from-[#D83636] via-[#EF4444] to-[#D83636] text-white flex flex-col items-center justify-center transform rotate-45 translate-x-[25%] translate-y-[45%] origin-center border-b border-white/20 shadow-lg px-4 group">
                                 {/* Top/Bottom Dashed Accents */}
                                 <div className="w-full border-t border-dashed border-white/30 h-px mb-1 opacity-40" />
@@ -488,9 +512,10 @@ const ProductCard = ({
 
                     {/* Premium Status Flag (Top Left) */}
                     {badges.filter(b => b.position === "top-left").map((badge, idx) => (
-                        <div key={idx} className="absolute top-5 left-5 z-20 overflow-hidden rounded-lg">
+                        <div key={idx} className="absolute top-5 left-5 z-2 overflow-hidden rounded-lg">
                             <div
-                                className="text-white px-3 py-1 text-[9px] font-black shadow-lg tracking-[0.2em] uppercase relative overflow-hidden backdrop-blur-md border border-white/20"
+                                key={badge.text}
+                                className="text-white px-3 py-1 text-[9px] font-black shadow-lg tracking-[0.2em] uppercase relative overflow-hidden backdrop-blur-md border border-white/20 animate-fade-in"
                                 style={{ backgroundColor: `${badge.color}dd` }}
                             >
                                 {/* Glow Shimmer */}
@@ -513,7 +538,7 @@ const ProductCard = ({
                             e.stopPropagation();
                             handleAddToWishlist();
                         }}
-                        className={`absolute ${badges.some(b => b.position === "top-right-float") ? "top-14" : "top-5"} right-5 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 z-40 shadow-sm ${isInWishlist ? "bg-red-50 text-red-500 border border-red-200" : "bg-white/80 backdrop-blur-md text-gray-400 hover:text-red-500 hover:bg-white"
+                        className={`absolute ${badges.some(b => b.position === "top-right-float") ? "top-14" : "top-5"} right-5 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 z-5 shadow-sm ${isInWishlist ? "bg-red-50 text-red-500 border border-red-200" : "bg-white/80 backdrop-blur-md text-gray-400 hover:text-red-500 hover:bg-white"
                             }`}
                     >
                         {isInWishlist ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
@@ -522,9 +547,10 @@ const ProductCard = ({
                     <div className="relative w-full aspect-[1/1] bg-gradient-to-b from-[#8cb369]/10 to-transparent flex justify-center items-center overflow-hidden">
                         {/* Primary Image with Luxurious Scale Transition */}
                         <Image
-                            src={productImages.main}
+                            src={imgError ? placeholderImg : productImages.main}
                             alt={name}
                             fill
+                            onError={() => setImgError(true)}
                             sizes="(max-width: 1024px) 50vw, 33vw"
                             priority={false}
                             className={`object-contain p-8 md:p-10 lg:p-12 transition-all duration-700 ease-out group-hover:scale-110 ${isHovered && productImages.hover !== productImages.main ? "opacity-0 scale-95" : "opacity-100 scale-100"
@@ -547,8 +573,8 @@ const ProductCard = ({
                         <div className="absolute bottom-5 left-5 right-5 flex flex-wrap gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
                             {badges.filter(b => b.position === "bottom-float").map((badge, idx) => (
                                 <div
-                                    key={idx}
-                                    className="px-2 py-1 text-[8px] font-bold rounded-lg shadow-sm uppercase tracking-tighter text-white/90 backdrop-blur-sm"
+                                    key={badge.text}
+                                    className="px-2 py-1 text-[8px] font-bold rounded-lg shadow-sm uppercase tracking-tighter text-white/90 backdrop-blur-sm animate-fade-in transition-colors duration-500"
                                     style={{ backgroundColor: `${badge.color}dd` }}
                                 >
                                     {badge.text}
@@ -608,10 +634,10 @@ const ProductCard = ({
                                     handleAddToCart();
                                 }}
                                 className={`h-10 lg:h-12 px-3 md:px-4 lg:px-6 rounded-xl lg:rounded-2xl flex items-center justify-center gap-2 transition-all duration-300 shadow-sm active:scale-95 ${isOutOfStock
-                                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                                        : isItemInCart
-                                            ? "bg-[#6D7D62] text-white"
-                                            : "bg-[#375421] text-white hover:shadow-lg hover:shadow-[#375421]/20"
+                                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                                    : isItemInCart
+                                        ? "bg-[#6D7D62] text-white"
+                                        : "bg-[#375421] text-white hover:shadow-lg hover:shadow-[#375421]/20"
                                     }`}
                             >
                                 <FaShoppingCart className="w-3 h-3 md:w-4 md:h-4" />
@@ -628,11 +654,12 @@ const ProductCard = ({
             <div className="sm:hidden w-full">
                 <div
                     onClick={() => router.push(productUrl)}
-                    className="group relative flex flex-col items-start text-left bg-white rounded-[1.5rem] border border-gray-100/80 overflow-hidden shadow-sm active:scale-[0.98] transition-all"
+                    className="group relative flex flex-col items-start text-left bg-white rounded-[1.25rem] border border-gray-100/80 overflow-hidden shadow-sm active:scale-[0.98] transition-all isolation-isolate transform-gpu"
+                    style={{ isolation: 'isolate', transform: 'translateZ(0)', WebkitMaskImage: '-webkit-radial-gradient(white, white)' }}
                 >
                     {/* Mobile Premium Ribbon (Top Right) */}
                     {badges.filter(b => b.position === "top-right-float").map((badge, idx) => (
-                        <div key={idx} className="absolute top-0 right-0 z-30 overflow-hidden w-20 h-20 pointer-events-none">
+                        <div key={idx} className="absolute top-0 right-0 z-[1] overflow-hidden w-20 h-20 pointer-events-none rounded-tr-[1.5rem]">
                             <div className="absolute top-0 right-0 w-[150%] min-h-[26px] bg-gradient-to-r from-[#D83636] via-[#EF4444] to-[#D83636] text-white flex flex-col items-center justify-center transform rotate-45 translate-x-[25%] translate-y-[45%] origin-center shadow-md px-2">
                                 <span className="text-[7px] font-black uppercase tracking-widest relative z-10 drop-shadow-sm">
                                     {badge.text}
@@ -643,9 +670,10 @@ const ProductCard = ({
 
                     {/* Mobile Status Flag (Top Left) */}
                     {badges.filter(b => b.position === "top-left").map((badge, idx) => (
-                        <div key={idx} className="absolute top-2.5 left-2.5 z-20 overflow-hidden rounded-md">
+                        <div key={idx} className="absolute top-2.5 left-2.5 z-2 overflow-hidden rounded-md">
                             <div
-                                className="text-white px-2 py-0.5 text-[7px] font-black shadow-md tracking-widest uppercase relative overflow-hidden backdrop-blur-sm"
+                                key={badge.text}
+                                className="text-white px-2 py-0.5 text-[7px] font-black shadow-md tracking-widest uppercase relative overflow-hidden backdrop-blur-sm animate-fade-in"
                                 style={{ backgroundColor: `${badge.color}ee` }}
                             >
                                 <span className="relative z-10">{badge.text}</span>
@@ -660,7 +688,7 @@ const ProductCard = ({
                             e.stopPropagation();
                             handleAddToWishlist();
                         }}
-                        className={`absolute ${badges.some(b => b.position === "top-right-float") ? "top-10" : "top-2.5"} right-2.5 w-8 h-8 rounded-full flex items-center justify-center z-40 shadow-sm ${isInWishlist ? "bg-red-50 text-red-500 border border-red-200" : "bg-white/95 text-gray-400"
+                        className={`absolute ${badges.some(b => b.position === "top-right-float") ? "top-10" : "top-2.5"} right-2.5 w-8 h-8 rounded-full flex items-center justify-center z-5 shadow-sm ${isInWishlist ? "bg-red-50 text-red-500 border border-red-200" : "bg-white/95 text-gray-400"
                             }`}
                     >
                         {isInWishlist ? <FaHeart className="w-3.5 h-3.5" /> : <FaRegHeart className="w-3.5 h-3.5" />}
@@ -668,11 +696,12 @@ const ProductCard = ({
 
                     <div className="relative w-full aspect-square bg-[#F9F9F8] flex justify-center items-center overflow-hidden">
                         <Image
-                            src={productImages.main}
+                            src={imgError ? placeholderImg : productImages.main}
                             alt={name}
                             fill
+                            onError={() => setImgError(true)}
                             sizes="50vw"
-                            className={`object-contain p-10 ${isOutOfStock ? "grayscale opacity-40" : ""}`}
+                            className={`object-contain p-6 ${isOutOfStock ? "grayscale opacity-40" : ""}`}
                         />
                     </div>
 
@@ -712,10 +741,10 @@ const ProductCard = ({
                                     handleAddToCart();
                                 }}
                                 className={`w-full h-8 rounded-lg flex items-center justify-center gap-1.5 transition-all active:scale-95 ${isOutOfStock
-                                        ? "bg-gray-100 text-gray-300"
-                                        : isItemInCart
-                                            ? "bg-[#6D7D62] text-white"
-                                            : "bg-[#375421] text-white"
+                                    ? "bg-gray-100 text-gray-300"
+                                    : isItemInCart
+                                        ? "bg-[#6D7D62] text-white"
+                                        : "bg-[#375421] text-white"
                                     }`}
                             >
                                 <FaShoppingCart className="w-3 h-3" />

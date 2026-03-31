@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import FilterSidebar from "./FilterSidebar"; // Ensure this path is correct
 import ProductGrid from "../../../components/Shared/ProductGrid";
 import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
-import CheckoutStores from "./CheckoutStores";
 import { FiFilter } from "react-icons/fi";
 import HomepageSchema from "../seo/HomepageSchema";
 import StoreSchema from "../seo/StoreSchema";
@@ -56,7 +55,6 @@ function Featured() {
         <div className="px-4 md:px-8 mt-8">
           <RecentlyViewedProducts />
           {/* <FAQSection /> */}
-          <CheckoutStores />
         </div>
 
         {/* --- Mobile Filter Sidebar Overlay (No changes needed here) --- */}

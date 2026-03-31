@@ -167,12 +167,14 @@ export default function RootLayout({
           <ScrollToTop />
           <DownloadAppPopup />
           <TawkChat />
-          <div className="landing-page-layout w-full min-h-screen flex flex-col">
-            <div className="sticky top-0 left-0 w-full z-[10001]">
-              <Header />
-              <NavBar />
-            </div>
-            <main className="main-content w-full">
+          
+          <div className="sticky top-0 left-0 w-full z-[1000] bg-white">
+            <Header />
+            <NavBar />
+          </div>
+
+          <div className="landing-page-layout w-full min-h-screen flex flex-col relative">
+            <main className="main-content w-full pb-32 md:pb-0">
               <div className="hidden md:block">
                 <Suspense fallback={null}>
                   <StaticBreadcrumb />
@@ -182,8 +184,8 @@ export default function RootLayout({
               <DownloadApp />
               <Footer />
             </main>
-            <MobileBottomNav />
           </div>
+          <MobileBottomNav />
         </Providers>
       </body>
     </html>

@@ -6,9 +6,9 @@ import FilterSidebar from "../Featured/FilterSidebar";
 import ProductGrid from "../../../components/Shared/ProductGrid";
 import PublicFlags from "../../../components/Shared/PublicFlags";
 import CategoryHero from "../../../components/Shared/CategoryHero";
-import InfoCards from "../../../components/Shared/InfoCards";
+import TrustBadges from "../../../components/Shared/TrustBadges";
 import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
-import CheckoutStores from "./CheckoutStores";
+import Blog from "../../../components/Blog/Blog";
 import { FiFilter } from "react-icons/fi";
 import axiosInstance from "../../../Axios/axiosInstance";
 import HomepageSchema from "../seo/HomepageSchema";
@@ -17,26 +17,7 @@ import CategoryStaticSEO from "../Info/CategoryStaticSEO";
 import { Typography, SwipeableDrawer, Box, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-const INFO_CARDS = [
-  {
-    id: 1,
-    title: "100% Secure Payment",
-    description: "Your security is our top priority. We use industry-standard encryption to protect your data.",
-    icon: "ShieldCheck",
-  },
-  {
-    id: 2,
-    title: "Fast Delivery",
-    description: "Experience lightning-fast shipping. We ensure your orders reach you in record time.",
-    icon: "Truck",
-  },
-  {
-    id: 3,
-    title: "Satisfaction Guaranteed",
-    description: "Love it or return it. We stand by the quality of our products with a no-hassle guarantee.",
-    icon: "Heart",
-  },
-];
+
 
 const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
@@ -207,7 +188,9 @@ function PlantCare({ initialResults, initialFilterData, initialSEOData }) {
                   getProducts={getInitialProducts}
                   bottomContent={
                     <>
-                      <InfoCards cards={categoryData?.info_cards || INFO_CARDS} />
+                      <div className="py-8">
+                        <TrustBadges />
+                      </div>
                       {seoData && (
                         <CategoryStaticSEO 
                           categoryDataFromAPI={seoData} 
@@ -215,7 +198,7 @@ function PlantCare({ initialResults, initialFilterData, initialSEOData }) {
                         />
                       )}
                       <RecentlyViewedProducts />
-                      <CheckoutStores />
+                      <Blog categoryId={2} />
                     </>
                   }
                 />

@@ -9,11 +9,19 @@ import axiosInstance from '../../Axios/axiosInstance';
  * PublicFlags - Interactive pill carousel for global product flags.
  * Source: /product/public-flags/
  */
-const PublicFlags = ({ selectedFlag, onSelectFlag }) => {
-    const [flags, setFlags] = useState([]);
-    const [loading, setLoading] = useState(true);
+const PublicFlags = ({ selectedFlag, onSelectFlag, initialFlags = [] }) => {
+    const [flags, setFlags] = useState(initialFlags || []);
+    const [loading, setLoading] = useState(!initialFlags || (Array.isArray(initialFlags) && initialFlags.length === 0));
 
     useEffect(() => {
+        // Only fetch if initialFlags are not provided or empty
+        if (Array.isArray(initialFlags) && initialFlags.length > 0) {
+            setLoading(false);
+            setFlags(initialFlags);
+            return;
+        }
+
+
         const fetchFlags = async () => {
             try {
                 const res = await axiosInstance.get('/product/public-flags/');
@@ -28,7 +36,8 @@ const PublicFlags = ({ selectedFlag, onSelectFlag }) => {
         };
 
         fetchFlags();
-    }, []);
+    }, [initialFlags]);
+
 
     // Icon mapping based on flag name/slug
     const getFlagIcon = (name) => {
@@ -69,12 +78,12 @@ const PublicFlags = ({ selectedFlag, onSelectFlag }) => {
                 </motion.button>
 
                 {flags.map((flag) => {
-                    const isActive = selectedFlag === flag.name;
+                    const isActive = Number(selectedFlag) === Number(flag.id);
                     return (
                         <motion.button
                             key={flag.id}
                             whileTap={{ scale: 0.95 }}
-                            onClick={() => onSelectFlag(isActive ? null : flag.name)}
+                            onClick={() => onSelectFlag(isActive ? null : flag.id)}
                             className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold transition-all duration-300 border-2 whitespace-nowrap flex-shrink-0 shadow-sm ${
                                 isActive 
                                 ? "bg-[#375421] border-[#375421] text-white shadow-[#375421]/20" 
@@ -88,6 +97,7 @@ const PublicFlags = ({ selectedFlag, onSelectFlag }) => {
                         </motion.button>
                     );
                 })}
+
             </div>
 
             {/* Subtle scroll masks for mobile */}

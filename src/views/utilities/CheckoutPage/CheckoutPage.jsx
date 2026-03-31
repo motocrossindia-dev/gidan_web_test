@@ -860,13 +860,24 @@ const ApplyCoupon = ({ id, setCoupon, coupon, onRemoveCoupon }) => {
   const getCoupones = async () => {
     if (!id) return;
     try {
+      // Step 1: Try order-specific fetch
       const response = await axiosInstance.get(`/coupon/coupons/?order_id=${id}`);
       if (response.status === 200) {
-        setCoupons(response.data.coupons);
+        setCoupons(response.data.coupons || []);
       }
     } catch (error) {
-      console.error("Error fetching coupons:", error);
-      enqueueSnackbar("Failed to load available coupons.", { variant: "warning" });
+      console.warn("Order-specific coupon fetch failed, trying general fallback...", error);
+      try {
+        // Step 2: Fallback to general fetch if specific fails
+        const fallbackRes = await axiosInstance.get(`/coupon/coupons/`);
+        if (fallbackRes.status === 200) {
+          const rawCoupons = fallbackRes.data.coupons || fallbackRes.data.data?.coupons || [];
+          setCoupons(rawCoupons);
+        }
+      } catch (fallbackError) {
+        console.error("Critical error: All coupon fetch attempts failed.", fallbackError);
+        enqueueSnackbar("Failed to load available coupons.", { variant: "warning" });
+      }
     }
   };
 

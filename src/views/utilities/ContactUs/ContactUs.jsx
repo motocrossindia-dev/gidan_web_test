@@ -8,7 +8,7 @@ const contactus = typeof _contactus === 'string' ? _contactus : _contactus?.src 
 import { useSnackbar } from "notistack"; // Import useSnackbar hook
 // Import useNavigate for navigation
 import axiosInstance from "../../../Axios/axiosInstance";
-import CheckOutStore from "../PlantFilter/CheckoutStores";
+import StoreSection from "../../../components/Home/StoreSection";
 import ContactUsSchema from "../seo/ContactUsSchema";
 
 
@@ -260,7 +260,7 @@ const ContactUs = () => {
 
         {/* Store Locations */}
 
-        <CheckOutStore />
+        <StoreSection />
 
       </div>
       <ContactUsSchema />

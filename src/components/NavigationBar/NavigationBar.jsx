@@ -6,7 +6,7 @@ import Image from "next/image";
 import React, { useState, useEffect, Suspense } from "react";
 import { FaRegUser, FaRegHeart, FaChevronDown } from "react-icons/fa";
 import { MdOutlineShoppingBag } from "react-icons/md";
-import { IoWalletOutline, IoSearch } from "react-icons/io5";
+import { IoSearch } from "react-icons/io5";
 import { TbCurrentLocation } from "react-icons/tb";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/Slice/userSlice";
@@ -16,7 +16,7 @@ import dynamic from "next/dynamic";
 const SignIn = dynamic(() => import("../../AuthPages/SignIn/Signin"), { ssr: false });
 const Verification = dynamic(() => import("../../AuthPages/Verification/Verification"), { ssr: false });
 const Login = dynamic(() => import("../../AuthPages/Login/Login"), { ssr: false });
-const WalletActivation = dynamic(() => import("../WalletActivation/WalletActivation"), { ssr: false });
+
 import __logo from "../../Assets/Gidan_logo.webp";
 const _logo = typeof __logo === 'string' ? __logo : __logo?.src || __logo;
 const logo = typeof _logo === 'string' ? _logo : _logo?.src || _logo;
@@ -55,8 +55,8 @@ const NavBar = () => {
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
   const [openPopper, setOpenPopper] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isAnchorEl, setIsAnchorEl] = useState(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isWalletPopupOpen, setIsWalletPopupOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   const { data: categoryData = [], isLoading } = useCategories();
@@ -74,13 +74,7 @@ const NavBar = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const handleWalletClick = () => {
-    if (username === "Guest") {
-      setIsWalletPopupOpen(true);
-    } else {
-      router.push("/profile/wallet");
-    }
-  };
+
 
   const handleGetOtpClick = () => {
     setIsSignInOpen(false);
@@ -167,7 +161,7 @@ const NavBar = () => {
   const displayUsername = isMounted ? username : "Guest";
 
   return (
-    <div className="relative">
+    <div className="relative z-[1000]" style={{ isolation: 'isolate', transform: 'translate3d(0,0,0)', WebkitTransform: 'translate3d(0,0,0)' }}>
       <nav className="w-full px-4 py-3 bg-white font-sans border-b border-gray-100">
         <div className="max-w-[1920px] mx-auto">
           {/* MOBILE (Below 800px): LOGO, SEARCH, HAMBURGER in one row */}
@@ -244,9 +238,7 @@ const NavBar = () => {
                 <button onClick={handleCartClick} className="p-2 rounded-full transition-all duration-300 hover:bg-green-50 text-gray-700 hover:text-[#375421] group">
                   <CartIconWithCount className="scale-100 lg:scale-110 transition-transform group-hover:scale-110" />
                 </button>
-                <button onClick={handleWalletClick} className="p-2 rounded-full transition-all duration-300 hover:bg-green-50 text-gray-700 hover:text-[#375421] group">
-                  <IoWalletOutline className="text-xl lg:text-2xl transition-transform group-hover:scale-110" />
-                </button>
+
 
                 <div
                   className="relative p-1"
@@ -285,14 +277,7 @@ const NavBar = () => {
                         <span>My Orders</span>
                       </Link>
 
-                      <Link
-                        href="/profile/wallet"
-                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#375421] transition-colors"
-                        onClick={() => setIsDropdownOpen(false)}
-                      >
-                        <IoWalletOutline className="text-lg opacity-70" />
-                        <span>My Wallet</span>
-                      </Link>
+
 
                       <div className="mt-1 pt-1 border-t border-gray-50">
                         <button
@@ -375,9 +360,7 @@ const NavBar = () => {
               <button onClick={handleCartClick} className="p-3 rounded-full transition-all duration-300 hover:bg-green-50 text-gray-700 hover:text-[#375421] group">
                 <CartIconWithCount className="scale-125 transition-transform group-hover:scale-135" />
               </button>
-              <button onClick={handleWalletClick} className="p-3 rounded-full transition-all duration-300 hover:bg-green-50 text-gray-700 hover:text-[#375421] group">
-                <IoWalletOutline className="text-2xl transition-transform group-hover:scale-110" />
-              </button>
+
               <div
                 className="relative group p-2"
                 onMouseEnter={() => username !== "Guest" && setIsDropdownOpen(true)}
@@ -416,14 +399,7 @@ const NavBar = () => {
                       <span>My Orders</span>
                     </Link>
 
-                    <Link
-                      href="/profile/wallet"
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#375421] transition-colors"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      <IoWalletOutline className="text-lg opacity-70" />
-                      <span>My Wallet</span>
-                    </Link>
+
 
                     <div className="mt-1 pt-1 border-t border-gray-50">
                       <button
@@ -457,7 +433,7 @@ const NavBar = () => {
 
       {isLoginOpen && <Login onClose={() => setIsLoginOpen(false)} />}
 
-      {isWalletPopupOpen && <WalletActivation onClose={() => setIsWalletPopupOpen(false)} />}
+
 
       {/* Wishlist Popper */}
       <ClickAwayListener onClickAway={handleClickAway}>

@@ -37,7 +37,7 @@ const TawkChat = () => {
         Tawk_API.onLoad = function(){
             var shiftIframes = function() {
                 var isMobile = window.innerWidth <= 768;
-                var expected = isMobile ? 'translateY(-85px)' : 'none';
+                var expected = isMobile ? 'translateY(-110px)' : 'none';
                 var iframes = document.querySelectorAll('iframe');
                 for (var i = 0; i < iframes.length; i++) {
                     var z = iframes[i].style.zIndex;

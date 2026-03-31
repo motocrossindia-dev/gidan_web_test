@@ -6,7 +6,7 @@ import FilterSidebarMobile from "./FilterSidebarMobile"; // Mobile version of Fi
 import ProductGrid from "../../../components/Shared/ProductGrid";
 import FAQSection from "./FAQSection";
 import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
-import CheckoutStores from "./CheckoutStores";
+import StoreSection from "../../../components/Home/StoreSection";
 import Banner1 from "./Banner1";
 import { Card } from "@mui/material";
 import { FiFilter } from "react-icons/fi";
@@ -68,7 +68,7 @@ function Thankyou() {
               <div className="md:ml-16 overflow-x-hidden md:mr-12 ">
                   <FAQSection />
 
-                  <CheckoutStores />
+                  <StoreSection />
               </div>
               {/* Mobile Filter Sidebar */}
               {showMobileFilter && (

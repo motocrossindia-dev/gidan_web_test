@@ -1,110 +1,95 @@
-'use client';
-
 import React from "react";
 import Image from "next/image";
+import { Star, Smartphone, Package, Clock, Leaf } from "lucide-react";
 
 const DownloadApp = () => {
-  return (
-    <section className="relative w-full overflow-hidden bg-[#3a6b3a] py-14 px-4">
+    return (
+        <section className="relative w-full bg-[#173113] py-16 lg:py-0 lg:h-[480px] xl:h-[520px] px-6 lg:px-16 overflow-hidden flex items-center" style={{ backgroundColor: "#173113" }}>
 
-      {/* Botanical SVG background */}
-      <svg
-        className="absolute inset-0 w-full h-full opacity-40 pointer-events-none"
-        viewBox="0 0 500 500"
-        xmlns="http://www.w3.org/2000/svg"
-        preserveAspectRatio="xMidYMid slice"
-      >
-        <g>
-          <g>
-            <path style={{fill:"#8DBA3D"}} d="M207.775,127.878c-3.034,2.148-4.894,4.044-6.99,7.114c-6.319,9.259-11.198,19.498-14.408,30.239 c-0.599,2.003-1.176,4.094-2.533,5.686c-1.356,1.592-3.754,2.518-5.593,1.523c-1.392-0.753-2.088-2.358-2.455-3.897 c-1.607-6.734,1.708-13.463,4.752-19.681c8.067-16.478,24.179-30.425,31.495-34.693c-1.988-4.607-4.947-9.097-9.022-13.626 c-1.351-1.501-2.863-2.854-4.481-4.088c-7.982,4.079-13.074,13.006-16.551,21.569c-3.27,8.052-5.843,16.387-7.681,24.881 c-0.539,2.491-1.044,5.068-2.452,7.193c-1.408,2.125-3.986,3.704-6.467,3.12c-2.651-0.624-4.236-3.424-4.698-6.108 c-0.825-4.798,0.893-9.633,2.676-14.163c4.481-11.388,9.572-22.586,16.133-32.916c2.217-3.491,4.706-6.966,8.019-9.382 c-6.417-2.207-13.58-3.025-20.74-2.41c-6.417,8.471-7.962,19.867-9.546,30.528c-0.62,4.176-1.424,8.615-4.319,11.688 c-2.895,3.074-8.623,3.805-11.059,0.357c-2.175-3.079-0.638-7.304,0.951-10.722c2.364-5.086,4.729-10.171,7.093-15.256 c2.292-4.929,4.584-9.859,6.875-14.788c-11.509,3.25-22.002,10.45-28.034,21.79c0,0-13.073-19.016-11.885-46.351 c0,0-4.16-5.942-6.537,0.594c-0.837,2.303-0.594,29.712,14.856,47.539c0,0-18.789,2.234-30.882,16.279 c5.956,5.318,14.294,7.965,22.215,6.807c2.324-0.34,4.624-0.982,6.973-0.943c2.349,0.039,4.86,0.915,6.091,2.916 c2.144,3.484-0.708,8.03-4.14,10.257c-5.376,3.488-12.478,4.153-18.408,1.724c-1.961-0.803-3.779-1.912-5.588-3.017 c-3.114-1.902-6.229-3.803-9.343-5.705c-1.318-0.805-2.689-1.694-3.744-2.801c-0.005,0.012-0.011,0.022-0.017,0.034 c-4.181,9.1-6.214,19.421-5.024,29.321l0.271-0.203c15,0.644,25.466-2.629,39.871-6.864c3.437-1.01,7.049-2.166,10.53-1.322 c3.481,0.844,6.514,4.628,5.133,7.932c-1.032,2.47-3.938,3.552-6.59,3.915c-4.971,0.679-10.013-0.219-15.03-0.173 c-10.823,0.101-21.507,4.863-28.876,12.781c3.265,5.6,8.047,10.669,14.635,14.791c2.907-4.667,6.997-8.646,11.61-11.683 c6.984-4.598,15.1-7.214,23.285-8.925c5.384-1.125,12.077-1.391,15.214,3.127c0.342,0.493,0.63,1.043,0.704,1.639 c0.32,2.571-2.996,3.811-5.543,4.288c-13.939,2.611-27.724,5.985-37.7,15.511c0.032,0.014,0.062,0.029,0.094,0.043 c5.646,2.435,13.486,4.316,22.209,5.777c6.315-7.013,14.719-12.148,23.875-14.46c5.279-1.333,11.372-1.592,15.664,1.757 c0.469,0.366,0.923,0.79,1.139,1.344c0.585,1.494-0.798,3.046-2.234,3.762c-3.156,1.573-6.87,1.266-10.396,1.278 c-7.092,0.025-14.685,3.128-19.37,8.453c-0.124,0.141-0.245,0.287-0.367,0.433c26.526,8.435,58.566,2.534,59.803,2.947 c1.73,0.577,0.781-25.686,9.718-51.105c-4.37,1.188-9.414,4.454-11.222,7.217c-2.605,3.983-3.943,8.677-4.624,13.387 c-0.227,1.568-0.397,3.186-1.124,4.594c-0.727,1.408-2.174,2.579-3.753,2.452c-1.679-0.135-2.961-1.709-3.302-3.358 c-0.34-1.65,0.055-3.355,0.499-4.98c2.236-8.196,12.338-27.093,24.584-33.384c2.749-9.314,3.882-17.475,2.865-25.069 C212.334,124.982,209.773,126.463,207.775,127.878z"/>
-            <path style={{fill:"#47A148"}} d="M198.266,211.572c-0.108,0-0.217-0.035-0.309-0.107c-28.919-22.766-46.002-46.98-55.242-63.285 c-10.019-17.682-13.24-30.158-13.272-30.282c-0.067-0.268,0.095-0.54,0.362-0.608c0.267-0.068,0.54,0.094,0.607,0.362 c0.124,0.492,13.094,49.673,68.162,93.025c0.217,0.171,0.254,0.485,0.084,0.702C198.561,211.507,198.414,211.572,198.266,211.572z"/>
-          </g>
-          <g>
-            <path style={{fill:"#47A148"}} d="M413.489,273.467c0,0,14.262-17.827,13.668-38.031s-23.175-22.581-24.958-0.594C400.416,256.828,413.489,273.467,413.489,273.467z"/>
-            <path style={{fill:"#47A148"}} d="M396.575,292.93c0,0-0.056-22.83-13.179-38.204c-13.123-15.374-32.211-3.077-19.823,15.176C375.96,288.154,396.575,292.93,396.575,292.93z"/>
-            <path style={{fill:"#47A148"}} d="M381.726,331.878c0,0,1.298-22.793-10.89-38.918c-12.188-16.125-31.972-4.982-20.688,13.973C361.431,325.888,381.726,331.878,381.726,331.878z"/>
-            <path style={{fill:"#47A148"}} d="M427.156,300.208c0,0,20.942-4.705,33.277-19.61c14.262-17.233-0.217-36.126-16.639-20.798C425.968,276.438,427.156,300.208,427.156,300.208z"/>
-            <path style={{fill:"#47A148"}} d="M417.266,347.951c0,0,21.446,0.889,37.225-10.306c18.244-12.943,9.162-34.945-10.674-24.403C422.285,324.687,417.266,347.951,417.266,347.951z"/>
-            <path style={{fill:"#8DBA3D"}} d="M414.234,233.818c0,0,0.271,7.99-2.047,41.614c-2.112,30.626-13.904,90.482-68.011,142.863c-0.85,0.823-0.867,2.183-0.024,3.013l0,0c0.816,0.803,2.125,0.81,2.945,0.01c6.741-6.575,34.769-35.341,50.804-73.868C421.228,291.405,414.234,233.818,414.234,233.818z"/>
-          </g>
-          <g>
-            <path style={{fill:"#8DBA3D"}} d="M365.249,181.954c0,0,14.262,21.987,37.437,13.668c23.175-8.319,27.335-38.626,29.118-55.859c1.783-17.233,4.561-38.607,10.696-52.293c7.725-17.233,8.319-36.249,8.319-36.249s-35.654,26.147-49.916,34.466s-67.743,32.089-67.743,60.018c0,27.929,28.524,34.466,28.524,34.466s-9.672,21.493-29.015,33.311c-1.627,0.994-2.103,3.136-1.009,4.698l0,0c1.129,1.612,3.414,1.881,4.879,0.566C343.138,212.826,359.6,197.017,365.249,181.954z"/>
-            <path style={{fill:"#47A148"}} d="M434.181,100.543l-21.549,9.931c14.026-21.344,25.678-39.401,25.114-39.643c-0.659-0.282-12.182,16.961-26.453,38.516l-1.476-23.066l-0.481,26.024c-4.291,6.485-8.79,13.294-13.289,20.087c-6.511-4.87-7.623-29.472-7.623-29.472s-1.069,22.577,5.989,31.939c-4.398,6.639-8.769,13.219-12.919,19.425c-13.858-6.085-13.868-38.885-13.868-38.885s-4.43,30.521,12.834,40.431c-3.851,5.753-7.491,11.15-10.761,15.932c-21.201-11.886-19.9-40.913-19.9-40.913s-5.508,28.271,18.446,43.035c-1.189,1.731-2.324,3.371-3.392,4.9l1.783,0.991c0,0,1.198-1.791,3.273-4.897c22.544,12.588,44.068,2.322,44.068,2.322s-18.818,6.735-42.191-4.358c2.699-4.044,6.389-9.576,10.656-15.986c15.915,7.287,43.211-6.198,43.211-6.198s-27.158,8.919-42.048,4.452c3.822-5.744,8.057-12.117,12.429-18.714c1.164-0.018,14.356-0.403,30.808-8.913c0,0-20.861,8.414-28.81,5.898c4.186-6.32,8.455-12.782,12.575-19.041C413.649,112.41,425.903,106.118,434.181,100.543z"/>
-          </g>
-          <g>
-            <path style={{fill:"#47A148"}} d="M87.809,270.9c0,0,9.508-21.987-3.565-38.031c-12.5-15.341-36.249-16.639-42.785-28.523c0,0-2.08,34.169,14.559,50.808C71.493,270.628,87.809,270.9,87.809,270.9z"/>
-            <path style={{fill:"#47A148"}} d="M83.649,302.395c-0.594-1.783,0.474-21.569-17.827-24.958c-16.044-2.971-21.987,2.377-43.38,2.971c0,0,14.856,19.61,30.901,23.77C69.388,308.337,83.649,302.395,83.649,302.395z"/>
-            <path style={{fill:"#47A148"}} d="M81.867,370.138c0,0,2.377-18.422-10.102-30.306s-30.901-13.073-41.003-23.77C30.762,316.062,36.704,369.544,81.867,370.138z"/>
-            <path style={{fill:"#489246"}} d="M125.017,415.622c-0.689-1.106-2.097-1.741-3.113-2.51c-2.474-1.873-4.722-4.043-6.751-6.387c-4.032-4.659-7.184-10.035-9.725-15.632c-5.805-12.786-8.773-26.879-10.43-40.761c-1.724-14.444-1.855-28.97-1.912-43.496c-0.055-14.102-0.397-28.575-5.216-41.996c-4.127-11.493-11.475-21.804-20.991-29.457c-1.152-0.926-2.334-1.813-3.543-2.663c-0.535-0.377-1.002,0.481-0.505,0.864c0.382,0.322,0.753,0.656,1.118,0.996c1.393,1.295,2.701,2.682,3.948,4.117c4.537,5.218,8.281,11.119,11.386,17.287c4.21,8.363,7.538,17.272,8.521,26.624c1.113,10.585,0.736,21.298,0.988,31.924c0.441,18.606,1.458,37.358,4.8,55.698c2.06,11.3,5.019,22.815,10.784,32.85c2.058,3.582,4.509,6.952,7.402,9.907c1.32,1.348,2.73,2.606,4.218,3.766c1.415,1.103,2.941,2.316,4.563,3.104c1.488,0.723,3.34,0.171,4.167-1.271C125.599,417.833,125.647,416.633,125.017,415.622z"/>
-          </g>
-          <g>
-            <path style={{fill:"#47A148"}} d="M269.576,69.642c0,0,15.469,29.223,21.987,38.031c10.993,14.856,18.325,29.27,12.479,47.539c-4.754,14.856-17.233,21.393-17.233,21.393s1.997,16.475,7.821,26.087c0.81,1.336,0.251,3.075-1.177,3.709l0,0c-1.367,0.607-2.964-0.053-3.494-1.452c-1.882-4.971-5.82-16.402-6.716-27.156c0,0-23.77,0-33.277-26.741C242.222,129.275,259.474,86.281,269.576,69.642z"/>
-            <path style={{fill:"#8DBA3D"}} d="M297.737,134.566c-0.24-0.125-0.537-0.037-0.668,0.2l-14.852,26.676c-0.888-4.424-1.82-9.734-2.753-15.487l13.145-27.967c0.116-0.247,0.014-0.54-0.23-0.661c-0.242-0.12-0.539-0.025-0.665,0.216l-12.855,24.615c-0.839-5.337-1.671-10.951-2.466-16.519l6.737-23.176c0.074-0.256-0.065-0.526-0.318-0.613c-0.254-0.086-0.527,0.04-0.627,0.288l-6.718,16.911c-2.693-19.428-4.755-36.62-4.8-36.99c-0.032-0.271-0.276-0.464-0.545-0.438c-0.271,0.026-0.471,0.264-0.45,0.536c0.028,0.366,1.504,19.463,3.994,40.675l-15.598-17.866c-0.179-0.205-0.486-0.229-0.694-0.057c-0.209,0.172-0.243,0.479-0.077,0.692l16.917,21.791c0.624,5.084,1.304,10.217,2.034,15.184l-19.462-13.331c-0.22-0.151-0.521-0.103-0.682,0.112c-0.161,0.214-0.125,0.517,0.082,0.686l20.747,17.052c0.845,5.387,1.749,10.477,2.704,14.97l-23.457-15.003c-0.225-0.144-0.528-0.085-0.682,0.138c-0.152,0.222-0.102,0.525,0.115,0.686l24.997,18.464c0.698,2.868,1.42,5.39,2.164,7.45c0.047,0.128,0.143,0.231,0.266,0.286c0.065,0.029,0.135,0.044,0.205,0.044c0.063,0,0.126-0.012,0.185-0.036l1.485-0.594c0.127-0.051,0.227-0.15,0.278-0.277c0.051-0.126,0.048-0.268-0.008-0.392c-0.623-1.394-1.318-3.858-2.056-7.103l14.826-30.506C298.074,134.984,297.976,134.691,297.737,134.566z"/>
-          </g>
-        </g>
-      </svg>
+            <div className="w-full max-w-7xl mx-auto relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8 h-full">
+                {/* Left Content */}
+                <div className="w-full lg:w-[50%] xl:w-[55%] flex flex-col items-start text-left z-20">
+                    <span className="text-[10px] text-[#A7D949] tracking-[0.2em] uppercase font-bold mb-3">
+                        Download the app
+                    </span>
+                    
+                    <h2 className="text-4xl md:text-5xl lg:text-[44px] xl:text-[52px] text-white font-serif tracking-tight mb-4 !leading-[1.1]">
+                        Your garden, <br className="hidden md:block" />
+                        <span className="italic text-[#A7D949]">in your pocket.</span>
+                    </h2>
+                    
+                    <p className="text-white/70 text-sm max-w-[420px] mb-8 leading-relaxed font-medium">
+                        App-only deals, live order tracking, plant care reminders, and seamless shopping — always just a tap away.
+                    </p>
+                    
+                    {/* Feature Pills (Matches User Screenshot Style) */}
+                    <div className="flex flex-wrap gap-2.5 mb-8">
+                        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/20 bg-transparent text-[11px] text-white/90">
+                            <Smartphone className="w-3.5 h-3.5 text-[#A7D949]" /> App-only deals
+                        </div>
+                        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/20 bg-transparent text-[11px] text-white/90">
+                            <Package className="w-3.5 h-3.5 text-[#A7D949]" /> Live order tracking
+                        </div>
+                        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/20 bg-transparent text-[11px] text-white/90">
+                            <Clock className="w-3.5 h-3.5 text-[#A7D949]" /> Care reminders
+                        </div>
+                        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/20 bg-transparent text-[11px] text-white/90">
+                            <Leaf className="w-3.5 h-3.5 text-[#A7D949]" /> Plant journal
+                        </div>
+                    </div>
+                    
+                    {/* Green CTA Buttons */}
+                    <div className="flex flex-wrap items-center gap-4">
+                        <a href="#" className="group flex items-center gap-3 px-5 py-3 rounded-xl bg-[#A7D949] hover:bg-[#b0e352] text-[#173113] transition-all transform hover:-translate-y-1 shadow-[0_6px_20px_-5px_rgba(167,217,73,0.4)]">
+                            <Image src="/appstore.svg" alt="App Store Logo" width={24} height={24} className="w-[1.5rem] h-[1.5rem]" />
+                            <div className="flex flex-col items-start justify-center">
+                                <span className="text-[10px] opacity-80 leading-tight font-bold tracking-wide">Download on the</span>
+                                <span className="text-[14px] font-black leading-tight mt-0.5">App Store</span>
+                            </div>
+                        </a>
+                        <a href="#" className="group flex items-center gap-3 px-5 py-3 rounded-xl bg-[#A7D949] hover:bg-[#b0e352] text-[#173113] transition-all transform hover:-translate-y-1 shadow-[0_6px_20px_-5px_rgba(167,217,73,0.4)]">
+                            <Image src="/playstore.svg" alt="Google Play Logo" width={24} height={24} className="w-[1.5rem] h-[1.5rem]" />
+                            <div className="flex flex-col items-start justify-center">
+                                <span className="text-[10px] opacity-80 leading-tight font-bold tracking-wide">Get it on</span>
+                                <span className="text-[14px] font-black leading-tight mt-0.5">Google Play</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
 
-      {/* Dark scrim so content stays readable */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(to bottom, rgba(30,70,30,0.55) 0%, rgba(30,70,30,0.45) 100%)" }} />
+                {/* Right Content - Stats Grid */}
+                <div className="w-full lg:w-[50%] xl:w-[45%] h-full flex flex-col items-center justify-center lg:items-end lg:justify-center mt-8 lg:mt-0">
+                    <div className="grid grid-cols-2 gap-4 lg:gap-6 w-full max-w-[400px]">
+                        {/* 50K+ APP DOWNLOADS */}
+                        <div className="flex flex-col gap-1.5 p-5 lg:p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-colors shadow-lg">
+                            <span className="text-3xl lg:text-4xl text-[#A7D949] font-serif leading-none">50K+</span>
+                            <span className="text-[10px] text-white/70 font-bold tracking-wider uppercase mt-1">App downloads</span>
+                        </div>
 
-      {/* Content */}
-      <div className="relative z-10 max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-        {/* Text Content */}
-        <div className="text-white text-center md:text-left">
-          <h2 className="text-3xl md:text-4xl font-bold mb-3 leading-tight drop-shadow">
-            Download Our App
-          </h2>
-          <p className="text-white/85 text-base md:text-lg max-w-md">
-            Shop plants, gifts &amp; more on the go. Get exclusive app-only deals,
-            track your orders in real-time, and enjoy a seamless shopping
-            experience.
-          </p>
-        </div>
+                        {/* 4.7 APP STORE RATING */}
+                        <div className="flex flex-col gap-1.5 p-5 lg:p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-colors shadow-lg">
+                            <span className="text-3xl lg:text-4xl text-[#A7D949] font-serif flex items-center gap-1.5 leading-none">
+                                4.7 <Star className="w-5 h-5 lg:w-6 lg:h-6 text-[#A7D949] fill-[#A7D949] -mt-1" />
+                            </span>
+                            <span className="text-[10px] text-white/70 font-bold tracking-wider uppercase mt-1">App store rating</span>
+                        </div>
 
-        {/* App Icon + Badges */}
-        <div className="flex flex-col items-center gap-4">
-          {/* App Icon */}
-          <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-lg border-2 border-white/50 bg-white flex items-center justify-center">
-            <Image
-              src="/logo.webp"
-              alt="Gidan App Icon"
-              width={80}
-              height={80}
-              className="w-full h-full object-contain p-1"
-            />
-          </div>
+                        {/* 200+ PLANT VARIETIES */}
+                        <div className="flex flex-col gap-1.5 p-5 lg:p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-colors shadow-lg">
+                            <span className="text-3xl lg:text-4xl text-[#A7D949] font-serif leading-none">200+</span>
+                            <span className="text-[10px] text-white/70 font-bold tracking-wider uppercase mt-1">Plant varieties</span>
+                        </div>
 
-          <div className="flex flex-row flex-wrap justify-center gap-3">
-            {/* Google Play Badge */}
-            <a
-              href="https://play.google.com/store/apps/details?id=com.biotechmaali.app&pcampaignid=web_share"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Get it on Google Play"
-            >
-              <img
-                src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
-                alt="Get it on Google Play"
-                className="h-14 w-auto hover:opacity-90 transition-opacity drop-shadow-md"
-              />
-            </a>
-
-            {/* App Store – Coming Soon */}
-            <div className="flex items-center gap-2 bg-white/10 border border-white/30 rounded-xl px-4 h-[46px] cursor-not-allowed" aria-label="App Store – Coming Soon">
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-white/70" viewBox="0 0 814 1000" fill="currentColor">
-                <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-37.5-155.5-127.4C46 790.7 0 663 0 541.8c0-207.1 134.7-316.6 267.7-316.6 68.7 0 126.2 45.2 169.6 45.2 41.5 0 106.5-47.7 183.5-47.7 37.9 0 138.4 3.2 207.9 100.3zm-159.3-113.9c31.4-37.9 53.6-90.5 53.6-143.1 0-7.7-.6-15.4-1.9-21.7-50.6 1.9-110.8 33.7-147.1 75.8-28.5 32.4-55.1 84.9-55.1 138.3 0 8.3 1.3 16.6 1.9 19.2 3.2.6 8.3 1.3 13.5 1.3 45.2 0 102.1-30.1 135.1-69.8z"/>
-              </svg>
-              <div className="leading-tight">
-                <p className="text-[10px] text-white/60 uppercase tracking-wide font-medium">Coming Soon on</p>
-                <p className="text-sm font-semibold text-white">App Store</p>
-              </div>
+                        {/* 12K+ HAPPY GARDENERS */}
+                        <div className="flex flex-col gap-1.5 p-5 lg:p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-colors shadow-lg">
+                            <span className="text-3xl lg:text-4xl text-[#A7D949] font-serif leading-none">12K+</span>
+                            <span className="text-[10px] text-white/70 font-bold tracking-wider uppercase mt-1">Happy gardeners</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+        </section>
+    );
 };
 
 export default DownloadApp;
-

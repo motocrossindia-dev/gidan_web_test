@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { IoHomeOutline, IoHomeSharp, IoHeartOutline, IoHeartSharp, IoWalletOutline, IoWalletSharp, IoSearchOutline, IoSearchSharp } from 'react-icons/io5';
+import { IoHomeOutline, IoHomeSharp, IoHeartOutline, IoHeartSharp, IoSearchOutline, IoSearchSharp } from 'react-icons/io5';
 import { FaRegUser, FaUser } from 'react-icons/fa';
 import { MdOutlineShoppingBag, MdShoppingBag } from 'react-icons/md';
 import CartIconWithCount from '../Cart/cartcount';
@@ -31,12 +31,7 @@ const MobileBottomNav = () => {
             activeIcon: <CartIconWithCount showLabel={false} className="scale-110" />,
             href: '/cart',
         },
-        {
-            label: 'Wallet',
-            icon: <IoWalletOutline className="text-2xl" />,
-            activeIcon: <IoWalletSharp className="text-2xl" />,
-            href: '/wallet',
-        },
+
         {
             label: 'Profile',
             icon: <FaRegUser className="text-xl" />,
@@ -46,8 +41,8 @@ const MobileBottomNav = () => {
     ];
 
     return (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-2 py-3 shadow-[0_-2px_15px_rgba(0,0,0,0.08)]">
-            <div className="flex items-center justify-between max-w-md mx-auto">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-2 py-3 shadow-[0_-2px_15px_rgba(0,0,0,0.08)] z-[2147483647]" style={{ isolation: 'isolate', transform: 'translate3d(0,0,0)', WebkitTransform: 'translate3d(0,0,0)' }}>
+            <div className="flex items-center justify-between max-w-md mx-auto pb-[env(safe-area-inset-bottom)]">
                 {navItems.map((item) => {
                     const isActive = pathname === item.href;
                     return (

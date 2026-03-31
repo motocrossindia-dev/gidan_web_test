@@ -13,7 +13,8 @@ function BlogList() {
       try {
         const response = await axiosInstance.get('/blog/blogs/');
         if (response.status === 200) {
-          setBlogs(response.data.data?.blogs || []);
+          // Correctly extract from results.blogs as per the backend response
+          setBlogs(response.data?.results?.blogs || response.data?.blogs || []);
         }
       } catch (error) {
         console.error("Error fetching blogs:", error);

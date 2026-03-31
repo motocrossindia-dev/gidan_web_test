@@ -9,7 +9,7 @@ import { Close as CloseIcon } from "@mui/icons-material";
 import FilterSidebar from "../Featured/FilterSidebar";
 import ProductGrid from "../../../components/Shared/ProductGrid";
 import Breadcrumb from "../../../components/Shared/Breadcrumb";
-import InfoCards from "../../../components/Shared/InfoCards";
+import TrustBadges from "../../../components/Shared/TrustBadges";
 import CategoryHero from "../../../components/Shared/CategoryHero";
 import PublicFlags from "../../../components/Shared/PublicFlags";
 // Schemas moved to Server Component (page.tsx) for better SSR/SEO
@@ -18,36 +18,7 @@ import Link from "next/link";
 import CategoryStaticSEO from "../Info/CategoryStaticSEO";
 import axiosInstance from "../../../Axios/axiosInstance";
 
-const INFO_CARDS = [
-    {
-        "id": 29,
-        "icon": null,
-        "title": "India-Climate Tested",
-        "description": "Every plant acclimatised to Indian heat, humidity and sun before shipping.",
-        "order": 1
-    },
-    {
-        "id": 30,
-        "icon": null,
-        "title": "7-Day Survival Guarantee",
-        "description": "Plant doesn't survive? We reship, free.",
-        "order": 2
-    },
-    {
-        "id": 31,
-        "icon": null,
-        "title": "Expert Packaging",
-        "description": "Plants arrive healthy — 99.2% success rate.",
-        "order": 3
-    },
-    {
-        "id": 32,
-        "icon": null,
-        "title": "WhatsApp Plant Support",
-        "description": "Real experts. Mon–Sat, 9AM–7PM.",
-        "order": 4
-    }
-];
+
 
 /**
  * @param {object} props
@@ -59,7 +30,17 @@ const INFO_CARDS = [
  * @param {string} [props.subcategoryName]
  * @param {object} [props.initialSEOData] SEO content pre-fetched server-side (hero/sections for category, title/subtitle/description for subcategory)
  */
+// Mapping of flag names to IDs as provided by the backend
+const FLAG_MAP = {
+    is_featured: 2,
+    is_latest: 3,
+    is_best_seller: 4,
+    is_seasonal_collection: 5,
+    is_trending: 6
+};
+
 function PlantFilter({
+
     initialResults = [],
     initialCategoryData = null,
     initialFilterData = null,
@@ -67,14 +48,17 @@ function PlantFilter({
     subcategorySlug: propSubcategorySlug = null,
     subcategoryName: propSubcategoryName = null,
     initialSEOData = null,
+    initialFlags = null,
 } = {}) {
+
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const path = pathname;
     const { categorySlug, subcategorySlug } = useParams();
     const routeBasedFilters = useMemo(() => ({
         isSeasonalCollection: path === '/seasonal' || path === '/seasonal/',
-        isTrending: path === '/trending' || path === '/trending/' || path === '/latest' || path === '/latest/',
+        isTrending: path === '/trending' || path === '/trending/',
+        isLatest: path === '/latest' || path === '/latest/',
         isFeatured: path === '/featured' || path === '/featured/',
         isBestSeller: path === '/bestseller' || path === '/bestseller/'
     }), [path]);
@@ -84,12 +68,14 @@ function PlantFilter({
     // Extract query parameters for boolean filters (fallback)
     const queryIsSeasonalCollection = searchParams.get('is_seasonal_collection') === 'true';
     const queryIsTrending = searchParams.get('is_trending') === 'true';
+    const queryIsLatest = searchParams.get('is_latest') === 'true';
     const queryIsFeatured = searchParams.get('is_featured') === 'true';
     const queryIsBestSeller = searchParams.get('is_best_seller') === 'true';
 
     // Combine route-based and query-based filters (route takes precedence)
     const isSeasonalCollection = routeBasedFilters.isSeasonalCollection || queryIsSeasonalCollection;
     const isTrending = routeBasedFilters.isTrending || queryIsTrending;
+    const isLatest = routeBasedFilters.isLatest || queryIsLatest;
     const isFeatured = routeBasedFilters.isFeatured || queryIsFeatured;
     const isBestSeller = routeBasedFilters.isBestSeller || queryIsBestSeller;
 
@@ -149,10 +135,11 @@ function PlantFilter({
 
     // State for Public Flags (Interactive Pills)
     const [selectedPublicFlag, setSelectedPublicFlag] = useState(() => {
-        if (isFeatured) return 'is_featured';
-        if (isBestSeller) return 'is_best_seller';
-        if (isTrending) return 'is_trending';
-        if (isSeasonalCollection) return 'is_seasonal_collection';
+        if (isFeatured) return FLAG_MAP.is_featured;
+        if (isBestSeller) return FLAG_MAP.is_best_seller;
+        if (isTrending) return FLAG_MAP.is_trending;
+        if (isLatest) return FLAG_MAP.is_latest;
+        if (isSeasonalCollection) return FLAG_MAP.is_seasonal_collection;
         return null;
     });
 
@@ -202,10 +189,10 @@ function PlantFilter({
         params.append("is_best_seller", isBestSeller ? "true" : "unknown");
         params.append("is_seasonal_collection", isSeasonalCollection ? "true" : "unknown");
         params.append("is_trending", isTrending ? "true" : "unknown");
-        params.append("is_latest", "unknown");
+        params.append("is_latest", isLatest ? "true" : "unknown");
         params.append("ordering", "");
         return params.toString();
-    }, [typeKey, resolvedCategoryId, resolvedSubcategoryId, isFeatured, isBestSeller, isSeasonalCollection, isTrending]);
+    }, [typeKey, resolvedCategoryId, resolvedSubcategoryId, isFeatured, isBestSeller, isSeasonalCollection, isTrending, isLatest]);
 
     const [currentQuery, setCurrentQuery] = useState(initialQueryString);
     const [filtersApplied, setFiltersApplied] = useState(() => {
@@ -377,7 +364,7 @@ function PlantFilter({
                 queryParams.append("is_best_seller", isBestSeller ? "true" : "unknown");
                 queryParams.append("is_seasonal_collection", isSeasonalCollection ? "true" : "unknown");
                 queryParams.append("is_trending", isTrending ? "true" : "unknown");
-                queryParams.append("is_latest", "unknown");
+                queryParams.append("is_latest", isLatest ? "true" : "unknown");
                 queryParams.append("ordering", "");
 
                 const response = await axiosInstance.get(
@@ -452,6 +439,7 @@ function PlantFilter({
         const suffix = "Online in India";
         if (isSeasonalCollection) return `Fresh Seasonal Collections - Buy Plants ${suffix}`;
         if (isTrending) return `Trending Gardening Products - Shop ${suffix}`;
+        if (isLatest) return `New Arrivals - Latest Gardening Products ${suffix}`;
         if (isFeatured) return `Featured Garden Products ${suffix}`;
         if (isBestSeller) return `Best Selling Plants & Pots ${suffix}`;
         if (currentFilterType) return `Buy ${currentFilterType}s ${suffix}`;
@@ -556,6 +544,7 @@ function PlantFilter({
                                     setCurrentFilterType={setCurrentFilterType}
                                     isSeasonalCollection={isSeasonalCollection}
                                     isTrending={isTrending}
+                                    isLatest={isLatest}
                                     isFeatured={isFeatured}
                                     isBestSeller={isBestSeller}
                                     setFetchedSubcategoryName={setFetchedSubcategoryName}
@@ -579,6 +568,7 @@ function PlantFilter({
                                 <PublicFlags 
                                     selectedFlag={selectedPublicFlag} 
                                     onSelectFlag={setSelectedPublicFlag} 
+                                    initialFlags={initialFlags}
                                 />
                             </div>
 
@@ -597,7 +587,9 @@ function PlantFilter({
                                     getProducts={getProducts}
                                     bottomContent={
                                         <>
-                                            <InfoCards cards={categoryData?.info_cards || INFO_CARDS} />
+                                            <div className="py-8">
+                                                <TrustBadges />
+                                            </div>
                                             {seoData && (
                                                 <CategoryStaticSEO 
                                                     categoryDataFromAPI={seoData} 
@@ -661,6 +653,7 @@ function PlantFilter({
                         setCurrentFilterType={setCurrentFilterType}
                         isSeasonalCollection={isSeasonalCollection}
                         isTrending={isTrending}
+                        isLatest={isLatest}
                         isFeatured={isFeatured}
                         isBestSeller={isBestSeller}
                         setFetchedCategoryName={setFetchedCategoryName}

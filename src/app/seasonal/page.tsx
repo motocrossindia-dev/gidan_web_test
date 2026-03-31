@@ -43,7 +43,7 @@ export default async function SeasonalPage() {
       />
       <StoreSchema />
       <Suspense fallback={<div className="flex justify-center p-8">Loading products...</div>}>
-        <PlantFilter initialResults={initialData} initialFilterData={filters} />
+        <PlantFilter initialResults={initialData as any} initialFilterData={filters as any} />
       </Suspense>
     </>
   );

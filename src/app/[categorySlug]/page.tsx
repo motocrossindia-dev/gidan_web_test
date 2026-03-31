@@ -46,10 +46,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-import { fetchCategoryBySlug, fetchSubcategoryBySlug, fetchProductsByFilters, fetchSubcategories, fetchFilters } from "@/utils/serverApi";
+import { fetchCategoryBySlug, fetchSubcategoryBySlug, fetchProductsByFilters, fetchSubcategories, fetchFilters, fetchPublicFlags } from "@/utils/serverApi";
 import CategoryStaticSEO from "@/views/utilities/Info/CategoryStaticSEO";
 import RecentlyViewedProducts from "@/components/Shared/RecentlyViewedProducts";
-import CheckoutStores from "@/views/utilities/PlantFilter/CheckoutStores";
+import Blog from "@/components/Blog/Blog";
 import CollectionSchema from "@/views/utilities/seo/CollectionSchema";
 
 export default async function CategoryPage({ params }: Props) {
@@ -66,9 +66,10 @@ export default async function CategoryPage({ params }: Props) {
   const categorySlugLower = categorySlug.toLowerCase();
   const typeKey = categoryToTypeMap[categorySlugLower] || (categorySlugLower === 'gifts' || categorySlugLower === 'gift' ? "gift" : "plant");
 
-  const [category, subcategories] = await Promise.all([
+  const [category, subcategories, publicFlags] = await Promise.all([
     fetchCategoryBySlug(categorySlug),
     fetchSubcategories(categorySlug),
+    fetchPublicFlags()
   ]);
 
   const isGiftCategory = categorySlugLower === 'gifts' || categorySlugLower === 'gift';
@@ -91,10 +92,11 @@ export default async function CategoryPage({ params }: Props) {
     return (
         <Suspense fallback={<div className="flex justify-center p-8">Loading gifts...</div>}>
             <PlantFilter
-                initialResults={initialData}
-                initialCategoryData={giftCategoryData}
-                initialFilterData={filters}
-                categorySlug={categorySlug}
+                initialResults={initialData as any}
+                initialCategoryData={giftCategoryData as any}
+                initialFilterData={filters as any}
+                categorySlug={categorySlug as any}
+                initialFlags={publicFlags as any}
             />
         </Suspense>
     );
@@ -127,19 +129,21 @@ export default async function CategoryPage({ params }: Props) {
         products={initialData?.results || []}
       />
       <Suspense fallback={<div className="flex justify-center p-8">Loading products...</div>}>
-        {/* @ts-ignore */}
         <PlantFilter
-          initialResults={initialData}
-          initialCategoryData={categoryWithSubs}
-          initialFilterData={filters}
-          categorySlug={categorySlug}
-          initialSEOData={initialSEOData}
+          initialResults={initialData as any}
+          initialCategoryData={categoryWithSubs as any}
+          initialFilterData={filters as any}
+          categorySlug={categorySlug as any}
+          initialSEOData={initialSEOData as any}
+          initialFlags={publicFlags as any}
         />
       </Suspense>
 
+
       <div className="space-y-12 mt-12 mb-8">
         <RecentlyViewedProducts />
-        <CheckoutStores />
+        {/* @ts-ignore */}
+        <Blog categoryId={2} />
       </div>
     </>
   );

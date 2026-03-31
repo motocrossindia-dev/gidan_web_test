@@ -12,17 +12,26 @@ import {
     Heart,
     ChevronLeft,
     ChevronRight,
+    Truck,
+    Tag,
+    Sparkles,
+    Copy,
+    Share2,
+    Link as LinkIcon,
+    Search
 } from "lucide-react";
+import RightDrawer from "../../../components/Shared/RightDrawer";
 import ProductSeller from "./ProductSeller";
 import ProductReviews from "./ProductReviews";
 import PeopleAlsoBought from "../../../components/Shared/PeopleAlsoBought";
 import ProductFeatured from "./ProductFeatured";
+import TrustBadges from "../../../components/Shared/TrustBadges";
 import AddOnProduct from "./AddOnProduct";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { isMobile } from "react-device-detect";
 import AboutTheProducts from "./AboutTheProducts";
 import { FaStar } from "react-icons/fa6";
-import { FaStarHalfAlt, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaStarHalfAlt, FaChevronLeft, FaChevronRight, FaWhatsapp, FaInstagram } from "react-icons/fa";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 // Schemas moved to Server Component (page.tsx) for better SSR/SEO
@@ -33,6 +42,7 @@ import StoreSchema from "../seo/StoreSchema";
 import { trackViewItem, trackAddToCart, trackAddToWishlist } from "../../../utils/ga4Ecommerce";
 import Breadcrumb from "../../../components/Shared/Breadcrumb";
 import { toSlugString, getProductUrl, convertToSlug } from "../../../utils/urlHelper";
+import { setCartItems } from "../../../redux/Slice/cartSlice";
 
 
 
@@ -134,12 +144,198 @@ export default function ProductData({ initialProductData }) {
     const [pincode, setPincode] = useState("");
     const [error, setError] = useState("");
     const [showNoDeliveryPopup, setShowNoDeliveryPopup] = useState(false);
+
     // ==========auth cart
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const [isAuthenticatedMobile] = useState(() => typeof window !== 'undefined' ? !!localStorage.getItem('userData') : false);
 
     const [token] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('token') : null);
     const accessToken = useSelector(selectAccessToken);
+
+    // ========== Free Shipping PDP Progress Logic (Synced with Cart)
+    const cartItems = useSelector(state => state.cart.items) || [];
+    const [freeShippingThreshold, setFreeShippingThreshold] = useState(2000);
+
+    const fetchCartItems = async () => {
+        if (!isAuthenticated && !isAuthenticatedMobile) return;
+        try {
+            const response = await axiosInstance.get(`/order/cart/`);
+            if (response.data?.message === "success") {
+                dispatch(setCartItems(response.data.data.cart));
+            }
+        } catch (err) {
+            console.error("Error fetching cart for PDP sync:", err);
+        }
+    };
+
+    useEffect(() => {
+        const fetchThreshold = async () => {
+            try {
+                const response = await axiosInstance.get(`/utils/freeShipping/`);
+                if (response.data?.status === "success" || response.data?.message === "success") {
+                    const threshold = response.data?.data?.threshold || response.data?.threshold || 2000;
+                    setFreeShippingThreshold(Number(threshold));
+                }
+            } catch (err) {
+                console.error("Error fetching free shipping threshold:", err?.message);
+            }
+        };
+
+        fetchThreshold();
+        fetchCartItems();
+
+        // Listen for external cart updates (e.g. from Sidebar or other components)
+        window.addEventListener("cartUpdated", fetchCartItems);
+        return () => window.removeEventListener("cartUpdated", fetchCartItems);
+    }, [isAuthenticated, isAuthenticatedMobile]);
+
+    // Calculate total including current item's potential addition
+    const currentProductId = productDetailData?.data?.product?.id;
+
+    // Calculate current cart total EXCLUDING any existing version of this product
+    const otherItemsTotal = cartItems.reduce((acc, item) => {
+        if (item.id === currentProductId || item.main_prod_id === currentProductId) return acc;
+        return acc + (Number(item.selling_price || 0) * Number(item.quantity || 0));
+    }, 0);
+
+    const sellingPrice = productDetailData?.data?.product?.selling_price || 0;
+    const currentItemContribution = sellingPrice * quantity;
+
+    const combinedTotal = otherItemsTotal + currentItemContribution;
+    const amountToFreeShipping = Math.max(0, freeShippingThreshold - combinedTotal);
+    const freeShippingProgress = Math.min(100, (combinedTotal / freeShippingThreshold) * 100);
+
+    // ========== Coupon Discovery Logic
+    const [allCoupons, setAllCoupons] = useState([]);
+    const [bestCoupon, setBestCoupon] = useState(null);
+    const [isCouponDrawerOpen, setIsCouponDrawerOpen] = useState(false);
+
+    useEffect(() => {
+        const fetchCoupons = async () => {
+            try {
+                const response = await axiosInstance.get(`/coupon/coupons/`);
+                if (response.data?.status === "success" || response.data?.message === "success") {
+                    const coupons = response.data.coupons || response.data.data?.coupons || [];
+                    setAllCoupons(coupons);
+
+                    // Filter applicable coupons
+                    const currentProduct = productDetailData?.data?.product;
+                    const catId = currentProduct?.category_id;
+                    const prodId = currentProduct?.id;
+
+                    const applicable = coupons.filter(c => {
+                        const isGlobal = !c.applicable_products?.length && !c.applicable_categories?.length && !c.applicable_combination_products?.length;
+                        const appliesToProduct = c.applicable_products?.includes(prodId);
+                        const appliesToCategory = c.applicable_categories?.some(cat => cat.id === catId || cat === catId);
+
+                        // Also check variants (combination products)
+                        const currentVariantId = productDetailData?.data?.product?.id; // The variant is the product ID in this structure
+                        const appliesToVariant = c.applicable_combination_products?.includes(currentVariantId);
+
+                        return isGlobal || appliesToProduct || appliesToCategory || appliesToVariant;
+                    });
+
+                    if (applicable.length > 0) {
+                        // Sort by discount value (approximate logic: fixed amount > percentage if high value)
+                        const best = applicable.sort((a, b) => (b.discount_value || 0) - (a.discount_value || 0))[0];
+                        setBestCoupon(best);
+                    }
+                }
+            } catch (err) {
+                console.error("Error fetching coupons for PDP:", err);
+            }
+        };
+        fetchCoupons();
+    }, [productDetailData]);
+
+    const handleCopyCoupon = (code) => {
+        navigator.clipboard.writeText(code);
+        enqueueSnackbar("Coupon code copied!", { variant: "success" });
+    };
+
+    // ========== Manual Coupon Application (PDP Preview)
+    const [manualCouponCode, setManualCouponCode] = useState("");
+    const [appliedCouponInfo, setAppliedCouponInfo] = useState(null);
+    const [isPreviewingCoupon, setIsPreviewingCoupon] = useState(false);
+
+    const handleApplyCouponPreview = async (codeToApply) => {
+        const activeCode = codeToApply || manualCouponCode;
+        if (!activeCode) {
+            enqueueSnackbar("Please enter a coupon code.", { variant: "warning" });
+            return;
+        }
+
+        setIsPreviewingCoupon(true);
+        try {
+            const currentProduct = productDetailData?.data?.product;
+            const payload = {
+                coupon_code: activeCode.toUpperCase(),
+                order_source: "product",
+                products: [
+                    {
+                        prod_id: currentProduct?.id,
+                        quantity: quantity
+                    }
+                ]
+            };
+
+            const response = await axiosInstance.post(`/order/previewCoupon/`, payload);
+
+            if (response.data?.status === "success" || response.data?.message === "success") {
+                setAppliedCouponInfo(response.data.data);
+                enqueueSnackbar("Coupon applied successfully!", { variant: "success" });
+            } else {
+                enqueueSnackbar(response.data?.message || "Invalid coupon code.", { variant: "error" });
+            }
+        } catch (err) {
+            console.error("PDP Coupon Error:", err);
+            enqueueSnackbar(err.response?.data?.message || "Failed to apply coupon.", { variant: "error" });
+        } finally {
+            setIsPreviewingCoupon(false);
+        }
+    };
+
+    const handleRemoveCoupon = () => {
+        setAppliedCouponInfo(null);
+        setManualCouponCode("");
+        enqueueSnackbar("Coupon removed.", { variant: "info" });
+    };
+
+    const handleCopyLink = () => {
+        const url = window.location.href;
+        navigator.clipboard.writeText(url);
+        enqueueSnackbar("Product link copied to clipboard!", { variant: "success" });
+    };
+
+    const handleWhatsAppShare = () => {
+        const p = productDetailData?.data?.product;
+        const name = p?.name || "Check this out";
+        const url = window.location.href;
+        const text = `Check out this ${name} on Gidan: ${url}`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+    };
+
+    const handleInstagramShare = () => {
+        // IG doesn't support direct link sharing via web URL.
+        // We trigger the native share if available, or just copy link.
+        if (navigator.share) {
+            navigator.share({
+                title: productDetailData?.data?.product?.name,
+                url: window.location.href
+            }).catch(() => handleCopyLink());
+        } else {
+            handleCopyLink();
+            enqueueSnackbar("Link copied! You can now share it in your Instagram stories or DMs.", { variant: "info" });
+        }
+    };
+
+    // Re-validate or reset coupon if selection changes
+    useEffect(() => {
+        if (appliedCouponInfo) {
+            setAppliedCouponInfo(null);
+            setManualCouponCode("");
+        }
+    }, [quantity, selectedSize, selectedPlanter, selectedColor]);
 
     // Robust access to rating and review data which might be at top level or nested under .data
     // SSR data from fetchProductDetail returns the whole response object { message, data: { ... } }
@@ -385,16 +581,17 @@ export default function ProductData({ initialProductData }) {
             try {
                 const response = await axiosInstance.post(`/order/cart/`, product_data);
 
-                if (response.status === 201) {
+                if (response.status === 201 || response.status === 200) {
                     dispatch(addToCart(product_data));
                     enqueueSnackbar("Product added to cart successfully!", { variant: "success" });
                     window.dispatchEvent(new Event("cartUpdated"));
                     trackAddToCart(productDetailData?.data?.product, quantity);
-                } else if (response.status === 200) {
-                    // Product already exists in cart — just show info
-                    enqueueSnackbar("This item is already in your cart.", { variant: "info" });
-                }
 
+                    // Navigate to cart with coupon (priority: manual > best)
+                    const finalCouponCode = appliedCouponInfo?.coupon_code || (bestCoupon ? bestCoupon.code : "");
+                    const couponParam = finalCouponCode ? `?coupon=${finalCouponCode}` : "";
+                    router.push(`/cart${couponParam}`);
+                }
             } catch (error) {
                 const msg = error.response?.data?.message || "";
                 const availableStock = error.response?.data?.available_stock;
@@ -485,6 +682,11 @@ export default function ProductData({ initialProductData }) {
                 prod_id: productId,
                 quantity: quantity,
             };
+
+            const finalCoupon = appliedCouponInfo?.coupon_code || bestCoupon?.code;
+            if (finalCoupon) {
+                product_data.coupon_code = finalCoupon;
+            }
 
             try {
                 const response = await axiosInstance.post(`/order/placeOrder/`, product_data);
@@ -1052,133 +1254,138 @@ export default function ProductData({ initialProductData }) {
 
             <div className="w-full" style={{ backgroundColor: "whitesmoke" }}>
                 <div className="container mx-auto px-3 py-4 font-sans md:px-8">
-                    <div className="flex flex-col md:flex-row -mx-4 relative overflow-visible">
-                        <div className="md:flex-1 px-4">
-
+                    <div className="flex flex-col md:flex-row -mx-4 relative items-start">
+                        {/* LEFT COLUMN: STATIC / STICKY IMAGE GALLERY & ACTIONS */}
+                        <div 
+                            className="md:flex-1 px-4 md:sticky md:top-24 h-fit z-30"
+                            style={{ position: '-webkit-sticky', position: 'sticky', top: '96px' }}
+                        >
                             {/* Main Image with Fully Working Zoom */}
-                            {/* Main Image with Lens + Right Side Zoom */}
-                            <div className="relative flex justify-center bg-site-bg">
-
-                                <div
-                                    className="relative w-full max-w-[500px] bg-site-bg rounded-lg overflow-hidden"
-                                    onMouseEnter={() => setZoom(true)}
-                                    onMouseLeave={() => setZoom(false)}
-                                    onMouseMove={(e) => {
-                                        const rect = e.currentTarget.getBoundingClientRect();
-                                        const x = e.clientX - rect.left;
-                                        const y = e.clientY - rect.top;
-
-                                        setPosition({ x, y });
-                                    }}
-                                    ref={imageRef}
-                                >
-                                    {/* MAIN IMAGE */}
-                                    {imageThumbnails.length > 0 ? (
-                                        <img
+                            <div 
+                                className="relative cursor-crosshair group z-40 bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm aspect-square"
+                                onMouseMove={(e) => {
+                                    const rect = e.currentTarget.getBoundingClientRect();
+                                    const x = e.clientX - rect.left;
+                                    const y = e.clientY - rect.top;
+                                    setPosition({ x, y });
+                                }}
+                                ref={imageRef}
+                            >
+                                {/* MAIN IMAGE */}
+                                {imageThumbnails.length > 0 ? (
+                                    <>
+                                        <Image
                                             src={
                                                 (() => {
                                                     const img = imageThumbnails[selectedImage] || imageThumbnails[0];
-                                                    const path = img?.image || img?.url || "";
+                                                    let path = (img?.image || img?.url || "").trim();
                                                     if (!path) return "";
-                                                    return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store"}${path}`;
+                                                    // Robust URL check (handles http://, https://, and //)
+                                                    if (path.startsWith("http") || path.startsWith("//")) {
+                                                        return path;
+                                                    }
+                                                    // Ensure relative path starts with /
+                                                    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+                                                    return `${process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store"}${cleanPath}`;
                                                 })()
                                             }
                                             alt={productDetailData?.data?.product?.main_product_name || ""}
-                                            className="w-full h-[500px] md:h-[450px] object-contain"
-                                            ref={imgRef} loading="lazy" width="400" height="300" style={{ aspectRatio: '4/3' }} />
-                                    ) : null}
-
-                                    {/* LENS BOX (Transparent Square) */}
-                                    {zoom && (
-                                        <div
-                                            className="absolute pointer-events-none border border-green-400 bg-white/20 rounded-sm"
-                                            style={{
-                                                width: lensSize,
-                                                height: lensSize,
-                                                top: position.y - lensSize / 2,
-                                                left: position.x - lensSize / 2,
-                                            }}
+                                            className="w-full h-full object-contain"
+                                            ref={imgRef}
+                                            priority={true}
+                                            width={500}
+                                            height={500}
+                                            unoptimized={true}
                                         />
-                                    )}
-                                </div>
+                                        
+                                        {/* Hover to Zoom indicator */}
+                                        <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-sm border border-gray-100 flex items-center gap-2 pointer-events-none z-10 transition-opacity duration-300">
+                                            <Share2 size={12} className="text-gray-400" />
+                                            <span className="text-[10px] font-black text-gray-700 uppercase tracking-wider">Hover to zoom</span>
+                                        </div>
+                                    </>
+                                ) : null}
 
-                                {/* ZOOM BOX ON RIGHT */}
-                                {/* ZOOM BOX ON RIGHT */}
+                                {/* LENS BOX (Transparent Square) */}
                                 {zoom && (
                                     <div
-                                        className="absolute top-0 right-0 translate-x-[110%] w-[500px] h-[500px] hidden md:block border border-gray-300 rounded-lg bg-white z-50 shadow-lg"
+                                        className="absolute pointer-events-none border border-green-400 bg-white/20 rounded-sm"
                                         style={{
-                                            backgroundImage: `url(${(() => {
-                                                const img = imageThumbnails[selectedImage] || imageThumbnails[0];
-                                                const path = img?.image || img?.url || "";
-                                                if (!path) return "";
-                                                return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store"}${path}`;
-                                            })()})`,
-                                            backgroundRepeat: "no-repeat",
-
-                                            /* BIGGER IMAGE FOR MAGNIFICATION */
-                                            backgroundSize: `${zoomLevel * 120}%`,
-
-                                            /* MOVE ZOOM AREA BASED ON LENS POSITION */
-                                            backgroundPosition: `
-        ${(position.x / (imageRef?.current?.offsetWidth || 1)) * 100}% 
-        ${(position.y / (imageRef?.current?.offsetHeight || 1)) * 100}%
-      `,
+                                            width: lensSize,
+                                            height: lensSize,
+                                            top: position.y - lensSize / 2,
+                                            left: position.x - lensSize / 2,
                                         }}
-                                    ></div>
+                                    />
                                 )}
-
                             </div>
 
-                            <div className="flex items-center justify-center gap-2 mt-6 overflow-x-auto px-2 relative">
-                                {/* Left Navigation Button */}
-                                <button
-                                    onClick={() =>
-                                        setSelectedImage((prev) =>
-                                            prev === 0 ? imageThumbnails.length - 1 : prev - 1
-                                        )
-                                    }
-                                    className="absolute left-0 z-10 text-gray-600 hover:text-gray-800 focus:outline-none bg-white rounded-full p-1 shadow-md md:relative md:bg-transparent md:shadow-none md:p-0"
-                                    aria-label="Previous image"
-                                >
-                                    <FaChevronLeft size={24} />
-                                </button>
+                            {/* ZOOM BOX ON RIGHT */}
+                            {zoom && (
+                                <div
+                                    className="absolute top-0 right-0 translate-x-[110%] w-[500px] h-[500px] hidden md:block border border-gray-300 rounded-lg bg-white z-50 shadow-lg"
+                                    style={{
+                                        backgroundImage: `url(${
+                                            (() => {
+                                                const img = imageThumbnails[selectedImage] || imageThumbnails[0];
+                                                const path = (img?.image || img?.url || "").trim();
+                                                if (path.startsWith("http") || path.startsWith("//")) return path;
+                                                const cleanPath = path.startsWith('/') ? path : `/${path}`;
+                                                return `${process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store"}${cleanPath}`;
+                                            })()
+                                        })`,
+                                        backgroundPosition: `${-position.x * 2.5 + 250}px ${-position.y * 2.5 + 250}px`,
+                                        backgroundSize: `1250px 1250px`,
+                                        backgroundRepeat: "no-repeat",
+                                    }}
+                                />
+                            )}
 
-                                {/* Thumbnail List */}
-                                <div className="flex gap-3 overflow-x-auto px-8 md:px-0">
-                                    {imageThumbnails.map((image, i) => (
-                                        <button aria-label="Button"
-                                            key={i}
-                                            onClick={() => setSelectedImage(i)}
-                                            className={`w-16 h-16 sm:w-20 sm:h-20 md:w-[90px] md:h-[90px] rounded-lg bg-site-bg flex items-center justify-center shrink-0 ${selectedImage === i
-                                                ? "ring-2 ring-indigo-300 ring-inset"
-                                                : ""
-                                                }`}
-                                        >
-                                            <img
-                                                src={(() => {
-                                                    const path = image?.image || image?.url || "";
-                                                    if (!path) return "";
-                                                    return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store"}${path}`;
-                                                })()}
-                                                loading="lazy"
-                                                alt={`${productData.name} ${i + 1}`}
-                                                className="w-full h-full object-cover rounded" width="400" height="300" style={{ aspectRatio: '4/3' }}
-                                            />
-                                        </button>
-                                    ))}
+                            {/* Image Thumbnails */}
+                            <div className="mt-6 flex flex-nowrap gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                                {imageThumbnails.map((thumbnail, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setSelectedImage(index)}
+                                        className={`relative w-20 h-20 rounded-2xl overflow-hidden border-2 transition-all shrink-0 ${
+                                            selectedImage === index ? "border-[#375421] shadow-md scale-[1.05]" : "border-gray-100 hover:border-gray-300"
+                                        }`}
+                                    >
+                                        <Image
+                                            src={
+                                                (() => {
+                                                    const path = (thumbnail?.image || thumbnail?.url || "").trim();
+                                                    if (path.startsWith("http") || path.startsWith("//")) return path;
+                                                    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+                                                    return `${process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store"}${cleanPath}`;
+                                                })()
+                                            }
+                                            alt={`Thumbnail ${index + 1}`}
+                                            fill
+                                            className="object-cover"
+                                            unoptimized={true}
+                                        />
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Shared footer row below thumbnails */}
+                            <div className="mt-8 flex items-center justify-between gap-4 px-2">
+                                <div className="flex items-center gap-2">
+                                    <button onClick={handleWhatsAppShare} className="w-8 h-8 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 hover:text-green-600 hover:border-green-100 transition-all shadow-sm">
+                                        <FaWhatsapp size={14} />
+                                    </button>
+                                    <button onClick={handleInstagramShare} className="w-8 h-8 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 hover:text-pink-600 hover:border-pink-100 transition-all shadow-sm">
+                                        <FaInstagram size={14} />
+                                    </button>
+                                    <button onClick={handleCopyLink} className="w-8 h-8 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-900 transition-all shadow-sm">
+                                        <LinkIcon size={14} />
+                                    </button>
                                 </div>
-                                <button
-                                    onClick={() =>
-                                        setSelectedImage((prev) =>
-                                            prev === imageThumbnails.length - 1 ? 0 : prev + 1
-                                        )
-                                    }
-                                    className="absolute right-0 z-10 text-gray-600 hover:text-gray-800 focus:outline-none bg-white rounded-full p-1 shadow-md md:relative md:bg-transparent md:shadow-none md:p-0"
-                                    aria-label="Next image"
-                                >
-                                    <FaChevronRight size={24} />
-                                </button>
+                                <div className="px-4 py-2 bg-[#ecf3e8] border border-green-100 rounded-full flex items-center gap-2 shadow-sm">
+                                    <span className="text-xl">🛡️</span>
+                                    <span className="text-[10px] font-black text-[#375421] uppercase tracking-wide">7-Day Survival Guarantee</span>
+                                </div>
                             </div>
                         </div>
 
@@ -1301,46 +1508,153 @@ export default function ProductData({ initialProductData }) {
                                         </>
                                     )}
                                 </div>
+
+                                {bestCoupon && (
+                                    <div
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setIsCouponDrawerOpen(true);
+                                        }}
+                                        className="ml-auto flex items-center gap-2 px-3 py-1.5 bg-orange-50 border border-orange-100 rounded-full cursor-pointer hover:bg-orange-100 transition-all animate-pulse shadow-sm"
+                                    >
+                                        <Tag className="w-3.5 h-3.5 text-orange-600" />
+                                        <span className="text-[11px] font-bold text-orange-700 uppercase tracking-tight">
+                                            Use {bestCoupon.code} for {bestCoupon.discount_type === 'percentage' ? `${bestCoupon.discount_value}%` : `₹${bestCoupon.discount_value}`} OFF
+                                        </span>
+                                        <Sparkles className="w-3 h-3 text-orange-400" />
+                                    </div>
+                                )}
                             </div>
 
-
                             {productDetailData?.data?.product_weights?.length > 0 && (
-                                <div className="space-y-6">
-                                    <div className="mb-4">
-                                        <span className="font-bold text-gray-700">Select Packet Size:</span>
-                                        <div className="flex items-center mt-2">
-                                            {productDetailData?.data?.product_weights?.map((size, idx) => (
-                                                <button aria-label="Button"
-                                                    key={size?.id || size?.size_grams || idx}
-                                                    onClick={() => handleWeightClick(size, productDetailData?.data?.product)}
-                                                    className={`${selectedgram?.size_grams === size?.size_grams
-                                                        ? "border-2 border-bio-green text-gray-700"
-                                                        : "border-2 border-gray-300 text-gray-700"
-                                                        } py-2 px-4 rounded-lg mr-2 focus:outline-none`}
-                                                >
-                                                    {size?.size_grams}
-                                                </button>
-                                            ))}
-                                        </div>
+                                <div className="mb-6">
+                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-3">Select Packet Size:</span>
+                                    <div className="flex flex-wrap gap-2">
+                                        {productDetailData?.data?.product_weights?.map((size, idx) => (
+                                            <button
+                                                key={size?.id || size?.size_grams || idx}
+                                                onClick={() => handleWeightClick(size, productDetailData?.data?.product)}
+                                                className={`px-5 py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${selectedgram?.size_grams === size?.size_grams
+                                                    ? "border-[#375421] text-[#375421] bg-[#375421]/5"
+                                                    : "border-gray-100 text-gray-500 hover:border-gray-200 hover:bg-gray-50"
+                                                    }`}
+                                            >
+                                                {size?.size_grams}
+                                            </button>
+                                        ))}
                                     </div>
                                 </div>
                             )}
 
                             {productDetailData?.data?.product_litres?.length > 0 && (
-                                <div className="space-y-6">
-                                    <div className="mb-4">
-                                        <span className="font-bold text-gray-700">Select Capacity:</span>
-                                        <div className="flex items-center mt-2">
-                                            {productDetailData?.data?.product_litres?.map((litre, idx) => (
-                                                <button aria-label="Button"
-                                                    key={litre?.id || litre?.name || idx}
-                                                    onClick={() => handleLitreClick(litre, productDetailData?.data?.product)}
-                                                    className={`${selectedLitre?.name === litre?.name
-                                                        ? "border-2 border-bio-green text-gray-700"
-                                                        : "border-2 border-gray-300 text-gray-700"
-                                                        } py-2 px-4 rounded-lg mr-2 focus:outline-none`}
+                                <div className="mb-6">
+                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-3">Select Capacity:</span>
+                                    <div className="flex flex-wrap gap-2">
+                                        {productDetailData?.data?.product_litres?.map((litre, idx) => (
+                                            <button
+                                                key={litre?.id || litre?.name || idx}
+                                                onClick={() => handleLitreClick(litre, productDetailData?.data?.product)}
+                                                className={`px-5 py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${selectedLitre?.name === litre?.name
+                                                    ? "border-[#375421] text-[#375421] bg-[#375421]/5"
+                                                    : "border-gray-100 text-gray-500 hover:border-gray-200 hover:bg-gray-50"
+                                                    }`}
+                                            >
+                                                {litre?.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {productDetailData?.data?.product_sizes?.length > 0 && (
+                                <div className="mb-6">
+                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-3">Select Plant Size:</span>
+                                    <div className="flex flex-wrap gap-2">
+                                        {productDetailData?.data?.product_sizes?.map((size, idx) => {
+                                            const diff = (size?.price || 0);
+                                            return (
+                                                <button
+                                                    key={size?.id || size?.size || idx}
+                                                    onClick={() => handleSizeClick(size, productDetailData?.data?.product)}
+                                                    className={`px-5 py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${selectedSize?.size === size?.size
+                                                        ? "border-[#375421] text-[#375421] bg-[#375421]/5"
+                                                        : "border-gray-100 text-gray-500 hover:border-gray-200 hover:bg-gray-50"
+                                                        }`}
                                                 >
-                                                    {litre?.name}
+                                                    {size?.size} {diff > 0 && <span className="text-[10px] opacity-60 ml-1">(+₹{Math.round(diff)})</span>}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
+
+                            {productDetailData?.data?.product_planter_sizes?.length > 0 && (
+                                <div className="mb-6">
+                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-3">Select Planter Size:</span>
+                                    <div className="flex flex-wrap gap-2">
+                                        {productDetailData?.data?.product_planter_sizes?.map((size, idx) => {
+                                            const diff = (size?.price || 0);
+                                            return (
+                                                <button
+                                                    key={size?.id || size?.size || idx}
+                                                    onClick={() => handlePlanterSizeClick(size, productDetailData?.data?.product)}
+                                                    className={`px-5 py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${selectedPlanterSize?.size === size?.size
+                                                        ? "border-[#375421] text-[#375421] bg-[#375421]/5"
+                                                        : "border-gray-100 text-gray-500 hover:border-gray-200 hover:bg-gray-50"
+                                                        }`}
+                                                >
+                                                    {size?.size} {diff > 0 && <span className="text-[10px] opacity-60 ml-1">(+₹{Math.round(diff)})</span>}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
+
+                            {productDetailData?.data?.product_planters?.length > 0 && (
+                                <div className="mb-6">
+                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-3">Select Planter:</span>
+                                    <div className="flex flex-wrap gap-2">
+                                        {productDetailData?.data?.product_planters?.map((planter, idx) => {
+                                            const diff = (planter?.price || 0);
+                                            return (
+                                                <button
+                                                    key={planter?.id || planter?.name || idx}
+                                                    onClick={() => handlePlanterClick(planter, productDetailData?.data?.product)}
+                                                    className={`px-5 py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${selectedPlanter?.id === planter?.id
+                                                        ? "border-[#375421] text-[#375421] bg-[#375421]/5"
+                                                        : "border-gray-100 text-gray-500 hover:border-gray-200 hover:bg-gray-50"
+                                                        }`}
+                                                >
+                                                    {planter?.name} {diff > 0 && <span className="text-[10px] opacity-60 ml-1">(+₹{Math.round(diff)})</span>}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
+
+                            {productDetailData?.data?.product_colors?.length > 0 && (
+                                <div className="mb-4">
+                                    <span className="font-bold text-gray-700">Recommended Planter Color:</span>
+                                    {/* Select Box - color name with code dot */}
+                                    <div className="relative mt-2">
+                                        <div className="flex flex-wrap gap-2">
+                                            {productDetailData?.data?.product_colors?.map((color, idx) => (
+                                                <button
+                                                    key={color?.id || color?.color_code || idx}
+                                                    onClick={() => handlePlanterColorClick(color, productDetailData?.data?.product)}
+                                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg border-2 transition-all ${selectedColor?.id === color?.id
+                                                        ? "border-bio-green bg-green-50 shadow-sm"
+                                                        : "border-gray-200 hover:border-gray-300"
+                                                        }`}
+                                                >
+                                                    <span
+                                                        className="w-4 h-4 rounded-full border border-gray-200"
+                                                        style={{ backgroundColor: color?.color_code }}
+                                                    />
+                                                    <span className="text-sm font-medium text-gray-700">{color?.name}</span>
                                                 </button>
                                             ))}
                                         </div>
@@ -1348,241 +1662,266 @@ export default function ProductData({ initialProductData }) {
                                 </div>
                             )}
 
-                            {productDetailData?.data?.product_sizes?.length > 0 && (
-                                <div className="mb-4">
-                                    <span className="font-bold text-gray-700">Select Plant Size:</span>
-                                    <div className="flex items-center mt-2">
-                                        {productDetailData?.data?.product_sizes?.map((size, idx) => (
-                                            <button aria-label="Button"
-                                                key={size?.id || size?.size || idx}
-                                                onClick={() => handleSizeClick(size, productDetailData?.data?.product)}
-                                                className={`${selectedSize?.size === size?.size
-                                                    ? "border-2 border-bio-green text-gray-700"
-                                                    : "border-2 border-gray-300 text-gray-700"
-                                                    } py-2 px-4 rounded-lg mr-2 focus:outline-none`}
-                                            >
-                                                {size?.size}
-                                            </button>
-                                        ))}
-                                    </div>
+                            {/* Manual Coupon Application UI (PDP) - Same as Checkout */}
+                            <div className="bg-[#f2f8f2] p-4 rounded-2xl mt-6 border border-emerald-50 mb-6">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <Tag className="text-[#375421]" size={16} fill="none" />
+                                    <span className="text-[11px] font-black text-[#375421] uppercase tracking-[0.1em]">APPLY COUPON</span>
                                 </div>
-                            )}
 
-                            {productDetailData?.data?.product_planter_sizes?.length > 0 && (
-                                <div className="mb-4">
-                                    <span className="font-bold text-gray-700">Select Planter Size:</span>
-                                    <div className="flex items-center mt-2">
-                                        {productDetailData?.data?.product_planter_sizes?.map((size, idx) => (
-                                            <button aria-label="Button"
-                                                key={size?.id || size?.size || idx}
-                                                onClick={() => handlePlanterSizeClick(size, productDetailData?.data?.product)}
-                                                className={`${selectedPlanterSize?.size === size?.size
-                                                    ? "border-2 border-bio-green text-gray-700"
-                                                    : "border-2 border-gray-300 text-gray-700"
-                                                    } py-2 px-4 rounded-lg mr-2 focus:outline-none`}
-                                            >
-                                                {size?.size}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            {productDetailData?.data?.product_planters?.length > 0 && (
-                                <div className="mb-4">
-                                    <span className="font-bold text-gray-700">Select Planter:</span>
-                                    <div className="grid grid-cols-2 gap-2 mt-2 md:grid-cols-3">
-                                        {productDetailData?.data?.product_planters?.map((planter, idx) => (
-                                            <button aria-label="Button"
-                                                key={planter?.id || planter?.name || idx}
-                                                onClick={() => handlePlanterClick(planter, productDetailData?.data?.product)}
-                                                className={`${selectedPlanter?.id === planter?.id
-                                                    ? "border-2 border-bio-green text-gray-700"
-                                                    : "border-2 border-gray-300 text-gray-700"
-                                                    } py-2 px-4 rounded-lg text-sm mr-2 focus:outline-none`}
-                                            >
-                                                {planter?.name}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-
-                            {productDetailData?.data?.product_colors?.length > 0 && (
-                                <div className="mb-4">
-                                    <span className="font-bold text-gray-700">Color:</span>
-                                    <div className="flex items-center mt-2 space-x-4">
-                                        {productDetailData?.data?.product_colors?.map((color, idx) => (
-                                            <div key={color?.id || color?.color_code || idx}
-                                                className="flex flex-col items-center">
-                                                <button
-                                                    onClick={() =>
-                                                        handlePlanterColorClick(color, productDetailData?.data?.product)
-                                                    }
-                                                    className={`w-10 h-10 rounded-full mb-1 focus:outline-none ${selectedColor?.id === color?.id
-                                                        ? "border-2 border-bio-green text-gray-700"
-                                                        : "border-2 border-gray-300 text-gray-700"
-                                                        }`}
-                                                    style={{ backgroundColor: color?.color_code }}
-                                                    aria-label={`Select ${color?.name || "color"}`}
-                                                />
-                                                {/* ✅ Show color name */}
-                                                <span className="text-xs text-gray-600">{color?.color_name}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            <div className="mb-6 flex flex-wrap items-end gap-6 overflow-hidden">
-                                <div className="flex flex-col">
-                                    <span className="font-bold text-black-700 text-base mb-2">Quantity:</span>
-                                    <div className="flex items-center">
-                                        <button aria-label="Button"
-                                            onMouseDown={(e) => e.preventDefault()}
-                                            onClick={() => handleQuantity(productDetailData?.data?.product?.id, "decrement", quantity)}
-                                            className="border border-bio-green text-black-700 py-2 px-4 rounded-l-lg hover:bg-bio-green hover:text-white"
+                                {appliedCouponInfo ? (
+                                    <div className="flex items-center justify-between bg-white border border-emerald-100 rounded-xl px-4 py-3 shadow-sm">
+                                        <div className="flex flex-col">
+                                            <span className="text-emerald-800 text-sm font-black tracking-widest uppercase">{appliedCouponInfo.coupon_code}</span>
+                                            <span className="text-emerald-600 text-[10px] font-bold">Applied — saved ₹{Math.round(appliedCouponInfo.discount_amount || 0)}</span>
+                                            {appliedCouponInfo.redemption_message && (
+                                                <p className="text-[9px] text-[#375421]/70 font-medium leading-tight mt-1">{appliedCouponInfo.redemption_message}</p>
+                                            )}
+                                        </div>
+                                        <button
+                                            onClick={handleRemoveCoupon}
+                                            className="text-[10px] font-black text-red-500 hover:text-red-700 uppercase tracking-widest bg-red-50 px-2 py-1 rounded-lg transition-colors"
                                         >
-                                            -
+                                            Remove
                                         </button>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-4">
+                                        <div className="flex gap-2">
+                                            <input
+                                                type="text"
+                                                placeholder="PROMO CODE"
+                                                value={manualCouponCode}
+                                                onChange={(e) => setManualCouponCode(e.target.value.toUpperCase())}
+                                                className="flex-1 px-4 py-2 border-2 border-dashed border-[#375421]/30 rounded-xl focus:outline-none focus:border-[#375421] text-sm bg-white placeholder:text-gray-300 font-bold uppercase tracking-wider transition-all"
+                                            />
+                                            <button
+                                                onClick={() => handleApplyCouponPreview()}
+                                                disabled={isPreviewingCoupon || !manualCouponCode}
+                                                className="bg-[#375421] text-white font-black px-6 py-2 rounded-xl hover:bg-[#2d451b] transition-all text-xs uppercase tracking-[0.15em] shadow-md shadow-green-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                                            >
+                                                {isPreviewingCoupon ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : "APPLY"}
+                                            </button>
+                                        </div>
 
-                                        <input
-                                            type="number"
-                                            min="1"
-                                            max="1000"
-                                            className="w-20 text-center border border-bio-green bg-gray-200 text-black py-2 px-4
-                                             [-moz-appearance:textfield]
-                                             [appearance:textfield]
-                                             [&::-webkit-inner-spin-button]:appearance-none
-                                             [&::-webkit-outer-spin-button]:appearance-none"
-                                            value={quantity}
-                                            onChange={(e) => {
-                                                const v = e.target.value;
-                                                // Let user type freely but cap at 1000
-                                                const num = Number(v);
-                                                setQuantity(v === '' ? '' : Math.min(num, 1000));
-                                            }}
-                                            onBlur={() =>
-                                                handleQuantity(
-                                                    productDetailData?.data?.product?.id,
-                                                    "direct",
-                                                    quantity
-                                                )
-                                            }
-                                        />
-                                        <button aria-label="Button"
-                                            onMouseDown={(e) => e.preventDefault()}
+                                        {bestCoupon && (
+                                            <div className="flex items-center justify-between pt-1">
+                                                <div className="flex items-center gap-x-2">
+                                                    <span className="text-[10px] text-gray-500 font-bold uppercase tracking-tighter">Try code</span>
+                                                    <button
+                                                        onClick={() => {
+                                                            setManualCouponCode(bestCoupon.code);
+                                                            handleApplyCouponPreview(bestCoupon.code);
+                                                        }}
+                                                        className="text-[10px] font-black text-[#375421] underline decoration-dashed transition-colors uppercase hover:text-[#2d451b]"
+                                                    >
+                                                        {bestCoupon.code}
+                                                    </button>
+                                                    <span className="text-[10px] text-gray-400 font-medium">· Max savings</span>
+                                                </div>
+
+                                                {allCoupons.length > 1 && (
+                                                    <button
+                                                        onClick={() => setIsCouponDrawerOpen(true)}
+                                                        className="text-[10px] font-black text-[#375421] uppercase hover:underline tracking-widest"
+                                                    >
+                                                        + More Offers
+                                                    </button>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Free Shipping Progress Indicator (PDP Standalone) */}
+                            <div className="mb-6 px-5 py-4 bg-gradient-to-r from-[#faf9f6]/80 to-white rounded-2xl border border-gray-100 shadow-sm relative">
+                                <div className="flex justify-between items-end mb-3 relative z-10 w-full">
+                                    <div className="flex-1">
+                                        <div className="flex items-center gap-2">
+                                            <Truck className="w-5 h-5 text-orange-500 shrink-0" />
+                                            <span className="text-[14px] font-bold text-gray-900 leading-tight">
+                                                {amountToFreeShipping > 0
+                                                    ? `Add ₹${Math.round(amountToFreeShipping).toLocaleString()} more for FREE shipping`
+                                                    : "This item qualifies for FREE shipping!"}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="text-right shrink-0 ml-4">
+                                        <span className="text-[15px] font-black text-[#375421] whitespace-nowrap">₹{Math.round(combinedTotal).toLocaleString()} <span className="text-gray-400 text-[11px] font-bold">/ ₹{freeShippingThreshold.toLocaleString()}</span></span>
+                                    </div>
+                                </div>
+
+                                <div className="relative h-2 w-full bg-gray-100 rounded-full overflow-hidden shadow-inner flex shrink-0 border border-gray-200/50">
+                                    <div
+                                        className="h-full bg-[#375421] transition-all duration-1000 ease-out rounded-full shadow-sm"
+                                        style={{ width: `${freeShippingProgress}%` }}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="mb-8 space-y-6">
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                                    <div className="flex items-center border border-[#375421] rounded-xl overflow-hidden shadow-sm h-12">
+                                        <button
+                                            onClick={() => handleQuantity(productDetailData?.data?.product?.id, "decrement", quantity)}
+                                            className="w-12 h-full flex items-center justify-center text-[#375421] hover:bg-gray-50 active:bg-gray-100 transition-colors border-r border-[#375421]/20 font-black"
+                                        >
+                                            −
+                                        </button>
+                                        <div className="w-14 h-full flex items-center justify-center bg-white text-sm font-black text-gray-900">
+                                            {quantity}
+                                        </div>
+                                        <button
                                             onClick={() => handleQuantity(productDetailData?.data?.product?.id, "increment", quantity)}
-                                            className="border border-bio-green text-black-700 py-2 px-4 rounded-r-lg hover:bg-bio-green hover:text-white"
+                                            className="w-12 h-full flex items-center justify-center text-[#375421] hover:bg-gray-50 active:bg-gray-100 transition-colors border-l border-[#375421]/20 font-black"
                                         >
                                             +
                                         </button>
                                     </div>
-                                </div>
-
-                                <div className="flex-grow max-w-sm">
-                                    <div className="flex w-full items-stretch">
-                                        <input
-                                            type="text"
-                                            placeholder="Enter Pin Code"
-                                            value={pincode}
-                                            onChange={handlePincodeChange}
-                                            className="flex-grow px-4 py-2 border border-gray-300 rounded-l outline-none focus:border-bio-green min-w-0"
-                                        />
-                                        <button
-                                            className="px-6 py-2 bg-bio-green text-white rounded-r hover:bg-[#375421] hover:text-white whitespace-nowrap"
-                                            onClick={handleCheck}
-                                        >
-                                            Check
-                                        </button>
-                                    </div>
-                                    {error && <p className="text-red-500 text-xs mt-1 absolute">{error}</p>}
-                                </div>
-
-                                {/* No Delivery Popup */}
-                                {showNoDeliveryPopup && (
-                                    <div
-                                        className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]"
-                                        onClick={() => setShowNoDeliveryPopup(false)}
+                                    <button
+                                        onClick={isInCart ? () => router.push('/cart') : handleAddToCartSubmit}
+                                        disabled={productDetailData?.data?.product?.in_stock === false}
+                                        className="flex-1 h-12 bg-[#375421] text-white rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#2d451b] transition-all shadow-md active:scale-[0.98] disabled:opacity-50"
                                     >
-                                        <div
-                                            className="bg-white rounded-2xl shadow-2xl p-6 mx-4 w-full max-w-sm text-center"
-                                            onClick={(e) => e.stopPropagation()}
-                                        >
-                                            <div className="text-5xl mb-4">😔</div>
-                                            <h2 className="text-lg font-bold text-gray-800 mb-2">Delivery Not Available</h2>
-                                            <p className="text-sm text-gray-500 mb-6">
-                                                We&apos;re sorry, delivery is currently unavailable for pincode <span className="font-semibold text-gray-700">{pincode}</span>. Please try a different pincode.
-                                            </p>
-                                            <button
-                                                className="w-full py-2 bg-bio-green text-white font-semibold rounded-lg hover:bg-[#375421] hover:text-white transition-colors"
-                                                onClick={() => setShowNoDeliveryPopup(false)}
-                                            >
-                                                Got it
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                            <div className="flex mb-8 space-x-2">
-                                <div className="w-1/2">
-                                    {productDetailData?.data?.product?.in_stock === false ? (
-                                        <button
-                                            aria-label="Add to cart disabled"
-                                            className="w-full border border-gray-400 text-gray-400 bg-site-bg py-2 px-4 rounded-lg cursor-not-allowed"
-                                            disabled
-                                        >
-                                            <ShoppingCart className="inline-block mr-2" />
-                                            Out of stock
-                                        </button>
-                                    ) : (
-                                        <button
-                                            aria-label="Add to cart"
-                                            className="w-full border border-bio-green text-bio-green py-2 px-4 rounded-lg hover:bg-bio-green hover:text-white"
-                                            onClick={isInCart ? () => router.push('/cart') : handleAddToCartSubmit}
-                                        >
-                                            <ShoppingCart className="inline-block mr-2" />
-                                            {isInCart ? "Go to Cart" : "Add to Cart"}
-                                        </button>
-                                    )}
-
-                                </div>
-
-                                <div className="w-1/2">
-                                    <button aria-label="Add to wishlist"
-                                        className="w-full border border-bio-green text-bio-green py-2 px-4 rounded-lg hover:bg-bio-green hover:text-white"
+                                        <ShoppingCart size={18} />
+                                        {isInCart ? "Go to Cart" : "Add to Cart"}
+                                    </button>
+                                    <button
                                         onClick={!productDetailData?.data?.product?.is_wishlist ? handleAddToWishlistSubmit : null}
+                                        className={`w-12 h-12 rounded-xl border flex items-center justify-center transition-all shadow-sm active:scale-95 ${productDetailData?.data?.product?.is_wishlist ? 'border-red-100 bg-red-50 text-red-500' : 'border-gray-200 bg-white text-gray-400 hover:text-red-400 hover:border-red-100 hover:bg-red-50'}`}
                                     >
-                                        <Heart className="inline-block mr-2" />
-                                        Add to Wishlist
+                                        <Heart size={20} fill={productDetailData?.data?.product?.is_wishlist ? "currentColor" : "none"} />
                                     </button>
                                 </div>
+                                <button
+                                    onClick={handleBuyItNowSubmit}
+                                    disabled={productDetailData?.data?.product?.in_stock === false}
+                                    className="w-full h-14 border-2 border-[#375421] text-[#375421] rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-[#375421]/5 transition-all shadow-sm active:scale-[0.98] disabled:opacity-50"
+                                >
+                                    <Sparkles size={18} className="text-orange-400" />
+                                    Buy Now — ₹{Math.round(productDetailData?.data?.product?.selling_price || 0)}
+                                </button>
                             </div>
 
-                            {productDetailData?.data?.product?.in_stock === false ? (
-                                <button
-                                    className="bg-gray-400 text-white py-2 px-4 rounded-lg w-full cursor-not-allowed"
-                                    disabled
-                                >
-                                    Out of stock
-                                </button>
-                            ) : (
-                                <button
-                                    className="bg-bio-green text-white py-2 px-4 rounded-lg w-full hover:bg-bio-green hover:text-white"
-                                    onClick={handleBuyItNowSubmit}
-                                >
-                                    Buy It Now
-                                </button>
-                            )}
+                            <div className="mb-8 p-6 bg-white rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden group">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center text-orange-500">
+                                        <Truck size={20} />
+                                    </div>
+                                    <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest">Check delivery</h3>
+                                </div>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="text"
+                                        placeholder="Enter PIN code"
+                                        value={pincode}
+                                        onChange={handlePincodeChange}
+                                        className="flex-1 px-5 py-3 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm font-bold focus:bg-white focus:border-[#375421] outline-none transition-all placeholder:text-gray-400"
+                                    />
+                                    <button
+                                        onClick={handleCheck}
+                                        className="px-8 bg-[#375421] text-white rounded-xl font-black uppercase tracking-widest hover:bg-[#2d451b] transition-all shadow-sm active:scale-95"
+                                    >
+                                        Check
+                                    </button>
+                                </div>
+                                {error && <p className="text-red-500 text-[10px] font-bold mt-2 ml-1">{error}</p>}
+                                <div className="mt-4 pt-4 border-t border-gray-50 flex flex-col gap-2">
+                                    <p className="text-[11px] font-bold text-gray-500 flex items-center gap-2">
+                                        📦 Free delivery on orders ₹{freeShippingThreshold}+
+                                    </p>
+                                    <p className="text-[11px] font-bold text-gray-500 flex items-center gap-2 text-orange-600">
+                                        ⚡ Same-day dispatch before 2PM (Bangalore)
+                                    </p>
+                                </div>
+                            </div>
 
+                            <div className="mt-8 border-t border-gray-100 pt-8">
+                                <TrustBadges isGrid={true} />
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {/* Coupon Details Drawer */}
+            <RightDrawer
+                isOpen={isCouponDrawerOpen}
+                onClose={() => setIsCouponDrawerOpen(false)}
+                title="Available Offers"
+                subtitle="Exclusive discounts for you"
+                footerText="Tap to apply the best offer at checkout"
+            >
+                <div className="space-y-4">
+                    {allCoupons.map((coupon) => {
+                        // Re-run filtering logic for display
+                        const currentProduct = productDetailData?.data?.product;
+                        const catId = currentProduct?.category_id;
+                        const prodId = currentProduct?.id;
+                        const isGlobal = !coupon.applicable_products?.length && !coupon.applicable_categories?.length && !coupon.applicable_combination_products?.length;
+                        const appliesToProduct = coupon.applicable_products?.includes(prodId);
+                        const appliesToCategory = coupon.applicable_categories?.some(cat => cat.id === catId || cat === catId);
+
+                        if (!isGlobal && !appliesToProduct && !appliesToCategory) return null;
+
+                        const isCurrentlyApplied = appliedCouponInfo?.coupon_code === coupon.code;
+
+                        return (
+                            <div
+                                key={coupon.id}
+                                className={`group relative p-5 border-2 rounded-[24px] transition-all duration-300 ${isCurrentlyApplied ? 'bg-white border-[#375421] shadow-sm' : 'bg-white border-gray-900 hover:border-[#375421]'}`}
+                            >
+                                <div className="flex flex-col">
+                                    <div className="flex items-center gap-3 mb-3">
+                                        <span className={`font-black text-[11px] px-3.5 py-1.5 rounded-lg border-2 tracking-widest uppercase transition-colors ${isCurrentlyApplied ? 'text-white bg-[#375421] border-[#375421]' : 'text-gray-900 bg-[#ebf5eb] border-gray-900'}`}>
+                                            {coupon.code}
+                                        </span>
+                                        {bestCoupon?.id === coupon.id && (
+                                            <span className="text-2xl animate-pulse">🔥</span>
+                                        )}
+                                    </div>
+                                    <h3 className="text-base font-black text-gray-900 mb-2 leading-tight tracking-tight">
+                                        {coupon.description}
+                                    </h3>
+                                    <div className="flex items-center justify-between mt-2 pt-4 border-t border-dashed border-gray-100">
+                                        <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest border-l-2 border-[#375421] pl-2">
+                                            Min order: ₹{coupon.minimum_order_value || 0}
+                                        </p>
+                                        <button
+                                            onClick={() => handleCopyCoupon(coupon.code)}
+                                            className="text-[10px] font-black text-gray-400 hover:text-gray-900 transition-colors uppercase tracking-[0.1em]"
+                                        >
+                                            Copy
+                                        </button>
+                                    </div>
+
+                                    <div className="mt-5">
+                                        <button
+                                            onClick={() => {
+                                                handleApplyCouponPreview(coupon.code);
+                                                setIsCouponDrawerOpen(false);
+                                            }}
+                                            disabled={isCurrentlyApplied}
+                                            className={`w-full py-4 rounded-2xl font-black text-[12px] uppercase tracking-[0.1em] transition-all active:scale-[0.96] flex items-center justify-center gap-2
+                                            ${isCurrentlyApplied
+                                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-2 border-gray-200'
+                                                    : 'bg-white text-gray-900 border-2 border-gray-900 hover:bg-site-bg shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none'
+                                                }`}
+                                        >
+                                            {isCurrentlyApplied ? 'COUPON APPLIED' : 'APPLY OFFER'}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            </RightDrawer>
+
             <div className="bg-white p-4">
-                <AboutTheProducts 
-                    productDetailData={productDetailData} 
+                <AboutTheProducts
+                    productDetailData={productDetailData}
                     ratingData={ratingData}
                     reviewData={reviewData}
                     onWriteReview={handleWriteReviewClick}
@@ -1601,10 +1940,6 @@ export default function ProductData({ initialProductData }) {
                     />
                 </div>
             )}
-
-            <ProductFeatured />
-            <ProductSeller />
-
             <StoreSchema />
         </>
     );

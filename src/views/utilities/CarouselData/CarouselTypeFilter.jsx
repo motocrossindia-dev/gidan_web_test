@@ -4,7 +4,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams, usePathname } from "next/navigation";
 import ProductGrid from "../../../components/Shared/ProductGrid";
 import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
-import CheckoutStores from "../PlantFilter/CheckoutStores";
 import axiosInstance from "../../../Axios/axiosInstance";
 function CarouselTypeFilter() {
     const { slug } = useParams();
@@ -79,7 +78,6 @@ function CarouselTypeFilter() {
 
                     <div className="mt-12 mb-8 space-y-8">
                         <RecentlyViewedProducts />
-                        <CheckoutStores />
                     </div>
                 </div>
             </div>
