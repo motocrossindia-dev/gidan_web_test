@@ -282,54 +282,62 @@ function PlantFilter({
         const resolveSlugs = async () => {
             if (!effectiveCategorySlug) return;
 
-            let currentCatId = resolvedCategoryId;
+            // If we already have the ID from props or derived from slug, skip API call
+            if (resolvedCategoryId) return;
 
-            if (!currentCatId) {
-                setIsResolvingIds(true);
-                try {
-                    const catRes = await axiosInstance.get('/category/');
-                    const categories = catRes.data?.data?.categories || [];
-                    const foundCat = categories.find(c => c.slug === effectiveCategorySlug);
-                    if (foundCat) {
-                        currentCatId = foundCat.id;
-                        setResolvedCategoryId(foundCat.id);
-                        setFetchedCategoryName(foundCat.name);
-                    }
-                } catch (err) {
-                    console.error("Error resolving category slug:", err);
-                } finally {
-                    setIsResolvingIds(false);
+            setIsResolvingIds(true);
+            try {
+                const catRes = await axiosInstance.get('/category/');
+                const categories = catRes.data?.data?.categories || [];
+                const foundCat = categories.find(c => c.slug === effectiveCategorySlug);
+                if (foundCat) {
+                    setResolvedCategoryId(foundCat.id);
+                    setFetchedCategoryName(foundCat.name);
                 }
-            }
-
-            if (effectiveSubcategorySlug && !resolvedSubcategoryId && currentCatId) {
-                setIsResolvingIds(true);
-                try {
-                    const subRes = await axiosInstance.get(`/category/categoryWiseSubCategory/${effectiveCategorySlug}/`);
-                    const subcategories = subRes.data?.data?.subCategorys || [];
-                    const foundSub = subcategories.find(s => s.slug === effectiveSubcategorySlug);
-                    if (foundSub) {
-                        setResolvedSubcategoryId(foundSub.id);
-                        setFetchedSubcategoryName(foundSub.name);
-                    }
-                } catch (err) {
-                    console.error("Error resolving subcategory slug:", err);
-                } finally {
-                    setIsResolvingIds(false);
-                }
+            } catch (err) {
+                console.error("Error resolving category slug:", err);
+            } finally {
+                setIsResolvingIds(false);
             }
         };
 
-        resolveSlugs();
-    }, [effectiveCategorySlug, effectiveSubcategorySlug, resolvedCategoryId, resolvedSubcategoryId]);
+        if (effectiveCategorySlug && !resolvedCategoryId) {
+            resolveSlugs();
+        }
+    }, [effectiveCategorySlug, resolvedCategoryId]);
+
+    // Separate effect for subcategory resolution to avoid complexity
+    useEffect(() => {
+        const resolveSubcategory = async () => {
+            if (!effectiveCategorySlug || !effectiveSubcategorySlug || resolvedSubcategoryId) return;
+
+            setIsResolvingIds(true);
+            try {
+                const subRes = await axiosInstance.get(`/category/categoryWiseSubCategory/${effectiveCategorySlug}/`);
+                const subcategories = subRes.data?.data?.subCategorys || [];
+                const foundSub = subcategories.find(s => s.slug === effectiveSubcategorySlug);
+                if (foundSub) {
+                    setResolvedSubcategoryId(foundSub.id);
+                    setFetchedSubcategoryName(foundSub.name);
+                }
+            } catch (err) {
+                console.error("Error resolving subcategory slug:", err);
+            } finally {
+                setIsResolvingIds(false);
+            }
+        };
+
+        if (effectiveSubcategorySlug && !resolvedSubcategoryId) {
+            resolveSubcategory();
+        }
+    }, [effectiveCategorySlug, effectiveSubcategorySlug, resolvedSubcategoryId]);
 
     useEffect(() => {
         const getInitialProducts = async () => {
+            // Skip fetching for specific categories that are handled elsewhere (like offers)
             if (categoryId === "14") {
                 try {
-                    const response = await axiosInstance.get(
-                        `/product/offerProducts/`
-                    );
+                    const response = await axiosInstance.get(`/product/offerProducts/`);
                     if (response.status === 200) {
                         setResults(response.data.products || []);
                         setProducts(response.data || {});
@@ -342,7 +350,6 @@ function PlantFilter({
                 const queryParams = new URLSearchParams();
                 const finalType = typeKey || (isSeasonalCollection || isTrending || isFeatured || isBestSeller ? "plant" : "");
                 queryParams.append("type", finalType);
-                // Clear category preference when searching to "handle all types"
                 queryParams.append("category_id", query ? "" : (resolvedCategoryId || ""));
                 queryParams.append("subcategory_id", resolvedSubcategoryId || "");
                 queryParams.append("search", query || "");
@@ -379,15 +386,13 @@ function PlantFilter({
                         next: response.data.next,
                         previous: response.data.previous,
                     });
+                    
                     const newCategoryInfo = response.data?.category_info?.category_info || null;
-                    setCategoryData(newCategoryInfo);
-
-                    // Update SEO data reactively when subcategory filter changes
                     if (newCategoryInfo) {
+                        setCategoryData(newCategoryInfo);
                         const hasSubcategory = !!newCategoryInfo.subcategory_name;
                         setIsSubcategorySEO(hasSubcategory);
                         if (hasSubcategory) {
-                            // Subcategory — spread ALL fields so sections/intro_text are preserved
                             setSeoData({
                                 ...newCategoryInfo,
                                 title: newCategoryInfo.subcategory_name,
@@ -396,17 +401,9 @@ function PlantFilter({
                                 sections: newCategoryInfo.sections || [],
                             });
                         } else {
-                            // Back to category level — use hero+sections format
                             setSeoData(newCategoryInfo);
                             setIsSubcategorySEO(false);
                         }
-                    }
-
-                    if (!categoryName && response.data?.category_info?.category_info?.category_name) {
-                        setFetchedCategoryName(response.data.category_info.category_info.category_name);
-                    }
-                    if (!subCategoryName && response.data?.category_info?.category_info?.subcategory_name) {
-                        setFetchedSubcategoryName(response.data.category_info.category_info.subcategory_name);
                     }
                 }
             } catch (error) {
@@ -418,20 +415,27 @@ function PlantFilter({
 
         const isSpecialRoute = routeBasedFilters.isSeasonalCollection || routeBasedFilters.isTrending || routeBasedFilters.isFeatured || routeBasedFilters.isBestSeller;
 
-        if (!isResolvingIds && (resolvedCategoryId || isSpecialRoute)) {
+        if (!isResolvingIds && (resolvedCategoryId !== null || isSpecialRoute)) {
             if (filtersApplied) return;
 
-            // Hydration guard: If we already have results from server, skip initial fetch
-            const hasInitialData = normalizedInitialResults.results && normalizedInitialResults.results.length > 0;
-            const isMatchingData = results.length === normalizedInitialResults.results.length;
+            // STRONGER HYDRATION GUARD: 
+            // 1. If server already provided results and we haven't manually changed anything, skip.
+            // 2. We use normalizedInitialResults which is a memoized version of the SSR prop.
+            const hasInitialResults = normalizedInitialResults.results && normalizedInitialResults.results.length > 0;
+            
+            // Check if current state results still exactly match the initial SSR results
+            const isShowingInitialData = results === normalizedInitialResults.results || 
+                                       (results.length === normalizedInitialResults.results.length && results.length > 0);
 
-            if (hasInitialData && isMatchingData && seoData) {
+            if (hasInitialResults && isShowingInitialData && seoData) {
+                // If we have SSR data, only fetch if the route has actually changed but the data hasn't
                 return;
             }
+
             setIsSearching(true);
             getInitialProducts();
         }
-    }, [path, typeKey, currentFilterType, resolvedCategoryId, resolvedSubcategoryId, isResolvingIds, isSeasonalCollection, isTrending, isFeatured, isBestSeller, normalizedInitialResults, results.length, seoData, filtersApplied]);
+    }, [path, typeKey, currentFilterType, resolvedCategoryId, resolvedSubcategoryId, isResolvingIds, isSeasonalCollection, isTrending, isFeatured, isBestSeller, normalizedInitialResults, results, seoData, filtersApplied]);
 
     const getDisplayName = () => {
         if (categoryData?.meta_title) return categoryData.meta_title;

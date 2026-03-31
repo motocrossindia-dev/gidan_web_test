@@ -55,7 +55,7 @@ import CollectionSchema from "@/views/utilities/seo/CollectionSchema";
 export default async function CategoryPage({ params }: Props) {
   const { categorySlug } = await params;
 
-  // 1. Fetch category, subcategories, and filters data on server in parallel
+  // 1. Determine common category metadata to allow parallel fetching
   const categoryToTypeMap: Record<string, string> = {
     'plants': 'plant',
     'pots': 'pot',
@@ -63,16 +63,56 @@ export default async function CategoryPage({ params }: Props) {
     'plant-care': 'plantcare',
     'gifts': 'gift'
   };
+  
+  const slugToIdMap: Record<string, number> = {
+    'plants': 19,
+    'pots': 20,
+    'seeds': 21,
+    'plant-care': 22,
+    'gifts': 0 // Gifts handled specially
+  };
+
   const categorySlugLower = categorySlug.toLowerCase();
   const typeKey = categoryToTypeMap[categorySlugLower] || (categorySlugLower === 'gifts' || categorySlugLower === 'gift' ? "gift" : "plant");
+  const knownCategoryId = slugToIdMap[categorySlugLower];
 
-  const [category, subcategories, publicFlags] = await Promise.all([
-    fetchCategoryBySlug(categorySlug),
-    fetchSubcategories(categorySlug),
-    fetchPublicFlags()
-  ]);
+  // 2. Fetch everything in parallel if category ID is known, otherwise waterfall slightly
+  let category, subcategories, publicFlags, filters, initialData;
+
+  if (knownCategoryId !== undefined) {
+    // Optimized: Parallel fetch for ALL initial data
+    const effectiveId = knownCategoryId === 0 ? null : knownCategoryId.toString();
+    [category, subcategories, publicFlags, filters, initialData] = await Promise.all([
+      fetchCategoryBySlug(categorySlug),
+      fetchSubcategories(categorySlug),
+      fetchPublicFlags(),
+      fetchFilters(typeKey, effectiveId as any),
+      fetchProductsByFilters({
+        type: typeKey,
+        category_id: effectiveId as string,
+      })
+    ]);
+  } else {
+    // Fallback: Resolve category first to get ID
+    [category, subcategories, publicFlags] = await Promise.all([
+      fetchCategoryBySlug(categorySlug),
+      fetchSubcategories(categorySlug),
+      fetchPublicFlags()
+    ]);
+
+    if (category) {
+      [filters, initialData] = await Promise.all([
+        fetchFilters(typeKey, category.id),
+        fetchProductsByFilters({
+          type: typeKey,
+          category_id: category.id,
+        })
+      ]);
+    }
+  }
 
   const isGiftCategory = categorySlugLower === 'gifts' || categorySlugLower === 'gift';
+  
   // Handle 'gifts' specially if not in standard category API
   if (!category && isGiftCategory) {
     const giftCategoryData = {
@@ -82,13 +122,6 @@ export default async function CategoryPage({ params }: Props) {
         subCategory: []
     };
     
-    // We can still try to fetch filters even without a category object
-    const filters = await fetchFilters(typeKey, undefined);
-    const initialData = await fetchProductsByFilters({
-        type: typeKey,
-        category_id: undefined,
-    });
-
     return (
         <Suspense fallback={<div className="flex justify-center p-8">Loading gifts...</div>}>
             <PlantFilter
@@ -104,22 +137,10 @@ export default async function CategoryPage({ params }: Props) {
 
   if (!category) notFound();
 
-  // Special handling for gifts - backend needs type='gift' and category_id=''
-  const effectiveCategoryId = isGiftCategory ? "" : category.id;
-
-  const filters = await fetchFilters(typeKey, category.id);
-
   // Attach subCategory to category object for PlantFilter
   const categoryWithSubs = { ...category, subCategory: subcategories };
 
-  // 2. Fetch initial products
-  const initialData = await fetchProductsByFilters({
-    type: typeKey,
-    category_id: effectiveCategoryId,
-  });
-
   // Extract SEO content — passed into PlantFilter as initialSEOData so it's SSR on first paint
-  // and reactive when client-side subcategory filter changes
   const initialSEOData = (initialData as any)?.category_info?.category_info || null;
 
   return (

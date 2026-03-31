@@ -34,10 +34,29 @@ const TawkChat = () => {
     <Script id="tawk-to" strategy="lazyOnload">
       {`
         var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        
+        // Use customStyle API for proper offsets
+        Tawk_API.customStyle = {
+            visibility : {
+                desktop : {
+                    position : 'br',
+                    xOffset : 0,
+                    yOffset : 0
+                },
+                mobile : {
+                    position : 'br',
+                    xOffset : 0,
+                    yOffset : 80 // Clear the mobile bottom nav
+                }
+            }
+        };
+
         Tawk_API.onLoad = function(){
             var shiftIframes = function() {
                 var isMobile = window.innerWidth <= 768;
-                var expected = isMobile ? 'translateY(-110px)' : 'none';
+                if (!isMobile) return;
+                
+                var expected = 'translateY(-110px)';
                 var iframes = document.querySelectorAll('iframe');
                 for (var i = 0; i < iframes.length; i++) {
                     var z = iframes[i].style.zIndex;
@@ -48,10 +67,14 @@ const TawkChat = () => {
                     }
                 }
             };
-            shiftIframes();
-            var observer = new MutationObserver(shiftIframes);
-            observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
+            
+            // Initial shift check
+            setTimeout(shiftIframes, 1000);
+            
+            // Re-apply on window resize
+            window.addEventListener('resize', shiftIframes);
         };
+
         (function(){
             var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
             s1.async=true;
