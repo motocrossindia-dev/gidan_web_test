@@ -54,7 +54,7 @@ const ProductCard = ({ product, handleRemove, handleQuantityChange }) => {
       {/* Product Image */}
       <div className="relative w-full sm:w-32 md:w-40 aspect-square overflow-hidden rounded-xl bg-gray-50 flex-shrink-0">
         <img name=" "   
-          src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
+          src={product.image?.startsWith('http') ? product.image : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
           alt={product.name}
           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
         />

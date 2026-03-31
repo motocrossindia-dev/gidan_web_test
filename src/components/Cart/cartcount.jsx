@@ -16,8 +16,15 @@ const CartIconWithCount = () => {
         const fetchCartData = async () => {
             // If not logged in, count pending items in localStorage
             if (!accessToken) {
-                const pending = localStorage.getItem("pendingCartAction");
-                setCartCount(pending ? 1 : 0);
+                const raw = localStorage.getItem("pendingCartAction");
+                try {
+                    const guestItems = raw ? JSON.parse(raw) : [];
+                    const itemsArray = Array.isArray(guestItems) ? guestItems : (guestItems ? [guestItems] : []);
+                    const totalQuantity = itemsArray.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
+                    setCartCount(totalQuantity);
+                } catch (e) {
+                    setCartCount(0);
+                }
                 return;
             }
 

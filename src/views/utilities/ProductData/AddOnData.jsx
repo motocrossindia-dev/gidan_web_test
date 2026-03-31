@@ -31,43 +31,63 @@ const AddOnData = ({
   const [loading, setLoading] = useState(false);
 
   const handleAddToCart = async (e) => {
-    if (e) e.stopPropagation();
     if (e) e.preventDefault();
 
-    if (!isAuthenticated) {
-      router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
-      return;
-    }
+    const guestPayload = {
+      prod_id: product.id,
+      quantity: 1,
+      name: product.name,
+      price: product.selling_price || price,
+      mrp: product.mrp || oldPrice,
+      product_image: product.product_image || (product.images && product.images[0]?.image) || imageUrl
+    };
 
-    setLoading(true);
-    try {
-      if (inCart) {
-        const response = await axiosInstance.delete(
-          `/order/cart/${product.id}/`
-        );
+    if (isAuthenticated) {
+      setLoading(true);
+      try {
+        if (inCart) {
+          const response = await axiosInstance.delete(
+            `/order/cart/${product.id}/`
+          );
 
-        if (response.status === 200 || response.data?.message === 'success') {
-          enqueueSnackbar("Product Removed from cart", { variant: "success" });
-          window.dispatchEvent(new Event("cartUpdated"));
-          trackRemoveFromCart(product);
+          if (response.status === 200 || response.data?.message === 'success') {
+            enqueueSnackbar("Product Removed from cart", { variant: "success" });
+            window.dispatchEvent(new Event("cartUpdated"));
+            trackRemoveFromCart(product);
+          }
+        } else {
+          const response = await axiosInstance.post(
+            `/order/cart/`,
+            { prod_id: product.id, quantity: 1 }
+          );
+
+          if (response.status === 200 || response.status === 201) {
+            enqueueSnackbar("Added to cart", { variant: "success" });
+            window.dispatchEvent(new Event("cartUpdated"));
+            trackAddToCart(product, 1);
+          }
         }
-      } else {
-        const response = await axiosInstance.post(
-          `/order/cart/`,
-          { prod_id: product.id, quantity: 1 }
-        );
-
-        if (response.status === 200 || response.status === 201) {
-          enqueueSnackbar("Added to cart", { variant: "success" });
-          window.dispatchEvent(new Event("cartUpdated"));
-          trackAddToCart(product, 1);
-        }
+      } catch (error) {
+        console.error("Error updating cart item:", error);
+        enqueueSnackbar(error.response?.data?.message || "Something went wrong", { variant: "error" });
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Error updating cart item:", error);
-      enqueueSnackbar(error.response?.data?.message || "Something went wrong", { variant: "error" });
-    } finally {
-      setLoading(false);
+    } else {
+      // Guest Mode
+      const cart = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('pendingCartAction') || '[]') : [];
+      const itemExists = cart.find(item => (item.prod_id || item.id) === product.id);
+      
+      if (itemExists) {
+        const updated = cart.filter(item => (item.prod_id || item.id) !== product.id);
+        localStorage.setItem('pendingCartAction', JSON.stringify(updated));
+        enqueueSnackbar("Removed from guest cart", { variant: "info" });
+      } else {
+        const updated = [...cart, guestPayload];
+        localStorage.setItem('pendingCartAction', JSON.stringify(updated));
+        enqueueSnackbar("Added to guest cart! 🎉", { variant: "success" });
+      }
+      window.dispatchEvent(new Event("cartUpdated"));
     }
   };
 

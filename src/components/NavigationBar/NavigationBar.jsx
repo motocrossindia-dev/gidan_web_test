@@ -111,13 +111,8 @@ const NavBar = () => {
     setIsLogoutDialogOpen(false);
   };
 
-  const handleWishListClick = (event) => {
-    if (username === "Guest") {
-      setAnchorEl(event.currentTarget);
-      setOpenPopper(true);
-    } else {
-      router.push("/wishlist");
-    }
+  const handleWishListClick = () => {
+    router.push("/wishlist");
   };
 
   useEffect(() => {
@@ -135,11 +130,7 @@ const NavBar = () => {
   };
 
   const handleCartClick = () => {
-    if (username === "Guest") {
-      setIsCartOpen(true);
-    } else {
-      router.push("/cart");
-    }
+    router.push("/cart");
   };
 
   const handleClickAway = (event) => {
@@ -435,29 +426,6 @@ const NavBar = () => {
 
 
 
-      {/* Wishlist Popper */}
-      <ClickAwayListener onClickAway={handleClickAway}>
-        <div>
-          <Popper open={openPopper} anchorEl={anchorEl} placement="bottom" transition style={{ zIndex: 11000 }}>
-            {({ TransitionProps }) => (
-              <Fade {...TransitionProps}>
-                <Box className="w-80 p-4 mt-10 shadow-lg rounded-lg bg-white border">
-                  <p className="text-center text-md">To add or view items in your wishlist, please sign in first.</p>
-                  <div className="text-center mt-4">
-                    <button
-                      onClick={handleSignIn}
-                      className="border border-[#375421] text-[#375421] px-4 py-2 rounded-md"
-                      aria-label="Sign in to view wishlist"
-                    >
-                      Sign In
-                    </button>
-                  </div>
-                </Box>
-              </Fade>
-            )}
-          </Popper>
-        </div>
-      </ClickAwayListener>
 
       {/* Logout Modal */}
       {isLogoutDialogOpen && (
@@ -486,22 +454,6 @@ const NavBar = () => {
         </div>
       )}
 
-      {/* Empty Cart Popup */}
-      {isCartOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)] z-[11000]" onClick={() => setIsCartOpen(false)}>
-          <div className="bg-white p-6 rounded-lg w-80 text-center" onClick={(e) => e.stopPropagation()}>
-            <Image src={empty} alt="Empty Cart" width={320} height={240} className="mx-auto mb-4" />
-            <h2 className="text-lg font-semibold mb-4">Your cart is currently empty</h2>
-            <button
-              className="bg-[#375421] text-white px-4 py-2 rounded-md"
-              onClick={() => setIsCartOpen(false)}
-              aria-label="Close empty cart message and add products"
-            >
-              Add Products
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

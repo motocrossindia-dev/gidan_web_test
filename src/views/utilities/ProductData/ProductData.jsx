@@ -163,7 +163,6 @@ export default function ProductData({ initialProductData }) {
     const [freeShippingThreshold, setFreeShippingThreshold] = useState(2000);
 
     const fetchCartItems = async () => {
-        if (!isAuthenticated && !isAuthenticatedMobile) return;
         try {
             const response = await axiosInstance.get(`/order/cart/`);
             if (response.data?.message === "success") {
@@ -472,13 +471,24 @@ export default function ProductData({ initialProductData }) {
     const router = useRouter();
 
     const handleAddToCartSubmit = async () => {
-        if (isAuthenticated || isAuthenticatedMobile) {
-            const productId = productDetailData?.data?.product?.id;
-            if (!productId) {
-                enqueueSnackbar("Product is still loading. Please wait.", { variant: "warning" });
-                return;
-            }
+        const productId = productDetailData?.data?.product?.id;
+        if (!productId) {
+            enqueueSnackbar("Product is still loading. Please wait.", { variant: "warning" });
+            return;
+        }
 
+        const product_data = {
+            prod_id: productId,
+            quantity: quantity,
+            // For guest cart display
+            name: productDetailData?.data?.product?.name,
+            price: productDetailData?.data?.product?.selling_price,
+            mrp: productDetailData?.data?.product?.mrp,
+            product_image: productDetailData?.data?.product?.product_image 
+                || (productDetailData?.data?.product?.images && productDetailData?.data?.product?.images[0]?.image)
+        };
+
+        if (isAuthenticated || isAuthenticatedMobile) {
             // Stock check before adding to cart
             try {
                 await axiosInstance.get(`/product/stockCheck/${productId}/`, {
@@ -489,50 +499,47 @@ export default function ProductData({ initialProductData }) {
                 return;
             }
 
-            const product_data = {
-                prod_id: productId,
-                quantity: quantity,
-            };
-
             try {
-                const response = await axiosInstance.post(`/order/cart/`, product_data);
+                const payload = { 
+                    prod_id: productId, 
+                    quantity
+                };
+                if (appliedCouponInfo?.coupon_code) {
+                    payload.coupon_code = appliedCouponInfo.coupon_code;
+                }
+                const response = await axiosInstance.post(`/order/cart/`, payload);
 
                 if (response.status === 201 || response.status === 200) {
-                    dispatch(addToCart(product_data));
+                    dispatch(addToCart({ prod_id: productId, quantity }));
                     enqueueSnackbar("Product added to cart successfully!", { variant: "success" });
                     window.dispatchEvent(new Event("cartUpdated"));
                     trackAddToCart(productDetailData?.data?.product, quantity);
 
-                    // Navigate to cart with coupon (priority: manual)
                     const finalCouponCode = appliedCouponInfo?.coupon_code || "";
                     const couponParam = finalCouponCode ? `?coupon=${finalCouponCode}` : "";
                     router.push(`/cart${couponParam}`);
                 }
             } catch (error) {
                 const msg = error.response?.data?.message || "";
-                const availableStock = error.response?.data?.available_stock;
-                if (msg.toLowerCase().includes("not enough stock") || msg.toLowerCase().includes("stock")) {
-                    const stockMsg = availableStock !== undefined
-                        ? `Only ${availableStock} unit${availableStock !== 1 ? 's' : ''} available in stock.`
-                        : msg;
-                    enqueueSnackbar(stockMsg, { variant: "warning" });
-                } else if (
-                    msg.toLowerCase().includes("already") ||
-                    msg.toLowerCase().includes("exists") ||
-                    error.response?.status === 400
-                ) {
+                if (msg.toLowerCase().includes("stock")) {
+                    enqueueSnackbar(msg, { variant: "warning" });
+                } else if (msg.toLowerCase().includes("already") || error.response?.status === 400) {
                     enqueueSnackbar("This item is already in your cart.", { variant: "info" });
                 } else {
                     enqueueSnackbar(msg || "Failed to add product to cart", { variant: "info" });
                 }
             }
         } else {
-            enqueueSnackbar("Added to cart (Guest)", { variant: "success" });
-            savePendingCartItem({ prod_id: productDetailData?.data?.product?.id, quantity });
+            // Guest Mode
+            savePendingCartItem(product_data);
+            enqueueSnackbar("Added to guest cart! 🎉", { variant: "success" });
             window.dispatchEvent(new Event("cartUpdated"));
+            
+            // Navigate to cart
+            const finalCouponCode = appliedCouponInfo?.coupon_code || "";
+            const couponParam = finalCouponCode ? `?coupon=${finalCouponCode}` : "";
+            router.push(`/cart${couponParam}`);
         }
-
-
     };
 
 
@@ -575,9 +582,13 @@ export default function ProductData({ initialProductData }) {
 
 
     const handleBuyItNowSubmit = async () => {
+        if (!isAuthenticated && !isAuthenticatedMobile) {
+            enqueueSnackbar("Please login to proceed with checkout", { variant: "info" });
+            router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn");
+            return;
+        }
 
-        if (isAuthenticated || isAuthenticatedMobile) {
-            const productId = productDetailData?.data?.product?.id;
+        const productId = productDetailData?.data?.product?.id;
             if (!productId) {
                 enqueueSnackbar("Product is still loading. Please wait.", { variant: "warning" });
                 return;
@@ -602,9 +613,8 @@ export default function ProductData({ initialProductData }) {
                 quantity: quantity,
             };
 
-            const finalCoupon = appliedCouponInfo?.coupon_code;
-            if (finalCoupon) {
-                product_data.coupon_code = finalCoupon;
+            if (appliedCouponInfo?.coupon_code) {
+                product_data.coupon_code = appliedCouponInfo.coupon_code;
             }
 
             try {
@@ -633,20 +643,8 @@ export default function ProductData({ initialProductData }) {
                         router.push('/profile')
 
                     }
-                } else {
-                    enqueueSnackbar("Failed to place order. Please try again.", { variant: "error" });
                 }
             }
-        } else {
-            // If not authenticated, redirect based on device type
-            enqueueSnackbar("Please Login or Signup to Buy Our Products.", { variant: 'info' });
-            savePendingCartItem({ prod_id: productDetailData?.data?.product?.id, quantity });
-            if (isMobile) {
-                router.push("/mobile-signin", { replace: true });
-            } else {
-                router.push("/?modal=signIn", { replace: true });
-            }
-        }
     };
 
     const CustomPrevArrow = ({ className, onClick }) => (

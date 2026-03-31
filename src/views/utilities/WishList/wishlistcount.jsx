@@ -16,8 +16,14 @@ const WishlistIconWithCount = () => {
         const fetchWishlistCount = async () => {
              // If not logged in, count pending items in localStorage
             if (!accessToken) {
-                const pending = localStorage.getItem("pendingWishlistAction");
-                setWishlistCount(pending ? 1 : 0);
+                const raw = localStorage.getItem("pendingWishlistAction");
+                try {
+                    const guestItems = raw ? JSON.parse(raw) : [];
+                    const itemsArray = Array.isArray(guestItems) ? guestItems : (guestItems ? [guestItems] : []);
+                    setWishlistCount(itemsArray.length);
+                } catch (e) {
+                    setWishlistCount(0);
+                }
                 return;
             }
 

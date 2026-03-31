@@ -41,63 +41,99 @@ const CartWishlistSidebar = () => {
   const updateQuantity = async (cartId, newQuantity) => {
     if (newQuantity < 1) return;
     
-    // If we're on the cart page, don't trigger the sidebar's internal update logic that might show a loader or open it
-    const isCartPage = pathname === '/cart';
-    
-    // Optimistic UI update
-    const previousItems = [...items];
-    setItems(items.map(item => item.id === cartId ? { ...item, quantity: newQuantity } : item));
+    if (accessToken) {
+      // Optimistic UI update
+      const previousItems = [...items];
+      setItems(items.map(item => item.id === cartId ? { ...item, quantity: newQuantity } : item));
 
-    try {
-      const response = await axiosInstance.patch(
-        `/order/cart/`,
-        { cart_id: cartId, quantity: newQuantity }
-      );
+      try {
+        const response = await axiosInstance.patch(
+          `/order/cart/`,
+          { cart_id: cartId, quantity: newQuantity }
+        );
 
-      if (response.data?.message === "success") {
-        // Still dispatch so badges update, but sidebar should stay closed due to useEffect check
-        window.dispatchEvent(new Event("cartUpdated"));
+        if (response.data?.message === "success") {
+          window.dispatchEvent(new Event("cartUpdated"));
+        }
+      } catch (err) {
+        setItems(previousItems);
+        const msg = err.response?.data?.message || "";
+        const availableStock = err.response?.data?.available_stock;
+        if ((msg.toLowerCase().includes("not enough stock") || msg.toLowerCase().includes("stock")) && availableStock !== undefined) {
+          enqueueSnackbar(`Only ${availableStock} unit${availableStock !== 1 ? 's' : ''} available in stock.`, { variant: "warning" });
+        } else {
+          enqueueSnackbar(msg || "Failed to update quantity", { variant: "error" });
+        }
       }
-    } catch (err) {
-      setItems(previousItems);
-      const msg = err.response?.data?.message || "";
-      const availableStock = err.response?.data?.available_stock;
-      if ((msg.toLowerCase().includes("not enough stock") || msg.toLowerCase().includes("stock")) && availableStock !== undefined) {
-        enqueueSnackbar(`Only ${availableStock} unit${availableStock !== 1 ? 's' : ''} available in stock.`, { variant: "warning" });
-      } else {
-        enqueueSnackbar(msg || "Failed to update quantity", { variant: "error" });
+    } else {
+      // Guest Mode
+      const key = type === 'cart' ? 'pendingCartAction' : 'pendingWishlistAction';
+      const raw = localStorage.getItem(key);
+      if (raw) {
+        let guestItems = JSON.parse(raw);
+        const idx = guestItems.findIndex(item => (item.id || item.prod_id) === cartId);
+        if (idx > -1) {
+          guestItems[idx].quantity = newQuantity;
+          localStorage.setItem(key, JSON.stringify(guestItems));
+          fetchGuestItems(type);
+          window.dispatchEvent(new Event("cartUpdated"));
+        }
       }
     }
   };
 
   const removeItem = async (id) => {
-    try {
-      const endpoint = type === 'cart' ? `/order/cart/${id}/` : `/order/wishlist/${id}/`;
-      const response = await axiosInstance.delete(endpoint);
-      
-      if (response.status === 200 || response.data?.message === 'success') {
-        enqueueSnackbar("Removed successfully", { variant: "success" });
-        setItems(items.filter(item => item.id !== id));
+    if (accessToken) {
+      try {
+        const endpoint = type === 'cart' ? `/order/cart/${id}/` : `/order/wishlist/${id}/`;
+        const response = await axiosInstance.delete(endpoint);
+        
+        if (response.status === 200 || response.data?.message === 'success') {
+          enqueueSnackbar("Removed successfully", { variant: "success" });
+          setItems(items.filter(item => item.id !== id));
+          window.dispatchEvent(new Event(type === 'cart' ? "cartUpdated" : "wishlistUpdated"));
+        }
+      } catch (error) {
+        enqueueSnackbar("Failed to remove item", { variant: "error" });
+      }
+    } else {
+      // Guest Mode
+      const key = type === 'cart' ? 'pendingCartAction' : 'pendingWishlistAction';
+      const raw = localStorage.getItem(key);
+      if (raw) {
+        let guestItems = JSON.parse(raw);
+        const updated = guestItems.filter(item => (item.id || item.prod_id) !== id);
+        localStorage.setItem(key, JSON.stringify(updated));
+        enqueueSnackbar("Removed from guest list", { variant: "info" });
+        fetchGuestItems(type);
         window.dispatchEvent(new Event(type === 'cart' ? "cartUpdated" : "wishlistUpdated"));
       }
-    } catch (error) {
-      enqueueSnackbar("Failed to remove item", { variant: "error" });
     }
   };
 
   const fetchGuestItems = (contentType) => {
     const key = contentType === 'cart' ? 'pendingCartAction' : 'pendingWishlistAction';
-    const pending = localStorage.getItem(key);
-    if (pending) {
-      // For guest, we might only have one item or the action payload
-      // Since we don't have full product data easily available without another fetch,
-      // we'll just show a simplified "Guest Session" view or empty instructions.
-      // But usually, the user wants to see the actual updated list.
-      // For now, let's just stick to what's available.
-      setItems([]); 
-    } else {
-      setItems([]);
+    const raw = localStorage.getItem(key);
+    let guestItems = [];
+    try {
+      guestItems = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(guestItems)) guestItems = guestItems ? [guestItems] : [];
+    } catch (e) {
+      guestItems = [];
     }
+    
+    // Map guest items to match the structure expected by the sidebar
+    const mappedItems = guestItems.map((item, idx) => ({
+      id: item.id || item.prod_id || idx,
+      prod_id: item.prod_id || item.id,
+      name: item.name,
+      price: item.price || item.mrp,
+      mrp: item.mrp || item.price,
+      quantity: item.quantity || 1,
+      image: item.product_image || item.image || item.product_img || (item.images && item.images[0]?.image)
+    }));
+    
+    setItems(mappedItems);
   };
 
   useEffect(() => {
@@ -132,6 +168,13 @@ const CartWishlistSidebar = () => {
       setIsOpen(true);
     };
 
+    // Initial fetch
+    if (accessToken) {
+      fetchItems(type);
+    } else {
+      fetchGuestItems(type);
+    }
+
     window.addEventListener('cartUpdated', handleCartUpdate);
     window.addEventListener('wishlistUpdated', handleWishlistUpdate);
 
@@ -139,7 +182,7 @@ const CartWishlistSidebar = () => {
       window.removeEventListener('cartUpdated', handleCartUpdate);
       window.removeEventListener('wishlistUpdated', handleWishlistUpdate);
     };
-  }, [accessToken, pathname]);
+  }, [accessToken, pathname, type]);
 
   const title = type === 'cart' ? 'Shopping Cart' : 'My Wishlist';
   const subtitle = type === 'cart' ? 'Your selected plants' : 'Plants you love';

@@ -32,20 +32,38 @@ const Cart = () => {
 
   // Fetch cart items and free shipping threshold
   const fetchCartItems = async () => {
-    try {
-      const response = await axiosInstance.get(`/order/cart/`);
+    if (accessToken) {
+      try {
+        const response = await axiosInstance.get(`/order/cart/`);
 
-      if (response.data?.message === "success") {
-        const cartItems = response.data.data.cart;
-        setProducts(cartItems);
-        setCompleteYourGarden(response.data.data.complete_your_garden || []);
+        if (response.data?.message === "success") {
+          const cartItems = response.data.data.cart;
+          setProducts(cartItems);
+          setCompleteYourGarden(response.data.data.complete_your_garden || []);
 
-        // GA4: Track view_cart event
-        trackViewCart(cartItems);
+          // GA4: Track view_cart event
+          trackViewCart(cartItems);
+        }
+      } catch (err) {
+        console.error("Error fetching cart items:", err.message);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error("Error fetching cart items:", err.message);
-    } finally {
+    } else {
+      // Guest Mode: Fetch from localStorage
+      const guestItems = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('pendingCartAction') || '[]') : [];
+      // Map guest items to match the structure expected by ProductCard
+      const mappedItems = guestItems.map((item, idx) => ({
+        id: item.id || item.prod_id || idx,
+        product_id: item.prod_id || item.id,
+        name: item.name,
+        mrp: item.mrp || item.price,
+        selling_price: item.price || item.mrp,
+        quantity: item.quantity || 1,
+        image: item.product_image || item.image,
+        stock_status: true // Default for guest as we don't have real-time check here
+      }));
+      setProducts(mappedItems);
       setLoading(false);
     }
   };
@@ -54,7 +72,6 @@ const Cart = () => {
     try {
       const response = await axiosInstance.get(`/utils/freeShipping/`);
       if (response.data?.status === "success" || response.data?.message === "success") {
-        // Fallback to 2000 if not found in data
         const threshold = response.data?.data?.threshold || response.data?.threshold || 2000;
         setFreeShippingThreshold(Number(threshold));
       }
@@ -65,72 +82,86 @@ const Cart = () => {
 
   // Shared refresh function to ensure real-time updates
   const refreshCartData = async () => {
-    try {
-      const response = await axiosInstance.get(`/order/cart/`);
-      if (response.data?.message === "success") {
-        setProducts(response.data.data.cart);
-        setCompleteYourGarden(response.data.data.complete_your_garden || []);
+    if (accessToken) {
+      try {
+        const response = await axiosInstance.get(`/order/cart/`);
+        if (response.data?.message === "success") {
+          setProducts(response.data.data.cart);
+          setCompleteYourGarden(response.data.data.complete_your_garden || []);
+        }
+        await fetchFreeShippingThreshold();
+        window.dispatchEvent(new Event("cartUpdated"));
+      } catch (err) {
+        console.error("Error refreshing cart data:", err.message);
       }
-      await fetchFreeShippingThreshold();
+    } else {
+      fetchCartItems();
       window.dispatchEvent(new Event("cartUpdated"));
-    } catch (err) {
-      console.error("Error refreshing cart data:", err.message);
     }
   };
 
   useEffect(() => {
-    if (accessToken) {
-      fetchCartItems();
-      fetchFreeShippingThreshold();
-    } else {
-      setLoading(false);
-    }
+    fetchCartItems();
+    fetchFreeShippingThreshold();
   }, [accessToken]);
 
   // Handle updating product quantity in cart
   const handleUpdateQuantity = async (cartId, newQuantity, rollback) => {
-    try {
-      const response = await axiosInstance.patch(
-        `/order/cart/`,
-        { cart_id: cartId, quantity: newQuantity }
-      );
+    if (accessToken) {
+      try {
+        const response = await axiosInstance.patch(
+          `/order/cart/`,
+          { cart_id: cartId, quantity: newQuantity }
+        );
 
-      if (response.data?.message === "success") {
-        // Refresh full data after quantity update to sync recommendations and shipping progress
-        await refreshCartData();
+        if (response.data?.message === "success") {
+          await refreshCartData();
+        }
+      } catch (err) {
+        const msg = err.response?.data?.message || "";
+        const availableStock = err.response?.data?.available_stock;
+        if ((msg.toLowerCase().includes("not enough stock") || msg.toLowerCase().includes("stock")) && availableStock !== undefined) {
+          enqueueSnackbar(`Only ${availableStock} unit${availableStock !== 1 ? 's' : ''} available in stock.`, { variant: "warning" });
+        } else {
+          enqueueSnackbar(msg || "Failed to update product quantity!", { variant: "error" });
+        }
+        if (rollback) rollback();
       }
-
-    } catch (err) {
-      const msg = err.response?.data?.message || "";
-      const availableStock = err.response?.data?.available_stock;
-      if ((msg.toLowerCase().includes("not enough stock") || msg.toLowerCase().includes("stock")) && availableStock !== undefined) {
-        enqueueSnackbar(`Only ${availableStock} unit${availableStock !== 1 ? 's' : ''} available in stock.`, { variant: "warning" });
-      } else {
-        enqueueSnackbar(msg || "Failed to update product quantity!", { variant: "error" });
+    } else {
+      // Guest update
+      const guestItems = JSON.parse(localStorage.getItem('pendingCartAction') || '[]');
+      const itemIndex = guestItems.findIndex(item => (item.id || item.prod_id) === cartId);
+      if (itemIndex > -1) {
+        guestItems[itemIndex].quantity = newQuantity;
+        localStorage.setItem('pendingCartAction', JSON.stringify(guestItems));
+        fetchCartItems();
       }
-      // Rollback the local quantity to previous value
-      if (rollback) rollback();
     }
   };
 
   // Handle removing products from cart
   const handleRemove = async (id) => {
-    try {
-      const response = await axiosInstance.delete(`/order/cart/${id}/`);
+    if (accessToken) {
+      try {
+        const response = await axiosInstance.delete(`/order/cart/${id}/`);
 
-      if (response.status === 200) {
-        enqueueSnackbar("Product removed from cart!", { variant: "success" });
-
-        // GA4: Track remove_from_cart event
-        const removedProduct = products.find((p) => p.id === id);
-        if (removedProduct) trackRemoveFromCart(removedProduct, removedProduct.quantity || 1);
-        
-        // Refresh full data to sync recommendations and shipping progress
-        await refreshCartData();
+        if (response.status === 200) {
+          enqueueSnackbar("Product removed from cart!", { variant: "success" });
+          const removedProduct = products.find((p) => p.id === id);
+          if (removedProduct) trackRemoveFromCart(removedProduct, removedProduct.quantity || 1);
+          await refreshCartData();
+        }
+      } catch (err) {
+        enqueueSnackbar("Failed to remove product from cart!", { variant: "error" });
       }
-
-    } catch (err) {
-      enqueueSnackbar("Failed to remove product from cart!", { variant: "error" });
+    } else {
+      // Guest removal
+      const guestItems = JSON.parse(localStorage.getItem('pendingCartAction') || '[]');
+      const updated = guestItems.filter(item => (item.id || item.prod_id) !== id);
+      localStorage.setItem('pendingCartAction', JSON.stringify(updated));
+      enqueueSnackbar("Removed from guest cart", { variant: "success" });
+      fetchCartItems();
+      window.dispatchEvent(new Event("cartUpdated"));
     }
   };
 
@@ -164,15 +195,23 @@ const Cart = () => {
 
   // Handle clearing the entire cart
   const handleClearCart = async () => {
-    try {
-      const response = await axiosInstance.delete(`/order/cart/clear/`);
-      if (response.data?.message === "success" || response.status === 200) {
-        enqueueSnackbar("Cart cleared successfully!", { variant: "success" });
-        await refreshCartData();
+    if (accessToken) {
+      try {
+        const response = await axiosInstance.delete(`/order/cart/clear/`);
+        if (response.data?.message === "success" || response.status === 200) {
+          enqueueSnackbar("Cart cleared successfully!", { variant: "success" });
+          await refreshCartData();
+        }
+      } catch (err) {
+        console.error("Clear cart error:", err);
+        enqueueSnackbar("Failed to clear cart!", { variant: "error" });
       }
-    } catch (err) {
-      console.error("Clear cart error:", err);
-      enqueueSnackbar("Failed to clear cart!", { variant: "error" });
+    } else {
+      // Guest clear
+      localStorage.removeItem('pendingCartAction');
+      enqueueSnackbar("Guest cart cleared", { variant: "success" });
+      fetchCartItems();
+      window.dispatchEvent(new Event("cartUpdated"));
     }
   };
 

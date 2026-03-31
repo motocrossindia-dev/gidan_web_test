@@ -200,15 +200,9 @@ const AboutProduct = ({ productDetailData, ratingData, reviewData, onWriteReview
               <button 
                 disabled={isBundling}
                 onClick={async () => {
-                  if (!isAuthenticated && !isAuthenticatedMobile) {
-                    enqueueSnackbar("Please login to add bundle to cart", { variant: "info" });
-                    router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn");
-                    return;
-                  }
-
                   setIsBundling(true);
                   const itemsToAdd = [];
-                  if (!mainInCart) itemsToAdd.push({ prod_id: mainId, quantity: 1 });
+                  if (!mainInCart) itemsToAdd.push({ prod_id: mainId, quantity: 1, type: 'main' });
                   addOnData.forEach(item => {
                     const addonId = item.product_id || item.id;
                     const isInCart = cartItems.some(c => 
@@ -216,7 +210,7 @@ const AboutProduct = ({ productDetailData, ratingData, reviewData, onWriteReview
                       c.main_prod_id === addonId || 
                       c.product_id === addonId
                     );
-                    if (!isInCart) itemsToAdd.push({ prod_id: addonId, quantity: 1 });
+                    if (!isInCart) itemsToAdd.push({ prod_id: addonId, quantity: 1, type: 'addon', data: item });
                   });
 
                   if (itemsToAdd.length === 0) {
@@ -226,24 +220,52 @@ const AboutProduct = ({ productDetailData, ratingData, reviewData, onWriteReview
                     return;
                   }
 
-                  try {
-                    enqueueSnackbar(`Adding bundle items...`, { variant: "info" });
-                    for (const item of itemsToAdd) {
-                      try {
-                        await axiosInstance.post('/order/cart/', item);
-                      } catch (singleErr) {
-                        const msg = singleErr.response?.data?.message || "";
-                        if (msg.toLowerCase().includes("already")) continue;
-                        throw singleErr;
+                  if (isAuthenticated || isAuthenticatedMobile) {
+                    try {
+                      enqueueSnackbar(`Adding bundle items...`, { variant: "info" });
+                      for (const item of itemsToAdd) {
+                        try {
+                          await axiosInstance.post('/order/cart/', { prod_id: item.prod_id, quantity: item.quantity });
+                        } catch (singleErr) {
+                          const msg = singleErr.response?.data?.message || "";
+                          if (msg.toLowerCase().includes("already")) continue;
+                          throw singleErr;
+                        }
                       }
+                      enqueueSnackbar("Bundle items updated successfully! 🎉", { variant: "success" });
+                      window.dispatchEvent(new Event("cartUpdated"));
+                    } catch (err) {
+                      enqueueSnackbar("Failed to complete bundle addition.", { variant: "error" });
+                    } finally {
+                      setIsBundling(false);
                     }
-                    enqueueSnackbar("Bundle items updated successfully! 🎉", { variant: "success" });
+                  } else {
+                    // Guest Mode
+                    for (const item of itemsToAdd) {
+                      const payload = item.type === 'main' 
+                        ? {
+                            prod_id: mainId,
+                            quantity: 1,
+                            name: productData.name,
+                            price: productData.selling_price,
+                            mrp: productData.mrp,
+                            product_image: productData.product_image || (productData.images && productData.images[0]?.image)
+                          }
+                        : {
+                            prod_id: item.prod_id,
+                            quantity: 1,
+                            name: item.data.name,
+                            price: item.data.price,
+                            mrp: item.data.mrp,
+                            product_image: item.data.imageUrl || item.data.image
+                          };
+                      savePendingCartItem(payload);
+                    }
+                    enqueueSnackbar("Bundle added to guest cart! 🎉", { variant: "success" });
                     window.dispatchEvent(new Event("cartUpdated"));
-                  } catch (err) {
-                    enqueueSnackbar("Failed to complete bundle addition.", { variant: "error" });
-                  } finally {
                     setIsBundling(false);
                   }
+                  router.push("/cart");
                 }}
                 className="w-full mt-6 bg-bio-green hover:bg-[#2d4a22] text-white py-5 rounded-[20px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-[13px] transition-all active:scale-[0.98] shadow-xl shadow-bio-green/20 disabled:opacity-50"
               >

@@ -46,7 +46,7 @@ const WishlistItem = ({
         {/* /> */}
         <img name=" "
           className="w-40 h-24 sm:w-40 sm:h-36 object-contain rounded-lg transition-transform duration-300 mt-6"
-          src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
+          src={product.image?.startsWith('http') ? product.image : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
           loading="lazy"
           alt={product.name}
         />
@@ -110,17 +110,40 @@ const WishList = () => {
 
 
   const getWishlistItems = async () => {
-    try {
-      const response = await axiosInstance.get(`/order/wishlist/`);
-      const itemsWithOldPrices = response.data?.data?.wishlists.map((item) => ({
-        ...item,
-        oldPrice: Number(item.price) + 100,
+    if (accessToken) {
+      try {
+        const response = await axiosInstance.get(`/order/wishlist/`);
+        const itemsWithOldPrices = (response.data?.data?.wishlists || []).map((item) => ({
+          ...item,
+          oldPrice: Number(item.price) + 100,
+        }));
+        setWishlistItems(itemsWithOldPrices);
+      } catch (error) {
+        enqueueSnackbar(error.response?.data?.message || "Failed to fetch wishlist items", {
+          variant: "error"
+        });
+      }
+    } else {
+      // Guest Mode: Fetch from localStorage
+      const raw = typeof window !== 'undefined' ? localStorage.getItem('pendingWishlistAction') : null;
+      let guestItems = [];
+      try {
+        guestItems = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(guestItems)) guestItems = guestItems ? [guestItems] : [];
+      } catch (e) {
+        guestItems = [];
+      }
+
+      const mappedItems = guestItems.map((item, idx) => ({
+        id: item.id || item.prod_id || idx,
+        product_id: item.prod_id || item.id,
+        name: item.name,
+        selling_price: item.price || item.mrp,
+        mrp: item.mrp || item.price,
+        image: item.product_image || item.image || item.product_img,
+        stock_status: "In Stock" // Default for guest
       }));
-      setWishlistItems(itemsWithOldPrices);
-    } catch (error) {
-      enqueueSnackbar(error.response?.data?.message || "Failed to fetch wishlist items", {
-        variant: "error"
-      });
+      setWishlistItems(mappedItems);
     }
   };
 
@@ -130,51 +153,93 @@ const WishList = () => {
 
 
   const handleRemove = (id) => {
-    axiosInstance.delete(`/order/wishlist/${id}/`)
-      .then((response) => {
-        if (response.status === 200) {
-          setWishlistItems((prevItems) => prevItems.filter((item) => item.id !== id));
-          window.dispatchEvent(new Event("wishlistUpdated"));
-
-        }
-
-      })
-      .catch((error) => {
-        console.error("Error removing item from wishlist:", error);
-      });
+    if (accessToken) {
+      axiosInstance.delete(`/order/wishlist/${id}/`)
+        .then((response) => {
+          if (response.status === 200) {
+            setWishlistItems((prevItems) => prevItems.filter((item) => item.id !== id));
+            window.dispatchEvent(new Event("wishlistUpdated"));
+          }
+        })
+        .catch((error) => {
+          console.error("Error removing item from wishlist:", error);
+        });
+    } else {
+      // Guest removal
+      const raw = localStorage.getItem('pendingWishlistAction');
+      const guestItems = raw ? JSON.parse(raw) : [];
+      const updated = guestItems.filter(item => (item.id || item.prod_id) !== id);
+      localStorage.setItem('pendingWishlistAction', JSON.stringify(updated));
+      enqueueSnackbar("Removed from guest favorites", { variant: "success" });
+      getWishlistItems();
+      window.dispatchEvent(new Event("wishlistUpdated"));
+    }
   };
 
   const handleAddToCart = async (id) => {
-    if (!isAuthenticated) {
-      router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn", { replace: true });
-      return;
-    }
+    const productToBag = wishlistItems.find(item => item.product_id === id || item.id === id);
+    
+    if (accessToken) {
+      try {
+        const response = await axiosInstance.post(
+          `/order/cart/`,
+          { prod_id: id, quantity: 1 }
+        );
 
-    try {
-      const response = await axiosInstance.post(
-        `/order/cart/`,
-        { prod_id: id, quantity: 1 }
-      );
-
-      if (response.status === 201 || response.status === 200) {
-        enqueueSnackbar("Added to cart", { variant: "success" });
-        setIsAdded(!isAdded);
+        if (response.status === 201 || response.status === 200) {
+          enqueueSnackbar("Added to cart", { variant: "success" });
+          setIsAdded(!isAdded);
+          getWishlistItems();
+          window.dispatchEvent(new Event("wishlistUpdated"));
+          window.dispatchEvent(new Event("cartUpdated"));
+          if (productToBag) trackAddToCart(productToBag);
+        }
+      } catch (error) {
+        console.error("Error adding item to cart:", error);
+        const msg = error.response?.data?.message || "Failed to add item to cart";
+        const availableStock = error.response?.data?.available_stock;
         getWishlistItems();
-        window.dispatchEvent(new Event("wishlistUpdated"));
-        window.dispatchEvent(new Event("cartUpdated"));
-        const wishlistProduct = wishlistItems.find(item => item.product_id === id);
-        if (wishlistProduct) trackAddToCart(wishlistProduct);
+        if ((msg.toLowerCase().includes("not enough stock") || msg.toLowerCase().includes("stock")) && availableStock !== undefined) {
+          enqueueSnackbar(`Only ${availableStock} unit${availableStock !== 1 ? 's' : ''} available in stock.`, { variant: "warning" });
+        } else {
+          enqueueSnackbar(msg, { variant: "error" });
+        }
       }
-    } catch (error) {
-      console.error("Error adding item to cart:", error);
-      const msg = error.response?.data?.message || "Failed to add item to cart";
-      const availableStock = error.response?.data?.available_stock;
-      getWishlistItems();
-      if ((msg.toLowerCase().includes("not enough stock") || msg.toLowerCase().includes("stock")) && availableStock !== undefined) {
-        enqueueSnackbar(`Only ${availableStock} unit${availableStock !== 1 ? 's' : ''} available in stock.`, { variant: "warning" });
+    } else {
+      // Guest Add to Cart
+      if (!productToBag) return;
+
+      const raw = localStorage.getItem('pendingCartAction');
+      let guestCart = [];
+      try {
+        guestCart = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(guestCart)) guestCart = guestCart ? [guestCart] : [];
+      } catch (e) {
+        guestCart = [];
+      }
+
+      const existingIndex = guestCart.findIndex(item => item.prod_id === id || item.id === id);
+      if (existingIndex > -1) {
+        guestCart[existingIndex].quantity = (guestCart[existingIndex].quantity || 1) + 1;
       } else {
-        enqueueSnackbar(msg, { variant: "error" });
+        guestCart.push({
+          prod_id: id,
+          id: id,
+          quantity: 1,
+          name: productToBag.name,
+          price: productToBag.selling_price || productToBag.price,
+          mrp: productToBag.mrp,
+          product_image: productToBag.image
+        });
       }
+
+      localStorage.setItem('pendingCartAction', JSON.stringify(guestCart));
+      enqueueSnackbar("Added to guest bag", { variant: "success" });
+      window.dispatchEvent(new Event("cartUpdated"));
+      // Also remove from wishlist for the "Go to Cart" effect? 
+      // Actually, standard behavior is often to keep it or mark it.
+      // For simplicity, let's just refresh.
+      getWishlistItems();
     }
   };
   return (

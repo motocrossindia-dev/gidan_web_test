@@ -33,8 +33,15 @@ const CartSummary = ({
   // Prepare the cart data to be sent
 
   const handlePlaceOrder = async () => {
-    const cartData = prepareCartData();
+    const isAuthenticatedMobile = typeof window !== 'undefined' ? !!localStorage.getItem('userData') : false;
+    
+    if (!accessToken && !isAuthenticatedMobile) {
+      enqueueSnackbar("Please login to proceed with your order", { variant: "info" });
+      router.push(window.innerWidth <= 640 ? "/mobile-signin" : "/?modal=signIn");
+      return;
+    }
 
+    const cartData = prepareCartData();
     try {
       const response = await axiosInstance.post(
         `/order/placeOrder/`,
