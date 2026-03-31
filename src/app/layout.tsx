@@ -6,7 +6,6 @@ import { Providers } from "./providers";
 import Header from "@/components/Header/Header";
 import NavBar from "@/components/NavigationBar/NavigationBar";
 import Footer from "@/components/Footer/Footer";
-import DownloadApp from "@/components/DownloadApp/DownloadApp";
 import DownloadAppPopup from "@/components/DownloadApp/DownloadAppPopup";
 import ScrollToTop from "@/components/ScrollToTop";
 import StaticBreadcrumb from "@/components/Shared/StaticBreadcrumb";
@@ -181,7 +180,6 @@ export default function RootLayout({
                 </Suspense>
               </div>
               {children}
-              <DownloadApp />
               <Footer />
             </main>
           </div>

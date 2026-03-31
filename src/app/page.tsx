@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Home from '@/components/Home/Home';
+import DownloadApp from "@/components/DownloadApp/DownloadApp";
 import HomepageSchema from "@/views/utilities/seo/HomepageSchema";
 import GlobalIdentitySchema from "@/views/utilities/seo/GlobalIdentitySchema";
 // Server-side fetching for LCP optimization
@@ -198,8 +199,7 @@ export default async function HomePage() {
         initialGlobalReviews={initialGlobalReviews}
         publicFlags={flags}
       />
-
-
+      <DownloadApp />
     </>
   );
 }

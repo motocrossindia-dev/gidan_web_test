@@ -7,26 +7,24 @@ import { addToCart } from "../../../redux/Slice/cartSlice";
 import { addtowishlist } from "../../../redux/Slice/addtowishlistSlice";
 import { savePendingCartItem, savePendingWishlistItem } from "../../../utils/pendingAction";
 import {
-
     ShoppingCart,
     Heart,
     ChevronLeft,
     ChevronRight,
     Truck,
-    Tag,
     Sparkles,
     Copy,
     Share2,
     Link as LinkIcon,
     Search
 } from "lucide-react";
-import RightDrawer from "../../../components/Shared/RightDrawer";
 import ProductSeller from "./ProductSeller";
 import ProductReviews from "./ProductReviews";
 import PeopleAlsoBought from "../../../components/Shared/PeopleAlsoBought";
 import ProductFeatured from "./ProductFeatured";
 import TrustBadges from "../../../components/Shared/TrustBadges";
 import AddOnProduct from "./AddOnProduct";
+import { Loader2 } from "lucide-react";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { isMobile } from "react-device-detect";
 import AboutTheProducts from "./AboutTheProducts";
@@ -34,6 +32,7 @@ import { FaStar } from "react-icons/fa6";
 import { FaStarHalfAlt, FaChevronLeft, FaChevronRight, FaWhatsapp, FaInstagram } from "react-icons/fa";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
+import CouponSection from "../../../components/Shared/CouponSection";
 // Schemas moved to Server Component (page.tsx) for better SSR/SEO
 import WriteAReview from "./WriteAReview";
 import StoreSchema from "../seo/StoreSchema";
@@ -144,6 +143,13 @@ export default function ProductData({ initialProductData }) {
     const [pincode, setPincode] = useState("");
     const [error, setError] = useState("");
     const [showNoDeliveryPopup, setShowNoDeliveryPopup] = useState(false);
+    const [deliveryInfo, setDeliveryInfo] = useState({ 
+        isOpen: false, 
+        isAvailable: false, 
+        pincode: "", 
+        stateName: "",
+        loading: false 
+    });
 
     // ==========auth cart
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
@@ -205,101 +211,8 @@ export default function ProductData({ initialProductData }) {
     const amountToFreeShipping = Math.max(0, freeShippingThreshold - combinedTotal);
     const freeShippingProgress = Math.min(100, (combinedTotal / freeShippingThreshold) * 100);
 
-    // ========== Coupon Discovery Logic
-    const [allCoupons, setAllCoupons] = useState([]);
-    const [bestCoupon, setBestCoupon] = useState(null);
-    const [isCouponDrawerOpen, setIsCouponDrawerOpen] = useState(false);
-
-    useEffect(() => {
-        const fetchCoupons = async () => {
-            try {
-                const response = await axiosInstance.get(`/coupon/coupons/`);
-                if (response.data?.status === "success" || response.data?.message === "success") {
-                    const coupons = response.data.coupons || response.data.data?.coupons || [];
-                    setAllCoupons(coupons);
-
-                    // Filter applicable coupons
-                    const currentProduct = productDetailData?.data?.product;
-                    const catId = currentProduct?.category_id;
-                    const prodId = currentProduct?.id;
-
-                    const applicable = coupons.filter(c => {
-                        const isGlobal = !c.applicable_products?.length && !c.applicable_categories?.length && !c.applicable_combination_products?.length;
-                        const appliesToProduct = c.applicable_products?.includes(prodId);
-                        const appliesToCategory = c.applicable_categories?.some(cat => cat.id === catId || cat === catId);
-
-                        // Also check variants (combination products)
-                        const currentVariantId = productDetailData?.data?.product?.id; // The variant is the product ID in this structure
-                        const appliesToVariant = c.applicable_combination_products?.includes(currentVariantId);
-
-                        return isGlobal || appliesToProduct || appliesToCategory || appliesToVariant;
-                    });
-
-                    if (applicable.length > 0) {
-                        // Sort by discount value (approximate logic: fixed amount > percentage if high value)
-                        const best = applicable.sort((a, b) => (b.discount_value || 0) - (a.discount_value || 0))[0];
-                        setBestCoupon(best);
-                    }
-                }
-            } catch (err) {
-                console.error("Error fetching coupons for PDP:", err);
-            }
-        };
-        fetchCoupons();
-    }, [productDetailData]);
-
-    const handleCopyCoupon = (code) => {
-        navigator.clipboard.writeText(code);
-        enqueueSnackbar("Coupon code copied!", { variant: "success" });
-    };
-
-    // ========== Manual Coupon Application (PDP Preview)
-    const [manualCouponCode, setManualCouponCode] = useState("");
+    // ========== Coupon State (Managed by CouponSection)
     const [appliedCouponInfo, setAppliedCouponInfo] = useState(null);
-    const [isPreviewingCoupon, setIsPreviewingCoupon] = useState(false);
-
-    const handleApplyCouponPreview = async (codeToApply) => {
-        const activeCode = codeToApply || manualCouponCode;
-        if (!activeCode) {
-            enqueueSnackbar("Please enter a coupon code.", { variant: "warning" });
-            return;
-        }
-
-        setIsPreviewingCoupon(true);
-        try {
-            const currentProduct = productDetailData?.data?.product;
-            const payload = {
-                coupon_code: activeCode.toUpperCase(),
-                order_source: "product",
-                products: [
-                    {
-                        prod_id: currentProduct?.id,
-                        quantity: quantity
-                    }
-                ]
-            };
-
-            const response = await axiosInstance.post(`/order/previewCoupon/`, payload);
-
-            if (response.data?.status === "success" || response.data?.message === "success") {
-                setAppliedCouponInfo(response.data.data);
-                enqueueSnackbar("Coupon applied successfully!", { variant: "success" });
-            } else {
-                enqueueSnackbar(response.data?.message || "Invalid coupon code.", { variant: "error" });
-            }
-        } catch (err) {
-            console.error("PDP Coupon Error:", err);
-            enqueueSnackbar(err.response?.data?.message || "Failed to apply coupon.", { variant: "error" });
-        } finally {
-            setIsPreviewingCoupon(false);
-        }
-    };
-
-    const handleRemoveCoupon = () => {
-        setAppliedCouponInfo(null);
-        setManualCouponCode("");
-        enqueueSnackbar("Coupon removed.", { variant: "info" });
-    };
 
     const handleCopyLink = () => {
         const url = window.location.href;
@@ -333,7 +246,6 @@ export default function ProductData({ initialProductData }) {
     useEffect(() => {
         if (appliedCouponInfo) {
             setAppliedCouponInfo(null);
-            setManualCouponCode("");
         }
     }, [quantity, selectedSize, selectedPlanter, selectedColor]);
 
@@ -530,26 +442,30 @@ export default function ProductData({ initialProductData }) {
             return;
         }
 
+        setDeliveryInfo(prev => ({ ...prev, loading: true }));
         try {
-
             const response = await axiosInstance.post(`/tracking/check-pincode/`, {
                 pincode: pincode
             })
             if (response.status === 200) {
                 const isAvailable = response?.data?.delivery_available;
-
-                if (isAvailable) {
-                    enqueueSnackbar("Great news! Delivery is available in your area 🎉", {
-                        variant: "success",
-                    });
-                } else {
-                    setShowNoDeliveryPopup(true);
-                }
+                setDeliveryInfo({
+                    isOpen: true,
+                    isAvailable: isAvailable,
+                    pincode: pincode,
+                    stateName: response?.data?.state || "",
+                    loading: false
+                });
             }
         } catch (error) {
-            setShowNoDeliveryPopup(true);
+            setDeliveryInfo({
+                isOpen: true,
+                isAvailable: false,
+                pincode: pincode,
+                stateName: error.response?.data?.state || "",
+                loading: false
+            });
         }
-
     };
 
     const dispatch = useDispatch();
@@ -587,8 +503,8 @@ export default function ProductData({ initialProductData }) {
                     window.dispatchEvent(new Event("cartUpdated"));
                     trackAddToCart(productDetailData?.data?.product, quantity);
 
-                    // Navigate to cart with coupon (priority: manual > best)
-                    const finalCouponCode = appliedCouponInfo?.coupon_code || (bestCoupon ? bestCoupon.code : "");
+                    // Navigate to cart with coupon (priority: manual)
+                    const finalCouponCode = appliedCouponInfo?.coupon_code || "";
                     const couponParam = finalCouponCode ? `?coupon=${finalCouponCode}` : "";
                     router.push(`/cart${couponParam}`);
                 }
@@ -669,6 +585,9 @@ export default function ProductData({ initialProductData }) {
 
             // Stock check before placing order
             try {
+                // Set flag to prevent Sidebar from opening
+                sessionStorage.setItem('BUY_NOW_IN_PROGRESS', 'true');
+                
                 await axiosInstance.get(`/product/stockCheck/${productId}/`, {
                     params: { quantity, action: "increment" },
                 });
@@ -683,7 +602,7 @@ export default function ProductData({ initialProductData }) {
                 quantity: quantity,
             };
 
-            const finalCoupon = appliedCouponInfo?.coupon_code || bestCoupon?.code;
+            const finalCoupon = appliedCouponInfo?.coupon_code;
             if (finalCoupon) {
                 product_data.coupon_code = finalCoupon;
             }
@@ -1257,8 +1176,7 @@ export default function ProductData({ initialProductData }) {
                     <div className="flex flex-col md:flex-row -mx-4 relative items-start">
                         {/* LEFT COLUMN: STATIC / STICKY IMAGE GALLERY & ACTIONS */}
                         <div 
-                            className="md:flex-1 px-4 md:sticky md:top-24 h-fit z-30"
-                            style={{ position: '-webkit-sticky', position: 'sticky', top: '96px' }}
+                            className="md:flex-1 px-4 lg:sticky lg:top-24 h-fit z-30"
                         >
                             {/* Main Image with Fully Working Zoom */}
                             <div 
@@ -1484,47 +1402,41 @@ export default function ProductData({ initialProductData }) {
                                     </button>
                                 </div>
                             </div>
-                            {/* ProductSchema moved to Server Component */}
-
                             <div className="flex mb-4 items-center">
                                 <div className="mr-4 flex items-center">
-                                    <span className="font-bold text-bio-green text-lg md:text-2xl">
-                                        ₹{Math.round(productDetailData?.data?.product?.selling_price || 0)}
-                                    </span>
-
-                                    {productDetailData?.data?.product?.mrp > productDetailData?.data?.product?.selling_price && (
-                                        <>
-                                            <span className="text-gray-600 text-md md:text-xl line-through ml-2">
-                                                ₹{Math.round(productDetailData?.data?.product?.mrp || 0)}
+                                    <div className="flex flex-col">
+                                        <div className="flex items-center">
+                                            <span className="font-bold text-bio-green text-lg md:text-2xl">
+                                                ₹{Math.round(appliedCouponInfo ? appliedCouponInfo.new_total : (productDetailData?.data?.product?.selling_price || 0))}
                                             </span>
-                                            <span className="ml-2 text-red-500 font-semibold text-md md:text-lg">
-                                                {Math.round(
-                                                    ((productDetailData?.data?.product?.mrp - productDetailData?.data?.product?.selling_price) /
-                                                        productDetailData?.data?.product?.mrp) *
-                                                    100
-                                                )}
-                                                % OFF
-                                            </span>
-                                        </>
-                                    )}
-                                </div>
 
-                                {bestCoupon && (
-                                    <div
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setIsCouponDrawerOpen(true);
-                                        }}
-                                        className="ml-auto flex items-center gap-2 px-3 py-1.5 bg-orange-50 border border-orange-100 rounded-full cursor-pointer hover:bg-orange-100 transition-all animate-pulse shadow-sm"
-                                    >
-                                        <Tag className="w-3.5 h-3.5 text-orange-600" />
-                                        <span className="text-[11px] font-bold text-orange-700 uppercase tracking-tight">
-                                            Use {bestCoupon.code} for {bestCoupon.discount_type === 'percentage' ? `${bestCoupon.discount_value}%` : `₹${bestCoupon.discount_value}`} OFF
-                                        </span>
-                                        <Sparkles className="w-3 h-3 text-orange-400" />
+                                            {(appliedCouponInfo || (productDetailData?.data?.product?.mrp > productDetailData?.data?.product?.selling_price)) && (
+                                                <>
+                                                    <span className="text-gray-600 text-md md:text-xl line-through ml-2">
+                                                        ₹{Math.round(appliedCouponInfo ? (appliedCouponInfo.original_price * (quantity || 1)) : (productDetailData?.data?.product?.mrp || 0))}
+                                                    </span>
+                                                    <span className="ml-2 text-red-500 font-semibold text-md md:text-lg">
+                                                        {appliedCouponInfo ? (
+                                                            `${Math.round((appliedCouponInfo.discount_amount / (appliedCouponInfo.original_price * (quantity || 1))) * 100)}% OFF`
+                                                        ) : (
+                                                            `${Math.round(((productDetailData?.data?.product?.mrp - productDetailData?.data?.product?.selling_price) / productDetailData?.data?.product?.mrp) * 100)}% OFF`
+                                                        )}
+                                                    </span>
+                                                </>
+                                            )}
+                                        </div>
+                                        {appliedCouponInfo && (
+                                            <div className="flex items-center gap-1.5 mt-1">
+                                                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                                                <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">
+                                                    Coupon "{appliedCouponInfo.coupon_code}" Applied
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
-                                )}
+                                </div>
                             </div>
+
 
                             {productDetailData?.data?.product_weights?.length > 0 && (
                                 <div className="mb-6">
@@ -1663,92 +1575,43 @@ export default function ProductData({ initialProductData }) {
                             )}
 
                             {/* Manual Coupon Application UI (PDP) - Same as Checkout */}
-                            <div className="bg-[#f2f8f2] p-4 rounded-2xl mt-6 border border-emerald-50 mb-6">
-                                <div className="flex items-center gap-2 mb-3">
-                                    <Tag className="text-[#375421]" size={16} fill="none" />
-                                    <span className="text-[11px] font-black text-[#375421] uppercase tracking-[0.1em]">APPLY COUPON</span>
-                                </div>
-
-                                {appliedCouponInfo ? (
-                                    <div className="flex items-center justify-between bg-white border border-emerald-100 rounded-xl px-4 py-3 shadow-sm">
-                                        <div className="flex flex-col">
-                                            <span className="text-emerald-800 text-sm font-black tracking-widest uppercase">{appliedCouponInfo.coupon_code}</span>
-                                            <span className="text-emerald-600 text-[10px] font-bold">Applied — saved ₹{Math.round(appliedCouponInfo.discount_amount || 0)}</span>
-                                            {appliedCouponInfo.redemption_message && (
-                                                <p className="text-[9px] text-[#375421]/70 font-medium leading-tight mt-1">{appliedCouponInfo.redemption_message}</p>
-                                            )}
-                                        </div>
-                                        <button
-                                            onClick={handleRemoveCoupon}
-                                            className="text-[10px] font-black text-red-500 hover:text-red-700 uppercase tracking-widest bg-red-50 px-2 py-1 rounded-lg transition-colors"
-                                        >
-                                            Remove
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-4">
-                                        <div className="flex gap-2">
-                                            <input
-                                                type="text"
-                                                placeholder="PROMO CODE"
-                                                value={manualCouponCode}
-                                                onChange={(e) => setManualCouponCode(e.target.value.toUpperCase())}
-                                                className="flex-1 px-4 py-2 border-2 border-dashed border-[#375421]/30 rounded-xl focus:outline-none focus:border-[#375421] text-sm bg-white placeholder:text-gray-300 font-bold uppercase tracking-wider transition-all"
-                                            />
-                                            <button
-                                                onClick={() => handleApplyCouponPreview()}
-                                                disabled={isPreviewingCoupon || !manualCouponCode}
-                                                className="bg-[#375421] text-white font-black px-6 py-2 rounded-xl hover:bg-[#2d451b] transition-all text-xs uppercase tracking-[0.15em] shadow-md shadow-green-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                                            >
-                                                {isPreviewingCoupon ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : "APPLY"}
-                                            </button>
-                                        </div>
-
-                                        {bestCoupon && (
-                                            <div className="flex items-center justify-between pt-1">
-                                                <div className="flex items-center gap-x-2">
-                                                    <span className="text-[10px] text-gray-500 font-bold uppercase tracking-tighter">Try code</span>
-                                                    <button
-                                                        onClick={() => {
-                                                            setManualCouponCode(bestCoupon.code);
-                                                            handleApplyCouponPreview(bestCoupon.code);
-                                                        }}
-                                                        className="text-[10px] font-black text-[#375421] underline decoration-dashed transition-colors uppercase hover:text-[#2d451b]"
-                                                    >
-                                                        {bestCoupon.code}
-                                                    </button>
-                                                    <span className="text-[10px] text-gray-400 font-medium">· Max savings</span>
-                                                </div>
-
-                                                {allCoupons.length > 1 && (
-                                                    <button
-                                                        onClick={() => setIsCouponDrawerOpen(true)}
-                                                        className="text-[10px] font-black text-[#375421] uppercase hover:underline tracking-widest"
-                                                    >
-                                                        + More Offers
-                                                    </button>
-                                                )}
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
+                            <div className="mt-6 mb-6">
+                                <CouponSection 
+                                    mode="pdp"
+                                    products={[{ prod_id: productDetailData?.data?.product?.id, quantity: quantity }]}
+                                    appliedCoupon={appliedCouponInfo}
+                                    onSuccess={(data) => setAppliedCouponInfo(data)}
+                                    onRemove={() => setAppliedCouponInfo(null)}
+                                />
                             </div>
 
                             {/* Free Shipping Progress Indicator (PDP Standalone) */}
-                            <div className="mb-6 px-5 py-4 bg-gradient-to-r from-[#faf9f6]/80 to-white rounded-2xl border border-gray-100 shadow-sm relative">
-                                <div className="flex justify-between items-end mb-3 relative z-10 w-full">
-                                    <div className="flex-1">
+                            <div className="mb-6 px-5 py-4 bg-gradient-to-r from-emerald-50/50 via-white to-orange-50/20 rounded-2xl border border-emerald-100/50 shadow-sm relative group">
+                                <div className="flex flex-col gap-3 relative z-10 w-full">
+                                    <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
-                                            <Truck className="w-5 h-5 text-orange-500 shrink-0" />
-                                            <span className="text-[14px] font-bold text-gray-900 leading-tight">
+                                            <div className="p-1.5 bg-orange-100 rounded-lg">
+                                                <Truck className="w-4 h-4 text-orange-600" />
+                                            </div>
+                                            <span className="text-[13px] font-black text-gray-900 leading-tight uppercase tracking-tight">
                                                 {amountToFreeShipping > 0
                                                     ? `Add ₹${Math.round(amountToFreeShipping).toLocaleString()} more for FREE shipping`
-                                                    : "This item qualifies for FREE shipping!"}
+                                                    : "This order qualifies for FREE shipping!"}
                                             </span>
                                         </div>
+                                        <div className="text-right">
+                                            <span className="text-[14px] font-black text-[#375421] whitespace-nowrap">₹{Math.round(combinedTotal).toLocaleString()} <span className="text-gray-300 text-[10px] font-bold">/ ₹{freeShippingThreshold.toLocaleString()}</span></span>
+                                        </div>
                                     </div>
-                                    <div className="text-right shrink-0 ml-4">
-                                        <span className="text-[15px] font-black text-[#375421] whitespace-nowrap">₹{Math.round(combinedTotal).toLocaleString()} <span className="text-gray-400 text-[11px] font-bold">/ ₹{freeShippingThreshold.toLocaleString()}</span></span>
+                                    
+                                    {/* Breakdown Tooltip/Label */}
+                                    <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400 italic">
+                                        <div className="flex items-center gap-1">
+                                            <span className="text-gray-500">Cart: ₹{Math.round(otherItemsTotal).toLocaleString()}</span>
+                                            <span className="text-gray-300">+</span>
+                                            <span className="text-[#375421]">This item: ₹{Math.round(currentItemContribution).toLocaleString()}</span>
+                                        </div>
+                                        {amountToFreeShipping > 0 && <span className="text-orange-500 ml-auto">Free at ₹{freeShippingThreshold.toLocaleString()}</span>}
                                     </div>
                                 </div>
 
@@ -1821,9 +1684,10 @@ export default function ProductData({ initialProductData }) {
                                     />
                                     <button
                                         onClick={handleCheck}
-                                        className="px-8 bg-[#375421] text-white rounded-xl font-black uppercase tracking-widest hover:bg-[#2d451b] transition-all shadow-sm active:scale-95"
+                                        disabled={deliveryInfo.loading}
+                                        className="px-8 bg-[#375421] text-white rounded-xl font-black uppercase tracking-widest hover:bg-[#2d451b] transition-all shadow-sm active:scale-95 disabled:opacity-50 min-w-[100px]"
                                     >
-                                        Check
+                                        {deliveryInfo.loading ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : "Check"}
                                     </button>
                                 </div>
                                 {error && <p className="text-red-500 text-[10px] font-bold mt-2 ml-1">{error}</p>}
@@ -1846,78 +1710,7 @@ export default function ProductData({ initialProductData }) {
             </div>
 
             {/* Coupon Details Drawer */}
-            <RightDrawer
-                isOpen={isCouponDrawerOpen}
-                onClose={() => setIsCouponDrawerOpen(false)}
-                title="Available Offers"
-                subtitle="Exclusive discounts for you"
-                footerText="Tap to apply the best offer at checkout"
-            >
-                <div className="space-y-4">
-                    {allCoupons.map((coupon) => {
-                        // Re-run filtering logic for display
-                        const currentProduct = productDetailData?.data?.product;
-                        const catId = currentProduct?.category_id;
-                        const prodId = currentProduct?.id;
-                        const isGlobal = !coupon.applicable_products?.length && !coupon.applicable_categories?.length && !coupon.applicable_combination_products?.length;
-                        const appliesToProduct = coupon.applicable_products?.includes(prodId);
-                        const appliesToCategory = coupon.applicable_categories?.some(cat => cat.id === catId || cat === catId);
-
-                        if (!isGlobal && !appliesToProduct && !appliesToCategory) return null;
-
-                        const isCurrentlyApplied = appliedCouponInfo?.coupon_code === coupon.code;
-
-                        return (
-                            <div
-                                key={coupon.id}
-                                className={`group relative p-5 border-2 rounded-[24px] transition-all duration-300 ${isCurrentlyApplied ? 'bg-white border-[#375421] shadow-sm' : 'bg-white border-gray-900 hover:border-[#375421]'}`}
-                            >
-                                <div className="flex flex-col">
-                                    <div className="flex items-center gap-3 mb-3">
-                                        <span className={`font-black text-[11px] px-3.5 py-1.5 rounded-lg border-2 tracking-widest uppercase transition-colors ${isCurrentlyApplied ? 'text-white bg-[#375421] border-[#375421]' : 'text-gray-900 bg-[#ebf5eb] border-gray-900'}`}>
-                                            {coupon.code}
-                                        </span>
-                                        {bestCoupon?.id === coupon.id && (
-                                            <span className="text-2xl animate-pulse">🔥</span>
-                                        )}
-                                    </div>
-                                    <h3 className="text-base font-black text-gray-900 mb-2 leading-tight tracking-tight">
-                                        {coupon.description}
-                                    </h3>
-                                    <div className="flex items-center justify-between mt-2 pt-4 border-t border-dashed border-gray-100">
-                                        <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest border-l-2 border-[#375421] pl-2">
-                                            Min order: ₹{coupon.minimum_order_value || 0}
-                                        </p>
-                                        <button
-                                            onClick={() => handleCopyCoupon(coupon.code)}
-                                            className="text-[10px] font-black text-gray-400 hover:text-gray-900 transition-colors uppercase tracking-[0.1em]"
-                                        >
-                                            Copy
-                                        </button>
-                                    </div>
-
-                                    <div className="mt-5">
-                                        <button
-                                            onClick={() => {
-                                                handleApplyCouponPreview(coupon.code);
-                                                setIsCouponDrawerOpen(false);
-                                            }}
-                                            disabled={isCurrentlyApplied}
-                                            className={`w-full py-4 rounded-2xl font-black text-[12px] uppercase tracking-[0.1em] transition-all active:scale-[0.96] flex items-center justify-center gap-2
-                                            ${isCurrentlyApplied
-                                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-2 border-gray-200'
-                                                    : 'bg-white text-gray-900 border-2 border-gray-900 hover:bg-site-bg shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none'
-                                                }`}
-                                        >
-                                            {isCurrentlyApplied ? 'COUPON APPLIED' : 'APPLY OFFER'}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            </RightDrawer>
+            {/* Legacy RightDrawer for coupons removed - now handled by CouponSection */}
 
             <div className="bg-white p-4">
                 <AboutTheProducts
@@ -1941,6 +1734,59 @@ export default function ProductData({ initialProductData }) {
                 </div>
             )}
             <StoreSchema />
+
+            {/* Delivery Status Modal */}
+            {deliveryInfo.isOpen && (
+                <div className="fixed inset-0 z-[9999999] flex items-center justify-center p-4">
+                    <div 
+                        className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300" 
+                        onClick={() => setDeliveryInfo(prev => ({ ...prev, isOpen: false }))}
+                    />
+                    <div className="relative bg-white w-full max-w-sm rounded-[32px] overflow-hidden shadow-2xl transition-all duration-500 scale-100 animate-in zoom-in-95">
+                        <div className={`h-2 ${deliveryInfo.isAvailable ? 'bg-emerald-500' : 'bg-orange-500'}`} />
+                        <div className="p-8 text-center">
+                            <div className="text-5xl mb-4">
+                                {deliveryInfo.isAvailable ? "😊" : "😔"}
+                            </div>
+                            
+                            <h3 className="text-2xl font-black text-gray-900 tracking-tight leading-tight mb-2">
+                                {deliveryInfo.isAvailable ? "Success!" : "Oops!"}
+                            </h3>
+                            
+                            <p className="text-[12px] font-black text-gray-400 uppercase tracking-widest mb-6">
+                                PINCODE: {deliveryInfo.pincode}
+                            </p>
+
+                            <div className="space-y-4 mb-8">
+                                <p className="text-gray-600 text-sm font-bold leading-relaxed">
+                                    {deliveryInfo.isAvailable ? (
+                                        <>Great news! We deliver to <span className="text-emerald-700 font-black">{deliveryInfo.stateName || "your area"}</span>! 🎉 Get ready to welcome your green friends.</>
+                                    ) : (
+                                        <>We're sorry! Delivery is currently not available for <span className="text-orange-700 font-black">{deliveryInfo.stateName || "this region"}</span> yet.</>
+                                    )}
+                                </p>
+                                
+                                {!deliveryInfo.isAvailable && (
+                                    <p className="text-[10px] text-gray-400 font-bold italic leading-tight">
+                                        We're growing fast! Check back soon or <span className="underline">sign up</span> for updates.
+                                    </p>
+                                )}
+                            </div>
+
+                            <button
+                                onClick={() => setDeliveryInfo(prev => ({ ...prev, isOpen: false }))}
+                                className={`w-full py-4 rounded-2xl font-black text-[12px] uppercase tracking-[0.2em] transition-all active:scale-95 shadow-lg ${
+                                    deliveryInfo.isAvailable 
+                                    ? 'bg-[#375421] text-white shadow-emerald-100/50' 
+                                    : 'bg-gray-100 text-gray-900 shadow-gray-100/50'
+                                }`}
+                            >
+                                {deliveryInfo.isAvailable ? "Gidan Experience! 🎉" : "Got It"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

@@ -9,6 +9,7 @@ import axiosInstance from "../../Axios/axiosInstance";
 import __LogoutGif from "../../Assets/logout_anim.webp";
 const _LogoutGif = typeof __LogoutGif === 'string' ? __LogoutGif : __LogoutGif?.src || __LogoutGif;
 const LogoutGif = typeof _LogoutGif === 'string' ? _LogoutGif : _LogoutGif?.src || _LogoutGif;
+import React from 'react';
 import {
   FaBars,
   FaUser,
@@ -19,7 +20,9 @@ import {
   FaLinkedin,
   FaYoutube,
   FaWhatsapp,
+  FaSignOutAlt,
 } from "react-icons/fa";
+import { useCategories } from "../../hooks/useCategories";
 
 const WithoutLoginHamburger = () => {
   const dispatch = useDispatch();
@@ -29,8 +32,7 @@ const WithoutLoginHamburger = () => {
   const [userName, setUserName] = useState("Guest");
   const [isOpen, setIsOpen] = useState(false);
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { data: categoryData = [], isLoading: loading } = useCategories();
   const [expandedCategory, setExpandedCategory] = useState(null);
 
   const categoryToTypeMap = {
@@ -57,42 +59,6 @@ const WithoutLoginHamburger = () => {
     };
   }, [isOpen, isLogoutDialogOpen]);
 
-  const getCategories = async () => {
-    try {
-      const response = await axiosInstance.get(`/category/`);
-      const data = response?.data?.data?.categories;
-      if (data) {
-        const categoriesWithSubs = await Promise.all(
-          data.map(async (category) => {
-            const subcategories = await getSubCategories(category.slug);
-            return { ...category, subcategories };
-          })
-        );
-        setCategories(categoriesWithSubs);
-      }
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getSubCategories = async (categorySlug) => {
-    try {
-      const response = await axiosInstance.get(
-        `/category/categoryWiseSubCategory/${categorySlug}/`
-      );
-      if (response.status === 200) {
-        return response?.data?.data?.subCategorys || [];
-      }
-    } catch (error) {
-      return [];
-    }
-  };
-
-  useEffect(() => {
-    getCategories();
-  }, []);
 
   const handleLogoutClick = () => {
     setIsOpen(false);
@@ -190,111 +156,104 @@ const WithoutLoginHamburger = () => {
         {/* Sidebar Menu */}
         {isOpen && (
           <div
-            className="fixed inset-0 bg-black/50 z-[11010] flex justify-end"
+            className="fixed inset-0 top-0 left-0 right-0 bottom-0 bg-black/70 z-[999999] flex justify-end"
             onClick={() => setIsOpen(false)}
           >
             <div
-              className="bg-white w-[85%] max-w-[320px] shadow-2xl h-full relative flex flex-col animate-slide-in-right transform transition-transform duration-300 ease-out"
+              className="bg-white w-[85%] max-w-[320px] h-[100dvh] shadow-[0_0_40px_rgba(0,0,0,0.2)] relative flex flex-col animate-slide-in-right transform transition-all duration-300 ease-out"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex flex-col h-full">
-                {/* Header Section */}
-                <div className="p-5 bg-[#375421] text-white">
-                  <div className="flex justify-between items-center mb-6">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-                        <FaUser className="text-xl" />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-xs opacity-80">Welcome,</span>
-                        {userName && userName !== "Guest" ? (
-                          <span
-                            className="font-bold text-sm cursor-pointer hover:underline"
-                            onClick={handleUserNameClick}
-                          >
-                            {userName}
-                          </span>
-                        ) : (
-                          <Link
-                            href="/mobile-signin"
-                            className="font-bold text-sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setIsOpen(false);
-                            }}
-                          >
-                            Login / Signup
-                          </Link>
-                        )}
-                      </div>
+              {/* 1. Header Section (Fixed at top) */}
+              <div className="p-6 bg-[#375421] text-white shrink-0 shadow-md">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center border border-white/10 shadow-inner">
+                      <FaUser className="text-xl text-white" />
                     </div>
-                    <button
-                      onClick={() => setIsOpen(false)}
-                      className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors"
-                    >
-                      <FaTimes className="text-xl" />
-                    </button>
+                    <div className="flex flex-col">
+                      <span className="text-[10px] uppercase tracking-widest opacity-70 font-bold">Welcome,</span>
+                      {userName && userName !== "Guest" ? (
+                        <span
+                          className="font-black text-lg cursor-pointer hover:text-orange-200 transition-colors"
+                          onClick={handleUserNameClick}
+                        >
+                          {userName}
+                        </span>
+                      ) : (
+                        <Link
+                          href="/mobile-signin"
+                          className="font-black text-lg hover:text-orange-200 transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsOpen(false);
+                          }}
+                        >
+                          Login / Signup
+                        </Link>
+                      )}
+                    </div>
                   </div>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-black/10 hover:bg-white/20 transition-all active:scale-95"
+                    aria-label="Close Menu"
+                  >
+                    <FaTimes className="text-xl" />
+                  </button>
                 </div>
+              </div>
 
-                {/* Categories & Links Section - Scrollable */}
-                <div className="flex-1 overflow-y-auto bg-white">
-                  {loading ? (
-                    <div className="p-4 space-y-4">
-                      {[1, 2, 3, 4, 5].map((i) => (
-                        <div key={i} className="h-10 bg-gray-100 rounded animate-pulse" />
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="divide-y divide-gray-50">
-                      {categories.filter((category) => category.name !== "SERVICES").map((category) => (
-                        <div key={category.id}>
-                          {/* Main Category */}
-                          <Link
-                            href={
-                              category.name === "GIFTS" ? "/gift/" :
-                                category.name === "OFFERS" ? "/offer/" :
-                                    `/${category.slug}/`
-                            }
-                            onClick={(e) => {
-                              if (category.subcategories && category.subcategories.length > 0) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setExpandedCategory(expandedCategory === category.id ? null : category.id);
-                              } else {
-                                setIsOpen(false);
-                              }
-                            }}
-                            className="flex items-center justify-between px-4 py-3 hover:bg-site-bg cursor-pointer transition-colors border-b border-gray-100"
-                          >
-                            <span className="text-gray-800 font-medium text-sm">
-                              {category.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')}
-                            </span>
-                            {category.subcategories && category.subcategories.length > 0 && (
-                              <FaChevronRight
-                                className={`text-gray-400 text-xs transition-transform duration-200 ${expandedCategory === category.id ? 'rotate-90' : ''
-                                  }`}
-                              />
-                            )}
-                          </Link>
+              {/* 2. Scrollable Content Area */}
+              <div className="flex-1 overflow-y-auto bg-white custom-scrollbar min-h-[200px]">
+                {loading ? (
+                  <div className="p-6 space-y-5">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                      <div key={i} className="h-12 bg-gray-50 rounded-xl animate-pulse" />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="py-2">
+                    <div className="px-6 py-4">
+                      <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Shop Categories</h3>
+                      <div className="space-y-1">
+                        {categoryData.filter((category) => category.name !== "SERVICES").map((category) => (
+                          <div key={category.id} className="border-b border-gray-50 last:border-0">
+                            <div
+                              onClick={(e) => {
+                                const hasSubs = category.subCategory && category.subCategory.length > 0;
+                                if (hasSubs) {
+                                  e.stopPropagation();
+                                  setExpandedCategory(expandedCategory === category.id ? null : category.id);
+                                } else {
+                                  setIsOpen(false);
+                                  router.push(category.name === "GIFTS" ? "/gift/" : category.name === "OFFERS" ? "/offer/" : `/${category.slug}/`);
+                                }
+                              }}
+                              className={`flex items-center justify-between py-4 group cursor-pointer transition-all duration-300 ${expandedCategory === category.id ? 'text-[#375421]' : 'text-gray-700 hover:text-[#375421]'}`}
+                            >
+                              <span className="font-bold text-[15px]">
+                                {category.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')}
+                              </span>
+                              {category.subCategory && category.subCategory.length > 0 && (
+                                <FaChevronRight
+                                  className={`text-gray-300 text-xs transition-transform duration-300 ${expandedCategory === category.id ? 'rotate-90 text-[#375421]' : ''}`}
+                                />
+                              )}
+                            </div>
 
-                          {/* Subcategories */}
-                          {expandedCategory === category.id &&
-                            category.subcategories &&
-                            category.subcategories.length > 0 && (
-                              <div className="bg-site-bg border-b border-gray-100">
-                                {category.subcategories.map((subcategory) => (
+                            {/* Subcategories */}
+                            {expandedCategory === category.id && category.subCategory && (
+                              <div className="bg-gray-50/50 rounded-2xl mb-2 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300">
+                                {category.subCategory.map((subcategory) => (
                                   <Link
                                     key={subcategory.id}
                                     href={`/${category.slug}/${subcategory.slug}/`}
                                     onClick={() => setIsOpen(false)}
-                                    className="flex items-center justify-between px-8 py-2 hover:bg-white cursor-pointer transition-colors"
+                                    className="flex items-center justify-between px-6 py-3.5 hover:bg-white text-gray-600 hover:text-[#375421] transition-all"
                                   >
-                                    <span className="text-gray-600 text-sm">
-                                      {subcategory.name}
-                                    </span>
-                                    {subcategory.product_count && (
-                                      <span className="text-xs text-gray-400">
+                                    <span className="text-sm font-medium">{subcategory.name}</span>
+                                    {subcategory.product_count > 0 && (
+                                      <span className="text-[10px] font-bold bg-white text-gray-400 px-2 py-0.5 rounded-full border border-gray-100 italic">
                                         {subcategory.product_count}
                                       </span>
                                     )}
@@ -302,104 +261,86 @@ const WithoutLoginHamburger = () => {
                                 ))}
                               </div>
                             )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* INFORMATION SECTION */}
-                <div className="border-t border-gray-200 mt-2">
-                  <div className="px-4 py-2 bg-site-bg">
-                    <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                      Information
-                    </h3>
-                  </div>
-                  <div>
-                    {additionalLinks.map((item, index) => (
-                      <Link
-                        key={index}
-                        href={item.path}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setIsOpen(false);
-                        }}
-                        className="block px-4 py-3 text-gray-700 hover:bg-site-bg transition-colors text-sm border-b border-gray-100"
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
-                    {/* Only show Sign Up when user is NOT logged in */}
-                    {userName === "Guest" && (
-                      <div
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigateToSignup();
-                        }}
-                        className="block px-4 py-3 text-[#375421] font-semibold hover:bg-site-bg transition-colors text-sm cursor-pointer border-b border-gray-100"
-                      >
-                        Sign Up
+                          </div>
+                        ))}
                       </div>
-                    )}
+                    </div>
+
+                    {/* Information Section */}
+                    <div className="mt-4 px-6 py-4 border-t border-gray-100 bg-gray-50/30">
+                      <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Support & Info</h3>
+                      <div className="space-y-3">
+                        {additionalLinks.map((item, index) => (
+                          <Link
+                            key={index}
+                            href={item.path}
+                            onClick={() => setIsOpen(false)}
+                            className="flex items-center gap-3 py-2 text-gray-600 hover:text-[#375421] font-bold text-sm transition-all"
+                          >
+                            <span className="w-1 h-1 rounded-full bg-gray-300 group-hover:bg-[#375421]"></span>
+                            {item.label}
+                          </Link>
+                        ))}
+                        {userName === "Guest" && (
+                          <Link
+                            href="/mobile-signin"
+                            onClick={() => setIsOpen(false)}
+                            className="flex items-center gap-3 py-2 text-[#375421] font-black text-sm transition-all group"
+                          >
+                            <div className="w-1 h-1 rounded-full bg-[#375421]"></div>
+                            Sign Up Now
+                          </Link>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
 
-              {/* Logout Button */}
-              {userName !== "Guest" && (
-                <div className="p-4 border-t border-gray-200 bg-site-bg">
-                  <button
-                    onClick={handleLogoutClick}
-                    className="w-full py-2 px-4 bg-[#375421] text-white rounded-lg hover:bg-[#375421] hover:text-white transition-colors font-medium"
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
+              {/* 3. Footer Section (Fixed at bottom) */}
+              <div className="shrink-0 bg-white border-t border-gray-100 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
+                {/* Logout Button (Only for members) */}
+                {userName !== "Guest" && (
+                  <div className="p-6 pb-2">
+                    <button
+                      onClick={handleLogoutClick}
+                      className="w-full py-4 bg-[#375421] text-white rounded-2xl hover:bg-[#2d451b] transition-all font-black text-[12px] uppercase tracking-widest shadow-md active:scale-[0.98] flex items-center justify-center gap-2"
+                    >
+                      <FaSignOutAlt className="rotate-180" />
+                      Logout Account
+                    </button>
+                  </div>
+                )}
 
-              {/* Social Media Footer */}
-              <div className="p-4 border-t border-gray-200 bg-site-bg">
-                <div className="flex justify-center items-center space-x-6">
-                  <a
-                    href="https://www.facebook.com/thegidanstore/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-[#375421] transition-colors"
-                  >
-                    <FaFacebookF size={18} />
-                  </a>
-                  <a
-                    href="https://www.instagram.com/thegidanstore/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-[#375421] transition-colors"
-                  >
-                    <FaInstagram size={18} />
-                  </a>
-                  <a
-                    href="https://www.linkedin.com/company/thegidanstore/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-[#375421] transition-colors"
-                  >
-                    <FaLinkedin size={18} />
-                  </a>
-                  <a
-                    href="https://www.youtube.com/@thegidanstore/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-[#375421] transition-colors"
-                  >
-                    <FaYoutube size={18} />
-                  </a>
-                  <a
-                    href="https://whatsapp.com/channel/0029Vac6g6TB4hdL2NqaEc1f/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-[#375421] transition-colors"
-                  >
-                    <FaWhatsapp size={18} />
-                  </a>
+                {/* Social Links */}
+                <div className="p-6">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Connect with us</span>
+                    <div className="flex items-center gap-4">
+                      {[
+                        { icon: <FaFacebookF />, url: "https://www.facebook.com/thegidanstore/" },
+                        { icon: <FaInstagram />, url: "https://www.instagram.com/thegidanstore/" },
+                        { icon: <FaLinkedin />, url: "https://www.linkedin.com/company/thegidanstore/" },
+                        { icon: <FaYoutube />, url: "https://www.youtube.com/@thegidanstore/" },
+                        { icon: <FaWhatsapp />, url: "https://whatsapp.com/channel/0029Vac6g6TB4hdL2NqaEc1f/" }
+                      ].map((social, i) => (
+                        <a
+                          key={i}
+                          href={social.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-[#375421]/10 hover:text-[#375421] transition-all active:scale-90"
+                        >
+                          {React.cloneElement(social.icon, { size: 16 })}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* App Version Info */}
+                <div className="px-6 py-4 bg-gray-50/50 flex justify-center border-t border-gray-100">
+                  <span className="text-[8px] font-black text-gray-300 uppercase tracking-[0.2em]">Gidan v2.4.0 — Made with 💚 in India</span>
                 </div>
               </div>
             </div>

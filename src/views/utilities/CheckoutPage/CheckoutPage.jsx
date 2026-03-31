@@ -11,6 +11,7 @@ import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { trackBeginCheckout, trackAddPaymentInfo, trackAddShippingInfo, trackPurchase } from "../../../utils/ga4Ecommerce";
 import RightDrawer from "../../../components/Shared/RightDrawer";
+import CouponSection from "../../../components/Shared/CouponSection";
 
 const loadRazorpayScript = () =>
   new Promise((resolve) => {
@@ -851,219 +852,16 @@ const OrderSummary = ({ selectedOption, selectedAddress, data, onUpdateData }) =
 
 
 const ApplyCoupon = ({ id, setCoupon, coupon, onRemoveCoupon }) => {
-  const [removing, setRemoving] = useState(false);
-  const [couponCode, setCouponCode] = useState('');
-  const accessToken = useSelector(selectAccessToken);
-  const [coupons, setCoupons] = useState([]);
-  const [showDrawer, setShowDrawer] = useState(false);
-
-  const getCoupones = async () => {
-    if (!id) return;
-    try {
-      // Step 1: Try order-specific fetch
-      const response = await axiosInstance.get(`/coupon/coupons/?order_id=${id}`);
-      if (response.status === 200) {
-        setCoupons(response.data.coupons || []);
-      }
-    } catch (error) {
-      console.warn("Order-specific coupon fetch failed, trying general fallback...", error);
-      try {
-        // Step 2: Fallback to general fetch if specific fails
-        const fallbackRes = await axiosInstance.get(`/coupon/coupons/`);
-        if (fallbackRes.status === 200) {
-          const rawCoupons = fallbackRes.data.coupons || fallbackRes.data.data?.coupons || [];
-          setCoupons(rawCoupons);
-        }
-      } catch (fallbackError) {
-        console.error("Critical error: All coupon fetch attempts failed.", fallbackError);
-        enqueueSnackbar("Failed to load available coupons.", { variant: "warning" });
-      }
-    }
-  };
-
-  useEffect(() => {
-    getCoupones();
-  }, [id]);
-
-  const applyCouponById = async (couponId) => {
-    if (!id) {
-      enqueueSnackbar("Order not found. Please restart checkout.", { variant: "error" });
-      return;
-    }
-    if (!couponId) {
-      enqueueSnackbar("Invalid coupon. Please try again.", { variant: "error" });
-      return;
-    }
-    try {
-      console.log("🎟️ Applying coupon ID:", couponId, "to order:", id);
-      const response = await axiosInstance.post(
-        `/order/applyCoupon/`,
-        {
-          selected_coupon_id: couponId,
-          order_id: id,
-        }
-      );
-
-      if (response.status === 200) {
-        setCoupon(response.data);
-        setShowDrawer(false);
-        enqueueSnackbar("Coupon applied successfully!", { variant: "success" });
-      }
-    } catch (error) {
-      const responseData = error.response?.data;
-      const errorMessage =
-        (typeof responseData === 'object' && responseData !== null && responseData.error) ||
-        (typeof responseData === 'string' && responseData) ||
-        "Failed to apply coupon. Please try again.";
-      enqueueSnackbar(errorMessage, { variant: "error" });
-    }
-  };
-
-  const applyManualCoupon = async () => {
-    if (!couponCode.trim()) {
-      enqueueSnackbar("Please enter a coupon code", { variant: "warning" });
-      return;
-    }
-
-    const foundCoupon = coupons.find(c => c.code === couponCode.trim().toUpperCase());
-
-    if (!foundCoupon) {
-      enqueueSnackbar("Invalid coupon code", { variant: "error" });
-      return;
-    }
-
-    if (!foundCoupon.is_applicable) {
-      enqueueSnackbar("This coupon cannot be applied to your order", { variant: "error" });
-      return;
-    }
-
-    await applyCouponById(foundCoupon.id);
-    setCouponCode('');
-  };
-
   return (
-    <>
-      <div className="bg-[#f2f8f2] p-4 rounded-lg mt-4 border border-emerald-50">
-        <div className="flex items-center gap-2 mb-3">
-          <Tag className="text-[#c5a382]" size={16} fill="#c5a382" />
-          <span className="text-[11px] font-bold text-[#375421] uppercase tracking-wider">APPLY COUPON</span>
-        </div>
-
-        {coupon?.success ? (
-          <div className="flex items-center justify-between bg-white border border-emerald-100 rounded-lg px-3 py-2">
-            <div className="flex flex-col">
-              <span className="text-emerald-700 text-xs font-bold">{coupon.coupon_code}</span>
-              <span className="text-emerald-600 text-[10px]">Applied - saved ₹{Number(coupon.discount_amount ?? 0).toFixed(2)}</span>
-            </div>
-            <button
-              onClick={async () => {
-                setRemoving(true);
-                await onRemoveCoupon?.();
-                setRemoving(false);
-              }}
-              disabled={removing}
-              className="text-[10px] font-bold text-red-500 hover:text-red-700 uppercase"
-            >
-              {removing ? '...' : 'Remove'}
-            </button>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                placeholder="PROMO CODE"
-                value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                className="flex-1 px-3 py-2 border-2 border-dashed border-[#375421]/30 rounded-lg focus:outline-none text-sm bg-white placeholder:text-gray-300 font-bold uppercase"
-              />
-              <button
-                onClick={applyManualCoupon}
-                className="bg-[#375421] text-white font-bold px-6 py-2 rounded-lg hover:bg-[#2d451b] hover:text-white transition-colors text-xs uppercase tracking-widest shadow-sm"
-              >
-                APPLY
-              </button>
-            </div>
-
-            {coupons.length > 0 && (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-x-2">
-                  <span className="text-[10px] text-gray-500 font-bold uppercase tracking-tighter">Try</span>
-                  <button
-                    onClick={() => coupons[0]?.is_applicable && applyCouponById(coupons[0].id)}
-                    className={`text-[10px] font-bold underline decoration-dashed transition-colors uppercase ${coupons[0]?.is_applicable ? 'text-[#375421] hover:text-[#2d451b]' : 'text-gray-400'}`}
-                  >
-                    {coupons[0]?.code}
-                  </button>
-                  <span className="text-[10px] text-gray-400 font-medium">· Launch from payment</span>
-                </div>
-                {coupons.length > 1 && (
-                  <button
-                    onClick={() => setShowDrawer(true)}
-                    className="text-[10px] font-bold text-[#375421] uppercase hover:underline"
-                  >
-                    + More
-                  </button>
-                )}
-              </div>
-            )}
-
-            {/* Reusable Side Drawer for Coupons */}
-            <RightDrawer
-              isOpen={showDrawer}
-              onClose={() => setShowDrawer(false)}
-              title="Available Coupons"
-              subtitle="Choose your best offer"
-              footerText="Apply coupons manually if you have a special code!"
-            >
-              <div className="space-y-4">
-                {coupons.map((c) => (
-                  <div
-                    key={c.id}
-                    className={`group relative p-5 border-2 rounded-[24px] transition-all duration-300 ${c.is_applicable
-                        ? 'bg-white border-gray-900 hover:border-emerald-600 shadow-sm'
-                        : 'bg-site-bg border-gray-100 opacity-60'
-                      }`}
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-3">
-                          <span className={`font-black text-[11px] px-3.5 py-1.5 rounded-lg border-2 tracking-widest uppercase transition-colors ${c.is_applicable ? 'text-gray-900 bg-[#ebf5eb] border-gray-900' : 'text-gray-400 bg-site-bg border-gray-200'}`}>
-                            {c.code}
-                          </span>
-                          {c.is_applicable && (
-                            <span className="text-2xl animate-pulse">
-                              🔥
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-base font-black text-gray-900 leading-snug tracking-tight">{c.description}</p>
-                        <p className="text-[10px] text-gray-500 mt-2 font-black uppercase tracking-widest border-l-2 border-emerald-400 pl-2">
-                          Valid on orders above ₹{c.minimum_order_value}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="mt-5 pt-4 border-t border-dashed border-gray-200">
-                      <button
-                        onClick={() => c.is_applicable && applyCouponById(c.id)}
-                        className={`w-full py-4.5 rounded-2xl font-black text-[12px] uppercase tracking-[0.1em] transition-all active:scale-[0.96] flex items-center justify-center gap-2
-                        ${c.is_applicable
-                            ? 'bg-white text-gray-900 border-2 border-gray-900 hover:bg-site-bg shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none'
-                            : 'bg-site-bg text-gray-300 cursor-not-allowed border-2 border-gray-200'
-                          }`}
-                      >
-                        {c.is_applicable ? 'APPLY COUPON' : 'LOCKED'}
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </RightDrawer>
-          </div>
-        )}
-      </div>
-    </>
+    <div className="bg-[#f2f8f2] p-4 rounded-lg mt-4 border border-emerald-50">
+      <CouponSection 
+        mode="checkout"
+        orderId={id}
+        appliedCoupon={coupon?.success ? coupon : null}
+        onSuccess={(data) => setCoupon(data)}
+        onRemove={onRemoveCoupon}
+      />
+    </div>
   );
 };
 

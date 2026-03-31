@@ -39,6 +39,11 @@ body {
   to { transform: translateX(0); }
 }
 
+@keyframes slide-in-right {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
 @keyframes shimmer {
   0% { transform: skewX(-25deg) translateX(-150%); }
   100% { transform: skewX(-25deg) translateX(150%); }
@@ -46,6 +51,10 @@ body {
 
 .animate-slide-left {
   animation: slide-left 0.3s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out;
 }
 
 /* Tawk.to mobile override to dodge bottom navigation bar */

@@ -161,7 +161,7 @@ const NavBar = () => {
   const displayUsername = isMounted ? username : "Guest";
 
   return (
-    <div className="relative z-[1000]" style={{ isolation: 'isolate', transform: 'translate3d(0,0,0)', WebkitTransform: 'translate3d(0,0,0)' }}>
+    <div className="relative z-[1000]">
       <nav className="w-full px-4 py-3 bg-white font-sans border-b border-gray-100">
         <div className="max-w-[1920px] mx-auto">
           {/* MOBILE (Below 800px): LOGO, SEARCH, HAMBURGER in one row */}

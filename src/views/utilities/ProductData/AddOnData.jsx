@@ -4,13 +4,14 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { Paper, Typography } from "@mui/material";
 import { FaStar } from "react-icons/fa";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
 import Link from "next/link";
 import { getProductUrl } from "../../../utils/urlHelper";
 import { trackAddToCart, trackRemoveFromCart } from "../../../utils/ga4Ecommerce";
+import axiosInstance from "../../../Axios/axiosInstance";
+import { Loader2 } from "lucide-react";
 
 const AddOnData = ({
   name,
@@ -27,7 +28,7 @@ const AddOnData = ({
 
   const [isHovered, setIsHovered] = useState(false);
   const [isImageHovered, setIsImageHovered] = useState(false);
-  const [isAdded, setIsAdded] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleAddToCart = async (e) => {
     if (e) e.stopPropagation();
@@ -38,41 +39,35 @@ const AddOnData = ({
       return;
     }
 
+    setLoading(true);
     try {
       if (inCart) {
-        const response = await axios.delete(
-          `${process.env.NEXT_PUBLIC_API_URL}/order/cart/?main_product_id=${product.id}/`,
-          {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          }
+        const response = await axiosInstance.delete(
+          `/order/cart/${product.id}/`
         );
 
-        if (response.status === 200 || response.status === 201) {
+        if (response.status === 200 || response.data?.message === 'success') {
           enqueueSnackbar("Product Removed from cart", { variant: "success" });
-          setIsAdded(!isAdded);
           window.dispatchEvent(new Event("cartUpdated"));
-
-          // GA4: Track remove_from_cart event
           trackRemoveFromCart(product);
         }
       } else {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/order/cart/`,
-          { main_prod_id: product.id },
-          { headers: { Authorization: `Bearer ${accessToken}` } }
+        const response = await axiosInstance.post(
+          `/order/cart/`,
+          { prod_id: product.id, quantity: 1 }
         );
 
         if (response.status === 200 || response.status === 201) {
           enqueueSnackbar("Added to cart", { variant: "success" });
-          setIsAdded(!isAdded);
           window.dispatchEvent(new Event("cartUpdated"));
-
-          // GA4: Track add_to_cart event
-          trackAddToCart(product);
+          trackAddToCart(product, 1);
         }
       }
     } catch (error) {
-      console.error("Error adding item to cart:", error);
+      console.error("Error updating cart item:", error);
+      enqueueSnackbar(error.response?.data?.message || "Something went wrong", { variant: "error" });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -150,10 +145,13 @@ const AddOnData = ({
             {cardContent}
           </Link>
           <button
-            className="mt-auto mb-2 px-4 py-2 bg-bio-green text-white rounded-full text-sm font-medium z-10"
+            className={`mt-auto mb-2 px-6 py-2 rounded-full text-sm font-black transition-all flex items-center justify-center gap-2 ${
+              inCart ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-bio-green text-white hover:bg-opacity-90'
+            }`}
             onClick={handleAddToCart}
+            disabled={loading}
           >
-            Add to Cart
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : (inCart ? "In Cart ✓" : "Add to Cart")}
           </button>
         </Paper>
       </div>
@@ -215,10 +213,13 @@ const AddOnData = ({
             </div>
           </Link>
           <button
-            className="mt-auto mb-2 px-4 py-2 bg-bio-green text-white rounded-full text-sm font-medium z-10"
+            className={`mt-auto mb-2 mx-4 py-2 rounded-xl text-sm font-black transition-all flex items-center justify-center gap-2 ${
+              inCart ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-bio-green text-white hover:bg-opacity-90'
+            }`}
             onClick={handleAddToCart}
+            disabled={loading}
           >
-            Add to Cart
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : (inCart ? "In Cart ✓" : "Add to Cart")}
           </button>
         </Paper>
       </div>

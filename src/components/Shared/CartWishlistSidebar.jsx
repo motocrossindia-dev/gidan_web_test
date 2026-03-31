@@ -107,7 +107,10 @@ const CartWishlistSidebar = () => {
       else fetchGuestItems('cart');
       
       const currentPath = window.location.pathname;
-      if (currentPath.includes('/cart') || currentPath.includes('/wishlist')) {
+      const isBuyNow = sessionStorage.getItem('BUY_NOW_IN_PROGRESS');
+      
+      if (currentPath.includes('/cart') || currentPath.includes('/wishlist') || isBuyNow) {
+        if (isBuyNow) sessionStorage.removeItem('BUY_NOW_IN_PROGRESS');
         return;
       }
       
@@ -231,7 +234,7 @@ const CartWishlistSidebar = () => {
                <Link 
                 href={type === 'cart' ? '/cart' : '/wishlist'}
                 onClick={() => setIsOpen(false)}
-                className="w-full py-4.5 rounded-2xl font-black text-[12px] uppercase tracking-[0.1em] transition-all active:scale-[0.96] flex items-center justify-center gap-2 bg-white text-gray-900 border-2 border-gray-900 hover:bg-site-bg shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none"
+                className="w-full py-4.5 rounded-2xl font-black text-[12px] uppercase tracking-[0.1em] transition-all active:scale-[0.96] flex items-center justify-center gap-2 bg-[#375421] text-white border-2 border-[#375421] hover:bg-[#2d451b] shadow-[6px_6px_0px_0px_rgba(55,84,33,0.2)] hover:shadow-none"
                >
                  VIEW FULL {type.toUpperCase()} <ArrowRight size={14} />
                </Link>
@@ -249,7 +252,7 @@ const CartWishlistSidebar = () => {
             
             <button 
               onClick={() => setIsOpen(false)}
-              className="mt-8 px-8 py-3 rounded-2xl bg-gray-900 text-white font-black text-[10px] uppercase tracking-widest hover:bg-[#375421] transition-colors"
+              className="mt-8 px-8 py-3 rounded-2xl bg-[#375421] text-white font-black text-[10px] uppercase tracking-widest hover:bg-[#2d451b] transition-colors"
             >
               Continue Shopping
             </button>
