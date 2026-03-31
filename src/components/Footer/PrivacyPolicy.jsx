@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import PageHeader from "@/components/Shared/PageHeader";
-import { Shield, Lock, Eye, Database, Smartphone, Users, AlertTriangle, Mail, CheckCircle, Info } from 'lucide-react';
+import { Shield, Lock, Eye, Database, Smartphone, Users, AlertTriangle, Scale, CheckCircle, Info } from 'lucide-react';
 import ReturnPolicySchema from "../../views/utilities/seo/ReturnPolicySchema";
 import HomepageSchema from "../../views/utilities/seo/HomepageSchema";
 import StoreSchema from "../../views/utilities/seo/StoreSchema";
