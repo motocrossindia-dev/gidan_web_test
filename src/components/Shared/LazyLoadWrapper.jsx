@@ -53,7 +53,17 @@ const LazyLoadWrapper = ({
   //      Since we WANT SSR integrity, we will render children if !hasMounted.
   //      To avoid the flash on hydration:
 
-  const effectivelyInView = shouldRender || !hasMounted;
+  // Heuristic: once it's rendered (via SSR/Hydration), we keep it visible.
+  // This avoids the "flicker/disappear" bug where hydration matches SSR, 
+  // then useEffect runs and flips it back to hidden until the observer triggers.
+  const [everRendered, setEverRendered] = useState(false);
+  
+  // Update everRendered if we are in the initial mount phase (SSR/Hydration)
+  if (!hasMounted && !everRendered) {
+    setEverRendered(true);
+  }
+
+  const effectivelyInView = shouldRender || !hasMounted || everRendered;
 
   return (
     <div
