@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { 
-  Check, ChevronRight, Star, 
-  ShieldCheck, ArrowRight,
-  Sun, Droplets, Leaf, Calendar, Trophy,
-  Mail, CheckCircle, Sparkles
+import {
+    Check, ChevronRight, Star,
+    ShieldCheck, ArrowRight,
+    Sun, Droplets, Leaf, Calendar, Trophy,
+    Mail, CheckCircle, Sparkles, CheckCheck,
+    CircleCheck
 } from 'lucide-react';
 import ProductCard from '../ProductCard';
 
@@ -43,7 +44,7 @@ const SectionHeader = ({ data, config, isDark, type }) => {
     const renderDescription = (text) => {
         if (!text) return "";
         const parts = text.split(/(India-climate tested)/g);
-        return parts.map((part, i) => 
+        return parts.map((part, i) =>
             part === "India-climate tested" ? <strong key={i} className={isDark ? "text-white" : "text-black"}>{part}</strong> : part
         );
     };
@@ -56,20 +57,20 @@ const SectionHeader = ({ data, config, isDark, type }) => {
     const italicBgColor = data.extra?.italic_bg_color;
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-1.5 mb-2">
             {labelText && (
-                <div className="animate-fade-in">
+                <div className="animate-fade-in group">
                     {isHero ? (
-                        <span 
-                            className={`inline-block px-5 py-2 rounded-full border ${isDark ? 'border-[#a8e070]/30 text-[#a8e070] bg-[#a8e070]/5' : 'bg-black/5 text-black/40 border-black/5'} text-[11px] font-bold tracking-[0.25em] uppercase backdrop-blur-sm`}
+                        <span
+                            className={`inline-block px-4 py-1.5 rounded-full border ${isDark ? 'border-[#a8e070]/30 text-[#a8e070] bg-[#a8e070]/5' : 'bg-black/5 text-black/40 border-black/5'} text-[10px] font-black tracking-[0.2em] uppercase backdrop-blur-sm transition-all hover:scale-105`}
                             style={data.extra?.italic_text_color ? { borderColor: `${data.extra.italic_text_color}33`, color: data.extra.italic_text_color } : {}}
                         >
-                            <span className="inline-block w-2 h-2 rounded-full bg-[#a8e070] mr-2" style={data.extra?.italic_text_color ? { backgroundColor: data.extra.italic_text_color } : {}} />
+                            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#a8e070] mr-2" style={data.extra?.italic_text_color ? { backgroundColor: data.extra.italic_text_color } : {}} />
                             {labelText}
                         </span>
                     ) : (
-                        <span 
-                            className="text-[12px] font-bold tracking-[0.15em] uppercase text-[#a8e070]"
+                        <span
+                            className="text-[11px] font-black tracking-[0.14em] uppercase text-[#a8e070]"
                             style={data.extra?.italic_text_color ? { color: data.extra.italic_text_color } : {}}
                         >
                             {labelText}
@@ -77,22 +78,22 @@ const SectionHeader = ({ data, config, isDark, type }) => {
                     )}
                 </div>
             )}
-            <h2 
-                className={`${isHero ? 'text-4xl lg:text-6xl' : 'text-2xl lg:text-4xl'} font-serif font-medium ${isDark ? 'text-white' : 'text-[#1a1f14]'} leading-[1.05] tracking-tight`}
+            <h2
+                className={`${isHero ? 'text-3xl lg:text-5xl' : 'text-xl lg:text-4xl'} font-serif font-medium ${isDark ? 'text-white' : 'text-[#1a1f14]'} leading-[1.1] tracking-tight`}
                 style={headingColor ? { color: headingColor } : {}}
             >
                 {data.heading} <br className="hidden sm:block" />
-                <span 
+                <span
                     className="italic font-normal text-[#a8e070]"
-                    style={{ 
+                    style={{
                         color: italicTextColor || undefined
                     }}
                 >
                     {data.italic_text}
                 </span> {data.heading_suffix}
             </h2>
-            <p 
-                className={`text-base lg:text-lg leading-relaxed max-w-[600px] ${!data.extra?.text_color && (isDark ? 'text-white/70' : 'text-black/60')}`}
+            <p
+                className={`text-sm lg:text-[15px] leading-relaxed max-w-[540px] ${!data.extra?.text_color && (isDark ? 'text-white/70' : 'text-black/60')}`}
                 style={data.extra?.text_color ? { color: data.extra.text_color } : {}}
             >
                 {renderDescription(data.description)}
@@ -101,36 +102,70 @@ const SectionHeader = ({ data, config, isDark, type }) => {
     );
 };
 
+// Helper to convert hex to rgba for the hard shadow
+const hexToRgba = (hex, alpha) => {
+    if (!hex || !hex.startsWith('#')) return `rgba(0,0,0,${alpha})`;
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
+
 const ActionButtons = ({ data, config, isDark, type }) => {
+    const [isP1Hovered, setIsP1Hovered] = useState(false);
+    const [isP2Hovered, setIsP2Hovered] = useState(false);
     const isClimateStory = type === 'climate' || type === 'gardener';
-    
+
     // Helper to clean trailing arrows from the API text so we don't get doubles
     const cleanButtonText = (text) => {
         if (!text) return "";
         return text.replace(/\s*(->|→|=>|>)\s*$/, "").trim();
     };
 
-    const btnPrimaryColor = data.extra?.btn_primary_color;
-    const btnSecondaryColor = data.extra?.btn_secondary_color;
-    const btnPrimaryTextColor = btnPrimaryColor ? (getIsDark(btnPrimaryColor) ? '#ffffff' : '#000000') : (isDark ? '#1a3d0a' : '#ffffff');
-    const btnSecondaryTextColor = btnSecondaryColor ? (getIsDark(btnSecondaryColor) ? '#ffffff' : '#000000') : (isDark ? '#ffffff' : '#1a3d0a');
+    const p1Color = data.extra?.btn_primary_color || (isDark ? '#a8e070' : '#1a3d0a');
+    const p2Color = data.extra?.btn_secondary_color || data.extra?.text_color || (isDark ? '#ffffff' : '#1a3d0a');
+
+    // Button 1 (Primary): Solid -> Invert
+    const b1Bg = isP1Hovered ? p2Color : p1Color;
+    const b1Text = isP1Hovered ? p1Color : p2Color;
+
+    // Button 2 (Secondary): Outline -> Fill
+    const b2Bg = isP2Hovered ? p2Color : 'transparent';
+    const b2Text = isP2Hovered ? p1Color : p2Color;
+
+    const shadowStyle1 = isP1Hovered ? 'none' : `6px 6px 0px 0px ${hexToRgba(p2Color, 0.2)}`;
+    const shadowStyle2 = isP2Hovered ? 'none' : `6px 6px 0px 0px ${hexToRgba(p2Color, 0.2)}`;
 
     return (
-        <div className="flex flex-wrap gap-5 pt-10">
+        <div className="flex items-center gap-5 pt-3 overflow-x-visible">
             {data.btn1_text && (
-                <a 
-                    href={data.btn1_link} 
-                    className={`px-10 py-5 rounded-[24px] text-[16px] font-extrabold flex items-center gap-3 group transition-all hover:scale-105 shadow-xl ${!btnPrimaryColor && (isDark ? 'bg-white text-[#1a3d0a] hover:shadow-white/10' : 'bg-[#1a3d0a] text-white shadow-black/10')}`}
-                    style={btnPrimaryColor ? { backgroundColor: btnPrimaryColor, color: btnPrimaryTextColor } : {}}
+                <a
+                    href={data.btn1_link}
+                    onMouseEnter={() => setIsP1Hovered(true)}
+                    onMouseLeave={() => setIsP1Hovered(false)}
+                    className="px-12 py-4.5 rounded-2xl text-[12px] font-black uppercase tracking-[0.1em] flex items-center justify-center gap-2 transition-all duration-300 active:scale-[0.96] border-2 whitespace-nowrap shrink-0"
+                    style={{ 
+                        backgroundColor: b1Bg, 
+                        color: b1Text,
+                        borderColor: p2Color,
+                        boxShadow: shadowStyle1
+                    }}
                 >
-                    {cleanButtonText(data.btn1_text)} {(isClimateStory || type === 'hero') && <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />}
+                    {cleanButtonText(data.btn1_text)} {(isClimateStory || type === 'hero') && <ArrowRight size={14} strokeWidth={3} className="group-hover:translate-x-1 transition-transform" />}
                 </a>
             )}
             {data.btn2_text && (
-                <a 
-                    href={data.btn2_link} 
-                    className={`px-10 py-5 rounded-[24px] text-[16px] font-bold flex items-center gap-2 transition-all backdrop-blur-md shadow-lg border ${!btnSecondaryColor && (isDark ? 'hover:bg-white/10 border-white/30 text-white' : 'hover:bg-black/5 border-black/10 text-black')}`}
-                    style={btnSecondaryColor ? { backgroundColor: btnSecondaryColor, color: btnSecondaryTextColor, borderColor: 'transparent' } : {}}
+                <a
+                    href={data.btn2_link}
+                    onMouseEnter={() => setIsP2Hovered(true)}
+                    onMouseLeave={() => setIsP2Hovered(false)}
+                    className="px-12 py-4.5 rounded-2xl text-[12px] font-black uppercase tracking-[0.1em] flex items-center justify-center gap-2 transition-all duration-300 backdrop-blur-md border-2 active:scale-[0.96] whitespace-nowrap shrink-0"
+                    style={{
+                        backgroundColor: b2Bg,
+                        color: b2Text,
+                        borderColor: p2Color,
+                        boxShadow: shadowStyle2
+                    }}
                 >
                     {cleanButtonText(data.btn2_text)}
                 </a>
@@ -138,7 +173,6 @@ const ActionButtons = ({ data, config, isDark, type }) => {
         </div>
     );
 };
-
 const StatsRenderer = ({ data, isDark }) => {
     const statCount = data.extra?.stat_count || "12,847";
     const statLabel = data.extra?.stat_label || "happy gardeners across India";
@@ -163,15 +197,15 @@ const StatsRenderer = ({ data, isDark }) => {
                 <div className="space-y-1">
                     <div className="flex gap-1 text-orange-400">
                         {[1, 2, 3, 4, 5].map((s) => (
-                            <Star 
-                                key={s} 
-                                size={16} 
-                                fill={s <= Math.round(statRating) ? "currentColor" : "none"} 
+                            <Star
+                                key={s}
+                                size={16}
+                                fill={s <= Math.round(statRating) ? "currentColor" : "none"}
                                 className={s <= Math.round(statRating) ? "" : "text-white/20"}
                             />
                         ))}
                     </div>
-                    <p 
+                    <p
                         className={`text-[15px] font-medium ${!data.extra?.text_color && (isDark ? 'text-white/80' : 'text-black/70')}`}
                         style={data.extra?.text_color ? { color: data.extra.text_color } : {}}
                     >
@@ -186,16 +220,33 @@ const StatsRenderer = ({ data, isDark }) => {
 const ItemsRenderer = ({ items, isDark, data }) => {
     const checklists = items.filter(i => i.item_type === 'checklist');
     const listItems = items.filter(i => i.item_type === 'list_item');
+    const accentColor = data.extra?.text_color || (isDark ? '#ffffff' : '#1a3d0a');
+
+    const renderIcon = (iconName) => {
+        const iconMap = {
+            'check': <CheckCheck size={18} strokeWidth={3} />,
+            'circle': <CheckCircle size={18} strokeWidth={3} />,
+            'leaf': <Leaf size={18} strokeWidth={3} />,
+            'sun': <Sun size={18} strokeWidth={3} />,
+            'shield': <ShieldCheck size={18} strokeWidth={3} />,
+            'star': <Star size={18} strokeWidth={3} />,
+            'default': <CheckCheck size={18} strokeWidth={3} />
+        };
+        return iconMap[iconName?.toLowerCase()] || iconMap.default;
+    };
 
     return (
-        <div className="space-y-8 py-4">
+        <div className="space-y-6 pt-2 pb-6">
+            {/* Minimalist Checklists */}
             {checklists.length > 0 && (
                 <div className="space-y-4">
                     {checklists.map((item) => (
-                        <div key={item.id} className="flex items-center gap-4 group transition-all">
-                            <Check size={20} className="text-[#a8e070] flex-shrink-0" strokeWidth={3} />
-                            <h4 
-                                className={`text-[16px] lg:text-[17px] font-normal leading-relaxed ${!data?.extra?.text_color && (isDark ? 'text-white/90' : 'text-[#1a1f14]')}`}
+                        <div key={item.id} className="flex items-start gap-4 group transition-all">
+                            <div className={`mt-0.5 ${isDark ? 'text-[#a8e070]' : 'text-[#375421]'} flex-shrink-0`}>
+                                {renderIcon(item.icon_name || 'default')}
+                            </div>
+                            <h4
+                                className={`text-[15px] leading-relaxed ${!data?.extra?.text_color && (isDark ? 'text-white/80' : 'text-[#1a1f14]')}`}
                                 style={data?.extra?.text_color ? { color: data.extra.text_color } : {}}
                             >
                                 {item.name}
@@ -204,56 +255,109 @@ const ItemsRenderer = ({ items, isDark, data }) => {
                     ))}
                 </div>
             )}
+
+            {/* Premium Feature Cards */}
             {listItems.length > 0 && (
-                <div className="space-y-4">
-                    {listItems.map((item) => (
-                        <div key={item.id} className={`flex items-center justify-between p-5 rounded-[24px] ${isDark ? 'bg-white/5 border-white/10 hover:bg-white/10 shadow-sm' : 'bg-white border-[#e2efe0] hover:bg-black/5'} border backdrop-blur-md transition-all`}>
-                            <div className="space-y-1">
-                                <h4 
-                                    className={`text-[16px] font-bold ${!data?.extra?.text_color && (isDark ? 'text-white' : 'text-[#1a1f14]')}`}
-                                    style={data?.extra?.text_color ? { color: data.extra.text_color } : {}}
-                                >{item.name}</h4>
-                                <p 
-                                    className={`text-[12px] italic ${!data?.extra?.text_color && (isDark ? 'text-white/40' : 'text-black/40')}`}
-                                    style={data?.extra?.text_color ? { color: data.extra.text_color, opacity: 0.6 } : {}}
-                                >{item.subtitle}{item.price && ` - ₹${item.price}`}</p>
+                <div className="space-y-4 pt-2">
+                    {listItems.map((item, idx) => {
+                        const [isHovered, setIsHovered] = useState(false);
+                        const hardShadow = isHovered ? 'none' : `6px 6px 0px 0px ${hexToRgba(accentColor, 0.12)}`;
+
+                        return (
+                            <div 
+                                key={item.id || idx} 
+                                onMouseEnter={() => setIsHovered(true)}
+                                onMouseLeave={() => setIsHovered(false)}
+                                className={`group flex items-start gap-5 p-5 rounded-[28px] transition-all duration-300 border-2 ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-[#e2efe0] backdrop-blur-sm'}`}
+                                style={{ 
+                                    boxShadow: hardShadow,
+                                    transform: isHovered ? 'scale(1.02)' : 'scale(1)'
+                                }}
+                            >
+                                {/* Modern Bullet/Icon Slot */}
+                                <div className={`mt-1.5 h-10 w-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all ${isDark ? 'bg-white/5 border border-white/10' : 'bg-[#ebf5eb] border border-[#d4e8a0]/30'}`}>
+                                    <CheckCircle 
+                                        size={18} 
+                                        className={`transition-colors ${isDark ? 'text-[#a8e070]' : 'text-[#375421]'}`} 
+                                        strokeWidth={3} 
+                                    />
+                                </div>
+                                
+                                <div className="flex-1 space-y-1">
+                                    <div className="flex items-center justify-between gap-4">
+                                        <h4
+                                            className={`text-[12px] font-black uppercase tracking-[0.16em] leading-tight transition-colors ${!data?.extra?.text_color && (isDark ? 'text-white' : 'text-[#1a1f14]')}`}
+                                            style={data?.extra?.text_color ? { color: data.extra.text_color } : {}}
+                                        >
+                                            {item.name}
+                                        </h4>
+                                        {item.tag && (
+                                            <span className={`px-4 py-1.5 rounded-full text-[9px] font-black tracking-[0.1em] uppercase border ${isDark ? 'border-white/20 text-white/50' : 'border-[#9ed36a]/30 text-[#2d5a1b] bg-[#f0f9ea]'}`}>
+                                                {item.tag}
+                                            </span>
+                                        )}
+                                    </div>
+                                    
+                                    {(item.subtitle || item.description) && (
+                                        <p
+                                            className={`text-[13px] leading-relaxed max-w-xl ${!data?.extra?.text_color && (isDark ? 'text-white/60' : 'text-gray-500 font-medium')}`}
+                                            style={data?.extra?.text_color ? { color: data.extra.text_color, opacity: 0.7 } : {}}
+                                        >
+                                            {item.subtitle || item.description} {item.price && <span className="font-bold opacity-100 ml-2 text-sm">₹{item.price}</span>}
+                                        </p>
+                                    )}
+                                </div>
                             </div>
-                            {item.tag && (
-                                <span className={`px-4 py-1.5 rounded-full text-[10px] font-bold tracking-tight border ${isDark ? 'border-white/20 text-white/60' : 'border-[#9ed36a]/30 text-[#2d5a1b] bg-[#f0f9ea]'}`}>
-                                    {item.tag}
-                                </span>
-                            )}
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             )}
         </div>
     );
 };
 
-const SubscriptionForm = ({ data, config, isDark }) => (
-    <div className="relative overflow-hidden group space-y-10">
-        <form className="relative">
-            <div className={`absolute left-7 top-1/2 -translate-y-1/2 ${isDark ? 'text-[#a8e070]' : 'text-[#2d5a1b]'}`}><Mail size={22} /></div>
-            <input 
-                type="email" 
-                placeholder="Enter your email" 
-                className={`w-full border rounded-3xl py-7 pl-16 pr-44 transition-all shadow-inner focus:outline-none ${isDark ? 'bg-white/5 border-white/20 text-white focus:border-[#a8e070]/50 placeholder:text-white/30' : 'bg-black/5 border-black/10 text-black focus:border-[#2d5a1b]/50 placeholder:text-black/30'}`} 
-            />
-            <button 
-                type="submit" 
-                className={`absolute right-3 top-3 bottom-3 px-8 rounded-2xl text-[14px] font-extrabold flex items-center gap-3 transition-all ${isDark ? 'bg-[#a8e070] text-[#1a3d0a] hover:bg-white' : 'bg-[#1a3d0a] text-white hover:bg-black'}`}
-            >
-                JOIN <ArrowRight size={18} />
-            </button>
-        </form>
-        {data.extra?.disclaimer && <p className={`text-[11px] tracking-wide ${isDark ? 'text-white/40' : 'text-black/40'}`}>{data.extra.disclaimer}</p>}
-    </div>
-);
+const SubscriptionForm = ({ data, config, isDark }) => {
+    const [isHovered, setIsHovered] = useState(false);
+    const btnPrimaryColor = data.extra?.btn_primary_color || (isDark ? '#a8e070' : '#1a3d0a');
+    const btnSecondaryColorRaw = data.extra?.btn_secondary_color || data.extra?.text_color || (isDark ? '#ffffff' : '#1a3d0a');
+
+    const bgColor = isHovered ? btnSecondaryColorRaw : btnPrimaryColor;
+    const textColor = isHovered ? btnPrimaryColor : btnSecondaryColorRaw;
+    const borderColor = btnSecondaryColorRaw;
+    const shadowStyle = isHovered ? 'none' : `6px 6px 0px 0px ${hexToRgba(btnSecondaryColorRaw, 0.2)}`;
+
+    return (
+        <div className="relative overflow-hidden group space-y-10">
+            <form className="relative">
+                <div className={`absolute left-7 top-1/2 -translate-y-1/2 ${isDark ? 'text-[#a8e070]' : 'text-[#2d5a1b]'}`}><Mail size={22} /></div>
+                <input
+                    type="email"
+                    placeholder="Enter your email"
+                    className={`w-full border rounded-3xl py-7 pl-16 pr-44 transition-all shadow-inner focus:outline-none ${isDark ? 'bg-white/5 border-white/20 text-white focus:border-[#a8e070]/50 placeholder:text-white/30' : 'bg-black/5 border-black/10 text-black focus:border-[#2d5a1b]/50 placeholder:text-black/30'}`}
+                />
+                <button
+                    type="submit"
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    className="absolute right-3 top-3 bottom-3 px-10 rounded-2xl text-[12px] font-black tracking-[0.1em] uppercase flex items-center justify-center gap-2 transition-all duration-300 border-2 active:scale-[0.96]"
+                    style={{
+                        backgroundColor: bgColor,
+                        color: textColor,
+                        borderColor: borderColor,
+                        boxShadow: shadowStyle
+                    }}
+                >
+                    JOIN <ArrowRight size={14} strokeWidth={3} />
+                </button>
+            </form>
+            {data.extra?.disclaimer && <p className={`text-[11px] tracking-wide ${isDark ? 'text-white/40' : 'text-black/40'}`}>{data.extra.disclaimer}</p>}
+        </div>
+    );
+};
 
 const StaticImageGrid = ({ data, isDark }) => (
     <div className="grid grid-cols-2 gap-5 h-[400px] lg:h-[640px] animate-fade-in relative">
-        <div 
+        <div
             className="relative bg-[#cee8a0] rounded-[60px] overflow-hidden row-span-2 shadow-2xl group border-8 border-white/10"
             style={data.extra?.product_card_color ? { backgroundColor: data.extra.product_card_color } : {}}
         >
@@ -268,13 +372,13 @@ const StaticImageGrid = ({ data, isDark }) => (
                 </div>
             )}
         </div>
-        <div 
+        <div
             className="relative bg-[#cee8a0] rounded-[40px] overflow-hidden shadow-2xl group hover:scale-[1.02] transition-transform"
             style={data.extra?.product_card_color ? { backgroundColor: data.extra.product_card_color } : {}}
         >
             <Image src={processUrl(data.image_secondary || data.image)} alt="V2" fill className="object-cover" />
         </div>
-        <div 
+        <div
             className="relative bg-[#d4e8a0] rounded-[40px] overflow-hidden shadow-2xl group hover:scale-[1.02] transition-transform"
             style={data.extra?.product_card_color ? { backgroundColor: data.extra.product_card_color } : {}}
         >
@@ -306,8 +410,8 @@ const BentoProductGrid = ({ products, isDark, data }) => {
                 {products[1] ? (
                     <ProductCard product={products[1].product_data || products[1]} variant="bento" />
                 ) : (
-                    <div 
-                        className={`w-full h-full rounded-[40px] border border-dashed ${isDark ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/10'}`} 
+                    <div
+                        className={`w-full h-full rounded-[40px] border border-dashed ${isDark ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/10'}`}
                         style={data?.extra?.product_card_color ? { backgroundColor: data.extra.product_card_color, borderColor: 'transparent' } : {}}
                     />
                 )}
@@ -322,8 +426,8 @@ const BentoProductGrid = ({ products, isDark, data }) => {
                         ))}
                     </div>
                 ) : (
-                    <div 
-                        className={`w-full h-full rounded-[40px] border border-dashed ${isDark ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/10'}`} 
+                    <div
+                        className={`w-full h-full rounded-[40px] border border-dashed ${isDark ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/10'}`}
                         style={data?.extra?.product_card_color ? { backgroundColor: data.extra.product_card_color, borderColor: 'transparent' } : {}}
                     />
                 )}
@@ -341,15 +445,15 @@ const UnifiedSection = ({ data }) => {
     const type = data.section_type || 'default';
     const items = data.items?.filter(i => i.is_active) || [];
     const products = data.product_cards?.filter(p => p.is_active) || [];
-    
+
     // Logic: Shift items to the right visual column if no products are there
     const hasProducts = products.length > 0;
     const hasItems = items.length > 0;
-    
+
     // Logic: Inverted 2-1 Pattern (Sections 1,2 = Left | Section 3 = Right | 4,5 = Left | 6 = Right)
     const sectionIndex = data.id || data.order || 1;
     const isReversed = sectionIndex % 3 === 0;
-    
+
     const styleConfig = {
         hero: { bg: "bg-[#1a3d0a]", title: "text-white", highlight: "text-[#a8e070]", accent: "bg-[#4a8a2a] text-white", isDark: true },
         climate: { bg: "bg-[#1a3d0a]", title: "text-white", highlight: "text-[#a8e070]", accent: "bg-[#4a8a2a] text-white", isDark: true },
@@ -357,34 +461,34 @@ const UnifiedSection = ({ data }) => {
         gardener: { bg: "bg-[#f9faf6]", title: "text-[#1a1f14]", highlight: "text-[#2d5a1b]", accent: "bg-[#2d5a1b] text-white", isDark: false },
         subscription: { bg: "bg-[#111111]", title: "text-white", highlight: "text-[#a8e070]", accent: "bg-[#a8e070] text-[#1a3d0a]", isDark: true }
     };
-    
+
     // API Priority Styles
     const apiBgColor = data.extra?.bg_color;
     const apiIsDark = data.extra?.is_dark !== undefined ? data.extra.is_dark : getIsDark(apiBgColor);
-    
+
     const config = styleConfig[type] || styleConfig.hero;
     const isDark = apiIsDark !== null ? apiIsDark : config.isDark;
 
     return (
-        <section 
-            className={`py-20 lg:py-32 ${config.bg} relative overflow-hidden`}
+        <section
+            className={`py-8 lg:py-16 ${config.bg} relative overflow-hidden`}
             style={data.extra?.bg_color ? { backgroundColor: data.extra.bg_color } : {}}
         >
             {isDark && <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-black/20 to-transparent pointer-events-none" />}
-            
-            <div className="max-w-[1440px] mx-auto px-6 lg:px-16 relative">
-                <div className={`flex flex-col lg:flex-row gap-10 lg:gap-16 lg:items-center ${isReversed ? 'lg:flex-row-reverse' : ''}`}>
+
+            <div className="max-w-[1300px] mx-auto px-5 lg:px-12 relative">
+                <div className={`flex flex-col lg:flex-row gap-6 lg:gap-16 lg:items-center ${isReversed ? 'lg:flex-row-reverse' : ''}`}>
                     {/* Header Column: Title and Description */}
-                    <div className={`w-full lg:w-[42%] space-y-10 animate-fade-in ${isReversed ? 'lg:pl-16' : 'lg:pr-10'}`}>
+                    <div className={`w-full lg:w-[42%] space-y-2 animate-fade-in ${isReversed ? 'lg:pl-12' : 'lg:pr-8'}`}>
                         <SectionHeader data={data} config={config} isDark={isDark} type={type} />
-                        
+
                         {type === 'subscription' && <SubscriptionForm data={data} config={config} isDark={isDark} />}
-                        
+
                         {/* Items on left only if products are present on right */}
                         {hasItems && hasProducts && <ItemsRenderer items={items} isDark={isDark} data={data} />}
-                        
+
                         <ActionButtons data={data} config={config} isDark={isDark} type={type} />
-                        
+
                         {type === 'hero' && <StatsRenderer data={data} isDark={isDark} />}
                     </div>
 
@@ -393,10 +497,7 @@ const UnifiedSection = ({ data }) => {
                         {hasProducts ? (
                             <BentoProductGrid products={products} isDark={isDark} data={data} />
                         ) : hasItems ? (
-                            <div 
-                                className={`p-8 lg:p-12 rounded-[64px] border backdrop-blur-xl animate-fade-in ${isDark ? 'bg-white/5 border-white/10' : 'bg-black/[0.02] border-black/[0.05]'}`}
-                                style={data.extra?.product_card_color ? { backgroundColor: `${data.extra.product_card_color}1a`, borderColor: `${data.extra.product_card_color}33` } : {}}
-                            >
+                            <div className="animate-fade-in">
                                 <ItemsRenderer items={items} isDark={isDark} data={data} />
                             </div>
                         ) : (
@@ -407,17 +508,17 @@ const UnifiedSection = ({ data }) => {
 
                 {/* Secondary Extension (Below Main Grid) */}
                 {data.heading_secondary && (
-                    <div className={`flex flex-col lg:flex-row gap-16 items-center border-t border-black/5 pt-32 mt-32 ${isReversed ? 'lg:flex-row-reverse' : ''}`}>
-                        <div className="w-full lg:w-1/2 relative aspect-[4/3] rounded-[64px] overflow-hidden shadow-2xl border-[16px] border-white/50">
+                    <div className={`flex flex-col lg:flex-row gap-10 items-center border-t border-black/5 pt-16 mt-20 ${isReversed ? 'lg:flex-row-reverse' : ''}`}>
+                        <div className="w-full lg:w-1/2 relative aspect-[4/3] rounded-[48px] overflow-hidden shadow-2xl border-[8px] border-white/50">
                             <Image src={processUrl(data.image)} alt="Secondary Visual" fill className="object-cover" />
                         </div>
-                        <div className="w-full lg:w-1/2 space-y-10">
-                            <h3 
-                                className={`text-3xl lg:text-[48px] font-serif font-bold leading-tight ${!data.extra?.color && config.title}`}
+                        <div className="w-full lg:w-1/2 space-y-6">
+                            <h3
+                                className={`text-2xl lg:text-[36px] font-serif font-bold leading-tight ${!data.extra?.color && config.title}`}
                                 style={data.extra?.color ? { color: data.extra.color } : {}}
                             >{data.heading_secondary}</h3>
-                            <p 
-                                className={`text-[17px] leading-loose border-l-4 border-[#8dbd64]/20 pl-8 italic ${!data.extra?.text_color && (isDark ? 'text-white/60' : 'text-[#4a5f3a]')}`}
+                            <p
+                                className={`text-[15px] leading-relaxed border-l-3 border-[#8dbd64]/20 pl-6 italic ${!data.extra?.text_color && (isDark ? 'text-white/60' : 'text-[#4a5f3a]')}`}
                                 style={data.extra?.text_color ? { color: data.extra.text_color, opacity: 0.8 } : {}}
                             >{data.description_secondary}</p>
                         </div>
