@@ -137,13 +137,13 @@ const ActionButtons = ({ data, config, isDark, type }) => {
     const shadowStyle2 = isP2Hovered ? 'none' : `6px 6px 0px 0px ${hexToRgba(p2Color, 0.2)}`;
 
     return (
-        <div className="flex items-center gap-5 pt-3 overflow-x-visible">
+        <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-4 lg:gap-5 pt-3 overflow-x-visible">
             {data.btn1_text && (
                 <a
                     href={data.btn1_link}
                     onMouseEnter={() => setIsP1Hovered(true)}
                     onMouseLeave={() => setIsP1Hovered(false)}
-                    className="px-12 py-4.5 rounded-2xl text-[12px] font-black uppercase tracking-[0.1em] flex items-center justify-center gap-2 transition-all duration-300 active:scale-[0.96] border-2 whitespace-nowrap shrink-0"
+                    className="w-full lg:w-auto px-12 py-4.5 rounded-2xl text-[12px] font-black uppercase tracking-[0.1em] flex items-center justify-center gap-2 transition-all duration-300 active:scale-[0.96] border-2 whitespace-nowrap shrink-0"
                     style={{ 
                         backgroundColor: b1Bg, 
                         color: b1Text,
@@ -159,7 +159,7 @@ const ActionButtons = ({ data, config, isDark, type }) => {
                     href={data.btn2_link}
                     onMouseEnter={() => setIsP2Hovered(true)}
                     onMouseLeave={() => setIsP2Hovered(false)}
-                    className="px-12 py-4.5 rounded-2xl text-[12px] font-black uppercase tracking-[0.1em] flex items-center justify-center gap-2 transition-all duration-300 backdrop-blur-md border-2 active:scale-[0.96] whitespace-nowrap shrink-0"
+                    className="w-full lg:w-auto px-12 py-4.5 rounded-2xl text-[12px] font-black uppercase tracking-[0.1em] flex items-center justify-center gap-2 transition-all duration-300 backdrop-blur-md border-2 active:scale-[0.96] whitespace-nowrap shrink-0"
                     style={{
                         backgroundColor: b2Bg,
                         color: b2Text,

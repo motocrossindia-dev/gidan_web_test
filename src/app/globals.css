@@ -12,41 +12,62 @@
   --color-emerald-800: #243615;
   --color-site-bg: #f8f7f0;
 }
+
 @layer base {
   body {
     background-color: #f8f7f0;
   }
+
   .bg-bio-green {
     background-color: #375421;
   }
+
   .text-bio-green {
     color: #375421;
   }
+
   .border-bio-green {
     border-color: #375421;
   }
+
   .hover\:bg-bio-green:hover {
     background-color: #375421;
   }
 }
+
 /* Apply font globally */
 body {
   font-family: var(--font-sans);
 }
 
 @keyframes slide-left {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
 }
 
 @keyframes slide-in-right {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
 }
 
 @keyframes shimmer {
-  0% { transform: skewX(-25deg) translateX(-150%); }
-  100% { transform: skewX(-25deg) translateX(150%); }
+  0% {
+    transform: skewX(-25deg) translateX(-150%);
+  }
+
+  100% {
+    transform: skewX(-25deg) translateX(150%);
+  }
 }
 
 .animate-slide-left {
@@ -57,9 +78,42 @@ body {
   animation: slide-in-right 0.3s ease-out;
 }
 
-/* Tawk.to mobile override to dodge bottom navigation bar */
+/* ── MASTER TAWK.TO POSITIONING (High-Visibility & Nav Clearance) ── */
+iframe[title="chat widget"], 
+#tawk-chat-widget-container,
+iframe[id^="tawk"] {
+    bottom: 90px !important; /* Raised on Desktop */
+    right: 50px !important;
+}
+
 @media (max-width: 768px) {
-  iframe[title="chat widget"] {
-    bottom: 110px !important;
+    /* Extreme Lift for Mobile to clear Nav + Badges */
+    iframe[title="chat widget"], 
+    #tawk-chat-widget-container,
+    iframe[id^="tawk"] {
+        bottom: 190px !important;
+        right: 35px !important;
+        left: auto !important;
+    }
+
+    /* Expansive Layout when maximized */
+    iframe[title="chat widget"][style*="height: 100%"],
+    iframe[title="chat widget"][style*="height: auto"] {
+        top: 20vh !important;
+        left: 10px !important;
+        right: 10px !important;
+        width: calc(100% - 20px) !important;
+        height: auto !important;
+    }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }
