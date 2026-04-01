@@ -5,33 +5,33 @@ import { usePathname } from 'next/navigation';
 import Script from 'next/script';
 
 const TawkChat = () => {
-    const pathname = usePathname();
+  const pathname = usePathname();
 
-    // Pages where Tawk.to should be hidden
-    const hiddenPages = ['/checkout', '/cart', '/payment', '/profile', '/successpage', '/order-success', '/thankyou'];
-    const shouldHide = hiddenPages.some(page => pathname.startsWith(page));
+  // Pages where Tawk.to should be hidden
+  const hiddenPages = ['/checkout', '/cart', '/payment', '/profile', '/successpage', '/order-success', '/thankyou'];
+  const shouldHide = hiddenPages.some(page => pathname.startsWith(page));
 
-    useEffect(() => {
-        if (typeof window !== 'undefined' && window.Tawk_API) {
-            if (shouldHide) {
-                try {
-                    window.Tawk_API.hideWidget();
-                } catch (e) {
-                    console.error("Error hiding Tawk widget", e);
-                }
-            } else {
-                try {
-                    window.Tawk_API.showWidget();
-                } catch (e) {
-                    // Script not loaded yet
-                }
-            }
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.Tawk_API) {
+      if (shouldHide) {
+        try {
+          window.Tawk_API.hideWidget();
+        } catch (e) {
+          console.error("Error hiding Tawk widget", e);
         }
-    }, [shouldHide, pathname]);
+      } else {
+        try {
+          window.Tawk_API.showWidget();
+        } catch (e) {
+          // Script not loaded yet
+        }
+      }
+    }
+  }, [shouldHide, pathname]);
 
-    return (
-        <Script id="tawk-to" strategy="lazyOnload">
-            {`
+  return (
+    <Script id="tawk-to" strategy="lazyOnload">
+      {`
                 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
                 Tawk_API.customStyle = {
                     visibility : {
@@ -57,8 +57,8 @@ const TawkChat = () => {
                     s0.parentNode.insertBefore(s1,s0);
                 })();
             `}
-        </Script>
-    );
+    </Script>
+  );
 };
 
 export default TawkChat;

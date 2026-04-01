@@ -78,32 +78,29 @@ body {
   animation: slide-in-right 0.3s ease-out;
 }
 
-/* ── MASTER TAWK.TO POSITIONING (High-Visibility & Nav Clearance) ── */
-iframe[title="chat widget"], 
-#tawk-chat-widget-container,
-iframe[id^="tawk"] {
-    bottom: 90px !important; /* Raised on Desktop */
-    right: 50px !important;
+/* ── MASTER TAWK.TO POSITIONING (Lifted as a single unit) ── */
+#tawk-chat-widget-container {
+    bottom: 100px !important; /* Base lift for the entire stack */
+    right: 40px !important;
 }
 
 @media (max-width: 768px) {
-    /* Extreme Lift for Mobile to clear Nav + Badges */
-    iframe[title="chat widget"], 
-    #tawk-chat-widget-container,
-    iframe[id^="tawk"] {
-        bottom: 190px !important;
-        right: 35px !important;
-        left: auto !important;
+    #tawk-chat-widget-container {
+        /* Lift the entire stack (bubble + chips) together */
+        bottom: 180px !important;
+        right: 25px !important;
     }
 
-    /* Expansive Layout when maximized */
+    /* Only apply the top/width overrides to the main panel when it's maximized */
+    /* Note: We target the iframe specifically for the panel layout */
     iframe[title="chat widget"][style*="height: 100%"],
     iframe[title="chat widget"][style*="height: auto"] {
         top: 20vh !important;
         left: 10px !important;
         right: 10px !important;
         width: calc(100% - 20px) !important;
-        height: auto !important;
+        border-radius: 28px 28px 0 0 !important;
+        bottom: 120px !important; /* Gap at the bottom when panel is open */
     }
 }
 
