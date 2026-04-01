@@ -114,29 +114,23 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://checkout.razorpay.com" />
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
 
-        {/* Logo/favicon theme switch — ONLY this tiny critical path stays beforeInteractive */}
+        {/* 1. Critical Header: Unregister any legacy Service Workers to prevent stale HTML/CSS caching which causes "Application Errors" on mobile */}
+        <Script id="sw-cleanup" strategy="beforeInteractive">
+          {`if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(regs){regs.forEach(function(reg){reg.unregister();});});}`}
+        </Script>
+
+        {/* 2. Theme Management: Ensure favicon and logo match browser color scheme immediately */}
         <Script id="theme-logo" strategy="beforeInteractive">
           {`(function(){function u(d){var f=document.querySelector('link[rel="icon"]'),a=document.querySelector('link[rel="apple-touch-icon"]'),o=location.origin;if(f)f.href=o+(d?'/logo-white.webp':'/logo.webp');if(a)a.href=o+(d?'/logo-white.webp':'/logo.webp');}var m=window.matchMedia('(prefers-color-scheme: dark)');u(m.matches);m.addEventListener('change',function(e){u(e.matches);});})();`}
         </Script>
 
-        {/* SW cleanup + GTM rogue text fix — deferred afterInteractive, never blocks paint */}
-        <Script id="sw-gtm-cleanup" strategy="afterInteractive">
-          {`
-            if('serviceWorker'in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(reg){reg.unregister();});});}
-            (function(){
-              var bad=function(t){return t&&(t.includes("fbq('track'")||(t.includes('ViewContent')&&t.includes('[object Object]')));},
-              clean=function(n){
-                if(!n)return;
-                if(n.nodeType===3){if(bad(n.textContent)&&n.parentNode&&!['SCRIPT','STYLE','HEAD'].includes(n.parentNode.tagName))n.textContent='';}
-                else if(n.nodeType===1&&!['SCRIPT','STYLE','HEAD'].includes(n.tagName)){
-                  if(bad(n.textContent)){var w=document.createTreeWalker(n,4,null,false),x;while(x=w.nextNode()){if(bad(x.textContent)&&x.parentNode&&!['SCRIPT','STYLE','HEAD'].includes(x.parentNode.tagName))x.textContent='';}}
-                }
-              };
-              if(document.documentElement)clean(document.documentElement);
-              new MutationObserver(function(ms){ms.forEach(function(m){if(m.type==='childList')m.addedNodes.forEach(clean);else if(m.type==='characterData')clean(m.target);});}).observe(document.documentElement,{childList:true,subtree:true,characterData:true});
-              window.addEventListener('load',function(){clean(document.body);});
-            })();
-          `}
+        {/* 3. DOM Guard: Prevents external trackers from modifying the DOM which breaks React hydration */}
+        <Script id="dom-guard" strategy="afterInteractive">
+          {`(function(){
+              function bad(t){return t&&(t.includes("fbq('track'")||t.includes('ViewContent'));}
+              function clean(n){if(n&&n.nodeType===3&&bad(n.textContent))n.parentNode.removeChild(n);}
+              if(window.MutationObserver){new MutationObserver(function(ms){ms.forEach(function(m){if(m.type==='childList')m.addedNodes.forEach(clean);});}).observe(document.documentElement,{childList:true,subtree:true});}
+            })();`}
         </Script>
       </head>
       <body className={`${nunitoSans.variable} font-sans antialiased`} suppressHydrationWarning>
@@ -177,7 +171,7 @@ export default function RootLayout({
           </div>
 
           <div className="landing-page-layout w-full min-h-screen flex flex-col relative">
-            <main className="main-content w-full pb-32 md:pb-0">
+            <main className="main-content w-full">
               <div className="hidden md:block">
                 <Suspense fallback={null}>
                   <StaticBreadcrumb />

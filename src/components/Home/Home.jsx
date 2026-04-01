@@ -33,7 +33,7 @@ const Home = ({
   );
 
   return (
-    <div className="bg-[#faf9f6] pb-20">
+    <div className="bg-[#faf9f6]">
       <ResourceHints />
 
       {homeData?.sections?.map((section, index) => {

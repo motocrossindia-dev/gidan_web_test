@@ -15,6 +15,9 @@ const StoreCard = ({ store }) => {
                 <img 
                     src={`${process.env.NEXT_PUBLIC_API_URL}${store.image}`} 
                     alt={store.location}
+                    onError={(e) => {
+                        e.target.src = "/placeholder-product.png";
+                    }}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 

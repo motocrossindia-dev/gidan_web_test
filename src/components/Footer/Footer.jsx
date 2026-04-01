@@ -82,7 +82,7 @@ const Footer = () => {
     };
 
     return (
-        <footer className="bg-white  border-black-100 py-8 px-4 md:px-16 font-sans mt-8">
+        <footer className="bg-white border-black-100 pb-8 pt-8 px-4 md:px-16 font-sans mt-0">
             <div className="container mx-auto grid grid-cols-1 md:grid-cols-5 md:gap-8 ">
 
                 {/* Quick Links */}
@@ -302,7 +302,7 @@ const Footer = () => {
 
             </div>
 
-            <div className="mt-6 text-left text-xs text-gray-600">
+            <div className="mt-4 text-left text-xs text-gray-600">
                 <p>© FARM AMMINO AGRITECH PRIVATE LIMITED. All rights reserved.</p>
             </div>
         </footer>

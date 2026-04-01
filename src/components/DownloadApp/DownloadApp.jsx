@@ -4,9 +4,9 @@ import { Star, Smartphone, Package, Clock, Leaf } from "lucide-react";
 
 const DownloadApp = () => {
     return (
-        <section className="relative w-full bg-[#173113] py-12 lg:py-0 lg:h-[440px] xl:h-[480px] px-6 lg:px-16 overflow-hidden flex items-center" style={{ backgroundColor: "#173113" }}>
+        <section className="relative w-full bg-[#173113] py-12 lg:py-0 lg:h-[440px] xl:h-[480px] px-6 lg:px-16 overflow-hidden flex items-center mb-0" style={{ backgroundColor: "#173113" }}>
 
-            <div className="w-full max-w-7xl mx-auto relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8 h-full">
+            <div className="w-full max-w-7xl mx-auto relative z-10 flex flex-col lg:flex-row pt-10 items-center justify-between gap-12 lg:gap-8 h-full">
                 {/* Left Content */}
                 <div className="w-full lg:w-[50%] xl:w-[55%] flex flex-col items-start text-left z-20">
                     <span className="text-[10px] text-[#A7D949] tracking-[0.2em] uppercase font-bold mb-3">
@@ -22,8 +22,7 @@ const DownloadApp = () => {
                         App-only deals, live order tracking, plant care reminders, and seamless shopping — always just a tap away.
                     </p>
 
-                    {/* Feature Pills (Matches User Screenshot Style) */}
-                    <div className="flex flex-wrap gap-2.5 mb-8">
+                    <div className="flex flex-wrap gap-2.5 mb-2">
                         <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/20 bg-transparent text-[11px] text-white/90">
                             <Smartphone className="w-3.5 h-3.5 text-[#A7D949]" /> App-only deals
                         </div>
@@ -39,11 +38,11 @@ const DownloadApp = () => {
                     </div>
 
                     {/* Full Logo Badge Buttons - Horizontal & Massive - Reduced Gap */}
-                    <div className="flex flex-row flex-wrap items-center justify-center lg:justify-start gap-4 w-full">
+                    <div className="flex flex-row flex-wrap items-center justify-center lg:justify-start gap-2 w-full mt-[-40px]">
                         {/* Google Play - Full Badge */}
                         <a
                             href="#"
-                            className="group transition-all duration-300 hover:scale-105 active:scale-95 block h-[120px] md:h-[150px] min-w-[200px]"
+                            className="group transition-all duration-300 hover:scale-105 active:scale-95 block h-[120px] md:h-[150px]"
                         >
                             <Image
                                 src="/playstore.svg"
@@ -58,7 +57,7 @@ const DownloadApp = () => {
                         {/* App Store - Full Badge */}
                         <a
                             href="#"
-                            className="group transition-all duration-300 hover:scale-105 active:scale-95 block h-[120px] md:h-[150px] min-w-[200px]"
+                            className="group transition-all duration-300 hover:scale-105 active:scale-95 block h-[120px] md:h-[150px]"
                         >
                             <Image
                                 src="/appstore.svg"

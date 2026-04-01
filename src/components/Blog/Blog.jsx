@@ -89,6 +89,9 @@ const Blog = ({ categoryId = null }) => {
                                         <img 
                                             src={`${process.env.NEXT_PUBLIC_API_URL}${blog.image}`} 
                                             alt={blog.title}
+                                            onError={(e) => {
+                                                e.target.src = "/logo.webp";
+                                            }}
                                             className="w-32 h-32 object-contain drop-shadow-[0_15px_30px_rgba(0,0,0,0.25)]"
                                         />
                                     ) : (
