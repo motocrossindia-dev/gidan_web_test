@@ -20,6 +20,7 @@ const ProductGrid = ({
   subcategorySlug: propSubcategorySlug,
   bottomContent = null,
   searchTerm = "",
+  hidePagination = false,
 }) => {
 
   const router = useRouter();
@@ -291,13 +292,15 @@ const ProductGrid = ({
         </div>
       )}
 
-      {/* Pagination Controls */}
-      {totalPages > 1 && renderPagination()}
+      {/* Trust Section and Bottom Content - Now above pagination */}
+      {bottomContent && (
+        <div className="mt-12">
+          {bottomContent}
+        </div>
+      )}
 
-      {/* Trust Section and Bottom Content */}
-      <div className="mt-12">
-        {bottomContent}
-      </div>
+      {/* Pagination Controls - Conditionally hidden */}
+      {!hidePagination && totalPages > 1 && renderPagination()}
 
     </div>
   );

@@ -21,6 +21,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import CategoryStaticSEO from "../Info/CategoryStaticSEO";
 import axiosInstance from "../../../Axios/axiosInstance";
 import logo from "../../../Assets/Gidan_logo.webp";
+import Pagination from "../../../components/Shared/Pagination";
 
 
 
@@ -92,7 +93,7 @@ function PlantFilter({
     // Use props for SSR stability, fall back to client-side hooks
     const effectiveCategorySlug = propCategorySlug || categorySlug;
     const effectiveSubcategorySlug = propSubcategorySlug || subcategorySlug;
-    
+
     // Helper to make slugs readable if API name is missing
     const toTitleCase = (str) => {
         if (!str) return "";
@@ -212,7 +213,6 @@ function PlantFilter({
 
     const [currentQuery, setCurrentQuery] = useState(initialQueryString);
     const [filtersApplied, setFiltersApplied] = useState(() => {
-        // Initialize as true if there are search parameters or active filters in the URL
         if (typeof window !== 'undefined') {
             const params = new URLSearchParams(window.location.search);
             return params.has('query') || params.has('color_id') || params.has('min_price') || params.has('max_price');
@@ -220,13 +220,61 @@ function PlantFilter({
         return false;
     });
     const [isSearching, setIsSearching] = useState(false);
+    const [currentPage, setCurrentPage] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return parseInt(new URLSearchParams(window.location.search).get('page') || '1');
+        }
+        return 1;
+    });
+    const pageSize = 12;
 
+    // Sync currentQuery when filters are cleared
     useEffect(() => {
         if (!filtersApplied) {
-            setCurrentCategorySlug(propCategorySlug || categorySlug || "");
-            setCurrentSubcategorySlug(propSubcategorySlug || subcategorySlug || "");
+            setCurrentQuery(initialQueryString);
+            setCurrentPage(1);
         }
-    }, [propCategorySlug, categorySlug, propSubcategorySlug, subcategorySlug, filtersApplied]);
+    }, [initialQueryString, filtersApplied]);
+
+    const handlePageChange = async (pageNumber, isArrowClick = false) => {
+        setIsSearching(true);
+        setCurrentPage(pageNumber);
+        try {
+            const queryParams = new URLSearchParams(currentQuery);
+            const response = await axiosInstance.get(
+                `/filters/main_productsFilter/?${queryParams}&page_size=${pageSize}&page=${pageNumber}`
+            );
+
+            if (response.status === 200) {
+                setResults(response.data.results || []);
+                setProducts({
+                    count: response.data.count,
+                    next: response.data.next,
+                    previous: response.data.previous,
+                });
+                
+                if (typeof window !== 'undefined') {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('page', pageNumber.toString());
+                    window.history.replaceState(null, '', url.pathname + url.search);
+                }
+
+                const gridElem = document.getElementById('product-grid-container');
+                if (gridElem) {
+                    const offset = isArrowClick ? 200 : 100;
+                    window.scrollTo({
+                        top: gridElem.offsetTop - offset,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        } catch (error) {
+            console.error("Error changing page:", error);
+        } finally {
+            setIsSearching(false);
+        }
+    };
+
     const getProducts = async () => {
         setIsSearching(true);
         try {
@@ -250,19 +298,13 @@ function PlantFilter({
         }
     };
 
-    // Sync currentQuery when props/ids resolve so ProductGrid pagination stays correct
-    useEffect(() => {
-        if (!filtersApplied) {
-            setCurrentQuery(initialQueryString);
-        }
-    }, [initialQueryString, filtersApplied]);
-
     // SEO state — initialised from server-fetched data, updates reactively on subcategory filter changes
-    const [seoData, setSeoData] = useState(initialSEOData || initialCategoryData || normalizedInitialResults.category_info?.category_info || null);
+    const [seoData, setSeoData] = useState(initialSEOData || initialCategoryData || (typeof normalizedInitialResults === 'object' ? normalizedInitialResults.category_info?.category_info : null));
     const [isSubcategorySEO, setIsSubcategorySEO] = useState(() => {
-        const info = initialSEOData || initialCategoryData || normalizedInitialResults.category_info?.category_info;
+        const info = initialSEOData || initialCategoryData || (typeof normalizedInitialResults === 'object' ? normalizedInitialResults.category_info?.category_info : null);
         return !!(info?.subcategory_name || propSubcategorySlug);
     });
+;
 
     // iOS Swipeable Drawer patch to prevent body bounce
     const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -298,20 +340,16 @@ function PlantFilter({
         }
     }, []);
 
-    // Reset products only when category Slug actually changes (fundamental context change)
+
     useEffect(() => {
         if (effectiveCategorySlug) {
-            // Only reset if we are NOT in the middle of a sidebar interaction (which handles its own result updates)
+
             if (filtersApplied) return;
 
             setFiltersApplied(false);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, [effectiveCategorySlug]);
-
-    // (SEO sync is now handled directly by FilterSidebar via setSeoData prop)
-
-    // Handle slug to ID resolution
     useEffect(() => {
         const resolveSlugs = async () => {
             if (!effectiveCategorySlug) return;
@@ -445,11 +483,11 @@ function PlantFilter({
                             tags: activeInfo.tags || [],
                             stats: activeInfo.stats || [],
                             // Info cards and sections are often at the parent level or inherited from initial state
-                            info_cards: (activeInfo.info_cards && activeInfo.info_cards.length > 0) 
-                                ? activeInfo.info_cards 
+                            info_cards: (activeInfo.info_cards && activeInfo.info_cards.length > 0)
+                                ? activeInfo.info_cards
                                 : (parentObj?.info_cards?.length > 0 ? parentObj.info_cards : initialSEOData?.info_cards || []),
-                            sections: (activeInfo.sections && activeInfo.sections.length > 0) 
-                                ? activeInfo.sections 
+                            sections: (activeInfo.sections && activeInfo.sections.length > 0)
+                                ? activeInfo.sections
                                 : (parentObj?.sections || initialSEOData?.sections || [])
                         });
                     }
@@ -677,21 +715,48 @@ function PlantFilter({
                                     hasSubcategory={!!resolvedSubcategoryId}
                                     query={currentQuery}
                                     getProducts={getProducts}
-                                    bottomContent={
-                                        <div className="flex flex-col gap-12">
-                                            <CategoryStaticSEO
-                                                isLoading={isSearching}
-                                                info_cards={(seoData?.info_cards?.length > 0 ? seoData.info_cards : initialSEOData?.info_cards || [])}
-                                            />
-                                        </div>
-                                    }
+                                    hidePagination={true}
                                 />
                                 {isSearching && (
                                     <div className="flex justify-center py-8">
                                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#375421]"></div>
                                     </div>
                                 )}
+
+                                {/* Info Cards - Now just the grid, green text moved below pagination */}
+                                <div className="mt-16 pt-8 border-t border-gray-100">
+                                    <CategoryStaticSEO
+                                        isLoading={isSearching}
+                                        info_cards={(seoData?.info_cards?.length > 0 ? seoData.info_cards : initialSEOData?.info_cards || [])}
+                                    />
+                                </div>
                             </div>
+                        </div>
+                    </div>
+
+                    {/* Pagination - External and non-sticky */}
+                    <div className="py-8 w-full">
+                        <Pagination 
+                            currentPage={currentPage}
+                            totalPages={Math.ceil((products?.count || 0) / pageSize)}
+                            onPageChange={handlePageChange}
+                            isLoading={isSearching}
+                        />
+                    </div>
+
+                    {/* Store Mission / SEO Statement - Final element below pagination */}
+                    <div className="w-full pb-16 pt-8 bg-[#f8f7f0]/30">
+                        <div className="max-w-4xl mx-auto text-center px-4">
+                            {(seoData?.category_info_green_text || initialSEOData?.category_info_green_text) && (
+                                <h2 className="text-xl md:text-2xl font-black text-[#375421] uppercase tracking-wider mb-6 leading-tight">
+                                    {seoData?.category_info_green_text || initialSEOData?.category_info_green_text}
+                                </h2>
+                            )}
+                            {(seoData?.category_info_description || initialSEOData?.category_info_description) && (
+                                <p className="text-sm md:text-base text-gray-600 leading-relaxed max-w-3xl mx-auto font-medium opacity-90 italic">
+                                    {seoData?.category_info_description || initialSEOData?.category_info_description}
+                                </p>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -723,41 +788,41 @@ function PlantFilter({
                 </Box>
 
                 <Box sx={{ overflowY: 'auto', flex: 1 }}>
-                        <FilterSidebar
-                            setResults={setResults}
-                            setProducts={setProducts}
-                            setFiltersApplied={setFiltersApplied}
-                            setShowMobileFilter={setMobileOpen}
-                            categoryId={resolvedCategoryId}
-                            category={categoryName || fetchedCategoryName}
-                            subcategory={subCategoryName || fetchedSubcategoryName}
-                            subcategoryID={resolvedSubcategoryId}
-                            subcategorySlug={currentSubcategorySlug}
-                            categorySlug={currentCategorySlug}
-                            setCategorySlug={setCurrentCategorySlug}
-                            setSubcategorySlug={setCurrentSubcategorySlug}
-                            categoryIdFromSlug={resolvedCategoryId}
-                            typeKey={typeKey}
-                            setCategoryData={setCategoryData}
-                            setCurrentFilterType={setCurrentFilterType}
-                            isSeasonalCollection={isSeasonalCollection}
-                            isTrending={isTrending}
-                            isLatest={isLatest}
-                            isFeatured={isFeatured}
-                            isBestSeller={isBestSeller}
-                            setFetchedCategoryName={setFetchedCategoryName}
-                            setFetchedSubcategoryName={setFetchedSubcategoryName}
-                            setIsSearching={setIsSearching}
-                            initialFilterData={initialFilterData}
-                            setSeoData={setSeoData}
-                            setIsSubcategorySEO={setIsSubcategorySEO}
-                            subcategoryList={subcategoryListMemo}
-                            setCurrentQuery={setCurrentQuery}
-                            selectedPublicFlag={selectedPublicFlag}
-                            setSelectedPublicFlag={setSelectedPublicFlag}
-                            searchQuery={query}
-                            isMobile={true}
-                        />
+                    <FilterSidebar
+                        setResults={setResults}
+                        setProducts={setProducts}
+                        setFiltersApplied={setFiltersApplied}
+                        setShowMobileFilter={setMobileOpen}
+                        categoryId={resolvedCategoryId}
+                        category={categoryName || fetchedCategoryName}
+                        subcategory={subCategoryName || fetchedSubcategoryName}
+                        subcategoryID={resolvedSubcategoryId}
+                        subcategorySlug={currentSubcategorySlug}
+                        categorySlug={currentCategorySlug}
+                        setCategorySlug={setCurrentCategorySlug}
+                        setSubcategorySlug={setCurrentSubcategorySlug}
+                        categoryIdFromSlug={resolvedCategoryId}
+                        typeKey={typeKey}
+                        setCategoryData={setCategoryData}
+                        setCurrentFilterType={setCurrentFilterType}
+                        isSeasonalCollection={isSeasonalCollection}
+                        isTrending={isTrending}
+                        isLatest={isLatest}
+                        isFeatured={isFeatured}
+                        isBestSeller={isBestSeller}
+                        setFetchedCategoryName={setFetchedCategoryName}
+                        setFetchedSubcategoryName={setFetchedSubcategoryName}
+                        setIsSearching={setIsSearching}
+                        initialFilterData={initialFilterData}
+                        setSeoData={setSeoData}
+                        setIsSubcategorySEO={setIsSubcategorySEO}
+                        subcategoryList={subcategoryListMemo}
+                        setCurrentQuery={setCurrentQuery}
+                        selectedPublicFlag={selectedPublicFlag}
+                        setSelectedPublicFlag={setSelectedPublicFlag}
+                        searchQuery={query}
+                        isMobile={true}
+                    />
                 </Box>
             </SwipeableDrawer>
         </>

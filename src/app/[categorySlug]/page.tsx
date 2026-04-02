@@ -121,7 +121,9 @@ export default async function CategoryPage({ params }: Props) {
     subtitle: catInfo.subtitle || `${effectiveCategory.name} - Buy Online in India from Gidan.store`,
     tags: catInfo.tags || [],
     stats: catInfo.stats || [],
-    info_cards: catInfo.info_cards || catInfo.category_info?.info_cards || []
+    info_cards: catInfo.info_cards || catInfo.category_info?.info_cards || [],
+    category_info_green_text: catInfo.category_info_green_text || "",
+    category_info_description: catInfo.category_info_description || ""
   } : {
     title: effectiveCategory.name,
     subtitle: `${effectiveCategory.name} - Buy Online in India from Gidan.store`,
