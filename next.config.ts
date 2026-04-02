@@ -29,7 +29,6 @@ const nextConfig: NextConfig = {
 
   // Inline critical CSS and defer non-critical — fixes render-blocking CSS chunks
   experimental: {
-    optimizeCss: true,
     // Tree-shake react-icons barrel files — strips unused icon code from all 13 icon sets
     optimizePackageImports: [
       'react-icons/ai', 'react-icons/bs', 'react-icons/ci',
@@ -92,10 +91,11 @@ const nextConfig: NextConfig = {
   },
 
   // Enforce zero-caching for HTML to prevent "stale asset" errors on mobile
+  // We exclude /_next/ and /public/ assets to prevent breaking framework caching.
   async headers() {
     return [
       {
-        source: "/:path*",
+        source: "/((?!api|_next/static|_next/image|favicon.ico|logo.webp|logo-white.webp|.*\\..*).*)",
         headers: [
           {
             key: "Cache-Control",
@@ -120,11 +120,6 @@ const nextConfig: NextConfig = {
     );
     config.resolve.alias["react-helmet"] = shimPath;
     config.resolve.alias["react-helmet-async"] = shimPath;
-
-    // Advanced: Minify server-side output in production
-    if (!dev) {
-      config.optimization.minimize = true;
-    }
 
     return config;
   },

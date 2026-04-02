@@ -65,7 +65,7 @@ const CategoryHero = ({ data, breadcrumb }) => {
 
             {/* Integrated Standard Breadcrumb Bar - Optimized per user screenshot */}
             {breadcrumb && (
-                <div className="relative z-30 w-full bg-black/10 border-b border-white/5 py-3 mb-6 md:mb-10">
+                <div className="relative z-30 w-full py-3 mb-6 md:mb-10">
                     <motion.nav 
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
