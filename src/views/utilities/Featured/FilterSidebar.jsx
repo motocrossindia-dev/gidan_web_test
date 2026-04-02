@@ -215,12 +215,13 @@ const FilterSidebar = ({
   const hasSyncedFromUrl = useRef(false);
   useEffect(() => {
     if (availableTypes.length > 0 && !userInteracted.current && !userHasSelectedType && !hasSyncedFromUrl.current) {
-      const searchTerm = (category || categorySlug || "").toLowerCase();
+      // Normalize searchTerm and types (remove hyphens for comparison)
+      const searchTerm = (category || categorySlug || "").toLowerCase().replace(/-/g, "");
       if (searchTerm) {
         const singular = searchTerm.endsWith("s") ? searchTerm.slice(0, -1) : searchTerm;
         const match = availableTypes.find((t) => {
-          const tLower = t.toLowerCase();
-          return tLower === searchTerm || tLower === singular;
+          const tNormalized = t.toLowerCase().replace(/-/g, "");
+          return tNormalized === searchTerm || tNormalized === singular;
         });
         const finalType = match || availableTypes[0];
         if (finalType && selectedFilterType !== finalType) {

@@ -92,6 +92,13 @@ function PlantFilter({
     // Use props for SSR stability, fall back to client-side hooks
     const effectiveCategorySlug = propCategorySlug || categorySlug;
     const effectiveSubcategorySlug = propSubcategorySlug || subcategorySlug;
+    
+    // Helper to make slugs readable if API name is missing
+    const toTitleCase = (str) => {
+        if (!str) return "";
+        return str.toLowerCase().replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    };
+
     const derivedType = useMemo(() => {
         if (!effectiveCategorySlug) return null;
         const slug = effectiveCategorySlug.toLowerCase().replace(/-/g, '');
@@ -501,6 +508,14 @@ function PlantFilter({
     };
 
     const displayName = getDisplayName();
+
+    // Sync Document Title for Real-Time Client SEO
+    useEffect(() => {
+        if (typeof document !== 'undefined' && displayName) {
+            document.title = `${displayName} | Gidan Plants`;
+        }
+    }, [displayName]);
+
     const currentPath = typeof window !== 'undefined' ? window.location.pathname : pathname;
     const pathSegments = currentPath.split('/').filter(Boolean);
     const isSpecialRoute = routeBasedFilters.isSeasonalCollection || routeBasedFilters.isTrending || routeBasedFilters.isFeatured || routeBasedFilters.isBestSeller;
@@ -521,7 +536,7 @@ function PlantFilter({
         if (!canonicalSubcategorySlug) return [];
         return [
             {
-                label: categoryName || fetchedCategoryName || canonicalCategorySlug,
+                label: categoryName || fetchedCategoryName || toTitleCase(canonicalCategorySlug),
                 path: `/${canonicalCategorySlug}/`
             }
         ];
@@ -529,9 +544,9 @@ function PlantFilter({
 
     const breadcrumbPage = useMemo(() => {
         if (canonicalSubcategorySlug) {
-            return subCategoryName || fetchedSubcategoryName || canonicalSubcategorySlug;
+            return subCategoryName || fetchedSubcategoryName || toTitleCase(canonicalSubcategorySlug);
         }
-        return categoryName || fetchedCategoryName || canonicalCategorySlug;
+        return categoryName || fetchedCategoryName || toTitleCase(canonicalCategorySlug);
     }, [canonicalSubcategorySlug, subCategoryName, fetchedSubcategoryName, categoryName, fetchedCategoryName, canonicalCategorySlug]);
 
     // Helper for Bottom Info Cards Icon Mapping
