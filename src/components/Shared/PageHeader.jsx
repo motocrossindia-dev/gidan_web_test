@@ -11,7 +11,7 @@ const PageHeader = ({
     className = "" 
 }) => {
     return (
-        <section className={`relative w-full bg-[#173113] overflow-hidden ${className}`}>
+        <section className={`relative w-full bg-[#375421] overflow-hidden ${className}`}>
             {/* Botanical SVG Background Overlay (Matches Download App CTA style) */}
             <svg
                 className="absolute inset-0 w-full h-full object-cover opacity-10 pointer-events-none"
@@ -25,7 +25,7 @@ const PageHeader = ({
             </svg>
 
             {/* Gradient Overlay */}
-            <div className="absolute inset-0 z-[1] bg-gradient-to-r from-[#173113] via-[#173113]/90 to-transparent" />
+            <div className="absolute inset-0 z-[1] bg-gradient-to-r from-[#375421] via-[#375421]/90 to-transparent" />
 
             <div className="max-w-7xl mx-auto px-6 py-16 lg:py-24 relative z-10">
                 {/* Breadcrumb Container */}

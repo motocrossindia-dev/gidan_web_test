@@ -1,22 +1,34 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import PageHeader from "@/components/Shared/PageHeader";
+import CategoryHero from "@/components/Shared/CategoryHero";
 import { Shield, Lock, Eye, Database, Smartphone, Users, AlertTriangle, Scale, CheckCircle, Info } from 'lucide-react';
 import ReturnPolicySchema from "../../views/utilities/seo/ReturnPolicySchema";
 import HomepageSchema from "../../views/utilities/seo/HomepageSchema";
 import StoreSchema from "../../views/utilities/seo/StoreSchema";
 
 const PrivacyPolicy = () => {
+  const privacyHeroData = {
+    heading_before: "Privacy",
+    italic_text: "Policy",
+    heading_after: "Our Commitment",
+    description: "Your privacy is the root of our relationship. We are committed to protecting your personal data and providing a secure gardening experience.",
+  };
+
+  const breadcrumb = {
+    items: [],
+    currentPage: "Privacy Policy"
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0); 
   }, []);
 
   return (
     <main className="bg-[#faf9f6] min-h-screen pb-24 font-sans text-[#173113]">
-      <PageHeader 
-        title="Privacy Policy" 
-        subtitle="Your privacy is the root of our relationship. We are committed to protecting your personal data."
+      <CategoryHero 
+        data={privacyHeroData} 
+        breadcrumb={breadcrumb}
       />
 
       <div className="max-w-4xl mx-auto px-6 mt-16 md:mt-24">

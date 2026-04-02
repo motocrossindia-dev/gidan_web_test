@@ -16,8 +16,11 @@ import { Sun, Leaf, Droplets, Package, Smartphone, ShieldCheck, Heart } from "lu
 // Schemas moved to Server Component (page.tsx) for better SSR/SEO
 
 import Link from "next/link";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import CategoryStaticSEO from "../Info/CategoryStaticSEO";
 import axiosInstance from "../../../Axios/axiosInstance";
+import logo from "../../../Assets/Gidan_logo.webp";
 
 
 
@@ -132,6 +135,10 @@ function PlantFilter({
     // State to track the currently selected Type from the Sidebar
     const [currentFilterType, setCurrentFilterType] = useState(typeKey || null);
 
+    // State to track the currently active slugs (reacts to sidebar type changes)
+    const [currentCategorySlug, setCurrentCategorySlug] = useState(propCategorySlug || categorySlug || "");
+    const [currentSubcategorySlug, setCurrentSubcategorySlug] = useState(propSubcategorySlug || subcategorySlug || "");
+
     // State for SwipeableDrawer
     const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -207,7 +214,12 @@ function PlantFilter({
     });
     const [isSearching, setIsSearching] = useState(false);
 
-    // Function to re-fetch products (useful for cart/wishlist updates)
+    useEffect(() => {
+        if (!filtersApplied) {
+            setCurrentCategorySlug(propCategorySlug || categorySlug || "");
+            setCurrentSubcategorySlug(propSubcategorySlug || subcategorySlug || "");
+        }
+    }, [propCategorySlug, categorySlug, propSubcategorySlug, subcategorySlug, filtersApplied]);
     const getProducts = async () => {
         setIsSearching(true);
         try {
@@ -259,6 +271,19 @@ function PlantFilter({
         }
         setMobileOpen(open);
     };
+
+    const [isStuck, setIsStuck] = useState(false);
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 150) {
+                setIsStuck(true);
+            } else {
+                setIsStuck(false);
+            }
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -377,8 +402,9 @@ function PlantFilter({
                 queryParams.append("is_latest", isLatest ? "true" : "unknown");
                 queryParams.append("ordering", "");
 
+                const currentPage = searchParams.get('page') || '1';
                 const response = await axiosInstance.get(
-                    `/filters/main_productsFilter/?${queryParams}&page_size=12&limit=12&page=1`
+                    `/filters/main_productsFilter/?${queryParams}&page_size=12&limit=12&page=${currentPage}`
                 );
 
                 if (response.status === 200) {
@@ -390,40 +416,35 @@ function PlantFilter({
                         previous: response.data.previous,
                     });
 
-                    const newCategoryInfo = response.data?.category_info?.category_info || response.data?.category_info || null;
-                    const newSubcategoryInfo = response.data?.subcategory_info || null;
+                    const parentCategoryInfo = response.data?.category_info || null;
+                    const parentSubcategoryInfo = response.data?.subcategory_info || null;
+                    const newCategoryInfo = parentCategoryInfo?.category_info || parentCategoryInfo;
+                    const newSubcategoryInfo = parentSubcategoryInfo;
                     const activeInfo = newSubcategoryInfo || newCategoryInfo;
 
                     if (activeInfo) {
                         setCategoryData(activeInfo);
-                        const hasSubcategory = !!(newSubcategoryInfo || activeInfo.subcategory_name);
+                        const hasSubcategory = !!newSubcategoryInfo;
                         setIsSubcategorySEO(hasSubcategory);
-                        
-                        if (hasSubcategory) {
-                            setSeoData({
-                                ...activeInfo,
-                                title: activeInfo.subcategory_name || activeInfo.name || activeInfo.title,
-                                subtitle: activeInfo.subtitle || `${activeInfo.subcategory_name || activeInfo.name} - Buy Online in India from Gidan.store`,
-                                description: activeInfo.intro_text || activeInfo.description || activeInfo.content || "",
-                                heading_before: activeInfo.heading_before || activeInfo.sub_category_info?.heading_before || "",
-                                italic_text: activeInfo.italic_text || activeInfo.sub_category_info?.italic_text || "",
-                                heading_after: activeInfo.heading_after || activeInfo.sub_category_info?.heading_after || "",
-                                tags: activeInfo.tags || activeInfo.sub_category_info?.tags || [],
-                                stats: activeInfo.stats || activeInfo.sub_category_info?.stats || [],
-                                sections: (activeInfo.sections && activeInfo.sections.length > 0) ? activeInfo.sections : (initialSEOData?.sections || []),
-                                info_cards: (activeInfo.info_cards && activeInfo.info_cards.length > 0) ? activeInfo.info_cards : (activeInfo.sub_category_info?.info_cards || initialSEOData?.info_cards || [])
-                            });
-                        } else {
-                            // Main category case: preserve info_cards/sections if missing in new data
-                            setSeoData({
-                                ...activeInfo,
-                                tags: activeInfo.tags || activeInfo.category_info?.tags || [],
-                                stats: activeInfo.stats || activeInfo.category_info?.stats || [],
-                                sections: (activeInfo.sections && activeInfo.sections.length > 0) ? activeInfo.sections : (initialSEOData?.sections || []),
-                                info_cards: (activeInfo.info_cards && activeInfo.info_cards.length > 0) ? activeInfo.info_cards : (activeInfo.category_info?.info_cards || initialSEOData?.info_cards || [])
-                            });
-                            setIsSubcategorySEO(false);
-                        }
+
+                        const parentObj = hasSubcategory ? parentSubcategoryInfo : parentCategoryInfo;
+
+                        setSeoData({
+                            ...activeInfo,
+                            // Ensure headings/tags/stats are prioritized from the detailed nested block
+                            heading_before: activeInfo.heading_before || "",
+                            italic_text: activeInfo.italic_text || "",
+                            heading_after: activeInfo.heading_after || "",
+                            tags: activeInfo.tags || [],
+                            stats: activeInfo.stats || [],
+                            // Info cards and sections are often at the parent level or inherited from initial state
+                            info_cards: (activeInfo.info_cards && activeInfo.info_cards.length > 0) 
+                                ? activeInfo.info_cards 
+                                : (parentObj?.info_cards?.length > 0 ? parentObj.info_cards : initialSEOData?.info_cards || []),
+                            sections: (activeInfo.sections && activeInfo.sections.length > 0) 
+                                ? activeInfo.sections 
+                                : (parentObj?.sections || initialSEOData?.sections || [])
+                        });
                     }
                 }
             } catch (error) {
@@ -484,10 +505,10 @@ function PlantFilter({
     const pathSegments = currentPath.split('/').filter(Boolean);
     const isSpecialRoute = routeBasedFilters.isSeasonalCollection || routeBasedFilters.isTrending || routeBasedFilters.isFeatured || routeBasedFilters.isBestSeller;
 
-    let canonicalCategorySlug = effectiveCategorySlug || category_slug;
-    let canonicalSubcategorySlug = effectiveSubcategorySlug || subcategory_slug;
+    let canonicalCategorySlug = currentCategorySlug;
+    let canonicalSubcategorySlug = currentSubcategorySlug;
 
-    if (!isSpecialRoute && pathSegments.length > 0) {
+    if (!filtersApplied && !isSpecialRoute && pathSegments.length > 0) {
         canonicalCategorySlug = pathSegments[0];
         if (pathSegments.length > 1) {
             canonicalSubcategorySlug = pathSegments[1];
@@ -530,29 +551,41 @@ function PlantFilter({
     return (
         <>
             {!hideHeader && !seoData && (canonicalCategorySlug || canonicalSubcategorySlug) && (
-                <Breadcrumb
-                    items={breadcrumbItems}
-                    currentPage={breadcrumbPage}
-                />
+                <>
+                    <Breadcrumb
+                        items={breadcrumbItems}
+                        currentPage={breadcrumbPage}
+                    />
+                    <div className="bg-white border-b border-gray-100">
+                        <TrustBadges />
+                    </div>
+                </>
             )}
 
             {!hideHeader && seoData && (
-                <CategoryHero
-                    data={seoData}
-                    breadcrumb={{
-                        items: breadcrumbItems,
-                        currentPage: breadcrumbPage
-                    }}
-                />
+                <>
+                    <CategoryHero
+                        data={seoData}
+                        breadcrumb={{
+                            items: breadcrumbItems,
+                            currentPage: breadcrumbPage
+                        }}
+                    />
+                    <div className="bg-white border-b border-gray-100">
+                        <TrustBadges />
+                    </div>
+                </>
             )}
 
             <div className="w-full overflow-visible py-8 md:py-12">
                 <div className="container mx-auto px-4 md:px-8 max-w-full">
                     {/* Mobile Filter Trigger */}
-                    <div className="flex md:hidden sticky top-[160px] z-40 bg-white/95 backdrop-blur-md justify-between items-center p-4 rounded-xl border border-gray-100 mt-4 mb-4 shadow-sm">
-                        <Typography variant="body2" className="text-gray-600 font-bold">
-                            Refine Products
-                        </Typography>
+                    <div className={`flex md:hidden sticky top-[95px] z-40 bg-[#f8f7f0]/95 backdrop-blur-md justify-between items-center px-4 rounded-xl border border-gray-100 mt-4 mb-4 shadow-sm transition-all duration-300 ${isStuck ? 'pt-8 pb-4' : 'p-4'}`}>
+                        <div className="flex items-center gap-3">
+                            <Typography variant="body2" className="text-gray-600 font-bold">
+                                Refine Products
+                            </Typography>
+                        </div>
                         <button
                             onClick={() => setMobileOpen(true)}
                             className="flex items-center gap-2 px-6 py-2 bg-[#375421] text-white rounded-full font-bold text-sm hover:bg-[#2d451b] transition-all shadow-md active:scale-95"
@@ -564,7 +597,7 @@ function PlantFilter({
 
                     <div className="flex flex-col md:flex-row gap-12 lg:gap-16 items-start">
                         {/* Desktop Sidebar (Left) */}
-                        <div className="hidden md:block w-[240px] lg:w-[280px] xl:w-[320px] flex-shrink-0 sticky top-[140px] z-30 self-start">
+                        <div className={`hidden md:block w-[240px] lg:w-[280px] xl:w-[320px] flex-shrink-0 sticky top-[115px] z-30 self-start transition-all duration-300 ${isStuck ? 'pt-8' : 'pt-2'}`}>
                             <div className="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 max-h-[calc(100vh-180px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200">
                                 <FilterSidebar
                                     setResults={setResults}
@@ -574,8 +607,11 @@ function PlantFilter({
                                     category={categoryName || fetchedCategoryName}
                                     subcategory={subCategoryName || fetchedSubcategoryName}
                                     subcategoryID={resolvedSubcategoryId}
-                                    subcategorySlug={effectiveSubcategorySlug}
-                                    categorySlug={effectiveCategorySlug}
+                                    subcategoryIDForSEO={resolvedSubcategoryId}
+                                    subcategorySlug={currentSubcategorySlug}
+                                    categorySlug={currentCategorySlug}
+                                    setCategorySlug={setCurrentCategorySlug}
+                                    setSubcategorySlug={setCurrentSubcategorySlug}
                                     categoryIdFromSlug={resolvedCategoryId}
                                     typeKey={typeKey}
                                     setCategoryData={setCategoryData}
@@ -585,6 +621,7 @@ function PlantFilter({
                                     isLatest={isLatest}
                                     isFeatured={isFeatured}
                                     isBestSeller={isBestSeller}
+                                    setFetchedCategoryName={setFetchedCategoryName}
                                     setFetchedSubcategoryName={setFetchedSubcategoryName}
                                     setIsSearching={setIsSearching}
                                     initialFilterData={initialFilterData}
@@ -601,13 +638,15 @@ function PlantFilter({
 
                         {/* Main Content (Right) - flex-grow with min-w-0 prevents grid overflow */}
                         <div className="flex-grow min-w-0 max-w-full">
-                            {/* Public Flags Interactive Pills - Parallel to Filter Sidebar */}
-                            <div className="mb-8 mt-4">
-                                <PublicFlags
-                                    selectedFlag={selectedPublicFlag}
-                                    onSelectFlag={setSelectedPublicFlag}
-                                    initialFlags={initialFlags}
-                                />
+                            {/* Public Flags Interactive Pills - Sticky at the top below header */}
+                            <div className={`sticky top-[95px] md:top-[115px] z-[40] bg-[#f8f7f0]/95 backdrop-blur-md pb-1 md:pb-2 -mx-4 px-4 md:-mx-8 md:px-8 border-b border-gray-100/50 mb-8 mt-0 transition-all duration-300 flex items-center ${isStuck ? 'pt-6 md:pt-8' : 'pt-1 md:pt-2'}`}>
+                                <div className="flex-grow overflow-hidden">
+                                    <PublicFlags
+                                        selectedFlag={selectedPublicFlag}
+                                        onSelectFlag={setSelectedPublicFlag}
+                                        initialFlags={initialFlags}
+                                    />
+                                </div>
                             </div>
 
                             <div className={`mt-0 transition-opacity duration-300 ${isSearching ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
@@ -669,39 +708,41 @@ function PlantFilter({
                 </Box>
 
                 <Box sx={{ overflowY: 'auto', flex: 1 }}>
-                    <FilterSidebar
-                        setResults={setResults}
-                        setProducts={setProducts}
-                        setFiltersApplied={setFiltersApplied}
-                        setShowMobileFilter={setMobileOpen}
-                        categoryId={resolvedCategoryId}
-                        category={categoryName || fetchedCategoryName}
-                        subcategory={subCategoryName || fetchedSubcategoryName}
-                        subcategoryID={resolvedSubcategoryId}
-                        subcategorySlug={effectiveSubcategorySlug}
-                        categorySlug={effectiveCategorySlug}
-                        categoryIdFromSlug={resolvedCategoryId}
-                        typeKey={typeKey}
-                        setCategoryData={setCategoryData}
-                        setCurrentFilterType={setCurrentFilterType}
-                        isSeasonalCollection={isSeasonalCollection}
-                        isTrending={isTrending}
-                        isLatest={isLatest}
-                        isFeatured={isFeatured}
-                        isBestSeller={isBestSeller}
-                        setFetchedCategoryName={setFetchedCategoryName}
-                        setFetchedSubcategoryName={setFetchedSubcategoryName}
-                        setIsSearching={setIsSearching}
-                        initialFilterData={initialFilterData}
-                        setSeoData={setSeoData}
-                        setIsSubcategorySEO={setIsSubcategorySEO}
-                        subcategoryList={subcategoryListMemo}
-                        setCurrentQuery={setCurrentQuery}
-                        selectedPublicFlag={selectedPublicFlag}
-                        setSelectedPublicFlag={setSelectedPublicFlag}
-                        searchQuery={query}
-                        isMobile={true}
-                    />
+                        <FilterSidebar
+                            setResults={setResults}
+                            setProducts={setProducts}
+                            setFiltersApplied={setFiltersApplied}
+                            setShowMobileFilter={setMobileOpen}
+                            categoryId={resolvedCategoryId}
+                            category={categoryName || fetchedCategoryName}
+                            subcategory={subCategoryName || fetchedSubcategoryName}
+                            subcategoryID={resolvedSubcategoryId}
+                            subcategorySlug={currentSubcategorySlug}
+                            categorySlug={currentCategorySlug}
+                            setCategorySlug={setCurrentCategorySlug}
+                            setSubcategorySlug={setCurrentSubcategorySlug}
+                            categoryIdFromSlug={resolvedCategoryId}
+                            typeKey={typeKey}
+                            setCategoryData={setCategoryData}
+                            setCurrentFilterType={setCurrentFilterType}
+                            isSeasonalCollection={isSeasonalCollection}
+                            isTrending={isTrending}
+                            isLatest={isLatest}
+                            isFeatured={isFeatured}
+                            isBestSeller={isBestSeller}
+                            setFetchedCategoryName={setFetchedCategoryName}
+                            setFetchedSubcategoryName={setFetchedSubcategoryName}
+                            setIsSearching={setIsSearching}
+                            initialFilterData={initialFilterData}
+                            setSeoData={setSeoData}
+                            setIsSubcategorySEO={setIsSubcategorySEO}
+                            subcategoryList={subcategoryListMemo}
+                            setCurrentQuery={setCurrentQuery}
+                            selectedPublicFlag={selectedPublicFlag}
+                            setSelectedPublicFlag={setSelectedPublicFlag}
+                            searchQuery={query}
+                            isMobile={true}
+                        />
                 </Box>
             </SwipeableDrawer>
         </>

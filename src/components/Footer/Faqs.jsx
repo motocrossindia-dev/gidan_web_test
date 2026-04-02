@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
-import PageHeader from "@/components/Shared/PageHeader";
+import CategoryHero from "@/components/Shared/CategoryHero";
 import { ChevronDown, HelpCircle, Leaf, MessageCircle } from "lucide-react";
 
 const FAQItem = ({ question, answer, isOpen, onClick }) => {
@@ -30,6 +30,18 @@ const FAQItem = ({ question, answer, isOpen, onClick }) => {
 };
 
 const FAQs = () => {
+  const faqHeroData = {
+    heading_before: "Help",
+    italic_text: "Center",
+    heading_after: "Resources",
+    description: "Find answers to common questions about plant delivery, care, and more. We're here to help you grow your perfect garden environment.",
+  };
+
+  const breadcrumb = {
+    items: [],
+    currentPage: "FAQs"
+  };
+
   const [openIndex, setOpenIndex] = useState(0);
 
   useEffect(() => {
@@ -73,9 +85,9 @@ const FAQs = () => {
 
   return (
     <main className="bg-[#faf9f6] min-h-screen pb-24 font-sans">
-      <PageHeader 
-        title="Help Center" 
-        subtitle="Find answers to common questions about plant delivery, care, and more."
+      <CategoryHero 
+        data={faqHeroData} 
+        breadcrumb={breadcrumb}
       />
 
       <div className="max-w-4xl mx-auto px-6 mt-16 md:mt-24">

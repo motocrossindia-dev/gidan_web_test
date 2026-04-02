@@ -63,7 +63,7 @@ const PublicFlags = ({ selectedFlag, onSelectFlag, initialFlags = [] }) => {
     }
 
     return (
-        <div className="relative w-full py-6">
+        <div className="relative w-full">
             <div className="flex items-center gap-3 overflow-x-auto no-scrollbar px-4 md:px-8 scroll-smooth">
                 {/* All Products / Reset Toggle */}
                 <motion.button

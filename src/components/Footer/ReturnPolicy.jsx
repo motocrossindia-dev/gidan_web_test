@@ -1,21 +1,33 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import PageHeader from "@/components/Shared/PageHeader";
+import CategoryHero from "@/components/Shared/CategoryHero";
 import { Mail, Phone, Heart, Trash2, Clock, CheckCircle, AlertCircle, Info, Star, ShieldCheck } from 'lucide-react';
 import HomepageSchema from "../../views/utilities/seo/HomepageSchema";
 import StoreSchema from "../../views/utilities/seo/StoreSchema";
 
 const RefundPolicy = () => {
+  const refundHeroData = {
+    heading_before: "Refund &",
+    italic_text: "Cancellation",
+    heading_after: "Policy",
+    description: "Our commitment to your satisfaction and the well-being of our green companions. We ensure a transparent and fair refund process for every plant lover.",
+  };
+
+  const breadcrumb = {
+    items: [],
+    currentPage: "Refund Policy"
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   return (
     <main className="bg-[#faf9f6] min-h-screen pb-24 font-sans text-[#173113]">
-      <PageHeader 
-        title="Refund & Cancellation" 
-        subtitle="Our commitment to your satisfaction and the well-being of our green companions."
+      <CategoryHero 
+        data={refundHeroData} 
+        breadcrumb={breadcrumb}
       />
 
       <div className="max-w-4xl mx-auto px-6 mt-16 md:mt-24">

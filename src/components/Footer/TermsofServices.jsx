@@ -1,19 +1,31 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import PageHeader from "@/components/Shared/PageHeader";
+import CategoryHero from "@/components/Shared/CategoryHero";
 import { Book, Shield, AlertTriangle, Scale, CreditCard, UserCheck, Mail } from 'lucide-react';
 
 const TermsOfService = () => {
+  const termsHeroData = {
+    heading_before: "Terms &",
+    italic_text: "Conditions",
+    heading_after: "Our Agreement",
+    description: "Our commitment to transparency and a seamless gardening community experience. Please read our terms carefully before starting your journey with us.",
+  };
+
+  const breadcrumb = {
+    items: [],
+    currentPage: "Terms & Conditions"
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0); 
   }, []);
 
   return (
     <main className="bg-[#faf9f6] min-h-screen pb-24 font-sans text-[#173113]">
-      <PageHeader 
-        title="Terms & Conditions" 
-        subtitle="Our commitment to transparency and a seamless gardening community experience."
+      <CategoryHero 
+        data={termsHeroData} 
+        breadcrumb={breadcrumb}
       />
 
       <div className="max-w-4xl mx-auto px-6 mt-16 md:mt-24">

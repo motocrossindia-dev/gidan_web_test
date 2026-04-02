@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import ProductCard from "./ProductCard";
@@ -24,13 +24,17 @@ const ProductGrid = ({
 
   const router = useRouter();
 
-  const observer = useRef(null);
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   const [loading, setLoading] = useState(false);
   const [loadingPage, setLoadingPage] = useState(null);
   const [nextUrl, setNextUrl] = useState(pagination?.next || null);
   const [prevUrl, setPrevUrl] = useState(pagination?.previous || null);
-  const [currentPage, setCurrentPage] = useState(1);
+
+  // Initialize from URL or default to 1
+  const initialPage = parseInt(searchParams.get('page') || '1');
+  const [currentPage, setCurrentPage] = useState(initialPage);
   const pageSize = 12; // Lowered to make pagination visible
 
   // Calculate total pages
@@ -114,6 +118,11 @@ const ProductGrid = ({
           setNextUrl(res.data.next || null);
           setPrevUrl(res.data.previous || null);
           setCurrentPage(pageNumber);
+
+          // Update URL strictly
+          const params = new URLSearchParams(searchParams);
+          params.set('page', pageNumber.toString());
+          router.push(`${pathname}?${params.toString()}`, { scroll: false });
           // Only scroll after updating state
           setTimeout(() => {
             const gridTop = document.getElementById('product-grid-container');
@@ -282,13 +291,13 @@ const ProductGrid = ({
         </div>
       )}
 
+      {/* Pagination Controls */}
+      {totalPages > 1 && renderPagination()}
+
       {/* Trust Section and Bottom Content */}
       <div className="mt-12">
         {bottomContent}
       </div>
-
-      {/* Pagination Controls */}
-      {totalPages > 1 && renderPagination()}
 
     </div>
   );

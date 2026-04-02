@@ -58,14 +58,14 @@ export const getProductUrl = (product, includeVariant = false) => {
     if (!product) return "/";
 
     // 1. Extract Category Slug
-    // Priority: category_slug > category (as object or name) > default 'all'
-    let catVal = product.category_slug || product.category;
+    // Priority: category_slug > category_name > category (as object or name) > default 'all'
+    let catVal = product.category_slug || product.category_name || product.category;
     let category_slug = toSlugString(catVal);
     if (!category_slug) category_slug = "all";
 
     // 2. Extract Subcategory Slug
-    // Priority: sub_category_slug > subcategory > sub_category > default 'all'
-    let subCatVal = product.sub_category_slug || product.subcategory || product.sub_category;
+    // Priority: sub_category_slug > sub_category_name > subcategory > sub_category > default 'all'
+    let subCatVal = product.sub_category_slug || product.sub_category_name || product.subcategory || product.sub_category;
     let sub_category_slug = toSlugString(subCatVal);
     if (!sub_category_slug) sub_category_slug = "all";
 

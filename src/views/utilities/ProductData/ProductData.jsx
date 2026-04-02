@@ -143,12 +143,12 @@ export default function ProductData({ initialProductData }) {
     const [pincode, setPincode] = useState("");
     const [error, setError] = useState("");
     const [showNoDeliveryPopup, setShowNoDeliveryPopup] = useState(false);
-    const [deliveryInfo, setDeliveryInfo] = useState({ 
-        isOpen: false, 
-        isAvailable: false, 
-        pincode: "", 
+    const [deliveryInfo, setDeliveryInfo] = useState({
+        isOpen: false,
+        isAvailable: false,
+        pincode: "",
         stateName: "",
-        loading: false 
+        loading: false
     });
 
     // ==========auth cart
@@ -376,8 +376,10 @@ export default function ProductData({ initialProductData }) {
 
         // Always use the primary slug field for a clean, stable URL
         const baseSlug = toSlugString(newProduct?.slug) || params.productSlug;
-        const catSlug = toSlugString(newProduct?.category_slug) || params.categorySlug;
-        const subCatSlug = toSlugString(newProduct?.sub_category_slug) || params.subcategorySlug || "all";
+
+        // Dynamic category extraction: priority data.slug > data.name > param > 'all'
+        const catSlug = toSlugString(newProduct?.category_slug || newProduct?.category_name) || params.categorySlug;
+        const subCatSlug = toSlugString(newProduct?.sub_category_slug || newProduct?.sub_category_name) || params.subcategorySlug || "all";
 
         // Construct clean URL - NO trailing slash before query params as requested
         const newUrl = `/${catSlug}/${subCatSlug}/${baseSlug}${queryString ? '?' + queryString : '/'}`;
@@ -404,26 +406,43 @@ export default function ProductData({ initialProductData }) {
         }
     }, [isReviewModalOpen]);
 
-    // URL normalization: ensure the URL uses the primary product slug
+    // URL normalization: ensure the URL uses the primary product slug and proper category path
     // This fires when product data becomes available (from SSR or fetch)
+    // NOTE: dep array must ALWAYS be the same length — we combine into a single stable key
+    const _urlNormKey = `${product?.id || ''}|${product?.slug || ''}|${product?.category_slug || ''}|${product?.sub_category_slug || ''}`;
     useEffect(() => {
         if (!product) return;
 
         const expectedSlug = toSlugString(product.slug);
         const currentSlug = params.productSlug;
 
-        if (expectedSlug && currentSlug !== expectedSlug) {
-            const catSlug = toSlugString(product.category_slug) || params.categorySlug;
-            const subCatSlug = toSlugString(product.sub_category_slug) || params.subcategorySlug || "all";
+        // Extract real category slugs from product info if params are generic ('all')
+        const realCatSlug = toSlugString(product.category_slug || product.category_name);
+        const realSubCatSlug = toSlugString(product.sub_category_slug || product.sub_category_name);
+
+        const isGenericPath = params.categorySlug === 'all' || !params.categorySlug;
+        const hasBetterPathData = realCatSlug && realCatSlug !== 'all';
+
+        // Trigger redirect if either the product slug is wrong OR we're on a generic path but have better categorized path data
+        if (expectedSlug && (currentSlug !== expectedSlug || (isGenericPath && hasBetterPathData))) {
+            const catSlug = realCatSlug || params.categorySlug || "all";
+            const subCatSlug = realSubCatSlug || params.subcategorySlug || "all";
 
             const urlParams = new URLSearchParams(window.location.search);
             const queryString = urlParams.toString();
+
+            // Construct categorized URL
             const cleanUrl = `/${catSlug}/${subCatSlug}/${expectedSlug}${queryString ? '?' + queryString : '/'}`;
 
             window.history.replaceState(null, "", cleanUrl);
             setCurrentUrl(cleanUrl);
+
+            // Sync local Breadcrumb states with the better path data
+            if (realCatSlug) setcategory_slug(realCatSlug);
+            if (realSubCatSlug) setsubcategory_slug(realSubCatSlug);
         }
-    }, [product?.id, product?.slug]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [_urlNormKey]);
 
 
 
@@ -488,7 +507,7 @@ export default function ProductData({ initialProductData }) {
             name: productDetailData?.data?.product?.name,
             price: productDetailData?.data?.product?.selling_price,
             mrp: productDetailData?.data?.product?.mrp,
-            product_image: productDetailData?.data?.product?.product_image 
+            product_image: productDetailData?.data?.product?.product_image
                 || (productDetailData?.data?.product?.images && productDetailData?.data?.product?.images[0]?.image)
         };
 
@@ -504,11 +523,11 @@ export default function ProductData({ initialProductData }) {
             }
 
             try {
-                const payload = { 
+                const payload = {
                     order_source: "product",
-                    products: [{ 
-                        prod_id: productId, 
-                        quantity 
+                    products: [{
+                        prod_id: productId,
+                        quantity
                     }]
                 };
                 if (appliedCouponInfo?.coupon_code) {
@@ -541,7 +560,7 @@ export default function ProductData({ initialProductData }) {
             savePendingCartItem(product_data);
             enqueueSnackbar("Added to guest cart! 🎉", { variant: "success" });
             window.dispatchEvent(new Event("cartUpdated"));
-            
+
             // Navigate to cart
             const finalCouponCode = appliedCouponInfo?.coupon_code || "";
             const couponParam = finalCouponCode ? `?coupon=${finalCouponCode}` : "";
@@ -588,7 +607,7 @@ export default function ProductData({ initialProductData }) {
                 price: productDetailData?.data?.product?.selling_price,
                 selling_price: productDetailData?.data?.product?.selling_price,
                 mrp: productDetailData?.data?.product?.mrp,
-                product_image: productDetailData?.data?.product?.product_image 
+                product_image: productDetailData?.data?.product?.product_image
                     || (productDetailData?.data?.product?.images && productDetailData?.data?.product?.images[0]?.image),
             });
             window.dispatchEvent(new Event("wishlistUpdated"));
@@ -604,64 +623,64 @@ export default function ProductData({ initialProductData }) {
         }
 
         const productId = productDetailData?.data?.product?.id;
-            if (!productId) {
-                enqueueSnackbar("Product is still loading. Please wait.", { variant: "warning" });
-                return;
+        if (!productId) {
+            enqueueSnackbar("Product is still loading. Please wait.", { variant: "warning" });
+            return;
+        }
+
+        // Stock check before placing order
+        try {
+            // Set flag to prevent Sidebar from opening
+            sessionStorage.setItem('BUY_NOW_IN_PROGRESS', 'true');
+
+            await axiosInstance.get(`/product/stockCheck/${productId}/`, {
+                params: { quantity, action: "increment" },
+            });
+        } catch (err) {
+            enqueueSnackbar(err?.response?.data?.message || "Not enough stock available.", { variant: "warning" });
+            return;
+        }
+
+        const product_data = {
+            order_source: "product",
+            products: [{
+                prod_id: productId,
+                quantity: quantity,
+            }]
+        };
+
+        if (appliedCouponInfo?.coupon_code) {
+            product_data.coupon_code = appliedCouponInfo.coupon_code;
+        }
+
+        try {
+            const response = await axiosInstance.post(`/order/placeOrder/`, product_data);
+
+
+            if (response.status === 200) {
+                //      enqueueSnackbar("Order placed successfully!", { variant: "success" });
+                window.dispatchEvent(new Event("cartUpdated"));
+
+
+                sessionStorage.setItem('checkout_ordersummary', JSON.stringify(response.data.data));
+                sessionStorage.removeItem('checkout_combo_offer');
+                router.push("/checkout");
             }
 
-            // Stock check before placing order
-            try {
-                // Set flag to prevent Sidebar from opening
-                sessionStorage.setItem('BUY_NOW_IN_PROGRESS', 'true');
-                
-                await axiosInstance.get(`/product/stockCheck/${productId}/`, {
-                    params: { quantity, action: "increment" },
-                });
-            } catch (err) {
-                enqueueSnackbar(err?.response?.data?.message || "Not enough stock available.", { variant: "warning" });
-                return;
-            }
+        } catch (error) {
+            if (error.response && error.response.status === 400) {
 
-            const product_data = {
-                order_source: "product",
-                products: [{
-                    prod_id: productId,
-                    quantity: quantity,
-                }]
-            };
-
-            if (appliedCouponInfo?.coupon_code) {
-                product_data.coupon_code = appliedCouponInfo.coupon_code;
-            }
-
-            try {
-                const response = await axiosInstance.post(`/order/placeOrder/`, product_data);
-
-
-                if (response.status === 200) {
-                    //      enqueueSnackbar("Order placed successfully!", { variant: "success" });
-                    window.dispatchEvent(new Event("cartUpdated"));
-
-
-                    sessionStorage.setItem('checkout_ordersummary', JSON.stringify(response.data.data));
-                    sessionStorage.removeItem('checkout_combo_offer');
-                    router.push("/checkout");
+                enqueueSnackbar(error.response.data.message, { variant: "warning" });
+                if (error.response.data.message === "User profile is not updated.") {
+                    router.push('/profile')
                 }
+                if (error.response.data.message === "User address is not updated.") {
 
-            } catch (error) {
-                if (error.response && error.response.status === 400) {
+                    router.push('/profile')
 
-                    enqueueSnackbar(error.response.data.message, { variant: "warning" });
-                    if (error.response.data.message === "User profile is not updated.") {
-                        router.push('/profile')
-                    }
-                    if (error.response.data.message === "User address is not updated.") {
-
-                        router.push('/profile')
-
-                    }
                 }
             }
+        }
     };
 
     const CustomPrevArrow = ({ className, onClick }) => (
@@ -1186,16 +1205,16 @@ export default function ProductData({ initialProductData }) {
                 }
             />
 
-            <div className="w-full overflow-x-clip" style={{ backgroundColor: "whitesmoke" }}>
-                <div className="container mx-auto px-3 py-4 font-sans md:px-8">
-                    <div className="flex flex-col md:flex-row -mx-4 relative items-start">
-                        {/* LEFT COLUMN: STATIC / STICKY IMAGE GALLERY & ACTIONS */}
+            <div className="w-full" style={{ backgroundColor: "whitesmoke" }}>
+                <div className="w-full max-w-full mx-auto px-4 py-4 font-sans md:px-8">
+                    <div className="flex flex-col md:flex-row gap-8 lg:gap-16 relative items-start w-full">
+                        {/* LEFT COLUMN: STICKY IMAGE GALLERY */}
                         <div 
-                            className="md:flex-1 px-4 lg:sticky lg:top-24 h-fit z-30 min-w-0"
+                            className="w-full md:w-1/2 md:sticky md:top-40 md:self-start pt-12 md:pt-32 pb-12 h-fit z-30 min-w-0 md:pr-4"
                         >
                             {/* Main Image with Fully Working Zoom */}
-                            <div 
-                                className="relative cursor-crosshair group z-40 bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm aspect-square w-full max-w-full lg:max-h-[600px] xl:max-h-[700px] flex items-center justify-center"
+                            <div
+                                className="relative cursor-crosshair group z-40 bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm aspect-square w-full max-w-full flex items-center justify-center p-6 md:p-10"
                                 onMouseMove={(e) => {
                                     const rect = e.currentTarget.getBoundingClientRect();
                                     const x = e.clientX - rect.left;
@@ -1230,7 +1249,7 @@ export default function ProductData({ initialProductData }) {
                                             height={500}
                                             unoptimized={true}
                                         />
-                                        
+
                                         {/* Hover to Zoom indicator */}
                                         <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-sm border border-gray-100 flex items-center gap-2 pointer-events-none z-10 transition-opacity duration-300">
                                             <Share2 size={12} className="text-gray-400" />
@@ -1253,21 +1272,20 @@ export default function ProductData({ initialProductData }) {
                                 )}
                             </div>
 
-                            {/* ZOOM BOX ON RIGHT - Only on larger desktop screens to prevent overflow */}
+                            {/* ZOOM BOX ON RIGHT - Only on XL+ screens where there's space outside the 50% column */}
                             {zoom && (
                                 <div
-                                    className="absolute top-0 left-full ml-4 w-[400px] xl:w-[500px] h-[400px] xl:h-[500px] hidden lg:block border border-gray-300 rounded-lg bg-white z-50 shadow-lg"
+                                    className="absolute top-0 left-full ml-4 w-[400px] xl:w-[500px] h-[400px] xl:h-[500px] hidden xl:block border border-gray-300 rounded-lg bg-white z-50 shadow-lg overflow-hidden"
                                     style={{
-                                        backgroundImage: `url(${
-                                            (() => {
+                                        backgroundImage: `url(${(() => {
                                                 const img = imageThumbnails[selectedImage] || imageThumbnails[0];
                                                 const path = (img?.image || img?.url || "").trim();
                                                 if (path.startsWith("http") || path.startsWith("//")) return path;
                                                 const cleanPath = path.startsWith('/') ? path : `/${path}`;
                                                 return `${process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store"}${cleanPath}`;
                                             })()
-                                        })`,
-                                        backgroundPosition: `${-position.x * 2.5 + 200}px ${-position.y * 2.5 + 200}px`, // Adjusted for 400px default width
+                                            })`,
+                                        backgroundPosition: `${-position.x * 2.5 + 200}px ${-position.y * 2.5 + 200}px`,
                                         backgroundSize: `1250px 1250px`,
                                         backgroundRepeat: "no-repeat",
                                     }}
@@ -1280,9 +1298,8 @@ export default function ProductData({ initialProductData }) {
                                     <button
                                         key={index}
                                         onClick={() => setSelectedImage(index)}
-                                        className={`relative w-20 h-20 rounded-2xl overflow-hidden border-2 transition-all shrink-0 ${
-                                            selectedImage === index ? "border-[#375421] shadow-md scale-[1.05]" : "border-gray-100 hover:border-gray-300"
-                                        }`}
+                                        className={`relative w-20 h-20 rounded-2xl overflow-hidden border-2 transition-all shrink-0 ${selectedImage === index ? "border-[#375421] shadow-md scale-[1.05]" : "border-gray-100 hover:border-gray-300"
+                                            }`}
                                     >
                                         <Image
                                             src={
@@ -1322,7 +1339,7 @@ export default function ProductData({ initialProductData }) {
                             </div>
                         </div>
 
-                        <div className="md:flex-1 px-4 font-sans mt-8 min-w-0">
+                        <div className="w-full md:w-1/2 font-sans mt-6 md:mt-0 md:pt-10 min-w-0 md:pl-6">
                             <h1 className="text-xl md:text-3xl font-bold mb-2">
                                 {(() => {
                                     const p = productDetailData?.data?.product;
@@ -1594,7 +1611,7 @@ export default function ProductData({ initialProductData }) {
 
                             {/* Manual Coupon Application UI (PDP) - Same as Checkout */}
                             <div className="mt-6 mb-6">
-                                <CouponSection 
+                                <CouponSection
                                     mode="pdp"
                                     products={[{ prod_id: productDetailData?.data?.product?.id, quantity: quantity }]}
                                     appliedCoupon={appliedCouponInfo}
@@ -1621,7 +1638,7 @@ export default function ProductData({ initialProductData }) {
                                             <span className="text-[14px] font-black text-[#375421] whitespace-nowrap">₹{isMounted ? Math.round(combinedTotal).toLocaleString() : "..."} <span className="text-gray-300 text-[10px] font-bold">/ ₹{freeShippingThreshold.toLocaleString()}</span></span>
                                         </div>
                                     </div>
-                                    
+
                                     {/* Breakdown Tooltip/Label */}
                                     <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400 italic">
                                         <div className="flex items-center gap-1">
@@ -1641,46 +1658,54 @@ export default function ProductData({ initialProductData }) {
                                 </div>
                             </div>
 
-                            <div className="mb-8 space-y-6">
-                                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                                    <div className="flex items-center border border-[#375421] rounded-xl overflow-hidden shadow-sm h-12">
+                            <div className="mb-8 space-y-4">
+                                {/* Quantity + Add to Cart + Wishlist — always one row */}
+                                <div className="flex flex-row items-center gap-3 w-full">
+                                    {/* Quantity Stepper */}
+                                    <div className="flex items-center border border-[#375421] rounded-xl overflow-hidden shadow-sm h-12 shrink-0">
                                         <button
                                             onClick={() => handleQuantity(productDetailData?.data?.product?.id, "decrement", quantity)}
-                                            className="w-12 h-full flex items-center justify-center text-[#375421] hover:bg-gray-50 active:bg-gray-100 transition-colors border-r border-[#375421]/20 font-black"
+                                            className="w-10 h-full flex items-center justify-center text-[#375421] hover:bg-gray-50 active:bg-gray-100 transition-colors border-r border-[#375421]/20 font-black text-lg"
                                         >
                                             −
                                         </button>
-                                        <div className="w-14 h-full flex items-center justify-center bg-white text-sm font-black text-gray-900">
+                                        <div className="w-10 h-full flex items-center justify-center bg-white text-sm font-black text-gray-900">
                                             {quantity}
                                         </div>
                                         <button
                                             onClick={() => handleQuantity(productDetailData?.data?.product?.id, "increment", quantity)}
-                                            className="w-12 h-full flex items-center justify-center text-[#375421] hover:bg-gray-50 active:bg-gray-100 transition-colors border-l border-[#375421]/20 font-black"
+                                            className="w-10 h-full flex items-center justify-center text-[#375421] hover:bg-gray-50 active:bg-gray-100 transition-colors border-l border-[#375421]/20 font-black text-lg"
                                         >
                                             +
                                         </button>
                                     </div>
+
+                                    {/* Add to Cart — takes remaining width */}
                                     <button
                                         onClick={isInCart ? () => router.push('/cart') : handleAddToCartSubmit}
                                         disabled={productDetailData?.data?.product?.in_stock === false}
-                                        className="flex-1 h-12 bg-[#375421] text-white rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#2d451b] transition-all shadow-md active:scale-[0.98] disabled:opacity-50"
+                                        className="flex-1 min-w-0 h-12 bg-[#375421] text-white rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#2d451b] transition-all shadow-md active:scale-[0.98] disabled:opacity-50 text-xs sm:text-sm"
                                     >
-                                        <ShoppingCart size={18} />
-                                        {isInCart ? "Go to Cart" : "Add to Cart"}
+                                        <ShoppingCart size={16} className="shrink-0" />
+                                        <span className="truncate">{isInCart ? "Go to Cart" : "Add to Cart"}</span>
                                     </button>
+
+                                    {/* Wishlist — fixed square */}
                                     <button
                                         onClick={!productDetailData?.data?.product?.is_wishlist ? handleAddToWishlistSubmit : null}
-                                        className={`w-12 h-12 rounded-xl border flex items-center justify-center transition-all shadow-sm active:scale-95 ${productDetailData?.data?.product?.is_wishlist ? 'border-red-100 bg-red-50 text-red-500' : 'border-gray-200 bg-white text-gray-400 hover:text-red-400 hover:border-red-100 hover:bg-red-50'}`}
+                                        className={`w-12 h-12 shrink-0 rounded-xl border flex items-center justify-center transition-all shadow-sm active:scale-95 ${productDetailData?.data?.product?.is_wishlist ? 'border-red-100 bg-red-50 text-red-500' : 'border-gray-200 bg-white text-gray-400 hover:text-red-400 hover:border-red-100 hover:bg-red-50'}`}
                                     >
                                         <Heart size={20} fill={productDetailData?.data?.product?.is_wishlist ? "currentColor" : "none"} />
                                     </button>
                                 </div>
+
+                                {/* Buy Now */}
                                 <button
                                     onClick={handleBuyItNowSubmit}
                                     disabled={productDetailData?.data?.product?.in_stock === false}
                                     className="w-full h-14 border-2 border-[#375421] text-[#375421] rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-[#375421]/5 transition-all shadow-sm active:scale-[0.98] disabled:opacity-50"
                                 >
-                                    <Sparkles size={18} className="text-orange-400" />
+                                    <Sparkles size={18} className="text-orange-400 shrink-0" />
                                     Buy Now — ₹{Math.round(productDetailData?.data?.product?.selling_price || 0)}
                                 </button>
                             </div>
@@ -1727,19 +1752,23 @@ export default function ProductData({ initialProductData }) {
                 </div>
             </div>
 
-            {/* Coupon Details Drawer */}
-            {/* Legacy RightDrawer for coupons removed - now handled by CouponSection */}
-
-            <div className="bg-white p-4">
-                <AboutTheProducts
-                    productDetailData={productDetailData}
-                    ratingData={ratingData}
-                    reviewData={reviewData}
-                    onWriteReview={handleWriteReviewClick}
-                />
+            {/* Detailed Tabs/About section - Full width at bottom */}
+            <div className="bg-white border-t border-gray-50 py-12">
+                <div className="container mx-auto px-4 md:px-8">
+                    <AboutTheProducts
+                        productDetailData={productDetailData}
+                        ratingData={ratingData}
+                        reviewData={reviewData}
+                        onWriteReview={handleWriteReviewClick}
+                    />
+                </div>
             </div>
-            <div className="bg-white pt-4">
-                <PeopleAlsoBought title="People Also Bought" />
+
+            {/* People Also Bought remains full-width below the sticky zone */}
+            <div className="bg-white pt-8 pb-12">
+                <div className="container mx-auto">
+                    <PeopleAlsoBought title="People Also Bought" />
+                </div>
             </div>
             {isReviewModalOpen && (
                 <div id="write-review-section" className="bg-white px-4 md:px-20">
@@ -1756,8 +1785,8 @@ export default function ProductData({ initialProductData }) {
             {/* Delivery Status Modal */}
             {deliveryInfo.isOpen && (
                 <div className="fixed inset-0 z-[9999999] flex items-center justify-center p-4">
-                    <div 
-                        className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300" 
+                    <div
+                        className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300"
                         onClick={() => setDeliveryInfo(prev => ({ ...prev, isOpen: false }))}
                     />
                     <div className="relative bg-white w-full max-w-sm rounded-[32px] overflow-hidden shadow-2xl transition-all duration-500 scale-100 animate-in zoom-in-95">
@@ -1766,11 +1795,11 @@ export default function ProductData({ initialProductData }) {
                             <div className="text-5xl mb-4">
                                 {deliveryInfo.isAvailable ? "😊" : "😔"}
                             </div>
-                            
+
                             <h3 className="text-2xl font-black text-gray-900 tracking-tight leading-tight mb-2">
                                 {deliveryInfo.isAvailable ? "Success!" : "Oops!"}
                             </h3>
-                            
+
                             <p className="text-[12px] font-black text-gray-400 uppercase tracking-widest mb-6">
                                 PINCODE: {deliveryInfo.pincode}
                             </p>
@@ -1783,7 +1812,7 @@ export default function ProductData({ initialProductData }) {
                                         <>We're sorry! Delivery is currently not available for <span className="text-orange-700 font-black">{deliveryInfo.stateName || "this region"}</span> yet.</>
                                     )}
                                 </p>
-                                
+
                                 {!deliveryInfo.isAvailable && (
                                     <p className="text-[10px] text-gray-400 font-bold italic leading-tight">
                                         We're growing fast! Check back soon or <span className="underline">sign up</span> for updates.
@@ -1793,11 +1822,10 @@ export default function ProductData({ initialProductData }) {
 
                             <button
                                 onClick={() => setDeliveryInfo(prev => ({ ...prev, isOpen: false }))}
-                                className={`w-full py-4 rounded-2xl font-black text-[12px] uppercase tracking-[0.2em] transition-all active:scale-95 shadow-lg ${
-                                    deliveryInfo.isAvailable 
-                                    ? 'bg-[#375421] text-white shadow-emerald-100/50' 
-                                    : 'bg-gray-100 text-gray-900 shadow-gray-100/50'
-                                }`}
+                                className={`w-full py-4 rounded-2xl font-black text-[12px] uppercase tracking-[0.2em] transition-all active:scale-95 shadow-lg ${deliveryInfo.isAvailable
+                                        ? 'bg-[#375421] text-white shadow-emerald-100/50'
+                                        : 'bg-gray-100 text-gray-900 shadow-gray-100/50'
+                                    }`}
                             >
                                 {deliveryInfo.isAvailable ? "Gidan Experience! 🎉" : "Got It"}
                             </button>

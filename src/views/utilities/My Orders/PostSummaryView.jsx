@@ -331,6 +331,7 @@ const PostSummaryView = () => {
                                 {/* Amazon Product Info & Standard Actions */}
                                 <div className="flex-1 flex flex-col md:flex-row justify-between gap-10">
                                     <div className="flex-1">
+                                        <p className="text-[9px] font-black text-[#375421] opacity-50 uppercase tracking-[0.2em] mb-2 block">{item.category_slug?.replace(/-/g, ' ') || item.category_name || "Gidan Selection"}</p>
                                         <p
                                             onClick={() => router.push(getProductUrl(item))}
                                             className="text-[17px] font-bold text-gray-900 hover:text-[#375421] transition-colors leading-snug cursor-pointer mb-3"
@@ -349,12 +350,6 @@ const PostSummaryView = () => {
                                                 className="px-6 py-2 bg-[#FFD814] hover:bg-[#F7CA00] border border-[#FCD200] text-gray-900 text-sm font-medium rounded-full shadow-sm shadow-gray-100 transition-all active:scale-95 text-center min-w-[140px]"
                                             >
                                                 Buy it again
-                                            </button>
-                                            <button
-                                                onClick={() => router.push(getProductUrl(item))}
-                                                className="px-6 py-2 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 text-sm font-medium rounded-full shadow-sm transition-all active:scale-95 text-center min-w-[140px]"
-                                            >
-                                                Track package
                                             </button>
                                         </div>
                                     </div>

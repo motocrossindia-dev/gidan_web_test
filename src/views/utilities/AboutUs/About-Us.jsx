@@ -3,21 +3,32 @@
 import React from "react";
 import Image from "next/image";
 import aboutUsImg from "../../../Assets/OurWork/ourwork3.webp";
-import PageHeader from "@/components/Shared/PageHeader";
+import CategoryHero from "@/components/Shared/CategoryHero";
 import { Leaf, GraduationCap, Globe, CheckCircle2 } from "lucide-react";
 import AboutUsSchema from "../seo/AboutUsSchema";
 
 const AboutUs = () => {
     const _aboutUsImg = typeof aboutUsImg === 'string' ? aboutUsImg : aboutUsImg?.src || aboutUsImg;
+
+    const aboutHeroData = {
+        heading_before: "About",
+        italic_text: "Gidan",
+        heading_after: "Our Mission",
+        description: "Cultivating Green Ecosystems, One Plant at a Time. Built with a deep respect for nature and a commitment to education-driven gardening.",
+    };
+
+    const breadcrumb = {
+        items: [],
+        currentPage: "About Us"
+    };
     
     return (
         <main className="font-sans text-[#173113] bg-[#faf9f6]">
             <AboutUsSchema />
             
-            {/* Premium Header */}
-            <PageHeader 
-                title="About Gidan" 
-                subtitle="Cultivating Green Ecosystems, One Plant at a Time"
+            <CategoryHero 
+                data={aboutHeroData} 
+                breadcrumb={breadcrumb}
             />
 
             {/* Introduction Section */}

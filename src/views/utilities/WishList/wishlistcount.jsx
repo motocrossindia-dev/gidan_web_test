@@ -13,6 +13,8 @@ const WishlistIconWithCount = () => {
     const [wishlistCount, setWishlistCount] = useState(0);
 
     useEffect(() => {
+        const controller = new AbortController();
+
         const fetchWishlistCount = async () => {
              // If not logged in, count pending items in localStorage
             if (!accessToken) {
@@ -30,6 +32,7 @@ const WishlistIconWithCount = () => {
             try {
                 // ADDED: Cache-busting timestamp to prevent stale browser/server responses
                 const response = await axiosInstance.get(`/order/wishlist/`, {
+                    signal: controller.signal,
                     params: { t: new Date().getTime() },
                     validateStatus: function (status) {
                         return status >= 200 && status < 500; // Accept 500 locally to handle it
@@ -59,6 +62,10 @@ const WishlistIconWithCount = () => {
 
                 setWishlistCount(actualItems.length);
             } catch (error) {
+                if (error.name === 'AbortError' || error.name === 'CanceledError' || (error.code === 'ERR_CANCELED')) {
+                    // Silently return on intentional aborts/cancellation
+                    return;
+                }
                 if (error.response?.status === 500) {
                     // Silently handle backend 500 errors to prevent console noise
                     return;
@@ -76,6 +83,7 @@ const WishlistIconWithCount = () => {
         window.addEventListener('wishlistUpdated', handleWishlistUpdate);
         window.addEventListener('storage', handleWishlistUpdate);
         return () => {
+            controller.abort();
             window.removeEventListener('wishlistUpdated', handleWishlistUpdate);
             window.removeEventListener('storage', handleWishlistUpdate);
         };

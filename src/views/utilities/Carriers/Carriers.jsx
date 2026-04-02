@@ -2,10 +2,22 @@
 
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../../Axios/axiosInstance';
-import PageHeader from "@/components/Shared/PageHeader";
+import CategoryHero from "@/components/Shared/CategoryHero";
 import { Briefcase, ChevronRight, MapPin, Search, Terminal, Users } from "lucide-react";
 
 const Carriers = () => {
+  const careersHeroData = {
+    heading_before: "Join",
+    italic_text: "Gidan",
+    heading_after: "Our Team",
+    description: "Help us build a greener future, one plant at a time. We're looking for passionate individuals to join our growing family.",
+  };
+
+  const breadcrumb = {
+    items: [],
+    currentPage: "Careers"
+  };
+
   const [activeTab, setActiveTab] = useState('non-tech');
   const [expanded, setExpanded] = useState(null);
   const [jobListings, setJobListings] = useState([]);
@@ -38,9 +50,9 @@ const Carriers = () => {
   return (
     <main className="font-sans text-[#173113] bg-[#faf9f6] min-h-screen pb-24">
       {/* Premium Header */}
-      <PageHeader 
-        title="Join Gidan" 
-        subtitle="Help us build a greener future, one plant at a time."
+      <CategoryHero 
+        data={careersHeroData} 
+        breadcrumb={breadcrumb}
       />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-16 mt-12 md:mt-20">
@@ -52,22 +64,26 @@ const Carriers = () => {
               onClick={() => setActiveTab('non-tech')}
               className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold transition-all duration-300 ${
                 activeTab === 'non-tech' 
-                  ? 'bg-[#173113] text-white shadow-lg' 
+                  ? 'bg-[#f0f9e8] text-[#173113] border border-[#A7D949] shadow-lg shadow-[#A7D949]/10' 
                   : 'text-[#173113]/60 hover:text-[#173113]'
               }`}
             >
-              <Users className="w-4 h-4" />
+              <div className={`p-1 rounded-md ${activeTab === 'non-tech' ? 'bg-[#A7D949]/20' : ''}`}>
+                <Users className="w-4 h-4" />
+              </div>
               Non-Tech
             </button>
             <button
               onClick={() => setActiveTab('tech')}
               className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold transition-all duration-300 ${
                 activeTab === 'tech' 
-                  ? 'bg-[#173113] text-white shadow-lg' 
+                  ? 'bg-[#f0f9e8] text-[#173113] border border-[#A7D949] shadow-lg shadow-[#A7D949]/10' 
                   : 'text-[#173113]/60 hover:text-[#173113]'
               }`}
             >
-              <Terminal className="w-4 h-4" />
+              <div className={`p-1 rounded-md ${activeTab === 'tech' ? 'bg-[#A7D949]/20' : ''}`}>
+                <Terminal className="w-4 h-4" />
+              </div>
               Technology
             </button>
           </div>

@@ -8,11 +8,37 @@ import { isMobile } from "react-device-detect";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import ProductCard from "@/components/Shared/ProductCard";
-import PageHeader from "@/components/Shared/PageHeader";
+import CategoryHero from "@/components/Shared/CategoryHero";
 import OfferTabs from "./OfferTabs";
 import ModernComboCard from "../ComboOffer/ModernComboCard";
 
 function Offer({ initialOffers = [] }) {
+  const offerSeoData = {
+    heading_before: "Exclusive",
+    italic_text: "Deals & Offers",
+    heading_after: "for your sanctuary",
+    description: "Unbeatable savings on nature's finest selection. Every plant is hand-selected and inspected for quality before shipping.",
+    tags: [
+        { label: "Limited Time" },
+        { label: "Expert Formulated" },
+        { label: "Free Delivery ₹2,000+" }
+    ],
+    stats: [
+        { value: "50+", label: "Special Offers" },
+        { value: "5K+", label: "Happy Plants" },
+        { value: "4.9★", label: "Avg. Rating" }
+    ],
+    info_cards: [
+        { title: "Quality Guarantee", content: "Each plant is hand-selected and inspected before shipping." },
+        { title: "Safe Transit", content: "Custom botanical packaging ensures healthy arrival." }
+    ]
+  };
+
+  const breadcrumb = {
+    items: [],
+    currentPage: "Offers"
+  };
+
   const [activeTab, setActiveTab] = useState('products');
   const [offers, setOffers] = useState(initialOffers);
   const [comboOffers, setComboOffers] = useState([]);
@@ -98,9 +124,9 @@ function Offer({ initialOffers = [] }) {
 
   return (
     <div className="min-h-screen bg-[#faf9f6]">
-      <PageHeader 
-        title="Exclusive Deals & Offers" 
-        subtitle="Unbeatable savings on nature's finest selection" 
+      <CategoryHero 
+        data={offerSeoData} 
+        breadcrumb={breadcrumb}
       />
 
       <div className="container mx-auto px-4 py-12">

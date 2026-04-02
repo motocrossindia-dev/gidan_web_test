@@ -89,6 +89,8 @@ const FilterSidebar = ({
   subcategoryID,
   subcategorySlug,
   categorySlug,
+  setCategorySlug,
+  setSubcategorySlug,
   setCategoryData,
   setCurrentFilterType,
   isSeasonalCollection,
@@ -529,6 +531,15 @@ const FilterSidebar = ({
       }
 
       params.append("page_size", "12");
+      if (setFetchedCategoryName && !finalSubcategoryId) {
+        // Fallback for main category name update during type switch
+        const catName = categorySegment.charAt(0).toUpperCase() + categorySegment.slice(1).replace(/-/g, ' ').replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())));
+        setFetchedCategoryName(catName);
+      }
+
+      if (setCategorySlug) setCategorySlug(categorySegment);
+      if (setSubcategorySlug) setSubcategorySlug(finalSubcategorySlug);
+
       const requestUrl = `/filters/main_productsFilter/?${params.toString()}`;
       const res = await axiosInstance.get(requestUrl);
       
@@ -555,44 +566,42 @@ const FilterSidebar = ({
         userInteracted.current = false;
       }, 100);
 
-      const catInfo = res.data?.category_info?.category_info || null;
+      const parentCatInfo = res.data?.category_info || null;
+      const parentSubcatInfo = res.data?.subcategory_info || null;
+      const nestedCatInfo = parentCatInfo?.category_info || parentCatInfo;
+      const activeInfo = parentSubcatInfo || nestedCatInfo;
+
       if (setCategoryData) {
-        setCategoryData(catInfo);
+        setCategoryData(activeInfo);
       }
 
       // Update SEO directly from same API call — no extra requests
-      if (setSeoData) {
+      if (setSeoData && activeInfo) {
+        const parentObj = finalSubcategoryId ? parentSubcatInfo : parentCatInfo;
+
         if (finalSubcategoryId) {
-          // Subcategory selected.
-          // Priority: subcategoryList (SSR list for route type) → filterData live list (for switched types)
-          // Use loose equality (==) to handle string vs number type mismatches.
+          // Subcategory selected logic
           const matchedSub =
             subcategoryListRef.current?.find(s => s.id == finalSubcategoryId) ||
             filterDataRef.current?.subcategories?.find(s => s.id == finalSubcategoryId);
 
-          // Helper: build SEO object from a subcategory record (sub_category_info or catInfo)
           const buildSubSeoData = (name, info = {}) => ({
             ...info,
             title: info.title || name,
             subtitle: info.subtitle || `${name} - Buy Online in India from Gidan.store`,
             description: info.description || info.intro_text || info.content || "",
-            sections: info.sections || [],
-            info_cards: info.info_cards || []
+            sections: info.sections || (parentObj?.sections || []),
+            info_cards: info.info_cards || (parentObj?.info_cards || [])
           });
 
           if (matchedSub?.sub_category_info?.description || matchedSub?.sub_category_info?.sections?.length) {
-            // sub_category_info has rich content — use it directly
             setSeoData(buildSubSeoData(matchedSub.name, matchedSub.sub_category_info));
             if (setIsSubcategorySEO) setIsSubcategorySEO(true);
-          } else if (catInfo?.subcategory_name && (catInfo?.description || catInfo?.intro_text || catInfo?.sections?.length)) {
-            // Products API returned subcategory info with content — use it
-            setSeoData(buildSubSeoData(catInfo.subcategory_name, catInfo));
+          } else if (activeInfo?.subcategory_name && (activeInfo?.description || activeInfo?.intro_text || activeInfo?.sections?.length)) {
+            setSeoData(buildSubSeoData(activeInfo.subcategory_name, activeInfo));
             if (setIsSubcategorySEO) setIsSubcategorySEO(true);
           } else {
-            // Neither source has the description — fetch from the subcategory listing API
-            // (same endpoint the SSR path uses, guaranteed to have sub_category_info)
-            const subName = matchedSub?.name || catInfo?.subcategory_name || "";
-            // Set title/subtitle immediately so the UI isn't blank while fetching
+            const subName = matchedSub?.name || activeInfo?.subcategory_name || "";
             setSeoData(buildSubSeoData(subName, matchedSub?.sub_category_info || {}));
             if (setIsSubcategorySEO) setIsSubcategorySEO(true);
 
@@ -602,39 +611,43 @@ const FilterSidebar = ({
                 .get(endpoint)
                 .then(subRes => {
                   const subcats = subRes.data?.data?.subCategorys || subRes.data?.products || [];
-                  const found = subcats.find(s =>
-                    s.slug === finalSubcategorySlug ||
-                    s.id == finalSubcategoryId
-                  );
+                  const found = subcats.find(s => s.slug === finalSubcategorySlug || s.id == finalSubcategoryId);
                   if (found) {
                     setSeoData(buildSubSeoData(found.name, found.sub_category_info || {}));
                     if (setFetchedSubcategoryName) setFetchedSubcategoryName(found.name);
                   }
                 })
-                .catch(() => {/* Silently ignore — we already set a fallback above */ });
+                .catch(() => { });
             }
           }
         } else {
-          // No subcategory — revert to category-level SEO from API response
-          if (catInfo) {
-            setSeoData({ 
-              ...catInfo, 
-              info_cards: catInfo.info_cards || catInfo.category_info?.info_cards || []
-            });
-          }
+          // No subcategory — category level
+          setSeoData({
+            ...activeInfo,
+            // Ensure info_cards are pulled from parent level if missing in detailed nested block
+            info_cards: (activeInfo.info_cards && activeInfo.info_cards.length > 0) 
+              ? activeInfo.info_cards 
+              : (parentCatInfo?.info_cards || []),
+            sections: (activeInfo.sections && activeInfo.sections.length > 0)
+              ? activeInfo.sections
+              : (parentCatInfo?.sections || [])
+          });
           if (setIsSubcategorySEO) setIsSubcategorySEO(false);
         }
       }
 
-      if (setFetchedCategoryName && catInfo?.category_name) {
-        setFetchedCategoryName(catInfo.category_name);
-      } else if (setFetchedCategoryName && isTypeMismatch) {
-        // Fallback for type switch when API doesn't return name immediately
-        setFetchedCategoryName(selectedFilterType.charAt(0).toUpperCase() + selectedFilterType.slice(1) + "s");
+      const activeName = activeInfo?.name || activeInfo?.title || activeInfo?.category_name || (finalSubcategoryId ? activeInfo?.subcategory_name : "");
+
+      if (setFetchedCategoryName) {
+        if (!finalSubcategoryId && activeName) {
+            setFetchedCategoryName(activeName);
+        } else if (activeInfo?.category_name) {
+            setFetchedCategoryName(activeInfo.category_name);
+        }
       }
 
       if (setFetchedSubcategoryName) {
-        setFetchedSubcategoryName(catInfo?.subcategory_name || null);
+        setFetchedSubcategoryName(finalSubcategoryId ? activeName : null);
       }
 
       setOpenFilters({});

@@ -129,22 +129,11 @@ export default async function CategoryPage({ params }: Props) {
     info_cards: []
   };
 
-  const breadcrumbItems: { label: string; path: string }[] = []; // Basic category level
-  const breadcrumbPage = effectiveCategory.name;
-
   return (
     <>
       <CollectionSchema
         category={{ name: effectiveCategory.name, slug: effectiveCategory.slug }}
         products={[]} 
-      />
-
-      <CategoryHero 
-        data={initialSEOData as any} 
-        breadcrumb={{
-            items: breadcrumbItems,
-            currentPage: breadcrumbPage
-        }}
       />
 
       <div className="bg-white border-b border-gray-100">
@@ -167,7 +156,6 @@ export default async function CategoryPage({ params }: Props) {
           categoryWithSubs={categoryWithSubs}
           publicFlags={publicFlags}
           initialSEOData={initialSEOData}
-          hideHeader={true}
         />
       </Suspense>
 

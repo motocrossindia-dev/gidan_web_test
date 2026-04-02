@@ -9,10 +9,22 @@ import { useSnackbar } from "notistack";
 import axiosInstance from "../../../Axios/axiosInstance";
 import StoreSection from "../../../components/Home/StoreSection";
 import ContactUsSchema from "../seo/ContactUsSchema";
-import PageHeader from "@/components/Shared/PageHeader";
+import CategoryHero from "@/components/Shared/CategoryHero";
 import { Mail, Phone, MapPin, Send, MessageSquare, User, Smartphone, Globe, ArrowRight } from "lucide-react";
 
 const ContactUs = () => {
+  const contactHeroData = {
+    heading_before: "Let's",
+    italic_text: "Talk",
+    heading_after: "Gardening",
+    description: "Have a question? We're here to help your garden thrive. Whether you're a beginner or an expert, our team is just a message away.",
+  };
+
+  const breadcrumb = {
+    items: [],
+    currentPage: "Contact Us"
+  };
+
   const [formData, setFormData] = useState({
     name: "",
     mobile: "",
@@ -79,9 +91,9 @@ const ContactUs = () => {
 
   return (
     <main className="bg-[#faf9f6] min-h-screen font-sans text-[#173113]">
-      <PageHeader 
-        title="Let's Talk" 
-        subtitle="Have a question? We're here to help your garden thrive."
+      <CategoryHero 
+        data={contactHeroData} 
+        breadcrumb={breadcrumb}
       />
 
       <div className="max-w-7xl mx-auto px-6 py-16 md:py-24">
@@ -98,22 +110,22 @@ const ContactUs = () => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-[#173113]/5 group hover:bg-[#173113] transition-all duration-500">
-                <div className="w-12 h-12 bg-[#A7D949]/20 rounded-2xl flex items-center justify-center mb-6 border border-[#A7D949]/20 group-hover:bg-[#A7D949] transition-colors">
+              <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-[#173113]/5 group hover:bg-[#f0f9e8] hover:border-[#A7D949] transition-all duration-500">
+                <div className="w-12 h-12 bg-[#A7D949]/20 rounded-2xl flex items-center justify-center mb-6 border border-[#A7D949]/20 group-hover:bg-[#A7D949] group-hover:text-white transition-colors">
                   <MapPin className="w-6 h-6 text-[#173113]" />
                 </div>
-                <h3 className="text-xl font-serif mb-2 group-hover:text-white transition-colors">Head Office</h3>
-                <p className="text-[#173113]/60 text-sm font-medium leading-relaxed group-hover:text-white/60 transition-colors">Jaynagar, Bengaluru, KA</p>
-                <p className="text-[#173113] font-bold mt-4 group-hover:text-[#A7D949] transition-colors">+91 7483316150</p>
+                <h3 className="text-xl font-serif mb-2 transition-colors">Head Office</h3>
+                <p className="text-[#173113]/60 text-sm font-medium leading-relaxed transition-colors">Jaynagar, Bengaluru, KA</p>
+                <p className="text-[#173113] font-bold mt-4 group-hover:text-[#375421] transition-colors">+91 7483316150</p>
               </div>
 
-              <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-[#173113]/5 group hover:bg-[#173113] transition-all duration-500">
-                 <div className="w-12 h-12 bg-[#A7D949]/20 rounded-2xl flex items-center justify-center mb-6 border border-[#A7D949]/20 group-hover:bg-[#A7D949] transition-colors">
+              <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-[#173113]/5 group hover:bg-[#f0f9e8] hover:border-[#A7D949] transition-all duration-500">
+                 <div className="w-12 h-12 bg-[#A7D949]/20 rounded-2xl flex items-center justify-center mb-6 border border-[#A7D949]/20 group-hover:bg-[#A7D949] group-hover:text-white transition-colors">
                   <Globe className="w-6 h-6 text-[#173113]" />
                 </div>
-                <h3 className="text-xl font-serif mb-2 group-hover:text-white transition-colors">Nursery Store</h3>
-                <p className="text-[#173113]/60 text-sm font-medium leading-relaxed group-hover:text-white/60 transition-colors">Kanakapura Road, Bengaluru</p>
-                <p className="text-[#173113] font-bold mt-4 group-hover:text-[#A7D949] transition-colors">+91 8971710854</p>
+                <h3 className="text-xl font-serif mb-2 transition-colors">Nursery Store</h3>
+                <p className="text-[#173113]/60 text-sm font-medium leading-relaxed transition-colors">Kanakapura Road, Bengaluru</p>
+                <p className="text-[#173113] font-bold mt-4 group-hover:text-[#375421] transition-colors">+91 8971710854</p>
               </div>
             </div>
 
@@ -189,10 +201,10 @@ const ContactUs = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#173113] text-white py-5 rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-[#173113]/90 hover:scale-[1.02] active:scale-100 transition-all shadow-xl shadow-[#173113]/20 disabled:opacity-50"
+                className="w-full bg-[#f0f9e8] text-[#173113] border border-[#A7D949] py-5 rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-[#A7D949]/10 hover:scale-[1.02] active:scale-100 transition-all shadow-xl shadow-[#A7D949]/10 disabled:opacity-50"
               >
                 {loading ? "Sending..." : "Send Message"}
-                {!loading && <Send className="w-5 h-5" />}
+                {!loading && <Send className="w-5 h-5 text-[#375421]" />}
               </button>
             </form>
           </div>

@@ -172,11 +172,6 @@ export default function RootLayout({
 
           <div className="landing-page-layout w-full min-h-screen flex flex-col relative">
             <main className="main-content w-full">
-              <div className="hidden md:block">
-                <Suspense fallback={null}>
-                  <StaticBreadcrumb />
-                </Suspense>
-              </div>
               {children}
               <Footer />
             </main>

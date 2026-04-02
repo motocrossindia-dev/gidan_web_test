@@ -38,12 +38,12 @@ const TawkChat = () => {
                         desktop : {
                             position : 'br',
                             xOffset : 40,
-                            yOffset : 80
+                            yOffset : 40
                         },
                         mobile : {
                             position : 'br',
                             xOffset : 25,
-                            yOffset : 180
+                            yOffset : 70
                         }
                     }
                 };

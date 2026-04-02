@@ -1,37 +1,59 @@
 'use client';
 
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import axios from "axios";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Header = () => {
+  const [announcements, setAnnouncements] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/utils/announcement/`);
+        if (response.data && response.data.is_active && response.data.items?.length > 0) {
+          setAnnouncements(response.data.items);
+          setIsActive(true);
+        }
+      } catch (error) {
+        console.error("Error fetching announcements:", error);
+      }
+    };
+    fetchAnnouncements();
+  }, []);
+
+  useEffect(() => {
+    if (isActive && announcements.length > 1) {
+      const timer = setInterval(() => {
+        setCurrentIndex((prev) => (prev + 1) % announcements.length);
+      }, 4000);
+      return () => clearInterval(timer);
+    }
+  }, [isActive, announcements]);
 
   return (
-    <header className="bg-[#375421] font-poppins relative">
-
-      <div className="max-w-full px-4 md:px-8 py-2 flex flex-row items-center justify-between gap-2 m-auto text-white">
-
-        <div>
-          <p className="text-white text-[11px] px-3 md:text-[13px]">
-            Free Shipping above ₹2000 | Delivery in Bengaluru
-          </p>
+    <header className="bg-[#375421] font-poppins relative overflow-hidden">
+      <div className="max-w-full px-4 md:px-8 py-2.5 flex items-center justify-center m-auto text-white">
+        <div className="flex flex-row items-center justify-between w-full max-w-5xl mx-auto gap-4 flex-wrap font-medium">
+          {isActive ? (
+            announcements.map((item, index) => (
+              <Link 
+                key={index}
+                href={item.url || "#"} 
+                className="text-white text-[10px] md:text-[13px] hover:text-white/80 transition-all whitespace-nowrap"
+              >
+                {item.text}
+              </Link>
+            ))
+          ) : (
+            <p className="text-white text-[10px] md:text-[13px] px-0 whitespace-nowrap">
+              Free Shipping above ₹2000 | Delivery in Bengaluru
+            </p>
+          )}
         </div>
-
-        {/* FIXED: Responsive Stack to prevent overlap */}
-        <div className="flex flex-col items-end space-y-1 sm:flex-row sm:items-center sm:space-x-6 sm:space-y-0">
-
-          <div className="flex flex-col text-white text-[10px] sm:text-xs leading-tight text-right">
-            <p>Help line</p>
-            <p className="font-semibold">+91 7483316150</p>
-          </div>
-
-          <Link
-            href="/franchise-enquiry/"
-            className="bg-white text-[#375421] font-bold uppercase whitespace-nowrap rounded-lg px-2 md:py-1
-            hover:bg-[#375421] hover:text-white hover:border hover:border-white transition text-[11px] md:text-[13px] flex items-center justify-center"
-          >
-            Franchise Enquiry
-          </Link>
-        </div>
-
       </div>
     </header>
   );

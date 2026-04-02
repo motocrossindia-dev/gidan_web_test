@@ -1,21 +1,33 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import PageHeader from "@/components/Shared/PageHeader";
+import CategoryHero from "@/components/Shared/CategoryHero";
 import { Truck, Package, RefreshCw, MessageCircle, Mail, Phone, MapPin, Clock, CheckCircle, XCircle, Info, Zap } from 'lucide-react';
 import HomepageSchema from "../../views/utilities/seo/HomepageSchema";
 import StoreSchema from "../../views/utilities/seo/StoreSchema";
 
 const ShippingPolicy = () => {
+  const shippingHeroData = {
+    heading_before: "Shipping &",
+    italic_text: "Delivery",
+    heading_after: "Promise",
+    description: "Ensuring your green companions reach you safely and swiftly across India. We partner with reputed courier agencies for a safe and timely delivery.",
+  };
+
+  const breadcrumb = {
+    items: [],
+    currentPage: "Shipping Policy"
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0); 
   }, []);
 
   return (
     <main className="bg-[#faf9f6] min-h-screen pb-24 font-sans text-[#173113]">
-      <PageHeader 
-        title="Shipping & Delivery" 
-        subtitle="Ensuring your green companions reach you safely and swiftly across India."
+      <CategoryHero 
+        data={shippingHeroData} 
+        breadcrumb={breadcrumb}
       />
 
       <div className="max-w-4xl mx-auto px-6 mt-16 md:mt-24">

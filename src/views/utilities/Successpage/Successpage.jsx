@@ -496,13 +496,13 @@ const SuccesspageContent = () => {
                             </div>
                             <div className="flex-1">
                               <div className="group cursor-pointer" onClick={() => router.push(getProductUrl(item))}>
-                                <p className="text-[10px] font-bold text-[#375421] uppercase tracking-widest mb-1 group-hover:underline">Evergreen Pot</p>
+                                <p className="text-[10px] font-bold text-[#375421] uppercase tracking-widest mb-1 group-hover:underline">{item.category_slug?.replace(/-/g, ' ') || item.category_name || "Gidan Collection"}</p>
                                 <h4 className="text-[16px] font-black text-gray-900 uppercase leading-none mb-2 group-hover:text-[#375421] transition-colors">{item.product_name}</h4>
-                                <p className="text-[11px] text-gray-400 font-bold uppercase tracking-tight mb-4">Swiss Cheese Plant · Regular size · No planter</p>
+                                <p className="text-[11px] text-gray-400 font-bold uppercase tracking-tight mb-4">{item.variant_name || "Premium Selection · Professional Grade"}</p>
                                 
                                 <div className="flex flex-wrap gap-2 mb-4">
-                                  <span className="px-2.5 py-1 bg-[#f4f7f1] text-[9px] font-black text-[#375421] rounded-lg uppercase tracking-tight flex items-center gap-1.5">CLIMATE TESTED</span>
-                                  <span className="px-2.5 py-1 bg-[#f4f7f1] text-[9px] font-black text-[#375421] rounded-lg uppercase tracking-tight flex items-center gap-1.5">EASY CARE</span>
+                                  <span className="px-2.5 py-1 bg-[#f4f7f1] text-[9px] font-black text-[#375421] rounded-lg uppercase tracking-tight flex items-center gap-1.5">QUALITY VERIFIED</span>
+                                  <span className="px-2.5 py-1 bg-[#f4f7f1] text-[9px] font-black text-[#375421] rounded-lg uppercase tracking-tight flex items-center gap-1.5">BOUTIQUE SELECTION</span>
                                 </div>
                               </div>
 
@@ -687,9 +687,9 @@ const SuccesspageContent = () => {
                   <div className="flex gap-4">
                     <div className="w-8 h-8 rounded-full bg-[#f4f7f1] flex items-center justify-center flex-shrink-0 text-[#375421] font-bold text-sm">3</div>
                     <div className="space-y-1">
-                      <h4 className="text-[15px] font-bold text-gray-900 leading-none">Shipped with tracking</h4>
+                      <h4 className="text-[15px] font-bold text-gray-900 leading-none">Healthy arrival</h4>
                       <p className="text-[13px] text-gray-400 leading-relaxed font-medium">
-                        You'll get a live tracking link on WhatsApp when your order is dispatched.
+                        Your plants are packed in breathable, eco-friendly boxes for a safe journey.
                       </p>
                     </div>
                   </div>
@@ -709,12 +709,6 @@ const SuccesspageContent = () => {
 
               {/* Action Buttons */}
               <div className="p-8 space-y-3">
-                <button 
-                  onClick={() => router.push('/profile/orders')}
-                  className="w-full py-4 bg-[#2d4a1e] text-white rounded-2xl font-bold text-[15px] flex items-center justify-center gap-2 hover:bg-[#1a3311] transition-all shadow-md shadow-green-900/10"
-                >
-                  <Package size={18} /> Track Order #{orderIdDisplay}
-                </button>
                 <button 
                   onClick={() => router.push('/profile')}
                   className="w-full py-4 bg-white border border-gray-200 text-gray-700 rounded-2xl font-bold text-[15px] flex items-center justify-center gap-2 hover:bg-gray-50 transition-all"
