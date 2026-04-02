@@ -20,6 +20,7 @@ const ProductGrid = ({
   subcategorySlug: propSubcategorySlug,
   bottomContent = null,
   searchTerm = "",
+  currentPage: propCurrentPage,
   hidePagination = false,
 }) => {
 
@@ -33,9 +34,12 @@ const ProductGrid = ({
   const [nextUrl, setNextUrl] = useState(pagination?.next || null);
   const [prevUrl, setPrevUrl] = useState(pagination?.previous || null);
 
-  // Initialize from URL or default to 1
-  const initialPage = parseInt(searchParams.get('page') || '1');
-  const [currentPage, setCurrentPage] = useState(initialPage);
+  // Initialize from props, URL, or default to 1
+  const initialPage = propCurrentPage || parseInt(searchParams.get('page') || '1');
+  const [currentPageInternal, setCurrentPageInternal] = useState(initialPage);
+  
+  // Internal page state sync with prop if it comes from parent
+  const currentPage = propCurrentPage || currentPageInternal;
   const pageSize = 12; // Lowered to make pagination visible
 
   // Calculate total pages
@@ -46,8 +50,8 @@ const ProductGrid = ({
   useEffect(() => {
     setNextUrl(pagination?.next || null);
     setPrevUrl(pagination?.previous || null);
-    setCurrentPage(1);
-  }, [pagination?.next, pagination?.previous, query]);
+    if (!propCurrentPage) setCurrentPageInternal(1);
+  }, [pagination?.next, pagination?.previous, query, propCurrentPage]);
 
   // GA4: Track view_item_list when products are shown
   const listName = [propCategorySlug, propSubcategorySlug].filter(Boolean).join(' > ') || 'Product List';
@@ -118,7 +122,7 @@ const ProductGrid = ({
           setResults(newProducts);
           setNextUrl(res.data.next || null);
           setPrevUrl(res.data.previous || null);
-          setCurrentPage(pageNumber);
+          setCurrentPageInternal(pageNumber);
 
           // Update URL strictly
           const params = new URLSearchParams(searchParams);
@@ -147,7 +151,7 @@ const ProductGrid = ({
       setLoading(false);
       setLoadingPage(null);
     }
-  }, [loading, setResults, query, pageSize]);
+  }, [loading, setResults, query, pageSize, propCurrentPage]);
 
   // Compute "Showing X–Y of Z" display string
   const showingFrom = productDetails?.length > 0 ? (currentPage - 1) * pageSize + 1 : 0;

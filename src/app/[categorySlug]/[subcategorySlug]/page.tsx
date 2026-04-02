@@ -130,6 +130,7 @@ export default async function SubcategoryPage({ params }: Props) {
 
   const initialData = await fetchProductsByFilters({
     type: typeKey,
+    category_id: category.id,
     subcategory_id: subcategory.id
   });
 

@@ -242,7 +242,7 @@ function PlantFilter({
         try {
             const queryParams = new URLSearchParams(currentQuery);
             const response = await axiosInstance.get(
-                `/filters/main_productsFilter/?${queryParams}&page_size=${pageSize}&page=${pageNumber}`
+                `/filters/main_productsFilter/?${queryParams}&page_size=${pageSize}&limit=${pageSize}&page=${pageNumber}`
             );
 
             if (response.status === 200) {
@@ -706,6 +706,7 @@ function PlantFilter({
                                 <ProductGrid
                                     productDetails={results}
                                     pagination={products}
+                                    currentPage={currentPage}
                                     setResults={setResults}
                                     filtersApplied={filtersApplied}
                                     categoryName={categoryName || fetchedCategoryName}
