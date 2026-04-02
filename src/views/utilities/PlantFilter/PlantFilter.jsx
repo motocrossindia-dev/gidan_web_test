@@ -85,9 +85,9 @@ function PlantFilter({
     const isFeatured = routeBasedFilters.isFeatured || queryIsFeatured;
     const isBestSeller = routeBasedFilters.isBestSeller || queryIsBestSeller;
 
-    // Use null as primary data source (keep existing logic)
-    const stateData = null || {};
-    const { categoryId, categoryName, subCategory, subcategoryID, category_slug } = stateData;
+    // Use initial data as primary source, sync with props on route changes
+    const stateData = initialCategoryData || {};
+    const { id: categoryId, name: categoryName, subCategory, subcategoryID, slug: category_slug } = stateData;
     const { name: subCategoryName, subcategory_slug } = subCategory || {};
 
     // Use props for SSR stability, fall back to client-side hooks
@@ -138,6 +138,28 @@ function PlantFilter({
     const [resolvedSubcategoryId, setResolvedSubcategoryId] = useState(
         subcategoryID || initialCategoryData?.subCategoryId || null
     );
+
+    // Sync state with props when navigating between slug-based routes
+    // This prevents stale data (like IDs or names) from appearing on the new page
+    useEffect(() => {
+        setResolvedCategoryId(categoryId || categoryIdFromSlug || initialCategoryData?.id || null);
+        setResolvedSubcategoryId(subcategoryID || initialCategoryData?.subCategoryId || null);
+        setFetchedCategoryName(categoryName || null);
+        setFetchedSubcategoryName(subCategoryName || null);
+        setCategoryData(initialSEOData || initialCategoryData || normalizedInitialResults?.category_info?.category_info || null);
+        setSeoData(initialSEOData || initialCategoryData || (typeof normalizedInitialResults === 'object' ? normalizedInitialResults?.category_info?.category_info : null));
+        setResults(normalizedInitialResults?.results || []);
+        setProducts({
+            count: normalizedInitialResults?.count || 0,
+            next: normalizedInitialResults?.next || null,
+            previous: normalizedInitialResults?.previous || null,
+        });
+        setCurrentPage(parseInt(searchParams.get('page') || '1'));
+        
+        // Hide mobile filter on navigation
+        setMobileOpen(false);
+    }, [effectiveCategorySlug, effectiveSubcategorySlug, initialCategoryData, initialSEOData, normalizedInitialResults, categoryId, subcategoryID, categoryName, subCategoryName]);
+    
     const [isResolvingIds, setIsResolvingIds] = useState(false);
 
     // State to track the currently selected Type from the Sidebar
