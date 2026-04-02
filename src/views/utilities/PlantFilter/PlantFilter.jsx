@@ -753,7 +753,7 @@ function PlantFilter({
                                 </h2>
                             )}
                             {(seoData?.category_info_description || initialSEOData?.category_info_description) && (
-                                <p className="text-sm md:text-base text-gray-600 leading-relaxed max-w-3xl mx-auto font-medium opacity-90 italic">
+                                <p className="text-base md:text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto font-medium opacity-100 italic">
                                     {seoData?.category_info_description || initialSEOData?.category_info_description}
                                 </p>
                             )}

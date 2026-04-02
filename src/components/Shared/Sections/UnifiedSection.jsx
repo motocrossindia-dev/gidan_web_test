@@ -93,7 +93,7 @@ const SectionHeader = ({ data, config, isDark, type }) => {
                 </span> {data.heading_suffix}
             </h2>
             <p
-                className={`text-sm lg:text-[15px] leading-relaxed max-w-[540px] ${!data.extra?.text_color && (isDark ? 'text-white/70' : 'text-black/60')}`}
+                className={`text-[16px] lg:text-[17px] leading-relaxed max-w-[540px] ${!data.extra?.text_color && (isDark ? 'text-white/70' : 'text-black/60')}`}
                 style={data.extra?.text_color ? { color: data.extra.text_color } : {}}
             >
                 {renderDescription(data.description)}
@@ -300,7 +300,7 @@ const ItemsRenderer = ({ items, isDark, data }) => {
                                     
                                     {(item.subtitle || item.description) && (
                                         <p
-                                            className={`text-[13px] leading-relaxed max-w-xl ${!data?.extra?.text_color && (isDark ? 'text-white/60' : 'text-gray-500 font-medium')}`}
+                                            className={`text-[15px] leading-relaxed max-w-xl ${!data?.extra?.text_color && (isDark ? 'text-white/60' : 'text-gray-500 font-medium')}`}
                                             style={data?.extra?.text_color ? { color: data.extra.text_color, opacity: 0.7 } : {}}
                                         >
                                             {item.subtitle || item.description} {item.price && <span className="font-bold opacity-100 ml-2 text-sm">₹{item.price}</span>}
@@ -518,7 +518,7 @@ const UnifiedSection = ({ data }) => {
                                 style={data.extra?.color ? { color: data.extra.color } : {}}
                             >{data.heading_secondary}</h3>
                             <p
-                                className={`text-[15px] leading-relaxed border-l-3 border-[#8dbd64]/20 pl-6 italic ${!data.extra?.text_color && (isDark ? 'text-white/60' : 'text-[#4a5f3a]')}`}
+                                className={`text-[17px] leading-relaxed border-l-3 border-[#8dbd64]/20 pl-6 italic ${!data.extra?.text_color && (isDark ? 'text-white/60' : 'text-[#4a5f3a]')}`}
                                 style={data.extra?.text_color ? { color: data.extra.text_color, opacity: 0.8 } : {}}
                             >{data.description_secondary}</p>
                         </div>
