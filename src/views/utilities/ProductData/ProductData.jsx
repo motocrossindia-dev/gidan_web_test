@@ -1206,15 +1206,15 @@ export default function ProductData({ initialProductData }) {
             />
 
             <div className="w-full" style={{ backgroundColor: "whitesmoke" }}>
-                <div className="w-full max-w-full mx-auto px-4 py-4 font-sans md:px-8">
+                <div className="w-full max-w-full mx-auto px-4 pt-2 pb-4 font-sans md:px-8">
                     <div className="flex flex-col md:flex-row gap-8 lg:gap-16 relative items-start w-full">
                         {/* LEFT COLUMN: STICKY IMAGE GALLERY */}
                         <div 
-                            className="w-full md:w-1/2 md:sticky md:top-40 md:self-start pt-12 md:pt-32 pb-12 h-fit z-30 min-w-0 md:pr-4"
+                            className="w-full md:w-1/2 md:sticky md:top-40 md:self-start pt-2 md:pt-4 pb-4 h-fit z-30 min-w-0 md:pr-4"
                         >
                             {/* Main Image with Fully Working Zoom */}
                             <div
-                                className="relative cursor-crosshair group z-40 bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm aspect-square w-full max-w-full flex items-center justify-center p-6 md:p-10"
+                                className="relative cursor-crosshair group z-40 bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm aspect-square w-full max-w-full flex items-center justify-center p-3 md:p-5"
                                 onMouseMove={(e) => {
                                     const rect = e.currentTarget.getBoundingClientRect();
                                     const x = e.clientX - rect.left;
@@ -1339,7 +1339,7 @@ export default function ProductData({ initialProductData }) {
                             </div>
                         </div>
 
-                        <div className="w-full md:w-1/2 font-sans mt-6 md:mt-0 md:pt-10 min-w-0 md:pl-6">
+                        <div className="w-full md:w-1/2 font-sans mt-6 md:mt-0 md:pt-4 min-w-0 md:pl-6">
                             <h1 className="text-xl md:text-3xl font-bold mb-2">
                                 {(() => {
                                     const p = productDetailData?.data?.product;

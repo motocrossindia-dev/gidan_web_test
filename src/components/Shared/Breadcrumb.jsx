@@ -20,7 +20,7 @@ export default function Breadcrumb({ items = [], currentPage }) {
     const pathname = usePathname();
 
     return (
-        <div className="py-3 px-4 bg-site-bg border-b border-gray-200">
+        <div className="py-1.5 px-4 bg-site-bg border-b border-gray-200">
             <div className="container mx-auto">
                 <Breadcrumbs
                     separator={<NavigateNext fontSize="small" className="text-gray-400" />}
