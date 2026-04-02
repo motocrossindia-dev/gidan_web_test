@@ -139,27 +139,6 @@ function PlantFilter({
         subcategoryID || initialCategoryData?.subCategoryId || null
     );
 
-    // Sync state with props when navigating between slug-based routes
-    // This prevents stale data (like IDs or names) from appearing on the new page
-    useEffect(() => {
-        setResolvedCategoryId(categoryId || categoryIdFromSlug || initialCategoryData?.id || null);
-        setResolvedSubcategoryId(subcategoryID || initialCategoryData?.subCategoryId || null);
-        setFetchedCategoryName(categoryName || null);
-        setFetchedSubcategoryName(subCategoryName || null);
-        setCategoryData(initialSEOData || initialCategoryData || normalizedInitialResults?.category_info?.category_info || null);
-        setSeoData(initialSEOData || initialCategoryData || (typeof normalizedInitialResults === 'object' ? normalizedInitialResults?.category_info?.category_info : null));
-        setResults(normalizedInitialResults?.results || []);
-        setProducts({
-            count: normalizedInitialResults?.count || 0,
-            next: normalizedInitialResults?.next || null,
-            previous: normalizedInitialResults?.previous || null,
-        });
-        setCurrentPage(parseInt(searchParams.get('page') || '1'));
-        
-        // Hide mobile filter on navigation
-        setMobileOpen(false);
-    }, [effectiveCategorySlug, effectiveSubcategorySlug, initialCategoryData, initialSEOData, normalizedInitialResults, categoryId, subcategoryID, categoryName, subCategoryName]);
-    
     const [isResolvingIds, setIsResolvingIds] = useState(false);
 
     // State to track the currently selected Type from the Sidebar
@@ -326,6 +305,26 @@ function PlantFilter({
         const info = initialSEOData || initialCategoryData || (typeof normalizedInitialResults === 'object' ? normalizedInitialResults.category_info?.category_info : null);
         return !!(info?.subcategory_name || propSubcategorySlug);
     });
+    // Sync state with props when navigating between slug-based routes
+    // This prevents stale data (like IDs or names) from appearing on the new page
+    useEffect(() => {
+        setResolvedCategoryId(categoryId || categoryIdFromSlug || initialCategoryData?.id || null);
+        setResolvedSubcategoryId(subcategoryID || initialCategoryData?.subCategoryId || null);
+        setFetchedCategoryName(categoryName || null);
+        setFetchedSubcategoryName(subCategoryName || null);
+        setCategoryData(initialSEOData || initialCategoryData || normalizedInitialResults?.category_info?.category_info || null);
+        setSeoData(initialSEOData || initialCategoryData || (typeof normalizedInitialResults === 'object' ? normalizedInitialResults?.category_info?.category_info : null));
+        setResults(normalizedInitialResults?.results || []);
+        setProducts({
+            count: normalizedInitialResults?.count || 0,
+            next: normalizedInitialResults?.next || null,
+            previous: normalizedInitialResults?.previous || null,
+        });
+        setCurrentPage(parseInt(searchParams.get('page') || '1'));
+        
+        // Hide mobile filter on navigation
+        setMobileOpen(false);
+    }, [effectiveCategorySlug, effectiveSubcategorySlug, initialCategoryData, initialSEOData, normalizedInitialResults, categoryId, subcategoryID, categoryName, subCategoryName]);
 ;
 
     // iOS Swipeable Drawer patch to prevent body bounce
