@@ -136,9 +136,6 @@ export default async function CategoryPage({ params }: Props) {
         products={[]} 
       />
 
-      <div className="bg-white border-b border-gray-100">
-        <TrustBadges variant="row" />
-      </div>
 
       <Suspense fallback={
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-12">
