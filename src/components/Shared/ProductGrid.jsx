@@ -37,15 +37,15 @@ const ProductGrid = ({
   const [currentPage, setCurrentPage] = useState(initialPage);
   const pageSize = 12; // Lowered to make pagination visible
 
-  // Calculate total pages
-  const totalCount = pagination?.count ?? productDetails?.length ?? 0;
+  // Calculate total pages - prioritize API count, but fallback to actual results length
+  const totalCount = Math.max(pagination?.count || 0, productDetails?.length || 0);
   const totalPages = Math.ceil(totalCount / pageSize);
 
   // Keep nextUrl/prevUrl synced when parent gives new pagination (filter change resets page)
   useEffect(() => {
     setNextUrl(pagination?.next || null);
     setPrevUrl(pagination?.previous || null);
-    setCurrentPage(1);
+    // Note: We don't reset currentPage here to allow direct navigation to stay on page
   }, [pagination?.next, pagination?.previous, query]);
 
   // GA4: Track view_item_list when products are shown
@@ -155,7 +155,7 @@ const ProductGrid = ({
 
   const renderPagination = () => {
     const pages = [];
-    if (totalPages <= 7) {
+    if (totalPages <= 5) {
       for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
       if (currentPage <= 3) {
@@ -168,55 +168,57 @@ const ProductGrid = ({
     }
 
     return (
-      <div className="flex flex-col items-center gap-8 mt-12 mb-8">
-        <div className="flex items-center gap-2 md:gap-3">
+      <div className="flex flex-col items-center gap-6 mt-12 mb-8 px-4 w-full overflow-hidden">
+        <div className="flex items-center justify-center gap-1.5 md:gap-3 w-full max-w-full overflow-x-auto pb-2 scrollbar-none no-scrollbar">
           {/* Previous Arrow */}
           <button
             onClick={() => currentPage > 1 && fetchPage(currentPage - 1, true)}
             disabled={currentPage === 1 || loading}
-            className={`w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-full border-2 transition-all duration-300 relative ${
+            className={`flex-shrink-0 w-8 h-8 md:w-11 md:h-11 flex items-center justify-center rounded-full border-[1.5px] md:border-2 transition-all duration-300 ${
               currentPage === 1 || loading
               ? "border-gray-100 text-gray-300 cursor-not-allowed"
-              : "border-gray-200 text-gray-600 hover:border-[#375421] hover:text-[#375421] hover:scale-110"
+              : "border-gray-200 text-gray-600 hover:border-[#375421] hover:text-[#375421]"
             }`}
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
 
-          {pages.map((page, index) => (
-            <button
-              key={index}
-              onClick={() => typeof page === 'number' && fetchPage(page, false)}
-              disabled={page === '...' || page === currentPage || loading}
-              className={`w-10 h-10 md:w-11 md:h-11 rounded-full border-2 text-sm font-bold transition-all duration-300 relative ${
-                page === currentPage
-                ? "bg-[#375421] text-white border-[#375421] shadow-lg shadow-[#375421]/30 scale-110"
-                : page === '...'
-                  ? "border-transparent text-gray-400 cursor-default"
-                  : "border-gray-100 text-gray-500 hover:border-[#375421] hover:text-[#375421] hover:bg-gray-50"
-              }`}
-            >
-              {loading && loadingPage === page ? (
-                <div className={`w-4 h-4 border-2 ${page === currentPage ? 'border-white' : 'border-[#375421]'} border-t-transparent rounded-full animate-spin mx-auto`}></div>
-              ) : (
-                page
-              )}
-            </button>
-          ))}
+          <div className="flex items-center gap-1 md:gap-2">
+            {pages.map((page, index) => (
+              <button
+                key={index}
+                onClick={() => typeof page === 'number' && fetchPage(page, false)}
+                disabled={page === '...' || page === currentPage || loading}
+                className={`flex-shrink-0 w-8 h-8 md:w-11 md:h-11 rounded-full border-[1.5px] md:border-2 text-[10px] md:text-sm font-bold transition-all duration-300 ${
+                  page === currentPage
+                  ? "bg-[#375421] text-white border-[#375421] shadow-lg shadow-[#375421]/20 scale-105"
+                  : page === '...'
+                    ? "border-transparent text-gray-400 cursor-default"
+                    : "border-gray-100 text-gray-500 hover:border-[#375421] hover:text-[#375421] hover:bg-gray-50"
+                }`}
+              >
+                {loading && loadingPage === page ? (
+                  <div className={`w-3 h-3 md:w-4 md:h-4 border-2 ${page === currentPage ? 'border-white' : 'border-[#375421]'} border-t-transparent rounded-full animate-spin mx-auto`}></div>
+                ) : (
+                  page
+                )}
+              </button>
+            ))}
+          </div>
 
           {/* Next Arrow */}
           <button
             onClick={() => currentPage < totalPages && fetchPage(currentPage + 1, true)}
             disabled={currentPage === totalPages || loading}
-            className={`w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-full border-2 transition-all duration-300 relative ${
+            className={`flex-shrink-0 w-8 h-8 md:w-11 md:h-11 flex items-center justify-center rounded-full border-[1.5px] md:border-2 transition-all duration-300 ${
               currentPage === totalPages || loading
               ? "border-gray-100 text-gray-300 cursor-not-allowed"
-              : "border-gray-200 text-gray-600 hover:border-[#375421] hover:text-[#375421] hover:scale-110"
+              : "border-gray-200 text-gray-600 hover:border-[#375421] hover:text-[#375421]"
             }`}
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
             </svg>
           </button>
