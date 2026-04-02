@@ -38,9 +38,8 @@ const Banner = ({ home }) => {
                                             width={800}
                                             height={600}
                                             className="w-full h-auto max-h-[350px] object-contain rounded-lg"
-                                            priority={index === 0}
-                                            fetchPriority={index === 0 ? "high" : "low"}
-                                            loading={index === 0 ? "eager" : "lazy"}
+                                            fetchPriority="low"
+                                            loading="lazy"
                                             quality={75}
                                             sizes="(max-width: 1024px) 100vw, 800px"
                                         />
@@ -53,9 +52,8 @@ const Banner = ({ home }) => {
                                             width={400}
                                             height={300}
                                             className="w-full h-auto max-h-[230px] object-contain rounded-lg"
-                                            priority={index === 0}
-                                            fetchPriority={index === 0 ? "high" : "low"}
-                                            loading={index === 0 ? "eager" : "lazy"}
+                                            fetchPriority="low"
+                                            loading="lazy"
                                             quality={75}
                                             sizes="(max-width: 640px) 100vw, 400px"
                                         />
