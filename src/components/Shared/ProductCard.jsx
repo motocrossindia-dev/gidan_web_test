@@ -660,7 +660,7 @@ const ProductCard = ({
                             >
                                 <FaShoppingCart className="w-3 h-3 md:w-4 md:h-4" />
                                 <span className="text-[9px] md:text-[10px] lg:text-[11px] font-black uppercase tracking-widest leading-none">
-                                    {isItemInCart ? "Added" : "Add"}
+                                    {isItemInCart ? "Added" : "Add to Cart"}
                                 </span>
                             </button>
                         </div>
@@ -768,7 +768,7 @@ const ProductCard = ({
                             >
                                 <FaShoppingCart className="w-3 h-3" />
                                 <span className="text-[9px] font-black uppercase tracking-widest leading-none">
-                                    {isItemInCart ? "In Cart" : "Add"}
+                                    {isItemInCart ? "In Cart" : "Add to Cart"}
                                 </span>
                             </button>
                         </div>

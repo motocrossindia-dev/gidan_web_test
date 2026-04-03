@@ -20,7 +20,7 @@ export const TrendingSection = ({
   initialLatest,
   publicFlags = []
 }) => {
-  const [selectedTab, setSelectedTab] = useState("trending");
+  const [selectedTab, setSelectedTab] = useState("bestseller");
   const accessToken = useSelector(selectAccessToken);
   const [visibleCount, setVisibleCount] = useState(8);
 
@@ -99,11 +99,11 @@ export const TrendingSection = ({
             <h2 className="text-[32px] md:text-[48px] font-serif text-[#1a1f14] leading-tight flex flex-wrap gap-x-3 items-baseline mb-4">
               {selectedTab === 'featured' ? 'Featured' :
                 selectedTab === 'bestseller' ? 'Best Selling' :
-                  selectedTab === 'latest' ? 'New' : 'Modern'}
+                  selectedTab === 'latest' ? 'New' : 'Trending'}
               <span className="italic font-normal text-[#375421]">
-                {selectedTab === 'featured' ? 'Picks & more' :
-                  selectedTab === 'bestseller' ? 'Favorites & more' :
-                    selectedTab === 'latest' ? 'Arrivals & more' : 'Trending & more'}
+                {selectedTab === 'featured' ? 'Plants in Bangalore' :
+                  selectedTab === 'bestseller' ? 'Plants in Bangalore' :
+                    selectedTab === 'latest' ? 'Arrivals in Bangalore' : 'Now in Bangalore'}
               </span>
             </h2>
             <p className="text-[14px] md:text-[15px] text-[#1a1f14]/60 font-medium max-w-lg">
@@ -117,9 +117,9 @@ export const TrendingSection = ({
             <div className="bg-white/40 md:bg-white/60 backdrop-blur-xl rounded-full p-1 border border-[#1a1f14]/5 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] md:overflow-visible overflow-hidden">
               <div className="grid grid-cols-4 items-center h-11 md:h-12">
                 {[
-                  { id: "trending", label: "Trending" },
-                  { id: "featured", label: "Featured" },
                   { id: "bestseller", label: "Bestseller" },
+                  { id: "featured", label: "Featured" },
+                  { id: "trending", label: "Trending" },
                   { id: "latest", label: "New Arrivals" }
                 ].map((tab) => (
                   <button
