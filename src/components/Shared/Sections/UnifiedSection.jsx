@@ -56,42 +56,36 @@ const SectionHeader = ({ data, config, isDark, type }) => {
     const italicTextColor = data.extra?.italic_text_color;
     const italicBgColor = data.extra?.italic_bg_color;
 
+    const HeadingTag = isHero ? 'h1' : 'h2';
+    
     return (
         <div className="space-y-1.5 mb-2">
             {labelText && (
                 <div className="animate-fade-in group">
-                    {isHero ? (
-                        <span
-                            className={`inline-block px-4 py-1.5 rounded-full border ${isDark ? 'border-[#a8e070]/30 text-[#a8e070] bg-[#a8e070]/5' : 'bg-black/5 text-black/40 border-black/5'} text-[10px] font-black tracking-[0.2em] uppercase backdrop-blur-sm transition-all hover:scale-105`}
-                            style={data.extra?.italic_text_color ? { borderColor: `${data.extra.italic_text_color}33`, color: data.extra.italic_text_color } : {}}
-                        >
-                            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#a8e070] mr-2" style={data.extra?.italic_text_color ? { backgroundColor: data.extra.italic_text_color } : {}} />
-                            {labelText}
-                        </span>
-                    ) : (
-                        <span
-                            className="text-[11px] font-black tracking-[0.14em] uppercase text-[#a8e070]"
-                            style={data.extra?.italic_text_color ? { color: data.extra.italic_text_color } : {}}
-                        >
-                            {labelText}
-                        </span>
-                    )}
+                    <span
+                        className={`inline-block px-4 py-1.5 rounded-full border ${isDark ? 'border-[#a8e070]/30 text-[#a8e070] bg-[#a8e070]/5' : 'bg-black/5 text-black/40 border-black/5'} text-[10px] font-black tracking-[0.2em] uppercase backdrop-blur-sm transition-all hover:scale-105`}
+                        style={data.extra?.italic_text_color ? { borderColor: `${data.extra.italic_text_color}33`, color: data.extra.italic_text_color } : {}}
+                    >
+                        <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#a8e070] mr-2" style={data.extra?.italic_text_color ? { backgroundColor: data.extra.italic_text_color } : {}} />
+                        {labelText}
+                    </span>
                 </div>
             )}
-            <h2
+            <HeadingTag
                 className={`${isHero ? 'text-3xl lg:text-5xl' : 'text-xl lg:text-4xl'} font-serif font-medium ${isDark ? 'text-white' : 'text-[#1a1f14]'} leading-[1.1] tracking-tight`}
                 style={headingColor ? { color: headingColor } : {}}
             >
-                {data.heading} <br className="hidden sm:block" />
+                {data.heading}
                 <span
-                    className="italic font-normal text-[#a8e070]"
+                    className="italic font-normal text-[#a8e070] px-1 md:px-2 inline-block md:inline"
                     style={{
                         color: italicTextColor || undefined
                     }}
                 >
                     {data.italic_text}
-                </span> {data.heading_suffix}
-            </h2>
+                </span>
+                {data.heading_suffix}
+            </HeadingTag>
             <p
                 className={`text-[16px] lg:text-[17px] leading-relaxed max-w-[540px] ${!data.extra?.text_color && (isDark ? 'text-white/70' : 'text-black/60')}`}
                 style={data.extra?.text_color ? { color: data.extra.text_color } : {}}
@@ -245,12 +239,12 @@ const ItemsRenderer = ({ items, isDark, data }) => {
                             <div className={`mt-0.5 ${isDark ? 'text-[#a8e070]' : 'text-[#375421]'} flex-shrink-0`}>
                                 {renderIcon(item.icon_name || 'default')}
                             </div>
-                            <h4
+                            <h5
                                 className={`text-[15px] leading-relaxed ${!data?.extra?.text_color && (isDark ? 'text-white/80' : 'text-[#1a1f14]')}`}
                                 style={data?.extra?.text_color ? { color: data.extra.text_color } : {}}
                             >
                                 {item.name}
-                            </h4>
+                            </h5>
                         </div>
                     ))}
                 </div>
@@ -285,12 +279,12 @@ const ItemsRenderer = ({ items, isDark, data }) => {
                                 
                                 <div className="flex-1 space-y-1">
                                     <div className="flex items-center justify-between gap-4">
-                                        <h4
+                                        <h5
                                             className={`text-[12px] font-black uppercase tracking-[0.16em] leading-tight transition-colors ${!data?.extra?.text_color && (isDark ? 'text-white' : 'text-[#1a1f14]')}`}
                                             style={data?.extra?.text_color ? { color: data.extra.text_color } : {}}
                                         >
                                             {item.name}
-                                        </h4>
+                                        </h5>
                                         {item.tag && (
                                             <span className={`px-4 py-1.5 rounded-full text-[9px] font-black tracking-[0.1em] uppercase border ${isDark ? 'border-white/20 text-white/50' : 'border-[#9ed36a]/30 text-[#2d5a1b] bg-[#f0f9ea]'}`}>
                                                 {item.tag}
