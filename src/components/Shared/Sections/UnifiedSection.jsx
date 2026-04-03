@@ -39,7 +39,7 @@ const getIsDark = (hex) => {
     return luminance < 128; // Standard threshold
 };
 
-const SectionHeader = ({ data, config, isDark, type }) => {
+const SectionHeader = ({ data, config, isDark, type, isFirstSection = false }) => {
     // Basic bolding for design match
     const renderDescription = (text) => {
         if (!text) return "";
@@ -50,14 +50,12 @@ const SectionHeader = ({ data, config, isDark, type }) => {
     };
 
     const isHero = type === 'hero';
+    const HeadingTag = (isHero && isFirstSection) ? 'h1' : 'h2';
 
     const labelText = data.extra?.badge_text || data.label;
     const headingColor = data.extra?.color;
     const italicTextColor = data.extra?.italic_text_color;
-    const italicBgColor = data.extra?.italic_bg_color;
 
-    const HeadingTag = isHero ? 'h1' : 'h2';
-    
     return (
         <div className="space-y-1.5 mb-2">
             {labelText && (
@@ -239,12 +237,12 @@ const ItemsRenderer = ({ items, isDark, data }) => {
                             <div className={`mt-0.5 ${isDark ? 'text-[#a8e070]' : 'text-[#375421]'} flex-shrink-0`}>
                                 {renderIcon(item.icon_name || 'default')}
                             </div>
-                            <h5
+                            <h3
                                 className={`text-[15px] leading-relaxed ${!data?.extra?.text_color && (isDark ? 'text-white/80' : 'text-[#1a1f14]')}`}
                                 style={data?.extra?.text_color ? { color: data.extra.text_color } : {}}
                             >
                                 {item.name}
-                            </h5>
+                            </h3>
                         </div>
                     ))}
                 </div>
@@ -279,12 +277,12 @@ const ItemsRenderer = ({ items, isDark, data }) => {
                                 
                                 <div className="flex-1 space-y-1">
                                     <div className="flex items-center justify-between gap-4">
-                                        <h5
+                                        <h3
                                             className={`text-[12px] font-black uppercase tracking-[0.16em] leading-tight transition-colors ${!data?.extra?.text_color && (isDark ? 'text-white' : 'text-[#1a1f14]')}`}
                                             style={data?.extra?.text_color ? { color: data.extra.text_color } : {}}
                                         >
                                             {item.name}
-                                        </h5>
+                                        </h3>
                                         {item.tag && (
                                             <span className={`px-4 py-1.5 rounded-full text-[9px] font-black tracking-[0.1em] uppercase border ${isDark ? 'border-white/20 text-white/50' : 'border-[#9ed36a]/30 text-[#2d5a1b] bg-[#f0f9ea]'}`}>
                                                 {item.tag}
@@ -433,7 +431,7 @@ const BentoProductGrid = ({ products, isDark, data }) => {
 /**
  * MASTER UNIVERSAL DISPATCHER
  */
-const UnifiedSection = ({ data }) => {
+const UnifiedSection = ({ data, isFirstSection = false }) => {
     if (!data || !data.is_active) return null;
 
     const type = data.section_type || 'default';
@@ -474,7 +472,7 @@ const UnifiedSection = ({ data }) => {
                 <div className={`flex flex-col lg:flex-row gap-6 lg:gap-16 lg:items-center ${isReversed ? 'lg:flex-row-reverse' : ''}`}>
                     {/* Header Column: Title and Description */}
                     <div className={`w-full lg:w-[42%] space-y-2 animate-fade-in ${isReversed ? 'lg:pl-12' : 'lg:pr-8'}`}>
-                        <SectionHeader data={data} config={config} isDark={isDark} type={type} />
+                        <SectionHeader data={data} config={config} isDark={isDark} type={type} isFirstSection={isFirstSection} />
 
                         {type === 'subscription' && <SubscriptionForm data={data} config={config} isDark={isDark} />}
 

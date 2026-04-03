@@ -43,9 +43,9 @@ const ModernComboCard = ({ offer }) => {
       <div className="p-6 flex flex-col flex-1 bg-white">
         <div className="mb-4">
            <span className="text-[10px] text-[#A7D949] font-black uppercase tracking-widest mb-1 block">Bundle Savings</span>
-           <h2 className="text-lg font-serif text-[#173113] leading-tight line-clamp-2 min-h-[3rem]">
+           <h3 className="text-lg font-serif text-[#173113] leading-tight line-clamp-2 min-h-[3rem]">
              {offer?.title}
-           </h2>
+           </h3>
         </div>
 
         <div className="mt-auto space-y-4">

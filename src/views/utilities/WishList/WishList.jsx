@@ -273,6 +273,7 @@ const WishList = () => {
                 <div className="flex justify-between items-center mb-6">
                   <div>
                     <h1 className="text-2xl font-bold text-gray-900">My Wishlist</h1>
+                    <h2 className="sr-only">Wishlist Items</h2>
                     <p className="text-sm text-gray-500 mt-1">{totalItems} item{totalItems !== 1 ? 's' : ''} saved</p>
                   </div>
                   <button
@@ -376,9 +377,9 @@ const WishList = () => {
                               {category}
                             </span>
                           </div>
-                          <h2 className="text-lg font-extrabold text-gray-900 truncate pr-8 group-hover:text-green-800 transition-colors">
+                          <h3 className="text-lg font-extrabold text-gray-900 truncate pr-8 group-hover:text-green-800 transition-colors">
                             {itemName}
-                          </h2>
+                          </h3>
 
                           <div className="mt-auto pt-6 flex flex-wrap items-end justify-between gap-4">
                             <div className="space-y-1">

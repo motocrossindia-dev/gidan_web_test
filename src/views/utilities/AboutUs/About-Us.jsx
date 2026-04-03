@@ -160,15 +160,15 @@ const AboutUs = () => {
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div className="bg-white p-8 rounded-3xl shadow-sm border border-[#173113]/5 hover:shadow-xl hover:translate-y-[-4px] transition-all duration-300">
-                                    <h4 className="text-xl font-bold text-[#173113] mb-2">Biotech Maali</h4>
+                                    <h3 className="text-xl font-bold text-[#173113] mb-2">Biotech Maali</h3>
                                     <p className="text-[#173113]/60 text-sm font-medium">Expert garden setup and maintenance services for homes and commercial spaces.</p>
                                 </div>
                                 <div className="bg-white p-8 rounded-3xl shadow-sm border border-[#173113]/5 hover:shadow-xl hover:translate-y-[-4px] transition-all duration-300">
-                                    <h4 className="text-xl font-bold text-[#173113] mb-2">Vaneera</h4>
+                                    <h3 className="text-xl font-bold text-[#173113] mb-2">Vaneera</h3>
                                     <p className="text-[#173113]/60 text-sm font-medium">Bespoke landscaping and large-scale greenery solutions for luxury estates.</p>
                                 </div>
                                 <div className="bg-[#A7D949] p-8 rounded-3xl shadow-sm border border-[#173113]/5 hover:shadow-xl hover:translate-y-[-4px] transition-all duration-300 sm:col-span-2">
-                                    <h4 className="text-xl font-bold text-[#173113] mb-2">GIDAN</h4>
+                                    <h3 className="text-xl font-bold text-[#173113] mb-2">GIDAN</h3>
                                     <p className="text-[#173113]/80 text-sm font-medium">Your premium destination for garden and agricultural products, tools, and supplies.</p>
                                 </div>
                             </div>

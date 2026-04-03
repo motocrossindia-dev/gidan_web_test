@@ -467,9 +467,9 @@ const ProductCard = ({
                             <span className="text-[6.5px] md:text-[7px] font-bold text-[#2d5a1b] opacity-40 uppercase tracking-[0.1em] md:tracking-[0.15em] line-clamp-1">
                                 {subcategory || category || "Gidan Selection"}
                             </span>
-                            <h4 className="text-[10px] md:text-xs font-bold leading-tight truncate uppercase">
+                            <h3 className="text-[10px] md:text-xs font-bold leading-tight truncate uppercase">
                                 {name}
-                            </h4>
+                            </h3>
                             {stockStatus && (
                                 <span className="text-[7px] md:text-[7.5px] font-bold opacity-30 uppercase tracking-tight mt-0.5" style={{ color: stockConfig.color }}>
                                     {stockStatus}

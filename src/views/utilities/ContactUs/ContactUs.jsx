@@ -140,7 +140,7 @@ const ContactUs = () => {
           {/* Right Side: Form */}
           <div className="bg-white rounded-[3rem] p-8 md:p-12 shadow-2xl border border-[#173113]/5">
             <div className="mb-10">
-              <h2 className="text-3xl font-serif text-[#173113] mb-2">Send a Message</h2>
+              <h3 className="text-3xl font-serif text-[#173113] mb-2">Send a Message</h3>
               <p className="text-[#173113]/50 font-medium">Expected response time: within 24 hours.</p>
             </div>
 

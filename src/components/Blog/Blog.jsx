@@ -112,9 +112,9 @@ const Blog = ({ categoryId = null }) => {
                                 <span className="text-[9px] font-black text-[#375421] opacity-40 uppercase tracking-[0.2em] mb-2.5">
                                     {blog.category || "Essential Guide"}
                                 </span>
-                                <h4 className="text-lg font-bold text-[#1a1f14] leading-snug line-clamp-2 md:line-clamp-3 mb-4 group-hover:text-[#375421] transition-colors">
+                                <h3 className="text-lg font-bold text-[#1a1f14] leading-snug line-clamp-2 md:line-clamp-3 mb-4 group-hover:text-[#375421] transition-colors">
                                     {blog.title}
-                                </h4>
+                                </h3>
                                 <p className="text-[13px] text-[#1a1f14]/40 leading-relaxed line-clamp-2 mb-8">
                                    {blog.short_description || blog.summary}
                                 </p>

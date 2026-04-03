@@ -115,9 +115,9 @@ const Carriers = () => {
                         {job.categories === 'Tech Positions' ? 'Engineering' : 'Creative / Sales'}
                       </span>
                     </div>
-                    <h2 className="text-2xl font-serif text-[#173113] mb-4 group-hover:text-[#A7D949] transition-colors leading-tight">
+                    <h3 className="text-2xl font-serif text-[#173113] mb-4 group-hover:text-[#A7D949] transition-colors leading-tight">
                       {job.position_name}
-                    </h2>
+                    </h3>
                     
                     <div className="flex items-center gap-4 text-[#173113]/50 text-sm font-medium">
                       <div className="flex items-center gap-1.5">

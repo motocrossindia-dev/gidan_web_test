@@ -233,7 +233,7 @@ const ProductGrid = ({
   return (
     <div id="product-grid-container" className="mt-4 p-0 md:px-2 lg:px-4 relative w-full max-w-full mx-auto z-0 overflow-x-hidden">
       <div className="flex justify-between items-center mb-6 px-1 md:px-2 w-full">
-        <h2 className="text-[10px] md:text-sm lg:text-base text-gray-500 font-medium">
+        <p className="text-[10px] md:text-sm lg:text-base text-gray-500 font-medium">
           {productDetails?.length > 0 ? (
             <>
               Showing {showingFrom}–{showingTo} of {totalCount} products
@@ -244,7 +244,7 @@ const ProductGrid = ({
           ) : (
             searchTerm ? `No products found for "${searchTerm}"` : "No products found"
           )}
-        </h2>
+        </p>
         {filtersApplied && productDetails?.length > 0 && (
           <span className="text-[10px] md:text-xs text-bio-green font-bold uppercase tracking-wider">
             Filters Active

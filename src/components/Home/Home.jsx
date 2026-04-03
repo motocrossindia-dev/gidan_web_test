@@ -41,7 +41,7 @@ const Home = ({
         const sectionContent = (
           <>
             <Suspense key={`dynamic-suspense-${section.id}`} fallback={<LoadingFallback />}>
-              <DynamicSection section={section} />
+              <DynamicSection section={section} isFirstSection={isFirstSection} />
             </Suspense>
             
             {index === 0 && (

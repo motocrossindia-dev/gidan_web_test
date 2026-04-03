@@ -32,7 +32,7 @@ const TermsOfService = () => {
         <div className="bg-white rounded-[3rem] p-8 md:p-16 shadow-2xl border border-[#173113]/5">
           
           <div className="mb-12">
-            <h1 className="text-3xl md:text-4xl font-serif text-[#173113] mb-6">Agreement to Terms</h1>
+            <h2 className="text-3xl md:text-4xl font-serif text-[#173113] mb-6">Agreement to Terms</h2>
             <p className="text-[#173113]/70 font-medium leading-relaxed text-lg">
               Please read the following carefully to understand our expressions under each circumstance before you have a wonderful shopping experience with Gidan.
             </p>

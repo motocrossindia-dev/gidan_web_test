@@ -90,11 +90,11 @@ export const GlobalReviews = ({ initialGlobalReviews }) => {
                     {review.user_initial || review.user_name?.[0] || 'G'}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h4 className="flex items-center gap-1.5 mb-1 w-full">
+                    <h3 className="flex items-center gap-1.5 mb-1 w-full">
                       <span className="text-sm font-bold text-[#1a1f14] leading-none truncate block">
                         {review.user_name || "Verified Buyer"}
                       </span>
-                    </h4>
+                    </h3>
                     <p className="text-[10px] text-[#1a1f14]/40 font-semibold uppercase tracking-wider">{review.date}</p>
                   </div>
                 </div>
@@ -114,7 +114,7 @@ export const GlobalReviews = ({ initialGlobalReviews }) => {
               </div>
 
               <div className="mb-4 grow flex flex-col justify-center">
-                <h5 className="font-bold text-[#1a1f14] text-sm mb-1.5 line-clamp-1">{review.title}</h5>
+                <h4 className="font-bold text-[#1a1f14] text-sm mb-1.5 line-clamp-1">{review.title}</h4>
                 <p className="text-[13px] text-[#1a1f14]/70 line-clamp-3 leading-relaxed">
                   {review.review}
                 </p>

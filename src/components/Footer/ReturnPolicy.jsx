@@ -39,7 +39,7 @@ const RefundPolicy = () => {
               <Star className="w-3 h-3 text-[#A7D949]" />
               Gidan Promise
             </div>
-            <h1 className="text-3xl md:text-4xl font-serif text-[#173113] mb-8 leading-tight">Your satisfaction is our priority.</h1>
+            <h2 className="text-3xl md:text-4xl font-serif text-[#173113] mb-8 leading-tight">Your satisfaction is our priority.</h2>
             <div className="max-w-2xl mx-auto space-y-6 text-[#173113]/70 font-medium leading-relaxed italic text-lg">
               <p>
                 "We've nurtured your plant with love and care, watching it grow, knowing it was meant for you. It was chosen just for you, and now, we're carefully packing it—wrapping it with the same warmth and attention it received while growing."
@@ -98,7 +98,7 @@ const RefundPolicy = () => {
                 <div className="bg-[#173113] p-8 rounded-[2.5rem] text-white">
                    <div className="flex flex-col md:flex-row gap-8 items-center justify-between">
                       <div className="space-y-2">
-                        <h4 className="text-xl font-serif">How to request?</h4>
+                        <h3 className="text-xl font-serif">How to request?</h3>
                         <p className="text-white/60 text-sm font-medium">Contact us within 24 hours of delivery.</p>
                       </div>
                       <div className="flex flex-col gap-3">

@@ -194,7 +194,7 @@ function Offer({ initialOffers = [] }) {
                { title: 'Care Support', desc: 'Lifetime support and digital care guides for every purchase.' }
              ].map((item, i) => (
                <div key={i} className="text-center">
-                 <h4 className="font-serif text-xl text-[#173113] mb-2">{item.title}</h4>
+                 <h3 className="font-serif text-xl text-[#173113] mb-2">{item.title}</h3>
                  <p className="text-gray-500 text-sm">{item.desc}</p>
                </div>
              ))}

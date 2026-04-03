@@ -34,7 +34,7 @@ const ShippingPolicy = () => {
         <div className="bg-white rounded-[3rem] p-8 md:p-16 shadow-2xl border border-[#173113]/5">
           
           <div className="mb-12">
-            <h1 className="text-3xl md:text-4xl font-serif text-[#173113] mb-6">Delivery Promise</h1>
+            <h2 className="text-3xl md:text-4xl font-serif text-[#173113] mb-6">Delivery Promise</h2>
             <p className="text-[#173113]/70 font-medium leading-relaxed text-lg">
               Gidan ensures quality products and premium packaging. We have partnered with reputed courier agencies for a safe and timely delivery. 
               <span className="text-[#A7D949] font-bold ml-2">Enjoy free shipping on orders above ₹2000.</span>
@@ -92,9 +92,9 @@ const ShippingPolicy = () => {
                 </div>
 
                 <div className="bg-[#A7D949]/10 p-8 rounded-[2.5rem] border border-[#A7D949]/20">
-                   <h4 className="text-[#173113] font-bold mb-3 flex items-center gap-2">
+                   <h3 className="text-[#173113] font-bold mb-3 flex items-center gap-2">
                      <RefreshCw className="w-4 h-4 text-[#A7D949]" /> Reviving your plant
-                   </h4>
+                   </h3>
                    <p className="text-[#173113]/70 font-medium text-sm leading-relaxed">
                      Plants might look slightly dull due to transit stress. Exposure to indirect sunlight and proper watering will revive them to their natural healthy state within a few days.
                    </p>
@@ -148,7 +148,7 @@ const ShippingPolicy = () => {
                 <div className="bg-white/10 p-6 rounded-[2rem] border border-white/10">
                    <div className="flex items-center gap-3 mb-3">
                       <MapPin className="w-5 h-5 text-[#A7D949]" />
-                      <h4 className="font-bold text-sm">Return Address</h4>
+                      <h3 className="font-bold text-sm">Return Address</h3>
                    </div>
                    <p className="text-xs opacity-70 leading-relaxed font-medium">
                       Farm Ammino Agritech Private Limited<br />

@@ -35,7 +35,7 @@ const PrivacyPolicy = () => {
         <div className="bg-white rounded-[3rem] p-8 md:p-16 shadow-2xl border border-[#173113]/5">
           
           <div className="mb-12">
-            <h1 className="text-3xl md:text-4xl font-serif text-[#173113] mb-6">Our Privacy Commitment</h1>
+            <h2 className="text-3xl md:text-4xl font-serif text-[#173113] mb-6">Our Privacy Commitment</h2>
             <p className="text-[#173113]/70 font-medium leading-relaxed text-lg italic">
               "At Gidan, we recognize that privacy is foundational. We promise to respect your contact preferences and protect your private information."
             </p>
@@ -160,17 +160,17 @@ const PrivacyPolicy = () => {
             {/* Legal & Children */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                <section className="bg-orange-50 p-8 rounded-[2rem] border border-orange-100">
-                  <h4 className="text-orange-900 font-bold mb-4 flex items-center gap-2">
+                  <h3 className="text-orange-900 font-bold mb-4 flex items-center gap-2">
                     <Scale className="w-4 h-4" /> Legal Disclosure
-                  </h4>
+                  </h3>
                   <p className="text-orange-900/70 text-xs font-medium leading-relaxed">
                     Gidan may disclose identifiable info under special circumstances: subpoenas, legal threats, or violations of our Terms.
                   </p>
                </section>
                <section className="bg-purple-50 p-8 rounded-[2rem] border border-purple-100">
-                  <h4 className="text-purple-900 font-bold mb-4 flex items-center gap-2">
+                  <h3 className="text-purple-900 font-bold mb-4 flex items-center gap-2">
                     <Shield className="w-4 h-4" /> Children's Privacy
-                  </h4>
+                  </h3>
                   <p className="text-purple-900/70 text-xs font-medium leading-relaxed">
                     Our services do not address anyone under 13. We immediately delete info if we discover a minor has provided data.
                   </p>

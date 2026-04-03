@@ -67,9 +67,9 @@ const CategoryStaticSEO = ({
                                             {getInfoCardIcon(card.title)}
                                         </div>
                                         <div className="flex flex-col items-center">
-                                            <h4 className="text-[10px] md:text-[11px] font-black text-gray-900 uppercase tracking-[0.15em] leading-tight mb-1.5">
+                                            <h3 className="text-[10px] md:text-[11px] font-black text-gray-900 uppercase tracking-[0.15em] leading-tight mb-1.5">
                                                 {card.title}
-                                            </h4>
+                                            </h3>
                                             <p className="text-[11px] md:text-[12px] text-gray-400 leading-relaxed font-medium max-w-[200px] opacity-100">
                                                 {card.description}
                                             </p>

@@ -309,7 +309,7 @@ const AboutProduct = ({ productDetailData, ratingData, reviewData, onWriteReview
                     />
                   )}
                   <div>
-                    <h4 className="font-bold text-gray-900">{guide.title}</h4>
+                    <h3 className="font-bold text-gray-900">{guide.title}</h3>
                     {guide.subtitle && <p className="text-sm font-semibold text-bio-green">{guide.subtitle}</p>}
                     <p className="text-sm text-gray-600 mt-1">{guide.description}</p>
                   </div>
@@ -326,7 +326,7 @@ const AboutProduct = ({ productDetailData, ratingData, reviewData, onWriteReview
              <div className="flex items-start gap-4 p-4 bg-sage-green/10 rounded-2xl border border-sage-green/20">
                 <div className="text-2xl mt-1">📦</div>
                 <div>
-                  <h4 className="font-bold text-gray-900 mb-1">What's in the Box?</h4>
+                  <h3 className="font-bold text-gray-900 mb-1">What's in the Box?</h3>
                   <p className="text-gray-600 text-sm leading-relaxed">
                     {productData?.data?.product?.whats_included || productData?.product?.whats_included || productData?.whats_included || "Standard premium nursery packaging included."}
                   </p>
@@ -359,6 +359,16 @@ const AboutProduct = ({ productDetailData, ratingData, reviewData, onWriteReview
 
   return (
     <div className="w-full max-w-5xl mx-auto py-6">
+      {/* Semantic SEO Heading for this section */}
+      <h2 className="sr-only">
+        {activeTab === 'about' ? 'Product Description' : 
+         activeTab === 'bundle' ? 'Frequently Bought Together & Bundle Offers' :
+         activeTab === 'care' ? 'Plant Care Guide & Growing Instructions' :
+         activeTab === 'box' ? 'Box Contents & Nursery Packaging' :
+         activeTab === 'video' ? 'Product Showcase Video' :
+         'Customer Ratings & Verified Reviews'}
+      </h2>
+      
       {/* Sub-Tabs */}
       <div className="flex border-b border-gray-100 mb-6 overflow-x-auto scrollbar-hide">
         {[

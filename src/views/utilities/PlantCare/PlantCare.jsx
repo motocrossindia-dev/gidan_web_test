@@ -176,6 +176,7 @@ function PlantCare({ initialResults, initialFilterData, initialSEOData }) {
                 />
               </div>
 
+              <h2 className="sr-only">Search Results for {query || 'Plants'}</h2>
               <div className={`mt-0 transition-opacity duration-300 ${isSearching ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
                 <ProductGrid
                   productDetails={results}

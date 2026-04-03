@@ -524,6 +524,15 @@ function PlantFilter({
     }, [path, typeKey, currentFilterType, resolvedCategoryId, resolvedSubcategoryId, isResolvingIds, isSeasonalCollection, isTrending, isFeatured, isBestSeller, normalizedInitialResults, results, seoData, filtersApplied]);
 
     const getDisplayName = () => {
+        // High priority: Use the structured boutique heading pieces if available
+        const hBefore = categoryData?.heading_before || "";
+        const hItalic = categoryData?.italic_text || "";
+        const hAfter = categoryData?.heading_after || "";
+        
+        if (hBefore || hItalic || hAfter) {
+            return `${hBefore} ${hItalic} ${hAfter}`.replace(/\s+/g, ' ').trim();
+        }
+
         if (categoryData?.meta_title) return categoryData.meta_title;
         if (categoryData?.seo_title) return categoryData.seo_title;
         const suffix = "Online in India";
@@ -609,6 +618,7 @@ function PlantFilter({
                         items={breadcrumbItems}
                         currentPage={breadcrumbPage}
                     />
+                    <h1 className="sr-only">{displayName} Collection</h1>
                     <div className="bg-white border-b border-gray-100">
                         <TrustBadges />
                     </div>
@@ -703,6 +713,9 @@ function PlantFilter({
                             </div>
 
                             <div className={`mt-0 transition-opacity duration-300 ${isSearching ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
+                                {/* Semantic SEO Heading for the collection */}
+                                <h2 className="sr-only">Browse our {breadcrumbPage} Collection</h2>
+                                
                                 <ProductGrid
                                     productDetails={results}
                                     pagination={products}
