@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Offer from '@/views/utilities/Offer/Offer';
-import { fetchOfferProducts } from "@/utils/serverApi";
+import { fetchOfferProducts, fetchPublicOffers } from "@/utils/serverApi";
 import CollectionSchema from "@/views/utilities/seo/CollectionSchema";
 import StoreSchema from "@/views/utilities/seo/StoreSchema";
 
@@ -28,7 +28,10 @@ export const metadata: Metadata = {
 };
 
 export default async function OfferPage() {
-  const products = await fetchOfferProducts();
+  const [products, banners] = await Promise.all([
+    fetchOfferProducts(),
+    fetchPublicOffers()
+  ]);
 
   return (
     <>
@@ -37,7 +40,7 @@ export default async function OfferPage() {
         products={products}
       />
       <StoreSchema />
-      <Offer initialOffers={products} />
+      <Offer initialOffers={products} initialBanners={banners} />
     </>
   );
 }

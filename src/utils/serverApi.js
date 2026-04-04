@@ -178,3 +178,19 @@ export async function getServiceBySlug(slug) {
         return null;
     }
 }
+
+/**
+ * Fetch the complete list of public offers/banners from the backend.
+ */
+export async function fetchPublicOffers() {
+    try {
+        const res = await fetch(`${API_URL}/offers/public/`, { next: { revalidate: 3600 } });
+        if (!res.ok) return [];
+        const data = await res.json();
+        const results = data?.data || [];
+        return Array.isArray(results) ? results.filter(o => o.is_visible) : [];
+    } catch (err) {
+        console.error("Error fetching public offers", err);
+        return [];
+    }
+}

@@ -29,29 +29,55 @@ const Header = () => {
     if (isActive && announcements.length > 1) {
       const timer = setInterval(() => {
         setCurrentIndex((prev) => (prev + 1) % announcements.length);
-      }, 4000);
+      }, 5000); // 5-second interval for better readability
       return () => clearInterval(timer);
     }
   }, [isActive, announcements]);
 
   return (
-    <header className="bg-[#375421] font-poppins relative overflow-hidden">
-      <div className="max-w-full px-4 md:px-8 py-2.5 flex items-center justify-center m-auto text-white">
-        <div className="flex flex-row items-center justify-between w-full max-w-5xl mx-auto gap-4 flex-wrap font-medium">
-          {isActive ? (
-            announcements.map((item, index) => (
-              <Link 
-                key={index}
-                href={item.url || "#"} 
-                className="text-white text-[10px] md:text-[13px] hover:text-white/80 transition-all whitespace-nowrap"
+    <header className="bg-[#375421] font-poppins relative overflow-hidden h-[34px] md:h-[40px] flex items-center">
+      <div className="w-full px-4 md:px-8 py-1 flex items-center justify-center m-auto text-white">
+        <div className="relative w-full max-w-5xl mx-auto flex items-center justify-center font-medium">
+          <AnimatePresence mode="wait">
+            {isActive && announcements.length > 0 ? (
+              <motion.div
+                key={currentIndex}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="w-full text-center"
               >
-                {item.text}
-              </Link>
-            ))
-          ) : (
-            <p className="text-white text-[10px] md:text-[13px] px-0 whitespace-nowrap">
-              Free Shipping above ₹2000 | Delivery in Bengaluru
-            </p>
+                <Link 
+                  href={announcements[currentIndex].url || "#"} 
+                  className="text-white text-[10px] md:text-[13px] hover:text-white/80 transition-all uppercase tracking-wider inline-block"
+                >
+                  {announcements[currentIndex].text}
+                </Link>
+              </motion.div>
+            ) : (
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-white text-[10px] md:text-[13px] text-center uppercase tracking-wider"
+              >
+                Free Shipping above ₹2000 | Delivery in Bengaluru
+              </motion.p>
+            )}
+          </AnimatePresence>
+          
+          {/* Subtle Progress Bar for multiple announcements */}
+          {isActive && announcements.length > 1 && (
+            <div className="absolute bottom-[-6px] left-1/2 -translate-x-1/2 flex gap-1.5 pointer-events-none opacity-30">
+              {announcements.map((_, idx) => (
+                <div 
+                  key={idx} 
+                  className={`h-0.5 rounded-full transition-all duration-500 ${
+                    currentIndex === idx ? 'w-4 bg-white' : 'w-1 bg-white/50'
+                  }`}
+                />
+              ))}
+            </div>
           )}
         </div>
       </div>

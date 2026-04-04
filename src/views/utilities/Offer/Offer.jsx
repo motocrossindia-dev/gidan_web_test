@@ -12,7 +12,7 @@ import CategoryHero from "@/components/Shared/CategoryHero";
 import OfferTabs from "./OfferTabs";
 import ModernComboCard from "../ComboOffer/ModernComboCard";
 
-function Offer({ initialOffers = [] }) {
+function Offer({ initialOffers = [], initialBanners = [] }) {
   const offerSeoData = {
     heading_before: "Exclusive",
     italic_text: "Deals & Offers",
@@ -41,12 +41,25 @@ function Offer({ initialOffers = [] }) {
 
   const [activeTab, setActiveTab] = useState('products');
   const [offers, setOffers] = useState(initialOffers);
+  const [banners, setBanners] = useState(initialBanners);
   const [comboOffers, setComboOffers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   
   const router = useRouter();
   const accessToken = useSelector(selectAccessToken);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
+  const getPublicOffers = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers/public/`);
+      const data = await response.json();
+      if (data?.data) {
+        setBanners(data.data.filter(b => b.is_visible));
+      }
+    } catch (error) {
+      console.error("Error fetching public banners:", error);
+    }
+  };
 
   const getOfferProducts = async () => {
     try {
@@ -74,17 +87,16 @@ function Offer({ initialOffers = [] }) {
     if (initialOffers.length === 0) {
       getOfferProducts();
     }
+    if (initialBanners.length === 0) {
+      getPublicOffers();
+    }
     getComboOffers();
-  }, [initialOffers]);
+  }, [initialOffers, initialBanners]);
 
   const handleBuyCombo = async (id) => {
     if (!isAuthenticated) {
       enqueueSnackbar("Please Login or Signup to Buy Our Products.");
-      if (isMobile) {
-        router.push("/login", { replace: true });
-      } else {
-        router.push("/login", { replace: true });
-      }
+      router.push("/login", { replace: true });
       return;
     }
 
@@ -130,6 +142,57 @@ function Offer({ initialOffers = [] }) {
       />
 
       <div className="container mx-auto px-4 py-12">
+        
+        {/* Promotional Banners Section */}
+        {banners.length > 0 && (
+          <div className="mb-20">
+            <div className="flex flex-col items-center text-center mb-10">
+              <span className="text-[#A7D949] font-black uppercase tracking-[0.3em] text-[10px] md:text-xs mb-2">Featured Promotions</span>
+              <h2 className="text-3xl md:text-4xl font-serif text-[#173113]">Seasonal Campaign</h2>
+              <div className="w-16 h-1 bg-[#A7D949] mt-3 rounded-full" />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+              {banners.map((banner) => (
+                <div 
+                  key={banner.id}
+                  className="group relative h-[300px] md:h-[400px] rounded-[30px] overflow-hidden bg-white shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer"
+                  onClick={() => banner.link && router.push(banner.link)}
+                >
+                  {/* Banner Image */}
+                  <div className="absolute inset-0">
+                    <img 
+                      src={banner.image || banner.image_url} 
+                      alt={banner.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  </div>
+
+                  {/* Banner Content */}
+                  <div className="absolute bottom-0 left-0 right-0 p-8 transform transition-transform duration-500">
+                    <h4 className="text-[#A7D949] font-bold text-xs uppercase tracking-widest mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                      {banner.title}
+                    </h4>
+                    <h3 className="text-white text-2xl md:text-3xl font-serif mb-2 leading-tight">
+                      {banner.heading}
+                    </h3>
+                    <p className="text-white/80 text-sm line-clamp-2 mb-6 max-w-md opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
+                      {banner.description}
+                    </p>
+                    
+                    <div className="flex items-center gap-2 text-white font-bold text-xs group/btn">
+                      <span className="bg-white text-[#173113] px-6 py-3 rounded-full hover:bg-[#A7D949] transition-colors duration-300">
+                        Explore Offer
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Tab Selection */}
         <OfferTabs activeTab={activeTab} setTab={setActiveTab} />
 
@@ -185,7 +248,7 @@ function Offer({ initialOffers = [] }) {
           )}
         </div>
 
-        {/* Trust & Policy Section */}
+        {/* Categories of trust */}
         <div className="mt-24 pt-16 border-t border-[#173113]/5">
            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
              {[
