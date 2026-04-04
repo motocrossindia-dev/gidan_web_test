@@ -200,6 +200,7 @@ export default async function SubcategoryPage({ params }: Props) {
           subcategorySlug={subcategorySlug as any}
           subcategoryName={subcategory.name as any}
           initialSEOData={initialSEOData as any}
+          // @ts-ignore
           hideHeader={true}
         />
       </Suspense>

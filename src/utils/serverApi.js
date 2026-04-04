@@ -42,7 +42,7 @@ export async function fetchProductsByFilters(filters = {}) {
 
         // Default filters - Include ALL parameters matching FilterSidebar.jsx to ensure consistent backend behavior
         const defaults = {
-            type: filters.type || "plant",
+            type: filters.type !== undefined ? filters.type : "plant",
             category_id: filters.category_id || "",
             subcategory_id: filters.subcategory_id || "",
             search: filters.search || "",

@@ -68,13 +68,7 @@ const DropdownMenu = ({ isOpen, filter, options, selectedFilters, handleFilterSe
   );
 };
 
-const FLAG_MAP = {
-    is_featured: 2,
-    is_latest: 3,
-    is_best_seller: 4,
-    is_seasonal_collection: 5,
-    is_trending: 6
-};
+// The FLAG_MAP is now derived dynamically from initialFlags passed through props.
 
 const FilterSidebar = ({
 
@@ -109,15 +103,35 @@ const FilterSidebar = ({
   subcategoryList = [],  // full subcategory objects with sub_category_info from server
   setCurrentQuery,
   selectedPublicFlag,
-  setSelectedPublicFlag,
+  onSelectPublicFlag,
   isMobile = false,
   searchQuery = "", // Added for search page support
+  isShop = false,
+  initialFlags = [],
 }) => {
   // Track if this is the very first render of the component
   const isInitialMount = useRef(true);
   // Track whether user has interacted with filters (to avoid auto-apply on mount)
   const userInteracted = useRef(false);
   const router = useRouter();
+
+  // Re-define dynamic Flag Map to replace the deprecated global constant
+  const FLAG_MAP = useMemo(() => {
+    const map = {
+      is_featured: 2,
+      is_latest: 3,
+      is_best_seller: 4,
+      is_seasonal_collection: 5,
+      is_trending: 6
+    };
+    if (Array.isArray(initialFlags)) {
+      initialFlags.forEach(f => {
+        const key = f.filter_key || f.slug || f.name.toLowerCase().replace(/\s+/g, '_');
+        if (key) map[key] = f.id;
+      });
+    }
+    return map;
+  }, [initialFlags]);
 
   const [selectedFilterType, setSelectedFilterType] = useState(typeKey || "");
   const [userHasSelectedType, setUserHasSelectedType] = useState(false);
@@ -129,6 +143,38 @@ const FilterSidebar = ({
   const [filterData, setFilterData] = useState(initialFilterData || {});
   const [availableTypes, setAvailableTypes] = useState(initialFilterData?.available_types || []);
   const applyTimerRef = useRef(null);
+
+  const flagToSlugMap = useMemo(() => {
+    const baseMap = {
+      2: 'featured',
+      3: 'latest',
+      4: 'bestseller',
+      5: 'seasonal',
+      6: 'trending'
+    };
+    
+    // If the backend filters has flag_to_slug, use it
+    if (filterData.flag_to_slug) return { ...baseMap, ...filterData.flag_to_slug };
+
+    // Build from initialFlags if available
+    if (Array.isArray(initialFlags) && initialFlags.length > 0) {
+      const dynamicMap = {};
+      initialFlags.forEach(f => {
+         if (f.id && f.slug) dynamicMap[f.id] = f.slug;
+         // Fallback slug mapping if f.slug is missing but name is available
+         else if (f.id && f.name) {
+           const lower = f.name.toLowerCase();
+           if (lower.includes('featured')) dynamicMap[f.id] = 'featured';
+           else if (lower.includes('latest')) dynamicMap[f.id] = 'latest';
+           else if (lower.includes('best')) dynamicMap[f.id] = 'bestseller';
+           else if (lower.includes('seasonal')) dynamicMap[f.id] = 'seasonal';
+           else if (lower.includes('trending')) dynamicMap[f.id] = 'trending';
+         }
+      });
+      return { ...baseMap, ...dynamicMap };
+    }
+    return baseMap;
+  }, [filterData.flag_to_slug, initialFlags]);
 
   // Use Refs for data that applyFilters needs but shouldn't trigger its re-definition
   const filterDataRef = useRef(filterData);
@@ -156,12 +202,13 @@ const FilterSidebar = ({
       });
 
       // If the selected type is in the new available types, keep it, otherwise update it
-      if (initialFilterData.available_types && !initialFilterData.available_types.includes(selectedFilterType)) {
+      // For shop route, we allow empty type (all products)
+      if (initialFilterData.available_types && !initialFilterData.available_types.includes(selectedFilterType) && !isShop) {
         const newType = initialFilterData.available_types[0] || "plant";
         setSelectedFilterType(newType);
       }
     }
-  }, [initialFilterData, categoryId, selectedFilterType]);
+  }, [initialFilterData, categoryId]);
 
   const dropdownButtonRefs = useRef({});
   const dropdownContainerRefs = useRef({});
@@ -205,9 +252,16 @@ const FilterSidebar = ({
   }, [category]);
 
   useEffect(() => {
-    if (typeKey && selectedFilterType !== typeKey && !userInteracted.current) {
-      setSelectedFilterType(typeKey);
-      setUserHasSelectedType(true);
+    // If we've explicitly navigated to a URL with a path-based type (like /plants) or back to global /shop (typeKey null)
+    if (!userInteracted.current) {
+      if (typeKey && selectedFilterType !== typeKey) {
+        setSelectedFilterType(typeKey);
+        setUserHasSelectedType(true);
+      } else if (typeKey === null && selectedFilterType !== "") {
+        // Reset to "All Collection" when on the shop route
+        setSelectedFilterType("");
+        setUserHasSelectedType(false);
+      }
     }
   }, [typeKey, selectedFilterType]);
 
@@ -223,8 +277,12 @@ const FilterSidebar = ({
           const tNormalized = t.toLowerCase().replace(/-/g, "");
           return tNormalized === searchTerm || tNormalized === singular;
         });
-        const finalType = match || availableTypes[0];
-        if (finalType && selectedFilterType !== finalType) {
+
+        // For the main shop route, if no specific category match, default to "All Collection" (empty string) 
+        // instead of falling back to the first available type (e.g. pots)
+        const finalType = match || (isShop ? "" : availableTypes[0]);
+        
+        if (finalType !== undefined && selectedFilterType !== finalType) {
           hasSyncedFromUrl.current = true;
           setSelectedFilterType(finalType);
         }
@@ -305,16 +363,16 @@ const FilterSidebar = ({
   };
 
   const isFirstFlagSync = useRef(true);
-  // Sync selectedPublicFlag prop change to mark as interaction if needed
   useEffect(() => {
-    if (isFirstFlagSync.current) {
-      isFirstFlagSync.current = false;
-      return;
-    }
-
-    // Any change after the first render is a user interaction from the pills
+    // Sync selectedPublicFlag prop change to mark as interaction if needed 
     if (selectedPublicFlag !== undefined) {
-      userInteracted.current = true;
+      // If the incoming flag change matches what's already in the URL, it's a mount/navigation sync, NOT a user interaction
+      const currentUrlParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : "");
+      const isUrlSync = Array.from(currentUrlParams.keys()).some(k => currentUrlParams.get(k) === "true");
+
+      if (!isUrlSync) {
+        userInteracted.current = true;
+      }
     }
   }, [selectedPublicFlag]);
 
@@ -469,11 +527,28 @@ const FilterSidebar = ({
 
     // Boolean flags mapping (mapping numeric IDs from flags data to Boolean params)
     const selectedFlag = Number(effectiveFlag);
-    params.append("is_featured", (selectedFlag === FLAG_MAP.is_featured || isFeatured) ? "true" : "unknown");
-    params.append("is_best_seller", (selectedFlag === FLAG_MAP.is_best_seller || isBestSeller) ? "true" : "unknown");
-    params.append("is_seasonal_collection", (selectedFlag === FLAG_MAP.is_seasonal_collection || isSeasonalCollection) ? "true" : "unknown");
-    params.append("is_trending", (selectedFlag === FLAG_MAP.is_trending || isTrending) ? "true" : "unknown");
-    params.append("is_latest", (selectedFlag === FLAG_MAP.is_latest || isLatest) ? "true" : "unknown");
+
+    // Dynamically append all collection flags based on active context (URL query params OR sidebar selection)
+    if (Array.isArray(initialFlags) && initialFlags.length > 0) {
+      initialFlags.forEach(f => {
+        const keys = [f.filter_key, f.slug, f.name].filter(Boolean);
+        const isUrlMatch = keys.some(k => (typeof window !== 'undefined' ? (new URLSearchParams(window.location.search)).get(k) === 'true' : false));
+        const isManualMatch = selectedFlag === f.id;
+        
+        if (isUrlMatch || isManualMatch) {
+          // Use the first valid key (usually filter_key or name) for the boolean parameter
+          const flagKey = keys.find(k => k.startsWith('is_')) || keys[0];
+          params.append(flagKey, "true");
+        }
+      });
+    } else {
+      // Legacy fallback for hardcoded flags if initialFlags data isn't loaded yet
+      params.append("is_featured", (selectedFlag === FLAG_MAP.is_featured || isFeatured) ? "true" : "unknown");
+      params.append("is_best_seller", (selectedFlag === FLAG_MAP.is_best_seller || isBestSeller) ? "true" : "unknown");
+      params.append("is_seasonal_collection", (selectedFlag === FLAG_MAP.is_seasonal_collection || isSeasonalCollection) ? "true" : "unknown");
+      params.append("is_trending", (selectedFlag === FLAG_MAP.is_trending || isTrending) ? "true" : "unknown");
+      params.append("is_latest", (selectedFlag === FLAG_MAP.is_latest || isLatest) ? "true" : "unknown");
+    }
 
 
     // Ordering (empty for now)
@@ -497,28 +572,54 @@ const FilterSidebar = ({
 
     // categorySegment is the URL-friendly category slug for the selected type
     // (e.g. "pots" for type "pot"). Hoisted so it's reachable by the SEO fetch later.
-    const categorySegment = typeToSlug[selectedFilterType] || selectedFilterType;
+    const categorySegment = selectedFilterType ? (typeToSlug[selectedFilterType] || selectedFilterType) : "shop";
 
     // Update URL visually only if we are applying a standard category filter and slugs have changed
-    if (selectedFilterType && !isSeasonalCollection && !isTrending && !isFeatured && !isBestSeller) {
-      let newUrl = `/${categorySegment}`;
-      if (finalSubcategorySlug) {
-        newUrl += `/${finalSubcategorySlug}`;
-      }
-      // Ensure trailing slash to match trailingSlash: true in next.config.ts
-      if (!newUrl.endsWith('/')) newUrl += '/';
+    // We prioritize flags for URL structure if present
+    const activeFlagSlug = flagToSlugMap[selectedFlag];
 
-      // PRESERVE SEARCH QUERY IN URL
-      if (searchQuery) {
-        newUrl += `?query=${encodeURIComponent(searchQuery)}`;
-      }
+    // Determine if ANY discovery flag or search query is currently active (prevents redirect to generic shop)
+    const hasActiveDiscovery = isSeasonalCollection || isTrending || isFeatured || isBestSeller || selectedPublicFlag || 
+                              (Array.isArray(initialFlags) && initialFlags.some(f => {
+                                const keys = [f.filter_key, f.slug, f.name].filter(Boolean);
+                                return keys.some(k => (new URLSearchParams(window.location.search)).get(k) === 'true');
+                              }));
+    
+    // Safety check: if there are ANY query parameters at all, we should probably not force-reset the path to /shop/
+    const hasAnyQuery = typeof window !== 'undefined' && window.location.search.length > 1;
 
-      if (window.location.pathname !== newUrl || window.location.search !== (searchQuery ? `?query=${encodeURIComponent(searchQuery)}` : "")) {
-        // Use replaceState to avoid cluttering history if filters are tweaked rapidly
-        window.history.replaceState(null, '', newUrl);
-        // Force popstate so other components (like Breadcrumbs) react to the manual URL change
-        window.dispatchEvent(new PopStateEvent('popstate'));
-      }
+    // Always synchronize the URL path to reflect the current category context while preserving discovery flags
+    let newUrlBase = `/${categorySegment}`;
+    if (selectedFilterType && finalSubcategorySlug) {
+      newUrlBase += `/${finalSubcategorySlug}`;
+    }
+    // Ensure trailing slash
+    if (!newUrlBase.endsWith('/')) newUrlBase += '/';
+
+    const currentParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : "");
+    const finalParams = new URLSearchParams();
+
+    // Preserve search query if active
+    if (searchQuery) finalParams.set('query', searchQuery);
+
+    // Preserve ALL active discovery flags from the current URL
+    if (Array.isArray(initialFlags)) {
+      initialFlags.forEach(f => {
+        const keys = [f.filter_key, f.slug, f.name].filter(Boolean);
+        keys.forEach(k => {
+          if (currentParams.get(k) === 'true') finalParams.set(k, 'true');
+        });
+      });
+    }
+
+    const newQueryString = finalParams.toString();
+    const newFullUrl = newUrlBase + (newQueryString ? `?${newQueryString}` : "");
+
+    if (typeof window !== 'undefined' && (window.location.pathname !== newUrlBase || window.location.search !== (newQueryString ? `?${newQueryString}` : ""))) {
+      // Use replaceState for fluid navigation that doesn't clutter history during discovery
+      window.history.replaceState(null, '', newFullUrl);
+      // Notify other URL-aware components like breadcrumbs
+      window.dispatchEvent(new PopStateEvent('popstate'));
     }
 
     try {
@@ -691,7 +792,8 @@ const FilterSidebar = ({
     setIsSubcategorySEO,
     typeKey,
     selectedPublicFlag,
-    searchQuery
+    searchQuery,
+    flagToSlugMap
   ]);
 
   // AUTO-APPLY: whenever selectedFilters, selectedFilterType, or priceRange changes after user interaction, apply immediately
@@ -978,6 +1080,39 @@ const FilterSidebar = ({
               })}
             </div>
           </div>
+
+          {/* Collections (Public Flags) Mobile */}
+          {Array.isArray(initialFlags) && initialFlags.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-gray-900 font-bold mb-4">Collections</h3>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => onSelectPublicFlag(null)}
+                  className={`px-4 py-2 rounded-full border text-sm font-medium transition-all ${!selectedPublicFlag
+                    ? "bg-[#375421] text-white border-[#375421] shadow-md"
+                    : "bg-white text-gray-700 border-gray-200"
+                    }`}
+                >
+                  All Items
+                </button>
+                {initialFlags.map((flag) => {
+                  const isSelected = selectedPublicFlag === flag.id;
+                  return (
+                    <button
+                      key={flag.id}
+                      onClick={() => onSelectPublicFlag(flag.id)}
+                      className={`px-4 py-2 rounded-full border text-sm font-medium transition-all ${isSelected
+                        ? "bg-[#375421] text-white border-[#375421] shadow-md"
+                        : "bg-white text-gray-700 border-gray-200"
+                        }`}
+                    >
+                      {flag.label || flag.name}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           <div className="mb-8">
             <h3 className="text-gray-900 font-bold mb-4">Price Range</h3>

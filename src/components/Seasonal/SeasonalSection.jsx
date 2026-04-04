@@ -96,7 +96,10 @@ export const SeasonalSection = ({
 
           <div className="flex flex-col items-start md:items-end gap-6">
             <Link
-              href="/seasonal/"
+              href={`/shop/?${(() => {
+                const f = publicFlags?.find(f => f.name.toLowerCase().includes('seasonal'));
+                return f?.filter_key || f?.slug || 'is_seasonal_collection';
+              })()}=true`}
               className="group flex items-center gap-2 text-[12px] font-bold text-[#375421] hover:text-[#1a1f14] transition-colors duration-300"
             >
               All seasonal offers <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />

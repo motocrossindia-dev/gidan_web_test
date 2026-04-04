@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname, useSearchParams, useParams } from "next/navigation";
+import { usePathname, useSearchParams, useParams, useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import { SwipeableDrawer, IconButton, Box, Typography } from "@mui/material";
 import { FiFilter } from "react-icons/fi";
@@ -27,23 +27,16 @@ import Pagination from "../../../components/Shared/Pagination";
 
 /**
  * @param {object} props
- * @param {any[] | {results: any[], count: number, next: string | null, previous: string | null}} props.initialResults
+ * @param {any[] | {results: any[], count: number, next: string | null, previous: string | null}} [props.initialResults]
  * @param {object} [props.initialCategoryData]
  * @param {object} [props.initialFilterData]
  * @param {string} [props.categorySlug]
  * @param {string} [props.subcategorySlug]
  * @param {string} [props.subcategoryName]
- * @param {object} [props.initialSEOData] SEO content pre-fetched server-side (hero/sections for category, title/subtitle/description for subcategory)
+ * @param {object} [props.initialSEOData]
+ * @param {any[]} [props.initialFlags]
+ * @param {boolean} [props.hideHeader]
  */
-// Mapping of flag names to IDs as provided by the backend
-const FLAG_MAP = {
-    is_featured: 2,
-    is_latest: 3,
-    is_best_seller: 4,
-    is_seasonal_collection: 5,
-    is_trending: 6
-};
-
 function PlantFilter({
 
     initialResults = [],
@@ -57,33 +50,46 @@ function PlantFilter({
     hideHeader = false,
 } = {}) {
 
+    // Fully dynamic Flag Map derived from API
+    const FLAG_MAP = useMemo(() => {
+        const dynamicMap = {};
+        if (Array.isArray(initialFlags)) {
+            initialFlags.forEach(f => {
+                const key = f.filter_key || f.slug || f.name.toLowerCase().replace(/\s+/g, '_');
+                if (key) dynamicMap[key] = f.id;
+            });
+        }
+        return dynamicMap;
+    }, [initialFlags]);
+
+    const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const path = pathname;
     const { categorySlug, subcategorySlug } = useParams();
+
     const routeBasedFilters = useMemo(() => ({
-        isSeasonalCollection: path === '/seasonal' || path === '/seasonal/',
-        isTrending: path === '/trending' || path === '/trending/',
-        isLatest: path === '/latest' || path === '/latest/',
-        isFeatured: path === '/featured' || path === '/featured/',
-        isBestSeller: path === '/bestseller' || path === '/bestseller/'
+        isShop: path === '/shop' || path === '/shop/' || path.startsWith('/shop/')
     }), [path]);
 
     const query = searchParams.get('query') || "";
 
-    // Extract query parameters for boolean filters (fallback)
-    const queryIsSeasonalCollection = searchParams.get('is_seasonal_collection') === 'true';
-    const queryIsTrending = searchParams.get('is_trending') === 'true';
-    const queryIsLatest = searchParams.get('is_latest') === 'true';
-    const queryIsFeatured = searchParams.get('is_featured') === 'true';
-    const queryIsBestSeller = searchParams.get('is_best_seller') === 'true';
+    // Dynamic detection of ANY flag from query params
+    const activeFlagFromQuery = useMemo(() => {
+        if (!Array.isArray(initialFlags)) return null;
+        const matched = initialFlags.find(f => {
+            const keys = [f.filter_key, f.slug, f.name].filter(Boolean);
+            return keys.some(k => searchParams.get(k) === 'true');
+        });
+        return matched ? matched.id : null;
+    }, [initialFlags, searchParams]);
 
-    // Combine route-based and query-based filters (route takes precedence)
-    const isSeasonalCollection = routeBasedFilters.isSeasonalCollection || queryIsSeasonalCollection;
-    const isTrending = routeBasedFilters.isTrending || queryIsTrending;
-    const isLatest = routeBasedFilters.isLatest || queryIsLatest;
-    const isFeatured = routeBasedFilters.isFeatured || queryIsFeatured;
-    const isBestSeller = routeBasedFilters.isBestSeller || queryIsBestSeller;
+    // Convenience booleans for legacy support/UI logic
+    const isSeasonalCollection = searchParams.get('is_seasonal_collection') === 'true' || path === '/seasonal/';
+    const isTrending = searchParams.get('is_trending') === 'true' || path === '/trending/';
+    const isLatest = searchParams.get('is_latest') === 'true' || path === '/latest/';
+    const isFeatured = searchParams.get('is_featured') === 'true' || path === '/featured/';
+    const isBestSeller = searchParams.get('is_best_seller') === 'true' || path === '/bestseller/';
 
     // Use null as primary data source (keep existing logic)
     const stateData = null || {};
@@ -135,13 +141,41 @@ function PlantFilter({
         if (idFromSlug === "") return ""; // Explicitly handle gift case
         return categoryId || idFromSlug || initialCategoryData?.id || null;
     });
+
+    // Reset categories when navigating back to global /shop/
+    useEffect(() => {
+        if (path === '/shop' || path === '/shop/') {
+            setResolvedCategoryId(null);
+            setResolvedSubcategoryId(null);
+        } else if (categoryIdFromSlug !== null) {
+            setResolvedCategoryId(categoryIdFromSlug);
+        }
+    }, [path, categoryIdFromSlug]);
     const [resolvedSubcategoryId, setResolvedSubcategoryId] = useState(
         subcategoryID || initialCategoryData?.subCategoryId || null
     );
+
+    useEffect(() => {
+        if (path === '/shop' || path === '/shop/') {
+            setResolvedSubcategoryId(null);
+        } else if (subcategoryID) {
+            setResolvedSubcategoryId(subcategoryID);
+        }
+    }, [path, subcategoryID]);
     const [isResolvingIds, setIsResolvingIds] = useState(false);
 
     // State to track the currently selected Type from the Sidebar
     const [currentFilterType, setCurrentFilterType] = useState(typeKey || null);
+
+    // Sync currentFilterType with path changes (e.g. from footer click /shop/)
+    // This ensures that navigating while on the same component correctly resets type defaults
+    useEffect(() => {
+        if (typeKey === null) {
+            setCurrentFilterType(null);
+        } else if (typeKey !== currentFilterType) {
+            setCurrentFilterType(typeKey);
+        }
+    }, [typeKey]);
 
     // State to track the currently active slugs (reacts to sidebar type changes)
     const [currentCategorySlug, setCurrentCategorySlug] = useState(propCategorySlug || categorySlug || "");
@@ -150,17 +184,31 @@ function PlantFilter({
     // State for SwipeableDrawer
     const [mobileOpen, setMobileOpen] = useState(false);
 
-    // State for Public Flags (Interactive Pills)
+    // State for Public Flags (Interactive Pills) - Initialize from URL
     const [selectedPublicFlag, setSelectedPublicFlag] = useState(() => {
         if (isFeatured) return FLAG_MAP.is_featured;
         if (isBestSeller) return FLAG_MAP.is_best_seller;
         if (isTrending) return FLAG_MAP.is_trending;
         if (isLatest) return FLAG_MAP.is_latest;
         if (isSeasonalCollection) return FLAG_MAP.is_seasonal_collection;
-        return null;
+        return activeFlagFromQuery || null;
     });
 
-    // Normalize initialResults: could be an array (legacy) or an object (new)
+    useEffect(() => {
+        if (activeFlagFromQuery !== null) {
+            setSelectedPublicFlag(activeFlagFromQuery);
+        } else if (isFeatured || isBestSeller || isTrending || isLatest || isSeasonalCollection) {
+            const legacyId = isFeatured ? FLAG_MAP.is_featured :
+                isBestSeller ? FLAG_MAP.is_best_seller :
+                    isTrending ? FLAG_MAP.is_trending :
+                        isLatest ? FLAG_MAP.is_latest :
+                            isSeasonalCollection ? FLAG_MAP.is_seasonal_collection : null;
+            setSelectedPublicFlag(legacyId);
+        } else {
+            setSelectedPublicFlag(null);
+        }
+    }, [activeFlagFromQuery, isFeatured, isBestSeller, isTrending, isLatest, isSeasonalCollection]);
+
     const normalizedInitialResults = useMemo(() => {
         if (!initialResults) return { results: [], count: 0, next: null, previous: null };
         if (Array.isArray(initialResults)) {
@@ -182,7 +230,7 @@ function PlantFilter({
     // Construct the initial query string to match getInitialProducts logic
     const initialQueryString = useMemo(() => {
         const params = new URLSearchParams();
-        const finalType = currentFilterType || typeKey || (isSeasonalCollection || isTrending || isFeatured || isBestSeller ? "plant" : "");
+        const finalType = currentFilterType || typeKey || "";
         params.append("type", finalType);
         // Clear category preference when searching to "handle all types"
         params.append("category_id", query ? "" : (resolvedCategoryId || ""));
@@ -421,7 +469,7 @@ function PlantFilter({
 
             try {
                 const queryParams = new URLSearchParams();
-                const finalType = typeKey || (isSeasonalCollection || isTrending || isFeatured || isBestSeller ? "plant" : "");
+                const finalType = typeKey || "";
                 queryParams.append("type", finalType);
                 queryParams.append("category_id", query ? "" : (resolvedCategoryId || ""));
                 queryParams.append("subcategory_id", resolvedSubcategoryId || "");
@@ -439,13 +487,41 @@ function PlantFilter({
                 queryParams.append("special_filter_id", "");
                 queryParams.append("care_guide_id", "");
                 queryParams.append("min_rating", "");
-                queryParams.append("flag", "");
-                queryParams.append("is_featured", isFeatured ? "true" : "unknown");
-                queryParams.append("is_best_seller", isBestSeller ? "true" : "unknown");
-                queryParams.append("is_seasonal_collection", isSeasonalCollection ? "true" : "unknown");
-                queryParams.append("is_trending", isTrending ? "true" : "unknown");
-                queryParams.append("is_latest", isLatest ? "true" : "unknown");
                 queryParams.append("ordering", "");
+
+                // Dynamically include all boolean discovery flags from URL search params
+                const discoveryKeysEncountered = new Set();
+                Array.from(searchParams.keys()).forEach(k => {
+                    if (searchParams.get(k) === 'true' && k !== 'page') {
+                        queryParams.append(k, "true");
+                        discoveryKeysEncountered.add(k);
+                        
+                        // If this key matches a known dynamic flag, also send its ID for backend stability
+                        const matchedFlag = initialFlags?.find(f => 
+                            [f.filter_key, f.slug, f.name].filter(Boolean).includes(k)
+                        );
+                        if (matchedFlag) {
+                            queryParams.append("flag", matchedFlag.id);
+                        }
+                    }
+                });
+
+                // Fallback for legacy hardcoded flags if not already processed by URL sync
+                if (!discoveryKeysEncountered.has("is_featured") && isFeatured) {
+                    queryParams.append("is_featured", "true");
+                }
+                if (!discoveryKeysEncountered.has("is_best_seller") && isBestSeller) {
+                    queryParams.append("is_best_seller", "true");
+                }
+                if (!discoveryKeysEncountered.has("is_seasonal_collection") && isSeasonalCollection) {
+                    queryParams.append("is_seasonal_collection", "true");
+                }
+                if (!discoveryKeysEncountered.has("is_trending") && isTrending) {
+                    queryParams.append("is_trending", "true");
+                }
+                if (!discoveryKeysEncountered.has("is_latest") && isLatest) {
+                    queryParams.append("is_latest", "true");
+                }
 
                 const currentPage = searchParams.get('page') || '1';
                 const response = await axiosInstance.get(
@@ -499,7 +575,7 @@ function PlantFilter({
             }
         };
 
-        const isSpecialRoute = routeBasedFilters.isSeasonalCollection || routeBasedFilters.isTrending || routeBasedFilters.isFeatured || routeBasedFilters.isBestSeller;
+        const isSpecialRoute = routeBasedFilters.isSeasonalCollection || routeBasedFilters.isTrending || routeBasedFilters.isFeatured || routeBasedFilters.isBestSeller || routeBasedFilters.isShop;
 
         if (!isResolvingIds && (resolvedCategoryId !== null || isSpecialRoute)) {
             if (filtersApplied) return;
@@ -513,40 +589,47 @@ function PlantFilter({
             const isShowingInitialData = results === normalizedInitialResults.results ||
                 (results.length === normalizedInitialResults.results.length && results.length > 0);
 
-            if (hasInitialResults && isShowingInitialData && seoData) {
-                // If we have SSR data, only fetch if the route has actually changed but the data hasn't
+            // Check if current searchParams have filters (aside from page)
+            const hasQueryFilters = Array.from(searchParams.keys()).some(k => k !== 'page' && searchParams.get(k) === 'true');
+
+            if (hasInitialResults && isShowingInitialData && seoData && !hasQueryFilters) {
+                // If we have SSR data, only fetch if the route has actually changed or filters are applied
                 return;
             }
 
             setIsSearching(true);
             getInitialProducts();
         }
-    }, [path, typeKey, currentFilterType, resolvedCategoryId, resolvedSubcategoryId, isResolvingIds, isSeasonalCollection, isTrending, isFeatured, isBestSeller, normalizedInitialResults, results, seoData, filtersApplied]);
+    }, [path, searchParams, typeKey, currentFilterType, resolvedCategoryId, resolvedSubcategoryId, isResolvingIds, isSeasonalCollection, isTrending, isFeatured, isBestSeller, normalizedInitialResults, filtersApplied]);
 
     const getDisplayName = () => {
         // High priority: Use the structured boutique heading pieces if available
         const hBefore = categoryData?.heading_before || "";
         const hItalic = categoryData?.italic_text || "";
         const hAfter = categoryData?.heading_after || "";
-        
+
         if (hBefore || hItalic || hAfter) {
             return `${hBefore} ${hItalic} ${hAfter}`.replace(/\s+/g, ' ').trim();
         }
 
         if (categoryData?.meta_title) return categoryData.meta_title;
         if (categoryData?.seo_title) return categoryData.seo_title;
-        const suffix = "Online in India";
-        if (isSeasonalCollection) return `Fresh Seasonal Collections - Buy Plants ${suffix}`;
-        if (isTrending) return `Trending Gardening Products - Shop ${suffix}`;
-        if (isLatest) return `New Arrivals - Latest Gardening Products ${suffix}`;
-        if (isFeatured) return `Featured Garden Products ${suffix}`;
-        if (isBestSeller) return `Best Selling Plants & Pots ${suffix}`;
-        if (currentFilterType) return `Buy ${currentFilterType}s ${suffix}`;
-        if (subCategoryName || fetchedSubcategoryName) {
-            const sName = subCategoryName || fetchedSubcategoryName;
+        const suffix = "Online in Bangalore, India";
+        const baseName = currentFilterType ? (toTitleCase(currentFilterType) + "s") : (categoryName || fetchedCategoryName || "");
+        const subName = subCategoryName || fetchedSubcategoryName || "";
+        const combinedBase = subName ? `${subName} ${baseName}` : (baseName || "Gardening Products");
+
+        if (isBestSeller) return `Best Selling ${combinedBase} ${suffix}`.replace(/\s+/g, ' ').trim();
+        if (isTrending) return `Trending ${combinedBase} ${suffix}`.replace(/\s+/g, ' ').trim();
+        if (isLatest) return `New ${combinedBase} ${suffix}`.replace(/\s+/g, ' ').trim();
+        if (isFeatured) return `Featured ${combinedBase} ${suffix}`.replace(/\s+/g, ' ').trim();
+        if (isSeasonalCollection) return `Seasonal ${combinedBase} ${suffix}`.replace(/\s+/g, ' ').trim();
+
+        if (subName) {
             const cName = categoryName || fetchedCategoryName || "";
-            return `Buy ${sName} ${cName} ${suffix}`.replace(/\s+/g, ' ').trim();
+            return `Buy ${subName} ${cName} ${suffix}`.replace(/\s+/g, ' ').trim();
         }
+        if (currentFilterType) return `Buy ${baseName} ${suffix}`.replace(/\s+/g, ' ').trim();
         if (categoryName || fetchedCategoryName) {
             const cName = categoryName || fetchedCategoryName;
             return `Buy ${cName} ${suffix}`;
@@ -565,7 +648,7 @@ function PlantFilter({
 
     const currentPath = typeof window !== 'undefined' ? window.location.pathname : pathname;
     const pathSegments = currentPath.split('/').filter(Boolean);
-    const isSpecialRoute = routeBasedFilters.isSeasonalCollection || routeBasedFilters.isTrending || routeBasedFilters.isFeatured || routeBasedFilters.isBestSeller;
+    const isSpecialRoute = routeBasedFilters.isSeasonalCollection || routeBasedFilters.isTrending || routeBasedFilters.isFeatured || routeBasedFilters.isBestSeller || routeBasedFilters.isShop;
 
     let canonicalCategorySlug = currentCategorySlug;
     let canonicalSubcategorySlug = currentSubcategorySlug;
@@ -587,14 +670,35 @@ function PlantFilter({
                 path: `/${canonicalCategorySlug}/`
             }
         ];
-    }, [canonicalSubcategorySlug, categoryName, fetchedCategoryName, canonicalCategorySlug]);
+    }, [canonicalSubcategorySlug, categoryName, fetchedCategoryName, canonicalCategorySlug, currentFilterType]);
 
     const breadcrumbPage = useMemo(() => {
-        if (canonicalSubcategorySlug) {
-            return subCategoryName || fetchedSubcategoryName || toTitleCase(canonicalSubcategorySlug);
+        const flagName = isBestSeller ? "Bestsellers" :
+            isTrending ? "Trending" :
+                isLatest ? "New Arrivals" :
+                    isFeatured ? "Featured" :
+                        isSeasonalCollection ? "Seasonal" : null;
+
+        if (routeBasedFilters.isShop) {
+            return flagName ? `Shop ${flagName}` : "Shop All Collections";
         }
-        return categoryName || fetchedCategoryName || toTitleCase(canonicalCategorySlug);
-    }, [canonicalSubcategorySlug, subCategoryName, fetchedSubcategoryName, categoryName, fetchedCategoryName, canonicalCategorySlug]);
+
+        const subName = subCategoryName || fetchedSubcategoryName || toTitleCase(canonicalSubcategorySlug);
+        const catName = (currentFilterType ? toTitleCase(currentFilterType + (currentFilterType.endsWith('s') ? '' : 's')) : null) || categoryName || fetchedCategoryName || toTitleCase(canonicalCategorySlug);
+
+        if (flagName) {
+            // Avoid duplicate naming like "Seasonal Seasonal" or "Best Selling Best Selling"
+            if (catName.toLowerCase() === flagName.toLowerCase() || catName === "Shop") {
+                return subName ? `${flagName} ${subName}` : flagName;
+            }
+            return subName ? `${flagName} ${subName} ${catName}` : `${flagName} ${catName}`;
+        }
+
+        if (canonicalSubcategorySlug) {
+            return subName;
+        }
+        return catName;
+    }, [routeBasedFilters.isShop, isBestSeller, isTrending, isLatest, isFeatured, isSeasonalCollection, canonicalSubcategorySlug, subCategoryName, fetchedSubcategoryName, categoryName, fetchedCategoryName, canonicalCategorySlug, currentFilterType]);
 
     // Helper for Bottom Info Cards Icon Mapping
     const getBottomInfoCardIcon = (title) => {
@@ -608,6 +712,23 @@ function PlantFilter({
         if (lower.includes('size') || lower.includes('range')) return <Package className="w-5 h-5 text-[#86a86d]" />;
         if (lower.includes('whatsapp') || lower.includes('support')) return <Smartphone className="w-5 h-5 text-[#86a86d]" />;
         return <ShieldCheck className="w-5 h-5 text-[#86a86d]" />;
+    };
+
+    const handleFlagSelection = (flagId) => {
+        // Handle pill clicking by manually updating the URL while preserving current path context
+        if (!flagId) {
+            // Reset to base route of the current page without flags
+            router.push(pathname);
+            return;
+        }
+
+        // Find the flag to derive its query key
+        const flag = initialFlags?.find(f => f.id === flagId);
+        if (flag) {
+            const key = flag.filter_key || flag.slug || flag.name;
+            // Maintain current category path instead of forcing redirect to /shop/
+            router.push(`${pathname}?${key}=true`);
+        }
     };
 
     return (
@@ -693,20 +814,22 @@ function PlantFilter({
                                     subcategoryList={subcategoryListMemo}
                                     setCurrentQuery={setCurrentQuery}
                                     selectedPublicFlag={selectedPublicFlag}
-                                    setSelectedPublicFlag={setSelectedPublicFlag}
+                                    onSelectPublicFlag={handleFlagSelection}
                                     searchQuery={query}
+                                    isShop={routeBasedFilters.isShop}
+                                    initialFlags={initialFlags}
                                 />
                             </div>
                         </div>
 
                         {/* Main Content (Right) - flex-grow with min-w-0 prevents grid overflow */}
                         <div className="flex-grow min-w-0 max-w-full">
-                            {/* Public Flags Interactive Pills - Sticky at the top below header */}
-                            <div className={`sticky top-[95px] md:top-[115px] z-[40] bg-[#f8f7f0]/95 backdrop-blur-md pb-1 md:pb-2 -mx-4 px-4 md:-mx-8 md:px-8 border-b border-gray-100/50 mb-8 mt-0 transition-all duration-300 flex items-center ${isStuck ? 'pt-6 md:pt-8' : 'pt-1 md:pt-2'}`}>
+                            {/* Public Flags Interactive Pills - Sticky at the top below header (Hidden on mobile as integrated in filter drawer) */}
+                            <div className={`hidden md:flex sticky top-[95px] md:top-[115px] z-[40] bg-[#f8f7f0]/95 backdrop-blur-md pb-1 md:pb-2 -mx-4 px-4 md:-mx-8 md:px-8 border-b border-gray-100/50 mb-8 mt-0 transition-all duration-300 items-center ${isStuck ? 'pt-6 md:pt-8' : 'pt-1 md:pt-2'}`}>
                                 <div className="flex-grow overflow-hidden">
                                     <PublicFlags
                                         selectedFlag={selectedPublicFlag}
-                                        onSelectFlag={setSelectedPublicFlag}
+                                        onSelectFlag={handleFlagSelection}
                                         initialFlags={initialFlags}
                                     />
                                 </div>
@@ -715,7 +838,7 @@ function PlantFilter({
                             <div className={`mt-0 transition-opacity duration-300 ${isSearching ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
                                 {/* Semantic SEO Heading for the collection */}
                                 <h2 className="sr-only">Browse our {breadcrumbPage} Collection</h2>
-                                
+
                                 <ProductGrid
                                     productDetails={results}
                                     pagination={products}
@@ -833,9 +956,11 @@ function PlantFilter({
                         subcategoryList={subcategoryListMemo}
                         setCurrentQuery={setCurrentQuery}
                         selectedPublicFlag={selectedPublicFlag}
-                        setSelectedPublicFlag={setSelectedPublicFlag}
+                        onSelectPublicFlag={handleFlagSelection}
                         searchQuery={query}
                         isMobile={true}
+                        isShop={routeBasedFilters.isShop}
+                        initialFlags={initialFlags}
                     />
                 </Box>
             </SwipeableDrawer>

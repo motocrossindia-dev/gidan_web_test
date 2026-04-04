@@ -156,12 +156,13 @@ export const TrendingSection = ({
 
       <div className="flex justify-center mt-8">
         <Link
-          href={
-            selectedTab === "featured" ? "/featured/" :
-              selectedTab === "bestseller" ? "/bestseller/" :
-                selectedTab === "latest" ? "/latest/" :
-                  "/trending/"
-          }
+          href={`/shop/?${(() => {
+            const f = selectedTab === 'featured' ? publicFlags?.find(f => f.name.toLowerCase().includes('featured')) :
+                     selectedTab === 'bestseller' ? publicFlags?.find(f => f.name.toLowerCase().includes('best')) :
+                     selectedTab === 'latest' ? publicFlags?.find(f => f.name.toLowerCase().includes('latest')) :
+                     publicFlags?.find(f => f.name.toLowerCase().includes('trending'));
+            return f?.filter_key || f?.slug || (selectedTab === 'bestseller' ? 'is_best_seller' : `is_${selectedTab}`);
+          })()}=true`}
           className="group flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.25em] text-[#375421] px-10 py-5 rounded-full border-2 border-[#375421]/10 hover:border-[#375421] hover:bg-[#375421] hover:text-white transition-all duration-500"
         >
           Explore the Collection <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform duration-500" />

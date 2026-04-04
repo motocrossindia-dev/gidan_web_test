@@ -3,7 +3,7 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
     FaFacebookF,
     FaInstagram,
@@ -25,6 +25,22 @@ const Footer = () => {
     const [subscribed, setSubscribed] = useState(false);
     const [isSignInOpen, setIsSignInOpen] = useState(false);
     const formRef = useRef(null);
+    const [publicFlags, setPublicFlags] = useState([]);
+
+    useEffect(() => {
+        const fetchFlags = async () => {
+            try {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/product/public-flags/`);
+                if (res.ok) {
+                    const data = await res.json();
+                    setPublicFlags(data.flags || []);
+                }
+            } catch (err) {
+                console.error("Error fetching footer flags", err);
+            }
+        };
+        fetchFlags();
+    }, []);
 
 
     const handleWalletClick = () => {
@@ -109,15 +125,22 @@ const Footer = () => {
                         <li className="hover:text-[#375421]">
                             <Link href="/stores/">Our Stores</Link>
                         </li>
-                        <li className="hover:text-[#375421]">
-                            <Link href="/trending/">Trending</Link>
-                        </li>
-                        <li className="hover:text-[#375421]">
-                            <Link href="/bestseller/">Bestsellers</Link>
-                        </li>
-                        <li className="hover:text-[#375421]">
-                            <Link href="/seasonal/">Seasonal</Link>
-                        </li>
+                        
+                        {/* Dynamic Flag Links */}
+                        {publicFlags.map((flag) => {
+                            // Unified route: always use /shop/ with the dynamic filter key or slug fallback
+                            const key = flag.filter_key || flag.slug || flag.name.toLowerCase().replace(/\s+/g, '_');
+                            const href = `/shop/?${key}=true`;
+                            
+                            return (
+                                <li key={flag.id} className="hover:text-[#375421]">
+                                    <Link href={href}>
+                                        {flag.label || flag.name}
+                                    </Link>
+                                </li>
+                            );
+                        })}
+
                         <li className="hover:text-[#375421]">
                             <Link href="/franchise-enquiry/">Franchise Enquiry</Link>
                         </li>

@@ -87,6 +87,12 @@ const nextConfig: NextConfig = {
         destination: "/:id/:subcategory/",
         permanent: true,
       },
+      // Decommission hardcoded discovery pages in favor of unified dynamic /shop/ route
+      { source: "/trending/", destination: "/shop/?is_trending=true", permanent: true },
+      { source: "/seasonal/", destination: "/shop/?is_seasonal_collection=true", permanent: true },
+      { source: "/featured/", destination: "/shop/?is_featured=true", permanent: true },
+      { source: "/latest/", destination: "/shop/?is_latest=true", permanent: true },
+      { source: "/bestseller/", destination: "/shop/?is_best_seller=true", permanent: true },
     ];
   },
 
