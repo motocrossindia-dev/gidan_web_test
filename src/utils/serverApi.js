@@ -1,12 +1,19 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store";
 
 export async function fetchCategoryBySlug(slug) {
+    if (!slug) return null;
     try {
         const res = await fetch(`${API_URL}/category/`, { next: { revalidate: 300 } });
         if (!res.ok) return null;
         const data = await res.json();
         const categories = data?.data?.categories || [];
-        return categories.find(c => c.slug === slug) || null;
+        
+        // Use robust matching: Case-insensitive and trimmed
+        const normalizedSlug = slug.toLowerCase().trim();
+        return categories.find(c => 
+            c.slug.toLowerCase().trim() === normalizedSlug || 
+            c.name.toLowerCase().trim() === normalizedSlug
+        ) || null;
     } catch (err) {
         console.error("Error fetching category", err);
         return null;

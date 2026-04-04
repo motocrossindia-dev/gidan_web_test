@@ -16,14 +16,6 @@
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '../Axios/axiosInstance';
 
-// Map categories to type_choices
-const categoryToTypeMap = {
-  'PLANTS': 'plant',
-  'POTS': 'pot',
-  'SEEDS': 'seed',
-  'PLANT CARE': 'plantcare'
-};
-
 // Fetch subcategories for a specific category
 const fetchSubCategory = async (categorySlug) => {
   try {
@@ -47,7 +39,7 @@ const fetchCategories = async () => {
       categories.map(async (category) => {
         if (category?.id) {
           const subCategory = await fetchSubCategory(category?.slug);
-          const typeKey = categoryToTypeMap[category.name] || '';
+          const typeKey = category.type || "";
           return { ...category, subCategory, typeKey };
         }
         return category;

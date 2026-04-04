@@ -7,16 +7,35 @@ import CategoryProductGridServer from "../sections/CategoryProductGridServer";
 type Props = { params: Promise<{ categorySlug: string }> };
 
 /**
- * PRODUCTION OPTIMIZATION: Pre-render main categories at build time
+ * PRODUCTION OPTIMIZATION: Dynamically pre-render all published categories at build time.
+ * This ensures that even new categories added to the backend are high-performance and SEO-ready instantly.
  */
 export async function generateStaticParams() {
-  return [
-    { categorySlug: 'plants' },
-    { categorySlug: 'pots' },
-    { categorySlug: 'seeds' },
-    { categorySlug: 'plant-care' },
-    { categorySlug: 'gifts' }
-  ];
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store";
+    const res = await fetch(`${apiUrl}/category/`, { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    
+    const data = await res.json();
+    const categories = data?.data?.categories || [];
+    
+    // Create static params for all published category slugs
+    return categories
+      .filter((c: any) => c.is_published && c.slug)
+      .map((c: any) => ({
+        categorySlug: c.slug,
+      }));
+  } catch (err) {
+    console.error("Error generating static params for categories:", err);
+    // Fallback to essential categories if API is down during build
+    return [
+      { categorySlug: 'plants' },
+      { categorySlug: 'pots' },
+      { categorySlug: 'seeds' },
+      { categorySlug: 'plant-care' },
+      { categorySlug: 'gifts' }
+    ];
+  }
 }
 
 // Fetch valid category slugs from the backend
@@ -71,44 +90,28 @@ import TrustBadges from "@/components/Shared/TrustBadges";
 export default async function CategoryPage({ params }: Props) {
   const { categorySlug } = await params;
 
-  // 1. Determine common category metadata to allow parallel fetching
-  const categoryToTypeMap: Record<string, string> = {
-    'plants': 'plant',
-    'pots': 'pot',
-    'seeds': 'seed',
-    'plant-care': 'plantcare',
-    'gifts': 'gift'
-  };
-  
-  const slugToIdMap: Record<string, number> = {
-    'plants': 19,
-    'pots': 20,
-    'seeds': 21,
-    'plant-care': 22,
-    'gifts': 0 // Gifts handled specially
-  };
-
+  // 2. Fetch primary category data to resolve dynamic metadata
+  const category = await fetchCategoryBySlug(categorySlug);
   const categorySlugLower = categorySlug.toLowerCase();
-  const typeKey = categoryToTypeMap[categorySlugLower] || (categorySlugLower === 'gifts' || categorySlugLower === 'gift' ? "gift" : "plant");
-  const knownCategoryId = slugToIdMap[categorySlugLower];
 
-  // 2. Fetch everything in parallel if category ID is known, otherwise waterfall slightly
-  // Optimized: Parallel fetch for fast metadata only
-  const [category, subcategories, publicFlags] = await Promise.all([
-    fetchCategoryBySlug(categorySlug),
+  // Handle 'gifts' specially if not in standard category API, otherwise use official 'type'
+  const isGiftCategory = categorySlugLower === 'gifts' || categorySlugLower === 'gift';
+  const effectiveCategory = category || (isGiftCategory ? { id: null, name: "Gifts", slug: categorySlug, type: "gift" } : null);
+
+  if (!effectiveCategory) notFound();
+
+  // Dynamically resolve typeKey from backend category object, fallback to 'plant'
+  const typeKey = (effectiveCategory as any).type || "plant";
+  const effectiveId = effectiveCategory.id ? effectiveCategory.id.toString() : null;
+
+  // 3. Fetch remaining data in parallel using resolved metadata
+  const [subcategories, publicFlags] = await Promise.all([
     fetchSubcategories(categorySlug),
     fetchPublicFlags()
   ]);
 
-  // Handle 'gifts' specially if not in standard category API
-  const isGiftCategory = categorySlugLower === 'gifts' || categorySlugLower === 'gift';
-  const effectiveCategory = category || (isGiftCategory ? { id: null, name: "Gifts", slug: categorySlug } : null);
-
-  if (!effectiveCategory) notFound();
-
   // Attach subCategory to category object for the Shell
   const categoryWithSubs = { ...effectiveCategory, subCategory: subcategories || [] };
-  const effectiveId = effectiveCategory.id ? effectiveCategory.id.toString() : null;
 
   // Prepare initial SEO data for server-side rendering
   const catInfo = (effectiveCategory as any).category_info?.category_info || (effectiveCategory as any).category_info;

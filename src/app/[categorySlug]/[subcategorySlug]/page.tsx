@@ -70,23 +70,24 @@ import TrustBadges from "@/components/Shared/TrustBadges";
 export default async function SubcategoryPage({ params }: Props) {
   const { categorySlug, subcategorySlug } = await params;
 
-  // 1. Fetch category, subcategory, subcategories list, and filters data on server
-  const categoryToTypeMap: Record<string, string> = {
-    'plants': 'plant',
-    'pots': 'pot',
-    'seeds': 'seed',
-    'plant-care': 'plantcare',
-    'gift': 'gift',
-    'gifts': 'gift'
-  };
-  const categorySlugLower = categorySlug.toLowerCase();
-  const typeKey = categoryToTypeMap[categorySlugLower] || "plant";
-
+  // 1. Fetch category and subcategory in parallel as first step
   const [category, subcategory, subcategoriesList] = await Promise.all([
     fetchCategoryBySlug(categorySlug),
     fetchSubcategoryBySlug(categorySlug, subcategorySlug),
     fetchSubcategories(categorySlug),
   ]);
+
+  const categorySlugLower = categorySlug.toLowerCase();
+
+  // Handle 'gifts' specially if not in standard category API, otherwise resolve typeKey dynamically
+  const isGiftCategory = categorySlugLower === 'gifts' || categorySlugLower === 'gift';
+  const effectiveCategory = category || (isGiftCategory ? { id: null, name: "Gifts", slug: categorySlug, type: "gift" } : null);
+
+  if (!effectiveCategory || (!isGiftCategory && !subcategory)) notFound();
+
+  // Dynamically resolve typeKey from backend category object, fallback to 'plant'
+  const typeKey = (effectiveCategory as any).type || "plant";
+  const effectiveId = effectiveCategory.id ? effectiveCategory.id.toString() : null;
 
   if (!category && (categorySlugLower === 'gifts' || categorySlugLower === 'gift')) {
     const giftCategoryData = {

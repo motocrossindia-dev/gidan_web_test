@@ -109,9 +109,7 @@ const FilterSidebar = ({
   isShop = false,
   initialFlags = [],
 }) => {
-  // Track if this is the very first render of the component
   const isInitialMount = useRef(true);
-  // Track whether user has interacted with filters (to avoid auto-apply on mount)
   const userInteracted = useRef(false);
   const router = useRouter();
 
@@ -152,7 +150,7 @@ const FilterSidebar = ({
       5: 'seasonal',
       6: 'trending'
     };
-    
+
     // If the backend filters has flag_to_slug, use it
     if (filterData.flag_to_slug) return { ...baseMap, ...filterData.flag_to_slug };
 
@@ -160,16 +158,16 @@ const FilterSidebar = ({
     if (Array.isArray(initialFlags) && initialFlags.length > 0) {
       const dynamicMap = {};
       initialFlags.forEach(f => {
-         if (f.id && f.slug) dynamicMap[f.id] = f.slug;
-         // Fallback slug mapping if f.slug is missing but name is available
-         else if (f.id && f.name) {
-           const lower = f.name.toLowerCase();
-           if (lower.includes('featured')) dynamicMap[f.id] = 'featured';
-           else if (lower.includes('latest')) dynamicMap[f.id] = 'latest';
-           else if (lower.includes('best')) dynamicMap[f.id] = 'bestseller';
-           else if (lower.includes('seasonal')) dynamicMap[f.id] = 'seasonal';
-           else if (lower.includes('trending')) dynamicMap[f.id] = 'trending';
-         }
+        if (f.id && f.slug) dynamicMap[f.id] = f.slug;
+        // Fallback slug mapping if f.slug is missing but name is available
+        else if (f.id && f.name) {
+          const lower = f.name.toLowerCase();
+          if (lower.includes('featured')) dynamicMap[f.id] = 'featured';
+          else if (lower.includes('latest')) dynamicMap[f.id] = 'latest';
+          else if (lower.includes('best')) dynamicMap[f.id] = 'bestseller';
+          else if (lower.includes('seasonal')) dynamicMap[f.id] = 'seasonal';
+          else if (lower.includes('trending')) dynamicMap[f.id] = 'trending';
+        }
       });
       return { ...baseMap, ...dynamicMap };
     }
@@ -281,7 +279,7 @@ const FilterSidebar = ({
         // For the main shop route, if no specific category match, default to "All Collection" (empty string) 
         // instead of falling back to the first available type (e.g. pots)
         const finalType = match || (isShop ? "" : availableTypes[0]);
-        
+
         if (finalType !== undefined && selectedFilterType !== finalType) {
           hasSyncedFromUrl.current = true;
           setSelectedFilterType(finalType);
@@ -302,7 +300,7 @@ const FilterSidebar = ({
       if (selectedFilterType) {
         params.append("type", selectedFilterType);
       }
-      
+
       if (searchQuery) {
         params.append("search", searchQuery);
       }
@@ -314,7 +312,7 @@ const FilterSidebar = ({
 
       const queryString = params.toString();
       const requestUrl = queryString ? `${API_URL}?${queryString}` : API_URL;
-      
+
       const res = await axiosInstance.get(requestUrl);
       const filters = res.data?.filters || {};
 
@@ -463,7 +461,7 @@ const FilterSidebar = ({
     // Clear route IDs on type switch or when a search query is active so we search across all categories
     let baseCategoryId = categoryId || categoryIdFromSlug || "";
     if (baseCategoryId === "undefined" || baseCategoryId === "null") baseCategoryId = "";
-    
+
     let finalCategoryId = (forceResetIds || searchQuery) ? "" : baseCategoryId;
 
     // If we're on a type change, default to the correct category ID for that type.
@@ -534,7 +532,7 @@ const FilterSidebar = ({
         const keys = [f.filter_key, f.slug, f.name].filter(Boolean);
         const isUrlMatch = keys.some(k => (typeof window !== 'undefined' ? (new URLSearchParams(window.location.search)).get(k) === 'true' : false));
         const isManualMatch = selectedFlag === f.id;
-        
+
         if (isUrlMatch || isManualMatch) {
           // Use the first valid key (usually filter_key or name) for the boolean parameter
           const flagKey = keys.find(k => k.startsWith('is_')) || keys[0];
@@ -579,12 +577,12 @@ const FilterSidebar = ({
     const activeFlagSlug = flagToSlugMap[selectedFlag];
 
     // Determine if ANY discovery flag or search query is currently active (prevents redirect to generic shop)
-    const hasActiveDiscovery = isSeasonalCollection || isTrending || isFeatured || isBestSeller || selectedPublicFlag || 
-                              (Array.isArray(initialFlags) && initialFlags.some(f => {
-                                const keys = [f.filter_key, f.slug, f.name].filter(Boolean);
-                                return keys.some(k => (new URLSearchParams(window.location.search)).get(k) === 'true');
-                              }));
-    
+    const hasActiveDiscovery = isSeasonalCollection || isTrending || isFeatured || isBestSeller || selectedPublicFlag ||
+      (Array.isArray(initialFlags) && initialFlags.some(f => {
+        const keys = [f.filter_key, f.slug, f.name].filter(Boolean);
+        return keys.some(k => (new URLSearchParams(window.location.search)).get(k) === 'true');
+      }));
+
     // Safety check: if there are ANY query parameters at all, we should probably not force-reset the path to /shop/
     const hasAnyQuery = typeof window !== 'undefined' && window.location.search.length > 1;
 
@@ -644,7 +642,7 @@ const FilterSidebar = ({
 
       const requestUrl = `/filters/main_productsFilter/?${params.toString()}`;
       const res = await axiosInstance.get(requestUrl);
-      
+
       if (setCurrentQuery) setCurrentQuery(params.toString());
       setResults(res.data.results);
 
@@ -727,8 +725,8 @@ const FilterSidebar = ({
           setSeoData({
             ...activeInfo,
             // Ensure info_cards are pulled from parent level if missing in detailed nested block
-            info_cards: (activeInfo.info_cards && activeInfo.info_cards.length > 0) 
-              ? activeInfo.info_cards 
+            info_cards: (activeInfo.info_cards && activeInfo.info_cards.length > 0)
+              ? activeInfo.info_cards
               : (parentCatInfo?.info_cards || []),
             sections: (activeInfo.sections && activeInfo.sections.length > 0)
               ? activeInfo.sections
@@ -742,9 +740,9 @@ const FilterSidebar = ({
 
       if (setFetchedCategoryName) {
         if (!finalSubcategoryId && activeName) {
-            setFetchedCategoryName(activeName);
+          setFetchedCategoryName(activeName);
         } else if (activeInfo?.category_name) {
-            setFetchedCategoryName(activeInfo.category_name);
+          setFetchedCategoryName(activeInfo.category_name);
         }
       }
 
@@ -841,12 +839,12 @@ const FilterSidebar = ({
       const url = new URL(window.location.href);
       // We explicitly clear the "search" query from the URL if it was previously present
       url.searchParams.delete('query');
-      
+
       // We remove specific faceted filters but keep the "type" if we are on the search page
       // On category routes, the type is part of the path, so this is safe.
       const filtersToClear = ['color_id', 'size_id', 'min_price', 'max_price', 'planter_size_id', 'planter_id', 'weight_id', 'pot_type_id', 'litre_id', 'space_and_light_id', 'special_filter_id', 'care_guide_id', 'min_rating', 'flag'];
       filtersToClear.forEach(f => url.searchParams.delete(f));
-      
+
       window.history.replaceState(null, '', url.pathname + url.search);
       window.dispatchEvent(new PopStateEvent('popstate'));
     }
@@ -964,7 +962,7 @@ const FilterSidebar = ({
 
         {options.length > 6 ? (
           /* Dropdown for > 6 options (Standard for Color, Planter Size) */
-          <div 
+          <div
             className="relative group"
             ref={(el) => (dropdownContainerRefs.current[filter] = el)}
           >

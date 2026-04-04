@@ -26,23 +26,38 @@ export const TrendingSection = ({
 
   // Map selected tab to API filters dynamically generated from publicFlags SSR Array
   const currentFilters = useMemo(() => {
-    const getId = (name) => publicFlags?.find(f => f.name.toLowerCase().includes(name.toLowerCase()))?.id || null;
+    // Priority finding: Try exact name match first, then partial match
+    const getFlagId = (key) => publicFlags?.find(f => f.name === key || f.filter_key === key)?.id;
+    const findIdByPart = (part) => publicFlags?.find(f => f.name.toLowerCase().includes(part.toLowerCase()) || f.label?.toLowerCase().includes(part.toLowerCase()))?.id;
     
-    if (selectedTab === "featured") return { flag: getId('featured') || 2 };
-    if (selectedTab === "bestseller") return { flag: getId('best_seller') || getId('best seller') || 4 };
-    if (selectedTab === "latest") return { flag: getId('latest') || 3 };
-    // Default to trending
-    return { flag: getId('trending') || 6 };
+    if (selectedTab === "under499") {
+        const id = getFlagId('is_under_499') || findIdByPart('499') || 8;
+        return { flag: id };
+    }
+    if (selectedTab === "lowmaintenance") {
+        const id = getFlagId('is_low_maintenance') || findIdByPart('maintenance') || 7;
+        return { flag: id };
+    }
+    if (selectedTab === "bestseller") {
+        const id = getFlagId('is_best_seller') || findIdByPart('best') || 4;
+        return { flag: id };
+    }
+    if (selectedTab === "latest") {
+        const id = getFlagId('is_latest') || findIdByPart('latest') || findIdByPart('new') || 3;
+        return { flag: id };
+    }
+    // Default to bestseller
+    return { flag: getFlagId('is_best_seller') || 4 };
   }, [selectedTab, publicFlags]);
 
 
 
   const initialDataForTab = useMemo(() => {
-    if (selectedTab === "featured") return initialFeatured;
     if (selectedTab === "bestseller") return initialBestseller;
     if (selectedTab === "latest") return initialLatest;
-    return initialTrending;
-  }, [selectedTab, initialTrending, initialFeatured, initialBestseller, initialLatest]);
+    // New dynamic tabs don't have SSR initial data from root page yet, will fetch on mount
+    return null;
+  }, [selectedTab, initialBestseller, initialLatest]);
 
 
   const { data: rawProducts = [], isLoading, refetch } = useHomeProducts(
@@ -69,9 +84,9 @@ export const TrendingSection = ({
         <div className="max-w-7xl mx-auto px-4 md:px-8">
           <div className="h-12 w-64 bg-gray-200 rounded animate-pulse mb-4" />
           <div className="h-4 w-96 bg-gray-200 rounded animate-pulse mb-10" />
-          <div className="flex gap-6 overflow-hidden">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="shrink-0 w-[300px] h-[450px] bg-gray-100 rounded-3xl animate-pulse" />
+              <div key={i} className="shrink-0 aspect-[3/4] bg-gray-100 rounded-3xl animate-pulse" />
             ))}
           </div>
         </div>
@@ -97,19 +112,20 @@ export const TrendingSection = ({
               Curated Selection
             </span>
             <h2 className="text-[32px] md:text-[48px] font-serif text-[#1a1f14] leading-tight flex flex-wrap gap-x-3 items-baseline mb-4">
-              {selectedTab === 'featured' ? 'Featured' :
-                selectedTab === 'bestseller' ? 'Best Selling' :
-                  selectedTab === 'latest' ? 'New' : 'Trending'}
+              {selectedTab === 'under499' ? 'Under ₹499' :
+                selectedTab === 'lowmaintenance' ? 'Easy Maintenance' :
+                  selectedTab === 'latest' ? 'New' : 'Best Selling'}
               <span className="italic font-normal text-[#375421]">
-                {selectedTab === 'featured' ? 'Plants in Bangalore' :
-                  selectedTab === 'bestseller' ? 'Plants in Bangalore' :
+                {selectedTab === 'under499' ? 'Value Plants' :
+                  selectedTab === 'lowmaintenance' ? 'Carefree Greens' :
                     selectedTab === 'latest' ? 'Arrivals in Bangalore' : 'Now in Bangalore'}
               </span>
             </h2>
             <p className="text-[14px] md:text-[15px] text-[#1a1f14]/60 font-medium max-w-lg">
-              {selectedTab === 'latest'
-                ? "Discover our freshest additions, curated for your home."
-                : "India's most-loved plants — chosen by 12,000+ gardeners."}
+              {selectedTab === 'under499' ? "Beautiful plants that don't break the bank." :
+                selectedTab === 'lowmaintenance' ? "Perfect for busy plant parents and beginners." :
+                  selectedTab === 'latest' ? "Discover our freshest additions, curated for your home." :
+                    "India's most-loved plants — chosen by 12,000+ gardeners."}
             </p>
           </div>
 
@@ -118,8 +134,8 @@ export const TrendingSection = ({
               <div className="grid grid-cols-4 items-center h-11 md:h-12">
                 {[
                   { id: "bestseller", label: "Bestseller" },
-                  { id: "featured", label: "Featured" },
-                  { id: "trending", label: "Trending" },
+                  { id: "under499", label: "Under ₹499" },
+                  { id: "lowmaintenance", label: "Easy Care" },
                   { id: "latest", label: "New Arrivals" }
                 ].map((tab) => (
                   <button
@@ -127,7 +143,7 @@ export const TrendingSection = ({
                     onClick={() => setSelectedTab(tab.id)}
                     className={`h-full w-full rounded-full text-[9px] md:text-[10px] font-bold uppercase transition-all duration-500 ${selectedTab === tab.id
                       ? "bg-[#1a3d0a] text-white shadow-[0_4px_12px_rgba(26,61,10,0.3)] scale-[0.98] tracking-normal"
-                      : "text-[#1a1f14]/50 hover:text-[#1a3d0a] hover:bg-black/[0.03] tracking-[0.1em] md:tracking-[0.2em]"
+                      : "text-[#1a1f14]/50 hover:text-[#1a3d0a] hover:bg-black/[0.03] tracking-tight"
                       }`}
                   >
                     {tab.label}
@@ -157,10 +173,11 @@ export const TrendingSection = ({
       <div className="flex justify-center mt-8">
         <Link
           href={`/shop/?${(() => {
-            const f = selectedTab === 'featured' ? publicFlags?.find(f => f.name.toLowerCase().includes('featured')) :
-                     selectedTab === 'bestseller' ? publicFlags?.find(f => f.name.toLowerCase().includes('best')) :
+            if (selectedTab === 'under499') return 'is_under_499';
+            if (selectedTab === 'lowmaintenance') return 'is_low_maintenance';
+            const f = selectedTab === 'bestseller' ? publicFlags?.find(f => f.name.toLowerCase().includes('best')) :
                      selectedTab === 'latest' ? publicFlags?.find(f => f.name.toLowerCase().includes('latest')) :
-                     publicFlags?.find(f => f.name.toLowerCase().includes('trending'));
+                     null;
             return f?.filter_key || f?.slug || (selectedTab === 'bestseller' ? 'is_best_seller' : `is_${selectedTab}`);
           })()}=true`}
           className="group flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.25em] text-[#375421] px-10 py-5 rounded-full border-2 border-[#375421]/10 hover:border-[#375421] hover:bg-[#375421] hover:text-white transition-all duration-500"
