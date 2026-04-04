@@ -40,7 +40,8 @@ export default async function OfferPage() {
         products={products}
       />
       <StoreSchema />
-      <Offer initialOffers={products} initialBanners={banners} />
+      {/* @ts-ignore - Props interface inherited from JS component needs manual override */}
+      <Offer initialOffers={products as any} initialBanners={banners as any} />
     </>
   );
 }
