@@ -104,8 +104,6 @@ const NavBar = () => {
     const query = e.target.value;
     setSearchTerm(query);
     router.push(`/search?query=${encodeURIComponent(query)}`);
-
-    // GA4: Track search event (only for meaningful queries)
     if (query.trim().length >= 3) {
       trackSearch(query.trim());
     }
@@ -113,11 +111,57 @@ const NavBar = () => {
 
   const displayUsername = isMounted ? username : "Guest";
 
+  // Check if we are on the checkout page to show the simplified 'Checkout Mode' header
+  const isCheckoutPage = pathname === '/checkout' || pathname === '/checkout/';
+
+  if (isCheckoutPage) {
+    return (
+      <div className="relative z-[1000]">
+        <nav className="w-full px-4 md:px-12 py-3 md:py-4 bg-white font-sans border-b border-white shadow-sm">
+          <div className="max-w-[1920px] mx-auto grid grid-cols-3 items-center">
+            
+            {/* LEFT: Logo */}
+            <div className="flex items-center">
+              <Link href="/" className="flex-shrink-0">
+                <Image
+                  src={logo}
+                  alt="Gidan Logo"
+                  width={140}
+                  height={70}
+                  className="h-9 md:h-11 w-auto object-contain"
+                  priority
+                />
+              </Link>
+            </div>
+
+            {/* CENTER: Checkout Title */}
+            <div className="flex justify-center text-center">
+              <h1 className="text-[15px] md:text-xl font-sans font-semibold text-[#173113] tracking-[0.02em] uppercase whitespace-nowrap">
+                Secure <span className="text-[#173113]">Checkout</span>
+              </h1>
+            </div>
+
+            {/* RIGHT: Back to Cart Action (Desktop Only) */}
+            <div className="hidden md:flex justify-end">
+              <Link 
+                href="/cart" 
+                className="group flex items-center gap-1.5 md:gap-2 text-[12px] md:text-base text-slate-500 hover:text-[#173113] transition-all font-medium"
+              >
+                <span className="hidden md:inline group-hover:-translate-x-1 transition-transform">←</span>
+                <span>Back<span className="hidden md:inline"> to Cart</span></span>
+              </Link>
+            </div>
+
+          </div>
+        </nav>
+      </div>
+    );
+  }
+
   return (
     <div className="relative z-[1000]">
       <nav className="w-full px-4 py-3 bg-white font-sans border-b border-gray-100">
         <div className="max-w-[1920px] mx-auto">
-          {/* MOBILE (Below 800px): LOGO, SEARCH, HAMBURGER in one row */}
           <div className="flex md:hidden items-center justify-between w-full h-[60px] gap-3 px-3">
             <Link href="/" onClick={() => window.scrollTo({ top: -10 })} className="flex-shrink-0">
               <Image
@@ -351,9 +395,6 @@ const NavBar = () => {
                       <MdOutlineShoppingBag className="text-lg opacity-70" />
                       <span>My Orders</span>
                     </Link>
-
-
-
                     <div className="mt-1 pt-1 border-t border-gray-50">
                       <button
                         onClick={handleLogOutClick}
@@ -370,8 +411,6 @@ const NavBar = () => {
           </div>
         </div>
       </nav>
-
-      {/* Logout Modal */}
       {isLogoutDialogOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)] z-[11000]">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96 text-center">

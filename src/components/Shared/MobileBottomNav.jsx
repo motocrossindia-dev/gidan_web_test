@@ -8,7 +8,6 @@ import { FaRegUser, FaUser } from 'react-icons/fa';
 import { MdOutlineShoppingBag, MdShoppingBag } from 'react-icons/md';
 import CartIconWithCount from '../Cart/cartcount';
 import WishlistIconWithCount from '../../views/utilities/WishList/wishlistcount';
-
 const MobileBottomNav = () => {
     const pathname = usePathname();
 
@@ -39,6 +38,37 @@ const MobileBottomNav = () => {
             href: '/profile',
         },
     ];
+
+    const isCheckoutPage = pathname === '/checkout' || pathname === '/checkout/';
+
+    if (isCheckoutPage) {
+        return (
+            <div className="md:hidden fixed bottom-1 left-0 right-0 z-[2147483647] px-4 pb-4 select-none touch-none pointer-events-none">
+                <div className="max-w-md mx-auto pointer-events-auto">
+                    <Link
+                        href="/cart"
+                        className="flex items-center justify-center gap-3 w-full bg-[#173113] text-white py-4 rounded-2xl shadow-2xl active:scale-95 transition-all duration-300 font-bold text-base"
+                    >
+                        <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            width="24" 
+                            height="24" 
+                            viewBox="0 0 24 24" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            strokeWidth="2.5" 
+                            strokeLinecap="round" 
+                            strokeLinejoin="round" 
+                            className="w-5 h-5"
+                        >
+                            <path d="m15 18-6-6 6-6"/>
+                        </svg>
+                        <span>Change Order / Back to Cart</span>
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-2 py-3 shadow-[0_-2px_15px_rgba(0,0,0,0.08)] z-[2147483647]" style={{ isolation: 'isolate', transform: 'translate3d(0,0,0)', WebkitTransform: 'translate3d(0,0,0)' }}>
