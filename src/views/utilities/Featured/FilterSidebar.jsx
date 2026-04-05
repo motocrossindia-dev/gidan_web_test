@@ -3,15 +3,15 @@
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { FaAngleDown, FaAngleUp, FaCheck } from "react-icons/fa";
+import { useCategories } from "../../../hooks/useCategories";
 import { FiFilter, FiSun, FiDroplet, FiMaximize, FiStar, FiInfo } from "react-icons/fi";
 import axiosInstance from "../../../Axios/axiosInstance";
 const API_URL = `/filters/filters_n/`;
 
-const getOptionValue = (option) => {
+const getOptionValue = (option, mainTypes = ['plant', 'pot', 'seed', 'plantcare', 'gift']) => {
   if (typeof option === "string") return option;
   if (option == null) return null;
-  // Type change check: if it's one of the main categories, return the name as well
-  const mainTypes = ['plant', 'pot', 'seed', 'plantcare', 'gift'];
+
   if (mainTypes.includes(String(option).toLowerCase())) return String(option).toLowerCase();
 
   // For flags, we need the "name" field (e.g., "is_featured") to pass to Boolean parameters
@@ -19,7 +19,7 @@ const getOptionValue = (option) => {
   return option.value != null ? option.value : (option.id != null ? option.id : option.name);
 };
 
-const DropdownMenu = ({ isOpen, filter, options, selectedFilters, handleFilterSelection }) => {
+const DropdownMenu = ({ isOpen, filter, options, selectedFilters, handleFilterSelection, mainTypes = [] }) => {
   if (!isOpen) return null;
 
   const handleDropdownMouseDown = (e) => e.stopPropagation();
@@ -32,7 +32,7 @@ const DropdownMenu = ({ isOpen, filter, options, selectedFilters, handleFilterSe
       <div className="p-3 space-y-1">
         {Array.isArray(options) && options.length > 0 ? (
           options.map((option, idx) => {
-            const optionValue = getOptionValue(option);
+            const optionValue = getOptionValue(option, mainTypes);
 
             const isSelected = selectedFilters[filter] === optionValue;
 
@@ -112,6 +112,24 @@ const FilterSidebar = ({
   const isInitialMount = useRef(true);
   const userInteracted = useRef(false);
   const router = useRouter();
+  const { data: categoryDataList = [] } = useCategories();
+
+  const mainTypes = useMemo(() => {
+    const types = categoryDataList.map(c => c.type?.toLowerCase()).filter(Boolean);
+    return types.length > 0 ? types : ['plant', 'pot', 'seed', 'plantcare', 'gift'];
+  }, [categoryDataList]);
+
+  const typeToId = useMemo(() => {
+    const map = {};
+    categoryDataList.forEach(c => { if (c.type && c.id) map[c.type.toLowerCase()] = c.id; });
+    return { ...map, 'gift': '' };
+  }, [categoryDataList]);
+
+  const typeToSlug = useMemo(() => {
+    const map = {};
+    categoryDataList.forEach(c => { if (c.type && c.slug) map[c.type.toLowerCase()] = c.slug; });
+    return { ...map, 'gift': 'gifts' };
+  }, [categoryDataList]);
 
   // Re-define dynamic Flag Map to replace the deprecated global constant
   const FLAG_MAP = useMemo(() => {
@@ -450,13 +468,8 @@ const FilterSidebar = ({
     // Use available_types from API if it contains category_id mapping or just use the current type matching
     // If the API filters/filters_n/ doesn't provide explicit mapping, we keep a fallback or better, use 
     // the ids from the filterData if available (e.g. from subcategories)
-    const typeToIdMap = filterData.type_to_id || {
-      'plant': 19,
-      'pot': 20,
-      'seed': 21,
-      'plantcare': 22,
-      'gift': '',
-    };
+    // Map types to IDs dynamically using the categories registry
+    const typeToIdMap = typeToId;
 
     // Clear route IDs on type switch or when a search query is active so we search across all categories
     let baseCategoryId = categoryId || categoryIdFromSlug || "";
@@ -552,31 +565,13 @@ const FilterSidebar = ({
     // Ordering (empty for now)
     params.append("ordering", "");
 
-    const typeToId = filterData.type_to_id || {
-      'plant': 19,
-      'pot': 20,
-      'seed': 21,
-      'plantcare': 22,
-      'gift': '',
-    };
+    // Ordering (empty for now)
+    params.append("ordering", "");
 
-    const typeToSlug = filterData.type_to_slug || {
-      'pot': 'pots',
-      'plant': 'plants',
-      'seed': 'seeds',
-      'plantcare': 'plant-care',
-      'gift': 'gifts'
-    };
-
-    // categorySegment is the URL-friendly category slug for the selected type
-    // (e.g. "pots" for type "pot"). Hoisted so it's reachable by the SEO fetch later.
     const categorySegment = selectedFilterType ? (typeToSlug[selectedFilterType] || selectedFilterType) : "shop";
 
-    // Update URL visually only if we are applying a standard category filter and slugs have changed
-    // We prioritize flags for URL structure if present
     const activeFlagSlug = flagToSlugMap[selectedFlag];
 
-    // Determine if ANY discovery flag or search query is currently active (prevents redirect to generic shop)
     const hasActiveDiscovery = isSeasonalCollection || isTrending || isFeatured || isBestSeller || selectedPublicFlag ||
       (Array.isArray(initialFlags) && initialFlags.some(f => {
         const keys = [f.filter_key, f.slug, f.name].filter(Boolean);
@@ -984,7 +979,7 @@ const FilterSidebar = ({
             {openFilters[filter] && (
               <div className="absolute z-[110] left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto overflow-x-hidden p-1 scrollbar-thin scrollbar-thumb-gray-200">
                 {options.map((option, idx) => {
-                  const value = getOptionValue(option);
+                  const value = getOptionValue(option, mainTypes);
                   const isSelected = selectedFilters[filter] === value;
                   return (
                     <div
@@ -1005,7 +1000,7 @@ const FilterSidebar = ({
           /* Tag list for <= 6 options (Space and Light, Special Filters, Care Guides etc.) */
           <div className="flex flex-wrap gap-2">
             {options.map((option, idx) => {
-              const value = getOptionValue(option);
+              const value = getOptionValue(option, mainTypes);
               const isSelected = selectedFilters[filter] === value;
               const rawLabel = typeof option === "string" ? option : option.name || option.title || option.label;
               const labelText = rawLabel === "Climate testeds" ? "Climate Tested" : rawLabel;

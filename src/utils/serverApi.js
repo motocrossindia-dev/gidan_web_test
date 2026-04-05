@@ -47,9 +47,15 @@ export async function fetchProductsByFilters(filters = {}) {
     try {
         const queryParams = new URLSearchParams();
 
-        // Default filters - Include ALL parameters matching FilterSidebar.jsx to ensure consistent backend behavior
+        // Dynamic resolution for flags if ID mapping is missing (Legacy fallback)
+        const isFeatured = !!(filters.is_featured || filters.featured || (filters.flag && String(filters.flag) === "2"));
+        const isBestSeller = !!(filters.is_best_seller || filters.best_seller || (filters.flag && String(filters.flag) === "4"));
+        const isSeasonal = !!(filters.is_seasonal_collection || filters.seasonal || (filters.flag && String(filters.flag) === "5"));
+        const isTrending = !!(filters.is_trending || filters.trending || (filters.flag && String(filters.flag) === "6"));
+        const isLatest = !!(filters.is_latest || filters.latest || (filters.flag && String(filters.flag) === "3"));
+
         const defaults = {
-            type: filters.type !== undefined ? filters.type : "plant",
+            type: filters.type || "",
             category_id: filters.category_id || "",
             subcategory_id: filters.subcategory_id || "",
             search: filters.search || "",
@@ -62,11 +68,11 @@ export async function fetchProductsByFilters(filters = {}) {
             weight_id: filters.weight_id || "",
             pot_type_id: filters.pot_type_id || "",
             litre_id: filters.litre_id || "",
-            is_featured: (filters.is_featured || filters.flag == 2) ? "true" : "unknown",
-            is_best_seller: (filters.is_best_seller || filters.flag == 4) ? "true" : "unknown",
-            is_seasonal_collection: (filters.is_seasonal_collection || filters.flag == 5) ? "true" : "unknown",
-            is_trending: (filters.is_trending || filters.flag == 6) ? "true" : "unknown",
-            is_latest: (filters.is_latest || filters.flag == 3) ? "true" : "unknown",
+            is_featured: isFeatured ? "true" : "unknown",
+            is_best_seller: isBestSeller ? "true" : "unknown",
+            is_seasonal_collection: isSeasonal ? "true" : "unknown",
+            is_trending: isTrending ? "true" : "unknown",
+            is_latest: isLatest ? "true" : "unknown",
             flag: filters.flag || "",
             ordering: filters.ordering || ""
         };

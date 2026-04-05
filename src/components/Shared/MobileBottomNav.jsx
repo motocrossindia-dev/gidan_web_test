@@ -43,12 +43,13 @@ const MobileBottomNav = () => {
 
     if (isCheckoutPage) {
         return (
-            <div className="md:hidden fixed bottom-1 left-0 right-0 z-[2147483647] px-4 pb-4 select-none touch-none pointer-events-none">
+            <div className="md:hidden fixed bottom-2 left-0 right-0 z-[2147483647] px-4 pb-4 select-none touch-none pointer-events-none">
                 <div className="max-w-md mx-auto pointer-events-auto">
                     <Link
                         href="/cart"
-                        className="flex items-center justify-center gap-3 w-full bg-[#173113] text-white py-4 rounded-2xl shadow-2xl active:scale-95 transition-all duration-300 font-bold text-base"
+                        className="flex items-center justify-center gap-3 w-full bg-white text-[#173113] py-3.5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-[#173113]/10 active:scale-[0.98] transition-all duration-300 font-bold text-sm md:text-base relative overflow-hidden group"
                     >
+                        <div className="absolute inset-0 bg-[#173113]/5 opacity-0 group-active:opacity-100 transition-opacity"></div>
                         <svg 
                             xmlns="http://www.w3.org/2000/svg" 
                             width="24" 
@@ -59,11 +60,11 @@ const MobileBottomNav = () => {
                             strokeWidth="2.5" 
                             strokeLinecap="round" 
                             strokeLinejoin="round" 
-                            className="w-5 h-5"
+                            className="w-4 h-4 md:w-5 md:h-5"
                         >
                             <path d="m15 18-6-6 6-6"/>
                         </svg>
-                        <span>Change Order / Back to Cart</span>
+                        <span>Change Items / Back to Cart</span>
                     </Link>
                 </div>
             </div>

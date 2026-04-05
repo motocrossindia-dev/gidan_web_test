@@ -205,10 +205,11 @@ const NavBar = () => {
               {/* Categories in the same line as logo and icons */}
               <div className="flex items-center justify-center flex-grow whitespace-nowrap overflow-x-auto no-scrollbar scroll-smooth">
                 {publishedCategories.map((category, idx) => {
-                  const href = category.name === "GIFTS" ? "/gifts/" :
-                    category.name === "SERVICES" ? "/services/" :
-                      category.name === "OFFERS" ? "/offer/" :
-                        `/${category.slug}/`;
+                  const slug = category.slug?.toLowerCase() || "";
+                  const href = slug === "offers" ? "/offer/" :
+                               slug === "services" ? "/services/" :
+                               slug === "gifts" || slug === "gift" ? "/gifts/" :
+                               `/${category.slug}/`;
                   const isActive = pathname === href;
 
                   return (
@@ -330,7 +331,12 @@ const NavBar = () => {
 
             <div className="flex items-center justify-center flex-[5] gap-2 whitespace-nowrap h-full overflow-x-auto no-scrollbar scroll-smooth">
               {publishedCategories.map((category, idx) => {
-                const href = `/${category.slug}/`;
+                const slug = category.slug?.toLowerCase() || "";
+                // Map system-specific slugs to their dedicated landing pages
+                const href = slug === "offers" ? "/offer/" :
+                             slug === "services" ? "/services/" :
+                             slug === "gifts" || slug === "gift" ? "/gifts/" :
+                             `/${category.slug}/`;
                 const isActive = pathname === href;
 
                 return (

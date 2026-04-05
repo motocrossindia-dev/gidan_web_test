@@ -65,25 +65,31 @@ const CategoryIcons = ({ initialData }) => {
           {/* "All" Badge */}
           <div className="relative shrink-0">
             <Link
-              href="/plants/"
+              href="/shop/"
               className={`flex items-center gap-3 px-4 py-2.5 rounded-full transition-all duration-300 shadow-sm border ${
-                pathname === '/plants/' 
+                pathname === '/shop/' 
                   ? 'bg-[#2d5a1b] border-[#2d5a1b] text-white shadow-md active-category' 
                   : 'bg-white border-gray-100 text-[#1a1f14] hover:border-gray-200 hover:shadow-md'
               }`}
             >
-              <Leaf size={18} className={pathname === '/plants/' ? 'text-white' : 'text-[#375421]'} />
+              <Leaf size={18} className={pathname === '/shop/' ? 'text-white' : 'text-[#375421]'} />
               <span className="text-[14px] font-semibold whitespace-nowrap">All</span>
               <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                pathname === '/plants/' ? 'bg-white/20 text-white' : 'bg-black/5 text-black/40'
+                pathname === '/shop/' ? 'bg-white/20 text-white' : 'bg-black/5 text-black/40'
               }`}>
-                200+
+                Shop
               </span>
             </Link>
           </div>
 
           {publishedCategoryData.map((category, idx) => {
-            const isActive = pathname === `/${category.slug}/` || (category.name === "GIFTS" && pathname === "/gifts/");
+            const slug = category.slug?.toLowerCase() || "";
+            // Use same mapping as NavigationBar for consistency
+            const href = slug === "offers" ? "/offer/" :
+                         slug === "services" ? "/services/" :
+                         slug === "gifts" || slug === "gift" ? "/gifts/" :
+                         `/${category.slug}/`;
+            const isActive = pathname === href;
             const hasSub = category.subCategory && category.subCategory.length > 0;
 
             return (
@@ -94,12 +100,7 @@ const CategoryIcons = ({ initialData }) => {
                 onMouseLeave={handleCategoryLeave}
               >
                 <Link
-                  href={
-                    category.name === "GIFTS" ? "/gifts/" :
-                      category.name === "SERVICES" ? "/services/" :
-                        category.name === "OFFERS" ? "/offer/" :
-                          `/${category.slug}/`
-                  }
+                  href={href}
                   className={`flex items-center gap-3 px-4 py-2.5 rounded-full transition-all duration-300 shadow-sm border ${
                     isActive 
                       ? 'bg-[#2d5a1b] border-[#2d5a1b] text-white shadow-md' 
@@ -120,7 +121,7 @@ const CategoryIcons = ({ initialData }) => {
                   
                   {/* Category Name */}
                   <span className="text-[14px] font-semibold whitespace-nowrap">
-                    {category.name.replace(/plants/gi, "").trim() || category.name}
+                    {category.name}
                   </span>
 
 
@@ -146,7 +147,7 @@ const CategoryIcons = ({ initialData }) => {
                     <div className="bg-white border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.08)] rounded-[20px] p-4 backdrop-blur-xl relative overflow-hidden">
                       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#8cb369] to-[#375421] opacity-60" />
                       <h3 className="text-[#375421] font-black text-[10px] uppercase tracking-widest mb-4 opacity-50">
-                        Explore {category.name.replace(/plants/gi, "").trim()}
+                        Explore {category.name}
                       </h3>
                       <ul className="text-gray-700 space-y-1">
                         {category.subCategory.map((item, index) => {

@@ -20,6 +20,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import CategoryStaticSEO from "../Info/CategoryStaticSEO";
 import axiosInstance from "../../../Axios/axiosInstance";
+import { useCategories } from "../../../hooks/useCategories";
 import logo from "../../../Assets/Gidan_logo.webp";
 import Pagination from "../../../components/Shared/Pagination";
 
@@ -73,8 +74,6 @@ function PlantFilter({
     }), [path]);
 
     const query = searchParams.get('query') || "";
-
-    // Dynamic detection of ANY flag from query params
     const activeFlagFromQuery = useMemo(() => {
         if (!Array.isArray(initialFlags)) return null;
         const matched = initialFlags.find(f => {
@@ -83,66 +82,54 @@ function PlantFilter({
         });
         return matched ? matched.id : null;
     }, [initialFlags, searchParams]);
-
-    // Convenience booleans for legacy support/UI logic
     const isSeasonalCollection = searchParams.get('is_seasonal_collection') === 'true' || path === '/seasonal/';
     const isTrending = searchParams.get('is_trending') === 'true' || path === '/trending/';
     const isLatest = searchParams.get('is_latest') === 'true' || path === '/latest/';
     const isFeatured = searchParams.get('is_featured') === 'true' || path === '/featured/';
     const isBestSeller = searchParams.get('is_best_seller') === 'true' || path === '/bestseller/';
 
-    // Use null as primary data source (keep existing logic)
     const stateData = null || {};
     const { categoryId, categoryName, subCategory, subcategoryID, category_slug } = stateData;
     const { name: subCategoryName, subcategory_slug } = subCategory || {};
 
-    // Use props for SSR stability, fall back to client-side hooks
     const effectiveCategorySlug = propCategorySlug || categorySlug;
     const effectiveSubcategorySlug = propSubcategorySlug || subcategorySlug;
-
-    // Helper to make slugs readable if API name is missing
     const toTitleCase = (str) => {
         if (!str) return "";
         return str.toLowerCase().replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
     };
 
+    const { data: categoryDataList = [] } = useCategories();
+
     const derivedType = useMemo(() => {
         if (!effectiveCategorySlug) return null;
-        const slug = effectiveCategorySlug.toLowerCase().replace(/-/g, '');
-        if (slug === 'gifts' || slug === 'gift') return 'gift';
-        const singular = slug.endsWith('s') ? slug.slice(0, -1) : slug;
-        const typeMap = { pot: 'pot', plant: 'plant', seed: 'seed', plantcare: 'plantcare' };
-        return typeMap[singular] || null;
-    }, [effectiveCategorySlug]);
+        const found = categoryDataList.find(c => c.slug?.toLowerCase() === effectiveCategorySlug.toLowerCase());
+        return found?.type || null;
+    }, [effectiveCategorySlug, categoryDataList]);
 
-    // Map known category slugs to their API IDs
     const categoryIdFromSlug = useMemo(() => {
         if (!effectiveCategorySlug) return null;
         const slugLower = effectiveCategorySlug.toLowerCase();
-        if (slugLower === 'gifts' || slugLower === 'gift') return ""; // Return empty string for gifts category_id
-        const slugToId = {
-            'plants': 19,
-            'pots': 20,
-            'seeds': 21,
-            'plant-care': 22,
-        };
-        return slugToId[slugLower] || null;
+        if (slugLower === 'gifts' || slugLower === 'gift') return "";
+        return null;
     }, [effectiveCategorySlug]);
     const typeKey = derivedType || (effectiveCategorySlug?.toLowerCase() === 'gifts' || effectiveCategorySlug?.toLowerCase() === 'gift' ? 'gift' : null);
 
-    // State to store fetched category/subcategory names when navigating via URL
     const [fetchedCategoryName, setFetchedCategoryName] = useState(null);
     const [fetchedSubcategoryName, setFetchedSubcategoryName] = useState(null);
 
-    // Resolved IDs from slugs (for direct URL access)
-    // Initialize from initialCategoryData if available to avoid waterfalls
     const [resolvedCategoryId, setResolvedCategoryId] = useState(() => {
-        const idFromSlug = categoryIdFromSlug;
-        if (idFromSlug === "") return ""; // Explicitly handle gift case
-        return categoryId || idFromSlug || initialCategoryData?.id || null;
+        if (categoryId) return String(categoryId);
+        if (effectiveCategorySlug === 'gifts' || effectiveCategorySlug === 'gift') return "";
+        
+        // Use primary category data from props if it matches the current slug
+        if (initialCategoryData?.id && initialCategoryData?.slug === effectiveCategorySlug) {
+            return String(initialCategoryData.id);
+        }
+
+        return categoryIdFromSlug || null;
     });
 
-    // Reset categories when navigating back to global /shop/
     useEffect(() => {
         if (path === '/shop' || path === '/shop/') {
             setResolvedCategoryId(null);
@@ -164,11 +151,8 @@ function PlantFilter({
     }, [path, subcategoryID]);
     const [isResolvingIds, setIsResolvingIds] = useState(false);
 
-    // State to track the currently selected Type from the Sidebar
     const [currentFilterType, setCurrentFilterType] = useState(typeKey || null);
 
-    // Sync currentFilterType with path changes (e.g. from footer click /shop/)
-    // This ensures that navigating while on the same component correctly resets type defaults
     useEffect(() => {
         if (typeKey === null) {
             setCurrentFilterType(null);
@@ -177,14 +161,11 @@ function PlantFilter({
         }
     }, [typeKey]);
 
-    // State to track the currently active slugs (reacts to sidebar type changes)
     const [currentCategorySlug, setCurrentCategorySlug] = useState(propCategorySlug || categorySlug || "");
     const [currentSubcategorySlug, setCurrentSubcategorySlug] = useState(propSubcategorySlug || subcategorySlug || "");
 
-    // State for SwipeableDrawer
     const [mobileOpen, setMobileOpen] = useState(false);
 
-    // State for Public Flags (Interactive Pills) - Initialize from URL
     const [selectedPublicFlag, setSelectedPublicFlag] = useState(() => {
         if (isFeatured) return FLAG_MAP.is_featured;
         if (isBestSeller) return FLAG_MAP.is_best_seller;
@@ -225,14 +206,11 @@ function PlantFilter({
         previous: normalizedInitialResults.previous || null,
     });
     const [results, setResults] = useState(normalizedInitialResults.results || []);
-    // SEO Data: Prioritize initialSEOData prop, then fallback to initialCategoryData or initialResults
     const [categoryData, setCategoryData] = useState(initialSEOData || initialCategoryData || normalizedInitialResults.category_info?.category_info || null);
-    // Construct the initial query string to match getInitialProducts logic
     const initialQueryString = useMemo(() => {
         const params = new URLSearchParams();
         const finalType = currentFilterType || typeKey || "";
         params.append("type", finalType);
-        // Clear category preference when searching to "handle all types"
         params.append("category_id", query ? "" : (resolvedCategoryId || ""));
         params.append("subcategory_id", resolvedSubcategoryId || "");
         params.append("search", query || "");
@@ -346,7 +324,6 @@ function PlantFilter({
         }
     };
 
-    // SEO state — initialised from server-fetched data, updates reactively on subcategory filter changes
     const [seoData, setSeoData] = useState(initialSEOData || initialCategoryData || (typeof normalizedInitialResults === 'object' ? normalizedInitialResults.category_info?.category_info : null));
     const [isSubcategorySEO, setIsSubcategorySEO] = useState(() => {
         const info = initialSEOData || initialCategoryData || (typeof normalizedInitialResults === 'object' ? normalizedInitialResults.category_info?.category_info : null);
@@ -354,10 +331,8 @@ function PlantFilter({
     });
     ;
 
-    // iOS Swipeable Drawer patch to prevent body bounce
     const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-    // Handle drawer toggle
     const toggleDrawer = (open) => (event) => {
         if (
             event &&
@@ -402,7 +377,6 @@ function PlantFilter({
         const resolveSlugs = async () => {
             if (!effectiveCategorySlug) return;
 
-            // If we already have the ID from props or derived from slug, skip API call
             if (resolvedCategoryId) return;
 
             setIsResolvingIds(true);
@@ -426,7 +400,6 @@ function PlantFilter({
         }
     }, [effectiveCategorySlug, resolvedCategoryId]);
 
-    // Separate effect for subcategory resolution to avoid complexity
     useEffect(() => {
         const resolveSubcategory = async () => {
             if (!effectiveCategorySlug || !effectiveSubcategorySlug || resolvedSubcategoryId) return;
@@ -455,8 +428,8 @@ function PlantFilter({
 
     useEffect(() => {
         const getInitialProducts = async () => {
-            // Skip fetching for specific categories that are handled elsewhere (like offers)
-            if (categoryId === "14") {
+            // Check for 'Offers' category dynamically via slug instead of hardcoded ID
+            if (effectiveCategorySlug?.toLowerCase() === 'offers') {
                 try {
                     const response = await axiosInstance.get(`/product/offerProducts/`);
                     if (response.status === 200) {
@@ -495,9 +468,9 @@ function PlantFilter({
                     if (searchParams.get(k) === 'true' && k !== 'page') {
                         queryParams.append(k, "true");
                         discoveryKeysEncountered.add(k);
-                        
+
                         // If this key matches a known dynamic flag, also send its ID for backend stability
-                        const matchedFlag = initialFlags?.find(f => 
+                        const matchedFlag = initialFlags?.find(f =>
                             [f.filter_key, f.slug, f.name].filter(Boolean).includes(k)
                         );
                         if (matchedFlag) {
