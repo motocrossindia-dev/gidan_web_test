@@ -35,8 +35,11 @@ const CouponSection = ({
     const fetchCoupons = async () => {
         setIsFetching(true);
         try {
-            // General coupons endpoint
-            const endpoint = orderId ? `/coupon/coupons/?order_id=${orderId}` : `/coupon/coupons/`;
+            // Use order-specific available coupons if ID is present, otherwise general list
+            const endpoint = orderId 
+                ? `/order/available-coupons/?order_id=${orderId}` 
+                : `/order/available-coupons/`;
+            
             const response = await axiosInstance.get(endpoint);
 
             if (response.status === 200) {
