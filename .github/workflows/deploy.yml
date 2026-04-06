@@ -1,4 +1,4 @@
-name: Deploy Gidan Web Test
+name: Deploy Gidan Web
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 env:
   PROJECT_NAME: "gidan-app"
   SERVER_DIR: "/var/www/html/gidan-app"
-  PM2_APP_NAME: "biotechmaali"  # <-- This ensures we only touch the NEW app fgg
+  PM2_APP_NAME: "biotechmaali"
 
 jobs:
   deploy:
@@ -20,159 +20,49 @@ jobs:
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          BRANCH_NAME: ${{ github.ref_name }}
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script_stop: true
+          envs: BRANCH_NAME
           script: |
             echo "🚀 Starting Deployment for ${{ env.PROJECT_NAME }}..."
-            
+
             # Go to project folder
             cd "${{ env.SERVER_DIR }}" || exit 1
-            
+
             # Git Config
             git config --global --add safe.directory ${{ env.SERVER_DIR }}
-            
+
             # Pull Code
             echo "📥 Pulling latest code..."
             git fetch origin
-            git reset --hard origin/${{ github.ref_name }}
-            
-            # Clean Build (Keep package-lock.json)
+            git reset --hard origin/$BRANCH_NAME
+
+            # Clean Build
             rm -rf .next node_modules
-            
+
             # Install Dependencies
             echo "📦 Installing dependencies..."
             npm install
-            
-            # # Create .env.local with secrets
-            # echo "📝 Creating environment file..."
-            # cat > .env.local << EOF
-            # NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
-            # NEXT_PUBLIC_EMAILJS_SERVICE_ID=${{ secrets.NEXT_PUBLIC_EMAILJS_SERVICE_ID }}
-            # NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=${{ secrets.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID }}
-            # NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY }}
-            # NEXT_PUBLIC_RAZORPAY_KEY_ID=${{ secrets.NEXT_PUBLIC_RAZORPAY_KEY_ID }}
-            # NEXT_PUBLIC_BASE_URL=${{ secrets.NEXT_PUBLIC_BASE_URL }}
-            # EOF
-            
+
             # Build
             echo "🔨 Building Next.js..."
             npm run build
-             
-            # --- PM2 LOGIC START --- g
-            
-            # 1. Check if the NEW app (gidan) is already running
+
+            # PM2 — Reload or Start
             if pm2 describe ${{ env.PM2_APP_NAME }} > /dev/null 2>&1; then
                 echo "✅ App '${{ env.PM2_APP_NAME }}' found. Reloading..."
                 pm2 reload ${{ env.PM2_APP_NAME }}
             else
                 echo "⚠️ App '${{ env.PM2_APP_NAME }}' NOT found. Starting fresh..."
-                # Start on Port 3002
                 PORT=3002 pm2 start npm --name "${{ env.PM2_APP_NAME }}" -- start
             fi
-            
-            # 2. Save the PM2 list (This saves BOTH apps, but doesn't stop them)
+
             pm2 save
-            
-            # --- PM2 LOGIC END ---
 
             echo "✅ Deployment Successful!"
-            echo "🔍 Status:"
             pm2 status
-# name: Standard VPS Deploy
-
-# # 1️⃣ Trigger Deployment
-# on:
-#   push:
-#     branches:
-#       - main
-#       - dev_mohan
-
-# # 2️⃣ Global Variables
-# env:
-#   PROJECT_NAME: "gidan-app"
-#   SERVER_DIR: "/var/www/html/gidan-app"
-#   PM2_APP_NAME: "gidan-app"
-
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-
-#     steps:
-
-#       # STEP 1 — Checkout Code
-#       - name: Checkout Code
-#         uses: actions/checkout@v4
-
-
-#       # STEP 2 — Deploy to VPS
-#       - name: Deploy via SSH
-#         uses: appleboy/ssh-action@v1.0.3
-
-#         with:
-#           host: ${{ secrets.SERVER_IP }}
-#           username: ${{ secrets.SERVER_USER }}
-#           key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-#           script_stop: true
-
-#           script: |
-            
-#             echo "===================================="
-#             echo "Starting Deployment"
-#             echo "Project: ${{ env.PROJECT_NAME }}"
-#             echo "Branch: ${{ github.ref_name }}"
-#             echo "===================================="
-            
-            
-#             # 1️⃣ Go to project folder
-#             cd "${{ env.SERVER_DIR }}" || exit 1
-            
-            
-#             # 2️⃣ Fix Git Safe Directory Error
-#             git config --global --add safe.directory ${{ env.SERVER_DIR }}
-            
-            
-#             # 3️⃣ Pull Latest Code
-#             echo "Pulling latest code..."
-            
-#             git fetch origin
-            
-#             git reset --hard origin/${{ github.ref_name }}
-            
-            
-#             # 4️⃣ Clean Old Build
-#             echo "Cleaning old files..."
-            
-#             rm -rf .next
-#             rm -rf node_modules
-#             rm -rf package-lock.json
-            
-            
-#             # 5️⃣ Install Dependencies
-#             echo "Installing dependencies..."
-            
-#             npm install
-            
-            
-#             # 6️⃣ Build Next.js
-#             echo "Building Next.js..."
-            
-#             npm run build
-            
-            
-#             # # 7️⃣ Restart PM2
-#             # echo "Restarting PM2..."
-            
-#             pm2 restart ${{ env.PM2_APP_NAME }} ||PORT=3001 pm2 start npm --name "${{ env.PM2_APP_NAME }}" -- start
-            
-            
-#             # 8️⃣ Save PM2
-#             pm2 save
-            
-            
-#             # echo "===================================="
-#             echo "Deployment Successful"
-#             echo "===================================="
