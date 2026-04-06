@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3 
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
@@ -60,8 +60,8 @@ jobs:
             # Build
             echo "🔨 Building Next.js..."
             npm run build
-            
-            # --- PM2 LOGIC START ---
+             
+            # --- PM2 LOGIC START --- g
             
             # 1. Check if the NEW app (gidan) is already running
             if pm2 describe ${{ env.PM2_APP_NAME }} > /dev/null 2>&1; then
