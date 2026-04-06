@@ -7,9 +7,9 @@ on:
       - dev_mohan
 
 env:
-  PROJECT_NAME: "gidan_web_test"
-  SERVER_DIR: "/var/www/html/gidan_web_test"
-  PM2_APP_NAME: "gidan_web_test"  # <-- This ensures we only touch the NEW app
+  PROJECT_NAME: "gidan-app"
+  SERVER_DIR: "/var/www/html/gidan-app"
+  PM2_APP_NAME: "biotechmaali"  # <-- This ensures we only touch the NEW app fgg
 
 jobs:
   deploy:
@@ -92,9 +92,9 @@ jobs:
 
 # # 2️⃣ Global Variables
 # env:
-#   PROJECT_NAME: "gidan_web_test"
-#   SERVER_DIR: "/var/www/html/gidan_web_test"
-#   PM2_APP_NAME: "gidan_web_test"
+#   PROJECT_NAME: "gidan-app"
+#   SERVER_DIR: "/var/www/html/gidan-app"
+#   PM2_APP_NAME: "gidan-app"
 
 # jobs:
 #   deploy:
