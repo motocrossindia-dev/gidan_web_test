@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { processImageUrl } from '../../utils/urlHelper';
 
 /**
  * Optimized Image Component
@@ -70,7 +71,7 @@ const OptimizedImage = ({
     return url.replace(/\.(jpg|jpeg|png)$/i, '.webp');
   };
 
-  const imageSrc = `${process.env.NEXT_PUBLIC_API_URL}${src}`;
+  const imageSrc = processImageUrl(src);
   const webpSrc = getWebPUrl(imageSrc);
 
   return (

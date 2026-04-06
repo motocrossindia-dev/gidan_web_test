@@ -81,27 +81,32 @@ const Blog = ({ categoryId = null }) => {
                             href={`/blogs/${blog.slug}`} 
                             className="group relative flex flex-col bg-white rounded-[40px] overflow-hidden shadow-xl transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_30px_60px_rgba(0,0,0,0.08)]"
                         >
-                            {/* Card Header (Gradient Image Area) */}
-                            <div className={`relative h-[240px] w-full bg-gradient-to-br ${getCardGradient(idx)} flex items-center justify-center overflow-hidden`}>
-                                <div className="relative transform transition-transform duration-700 group-hover:scale-110">
-                                    <div className="absolute inset-0 bg-white/10 blur-3xl rounded-full scale-150" />
-                                    {blog.image ? (
+                            {/* Card Header (Full-Image Area with Color Accent) */}
+                            <div className="relative h-[240px] w-full bg-gray-100 overflow-hidden">
+                                {blog.image ? (
+                                    <>
+                                        {/* Full Image */}
                                         <img 
                                             src={`${process.env.NEXT_PUBLIC_API_URL}${blog.image}`} 
                                             alt={blog.title}
                                             onError={(e) => {
                                                 e.target.src = "/logo.webp";
                                             }}
-                                            className="w-32 h-32 object-contain drop-shadow-[0_15px_30px_rgba(0,0,0,0.25)]"
+                                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                                         />
-                                    ) : (
-                                        getCategoryIcon(blog.category)
-                                    )}
-                                </div>
+                                        {/* Professional Color Wash Overlay - "then color" */}
+                                        <div className={`absolute inset-0 bg-gradient-to-t ${getCardGradient(idx)} opacity-40 mix-blend-multiply transition-opacity duration-700 group-hover:opacity-20`} />
+                                        <div className="absolute inset-0 bg-black/5" />
+                                    </>
+                                ) : (
+                                    <div className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${getCardGradient(idx)}`}>
+                                        {getCategoryIcon(blog.category)}
+                                    </div>
+                                )}
                                 
                                 {/* Centered Badge on Image */}
-                                <div className="absolute bottom-6 inset-x-0 flex justify-center">
-                                    <span className="bg-black/10 backdrop-blur-md px-3 py-1.5 rounded-full text-white text-[9px] font-bold uppercase tracking-widest border border-white/5">
+                                <div className="absolute bottom-6 inset-x-0 flex justify-center z-10">
+                                    <span className="bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full text-white text-[9px] font-bold uppercase tracking-widest border border-white/5 shadow-lg">
                                         {blog.category} · 5 min read
                                     </span>
                                 </div>

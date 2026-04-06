@@ -165,13 +165,16 @@ export default function RootLayout({
           <DownloadAppPopup />
           <TawkChat />
           
-          <div className="sticky top-0 left-0 w-full z-[1000] bg-white">
+          <header className="fixed top-0 left-0 w-full z-[1000] bg-white shadow-sm">
             <Header />
             <NavBar />
-          </div>
+          </header>
 
-          <div className="landing-page-layout w-full min-h-screen flex flex-col relative">
-            <main className="main-content w-full">
+          {/* Spacer for fixed header (approx 115-135px) */}
+          <div className="h-[105px] md:h-[130px] w-full" aria-hidden="true" />
+
+          <div className="landing-page-layout w-full min-h-screen flex flex-col relative min-w-0">
+            <main className="main-content w-full min-w-0">
               {children}
               <Footer />
             </main>

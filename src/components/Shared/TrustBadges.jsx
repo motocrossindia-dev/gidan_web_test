@@ -1,7 +1,47 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { Leaf, Sun, ShieldCheck, Package, MessageCircle } from 'lucide-react';
+
+/**
+ * Robust Image with Fallback Icon
+ * Now supports both URL strings and React elements for icons
+ */
+const SafeImage = ({ src, alt, width, height, className, fill = false, size = 24 }) => {
+    const [err, setErr] = useState(false);
+    
+    // If src is a React element (from our fallback mapping), render it directly
+    if (src && typeof src !== 'string') {
+        return (
+            <div className={`flex items-center justify-center text-bio-green ${className}`}>
+                {React.cloneElement(src, { size, strokeWidth: 1.5 })}
+            </div>
+        );
+    }
+
+    if (err || !src) {
+        return (
+            <div className={`flex items-center justify-center text-bio-green opacity-40 ${className}`}>
+                <Leaf size={size} strokeWidth={1.5} />
+            </div>
+        );
+    }
+
+
+    return (
+        <Image 
+            src={src} 
+            alt={alt || "Badge icon"} 
+            width={!fill ? width : undefined} 
+            height={!fill ? height : undefined} 
+            fill={fill}
+            className={className}
+            onError={() => setErr(true)}
+            unoptimized
+        />
+    );
+};
 
 /**
  * TrustBadges Component
@@ -24,10 +64,10 @@ const TrustBadges = ({ variant = "scroll" }) => {
                 console.error("Failed to fetch trust badges", err);
                 // Fallback data
                 setBadges([
-                    { id: 1, icon: "https://gidanbackendtest.mymotokart.in/media/trust_badges/ChatGPT_Image_Mar_30_2026_12_40_39_PM.gif", title: "India-Climate Tested", subtitle: "Every plant tested in Bangalore conditions" },
-                    { id: 3, icon: "https://gidanbackendtest.mymotokart.in/media/trust_badges/ChatGPT_Image_Mar_30_2026_12_41_22_PM.gif", title: "7-Day Survival Guarantee", subtitle: "Plant doesn't survive? We reship, free." },
-                    { id: 5, icon: "https://gidanbackendtest.mymotokart.in/media/trust_badges/ChatGPT_Image_Mar_30_2026_12_44_25_PM.gif", title: "Expert Packaging", subtitle: "Plants arrive healthy — 99.2% success rate" },
-                    { id: 4, icon: "https://gidanbackendtest.mymotokart.in/media/trust_badges/ChatGPT_Image_Mar_30_2026_12_42_19_PM.gif", title: "WhatsApp Plant Support", subtitle: "Real experts. Mon–Sat, 9AM–7PM" }
+                    { id: 1, icon: <Sun />, title: "India-Climate Tested", subtitle: "Tested for Bangalore's uniquely unpredictable conditions" },
+                    { id: 3, icon: <ShieldCheck />, title: "Survival Guarantee", subtitle: "We replace any plant that doesn't survive 7 days" },
+                    { id: 5, icon: <Package />, title: "Expert Packaging", subtitle: "Plants arrive healthy with a 99% success rate" },
+                    { id: 4, icon: <MessageCircle />, title: "Expert Support", subtitle: "Botanical expertise available on WhatsApp Mon–Sat" }
                 ]);
             } finally {
                 setIsLoading(false);
@@ -55,15 +95,15 @@ const TrustBadges = ({ variant = "scroll" }) => {
                                 ${idx === 2 ? "md:border-r border-[#173113]/5" : ""}
                             `}
                         >
-                            <div className="w-14 h-14 mb-6 relative group-hover:scale-110 transition-transform duration-500">
-                                <Image 
+                             <div className="w-14 h-14 mb-6 relative group-hover:scale-110 transition-transform duration-500 flex items-center justify-center">
+                                <SafeImage 
                                     src={badge.icon} 
                                     alt={badge.title} 
                                     fill 
+                                    size={32}
                                     className="object-contain"
-                                    unoptimized // For GIFs
                                 />
-                            </div>
+                             </div>
                             <h3 className="text-sm md:text-base font-serif font-bold text-[#173113] mb-2 px-2">
                                 {badge.title}
                             </h3>
@@ -90,8 +130,8 @@ const TrustBadges = ({ variant = "scroll" }) => {
                                     idx !== filteredBadges.length - 1 ? "border-r border-gray-100" : ""
                                 } hover:bg-gray-50/50 transition-colors`}
                             >
-                                <div className="relative shrink-0 w-8 md:w-10 h-8 md:h-10 flex items-center justify-center overflow-hidden">
-                                    <Image src={badge.icon} alt={badge.title} width={28} height={28} className="object-contain" unoptimized />
+                                 <div className="relative shrink-0 w-8 md:w-10 h-8 md:h-10 flex items-center justify-center overflow-hidden">
+                                    <SafeImage src={badge.icon} alt={badge.title} width={28} height={28} size={22} className="object-contain" />
                                 </div>
                                 <div className="flex flex-col text-left">
                                     <h3 className="text-[11px] md:text-[13px] font-bold text-[#1a1f14] leading-tight whitespace-nowrap tracking-tight">
@@ -127,8 +167,8 @@ const TrustBadges = ({ variant = "scroll" }) => {
                         key={badge.id} 
                         className="flex items-center gap-3 md:gap-4 px-6 md:px-10 border-r border-gray-100 last:border-r-0 hover:bg-gray-50/50 transition-colors"
                     >
-                        <div className="relative shrink-0 w-10 h-10 bg-[#ecf3e8] rounded-xl flex items-center justify-center overflow-hidden p-2">
-                            <Image src={badge.icon} alt={badge.title} width={24} height={24} className="object-contain" unoptimized />
+                         <div className="relative shrink-0 w-10 h-10 bg-[#ecf3e8] rounded-xl flex items-center justify-center overflow-hidden p-2">
+                            <SafeImage src={badge.icon} alt={badge.title} width={24} height={24} size={20} className="object-contain" />
                         </div>
                         <div className="flex flex-col text-left">
                             <h3 className="text-[11px] md:text-[13px] font-black text-[#1a1f14] leading-tight whitespace-nowrap">

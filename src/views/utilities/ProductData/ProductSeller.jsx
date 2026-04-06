@@ -11,7 +11,7 @@ import { FaRegHeart } from "react-icons/fa";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { FiEye } from "react-icons/fi";
 import TrendingCard from '../../../components/Shared/ProductCard';
-import { getProductUrl } from "../../../utils/urlHelper";
+import { getProductUrl, processImageUrl } from "../../../utils/urlHelper";
 
 
 
@@ -89,7 +89,7 @@ const ProductSeller = () => {
                     {/* <div className="relative w-full flex mb-4">
                                     <img name=" "   
                                       className="w-40 h-24 sm:w-40 sm:h-36 object-contain rounded-lg transition-transform duration-300 relative z-50 mt-6"
-                                      src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
+                                      src={processImageUrl(product.image)}
                                       loading="lazy"
                                       alt={product.name}
                                     />
@@ -98,7 +98,7 @@ const ProductSeller = () => {
                     <div className="relative w-full flex justify-center mb-3">
                       <img
                         className="w-full h-40 object-cover rounded-lg transition-transform duration-300 relative z-50"
-                        src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
+                        src={processImageUrl(product.image)}
                         alt={product.name}
                       />
                     </div>

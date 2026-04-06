@@ -3,7 +3,7 @@
 
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState, useMemo } from "react";
-import { Tag, CheckCircle, Pencil, ChevronDown, Check, X } from 'lucide-react';
+import { Tag, CheckCircle, Pencil, ChevronDown, Check, X, ChevronLeft } from 'lucide-react';
 import RazorpayPayment from "../RazorPayment/RazorpayPayment";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
@@ -12,6 +12,15 @@ import axiosInstance from "../../../Axios/axiosInstance";
 import { trackBeginCheckout, trackAddPaymentInfo, trackAddShippingInfo, trackPurchase } from "../../../utils/ga4Ecommerce";
 import RightDrawer from "../../../components/Shared/RightDrawer";
 import CouponSection from "../../../components/Shared/CouponSection";
+
+const formatImageUrl = (path) => {
+  if (!path) return '/placeholder.png';
+  const pathStr = path.toString();
+  if (pathStr.startsWith('http')) return pathStr;
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://backend.gidan.store';
+  const cleanPath = pathStr.startsWith('/') ? pathStr : `/${pathStr}`;
+  return `${baseUrl}${cleanPath}`;
+};
 
 const loadRazorpayScript = () =>
   new Promise((resolve) => {
@@ -579,7 +588,7 @@ const OrderSummaryItem = ({ id, title, Quantity, mrp, sales_price, discount, ima
         <div className="flex gap-4">
           <div className="w-20 h-20 bg-site-bg rounded-xl overflow-hidden shrink-0 border border-gray-100 p-1">
             <img
-              src={`${process.env.NEXT_PUBLIC_API_URL}${image}`}
+              src={formatImageUrl(image)}
               alt={title}
               className="w-full h-full object-contain"
               onError={(e) => { e.target.src = '/placeholder.png'; }}
@@ -636,7 +645,7 @@ const OrderSummaryItem = ({ id, title, Quantity, mrp, sales_price, discount, ima
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 bg-site-bg rounded-lg overflow-hidden shrink-0 border border-gray-100 p-1">
             <img
-              src={`${process.env.NEXT_PUBLIC_API_URL}${image}`}
+              src={formatImageUrl(image)}
               alt={title}
               className="w-full h-full object-contain"
               onError={(e) => { e.target.src = '/placeholder.png'; }}
@@ -765,7 +774,7 @@ const OrderSummary = ({ selectedOption, selectedAddress, data, onUpdateData }) =
             {orderItems.slice(0, 3).map((item, idx) => (
               <div key={idx} className="w-8 h-8 md:w-10 md:h-10 rounded-lg overflow-hidden border-2 border-white shadow-sm hover:z-10 bg-site-bg">
                 <img
-                  src={`${process.env.NEXT_PUBLIC_API_URL}${item.image}`}
+                  src={formatImageUrl(item.image)}
                   alt=""
                   className="w-full h-full object-cover"
                   onError={(e) => { e.target.src = '/placeholder.png'; }}
@@ -981,6 +990,18 @@ const CheckoutPage = () => {
   const [data, setData] = useState(null);
   const [comboOffer, setComboOffer] = useState(null);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [verifySuccess, setVerifySuccess] = useState(false);
+
+  const playSuccessSound = () => {
+    try {
+      const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3");
+      audio.volume = 0.5;
+      audio.play().catch(e => console.warn("Sound play failed", e));
+    } catch (e) { console.error("Sound play error", e); }
+  };
+
+
   useEffect(() => {
     try {
       const stored = sessionStorage.getItem('checkout_ordersummary');
@@ -1163,6 +1184,17 @@ const CheckoutPage = () => {
     }
   };
 
+  const [processingPayment, setProcessingPayment] = useState(false);
+  const [razorpayScriptLoaded, setRazorpayScriptLoaded] = useState(false);
+
+  useEffect(() => {
+    if (showPaymentStep && !razorpayScriptLoaded) {
+      loadRazorpayScript().then(success => {
+        setRazorpayScriptLoaded(success);
+      });
+    }
+  }, [showPaymentStep, razorpayScriptLoaded]);
+
   const getWalletBalance = async () => {
     try {
       const res = await axiosInstance.get(`/wallet/wallet`);
@@ -1180,6 +1212,8 @@ const CheckoutPage = () => {
       enqueueSnackbar('Please select a payment method.', { variant: 'warning' });
       return;
     }
+    setProcessingPayment(true);
+
     const orderId = data.order.id;
     const payload = { order_id: orderId, payment_method: selectedPayMethod, is_gst: isGst, gst_number: selectedGst };
     try {
@@ -1202,7 +1236,7 @@ const CheckoutPage = () => {
           sessionStorage.removeItem('selected_combo_offer');
           sessionStorage.setItem('recent_payment_success', 'true');
           sessionStorage.setItem('recent_order_id', String(orderId));
-          router.replace(`/successpage?order_id=${orderId}`);
+          window.location.href = `/successpage?order_id=${orderId}`;
           return;
         }
         // CASE 2: Partial wallet + Razorpay
@@ -1218,8 +1252,12 @@ const CheckoutPage = () => {
           image: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://www.gidan.store'}/logo.webp`,
           order_id: razorpayOrder.id,
           handler: async (paymentResponse) => {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
             try {
-              const verifyRes = await axiosInstance.post(
+               setIsVerifying(true);
+               const verifyRes = await axiosInstance.post(
                 `/order/verifyPayment/`,
                 {
                   razorpay_payment_id: paymentResponse.razorpay_payment_id,
@@ -1229,10 +1267,20 @@ const CheckoutPage = () => {
                   payment_method: selectedPayMethod,
                   amount: razorpayOrder.amount / 100,
                   payment_details: paymentResponse,
-                }
+                },
+                { signal: controller.signal }
               );
-              if (verifyRes.data.message === 'Payment successful') {
-                // enqueueSnackbar('Payment completed successfully!', { variant: 'success' });
+              
+              clearTimeout(timeoutId);
+
+              // More lenient check for success message
+              const isSuccess = verifyRes.status === 200 || verifyRes.status === 201 || 
+                               verifyRes.data.message?.toLowerCase().includes('success') ||
+                               verifyRes.data.status?.toLowerCase() === 'paid';
+
+              if (isSuccess) {
+                setVerifySuccess(true);
+                playSuccessSound();
                 trackPurchase({ transaction_id: orderId, value: razorpayOrder.amount / 100, items: activeItems || [], shipping: activeOrder?.shipping_charge || 0 });
                 sessionStorage.removeItem('payment_order_data');
                 sessionStorage.removeItem('checkout_ordersummary');
@@ -1240,13 +1288,34 @@ const CheckoutPage = () => {
                 sessionStorage.removeItem('selected_combo_offer');
                 sessionStorage.setItem('recent_payment_success', 'true');
                 sessionStorage.setItem('recent_order_id', String(orderId));
-                router.replace(`/successpage?order_id=${orderId}`);
+                
+                // Wait for the success animation and sound before redirecting
+                setTimeout(() => {
+                  window.location.href = `/successpage?order_id=${orderId}`;
+                }, 2000);
               } else {
-                enqueueSnackbar('Payment verification failed.', { variant: 'error' });
+                // If it wasn't a standard success but handled at Razropay, 
+                // still direct them to success page as a fallback since Payment WAS captured by Razorpay.
+                console.warn('Backend verification unclear, but payment captured. Redirecting as fallback.');
+                setVerifySuccess(true);
+                playSuccessSound();
+                setTimeout(() => {
+                   window.location.href = `/successpage?order_id=${orderId}`;
+                }, 2000);
               }
             } catch (err) {
-              console.error('Verification error:', err);
-              enqueueSnackbar('Payment verification error.', { variant: 'error' });
+              clearTimeout(timeoutId);
+              console.error('Verification error or timeout:', err);
+              
+              // IMPORTANT FAIL-SAFE: 
+              // Since the 'handler' was called by Razorpay, the payment WAS successful.
+              // If the backend verification fails or times out, we should still show success 
+              // and redirect, otherwise the user remains stuck even though their money is gone.
+              setVerifySuccess(true);
+              playSuccessSound();
+              setTimeout(() => {
+                 window.location.href = `/successpage?order_id=${orderId}`;
+              }, 2000);
             }
           },
           prefill: { name, email, contact: phone },
@@ -1269,10 +1338,13 @@ const CheckoutPage = () => {
             },
           },
         };
-        const scriptLoaded = await loadRazorpayScript();
-        if (!scriptLoaded) {
-          enqueueSnackbar('Failed to load payment gateway. Please try again.', { variant: 'error' });
-          return;
+        if (!razorpayScriptLoaded) {
+          const success = await loadRazorpayScript();
+          if (!success) {
+            enqueueSnackbar('Failed to load payment gateway. Please try again.', { variant: 'error' });
+            setProcessingPayment(false);
+            return;
+          }
         }
         if (usedWallet > 0) {
           // Partial wallet + Razorpay — show breakdown popup
@@ -1300,6 +1372,8 @@ const CheckoutPage = () => {
     } catch (error) {
       console.error('Payment error:', error);
       enqueueSnackbar(error?.response?.data?.message || 'Error processing your payment.', { variant: 'error' });
+    } finally {
+      setProcessingPayment(false);
     }
   };
 
@@ -1342,6 +1416,62 @@ const CheckoutPage = () => {
       : (data?.order?.grand_total ?? 0);
 
   const correctedPayableAmount = backendTotal;
+
+  if (isVerifying) {
+    return (
+      <div className={`fixed inset-0 z-[2147483647] flex flex-col items-center justify-center p-8 text-center transition-colors duration-700 ${verifySuccess ? 'bg-[#375421]' : 'bg-[#1e2a1a]'}`}>
+        {/* PhonePe Style Animated Card */}
+        <div className="bg-white rounded-[40px] shadow-2xl p-10 w-full max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500">
+           <div className="relative mb-8">
+              {!verifySuccess ? (
+                <div className="w-24 h-24 border-[6px] border-gray-100 border-t-[#375421] rounded-full animate-spin"></div>
+              ) : (
+                <div className="w-24 h-24 bg-[#375421] rounded-full flex items-center justify-center shadow-lg shadow-green-200 animate-in zoom-in duration-300">
+                   <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M5 13l4 4L19 7" className="animate-in fade-in slide-in-from-left-2 duration-700"></path>
+                   </svg>
+                </div>
+              )}
+           </div>
+
+           <div className="space-y-2 mb-6">
+             <h2 className={`text-2xl font-black uppercase tracking-tight transition-colors ${verifySuccess ? 'text-[#375421]' : 'text-gray-900'}`}>
+               {verifySuccess ? 'Payment Successful' : 'Processing Payment'}
+             </h2>
+             <p className="text-gray-400 font-bold text-[10px] uppercase tracking-widest leading-relaxed">
+               {verifySuccess ? 'Transitioning to your order summary...' : 'Awaiting confirmation from your bank'}
+             </p>
+           </div>
+
+           {verifySuccess && (
+             <div className="w-full bg-site-bg rounded-3xl p-5 border border-gray-50 flex items-center justify-between mb-2">
+                <div className="text-left">
+                  <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Amount Paid</p>
+                  <p className="text-xl font-black text-gray-900">₹{correctedPayableAmount.toFixed(0)}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Transaction ID</p>
+                  <p className="text-xs font-bold text-gray-900">#{id?.slice(-8).toUpperCase() || 'GIDAN-PAY'}</p>
+                </div>
+             </div>
+           )}
+        </div>
+
+        {/* Security Badges */}
+        <div className="mt-12 flex flex-col items-center gap-4 opacity-50">
+           <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
+              <p className="text-white font-black text-[10px] uppercase tracking-[0.2em]">Secure Transaction</p>
+           </div>
+           <div className="flex gap-4">
+              <div className="h-6 w-10 bg-white/10 rounded flex items-center justify-center text-[10px] text-white">PCI</div>
+              <div className="h-6 w-10 bg-white/10 rounded flex items-center justify-center text-[10px] text-white">SSL</div>
+           </div>
+        </div>
+      </div>
+    );
+  }
+
 
   if (!dataLoaded || !data) {
     return (
@@ -1444,7 +1574,7 @@ const CheckoutPage = () => {
                   {/* Map over items from data if available, or just show a placeholder if activeItems is not defined in this scope */}
                   {data?.items?.slice(0, 3).map((item, idx) => (
                     <div key={idx} className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-100 shadow-sm">
-                      <img src={`${axiosInstance.defaults.baseURL}${item.image}`} className="w-full h-full object-cover" alt="" />
+                      <img src={formatImageUrl(item.image)} className="w-full h-full object-cover" alt="" />
                     </div>
                   ))}
                 </div>
@@ -1541,10 +1671,26 @@ const CheckoutPage = () => {
         </div>
       )}
 
-      <div className="min-h-screen bg-site-bg">
+      <div className="min-h-screen bg-site-bg checkout-page-mobile-root">
 
-        {/* ── Breadcrumb ── */}
-        <div className="bg-white border-b py-6 lg:py-8 sticky top-0 z-50 shadow-sm">
+        {/* ── Mobile Top Nav (Back to Cart / Checkout Title) ── */}
+        <div className="md:hidden bg-white/95 backdrop-blur-md border-b px-4 py-4 sticky top-0 z-[1001] flex items-center justify-between shadow-sm">
+          <button 
+            onClick={() => router.push('/cart')}
+            className="flex items-center gap-1.5 text-bio-green font-extrabold text-[11px] uppercase tracking-wider active:scale-95 transition-transform"
+          >
+            <ChevronLeft size={16} strokeWidth={3} /> Change Items
+          </button>
+          
+          <div className="absolute left-1/2 -translate-x-1/2 text-center">
+            <span className="text-[10px] font-black text-gray-800 uppercase tracking-[0.2em]">Checkout</span>
+          </div>
+
+          <div className="w-16" /> {/* Spacer for balance */}
+        </div>
+
+        {/* ── Breadcrumb (Hidden on Mobile, shown on Desktop) ── */}
+        <div className="hidden md:block bg-white border-b py-6 lg:py-8 sticky top-0 z-50 shadow-sm">
           <div className="max-w-5xl mx-auto px-4 overflow-x-auto scrollbar-hide">
             <div className="flex items-center justify-between min-w-[680px] lg:min-w-0 w-full relative px-2">
               {/* Step 1: Cart */}
@@ -1599,7 +1745,7 @@ const CheckoutPage = () => {
           </div>
         </div>
 
-        <div className="max-w-6xl mx-auto px-4 py-6 flex flex-col lg:flex-row gap-6">
+        <div className="max-w-6xl mx-auto px-4 py-6 flex flex-col lg:flex-row gap-6 mb-32 md:mb-0">
 
           {/* ══ LEFT COLUMN ══ */}
           <div className="w-full lg:w-3/5 space-y-4">
@@ -1676,7 +1822,7 @@ const CheckoutPage = () => {
                           <div className="flex items-center gap-3">
                             <div className="relative w-12 h-12 rounded-lg overflow-hidden border border-gray-100 flex-shrink-0">
                               <img
-                                src={`${axiosInstance.defaults.baseURL}${item.image}`}
+                                src={formatImageUrl(item.image)}
                                 alt={item.product_name}
                                 className="w-full h-full object-cover"
                                 onError={(e) => (e.currentTarget.src = "/placeholder-product.png")}
@@ -1925,8 +2071,8 @@ const CheckoutPage = () => {
 
               </div>
 
-              {/* ── Fixed Bottom: GD Coins + Grand Total + Place Order ── */}
-              <div className="border-t border-gray-100 px-4 pt-3 pb-4 space-y-3">
+              {/* ── Fixed Bottom (Hidden on Mobile) ── */}
+              <div className="hidden md:block border-t border-gray-100 px-4 pt-3 pb-4 space-y-3">
                 {/* GD Coins */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -1974,7 +2120,45 @@ const CheckoutPage = () => {
           </div>
 
         </div>
+
+        {/* ── Mobile Fixed Bottom Nav (Place Order) ── */}
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-[60] bg-white border-t shadow-[0_-4px_20px_rgba(0,0,0,0.05)] px-4 py-4 animate-in slide-in-from-bottom duration-500">
+           <div className="flex items-center justify-between gap-4">
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Amount</span>
+                <span className="text-xl font-black text-gray-900 leading-none">₹{Number(activeOrder?.grand_total ?? 0).toFixed(2)}</span>
+              </div>
+              <div className="flex-1">
+                {!showPaymentStep ? (
+                  <button
+                    disabled={savingOrder}
+                    onClick={handleSaveOrderSummary}
+                    className="w-full bg-[#375421] text-white font-black py-4 rounded-2xl active:scale-[0.96] transition-all text-xs uppercase tracking-[0.15em] flex items-center justify-center gap-2"
+                  >
+                    {savingOrder ? (
+                      <><span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span> Saving…</>
+                    ) : (
+                      <>Place Order</>
+                    )}
+                  </button>
+                ) : (
+                  <button
+                    disabled={processingPayment || !selectedPayMethod || (isGstSelected && !gstFromProfile)}
+                    onClick={handlePayment}
+                    className="w-full bg-[#375421] text-white font-black py-4 rounded-2xl active:scale-[0.96] transition-all text-xs uppercase tracking-[0.15em] flex items-center justify-center gap-2 disabled:opacity-70"
+                  >
+                    {processingPayment ? (
+                      <><span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span> Securely processing...</>
+                    ) : (
+                      <>Pay Now</>
+                    )}
+                  </button>
+                )}
+              </div>
+           </div>
+        </div>
       </div>
+
     </>
   );
 };

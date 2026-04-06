@@ -20,7 +20,7 @@ export const TrendingSection = ({
   initialLatest,
   publicFlags = []
 }) => {
-  const [selectedTab, setSelectedTab] = useState("bestseller");
+  const [selectedTab, setSelectedTab] = useState("trending");
   const accessToken = useSelector(selectAccessToken);
   const [visibleCount, setVisibleCount] = useState(8);
 
@@ -30,12 +30,12 @@ export const TrendingSection = ({
     const getFlagId = (key) => publicFlags?.find(f => f.name === key || f.filter_key === key)?.id;
     const findIdByPart = (part) => publicFlags?.find(f => f.name.toLowerCase().includes(part.toLowerCase()) || f.label?.toLowerCase().includes(part.toLowerCase()))?.id;
     
-    if (selectedTab === "under499") {
-        const id = getFlagId('is_under_499') || findIdByPart('499') || 8;
+    if (selectedTab === "trending") {
+        const id = getFlagId('is_trending') || findIdByPart('trending') || 6;
         return { flag: id };
     }
-    if (selectedTab === "lowmaintenance") {
-        const id = getFlagId('is_low_maintenance') || findIdByPart('maintenance') || 7;
+    if (selectedTab === "featured") {
+        const id = getFlagId('is_featured') || findIdByPart('featured') || 2;
         return { flag: id };
     }
     if (selectedTab === "bestseller") {
@@ -46,18 +46,19 @@ export const TrendingSection = ({
         const id = getFlagId('is_latest') || findIdByPart('latest') || findIdByPart('new') || 3;
         return { flag: id };
     }
-    // Default to bestseller
-    return { flag: getFlagId('is_best_seller') || 4 };
+    // Default to trending
+    return { flag: getFlagId('is_trending') || 6 };
   }, [selectedTab, publicFlags]);
 
 
 
   const initialDataForTab = useMemo(() => {
+    if (selectedTab === "trending") return initialTrending;
+    if (selectedTab === "featured") return initialFeatured;
     if (selectedTab === "bestseller") return initialBestseller;
     if (selectedTab === "latest") return initialLatest;
-    // New dynamic tabs don't have SSR initial data from root page yet, will fetch on mount
     return null;
-  }, [selectedTab, initialBestseller, initialLatest]);
+  }, [selectedTab, initialTrending, initialFeatured, initialBestseller, initialLatest]);
 
 
   const { data: rawProducts = [], isLoading, refetch } = useHomeProducts(
@@ -112,18 +113,18 @@ export const TrendingSection = ({
               Curated Selection
             </span>
             <h2 className="text-[32px] md:text-[48px] font-serif text-[#1a1f14] leading-tight flex flex-wrap gap-x-3 items-baseline mb-4">
-              {selectedTab === 'under499' ? 'Under ₹499' :
-                selectedTab === 'lowmaintenance' ? 'Easy Maintenance' :
-                  selectedTab === 'latest' ? 'New' : 'Best Selling'}
+              {selectedTab === 'trending' ? 'Now Trending' :
+                selectedTab === 'featured' ? 'Featured Picks' :
+                  selectedTab === 'latest' ? 'New Arrivals' : 'Best Sellers'}
               <span className="italic font-normal text-[#375421]">
-                {selectedTab === 'under499' ? 'Value Plants' :
-                  selectedTab === 'lowmaintenance' ? 'Carefree Greens' :
-                    selectedTab === 'latest' ? 'Arrivals in Bangalore' : 'Now in Bangalore'}
+                {selectedTab === 'trending' ? 'Popular in Bangalore' :
+                  selectedTab === 'featured' ? 'Selected For You' :
+                    selectedTab === 'latest' ? 'Fresh Arrivals' : 'Top Rated Items'}
               </span>
             </h2>
             <p className="text-[14px] md:text-[15px] text-[#1a1f14]/60 font-medium max-w-lg">
-              {selectedTab === 'under499' ? "Beautiful plants that don't break the bank." :
-                selectedTab === 'lowmaintenance' ? "Perfect for busy plant parents and beginners." :
+              {selectedTab === 'trending' ? "Discover what's catching everyone's eye this week." :
+                selectedTab === 'featured' ? "Expertly curated selections for a modern indoor jungle." :
                   selectedTab === 'latest' ? "Discover our freshest additions, curated for your home." :
                     "India's most-loved plants — chosen by 12,000+ gardeners."}
             </p>
@@ -133,9 +134,9 @@ export const TrendingSection = ({
             <div className="bg-white/40 md:bg-white/60 backdrop-blur-xl rounded-full p-1 border border-[#1a1f14]/5 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] md:overflow-visible overflow-hidden">
               <div className="grid grid-cols-4 items-center h-11 md:h-12">
                 {[
+                  { id: "trending", label: "Trending" },
                   { id: "bestseller", label: "Bestseller" },
-                  { id: "under499", label: "Under ₹499" },
-                  { id: "lowmaintenance", label: "Easy Care" },
+                  { id: "featured", label: "Featured" },
                   { id: "latest", label: "New Arrivals" }
                 ].map((tab) => (
                   <button

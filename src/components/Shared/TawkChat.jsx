@@ -15,13 +15,17 @@ const TawkChat = () => {
     if (typeof window !== 'undefined' && window.Tawk_API) {
       if (shouldHide) {
         try {
-          window.Tawk_API.hideWidget();
+          if (typeof window.Tawk_API.hideWidget === 'function') {
+            window.Tawk_API.hideWidget();
+          }
         } catch (e) {
           console.error("Error hiding Tawk widget", e);
         }
       } else {
         try {
-          window.Tawk_API.showWidget();
+          if (typeof window.Tawk_API.showWidget === 'function') {
+            window.Tawk_API.showWidget();
+          }
         } catch (e) {
           // Script not loaded yet
         }

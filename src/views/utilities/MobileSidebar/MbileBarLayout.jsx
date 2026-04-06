@@ -17,7 +17,7 @@ const MobileBarLayout = () => {
 
 
 
-        <div className='w-screen' >
+        <div className='w-full' >
         {/* Outlet removed - use Next.js layout children */}
             {/* Footer */}
             <Footer />

@@ -12,7 +12,7 @@ import { savePendingCartItem, savePendingWishlistItem } from "../../utils/pendin
 import StarsOnCards from "./StarsOnCards";
 import ReactStars from "react-rating-stars-component";
 import axiosInstance from "../../Axios/axiosInstance";
-import { getProductUrl } from "../../utils/urlHelper";
+import { getProductUrl, processImageUrl } from "../../utils/urlHelper";
 
 
 const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, inCart, getProducts, ratingNumber, mrp, ribbon }) => {
@@ -165,7 +165,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                         <div className="relative rounded-lg flex justify-center items-center w-full">
                             <img name=" "
                                 className="w-32 h-32 sm:w-36 sm:h-36 lg:h-[200px] mt-4 lg:w-[200px] object-contain transition-transform duration-300 rounded-[2rem] scale-100 hover:scale-105"
-                                src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
+                                src={processImageUrl(imageUrl || product?.image)}
                                 alt={name} loading="lazy" width="400" height="400" style={{ aspectRatio: '1/1' }} />
 
                             <div
@@ -285,7 +285,7 @@ const TrendingCard = ({ name, price, imageUrl, product, userRating, inWishlist, 
                         <div className="relative w-full bg-white overflow-hidden">
                             <img
                                 className="w-full h-32 object-contain p-2"
-                                src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
+                                src={processImageUrl(product.image)}
                                 alt={product.name} loading="lazy" width="400" height="400" style={{ aspectRatio: '1/1' }} />
 
 

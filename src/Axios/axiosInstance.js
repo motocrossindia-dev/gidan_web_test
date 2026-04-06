@@ -36,6 +36,10 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
+    if (error.response?.status === 404) {
+      console.error(`Missing Endpoint (404): ${error.config?.url}`);
+    }
+
     if (error.response?.status === 401) {
       const state = store.getState();
       const token = selectAccessToken(state);

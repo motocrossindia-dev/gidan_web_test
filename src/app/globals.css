@@ -36,8 +36,35 @@
 }
 
 /* Apply font globally */
+html {
+  overflow-x: hidden;
+}
+
 body {
   font-family: var(--font-sans);
+  overflow-x: clip;
+  width: 100% !important;
+  max-width: 100% !important;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Specific fix for Safari when children use large widths or sticky positioning */
+@supports (-webkit-hyphens:none) {
+  html, body {
+    overflow-x: hidden;
+    height: 100%;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+* {
+  box-sizing: border-box;
 }
 
 @keyframes slide-left {
@@ -125,5 +152,12 @@ body {
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border-width: 0;
+  }
+}
+
+/* ── Hide Global Fixed Header on Mobile Checkout ── */
+@media (max-width: 768px) {
+  body:has(.checkout-page-mobile-root) header.fixed.top-0 {
+    display: none !important;
   }
 }

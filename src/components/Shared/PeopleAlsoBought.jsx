@@ -10,7 +10,7 @@ import { FaRegHeart } from "react-icons/fa";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { FiEye } from "react-icons/fi";
 import TrendingCard from './ProductCard';
-import { getProductUrl } from "../../utils/urlHelper";
+import { getProductUrl, processImageUrl } from "../../utils/urlHelper";
 import axiosInstance from "../../Axios/axiosInstance";
 
 const PeopleAlsoBought = ({ title = "People also bought" }) => {
@@ -80,7 +80,7 @@ const PeopleAlsoBought = ({ title = "People also bought" }) => {
                                         <div className="relative w-full flex justify-center mb-3 aspect-[4/5]">
                                             <img
                                                 className="w-full h-full object-cover rounded-xl transition-transform duration-700 group-hover:scale-105"
-                                                src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
+                                                src={processImageUrl(product.image)}
                                                 alt={product.name}
                                             />
                                         </div>

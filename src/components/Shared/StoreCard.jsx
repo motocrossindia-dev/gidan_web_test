@@ -2,14 +2,23 @@
 
 import React from 'react';
 import { MapPin, Phone, Clock } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const StoreCard = ({ store }) => {
+    const router = useRouter();
     if (!store) return null;
 
     const mapLink = store.address_link || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(store.address)}`;
 
+    const handleCardClick = () => {
+        router.push(`/stores/${store.slug || store.id}`);
+    };
+
     return (
-        <div className="group bg-white rounded-[2rem] overflow-hidden shadow-sm border border-gray-100 flex flex-col h-full hover:shadow-xl transition-all duration-300">
+        <div 
+            onClick={handleCardClick}
+            className="group bg-white rounded-[2rem] overflow-hidden shadow-sm border border-gray-100 flex flex-col h-full hover:shadow-xl transition-all duration-300 cursor-pointer hover:-translate-y-1 transform-gpu"
+        >
             {/* Header Area with Image and Badge */}
             <div className="relative h-44 overflow-hidden">
                 <img 
@@ -58,13 +67,17 @@ const StoreCard = ({ store }) => {
                 {/* Dual Button Bar - Further Reduced Size */}
                 <div className="grid grid-cols-2 gap-2 mt-auto pt-1">
                     <button 
-                        onClick={() => window.open(mapLink, '_blank')}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            window.open(mapLink, '_blank');
+                        }}
                         className="flex items-center justify-center gap-1.5 py-2 bg-[#2d4a1e] hover:bg-[#1f3315] text-white rounded-lg font-black text-[10px] uppercase tracking-wider transition-all shadow-md active:scale-95"
                     >
                         <MapPin size={12} className="text-white shrink-0" /> Directions
                     </button>
                     <a 
                         href={`tel:${store.contact}`}
+                        onClick={(e) => e.stopPropagation()}
                         className="flex items-center justify-center gap-1.5 py-2 bg-white border-2 border-gray-100 hover:border-[#375421] text-gray-700 hover:text-[#375421] rounded-lg font-black text-[10px] uppercase tracking-wider transition-all active:scale-95"
                     >
                         <Phone size={12} className="text-gray-400 shrink-0" /> Call

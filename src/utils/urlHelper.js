@@ -35,23 +35,40 @@ export const toSlugString = (val) => {
 
 
 /**
- * Convert a relative URL to an absolute URL using the base URL.
+ * Robustly process image URLs from API response.
+ * Handles arrays, absolute URLs, relative paths, and fallbacks.
  * 
- * @param {string} path - Relative path (e.g., "/logo.webp")
- * @returns {string} - Absolute URL
+ * @param {string|string[]} val - Raw image value from API
+ * @returns {string} - Clean absolute URL
+ */
+export const processImageUrl = (val) => {
+    // 1. Handle arrays from API (e.g. ["https://..."])
+    const rawValue = Array.isArray(val) ? val[0] : val;
+
+    // 2. Fallback for empty/invalid values
+    if (!rawValue || typeof rawValue !== 'string' || rawValue.trim() === "") {
+        return "/logo.png";
+    }
+
+    const trimmed = rawValue.trim();
+
+    // 3. Keep absolute URLs as is
+    if (trimmed.startsWith('http') || trimmed.startsWith('//') || trimmed.startsWith('data:')) {
+        return trimmed;
+    }
+
+    // 4. Prefix relative paths with API base URL
+    const normalizedPath = trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BASE_URL || "https://backend.gidan.store").replace(/\/$/, "");
+
+    return `${baseUrl}${normalizedPath}`;
+};
+
+/**
+ * Convert a relative URL to an absolute URL using the base URL.
  */
 export const toAbsoluteUrl = (path) => {
-    if (!path) return "";
-    if (path.startsWith('http') || path.startsWith('//') || path.startsWith('data:')) return path;
-
-    // Ensure path starts with /
-    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.gidan.store";
-
-    // Remove trailing slash from baseUrl if present
-    const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
-
-    return `${cleanBaseUrl}${normalizedPath}`;
+    return processImageUrl(path);
 };
 
 export const getProductUrl = (product, includeVariant = false) => {

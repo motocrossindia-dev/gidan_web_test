@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
 import Link from "next/link";
-import { getProductUrl } from "../../../utils/urlHelper";
+import { getProductUrl, processImageUrl } from "../../../utils/urlHelper";
 import { trackAddToCart, trackRemoveFromCart } from "../../../utils/ga4Ecommerce";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { Loader2 } from "lucide-react";
@@ -202,7 +202,7 @@ const AddOnData = ({
           <Link href={prodUrl} className="flex flex-col items-center w-full p-2">
             <img name=" "
               className="w-40 h-24 sm:w-40 sm:h-36 object-contain rounded-lg transition-transform duration-300 mt-6"
-              src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
+              src={processImageUrl(product.image)}
               loading="lazy"
               alt={product.name}
             />

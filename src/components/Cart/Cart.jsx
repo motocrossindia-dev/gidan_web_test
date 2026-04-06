@@ -2,6 +2,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import Verify from "../../Services/Services/Verify";
 
+import { processImageUrl } from "../../utils/urlHelper";
+
 const Cart = ({ onClose }) => {
   const modalRef = useRef(null);
   const [cartItems, setCartItems] = useState([]);
@@ -47,7 +49,7 @@ const Cart = ({ onClose }) => {
               <div key={product.id} className="mb-4">
                 <img name=" "
                   className="w-40 h-24 sm:w-40 sm:h-36 object-contain rounded-lg transition-transform duration-300 mt-6"
-                  src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
+                  src={processImageUrl(product.image)}
                   alt={product.name}
                 />
                 <h2 className="text-lg font-semibold mb-2">{product.name}</h2>

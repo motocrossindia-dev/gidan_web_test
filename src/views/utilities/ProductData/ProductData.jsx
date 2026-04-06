@@ -2,6 +2,7 @@
 
 import { useRouter, usePathname, useParams } from "next/navigation";
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../../redux/Slice/cartSlice";
 import { addtowishlist } from "../../../redux/Slice/addtowishlistSlice";
@@ -124,7 +125,10 @@ export default function ProductData({ initialProductData }) {
     const stockCheckTimer = useRef(null);
     const [inWishlist, setInWishlist] = useState(null)
     const [productDetailData, setProductDetailData] = useState(initialProductData || []);
-    const [imageThumbnails, setImageThumbnails] = useState(initialProductData?.data?.product?.images || []);
+    const [imageThumbnails, setImageThumbnails] = useState(() => {
+        const imgs = initialProductData?.data?.product?.images || [];
+        return [...imgs];
+    });
     const [mainProductId, setMainProductId] = useState(initialProductData?.data?.product?.id || null);
     const params = useParams();
 
@@ -152,11 +156,11 @@ export default function ProductData({ initialProductData }) {
     });
 
     // ==========auth cart
-    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+    const accessToken = useSelector(selectAccessToken);
+    const isAuthenticated = !!accessToken;
     const [isAuthenticatedMobile] = useState(() => typeof window !== 'undefined' ? !!localStorage.getItem('userData') : false);
 
     const [token] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('token') : null);
-    const accessToken = useSelector(selectAccessToken);
 
     // ========== Free Shipping PDP Progress Logic (Synced with Cart)
     const [isMounted, setIsMounted] = useState(false);
@@ -186,7 +190,8 @@ export default function ProductData({ initialProductData }) {
                     setFreeShippingThreshold(Number(threshold));
                 }
             } catch (err) {
-                console.error("Error fetching free shipping threshold:", err?.message);
+                // Silently fallback to 2000 if endpoint is missing (404)
+                setFreeShippingThreshold(2000);
             }
         };
 
@@ -770,7 +775,7 @@ export default function ProductData({ initialProductData }) {
             setproduct_slug(data?.data?.product?.slug || id);
             setcategory_slug(data?.data?.product?.category_slug);
             setsubcategory_slug(data?.data?.product?.sub_category_slug);
-            setImageThumbnails(images);
+            setImageThumbnails([...images].reverse());
             setProductDetailData(data);
             if (data?.data?.product_add_ons) {
                 setAddOnData(data.data.product_add_ons);
@@ -802,7 +807,7 @@ export default function ProductData({ initialProductData }) {
             const data = res?.data;
 
             if (data?.data?.product?.images) {
-                setImageThumbnails(data?.data?.product?.images || []);
+                setImageThumbnails([...(data?.data?.product?.images || [])].reverse());
             }
 
             // Update URL with query parameters
@@ -846,7 +851,7 @@ export default function ProductData({ initialProductData }) {
             setsubcategory_slug(data?.data?.product?.sub_category_slug);
 
             if (data?.data?.product?.images) {
-                setImageThumbnails(data?.data?.product?.images || []);
+                setImageThumbnails([...(data?.data?.product?.images || [])].reverse());
             }
 
             setProductDetailData(data);
@@ -885,7 +890,7 @@ export default function ProductData({ initialProductData }) {
             setproduct_slug(data?.data?.product?.slug || id);
             setcategory_slug(data?.data?.product?.category_slug);
             setsubcategory_slug(data?.data?.product?.sub_category_slug);
-            setImageThumbnails(images);
+            setImageThumbnails([...images].reverse());
             setProductDetailData(data);
 
             // You can update state or perform additional actions with the filtered products
@@ -925,7 +930,7 @@ export default function ProductData({ initialProductData }) {
             setproduct_slug(data?.data?.product?.slug || id);
             setcategory_slug(data?.data?.product?.category_slug);
             setsubcategory_slug(data?.data?.product?.sub_category_slug);
-            setImageThumbnails(images);
+            setImageThumbnails([...images].reverse());
             setProductDetailData(data);
 
             // You can update state or perform additional actions with the filtered products
@@ -964,7 +969,7 @@ export default function ProductData({ initialProductData }) {
             setproduct_slug(data?.data?.product?.slug || id);
             setcategory_slug(data?.data?.product?.category_slug);
             setsubcategory_slug(data?.data?.product?.sub_category_slug);
-            setImageThumbnails(images);
+            setImageThumbnails([...images].reverse());
             setProductDetailData(data);
             setSelectedImage(0);
 
@@ -986,7 +991,7 @@ export default function ProductData({ initialProductData }) {
                     const data = response.data;
                     setProductDetailData(data);
                     setAddOnData(data?.data?.product_add_ons || []);
-                    setImageThumbnails(data?.data?.product?.images || []);
+                    setImageThumbnails([...(data?.data?.product?.images || [])].reverse());
 
                     // GA4: Track view_item event (MOVED TO SEPARATE USEEFFECT)
                     // if (data?.data?.product) {
@@ -1206,20 +1211,32 @@ export default function ProductData({ initialProductData }) {
             />
 
             <div className="w-full" style={{ backgroundColor: "whitesmoke" }}>
-                <div className="w-full max-w-full mx-auto px-4 pt-2 pb-4 font-sans md:px-8">
-                    <div className="flex flex-col md:flex-row gap-8 lg:gap-16 relative items-start w-full">
+                <div className="w-full max-w-full mx-auto px-4 pt-1 pb-3 font-sans md:px-6">
+                    <div className="flex flex-col md:flex-row gap-6 lg:gap-10 relative items-start w-full">
                         {/* LEFT COLUMN: STICKY IMAGE GALLERY */}
                         <div 
                             className="w-full md:w-1/2 md:sticky md:top-40 md:self-start pt-2 md:pt-4 pb-4 h-fit z-30 min-w-0 md:pr-4"
                         >
                             {/* Main Image with Fully Working Zoom */}
                             <div
-                                className="relative cursor-crosshair group z-40 bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm aspect-square w-full max-w-full flex items-center justify-center p-3 md:p-5"
+                                className="relative cursor-crosshair group z-40 bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm aspect-square w-full max-w-full flex items-center justify-center p-0"
+                                onMouseEnter={() => setZoom(true)}
+                                onMouseLeave={() => setZoom(false)}
                                 onMouseMove={(e) => {
                                     const rect = e.currentTarget.getBoundingClientRect();
                                     const x = e.clientX - rect.left;
                                     const y = e.clientY - rect.top;
-                                    setPosition({ x, y });
+                                    
+                                    // Constrain lens to stay within the box
+                                    const constrainedX = Math.max(lensSize / 2, Math.min(x, rect.width - lensSize / 2));
+                                    const constrainedY = Math.max(lensSize / 2, Math.min(y, rect.height - lensSize / 2));
+                                    
+                                    setPosition({ 
+                                        x: constrainedX, 
+                                        y: constrainedY,
+                                        width: rect.width,
+                                        height: rect.height
+                                    });
                                 }}
                                 ref={imageRef}
                             >
@@ -1251,7 +1268,7 @@ export default function ProductData({ initialProductData }) {
                                         />
 
                                         {/* Hover to Zoom indicator */}
-                                        <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-sm border border-gray-100 flex items-center gap-2 pointer-events-none z-10 transition-opacity duration-300">
+                                        <div className={`absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-sm border border-gray-100 flex items-center gap-2 pointer-events-none z-10 transition-opacity duration-300 ${zoom ? "opacity-0" : "opacity-100"}`}>
                                             <Share2 size={12} className="text-gray-400" />
                                             <span className="text-[10px] font-black text-gray-700 uppercase tracking-wider">Hover to zoom</span>
                                         </div>
@@ -1261,7 +1278,7 @@ export default function ProductData({ initialProductData }) {
                                 {/* LENS BOX (Transparent Square) */}
                                 {zoom && (
                                     <div
-                                        className="absolute pointer-events-none border border-green-400 bg-white/20 rounded-sm"
+                                        className="absolute pointer-events-none border border-black/10 bg-black/5 rounded-sm"
                                         style={{
                                             width: lensSize,
                                             height: lensSize,
@@ -1275,18 +1292,23 @@ export default function ProductData({ initialProductData }) {
                             {/* ZOOM BOX ON RIGHT - Only on XL+ screens where there's space outside the 50% column */}
                             {zoom && (
                                 <div
-                                    className="absolute top-0 left-full ml-4 w-[400px] xl:w-[500px] h-[400px] xl:h-[500px] hidden xl:block border border-gray-300 rounded-lg bg-white z-50 shadow-lg overflow-hidden"
+                                    className="absolute top-0 left-full ml-4 w-[400px] xl:w-[500px] h-[400px] xl:h-[500px] hidden lg:block border border-gray-200 rounded-xl bg-white z-[100] shadow-2xl overflow-hidden pointer-events-none"
                                     style={{
-                                        backgroundImage: `url(${(() => {
+                                        backgroundImage: `url("${(() => {
                                                 const img = imageThumbnails[selectedImage] || imageThumbnails[0];
                                                 const path = (img?.image || img?.url || "").trim();
+                                                if (!path) return "";
                                                 if (path.startsWith("http") || path.startsWith("//")) return path;
                                                 const cleanPath = path.startsWith('/') ? path : `/${path}`;
                                                 return `${process.env.NEXT_PUBLIC_API_URL || "https://backend.gidan.store"}${cleanPath}`;
                                             })()
-                                            })`,
-                                        backgroundPosition: `${-position.x * 2.5 + 200}px ${-position.y * 2.5 + 200}px`,
-                                        backgroundSize: `1250px 1250px`,
+                                            }")`,
+                                        backgroundPosition: (() => {
+                                            const normalizedX = (position.x - lensSize / 2) / ((position.width || 500) - lensSize);
+                                            const normalizedY = (position.y - lensSize / 2) / ((position.height || 500) - lensSize);
+                                            return `${Math.max(0, Math.min(100, normalizedX * 100))}% ${Math.max(0, Math.min(100, normalizedY * 100))}%`;
+                                        })(),
+                                        backgroundSize: `${zoomLevel * 100}%`,
                                         backgroundRepeat: "no-repeat",
                                     }}
                                 />
@@ -1320,7 +1342,7 @@ export default function ProductData({ initialProductData }) {
                             </div>
 
                             {/* Shared footer row below thumbnails */}
-                            <div className="mt-8 flex items-center justify-between gap-4 px-2">
+                            <div className="mt-4 flex items-center justify-between gap-4 px-2">
                                 <div className="flex items-center gap-2">
                                     <button onClick={handleWhatsAppShare} className="w-8 h-8 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 hover:text-green-600 hover:border-green-100 transition-all shadow-sm">
                                         <FaWhatsapp size={14} />
@@ -1339,27 +1361,27 @@ export default function ProductData({ initialProductData }) {
                             </div>
                         </div>
 
-                        <div className="w-full md:w-1/2 font-sans mt-6 md:mt-0 md:pt-4 min-w-0 md:pl-6">
-                            <h1 className="text-xl md:text-3xl font-bold mb-2">
+                        <div className="w-full md:w-1/2 font-sans mt-4 md:mt-0 md:pt-2 min-w-0 md:pl-4">
+                            <h1 className="text-xl md:text-3xl font-bold mb-1">
                                 {(() => {
                                     const p = productDetailData?.data?.product;
                                     const cleanName = p?.name || (p?.slug ? p.slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') : "");
                                     return cleanName ? `Buy ${cleanName}` : "";
                                 })()}
                             </h1>
-                            <p className="text-md md:text-lg font-sans mb-4 whitespace-pre-line text-black">
+                            <p className="text-md md:text-lg font-sans mb-2 whitespace-pre-line text-black">
                                 {productDetailData?.data?.product?.description || ""}
                             </p>
                             {productDetailData?.data?.product?.whats_included && (
-                                <p className="text-sm text-gray-600 mb-4 italic leading-relaxed">
+                                <p className="text-sm text-gray-600 mb-3 italic leading-relaxed">
                                     <span className="font-bold">What's included:</span> {productDetailData.data.product.whats_included}
                                 </p>
                             )}
 
                             {/* Product Highlights & Real-time Info */}
-                            <div className="mb-6 space-y-4">
+                            <div className="mb-4 space-y-2">
                                 {productDetailData?.data?.care_guides?.length > 0 && (
-                                    <div className="grid grid-cols-2 gap-y-2 gap-x-4">
+                                    <div className="grid grid-cols-2 gap-y-1 gap-x-4">
                                         {productDetailData.data.care_guides.map((guide, index) => (
                                             <div key={guide.id || index} className="flex items-center gap-2 text-sm text-gray-700">
                                                 {guide.icon ? (
@@ -1373,19 +1395,19 @@ export default function ProductData({ initialProductData }) {
                                     </div>
                                 )}
 
-                                <div className="flex flex-col gap-1 py-3 border-y border-gray-200/60">
+                                <div className="flex flex-col gap-1 py-1.5 border-y border-gray-200/60">
                                     <div className="flex items-center gap-2">
                                         <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                                         <span className="text-sm font-bold text-green-600">
                                             {productDetailData?.data?.product?.stock_word === "OutOfStock" ? "Out of Stock" : `In stock (${productDetailData?.data?.product?.stock || 0})`}
                                         </span>
                                         {productDetailData?.data?.product?.stock > 0 && (
-                                            <span className="text-sm text-gray-500">— Only {productDetailData.data.product.stock} left</span>
+                                            <span className="text-xs text-gray-500">— Only {productDetailData.data.product.stock} left</span>
                                         )}
                                     </div>
                                     {productDetailData?.data?.product?.viewing_count > 0 && (
                                         <div className="flex items-center gap-2 text-sm text-gray-600">
-                                            <span className="text-orange-500">🔥</span>
+                                            <span className="text-orange-500 text-xs">🔥</span>
                                             <span className="font-medium text-orange-600">
                                                 {productDetailData.data.product.viewing_count} people
                                             </span> viewing right now
@@ -1394,60 +1416,62 @@ export default function ProductData({ initialProductData }) {
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-4 mb-4">
-                                <p className="text-black-600 text-sm">
-                                    {Array.from({ length: 5 }).map((_, i) => {
-                                        const fraction =
-                                            ratingData?.avg_rating || 0;
-                                        const filled = Math.floor(fraction);
-                                        const half = fraction - filled;
-                                        return (
-                                            <React.Fragment key={i}>
-                                                {i < filled && (
-                                                    <FaStar className="inline-block text-bio-green" />
-                                                )}
-                                                {i === filled && half > 0 && (
-                                                    <FaStarHalfAlt className="inline-block text-bio-green" />
-                                                )}
-                                                {i >= filled + half && (
-                                                    <FaStar className="inline-block text-gray-700" />
-                                                )}
-                                            </React.Fragment>
-                                        );
-                                    })}
-                                    <span className="ml-2">({ratingData?.num_ratings || 0} {ratingData?.num_ratings === 1 ? 'review' : 'reviews'})</span>
-                                </p>
+                            <div className="flex items-center gap-4 mb-2">
+                                <div className="text-black-600 text-sm flex items-center">
+                                    <div className="flex items-center mr-1.5">
+                                        {Array.from({ length: 5 }).map((_, i) => {
+                                            const fraction =
+                                                ratingData?.avg_rating || 0;
+                                            const filled = Math.floor(fraction);
+                                            const half = fraction - filled;
+                                            return (
+                                                <React.Fragment key={i}>
+                                                    {i < filled && (
+                                                        <FaStar className="inline-block text-bio-green text-xs" />
+                                                    )}
+                                                    {i === filled && half > 0 && (
+                                                        <FaStarHalfAlt className="inline-block text-bio-green text-xs" />
+                                                    )}
+                                                    {i >= filled + half && (
+                                                        <FaStar className="inline-block text-gray-300 text-xs" />
+                                                    )}
+                                                </React.Fragment>
+                                            );
+                                        })}
+                                    </div>
+                                    <span className="text-xs text-gray-500 cursor-default">({ratingData?.num_ratings || 0})</span>
+                                </div>
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={handleViewReviewClick}
-                                        className="text-sm text-bio-green hover:text-[#051d18] hover:underline cursor-pointer bg-transparent border-none p-0"
+                                        className="text-xs text-bio-green hover:underline cursor-pointer bg-transparent border-none p-0 font-medium"
                                     >
                                         View reviews
                                     </button>
-                                    <span className="text-sm text-gray-400">|</span>
+                                    <span className="text-[10px] text-gray-300">|</span>
                                     <button
                                         onClick={handleWriteReviewClick}
                                         disabled={isCheckingPurchase}
-                                        className="text-sm text-bio-green hover:text-[#051d18] hover:underline cursor-pointer bg-transparent border-none p-0"
+                                        className="text-xs text-bio-green hover:underline cursor-pointer bg-transparent border-none p-0 font-medium"
                                     >
-                                        {isCheckingPurchase ? "Checking..." : (productDetailData?.data?.product?.is_review ? "Edit your review" : (productDetailData?.data?.product_rating?.num_ratings === 0 ? "Be the first to review" : "Write a review"))}
+                                        {isCheckingPurchase ? "Checking..." : (productDetailData?.data?.product?.is_review ? "Edit" : "Write a review")}
                                     </button>
                                 </div>
                             </div>
-                            <div className="flex mb-4 items-center">
+                            <div className="flex mb-3 items-center">
                                 <div className="mr-4 flex items-center">
                                     <div className="flex flex-col">
                                         <div className="flex items-center">
-                                            <span className="font-bold text-bio-green text-lg md:text-2xl">
+                                            <span className="font-bold text-bio-green text-2xl md:text-3xl">
                                                 ₹{Math.round(appliedCouponInfo ? appliedCouponInfo.new_total : (productDetailData?.data?.product?.selling_price || 0))}
                                             </span>
 
                                             {(appliedCouponInfo || (productDetailData?.data?.product?.mrp > productDetailData?.data?.product?.selling_price)) && (
                                                 <>
-                                                    <span className="text-gray-600 text-md md:text-xl line-through ml-2">
+                                                    <span className="text-gray-400 text-lg md:text-xl line-through ml-2.5">
                                                         ₹{Math.round(appliedCouponInfo ? (appliedCouponInfo.original_price * (quantity || 1)) : (productDetailData?.data?.product?.mrp || 0))}
                                                     </span>
-                                                    <span className="ml-2 text-red-500 font-semibold text-md md:text-lg">
+                                                    <span className="ml-2.5 text-red-500 font-bold text-sm md:text-base">
                                                         {appliedCouponInfo ? (
                                                             `${Math.round((appliedCouponInfo.discount_amount / (appliedCouponInfo.original_price * (quantity || 1))) * 100)}% OFF`
                                                         ) : (
@@ -1458,10 +1482,10 @@ export default function ProductData({ initialProductData }) {
                                             )}
                                         </div>
                                         {appliedCouponInfo && (
-                                            <div className="flex items-center gap-1.5 mt-1">
+                                            <div className="flex items-center gap-1.5 mt-0.5">
                                                 <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
                                                 <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">
-                                                    Coupon "{appliedCouponInfo.coupon_code}" Applied
+                                                    Coupon Applied
                                                 </span>
                                             </div>
                                         )}
@@ -1471,14 +1495,14 @@ export default function ProductData({ initialProductData }) {
 
 
                             {productDetailData?.data?.product_weights?.length > 0 && (
-                                <div className="mb-6">
-                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-3">Select Packet Size:</span>
-                                    <div className="flex flex-wrap gap-2">
+                                <div className="mb-3">
+                                    <span className="text-[9px] font-black text-gray-400 uppercase tracking-wider block mb-1">Select Packet Size:</span>
+                                    <div className="flex flex-wrap gap-1.5">
                                         {productDetailData?.data?.product_weights?.map((size, idx) => (
                                             <button
                                                 key={size?.id || size?.size_grams || idx}
                                                 onClick={() => handleWeightClick(size, productDetailData?.data?.product)}
-                                                className={`px-5 py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${selectedgram?.size_grams === size?.size_grams
+                                                className={`px-4 py-1.5 rounded-lg border-2 text-xs font-bold transition-all ${selectedgram?.size_grams === size?.size_grams
                                                     ? "border-[#375421] text-[#375421] bg-[#375421]/5"
                                                     : "border-gray-100 text-gray-500 hover:border-gray-200 hover:bg-gray-50"
                                                     }`}
@@ -1491,14 +1515,14 @@ export default function ProductData({ initialProductData }) {
                             )}
 
                             {productDetailData?.data?.product_litres?.length > 0 && (
-                                <div className="mb-6">
-                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-3">Select Capacity:</span>
-                                    <div className="flex flex-wrap gap-2">
+                                <div className="mb-3">
+                                    <span className="text-[9px] font-black text-gray-400 uppercase tracking-wider block mb-1">Select Capacity:</span>
+                                    <div className="flex flex-wrap gap-1.5">
                                         {productDetailData?.data?.product_litres?.map((litre, idx) => (
                                             <button
                                                 key={litre?.id || litre?.name || idx}
                                                 onClick={() => handleLitreClick(litre, productDetailData?.data?.product)}
-                                                className={`px-5 py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${selectedLitre?.name === litre?.name
+                                                className={`px-4 py-1.5 rounded-lg border-2 text-xs font-bold transition-all ${selectedLitre?.name === litre?.name
                                                     ? "border-[#375421] text-[#375421] bg-[#375421]/5"
                                                     : "border-gray-100 text-gray-500 hover:border-gray-200 hover:bg-gray-50"
                                                     }`}
@@ -1511,21 +1535,21 @@ export default function ProductData({ initialProductData }) {
                             )}
 
                             {productDetailData?.data?.product_sizes?.length > 0 && (
-                                <div className="mb-6">
-                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-3">Select Plant Size:</span>
-                                    <div className="flex flex-wrap gap-2">
+                                <div className="mb-3">
+                                    <span className="text-[9px] font-black text-gray-400 uppercase tracking-wider block mb-1">Select Plant Size:</span>
+                                    <div className="flex flex-wrap gap-1.5">
                                         {productDetailData?.data?.product_sizes?.map((size, idx) => {
                                             const diff = (size?.price || 0);
                                             return (
                                                 <button
                                                     key={size?.id || size?.size || idx}
                                                     onClick={() => handleSizeClick(size, productDetailData?.data?.product)}
-                                                    className={`px-5 py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${selectedSize?.size === size?.size
+                                                    className={`px-4 py-1.5 rounded-lg border-2 text-xs font-bold transition-all ${selectedSize?.size === size?.size
                                                         ? "border-[#375421] text-[#375421] bg-[#375421]/5"
                                                         : "border-gray-200 text-gray-500 hover:border-gray-300 hover:bg-gray-50"
                                                         }`}
                                                 >
-                                                    {size?.size} {diff > 0 && <span className="text-[10px] opacity-60 ml-1">(+₹{Math.round(diff)})</span>}
+                                                    {size?.size} {diff > 0 && <span className="text-[10px] opacity-60 ml-0.5">(+₹{Math.round(diff)})</span>}
                                                 </button>
                                             );
                                         })}
@@ -1534,21 +1558,21 @@ export default function ProductData({ initialProductData }) {
                             )}
 
                             {productDetailData?.data?.product_planter_sizes?.length > 0 && (
-                                <div className="mb-6">
-                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-3">Select Planter Size:</span>
-                                    <div className="flex flex-wrap gap-2">
+                                <div className="mb-3">
+                                    <span className="text-[9px] font-black text-gray-400 uppercase tracking-wider block mb-1">Select Planter Size:</span>
+                                    <div className="flex flex-wrap gap-1.5">
                                         {productDetailData?.data?.product_planter_sizes?.map((size, idx) => {
                                             const diff = (size?.price || 0);
                                             return (
                                                 <button
                                                     key={size?.id || size?.size || idx}
                                                     onClick={() => handlePlanterSizeClick(size, productDetailData?.data?.product)}
-                                                    className={`px-5 py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${selectedPlanterSize?.size === size?.size
+                                                    className={`px-4 py-1.5 rounded-lg border-2 text-xs font-bold transition-all ${selectedPlanterSize?.size === size?.size
                                                         ? "border-[#375421] text-[#375421] bg-[#375421]/5"
                                                         : "border-gray-200 text-gray-500 hover:border-gray-300 hover:bg-gray-50"
                                                         }`}
                                                 >
-                                                    {size?.size} {diff > 0 && <span className="text-[10px] opacity-60 ml-1">(+₹{Math.round(diff)})</span>}
+                                                    {size?.size} {diff > 0 && <span className="text-[10px] opacity-60 ml-0.5">(+₹{Math.round(diff)})</span>}
                                                 </button>
                                             );
                                         })}
@@ -1557,21 +1581,21 @@ export default function ProductData({ initialProductData }) {
                             )}
 
                             {productDetailData?.data?.product_planters?.length > 0 && (
-                                <div className="mb-6">
-                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-3">Select Planter:</span>
-                                    <div className="flex flex-wrap gap-2">
+                                <div className="mb-3">
+                                    <span className="text-[9px] font-black text-gray-400 uppercase tracking-wider block mb-1">Select Planter:</span>
+                                    <div className="flex flex-wrap gap-1.5">
                                         {productDetailData?.data?.product_planters?.map((planter, idx) => {
                                             const diff = (planter?.price || 0);
                                             return (
                                                 <button
                                                     key={planter?.id || planter?.name || idx}
                                                     onClick={() => handlePlanterClick(planter, productDetailData?.data?.product)}
-                                                    className={`px-5 py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${selectedPlanter?.id === planter?.id
+                                                    className={`px-4 py-1.5 rounded-lg border-2 text-xs font-bold transition-all ${selectedPlanter?.id === planter?.id
                                                         ? "border-[#375421] text-[#375421] bg-[#375421]/5"
                                                         : "border-gray-200 text-gray-500 hover:border-gray-300 hover:bg-gray-50"
                                                         }`}
                                                 >
-                                                    {planter?.name} {diff > 0 && <span className="text-[10px] opacity-60 ml-1">(+₹{Math.round(diff)})</span>}
+                                                    {planter?.name} {diff > 0 && <span className="text-[10px] opacity-60 ml-0.5">(+₹{Math.round(diff)})</span>}
                                                 </button>
                                             );
                                         })}
@@ -1610,7 +1634,7 @@ export default function ProductData({ initialProductData }) {
                             )}
 
                             {/* Manual Coupon Application UI (PDP) - Same as Checkout */}
-                            <div className="mt-6 mb-6">
+                            <div className="mt-3 mb-4">
                                 <CouponSection
                                     mode="pdp"
                                     products={[{ prod_id: productDetailData?.data?.product?.id, quantity: quantity }]}
@@ -1621,7 +1645,7 @@ export default function ProductData({ initialProductData }) {
                             </div>
 
                             {/* Free Shipping Progress Indicator (PDP Standalone) */}
-                            <div className="mb-6 px-5 py-4 bg-gradient-to-r from-emerald-50/50 via-white to-orange-50/20 rounded-2xl border border-emerald-100/50 shadow-sm relative group">
+                            <div className="mb-3 px-4 py-3 bg-gradient-to-r from-emerald-50/50 via-white to-orange-50/20 rounded-2xl border border-emerald-100/50 shadow-sm relative group">
                                 <div className="flex flex-col gap-3 relative z-10 w-full">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
@@ -1710,7 +1734,7 @@ export default function ProductData({ initialProductData }) {
                                 </button>
                             </div>
 
-                            <div className="mb-8 p-6 bg-white rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden group">
+                            <div className="mb-4 p-4 bg-white rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden group">
                                 <div className="flex items-center gap-3 mb-4">
                                     <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center text-orange-500">
                                         <Truck size={20} />
@@ -1744,7 +1768,7 @@ export default function ProductData({ initialProductData }) {
                                 </div>
                             </div>
 
-                            <div className="mt-8 border-t border-gray-100 pt-8">
+                            <div className="mt-6 border-t border-gray-100 pt-6">
                                 <TrustBadges isGrid={true} />
                             </div>
                         </div>
@@ -1753,7 +1777,7 @@ export default function ProductData({ initialProductData }) {
             </div>
 
             {/* Detailed Tabs/About section - Full width at bottom */}
-            <div className="bg-white border-t border-gray-50 py-12">
+            <div className="bg-white border-t border-gray-50 py-6">
                 <div className="container mx-auto px-4 md:px-8">
                     <AboutTheProducts
                         productDetailData={productDetailData}
@@ -1765,7 +1789,7 @@ export default function ProductData({ initialProductData }) {
             </div>
 
             {/* People Also Bought remains full-width below the sticky zone */}
-            <div className="bg-white pt-8 pb-12">
+            <div className="bg-white pt-6 pb-8">
                 <div className="container mx-auto">
                     <PeopleAlsoBought title="People Also Bought" />
                 </div>

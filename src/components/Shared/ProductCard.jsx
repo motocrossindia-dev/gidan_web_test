@@ -12,11 +12,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { setPendingCartItem } from "../../redux/Slice/cartSlice";
 import { setPendingWishlistItem } from "../../redux/Slice/addtowishlistSlice";
 import { savePendingCartItem, savePendingWishlistItem } from "../../utils/pendingAction";
+import { selectAccessToken } from "../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
 // import img from "./img";
 import ReactStars from "react-rating-stars-component";
 import axiosInstance from "../../Axios/axiosInstance";
-import { getProductUrl } from "../../utils/urlHelper";
+import { getProductUrl, processImageUrl } from "../../utils/urlHelper";
 import { trackAddToCart, trackRemoveFromCart, trackAddToWishlist } from "../../utils/ga4Ecommerce";
 import { ArrowRight } from 'lucide-react';
 
@@ -74,7 +75,8 @@ const ProductCard = ({
     const [isHovered, setIsHovered] = useState(false);
     const router = useRouter();
     const dispatch = useDispatch();
-    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+    const accessToken = useSelector(selectAccessToken);
+    const isAuthenticated = !!accessToken;
     const cartItems = useSelector((state) => state.cart.items);
     const wishlistItems = useSelector((state) => state.wishlist.items);
     const [isRehydrated, setIsRehydrated] = useState(false);
@@ -248,25 +250,31 @@ const ProductCard = ({
     const stockConfig = getStockConfig(stockCount);
     const stockStatus = stockCount > 0 ? stockConfig.label : null;
 
-    // Image handling logic for consistent URL prefixing across the app
+    // Image handling logic for consistent URL prefixing and hover support
     const getImages = () => {
-        const imageList = product?.image || [];
-
-        const processUrl = (url) => {
-            if (!url || typeof url !== 'string' || url === "") return "/logo.png";
-            if (url.startsWith('http') || url.startsWith('data:')) return url;
-            return url.startsWith('/') ? `${process.env.NEXT_PUBLIC_API_URL || ''}${url}` : `${process.env.NEXT_PUBLIC_API_URL || ''}/${url}`;
-        };
-
-        const primary = processUrl(propImageUrl || product?.image);
-
-        if (Array.isArray(imageList) && imageList.length >= 2) {
-            return {
-                main: processUrl(imageList[0]),
-                hover: processUrl(imageList[1])
-            };
+        // Collect all potential image sources from the product object
+        let sources = [];
+        
+        // 1. Check plural images (array of objects) - only use if not empty
+        if (Array.isArray(product?.images) && product.images.length > 0) {
+            sources = product.images.map(img => img.image || img.url || img);
+        } 
+        // 2. Check singular image field (might be a string or array)
+        else if (Array.isArray(product?.image) && product.image.length > 0) {
+            sources = product.image;
         }
-        return { main: primary, hover: primary };
+        // 3. Check imageUrl prop itself if it's an array
+        else if (Array.isArray(propImageUrl) && propImageUrl.length > 0) {
+            sources = propImageUrl;
+        }
+
+        // Determine primary image (use prop, then first source, then singular field)
+        const mainImage = processImageUrl(propImageUrl || sources[0] || product?.image || product?.product_image);
+        
+        // Determine hover image (use second source if available, otherwise fallback to main)
+        const hoverImage = sources.length >= 2 ? processImageUrl(sources[1]) : mainImage;
+
+        return { main: mainImage, hover: hoverImage };
     };
 
     const productImages = getImages();
@@ -337,16 +345,16 @@ const ProductCard = ({
     if (isBentoLarge) {
         const cardBg = extra.product_card_color || "#f3f6f0";
         return (
-            <Link href={productUrl} className="relative flex flex-row lg:flex-col w-full h-full overflow-hidden group rounded-[32px] md:rounded-[40px] shadow-2xl transition-all duration-700 hover:scale-[1.01]" style={{ backgroundColor: cardBg }}>
+            <Link href={productUrl} className="relative flex flex-row lg:flex-col w-full h-full overflow-hidden group rounded-[32px] md:rounded-[40px] shadow-2xl transition-all duration-700" style={{ backgroundColor: cardBg }}>
                 {/* Top Image Container (Fills space, pushes info down) */}
-                <div className="relative w-[60%] lg:w-full flex-grow overflow-hidden flex items-center justify-center p-3 md:p-6 min-h-[160px] lg:min-h-[200px]">
+                <div className="relative w-[60%] lg:w-full flex-grow overflow-hidden min-h-[160px] lg:min-h-[200px]">
                     {!imgError ? (
                         <Image
                             src={productImages.main}
                             alt={name}
                             fill
                             onError={() => setImgError(true)}
-                            className="object-contain p-2 md:p-4 transition-transform duration-[2000ms] group-hover:scale-110"
+                            className="object-cover transition-opacity duration-300"
                         />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center bg-gray-50/50">
@@ -420,7 +428,7 @@ const ProductCard = ({
             : "from-[#8cb369] to-[#6a8d4c]";
 
         return (
-            <Link href={productUrl} className={`relative flex flex-col w-full h-full bg-[#f3f6f0] overflow-hidden group rounded-[32px] md:rounded-[40px] shadow-xl transition-all duration-700 hover:scale-[1.02]`}>
+            <Link href={productUrl} className={`relative flex flex-col w-full h-full bg-[#f3f6f0] overflow-hidden group rounded-[32px] md:rounded-[40px] shadow-xl transition-all duration-700`}>
                 {/* Full-Card Background Image */}
                 <div className="absolute inset-0 z-0">
                     {!imgError ? (
@@ -429,7 +437,7 @@ const ProductCard = ({
                             alt={name}
                             fill
                             onError={() => setImgError(true)}
-                            className="object-cover transition-transform duration-[2000ms] group-hover:scale-110 shadow-inner"
+                            className="object-cover transition-opacity duration-300 shadow-inner"
                         />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center opacity-10 bg-gray-100">
@@ -502,7 +510,7 @@ const ProductCard = ({
                     onClick={() => router.push(productUrl)}
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}
-                    className="group relative flex flex-col items-start text-left transition-all duration-500 bg-white rounded-[2.5rem] border border-gray-100/60 overflow-hidden cursor-pointer hover:shadow-[0_22px_50px_rgba(0,0,0,0.06)] hover:-translate-y-2 isolation-isolate transform-gpu"
+                    className="group relative flex flex-col items-start text-left transition-all duration-500 bg-white rounded-[2.5rem] border border-gray-100/60 overflow-hidden cursor-pointer hover:shadow-[0_22px_50px_rgba(0,0,0,0.06)] isolation-isolate transform-gpu"
                     style={{ isolation: 'isolate', transform: 'translateZ(0)', WebkitMaskImage: '-webkit-radial-gradient(white, white)' }}
                 >
                     {/* Premium Diagonal Ribbon (Top Right) */}
@@ -571,7 +579,7 @@ const ProductCard = ({
                             onError={() => setImgError(true)}
                             sizes="(max-width: 1024px) 50vw, 33vw"
                             priority={priority}
-                            className={`object-contain p-8 md:p-10 lg:p-12 transition-all duration-700 ease-out group-hover:scale-110 ${isHovered && productImages.hover !== productImages.main ? "opacity-0 scale-95" : "opacity-100 scale-100"
+                            className={`object-cover transition-opacity duration-300 ${isHovered && productImages.hover !== productImages.main ? "opacity-0" : "opacity-100"
                                 } ${isOutOfStock ? "grayscale opacity-40" : ""}`}
                         />
 
@@ -582,13 +590,13 @@ const ProductCard = ({
                                 alt={`${name} hover`}
                                 fill
                                 sizes="(max-width: 1024px) 50vw, 33vw"
-                                className={`object-contain p-8 md:p-10 lg:p-12 transition-all duration-700 ease-out absolute inset-0 group-hover:scale-110 ${isHovered ? "opacity-100 scale-100" : "opacity-0 scale-95"
+                                className={`object-cover transition-opacity duration-300 absolute inset-0 ${isHovered ? "opacity-100" : "opacity-0"
                                     } ${isOutOfStock ? "grayscale opacity-40" : ""}`}
                             />
                         )}
 
                         {/* Bottom Tags Floating on Image */}
-                        <div className="absolute bottom-5 left-5 right-5 flex flex-wrap gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+                        <div className="absolute bottom-5 left-5 right-5 flex flex-wrap gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-500">
                             {badges.filter(b => b.position === "bottom-float").map((badge, idx) => (
                                 <div
                                     key={badge.text}
@@ -720,7 +728,7 @@ const ProductCard = ({
                             onError={() => setImgError(true)}
                             sizes="50vw"
                             priority={priority}
-                            className={`object-contain p-6 ${isOutOfStock ? "grayscale opacity-40" : ""}`}
+                            className={`object-cover ${isOutOfStock ? "grayscale opacity-40" : ""}`}
                         />
                     </div>
 

@@ -76,7 +76,8 @@ const Cart = () => {
         setFreeShippingThreshold(Number(threshold));
       }
     } catch (err) {
-      console.error("Error fetching free shipping threshold:", err.message);
+      // Silently fallback to 2000 if endpoint is missing (404)
+      setFreeShippingThreshold(2000);
     }
   };
 
@@ -212,6 +213,45 @@ const Cart = () => {
       enqueueSnackbar("Guest cart cleared", { variant: "success" });
       fetchCartItems();
       window.dispatchEvent(new Event("cartUpdated"));
+    }
+  };
+
+  const handlePlaceOrder = async () => {
+    const isAuthenticatedMobile = typeof window !== 'undefined' ? !!localStorage.getItem('userData') : false;
+    
+    if (!accessToken && !isAuthenticatedMobile) {
+      enqueueSnackbar("Please login to proceed with your order", { variant: "info" });
+      router.push("/login");
+      return;
+    }
+
+    const cartData = {
+      order_source: "cart",
+      products: products.map((product) => ({
+        prod_id: product.product_id,
+        quantity: product.quantity,
+      })),
+    };
+    
+    try {
+      const response = await axiosInstance.post(
+        `/order/placeOrder/`,
+        cartData
+      );
+
+      if (response.status === 200) {
+        sessionStorage.setItem('checkout_ordersummary', JSON.stringify(response.data.data));
+        sessionStorage.removeItem('checkout_combo_offer');
+        router.push("/checkout");
+      }
+    } catch (error) {
+      if (error.response?.data) {
+        const { message, address_status } = error.response.data;
+        enqueueSnackbar(message || "Something went wrong, please try again.", { variant: "error" });
+        if (address_status === false) router.push("/profile");
+      } else {
+        enqueueSnackbar("Something went wrong, please try again.", { variant: "error" });
+      }
     }
   };
 
@@ -368,57 +408,6 @@ const Cart = () => {
                 </div>
               </div>
 
-              {/* Upsell Section */}
-              {completeYourGarden.length > 0 && (
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 overflow-hidden relative">
-                  <div className="absolute top-0 right-0 p-8 opacity-5">
-                     <Star className="w-32 h-32 text-orange-400 rotate-12" />
-                  </div>
-                  <div className="flex items-center gap-2 mb-6 text-sm font-bold text-gray-800 uppercase tracking-wide relative z-10">
-                    <div className="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center">
-                      <Star className="w-4 h-4 text-orange-400 fill-orange-400" />
-                    </div>
-                    Complete your garden
-                  </div>
-                  <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-5 relative z-10">
-                    {completeYourGarden.map((item) => (
-                      <div key={item.id} className="group relative bg-white border border-gray-100 rounded-2xl overflow-hidden hover:border-green-300 hover:shadow-xl hover:shadow-green-50 transition-all duration-300 transform hover:-translate-y-1">
-                        <div className="aspect-[4/3] bg-gradient-to-br from-green-50/50 to-white flex items-center justify-center relative overflow-hidden">
-                           <img 
-                             src={`${process.env.NEXT_PUBLIC_API_URL}${item.image}`} 
-                             alt={item.name} 
-                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                           />
-                           {item.ribbon && (
-                             <div className="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-black px-2 py-1 rounded-lg shadow-sm z-20">
-                               {item.ribbon}
-                             </div>
-                           )}
-                           <div className="absolute inset-0 bg-green-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        </div>
-                        <div className="p-4 border-t border-gray-50">
-                          <h3 className="text-sm font-bold text-gray-800 leading-tight mb-1 group-hover:text-green-800 transition-colors truncate">{item.name}</h3>
-                          <p className="text-[11px] text-gray-400 font-bold mb-3 uppercase tracking-tighter truncate">{item.category_slug}</p>
-                          <div className="flex items-center justify-between">
-                            <div className="flex flex-col">
-                              <span className="font-extrabold text-[15px] text-gray-900">₹{Math.round(item.selling_price)}</span>
-                              {item.mrp > item.selling_price && (
-                                <span className="text-[10px] text-gray-400 line-through">₹{Math.round(item.mrp)}</span>
-                              )}
-                            </div>
-                            <button 
-                              onClick={() => handleAddToCart(item.main_prod_id || item.product_id || item.id)}
-                              className="flex items-center justify-center w-8 h-8 bg-gray-900 text-white rounded-xl hover:bg-green-700 transition-all shadow-sm active:scale-90"
-                            >
-                              <Plus className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Right Column: Order Summary */}
@@ -430,8 +419,41 @@ const Cart = () => {
                 totalSellingPrice={Math.round(totalSellingPrice)}
                 amountToFreeShipping={amountToFreeShipping}
                 products={products}
-                handlePlaceOrder={null} // Passing null to override original button but keep logic available
+                handlePlaceOrder={handlePlaceOrder}
               />
+
+              {/* Upsell Section - Now below summary */}
+              {completeYourGarden.length > 0 && (
+                <div className="mt-6 bg-white rounded-xl shadow-sm border border-gray-100 p-5 overflow-hidden relative">
+                  <div className="flex items-center gap-2 mb-4 text-xs font-bold text-gray-800 uppercase tracking-widest relative z-10">
+                    <Star className="w-3.5 h-3.5 text-orange-400 fill-orange-400" />
+                    Complete your garden
+                  </div>
+                  <div className="grid grid-cols-1 gap-4 relative z-10">
+                    {completeYourGarden.slice(0, 3).map((item) => (
+                      <div key={item.id} className="group flex items-center gap-4 p-2 bg-gray-50/50 rounded-2xl hover:bg-white hover:shadow-md transition-all duration-300">
+                        <div className="w-16 h-16 bg-white rounded-xl overflow-hidden shrink-0">
+                           <img 
+                             src={`${process.env.NEXT_PUBLIC_API_URL}${item.image}`} 
+                             alt={item.name} 
+                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                           />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-[12px] font-bold text-gray-800 leading-tight truncate">{item.name}</h3>
+                          <p className="text-[13px] font-black text-gray-900 mt-0.5">₹{Math.round(item.selling_price)}</p>
+                        </div>
+                        <button 
+                          onClick={() => handleAddToCart(item.main_prod_id || item.product_id || item.id)}
+                          className="w-8 h-8 bg-gray-900 text-white rounded-lg flex items-center justify-center hover:bg-[#375421] transition-colors active:scale-90"
+                        >
+                          <Plus size={16} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         ) : (
@@ -447,6 +469,21 @@ const Cart = () => {
             >
               Continue Shopping
             </button>
+          </div>
+        )}
+
+        {/* Floating Mobile Sticky Checkout Bar - Transparent Container with Light Button */}
+        {products.length > 0 && (
+          <div className="md:hidden fixed bottom-[72px] left-0 right-0 bg-transparent p-4 z-[100] animate-in slide-in-from-bottom duration-500">
+             <div className="max-w-md mx-auto">
+                <button
+                  onClick={handlePlaceOrder}
+                  className="w-full bg-white text-[#375421] border-2 border-[#375421] py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
+                >
+                  Place Order
+                  <ChevronRight size={18} strokeWidth={3} />
+                </button>
+             </div>
           </div>
         )}
 

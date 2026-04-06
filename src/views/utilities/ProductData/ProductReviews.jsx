@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Star } from "lucide-react";
+import { Star, CheckCircle2 } from "lucide-react";
 import { FaStarHalfAlt, FaStar } from "react-icons/fa";
 import WriteAReview from "./WriteAReview";
 
@@ -140,18 +140,30 @@ const RatingsAndReviews = ({ product_Rating, total_Rating, productId, onWriteRev
                       <div className="flex">
                         {renderStars(review.latest_rating || review.product_rating || 0, "w-4 h-4")}
                       </div>
-                      <span className="font-bold text-sm text-gray-900">{review.review_title}</span>
+                      <span className="text-xs text-gray-500">
+                        {review.date_created || new Date(review.created_at).toLocaleDateString()}
+                      </span>
                     </div>
 
-                    <p className="text-xs text-gray-500">
-                      Reviewed in India on {review.date_created || new Date(review.created_at).toLocaleDateString()}
-                    </p>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="inline-block bg-orange-50 text-orange-700 text-[10px] font-bold px-2 py-0.5 rounded border border-orange-100 uppercase tracking-tight">Verified Purchase</span>
+                      {review.recommend === 'true' || review.recommend === true && (
+                        <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest flex items-center gap-1">
+                          <CheckCircle2 size={12} /> Recommends
+                        </span>
+                      )}
+                    </div>
 
-                    <span className="inline-block bg-orange-50 text-orange-700 text-[10px] font-bold px-2 py-0.5 rounded border border-orange-100 uppercase tracking-tight">Verified Purchase</span>
-
-                    <p className="text-gray-800 text-sm leading-relaxed whitespace-pre-line">
-                      {review.product_review}
-                    </p>
+                    <div className="pt-1">
+                      {review.review_title && (
+                        <h4 className="font-bold text-gray-900 text-sm mb-1.5 leading-tight">
+                          {review.review_title}
+                        </h4>
+                      )}
+                      <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
+                        {review.product_review}
+                      </p>
+                    </div>
 
                   </div>
                 ))}

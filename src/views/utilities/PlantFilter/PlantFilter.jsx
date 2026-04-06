@@ -734,10 +734,10 @@ function PlantFilter({
                 </>
             )}
 
-            <div className="w-full overflow-visible py-8 md:py-12">
+            <div className="w-full overflow-visible py-2 md:py-4">
                 <div className="container mx-auto px-4 md:px-8 max-w-full">
                     {/* Mobile Filter Trigger */}
-                    <div className={`flex md:hidden sticky top-[95px] z-40 bg-[#f8f7f0]/95 backdrop-blur-md justify-between items-center px-4 rounded-xl border border-gray-100 mt-4 mb-4 shadow-sm transition-all duration-300 ${isStuck ? 'pt-8 pb-4' : 'p-4'}`}>
+                    <div className={`flex md:hidden sticky top-[115px] z-40 bg-[#f8f7f0]/95 backdrop-blur-md justify-between items-center px-4 rounded-xl border border-gray-100 mt-4 mb-4 shadow-sm transition-all duration-300 ${isStuck ? 'pt-10 pb-4' : 'p-4'}`}>
                         <div className="flex items-center gap-3">
                             <Typography variant="body2" className="text-gray-600 font-bold">
                                 Refine Products
@@ -754,7 +754,7 @@ function PlantFilter({
 
                     <div className="flex flex-col md:flex-row gap-12 lg:gap-16 items-start">
                         {/* Desktop Sidebar (Left) */}
-                        <div className={`hidden md:block w-[240px] lg:w-[280px] xl:w-[320px] flex-shrink-0 sticky top-[115px] z-30 self-start transition-all duration-300 ${isStuck ? 'pt-8' : 'pt-2'}`}>
+                        <div className={`hidden md:block w-[240px] lg:w-[280px] xl:w-[320px] flex-shrink-0 sticky top-[135px] z-30 self-start transition-all duration-300 ${isStuck ? 'pt-4' : 'pt-2'}`}>
                             <div className="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 max-h-[calc(100vh-180px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200">
                                 <FilterSidebar
                                     setResults={setResults}
@@ -798,7 +798,7 @@ function PlantFilter({
                         {/* Main Content (Right) - flex-grow with min-w-0 prevents grid overflow */}
                         <div className="flex-grow min-w-0 max-w-full">
                             {/* Public Flags Interactive Pills - Sticky at the top below header (Hidden on mobile as integrated in filter drawer) */}
-                            <div className={`hidden md:flex sticky top-[95px] md:top-[115px] z-[40] bg-[#f8f7f0]/95 backdrop-blur-md pb-1 md:pb-2 -mx-4 px-4 md:-mx-8 md:px-8 border-b border-gray-100/50 mb-8 mt-0 transition-all duration-300 items-center ${isStuck ? 'pt-6 md:pt-8' : 'pt-1 md:pt-2'}`}>
+                            <div className={`hidden md:flex sticky top-[135px] z-[40] bg-[#f8f7f0]/95 backdrop-blur-md pb-1 md:pb-2 -mx-4 px-4 md:-mx-8 md:px-8 border-b border-gray-100/50 mb-4 mt-0 transition-all duration-300 items-center ${isStuck ? 'pt-4' : 'pt-1 md:pt-2'}`}>
                                 <div className="flex-grow overflow-hidden">
                                     <PublicFlags
                                         selectedFlag={selectedPublicFlag}
