@@ -36,6 +36,15 @@ jobs:
             npm install
             npm run build
 
-            pm2 restart biotechmaali
+            # Force stop and start (not restart) to pick up new build
+            pm2 stop biotechmaali || true
+            pm2 delete biotechmaali || true
+            PORT=3000 pm2 start npm --name "biotechmaali" -- start
+            pm2 save
+
+            # Clear Nginx cache if exists
+            rm -rf /var/cache/nginx/* || true
+            nginx -s reload || true
 
             echo "Deployment Successful!"
+            pm2 status
