@@ -254,7 +254,7 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
         {selectedDelType === 'Pick Up Store' && (
           <div className="mt-8 animate-in fade-in slide-in-from-top-4 duration-500 border-t border-dashed border-gray-100 pt-6">
             <label className="block mb-4 text-[11px] font-bold text-gray-400 uppercase tracking-[0.2em] ml-1">Select pickup store</label>
-            
+
             <div className="relative group">
               <select
                 value={selectedStoreId || ""}
@@ -294,7 +294,7 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
 
         {/* Gift Option */}
         <div className="mt-8 pt-6 border-t border-dashed border-gray-100">
-          <label 
+          <label
             className="flex items-center gap-4 cursor-pointer group"
             onClick={() => setIsGift(!isGift)}
           >
@@ -303,7 +303,7 @@ const DeliveryAddress = ({ setSelectedAddress, selectedAddress, setSelectedOptio
             </div>
             <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-3">
               <span className={`text-sm font-extrabold uppercase tracking-tight transition-colors whitespace-nowrap ${isGift ? 'text-gray-900' : 'text-gray-500'}`}>
-                 This is a gift
+                This is a gift
               </span>
             </div>
           </label>
@@ -597,13 +597,13 @@ const OrderSummaryItem = ({ id, title, Quantity, mrp, sales_price, discount, ima
           <div className="flex-1 min-w-0">
             <h4 className="font-bold text-gray-800 text-sm leading-tight line-clamp-2 mb-1">{title}</h4>
             <p className="text-[10px] text-gray-400 font-medium mb-3">Standard Delivery</p>
-            
+
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="text-xs text-gray-400 line-through">₹{Number(mrp).toFixed(2)}</span>
                 <span className="font-bold text-gray-800">₹{Number(sales_price / qty).toFixed(2)}</span>
               </div>
-              
+
               {isEditing ? (
                 <div className="flex items-center p-1 border border-bio-green bg-green-50 rounded-lg gap-2">
                   <button
@@ -625,7 +625,7 @@ const OrderSummaryItem = ({ id, title, Quantity, mrp, sales_price, discount, ima
                 <span className="text-[11px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">Qty: {qty}</span>
               )}
             </div>
-            
+
             <div className="flex items-center justify-between mt-2 pt-2 border-t border-dotted border-gray-100">
               <div className="flex items-center gap-1">
                 <span className="text-[10px] text-emerald-600 font-bold">SAVED ₹{Number(discount).toFixed(2)}</span>
@@ -863,7 +863,7 @@ const OrderSummary = ({ selectedOption, selectedAddress, data, onUpdateData }) =
 const ApplyCoupon = ({ id, setCoupon, coupon, onRemoveCoupon }) => {
   return (
     <div className="bg-[#f2f8f2] p-4 rounded-lg mt-4 border border-emerald-50">
-      <CouponSection 
+      <CouponSection
         mode="checkout"
         orderId={id}
         appliedCoupon={coupon?.success ? coupon : null}
@@ -1256,8 +1256,8 @@ const CheckoutPage = () => {
             const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
 
             try {
-               setIsVerifying(true);
-               const verifyRes = await axiosInstance.post(
+              setIsVerifying(true);
+              const verifyRes = await axiosInstance.post(
                 `/order/verifyPayment/`,
                 {
                   razorpay_payment_id: paymentResponse.razorpay_payment_id,
@@ -1270,25 +1270,25 @@ const CheckoutPage = () => {
                 },
                 { signal: controller.signal }
               );
-              
+
               clearTimeout(timeoutId);
 
               // More lenient check for success message
-              const isSuccess = verifyRes.status === 200 || verifyRes.status === 201 || 
-                               verifyRes.data.message?.toLowerCase().includes('success') ||
-                               verifyRes.data.status?.toLowerCase() === 'paid';
+              const isSuccess = verifyRes.status === 200 || verifyRes.status === 201 ||
+                verifyRes.data.message?.toLowerCase().includes('success') ||
+                verifyRes.data.status?.toLowerCase() === 'paid';
 
               if (isSuccess) {
                 setVerifySuccess(true);
-                playSuccessSound();
-                trackPurchase({ transaction_id: id, value: razorpayOrder.amount / 100, items: activeItems || [], shipping: activeOrder?.shipping_charge || 0 });
+                // Removed success sound as requested
+                trackPurchase({ transaction_id: id, value: Number(razorpayOrder.amount / 100).toFixed(2), items: activeItems || [], shipping: activeOrder?.shipping_charge || 0 });
                 sessionStorage.removeItem('payment_order_data');
                 sessionStorage.removeItem('checkout_ordersummary');
                 sessionStorage.removeItem('checkout_combo_offer');
                 sessionStorage.removeItem('selected_combo_offer');
                 sessionStorage.setItem('recent_payment_success', 'true');
                 sessionStorage.setItem('recent_order_id', String(id));
-                
+
                 // Wait for the success animation and sound before redirecting
                 setTimeout(() => {
                   window.location.href = `/successpage?order_id=${id}`;
@@ -1298,23 +1298,23 @@ const CheckoutPage = () => {
                 // still direct them to success page as a fallback since Payment WAS captured by Razorpay.
                 console.warn('Backend verification unclear, but payment captured. Redirecting as fallback.');
                 setVerifySuccess(true);
-                playSuccessSound();
+                // Removed success sound as requested
                 setTimeout(() => {
-                   window.location.href = `/successpage?order_id=${id}`;
+                  window.location.href = `/successpage?order_id=${id}`;
                 }, 2000);
               }
             } catch (err) {
               clearTimeout(timeoutId);
               console.error('Verification error or timeout:', err);
-              
+
               // IMPORTANT FAIL-SAFE: 
               // Since the 'handler' was called by Razorpay, the payment WAS successful.
               // If the backend verification fails or times out, we should still show success 
               // and redirect, otherwise the user remains stuck even though their money is gone.
               setVerifySuccess(true);
-              playSuccessSound();
+              // Removed success sound as requested
               setTimeout(() => {
-                 window.location.href = `/successpage?order_id=${id}`;
+                window.location.href = `/successpage?order_id=${id}`;
               }, 2000);
             }
           },
@@ -1355,7 +1355,6 @@ const CheckoutPage = () => {
             razorpayOptions: options,
           });
         } else if (selectedPayMethod === 'Wallet') {
-          // Wallet selected but balance is insufficient — inform user then open Razorpay
           setPartialPaymentPopup({
             message: 'Your Gidan Wallet balance is insufficient. Please complete the full payment via UPI / Card.',
             wallet_debited: '0.00',
@@ -1363,7 +1362,6 @@ const CheckoutPage = () => {
             razorpayOptions: options,
           });
         } else {
-          // Pure Razorpay / UPI selected — open gateway directly, no popup
           const razorpay = new window.Razorpay(options);
           razorpay.open();
           razorpay.on('payment.failed', () => { enqueueSnackbar('Payment failed. Please try again.', { variant: 'error' }); });
@@ -1422,51 +1420,51 @@ const CheckoutPage = () => {
       <div className={`fixed inset-0 z-[2147483647] flex flex-col items-center justify-center p-8 text-center transition-colors duration-700 ${verifySuccess ? 'bg-[#375421]' : 'bg-[#1e2a1a]'}`}>
         {/* PhonePe Style Animated Card */}
         <div className="bg-white rounded-[40px] shadow-2xl p-10 w-full max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500">
-           <div className="relative mb-8">
-              {!verifySuccess ? (
-                <div className="w-24 h-24 border-[6px] border-gray-100 border-t-[#375421] rounded-full animate-spin"></div>
-              ) : (
-                <div className="w-24 h-24 bg-[#375421] rounded-full flex items-center justify-center shadow-lg shadow-green-200 animate-in zoom-in duration-300">
-                   <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M5 13l4 4L19 7" className="animate-in fade-in slide-in-from-left-2 duration-700"></path>
-                   </svg>
-                </div>
-              )}
-           </div>
+          <div className="relative mb-8">
+            {!verifySuccess ? (
+              <div className="w-24 h-24 border-[6px] border-gray-100 border-t-[#375421] rounded-full animate-spin"></div>
+            ) : (
+              <div className="w-24 h-24 bg-[#375421] rounded-full flex items-center justify-center shadow-lg shadow-green-200 animate-in zoom-in duration-300">
+                <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M5 13l4 4L19 7" className="animate-in fade-in slide-in-from-left-2 duration-700"></path>
+                </svg>
+              </div>
+            )}
+          </div>
 
-           <div className="space-y-2 mb-6">
-             <h2 className={`text-2xl font-black uppercase tracking-tight transition-colors ${verifySuccess ? 'text-[#375421]' : 'text-gray-900'}`}>
-               {verifySuccess ? 'Payment Successful' : 'Processing Payment'}
-             </h2>
-             <p className="text-gray-400 font-bold text-[10px] uppercase tracking-widest leading-relaxed">
-               {verifySuccess ? 'Transitioning to your order summary...' : 'Awaiting confirmation from your bank'}
-             </p>
-           </div>
+          <div className="space-y-2 mb-6">
+            <h2 className={`text-2xl font-black uppercase tracking-tight transition-colors ${verifySuccess ? 'text-[#375421]' : 'text-gray-900'}`}>
+              {verifySuccess ? 'Payment Successful' : 'Processing Payment'}
+            </h2>
+            <p className="text-gray-400 font-bold text-[10px] uppercase tracking-widest leading-relaxed">
+              {verifySuccess ? 'Transitioning to your order summary...' : 'Awaiting confirmation from your bank'}
+            </p>
+          </div>
 
-           {verifySuccess && (
-             <div className="w-full bg-site-bg rounded-3xl p-5 border border-gray-50 flex items-center justify-between mb-2">
-                <div className="text-left">
-                  <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Amount Paid</p>
-                  <p className="text-xl font-black text-gray-900">₹{correctedPayableAmount.toFixed(0)}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Transaction ID</p>
-                  <p className="text-xs font-bold text-gray-900">#{id?.slice(-8).toUpperCase() || 'GIDAN-PAY'}</p>
-                </div>
-             </div>
-           )}
+          {verifySuccess && (
+            <div className="w-full bg-site-bg rounded-3xl p-5 border border-gray-50 flex items-center justify-between mb-2">
+              <div className="text-left">
+                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Amount Paid</p>
+                <p className="text-xl font-black text-gray-900">₹{correctedPayableAmount.toFixed(0)}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Transaction ID</p>
+                <p className="text-xs font-bold text-gray-900">#{String(id || '').slice(-8).toUpperCase() || 'GIDAN-PAY'}</p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Security Badges */}
         <div className="mt-12 flex flex-col items-center gap-4 opacity-50">
-           <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
-              <p className="text-white font-black text-[10px] uppercase tracking-[0.2em]">Secure Transaction</p>
-           </div>
-           <div className="flex gap-4">
-              <div className="h-6 w-10 bg-white/10 rounded flex items-center justify-center text-[10px] text-white">PCI</div>
-              <div className="h-6 w-10 bg-white/10 rounded flex items-center justify-center text-[10px] text-white">SSL</div>
-           </div>
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
+            <p className="text-white font-black text-[10px] uppercase tracking-[0.2em]">Secure Transaction</p>
+          </div>
+          <div className="flex gap-4">
+            <div className="h-6 w-10 bg-white/10 rounded flex items-center justify-center text-[10px] text-white">PCI</div>
+            <div className="h-6 w-10 bg-white/10 rounded flex items-center justify-center text-[10px] text-white">SSL</div>
+          </div>
         </div>
       </div>
     );
@@ -1502,7 +1500,7 @@ const CheckoutPage = () => {
             <p className="text-xs text-gray-500 text-center font-bold uppercase tracking-widest mb-6 leading-relaxed">
               {partialPaymentPopup.message}
             </p>
-            
+
             <div className="bg-site-bg rounded-2xl p-5 mb-8 space-y-3 border border-gray-100">
               <div className="flex justify-between items-baseline">
                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Wallet Used</span>
@@ -1533,16 +1531,16 @@ const CheckoutPage = () => {
 
       {/* ── Payment Method Centered Modal ── */}
       {showPaymentStep && (
-        <div 
+        <div
           className="fixed inset-0 flex items-center justify-center p-4 shadow-2xl"
           style={{ zIndex: 99999 }}
         >
-          <div 
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" 
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
             style={{ zIndex: 99998 }}
             onClick={() => setShowPaymentStep(false)}
           />
-          <div 
+          <div
             className="relative bg-white w-[95%] max-w-2xl rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 fade-in duration-200"
             style={{ zIndex: 99999 }}
           >
@@ -1552,7 +1550,7 @@ const CheckoutPage = () => {
                 <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight leading-none">Select Payment Method</h3>
                 <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest mt-1">Secure · 256-bit Encryption</p>
               </div>
-              <button 
+              <button
                 onClick={() => setShowPaymentStep(false)}
                 className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 transition-colors"
               >
@@ -1615,8 +1613,8 @@ const CheckoutPage = () => {
                       key={opt.id}
                       onClick={() => !opt.disabled && setSelectedPayMethod(opt.id)}
                       className={`flex items-center gap-3 p-4 rounded-2xl border-2 transition-all cursor-pointer
-                      ${opt.id === 'cod' ? 'md:col-span-1 opacity-40 cursor-not-allowed border-gray-100' : 
-                        selectedPayMethod === opt.id ? 'border-[#375421] bg-green-50' : 'border-gray-100 bg-white hover:border-gray-300'}`}
+                      ${opt.id === 'cod' ? 'md:col-span-1 opacity-40 cursor-not-allowed border-gray-100' :
+                          selectedPayMethod === opt.id ? 'border-[#375421] bg-green-50' : 'border-gray-100 bg-white hover:border-gray-300'}`}
                     >
                       <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0
                       ${selectedPayMethod === opt.id ? 'border-[#375421]' : 'border-gray-300'}`}>
@@ -1637,13 +1635,13 @@ const CheckoutPage = () => {
                   onClick={handlePayment}
                   disabled={isGstSelected && !gstFromProfile}
                   className={`w-full py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all
-                  ${(isGstSelected && !gstFromProfile) 
-                    ? 'bg-gray-100 text-gray-300 cursor-not-allowed' 
-                    : 'bg-[#375421] text-white hover:shadow-lg active:scale-[0.99]'}`}
+                  ${(isGstSelected && !gstFromProfile)
+                      ? 'bg-gray-100 text-gray-300 cursor-not-allowed'
+                      : 'bg-[#375421] text-white hover:shadow-lg active:scale-[0.99]'}`}
                 >
                   Confirm Order
                 </button>
-                
+
                 <div className="mt-6 pt-6 border-t border-dashed border-gray-100">
                   <div className="grid grid-cols-2 gap-x-6 gap-y-1.5">
                     {[
@@ -1675,13 +1673,13 @@ const CheckoutPage = () => {
 
         {/* ── Mobile Top Nav (Back to Cart / Checkout Title) ── */}
         <div className="md:hidden bg-white/95 backdrop-blur-md border-b px-4 py-4 sticky top-0 z-[1001] flex items-center justify-between shadow-sm">
-          <button 
+          <button
             onClick={() => router.push('/cart')}
             className="flex items-center gap-1.5 text-bio-green font-extrabold text-[11px] uppercase tracking-wider active:scale-95 transition-transform"
           >
             <ChevronLeft size={16} strokeWidth={3} /> Change Items
           </button>
-          
+
           <div className="absolute left-1/2 -translate-x-1/2 text-center">
             <span className="text-[10px] font-black text-gray-800 uppercase tracking-[0.2em]">Checkout</span>
           </div>
@@ -1781,13 +1779,13 @@ const CheckoutPage = () => {
                 <h3 className="text-lg font-black text-gray-800 uppercase tracking-widest mb-2">Secure Checkout</h3>
                 <p className="text-xs text-gray-400 font-bold max-w-xs mx-auto mb-6">Completing your order details... Please select your payment method in the side window.</p>
                 <div className="flex flex-col gap-3">
-                  <button 
+                  <button
                     onClick={() => setShowPaymentStep(true)}
                     className="bg-[#375421] text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest"
                   >
                     Open Payment Window
                   </button>
-                  <button 
+                  <button
                     onClick={() => setShowPaymentStep(false)}
                     className="text-emerald-700 text-[10px] font-black uppercase tracking-widest hover:underline"
                   >
@@ -1925,7 +1923,7 @@ const CheckoutPage = () => {
                       // Support both data structures: data.order.gst_breakdown (from orderSummary) 
                       // and data.order.gst_breakdown.gst_X (from initial summary)
                       const breakdown = data?.order?.gst_breakdown || {};
-                      
+
                       // Check for gst_N pattern in either breakdown root or breakdown.summary
                       const summary = breakdown.summary || breakdown;
                       const gstKeys = Object.keys(summary).filter(k => k.startsWith('gst_'));
@@ -1945,8 +1943,8 @@ const CheckoutPage = () => {
                                 onClick={() => toggleGstExpand(rate)}
                               >
                                 <span className="flex items-center gap-1">
-                                  <span 
-                                    className="text-[8px] transition-transform duration-200" 
+                                  <span
+                                    className="text-[8px] transition-transform duration-200"
                                     style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}
                                   >
                                     ▶
@@ -2123,39 +2121,39 @@ const CheckoutPage = () => {
 
         {/* ── Mobile Fixed Bottom Nav (Place Order) ── */}
         <div className="md:hidden fixed bottom-0 left-0 right-0 z-[60] bg-white border-t shadow-[0_-4px_20px_rgba(0,0,0,0.05)] px-4 py-4 animate-in slide-in-from-bottom duration-500">
-           <div className="flex items-center justify-between gap-4">
-              <div className="flex flex-col">
-                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Amount</span>
-                <span className="text-xl font-black text-gray-900 leading-none">₹{Number(activeOrder?.grand_total ?? 0).toFixed(2)}</span>
-              </div>
-              <div className="flex-1">
-                {!showPaymentStep ? (
-                  <button
-                    disabled={savingOrder}
-                    onClick={handleSaveOrderSummary}
-                    className="w-full bg-[#375421] text-white font-black py-4 rounded-2xl active:scale-[0.96] transition-all text-xs uppercase tracking-[0.15em] flex items-center justify-center gap-2"
-                  >
-                    {savingOrder ? (
-                      <><span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span> Saving…</>
-                    ) : (
-                      <>Place Order</>
-                    )}
-                  </button>
-                ) : (
-                  <button
-                    disabled={processingPayment || !selectedPayMethod || (isGstSelected && !gstFromProfile)}
-                    onClick={handlePayment}
-                    className="w-full bg-[#375421] text-white font-black py-4 rounded-2xl active:scale-[0.96] transition-all text-xs uppercase tracking-[0.15em] flex items-center justify-center gap-2 disabled:opacity-70"
-                  >
-                    {processingPayment ? (
-                      <><span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span> Securely processing...</>
-                    ) : (
-                      <>Pay Now</>
-                    )}
-                  </button>
-                )}
-              </div>
-           </div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col">
+              <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Amount</span>
+              <span className="text-xl font-black text-gray-900 leading-none">₹{Number(activeOrder?.grand_total ?? 0).toFixed(2)}</span>
+            </div>
+            <div className="flex-1">
+              {!showPaymentStep ? (
+                <button
+                  disabled={savingOrder}
+                  onClick={handleSaveOrderSummary}
+                  className="w-full bg-[#375421] text-white font-black py-4 rounded-2xl active:scale-[0.96] transition-all text-xs uppercase tracking-[0.15em] flex items-center justify-center gap-2"
+                >
+                  {savingOrder ? (
+                    <><span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span> Saving…</>
+                  ) : (
+                    <>Place Order</>
+                  )}
+                </button>
+              ) : (
+                <button
+                  disabled={processingPayment || !selectedPayMethod || (isGstSelected && !gstFromProfile)}
+                  onClick={handlePayment}
+                  className="w-full bg-[#375421] text-white font-black py-4 rounded-2xl active:scale-[0.96] transition-all text-xs uppercase tracking-[0.15em] flex items-center justify-center gap-2 disabled:opacity-70"
+                >
+                  {processingPayment ? (
+                    <><span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span> Securely processing...</>
+                  ) : (
+                    <>Pay Now</>
+                  )}
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
