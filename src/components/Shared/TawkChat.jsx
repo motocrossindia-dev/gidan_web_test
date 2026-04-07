@@ -8,7 +8,7 @@ const TawkChat = () => {
   const pathname = usePathname();
 
   // Pages where Tawk.to should be hidden
-  const hiddenPages = ['/checkout', '/cart', '/payment', '/profile', '/successpage', '/order-success', '/thankyou'];
+  const hiddenPages = ['/payment', '/successpage', '/order-success', '/thankyou'];
   const shouldHide = hiddenPages.some(page => pathname.startsWith(page));
 
   useEffect(() => {
