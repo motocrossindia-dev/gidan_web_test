@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Nunito_Sans } from "next/font/google";
-import { usePathname } from "next/navigation";
 import "./globals.css";
 import Script from "next/script";
 import { Providers } from "./providers";
@@ -14,6 +13,7 @@ import MobileBottomNav from "@/components/Shared/MobileBottomNav";
 import TawkChat from "@/components/Shared/TawkChat";
 import CartWishlistSidebar from "@/components/Shared/CartWishlistSidebar";
 import TopLoader from "@/components/Shared/TopLoader";
+import HeaderSpacer from "@/components/Shared/HeaderSpacer";
 import React, { Suspense } from "react";
 
 import Verify from "@/Services/Services/Verify";
@@ -183,17 +183,5 @@ export default function RootLayout({
         </Providers>
       </body>
     </html>
-  );
-}
-
-function HeaderSpacer() {
-  const pathname = usePathname();
-  const isCheckout = pathname === '/checkout' || pathname === '/checkout/';
-  
-  return (
-    <div 
-      className={`${isCheckout ? 'h-[45px] md:h-[80px]' : 'h-[60px] md:h-[130px]'} w-full transition-all duration-300`} 
-      aria-hidden="true" 
-    />
   );
 }
