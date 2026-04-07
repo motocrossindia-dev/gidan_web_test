@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../../redux/User/verificationSlice";
 import axiosInstance from "../../../Axios/axiosInstance";
 import { useSnackbar } from "notistack";
-import { Tag, Sparkles, Lock, ChevronRight, ShieldCheck, Truck, RefreshCcw, Smartphone, CreditCard, X, Loader2 } from "lucide-react";
+import { Tag, Sparkles, Lock, ChevronRight, ShieldCheck, Truck, RefreshCcw, Smartphone, CreditCard, X, Loader2, Plus } from "lucide-react";
 import CouponSection from "../../../components/Shared/CouponSection";
 
 const CartSummary = ({
