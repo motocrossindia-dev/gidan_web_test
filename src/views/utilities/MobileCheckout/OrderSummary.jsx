@@ -120,8 +120,8 @@ const OrderSummary = () => {
 
   return (
 
-    <><div className="max-w-md mx-auto bg-white h-screen flex flex-col overflow-hidden">
-      <div className="flex-1 overflow-y-auto p-4 pb-20 scrollbar-hide">
+    <><div className="max-w-md mx-auto bg-white min-h-screen">
+      <div className="p-4 pb-24">
         <ProgressBar currentStep="order" />
 
         {/* Delivery Address */}
@@ -142,8 +142,8 @@ const OrderSummary = () => {
           </div>
         </div>
 
-        {/* Product List - Scrollable Area */}
-        <div className="space-y-4 mb-6 max-h-[40vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-200">
+        {/* Product List */}
+        <div className="space-y-4 mb-6">
           {orderItem.map((item, idx) => (
             <div key={item.id ?? idx} className="flex items-center space-x-4">
               <img name=" "
