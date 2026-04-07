@@ -8,29 +8,41 @@ const TawkChat = () => {
   const pathname = usePathname();
 
   // Pages where Tawk.to should be hidden
-  const hiddenPages = ['/payment', '/successpage', '/order-success', '/thankyou'];
+  const hiddenPages = ['/checkout', '/cart', '/payment', '/profile', '/successpage', '/order-success', '/thankyou'];
   const shouldHide = hiddenPages.some(page => pathname.startsWith(page));
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.Tawk_API) {
-      if (shouldHide) {
-        try {
-          if (typeof window.Tawk_API.hideWidget === 'function') {
-            window.Tawk_API.hideWidget();
+    const handleWidget = () => {
+      if (typeof window !== 'undefined' && window.Tawk_API) {
+        if (shouldHide) {
+          try {
+            if (typeof window.Tawk_API.hideWidget === 'function') {
+              window.Tawk_API.hideWidget();
+            }
+          } catch (e) {
+            console.error("Error hiding Tawk widget", e);
           }
-        } catch (e) {
-          console.error("Error hiding Tawk widget", e);
-        }
-      } else {
-        try {
-          if (typeof window.Tawk_API.showWidget === 'function') {
-            window.Tawk_API.showWidget();
+        } else {
+          try {
+            if (typeof window.Tawk_API.showWidget === 'function') {
+              window.Tawk_API.showWidget();
+            }
+          } catch (e) {
+            // Script not loaded yet
           }
-        } catch (e) {
-          // Script not loaded yet
         }
       }
+    };
+
+    // Run immediately if API exists
+    handleWidget();
+
+    // Also set as onLoad callback in case it loads later
+    if (typeof window !== 'undefined') {
+        window.Tawk_API = window.Tawk_API || {};
+        window.Tawk_API.onLoad = handleWidget;
     }
+
   }, [shouldHide, pathname]);
 
   return (
