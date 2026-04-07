@@ -15,7 +15,6 @@ import TawkChat from "@/components/Shared/TawkChat";
 import CartWishlistSidebar from "@/components/Shared/CartWishlistSidebar";
 import TopLoader from "@/components/Shared/TopLoader";
 import React, { Suspense } from "react";
-import { usePathname } from "next/navigation";
 
 import Verify from "@/Services/Services/Verify";
 
@@ -100,13 +99,14 @@ export const viewport: Viewport = {
   themeColor: "#000000",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
-  const isCheckoutPage = pathname === '/checkout' || pathname === '/checkout/';
+  const headerList = await headers();
+  const pathname = headerList.get("x-pathname") || "";
+  const isCheckoutPage = pathname === "/checkout" || pathname === "/checkout/";
 
   return (
     <html lang="en" suppressHydrationWarning>
