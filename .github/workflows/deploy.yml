@@ -1,68 +1,40 @@
-name: Deploy Gidan Web
+name: Deploy to VPS
 
 on:
   push:
     branches:
       - main
-      - dev_mohan
-
-env:
-  PROJECT_NAME: "gidan-app"
-  SERVER_DIR: "/var/www/html/gidan-app"
-  PM2_APP_NAME: "biotechmaali"
+      - next-krish
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to VPS
-        uses: appleboy/ssh-action@v1.0.3
-        env:
-          BRANCH_NAME: ${{ github.ref_name }}
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script_stop: true
-          envs: BRANCH_NAME
           script: |
-            echo "🚀 Starting Deployment for ${{ env.PROJECT_NAME }}..."
+            echo "Starting Deployment..."
 
-            # Go to project folder
-            cd "${{ env.SERVER_DIR }}" || exit 1
+            cd /var/www/gidan-app
 
-            # Git Config
-            git config --global --add safe.directory ${{ env.SERVER_DIR }}
+            # Detect branch automatically
+            BRANCH=${{ github.ref_name }}
 
-            # Pull Code
-            echo "📥 Pulling latest code..."
-            git fetch origin
-            git reset --hard origin/$BRANCH_NAME
+            echo "Deploying branch: $BRANCH"
 
-            # Clean Build
-            rm -rf .next node_modules
+            git pull https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/motocrossindia-dev/Gidan_Web_Nextjs.git $BRANCH
 
-            # Install Dependencies
-            echo "📦 Installing dependencies..."
             npm install
-
-            # Build
-            echo "🔨 Building Next.js..."
             npm run build
 
-            # PM2 — Reload or Start
-            if pm2 describe ${{ env.PM2_APP_NAME }} > /dev/null 2>&1; then
-                echo "✅ App '${{ env.PM2_APP_NAME }}' found. Reloading..."
-                pm2 reload ${{ env.PM2_APP_NAME }}
-            else
-                echo "⚠️ App '${{ env.PM2_APP_NAME }}' NOT found. Starting fresh..."
-                PORT=3002 pm2 start npm --name "${{ env.PM2_APP_NAME }}" -- start
-            fi
+            pm2 restart biotechmaali
 
-            pm2 save
-
-            echo "✅ Deployment Successful!"
-            pm2 status
+            echo "Deployment Successful!"
