@@ -117,7 +117,7 @@ const NavBar = () => {
   if (isCheckoutPage) {
     return (
       <div className="relative z-[1000]">
-        <nav className="w-full px-3 md:px-12 py-2 md:py-4 bg-white font-sans border-b border-white shadow-sm">
+        <nav className="w-full px-3 md:px-12 py-2 md:py-4 bg-white font-sans border-none">
           <div className="max-w-[1920px] mx-auto grid grid-cols-3 items-center">
             
             {/* LEFT: Logo */}
