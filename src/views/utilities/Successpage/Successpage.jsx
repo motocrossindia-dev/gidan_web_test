@@ -35,7 +35,7 @@ import { FaInstagram, FaWhatsapp, FaEnvelope } from "react-icons/fa";
 import axiosInstance from '../../../Axios/axiosInstance';
 import { enqueueSnackbar } from 'notistack';
 import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
-import { getProductUrl } from '../../../utils/urlHelper';
+import { getProductUrl, processImageUrl } from '../../../utils/urlHelper';
 
 
 
@@ -482,7 +482,7 @@ const SuccesspageContent = () => {
                               className="w-full sm:w-28 h-28 bg-[#f8fbf6] rounded-3xl overflow-hidden border border-gray-50 flex items-center justify-center relative group flex-shrink-0 cursor-pointer"
                             >
                               <img 
-                                src={`${axiosInstance.defaults.baseURL}${item.image}`} 
+                                src={processImageUrl(item.image)} 
                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
                                 alt="" 
                               />
@@ -828,7 +828,7 @@ const SuccesspageContent = () => {
                      <div key={idx} className="p-8 flex gap-6 items-start hover:bg-gray-50/30 transition-colors">
                        <div className="w-14 h-14 bg-[#f4f7f1] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm">
                           <img 
-                            src={`${axiosInstance.defaults.baseURL}${item.image}`} 
+                            src={processImageUrl(item.image)} 
                             className="w-10 h-10 object-contain" 
                             alt="" 
                           />

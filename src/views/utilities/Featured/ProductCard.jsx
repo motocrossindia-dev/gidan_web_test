@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
 
 import { Paper, Typography } from "@mui/material";
+import { processImageUrl } from "../../../utils/urlHelper";
 
 const ProductCard = ({ name, price, mrp, imageUrl, rating, product }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -49,7 +50,7 @@ const ProductCard = ({ name, price, mrp, imageUrl, rating, product }) => {
             <img name=" "   
               className={`w-40 h-43 sm:w-48 sm:h-53 lg:h-[260px] object-cover mt-4 lg:w-[226px] object-contain transition-transform duration-300 rounded-[2rem] 
               ${isImageHovered ? "scale-105" : "scale-100"}`}
-              src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
+              src={processImageUrl(imageUrl)}
               loading="lazy"
               alt={name}
             />
@@ -97,7 +98,7 @@ const ProductCard = ({ name, price, mrp, imageUrl, rating, product }) => {
           <div className="relative w-full flex flex-col items-center p-2">
             <img name=" "   
               className="w-40 h-24 sm:w-40 sm:h-36 object-contain rounded-lg transition-transform duration-300 mt-6"
-              src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
+              src={processImageUrl(product.image)}
               loading="lazy"
               alt={product.name}
             />

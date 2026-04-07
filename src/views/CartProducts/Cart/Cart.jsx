@@ -14,6 +14,7 @@ import { trackViewCart, trackRemoveFromCart } from "../../../utils/ga4Ecommerce"
 import emptyCartImg from "../../../Assets/emptycart.webp";
 import { Trash2, ChevronRight, Info, ShieldCheck, RefreshCcw, Truck, Leaf, Gift, Star, Plus, ShoppingCart, MapPin, CreditCard, Check } from "lucide-react";
 import RecentlyViewedProducts from "../../../components/Shared/RecentlyViewedProducts";
+import { processImageUrl, getProductUrl } from "../../../utils/urlHelper";
 
 const Cart = () => {
   const accessToken = useSelector(selectAccessToken);
@@ -432,7 +433,7 @@ const Cart = () => {
                           className="aspect-square bg-white rounded-[1.5rem] overflow-hidden mb-4 relative cursor-pointer"
                         >
                           <img 
-                            src={`${process.env.NEXT_PUBLIC_API_URL}${item.image}`} 
+                            src={processImageUrl(item.image)} 
                             alt={item.name} 
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                           />
