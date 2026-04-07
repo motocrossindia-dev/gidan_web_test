@@ -46,11 +46,10 @@ const CouponSection = ({
                 setCoupons(fetchedCoupons);
             }
         } catch (error) {
-            // Silently handle 404s/Auth errors for coupons to keep the console clean
             if (error.response?.status !== 404 && error.response?.status !== 401 && error.response?.status !== 403) {
                 console.warn("Coupon fetch info:", error.message);
             }
-            setCoupons([]); // Clear to show empty state
+            setCoupons([]);
         } finally {
             setIsFetching(false);
         }
@@ -73,13 +72,11 @@ const CouponSection = ({
         try {
             let response;
             if (mode === 'checkout') {
-                // Checkout mode: Applies directly to order
                 response = await axiosInstance.post(`/order/applyCoupon/`, {
                     selected_coupon_id: targetId,
                     order_id: orderId
                 });
             } else {
-                // Cart or PDP mode: Preview functionality
                 const codeToApply = targetCode || coupons.find(c => c.id === targetId)?.code;
 
                 const payload = {
@@ -170,15 +167,15 @@ const CouponSection = ({
                                 value={manualCode}
                                 onChange={(e) => setManualCode(e.target.value.toUpperCase())}
                                 onKeyDown={(e) => e.key === 'Enter' && handleApplyCoupon(manualCode)}
-                                className="w-full pl-4 pr-4 py-3.5 bg-white border-2 border-dashed border-[#375421]/20 rounded-2xl text-sm font-black text-gray-900 focus:bg-white focus:border-[#375421] outline-none transition-all placeholder:text-gray-300 uppercase tracking-widest"
+                                className="w-full pl-4 pr-4 py-2.5 bg-white border-2 border-dashed border-[#375421]/20 rounded-xl text-xs font-black text-gray-900 focus:bg-white focus:border-[#375421] outline-none transition-all placeholder:text-gray-300 uppercase tracking-widest"
                             />
                         </div>
                         <button
                             onClick={() => handleApplyCoupon(manualCode)}
                             disabled={isApplying || !manualCode}
-                            className="px-8 py-3.5 bg-gray-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-[#375421] transition-all shadow-md active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-w-[120px]"
+                            className="px-6 py-2.5 bg-gray-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-[#375421] transition-all shadow-md active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-w-[100px]"
                         >
-                            {isApplying ? <Loader2 className="w-4 h-4 animate-spin" /> : "Apply"}
+                            {isApplying ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : "Apply"}
                         </button>
                     </div>
 
