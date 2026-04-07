@@ -117,7 +117,7 @@ const NavBar = () => {
   if (isCheckoutPage) {
     return (
       <div className="relative z-[1000]">
-        <nav className="w-full px-4 md:px-12 py-3 md:py-4 bg-white font-sans border-b border-white shadow-sm">
+        <nav className="w-full px-4 md:px-12 py-3 md:py-4 bg-white font-sans border-b border-gray-100 shadow-sm">
           <div className="max-w-[1920px] mx-auto grid grid-cols-3 items-center">
             
             {/* LEFT: Logo */}
@@ -128,30 +128,30 @@ const NavBar = () => {
                   alt="Gidan Logo"
                   width={140}
                   height={70}
-                  className="h-9 md:h-11 w-auto object-contain"
+                  className="h-8 md:h-11 w-auto object-contain"
                   priority
                 />
               </Link>
             </div>
-
+ 
             {/* CENTER: Checkout Title */}
             <div className="flex justify-center text-center">
-              <h1 className="text-[15px] md:text-xl font-sans font-semibold text-[#173113] tracking-[0.02em] uppercase whitespace-nowrap">
-                Secure <span className="text-[#173113]">Checkout</span>
+              <h1 className="text-[12px] md:text-xl font-bold text-[#173113] tracking-[0.05em] uppercase whitespace-nowrap">
+                Secure <span className="hidden sm:inline">Checkout</span><span className="sm:hidden">Pay</span>
               </h1>
             </div>
-
-            {/* RIGHT: Back to Cart Action (Desktop Only) */}
-            <div className="hidden md:flex justify-end">
+ 
+            {/* RIGHT: Back to Cart Action */}
+            <div className="flex justify-end">
               <Link 
                 href="/cart" 
-                className="group flex items-center gap-1.5 md:gap-2 text-[12px] md:text-base text-slate-500 hover:text-[#173113] transition-all font-medium"
+                className="group flex items-center gap-1.5 md:gap-2 text-[10px] md:text-base text-gray-500 hover:text-[#375421] transition-all font-bold uppercase tracking-wider"
               >
-                <span className="hidden md:inline group-hover:-translate-x-1 transition-transform">←</span>
+                <span className="group-hover:-translate-x-1 transition-transform">←</span>
                 <span>Back<span className="hidden md:inline"> to Cart</span></span>
               </Link>
             </div>
-
+ 
           </div>
         </nav>
       </div>
