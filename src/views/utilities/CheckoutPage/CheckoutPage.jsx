@@ -1811,7 +1811,7 @@ const CheckoutPage = () => {
                   <p className="text-[10px] uppercase font-bold text-gray-400 tracking-widest mb-2">
                     Items ({data?.order_items?.length ?? 0})
                   </p>
-                  <div className="space-y-4">
+                  <div className={`space-y-4 ${activeItems?.length > 5 ? 'max-h-[360px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-200' : ''}`}>
                     {activeItems?.map((item) => {
                       const qty = Number(item.quantity) || 1;
                       const lineTotal = Number(item.selling_price) || 0;

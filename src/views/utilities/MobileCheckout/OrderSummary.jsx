@@ -142,8 +142,8 @@ const OrderSummary = () => {
           </div>
         </div>
 
-        {/* Product List */}
-        <div className="space-y-4 mb-6">
+        {/* Product List - Conditional Scroll if items > 5 */}
+        <div className={`space-y-4 mb-6 pr-2 scrollbar-thin scrollbar-thumb-gray-200 ${orderItem.length > 5 ? 'max-h-[320px] overflow-y-auto' : ''}`}>
           {orderItem.map((item, idx) => (
             <div key={item.id ?? idx} className="flex items-center space-x-4">
               <img name=" "
