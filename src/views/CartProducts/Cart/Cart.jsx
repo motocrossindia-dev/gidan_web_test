@@ -408,6 +408,57 @@ const Cart = () => {
                 </div>
               </div>
 
+              {/* Complete Your Garden - Moved here from right column */}
+              {completeYourGarden.length > 0 && (
+                <div className="mt-8 bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+                  <div className="flex items-center justify-between mb-8">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
+                        <Star className="w-5 h-5 text-orange-400 fill-orange-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-black text-gray-900 uppercase tracking-tight">Complete your garden</h3>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Handpicked for your collection</p>
+                      </div>
+                    </div>
+                    <span className="px-3 py-1 bg-gray-50 text-[10px] font-black text-gray-400 rounded-lg uppercase tracking-widest border border-gray-100">Top Picks</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {completeYourGarden.slice(0, 3).map((item) => (
+                      <div key={item.id} className="group bg-gray-50/30 rounded-[2rem] p-4 border border-transparent hover:border-green-100 hover:bg-white hover:shadow-xl hover:shadow-green-900/5 transition-all duration-500">
+                        <div 
+                          onClick={() => router.push(getProductUrl(item))}
+                          className="aspect-square bg-white rounded-[1.5rem] overflow-hidden mb-4 relative cursor-pointer"
+                        >
+                          <img 
+                            src={`${process.env.NEXT_PUBLIC_API_URL}${item.image}`} 
+                            alt={item.name} 
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                          />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors" />
+                        </div>
+                        
+                        <div className="space-y-1 mb-4 px-1">
+                          <h4 className="text-[13px] font-black text-gray-900 uppercase truncate leading-tight group-hover:text-[#375421] transition-colors">{item.name}</h4>
+                          <p className="text-[11px] font-bold text-gray-400 uppercase tracking-tight">Professional Selection</p>
+                        </div>
+
+                        <div className="flex items-center justify-between px-1">
+                          <span className="text-lg font-black text-gray-900">₹{Math.round(item.selling_price)}</span>
+                          <button 
+                            onClick={() => handleAddToCart(item.main_prod_id || item.product_id || item.id)}
+                            className="w-10 h-10 bg-white border border-gray-100 text-[#375421] rounded-xl flex items-center justify-center hover:bg-[#375421] hover:text-white transition-all shadow-sm active:scale-95 group/btn"
+                          >
+                            <Plus size={18} strokeWidth={3} className="group-hover/btn:rotate-90 transition-transform duration-300" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
             </div>
 
             {/* Right Column: Order Summary */}
@@ -422,38 +473,6 @@ const Cart = () => {
                 handlePlaceOrder={handlePlaceOrder}
               />
 
-              {/* Upsell Section - Now below summary */}
-              {completeYourGarden.length > 0 && (
-                <div className="mt-6 bg-white rounded-xl shadow-sm border border-gray-100 p-5 overflow-hidden relative">
-                  <div className="flex items-center gap-2 mb-4 text-xs font-bold text-gray-800 uppercase tracking-widest relative z-10">
-                    <Star className="w-3.5 h-3.5 text-orange-400 fill-orange-400" />
-                    Complete your garden
-                  </div>
-                  <div className="grid grid-cols-1 gap-4 relative z-10">
-                    {completeYourGarden.slice(0, 3).map((item) => (
-                      <div key={item.id} className="group flex items-center gap-4 p-2 bg-gray-50/50 rounded-2xl hover:bg-white hover:shadow-md transition-all duration-300">
-                        <div className="w-16 h-16 bg-white rounded-xl overflow-hidden shrink-0">
-                           <img 
-                             src={`${process.env.NEXT_PUBLIC_API_URL}${item.image}`} 
-                             alt={item.name} 
-                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                           />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-[12px] font-bold text-gray-800 leading-tight truncate">{item.name}</h3>
-                          <p className="text-[13px] font-black text-gray-900 mt-0.5">₹{Math.round(item.selling_price)}</p>
-                        </div>
-                        <button 
-                          onClick={() => handleAddToCart(item.main_prod_id || item.product_id || item.id)}
-                          className="w-8 h-8 bg-gray-900 text-white rounded-lg flex items-center justify-center hover:bg-[#375421] transition-colors active:scale-90"
-                        >
-                          <Plus size={16} />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         ) : (
