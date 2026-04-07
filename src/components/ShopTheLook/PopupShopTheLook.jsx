@@ -1,9 +1,9 @@
 'use client';
 
 
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
+import { X, ShoppingCart, ArrowRight } from "lucide-react";
 import { selectAccessToken } from "../../redux/User/verificationSlice";
 import { enqueueSnackbar } from "notistack";
 import { isMobile } from "react-device-detect";
@@ -151,79 +151,94 @@ const PopupShopTheLook = ({ onClose }) => {
   };
 
   return (
-    <div
-      className="fixed inset-0 bg-[rgba(0,0,0,0.5)] flex justify-center items-center z-50 font-sans"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white relative w-[90%] max-w-lg md:h-[85%] max-h-[85vh] overflow-hidden rounded-lg"
-        onClick={(e) => e.stopPropagation()}
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-[100] font-sans p-4"
+        onClick={onClose}
       >
-        <button
-          onClick={onClose}
-          className="absolute top-2 right-2 text-gray-500 hover:text-black"
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.9, y: 20 }}
+          className="bg-[#f8f7f0] relative w-full max-w-[480px] h-fit max-h-[90vh] overflow-hidden rounded-3xl shadow-2xl flex flex-col"
+          onClick={(e) => e.stopPropagation()}
         >
-          ✕
-        </button>
-        <div className="bg-bio-green text-white text-center py-3 sticky top-0 z-10">
-          <h2 className="text-lg md:text-2xl font-bold">Shop The Look</h2>
-          <p className="text-xs md:text-sm">Add the shop look to your cart</p>
-        </div>
-        <Box
-          className="overflow-y-auto flex-1 max-h-[calc(100%-4rem)] shadow-lg"
-          sx={{
-            boxShadow: 3,
-          }}
-        >
-          <div className="p-4">
-            {productss.map((product) => (
-              <div
-                key={product.id}
-                className="flex items-center p-2 md:p-4 border-b last:border-b-0 relative"
-              >
-                <img name=" "
-                  src={`${process.env.NEXT_PUBLIC_API_URL}${product?.image}`}
-                  alt={product?.name}
-                  className="w-16 h-16 md:w-20 md:h-20 rounded-lg mr-3 md:mr-4"
-                />
-                <div className="flex-1">
-                  <h3 className="text-sm md:text-lg font-semibold">
-                    {product?.name}
-                  </h3>
-                  <p className="text-xs md:text-sm text-gray-500">
-                    {product?.size}
-                  </p>
-                  <div className="flex items-center">
-                    <span className="text-[#375421] font-bold text-sm md:text-lg mr-2">
-                      {product?.selling_price}
-                    </span>
-                    <span className="text-gray-400 line-through text-xs md:text-sm">
-                      {product?.mrp}
-                    </span>
-                  </div>
+          {/* Header */}
+          <div className="bg-[#375421] text-white p-6 pb-8 text-center relative overflow-hidden">
+            {/* Background pattern/accent */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+            
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 p-2 rounded-full transition-all z-20"
+            >
+              <X size={20} />
+            </button>
 
-                </div>
-
-              </div>
-            ))}
+            <h2 className="text-2xl md:text-3xl font-sans font-black tracking-tight mb-1 relative z-10">Shop The Look</h2>
+            <p className="text-white/80 text-sm font-medium tracking-wide uppercase relative z-10">Add the full look to your garden</p>
           </div>
-        </Box>
-        <div className="sticky bottom-0 z-10 bg-white p-4 flex justify-center gap-2">
-          <button
-            className="w-1/2 py-2 bg-bio-green text-white font-bold text-center rounded-lg hover:bg-[#2d451b] hover:text-white"
-            onClick={handleAddToCart}
-          >
-            Add to Cart
-          </button>
-          <button
-            className="w-1/2 py-2 bg-lime-500 text-white font-bold text-center rounded-lg hover:bg-lime-600"
-            onClick={handlePlaceOrder}
-          >
-            Place Order
-          </button>
-        </div>
-      </div>
-    </div>
+
+          {/* Product List */}
+          <div className="flex-1 overflow-y-auto px-6 py-4 scrollbar-hide -mt-4 bg-[#f8f7f0] rounded-t-3xl relative z-10">
+            <div className="space-y-3">
+              {productss.map((product) => (
+                <div
+                  key={product.id}
+                  className="flex items-center p-3 bg-white rounded-2xl shadow-sm border border-gray-100/50 hover:shadow-md transition-shadow group"
+                >
+                  <div className="w-20 h-20 rounded-xl overflow-hidden bg-gray-50 flex-shrink-0">
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_API_URL}${product?.image}`}
+                      alt={product?.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                  </div>
+                  
+                  <div className="flex-1 ml-4 pr-2">
+                    <h3 className="text-[15px] font-bold text-[#173113] leading-tight mb-0.5 line-clamp-1">
+                      {product?.name}
+                    </h3>
+                    <p className="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider mb-1">
+                      {product?.size || "Standard Size"}
+                    </p>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-[#375421] font-black text-base">
+                        ₹{product?.selling_price}
+                      </span>
+                      {product?.mrp > product?.selling_price && (
+                        <span className="text-gray-300 line-through text-xs font-bold">
+                          ₹{product?.mrp}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="p-6 pt-2 bg-[#f8f7f0] flex flex-col gap-3">
+            <button
+              className="w-full py-4 bg-[#375421] text-white font-sans font-black text-sm uppercase tracking-widest rounded-2xl hover:bg-[#2d451b] transition-all flex items-center justify-center gap-2 shadow-lg shadow-green-900/10 active:scale-[0.98]"
+              onClick={handlePlaceOrder}
+            >
+              Buy the full look <ArrowRight size={16} />
+            </button>
+            <button
+              className="w-full py-4 text-[#375421] font-sans font-black text-sm uppercase tracking-widest rounded-2xl border-2 border-[#375421]/10 hover:bg-[#375421]/5 transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
+              onClick={handleAddToCart}
+            >
+              Add set to cart <ShoppingCart size={16} />
+            </button>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
