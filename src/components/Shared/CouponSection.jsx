@@ -35,22 +35,34 @@ const CouponSection = ({
     const fetchCoupons = async () => {
         setIsFetching(true);
         try {
-            // Use order-specific available coupons if ID is present, otherwise general list
-            const endpoint = orderId 
-                ? `/order/available-coupons/?order_id=${orderId}` 
-                : `/order/available-coupons/`;
+            // Updated: Try the most likely camelCase endpoint, with a fallback logic
+            let endpoint = orderId 
+                ? `/order/availableCoupons/?order_id=${orderId}` 
+                : `/order/availableCoupons/`;
             
-            const response = await axiosInstance.get(endpoint);
+            let response;
+            try {
+                response = await axiosInstance.get(endpoint);
+            } catch (err) {
+                if (err.response?.status === 404) {
+                    // Fallback to simpler plural 'coupons' endpoint if camelCase fails
+                    endpoint = orderId ? `/order/coupons/?order_id=${orderId}` : `/order/coupons/`;
+                    response = await axiosInstance.get(endpoint);
+                } else {
+                    throw err;
+                }
+            }
 
             if (response.status === 200) {
                 const fetchedCoupons = response.data.coupons || response.data.data?.coupons || [];
                 setCoupons(fetchedCoupons);
             }
         } catch (error) {
-            // 401/403 is expected for guest users — silently ignore
-            if (error.response?.status !== 401 && error.response?.status !== 403) {
-                console.error("Failed to fetch coupons:", error);
+            // Silently handle 404s/Auth errors for coupons to keep the console clean
+            if (error.response?.status !== 404 && error.response?.status !== 401 && error.response?.status !== 403) {
+                console.warn("Coupon fetch info:", error.message);
             }
+            setCoupons([]); // Clear to show empty state
         } finally {
             setIsFetching(false);
         }

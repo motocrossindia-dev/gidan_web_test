@@ -1281,17 +1281,17 @@ const CheckoutPage = () => {
               if (isSuccess) {
                 setVerifySuccess(true);
                 playSuccessSound();
-                trackPurchase({ transaction_id: orderId, value: razorpayOrder.amount / 100, items: activeItems || [], shipping: activeOrder?.shipping_charge || 0 });
+                trackPurchase({ transaction_id: id, value: razorpayOrder.amount / 100, items: activeItems || [], shipping: activeOrder?.shipping_charge || 0 });
                 sessionStorage.removeItem('payment_order_data');
                 sessionStorage.removeItem('checkout_ordersummary');
                 sessionStorage.removeItem('checkout_combo_offer');
                 sessionStorage.removeItem('selected_combo_offer');
                 sessionStorage.setItem('recent_payment_success', 'true');
-                sessionStorage.setItem('recent_order_id', String(orderId));
+                sessionStorage.setItem('recent_order_id', String(id));
                 
                 // Wait for the success animation and sound before redirecting
                 setTimeout(() => {
-                  window.location.href = `/successpage?order_id=${orderId}`;
+                  window.location.href = `/successpage?order_id=${id}`;
                 }, 2000);
               } else {
                 // If it wasn't a standard success but handled at Razropay, 
@@ -1300,7 +1300,7 @@ const CheckoutPage = () => {
                 setVerifySuccess(true);
                 playSuccessSound();
                 setTimeout(() => {
-                   window.location.href = `/successpage?order_id=${orderId}`;
+                   window.location.href = `/successpage?order_id=${id}`;
                 }, 2000);
               }
             } catch (err) {
@@ -1314,7 +1314,7 @@ const CheckoutPage = () => {
               setVerifySuccess(true);
               playSuccessSound();
               setTimeout(() => {
-                 window.location.href = `/successpage?order_id=${orderId}`;
+                 window.location.href = `/successpage?order_id=${id}`;
               }, 2000);
             }
           },
