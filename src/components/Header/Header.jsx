@@ -13,7 +13,6 @@ const Header = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isActive, setIsActive] = useState(false);
-  if (isCheckoutPage) return null;
 
   useEffect(() => {
     const fetchAnnouncements = async () => {
@@ -39,6 +38,7 @@ const Header = () => {
     }
   }, [isActive, announcements]);
 
+  if (isCheckoutPage) return null;
 
   return (
     <header className="bg-[#375421] font-poppins relative overflow-hidden min-h-[28px] md:h-auto flex items-center py-1 md:py-2 w-full">
