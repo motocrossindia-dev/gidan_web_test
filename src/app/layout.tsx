@@ -170,8 +170,8 @@ export default function RootLayout({
             <NavBar />
           </header>
 
-          {/* Spacer for fixed header (actual heights: Mobile ~75px, Desktop ~130px) */}
-          <div className="h-[75px] md:h-[130px] w-full" aria-hidden="true" />
+          {/* Spacer for fixed header (actual heights: Mobile ~60px, Desktop ~130px) */}
+          <div className="h-[60px] md:h-[130px] w-full" aria-hidden="true" />
 
           <div className="landing-page-layout w-full min-h-screen flex flex-col relative min-w-0">
             <main className="main-content w-full min-w-0">
