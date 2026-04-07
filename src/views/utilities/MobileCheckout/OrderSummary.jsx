@@ -119,215 +119,215 @@ const OrderSummary = () => {
   }
 
   return (
-    <>
-      <div className="max-w-md mx-auto bg-white h-screen flex flex-col overflow-hidden">
-      <div className="p-4 flex flex-col h-full">
+
+    <><div className="max-w-md mx-auto bg-white h-screen flex flex-col overflow-hidden">
+      <div className="flex-1 overflow-y-auto p-4 pb-20 scrollbar-hide">
         <ProgressBar currentStep="order" />
 
-        <div className="flex-1 overflow-y-auto pr-1 -mr-1 scrollbar-hide">
-          {/* Delivery Address */}
-          <div className="border-b pb-4 mb-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold">Order Summary</h2>
-              <button
-                onClick={() => router.push('/address')}
-                className="text-sm text-[#375421]"
-              >
-                Change
-              </button>
-            </div>
-            <div className="mt-2 text-sm">
-              <p className="text-gray-700">Deliver to: <span className="font-medium">{address?.address}</span></p>
-              <p className="font-medium">{address?.city}</p>
-              <p className="text-gray-500">{address?.state} - {address?.pincode} </p>
-            </div>
+        {/* Delivery Address */}
+        <div className="border-b pb-4 mb-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">Order Summary</h2>
+            <button
+              onClick={() => router.push('/address')}
+              className="text-sm text-[#375421]"
+            >
+              Change
+            </button>
           </div>
+          <div className="mt-2">
+            <p className="text-gray-700">Deliver to:{address?.address}</p>
+            <p className="font-medium">{address?.city}</p>
+            <p className="text-sm text-gray-500">{address?.state}-{address?.pincode} </p>
+          </div>
+        </div>
 
-          {/* Product List */}
-          <div className="space-y-4 mb-6">
-            <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Your Items</h3>
-            {orderItem.map((item, idx) => (
-              <div key={item.id ?? idx} className="flex items-center space-x-4 p-2 bg-gray-50 rounded-xl border border-gray-100/50">
-                <img 
-                  src={`https://backend.gidan.store${item.image}`}
-                  loading="lazy"
-                  alt="Product"
-                  className="w-16 h-16 object-cover rounded-lg shrink-0 shadow-sm"
-                />
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-sm text-gray-900 truncate">{item.product_name}</h3>
-                  <div className="flex items-center justify-between mt-1">
-                    <span className="text-sm font-black text-[#375421]">₹{item.selling_price}</span>
-                    <span className="px-2 py-0.5 bg-white border border-gray-200 rounded text-[10px] font-black uppercase text-gray-500">
+        {/* Product List - Scrollable Area */}
+        <div className="space-y-4 mb-6 max-h-[40vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-200">
+          {orderItem.map((item, idx) => (
+            <div key={item.id ?? idx} className="flex items-center space-x-4">
+              <img name=" "
+                src={`https://backend.gidan.store${item.image}`}
+                loading="lazy"
+                alt="Product"
+                className="w-20 h-20 object-cover rounded"
+              />
+              <div className="flex-1">
+                <h3 className="font-medium text-sm leading-tight line-clamp-2">{item.product_name}</h3>
+                <div className="flex items-center space-x-2 mt-1">
+                  <span className="text-sm font-bold">₹{item.selling_price}</span>
+                  <div className="flex items-center">
+                    <span className="px-2 py-0.5 bg-gray-50 border border-gray-100 rounded text-[10px] font-bold">
                       Qty: {item.quantity}
                     </span>
                   </div>
                 </div>
               </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Add More Products Button */}
+        <button className="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 mb-6">
+          Add More Products
+        </button>
+
+        {/* Delivery Options */}
+        <div className="mb-6">
+          <h3 className="font-medium mb-3">Choose Delivery Option</h3>
+          <div className="space-y-2">
+            {deliveryOptions.map((option) => (
+              <div key={option.id} className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name="delivery-option"
+                  value={option.id}
+                  onChange={() => setSelectedOption(option.id)}
+                  className="w-5 h-5"
+                />              <label htmlFor="express">{option.label} ( {option.price}.00 )</label>
+              </div>
             ))}
+
+            {/* <div className="flex items-center space-x-2">
+              <input type="radio" name="delivery" id="regular" className="text-[#375421]" />
+              <label htmlFor="regular">Regular (₹700.00)</label>
+            </div> */}
           </div>
+        </div>
 
-          {/* Add More Products Button */}
-          <button className="w-full py-2 border-2 border-dashed border-gray-200 rounded-xl text-[11px] font-black uppercase tracking-widest text-gray-400 hover:border-[#375421]/30 hover:text-[#375421]/50 transition-all mb-6">
-            Add More Products
-          </button>
+        {/* Coupon Section */}
+        <div className="mb-6">
+          <h3 className="font-medium mb-3 ">Apply Coupon</h3>
+          <div className="flex space-x-2">
+            <input
+              type="text"
+              placeholder="Discount code"
+              className="flex-1 border rounded px-3 py-2"
+            />
+            <button className="px-4 py-2 bg-[#375421] text-white rounded">Apply</button>
+          </div>
+        </div>
 
-          {/* Delivery Options */}
-          <div className="mb-6 bg-gray-50 p-4 rounded-2xl border border-gray-100">
-            <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-4">Choose Delivery Option</h3>
-            <div className="space-y-3">
-              {deliveryOptions.map((option) => (
-                <label key={option.id} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl cursor-pointer hover:border-[#375421]/30 transition-all">
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="radio"
-                      name="delivery-option"
-                      value={option.id}
-                      checked={selectedOption === option.id}
-                      onChange={() => setSelectedOption(option.id)}
-                      className="w-4 h-4 accent-[#375421]"
-                    />
-                    <span className="text-sm font-bold text-gray-700">{option.label}</span>
-                  </div>
-                  <span className="text-sm font-black text-gray-900">{option.price}.00</span>
-                </label>
-              ))}
+        {/* Price Details */}
+        <div className="border-t pt-4 mb-6">
+          <h3 className="font-medium mb-3 text-gray-500">Price Details</h3>
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span className="text-gray-500">Price ({orderItem?.length || 0} items)</span>
+              <span>₹{order?.total_selling_price || order?.total_price}</span>
             </div>
-          </div>
-
-          {/* Coupon Section */}
-          <div className="mb-6">
-            <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-3">Apply Coupon</h3>
-            <div className="flex space-x-2">
-              <input
-                type="text"
-                placeholder="Discount code"
-                className="flex-1 border-2 border-dashed border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-[#375421] outline-none transition-all uppercase font-black placeholder:text-gray-300"
-              />
-              <button className="px-6 py-2.5 bg-gray-900 text-white rounded-xl text-xs font-black uppercase tracking-widest active:scale-95 transition-all">Apply</button>
+            {Number(order?.total_discount || 0) > 0 && (
+              <div className="flex justify-between">
+                <span className="text-gray-500">Discount</span>
+                <span className="text-[#375421]">-₹{order?.total_discount}</span>
+              </div>
+            )}
+            <div className="flex justify-between">
+              <span className="text-gray-600">Delivery Charges</span>
+              <span className="text-[#375421]">
+                {order?.shipping_charge ? `₹${order.shipping_charge}` : 'Free'}
+              </span>
             </div>
-          </div>
 
-          {/* Price Details */}
-          <div className="border-t border-dashed pt-6 mb-2">
-            <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-4">Final Summary</h3>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-gray-500 font-medium">Price ({orderItem?.length || 0} items)</span>
-                <span className="font-bold">₹{order?.total_selling_price || order?.total_price}</span>
+            {/* Taxable Value */}
+            {Number(order?.taxable_value || 0) > 0 && (
+              <div className="flex justify-between pt-2 border-t border-dashed">
+                <span className="text-gray-500">Taxable Value</span>
+                <span>₹{order.taxable_value}</span>
               </div>
-              {Number(order?.total_discount || 0) > 0 && (
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-gray-500 font-medium">Discount</span>
-                  <span className="text-[#375421] font-bold">-₹{order?.total_discount}</span>
-                </div>
-              )}
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-gray-500 font-medium">Delivery Charges</span>
-                <span className="text-gray-900 font-bold">
-                  {order?.shipping_charge ? `₹${order.shipping_charge}` : 'FREE'}
-                </span>
-              </div>
+            )}
 
-              {/* Taxable Value */}
-              {Number(order?.taxable_value || 0) > 0 && (
-                <div className="flex justify-between pt-2 border-t border-dashed border-gray-100">
-                  <span className="text-gray-500 font-medium">Taxable Value</span>
-                  <span className="font-bold">₹{order.taxable_value}</span>
-                </div>
-              )}
+            {/* GST Section */}
+            {(() => {
+              const summaryData = order?.gst_summary;
+              const breakdown = order?.gst_breakdown || {};
+              
+              let gstItems = [];
+              let totalGst = 0;
 
-              {/* GST Section */}
-              {(() => {
-                const summaryData = order?.gst_summary;
-                const breakdown = order?.gst_breakdown || {};
-                
-                let gstItems = [];
-                let totalGst = 0;
+              if (summaryData) {
+                Object.keys(summaryData).forEach(rate => {
+                  const val = Number(summaryData[rate]);
+                  if (!isNaN(val) && val > 0) {
+                    gstItems.push({ rate: rate.includes('%') ? rate : `${rate}%`, amount: val });
+                    totalGst += val;
+                  }
+                });
+              } else if (breakdown.summary || Object.keys(breakdown).some(k => k.startsWith('gst_'))) {
+                const sumObj = breakdown.summary || breakdown;
+                Object.keys(sumObj).filter(k => k.startsWith('gst_')).forEach(key => {
+                  const rate = key.split('_')[1];
+                  const val = Number(sumObj[key].total || 0);
+                  if (val > 0) {
+                    gstItems.push({ rate: `${rate}%`, amount: val });
+                    totalGst += val;
+                  }
+                });
+              } else if (breakdown.groups) {
+                Object.keys(breakdown.groups).forEach(rate => {
+                  const group = breakdown.groups[rate];
+                  const val = Number(group.total_amount || group.igst || (Number(group.cgst || 0) + Number(group.sgst || 0)) || 0);
+                  if (val > 0) {
+                    gstItems.push({ rate: `${rate}%`, amount: val });
+                    totalGst += val;
+                  }
+                });
+              }
 
-                if (summaryData) {
-                  Object.keys(summaryData).forEach(rate => {
-                    const val = Number(summaryData[rate]);
-                    if (!isNaN(val) && val > 0) {
-                      gstItems.push({ rate: rate.includes('%') ? rate : `${rate}%`, amount: val });
-                      totalGst += val;
-                    }
-                  });
-                } else if (breakdown.summary || Object.keys(breakdown).some(k => k.startsWith('gst_'))) {
-                  const sumObj = breakdown.summary || breakdown;
-                  Object.keys(sumObj).filter(k => k.startsWith('gst_')).forEach(key => {
-                    const rate = key.split('_')[1];
-                    const val = Number(sumObj[key].total || 0);
-                    if (val > 0) {
-                      gstItems.push({ rate: `${rate}%`, amount: val });
-                      totalGst += val;
-                    }
-                  });
-                } else if (breakdown.groups) {
-                  Object.keys(breakdown.groups).forEach(rate => {
-                    const group = breakdown.groups[rate];
-                    const val = Number(group.total_amount || group.igst || (Number(group.cgst || 0) + Number(group.sgst || 0)) || 0);
-                    if (val > 0) {
-                      gstItems.push({ rate: `${rate}%`, amount: val });
-                      totalGst += val;
-                    }
-                  });
-                }
+              if (gstItems.length === 0) return null;
 
-                if (gstItems.length === 0) return null;
+              const isExpanded = !!expandedGst['all_taxes'];
 
-                const isExpanded = !!expandedGst['all_taxes'];
-
-                return (
-                  <div className="space-y-2 py-1">
-                    <div
-                      className="flex justify-between text-sm text-gray-600 font-medium cursor-pointer py-1"
-                      onClick={() => setExpandedGst(prev => ({ ...prev, all_taxes: !prev.all_taxes }))}
-                    >
-                      <span className="flex items-center gap-1">
-                        <span
-                          className={`text-[8px] transition-transform duration-200 ${isExpanded ? 'rotate-90' : 'rotate-0'}`}
-                        >
-                          ▶
-                        </span>
-                        Taxes (GST)
+              return (
+                <div className="space-y-1 py-1">
+                  <div
+                    className="flex justify-between text-xs text-gray-600 font-medium cursor-pointer"
+                    onClick={() => setExpandedGst(prev => ({ ...prev, all_taxes: !prev.all_taxes }))}
+                  >
+                    <span className="flex items-center gap-1">
+                      <span
+                        className="text-[8px] transition-transform duration-200"
+                        style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}
+                      >
+                        ▶
                       </span>
-                      <span className="font-bold">₹{totalGst.toFixed(2)}</span>
-                    </div>
-
-                    {isExpanded && (
-                      <div className="space-y-2 pl-4 border-l-2 border-gray-100 ml-1 mt-1 animate-in fade-in slide-in-from-top-1">
-                        {gstItems.map((item, idx) => (
-                          <div key={idx} className="flex justify-between text-[11px] text-gray-400 font-bold uppercase">
-                            <span>GST ({item.rate})</span>
-                            <span>₹{item.amount.toFixed(2)}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                      Taxes (GST)
+                    </span>
+                    <span>₹{totalGst.toFixed(2)}</span>
                   </div>
-                );
-              })()}
 
-              <div className="flex justify-between items-end pt-4 border-t-2 border-dashed border-gray-100 mt-4">
-                <span className="text-xs font-black text-gray-400 uppercase tracking-widest">Grand Total</span>
-                <span className="text-2xl font-black text-gray-900 font-serif">₹{order?.grand_total || 0}</span>
-              </div>
+                  {isExpanded && (
+                    <div className="space-y-1 pl-4 border-l border-gray-100 ml-1 mt-1 animate-in fade-in slide-in-from-top-1 duration-200">
+                      {gstItems.map((item, idx) => (
+                        <div key={idx} className="flex justify-between text-[10px] text-gray-400">
+                          <span>GST ({item.rate})</span>
+                          <span>₹{item.amount.toFixed(2)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+
+            <div className="flex justify-between font-medium pt-2 border-t">
+              <span>Total Amount</span>
+              <span>₹{order?.grand_total || 0}</span>
             </div>
           </div>
         </div>
 
-        {/* Payment Button Fixed at Bottom */}
-        <div className="pt-4 border-t bg-white mt-auto">
-          <button 
-            onClick={handleSaveOrderSummary} 
-            className="w-full py-4 bg-[#375421] text-white rounded-2xl font-black uppercase tracking-[0.1em] shadow-xl shadow-green-900/10 active:scale-[0.98] transition-all"
-          >
-            Save Order Summary
-          </button>
-          </div>
-        </div>
       </div>
+      {/* Sticky Bottom Button */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t z-50">
+        <button 
+          onClick={handleSaveOrderSummary} 
+          className="w-full py-4 bg-[#375421] text-white rounded-2xl font-black uppercase tracking-widest active:scale-[0.98] transition-all shadow-xl shadow-green-900/10"
+        >
+          Proceed to Payment
+        </button>
+      </div>
+    </div>
       <HomepageSchema />
       <StoreSchema />
     </>
