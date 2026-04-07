@@ -287,15 +287,15 @@ const ItemsRenderer = ({ items, isDark, data }) => {
                                 </div>
                                 
                                 <div className="flex-1 space-y-1">
-                                    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                                    <div className="flex items-center justify-between gap-2 md:gap-4">
                                         <h3
-                                            className={`text-[12px] font-black uppercase tracking-[0.16em] leading-tight transition-colors ${!data?.extra?.text_color && (isDark ? 'text-white' : 'text-[#1a1f14]')}`}
+                                            className={`text-[10px] md:text-[12px] font-black uppercase tracking-[0.1em] md:tracking-[0.16em] leading-tight transition-colors ${!data?.extra?.text_color && (isDark ? 'text-white' : 'text-[#1a1f14]')}`}
                                             style={data?.extra?.text_color ? { color: data.extra.text_color } : {}}
                                         >
                                             {item.name}
                                         </h3>
                                         {item.tag && (
-                                            <span className={`px-4 py-1.5 rounded-full text-[9px] font-black tracking-[0.1em] uppercase border shrink-0 ${isDark ? 'border-white/20 text-white/50' : 'border-[#9ed36a]/30 text-[#2d5a1b] bg-[#f0f9ea]'}`}>
+                                            <span className={`px-2 py-1 md:px-4 md:py-1.5 rounded-full text-[8px] md:text-[9px] font-black tracking-[0.1em] uppercase border shrink-0 ${isDark ? 'border-white/20 text-white/50' : 'border-[#9ed36a]/30 text-[#2d5a1b] bg-[#f0f9ea]'}`}>
                                                 {item.tag}
                                             </span>
                                         )}
