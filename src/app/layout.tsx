@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
+import { headers } from "next/headers";
 import Script from "next/script";
 import { Providers } from "./providers";
 import Header from "@/components/Header/Header";
@@ -14,6 +15,7 @@ import TawkChat from "@/components/Shared/TawkChat";
 import CartWishlistSidebar from "@/components/Shared/CartWishlistSidebar";
 import TopLoader from "@/components/Shared/TopLoader";
 import React, { Suspense } from "react";
+import { usePathname } from "next/navigation";
 
 import Verify from "@/Services/Services/Verify";
 
@@ -103,6 +105,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+  const isCheckoutPage = pathname === '/checkout' || pathname === '/checkout/';
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -165,13 +170,23 @@ export default function RootLayout({
           <DownloadAppPopup />
           <TawkChat />
           
-          <header className="fixed top-0 left-0 w-full z-[1000] bg-white shadow-sm">
-            <Header />
-            <NavBar />
-          </header>
+          {!isCheckoutPage && (
+            <header className="fixed top-0 left-0 w-full z-[1000] bg-white shadow-sm">
+              <Header />
+              <NavBar />
+            </header>
+          )}
 
-          {/* Spacer for fixed header (approx 115-135px) */}
-          <div className="h-[105px] md:h-[130px] w-full" aria-hidden="true" />
+          {isCheckoutPage && (
+            <div className="fixed top-0 left-0 w-full z-[1000]">
+              <NavBar />
+            </div>
+          )}
+
+          {/* Spacer for fixed header */}
+          {!isCheckoutPage && (
+            <div className="h-[105px] md:h-[130px] w-full" aria-hidden="true" />
+          )}
 
           <div className="landing-page-layout w-full min-h-screen flex flex-col relative min-w-0">
             <main className="main-content w-full min-w-0">
