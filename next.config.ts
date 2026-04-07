@@ -4,15 +4,7 @@ import redirectsData from "./src/lib/redirects.json";
 import goneData from "./src/lib/gone.json";
 
 const nextConfig: NextConfig = {
-  // Enforce trailing slashes on all URLs (301 redirect for non-slash URLs).
-  // This is the correct way — using custom redirects caused infinite redirect loops.
   trailingSlash: true,
-
-  // Use absolute URLs for static assets (managed by assetPrefix)
-  // assetPrefix: process.env.NODE_ENV === "production" ? (process.env.NEXT_PUBLIC_BASE_URL || undefined) : undefined,
-
-
-  // Map CRA env vars to Next.js NEXT_PUBLIC_ equivalents
   env: {
     REACT_APP_API_URL: process.env.NEXT_PUBLIC_API_URL,
     REACT_APP_EMAILJS_SERVICE_ID: process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
@@ -87,7 +79,6 @@ const nextConfig: NextConfig = {
         destination: "/:id/:subcategory/",
         permanent: true,
       },
-      // Decommission hardcoded discovery pages in favor of unified dynamic /shop/ route
       { source: "/trending/", destination: "/shop/?is_trending=true", permanent: true },
       { source: "/seasonal/", destination: "/shop/?is_seasonal_collection=true", permanent: true },
       { source: "/featured/", destination: "/shop/?is_featured=true", permanent: true },
@@ -95,9 +86,6 @@ const nextConfig: NextConfig = {
       { source: "/bestseller/", destination: "/shop/?is_best_seller=true", permanent: true },
     ];
   },
-
-  // Enforce zero-caching for HTML to prevent "stale asset" errors on mobile
-  // We exclude /_next/ and /public/ assets to prevent breaking framework caching.
   async headers() {
     return [
       {
@@ -113,12 +101,10 @@ const nextConfig: NextConfig = {
   },
 
 
-  // Rewrites (backend sitemap proxy removed — using local sitemap.ts with clean URLs)
   async rewrites() {
     return [];
   },
 
-  // Shim react-helmet / react-helmet-async (not compatible with React 19 / Next.js App Router)
   webpack(config, { dev, isServer }) {
     const shimPath = path.resolve(
       __dirname,
@@ -130,7 +116,6 @@ const nextConfig: NextConfig = {
     return config;
   },
 
-  // Transpile MUI packages
   transpilePackages: [
     "@mui/material",
     "@mui/icons-material",
@@ -138,11 +123,9 @@ const nextConfig: NextConfig = {
     "@mui/system",
   ],
 
-  // JS Minification & Production Cleanup
   productionBrowserSourceMaps: false,
 
   compiler: {
-    // Remove console logs in production for smaller bundles and cleaner logs
     removeConsole: process.env.NODE_ENV === "production"
       ? { exclude: ["error", "warn"] }
       : false,
