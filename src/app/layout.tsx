@@ -1,11 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Nunito_Sans } from "next/font/google";
-import { usePathname } from "next/navigation";
+
 import "./globals.css";
 import Script from "next/script";
 import { Providers } from "./providers";
-import Header from "@/components/Header/Header";
-import NavBar from "@/components/NavigationBar/NavigationBar";
 import Footer from "@/components/Footer/Footer";
 import DownloadAppPopup from "@/components/DownloadApp/DownloadAppPopup";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -100,17 +98,7 @@ export const viewport: Viewport = {
   themeColor: "#000000",
 };
 
-function HeaderWrapper() {
-  const pathname = usePathname();
-  const isCheckout = pathname === '/checkout' || pathname === '/checkout/';
-  
-  return (
-    <header className={`fixed top-0 left-0 w-full z-[1000] bg-white shadow-sm ${isCheckout ? 'md:relative' : ''}`}>
-      <Header />
-      <NavBar />
-    </header>
-  );
-}
+import HeaderWrapper from "@/components/Shared/HeaderWrapper.jsx";
 
 export default function RootLayout({
   children,
