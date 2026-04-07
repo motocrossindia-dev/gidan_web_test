@@ -9,7 +9,7 @@ const HeaderWrapper = () => {
   const isCheckout = pathname === '/checkout' || pathname === '/checkout/';
 
   return (
-    <header className={`fixed top-0 left-0 w-full z-[1000] bg-white shadow-sm ${isCheckout ? 'md:relative' : ''}`}>
+    <header className={`${isCheckout ? 'relative' : 'fixed top-0 left-0'} w-full z-[1000] bg-white shadow-sm`}>
       <Header />
       <NavBar />
     </header>
