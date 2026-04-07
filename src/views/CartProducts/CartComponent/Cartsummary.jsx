@@ -14,6 +14,8 @@ const CartSummary = ({
   totalSellingPrice,
   amountToFreeShipping,
   products,
+  completeYourGarden = [],
+  handleAddToCart,
 }) => {
   const accessToken = useSelector(selectAccessToken);
   const router = useRouter();
@@ -184,6 +186,40 @@ const CartSummary = ({
            </div>
         </div>
       </div>
+
+      {/* Complete Your Garden - Mobile Only (Below Summary) */}
+      {completeYourGarden.length > 0 && (
+        <div className="lg:hidden p-6 bg-white rounded-2xl border border-gray-100 shadow-sm mt-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-orange-50 rounded-lg flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-orange-400" />
+              </div>
+              <h3 className="text-[13px] font-black text-gray-900 uppercase tracking-tight">Complete your garden</h3>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            {completeYourGarden.slice(0, 3).map((item) => (
+              <div key={item.id} className="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl border border-gray-100 group transition-all">
+                <div className="w-16 h-16 bg-white rounded-xl overflow-hidden shrink-0 border border-gray-100">
+                  <img src={item.image.startsWith('http') ? item.image : `https://backend.gidan.store${item.image}`} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-[11px] font-black text-gray-900 uppercase truncate mb-1">{item.name}</h4>
+                  <p className="text-sm font-black text-[#375421]">₹{Math.round(item.selling_price)}</p>
+                </div>
+                <button 
+                  onClick={() => handleAddToCart(item.main_prod_id || item.product_id || item.id)}
+                  className="w-10 h-10 bg-[#375421] text-white rounded-xl flex items-center justify-center shadow-lg active:scale-90 transition-transform"
+                >
+                  <Tag className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Trust Badges */}
       <div className="space-y-3 px-2">

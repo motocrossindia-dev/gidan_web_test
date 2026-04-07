@@ -409,9 +409,9 @@ const Cart = () => {
                 </div>
               </div>
 
-              {/* Complete Your Garden - Moved here from right column */}
+              {/* Complete Your Garden - Desktop: Below Products | Mobile: Hidden here (handled in CartSummary) */}
               {completeYourGarden.length > 0 && (
-                <div className="mt-8 bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+                <div className="mt-8 bg-white rounded-2xl shadow-sm border border-gray-100 p-8 hidden lg:block">
                   <div className="flex items-center justify-between mb-8">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
@@ -472,8 +472,9 @@ const Cart = () => {
                 amountToFreeShipping={amountToFreeShipping}
                 products={products}
                 handlePlaceOrder={handlePlaceOrder}
+                completeYourGarden={completeYourGarden} // Pass down to summary for mobile display
+                handleAddToCart={handleAddToCart}
               />
-
             </div>
           </div>
         ) : (
