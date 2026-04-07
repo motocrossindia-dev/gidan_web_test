@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Nunito_Sans } from "next/font/google";
+import { usePathname } from "next/navigation";
 import "./globals.css";
 import Script from "next/script";
 import { Providers } from "./providers";
@@ -170,8 +171,7 @@ export default function RootLayout({
             <NavBar />
           </header>
 
-          {/* Spacer for fixed header (actual heights: Mobile ~60px, Desktop ~130px) */}
-          <div className="h-[60px] md:h-[130px] w-full" aria-hidden="true" />
+          <HeaderSpacer />
 
           <div className="landing-page-layout w-full min-h-screen flex flex-col relative min-w-0">
             <main className="main-content w-full min-w-0">
@@ -183,5 +183,17 @@ export default function RootLayout({
         </Providers>
       </body>
     </html>
+  );
+}
+
+function HeaderSpacer() {
+  const pathname = usePathname();
+  const isCheckout = pathname === '/checkout' || pathname === '/checkout/';
+  
+  return (
+    <div 
+      className={`${isCheckout ? 'h-[45px] md:h-[80px]' : 'h-[60px] md:h-[130px]'} w-full transition-all duration-300`} 
+      aria-hidden="true" 
+    />
   );
 }
