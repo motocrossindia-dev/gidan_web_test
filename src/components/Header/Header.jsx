@@ -100,23 +100,23 @@ const Header = () => {
               )}
             </AnimatePresence>
             
-            {/* Subtle Progress Bar for mobile multiple announcements */}
-            {isActive && announcements.length > 1 && (
-              <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 flex gap-1 pointer-events-none opacity-30">
-                {announcements.map((_, idx) => (
-                  <div 
-                    key={idx} 
-                    className={`h-0.5 rounded-full transition-all duration-500 ${
-                      currentIndex === idx ? 'w-3 bg-white' : 'w-1 bg-white/50'
-                    }`}
-                  />
-                ))}
-              </div>
-            )}
           </div>
-
         </div>
       </div>
+
+      {/* Subtle Progress Bar for mobile multiple announcements (ONLY on mobile) */}
+      {isActive && announcements.length > 1 && (
+        <div className="absolute bottom-0.5 left-0 w-full flex justify-center gap-1.5 pointer-events-none opacity-40 md:hidden pb-1">
+          {announcements.map((_, idx) => (
+            <div 
+              key={idx} 
+              className={`h-0.5 rounded-full transition-all duration-500 ${
+                currentIndex === idx ? 'w-3.5 bg-white' : 'w-1 bg-white/50'
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </header>
   );
 };
