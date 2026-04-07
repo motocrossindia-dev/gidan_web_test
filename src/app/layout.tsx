@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Nunito_Sans } from "next/font/google";
+import { usePathname } from "next/navigation";
 import "./globals.css";
 import Script from "next/script";
 import { Providers } from "./providers";
@@ -99,6 +100,18 @@ export const viewport: Viewport = {
   themeColor: "#000000",
 };
 
+function HeaderWrapper() {
+  const pathname = usePathname();
+  const isCheckout = pathname === '/checkout' || pathname === '/checkout/';
+  
+  return (
+    <header className={`fixed top-0 left-0 w-full z-[1000] bg-white shadow-sm ${isCheckout ? 'md:relative' : ''}`}>
+      <Header />
+      <NavBar />
+    </header>
+  );
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -166,10 +179,7 @@ export default function RootLayout({
           <DownloadAppPopup />
           <TawkChat />
           
-          <header className="fixed top-0 left-0 w-full z-[1000] bg-white shadow-sm">
-            <Header />
-            <NavBar />
-          </header>
+          <HeaderWrapper />
 
           <HeaderSpacer />
 
