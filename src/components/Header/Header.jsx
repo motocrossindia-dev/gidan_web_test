@@ -13,8 +13,7 @@ const Header = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isActive, setIsActive] = useState(false);
-
-
+  if (isCheckoutPage) return null;
 
   useEffect(() => {
     const fetchAnnouncements = async () => {
@@ -40,20 +39,19 @@ const Header = () => {
     }
   }, [isActive, announcements]);
 
-  if (isCheckoutPage) return null;
 
   return (
     <header className="bg-[#375421] font-poppins relative overflow-hidden min-h-[28px] md:h-auto flex items-center py-1 md:py-2 w-full">
       <div className="w-full flex items-center justify-center text-white px-2">
         <div className="relative w-full font-medium">
-          
+
           {/* DESKTOP LAYOUT (MD+): Show all announcements side-by-side on one line */}
           <div className="hidden md:flex flex-row items-center justify-center gap-6 lg:gap-8 overflow-hidden">
             {isActive && announcements.length > 0 ? (
               announcements.map((item, idx) => (
                 <React.Fragment key={idx}>
-                  <Link 
-                    href={item.url || "#"} 
+                  <Link
+                    href={item.url || "#"}
                     className="text-white text-[11px] lg:text-[12px] hover:text-[#A7D949] transition-all uppercase tracking-[0.12em] whitespace-nowrap"
                   >
                     {item.text}
@@ -64,7 +62,7 @@ const Header = () => {
                 </React.Fragment>
               ))
             ) : (
-               <p className="text-white text-[11px] lg:text-[12px] uppercase tracking-[0.12em] whitespace-nowrap">
+              <p className="text-white text-[11px] lg:text-[12px] uppercase tracking-[0.12em] whitespace-nowrap">
                 Free Shipping above ₹2000 | Delivery in Bengaluru
               </p>
             )}
@@ -82,15 +80,15 @@ const Header = () => {
                   transition={{ duration: 0.4, ease: "easeOut" }}
                   className="w-full text-center"
                 >
-                  <Link 
-                    href={announcements[currentIndex].url || "#"} 
+                  <Link
+                    href={announcements[currentIndex].url || "#"}
                     className="text-white text-[9px] hover:text-white/80 transition-all uppercase tracking-[0.08em] inline-block px-4 font-semibold"
                   >
                     {announcements[currentIndex].text}
                   </Link>
                 </motion.div>
               ) : (
-                <motion.p 
+                <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   className="text-white text-[9px] text-center uppercase tracking-[0.08em] font-semibold"
@@ -99,7 +97,7 @@ const Header = () => {
                 </motion.p>
               )}
             </AnimatePresence>
-            
+
           </div>
         </div>
       </div>
@@ -108,11 +106,10 @@ const Header = () => {
       {isActive && announcements.length > 1 && (
         <div className="absolute bottom-0.5 left-0 w-full flex justify-center gap-1.5 pointer-events-none opacity-40 md:hidden pb-1">
           {announcements.map((_, idx) => (
-            <div 
-              key={idx} 
-              className={`h-0.5 rounded-full transition-all duration-500 ${
-                currentIndex === idx ? 'w-3.5 bg-white' : 'w-1 bg-white/50'
-              }`}
+            <div
+              key={idx}
+              className={`h-0.5 rounded-full transition-all duration-500 ${currentIndex === idx ? 'w-3.5 bg-white' : 'w-1 bg-white/50'
+                }`}
             />
           ))}
         </div>
