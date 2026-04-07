@@ -115,6 +115,8 @@ export default function RootLayout({
         <link rel="preconnect" href="https://connect.facebook.net" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://checkout.razorpay.com" />
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        <link rel="dns-prefetch" href="https://tawk.to" />
+        <link rel="dns-prefetch" href="https://embed.tawk.to" />
 
         {/* 1. Critical Header: Unregister any legacy Service Workers to prevent stale HTML/CSS caching which causes "Application Errors" on mobile */}
         <Script id="sw-cleanup" strategy="beforeInteractive">

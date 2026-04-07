@@ -579,6 +579,7 @@ const ProductCard = ({
                             onError={() => setImgError(true)}
                             sizes="(max-width: 1024px) 50vw, 33vw"
                             priority={priority}
+                            {...(priority ? { fetchPriority: "high" } : {})}
                             className={`object-cover transition-opacity duration-300 ${isHovered && productImages.hover !== productImages.main ? "opacity-0" : "opacity-100"
                                 } ${isOutOfStock ? "grayscale opacity-40" : ""}`}
                         />
@@ -728,6 +729,7 @@ const ProductCard = ({
                             onError={() => setImgError(true)}
                             sizes="50vw"
                             priority={priority}
+                            {...(priority ? { fetchPriority: "high" } : {})}
                             className={`object-cover ${isOutOfStock ? "grayscale opacity-40" : ""}`}
                         />
                     </div>

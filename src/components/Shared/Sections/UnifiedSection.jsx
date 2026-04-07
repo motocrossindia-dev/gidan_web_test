@@ -364,7 +364,14 @@ const StaticImageGrid = ({ data, isDark }) => (
             className="relative bg-[#cee8a0] rounded-[60px] overflow-hidden row-span-2 shadow-2xl group border-8 border-white/10"
             style={data.extra?.product_card_color ? { backgroundColor: data.extra.product_card_color } : {}}
         >
-            <Image src={processUrl(data.image)} alt="V1" fill className="object-cover transition-transform group-hover:scale-110 duration-1000" />
+            <Image 
+                src={processUrl(data.image)} 
+                alt="V1" 
+                fill 
+                priority={isFirstSection}
+                {...(isFirstSection ? { fetchPriority: "high" } : {})}
+                className="object-cover transition-transform group-hover:scale-110 duration-1000" 
+            />
             <div className="absolute inset-x-0 bottom-0 p-8 pt-20 bg-gradient-to-t from-black/60 to-transparent">
                 <span className="text-[10px] font-bold tracking-[0.2em] text-white uppercase">{data.extra?.sub_badge_text || "PREMIUM"}</span>
                 <p className="text-white text-[15px] font-bold mt-1">{data.extra?.image_caption || "Curated Selection"}</p>
@@ -407,7 +414,11 @@ const BentoProductGrid = ({ products, isDark, data }) => {
     return (
         <div className="grid grid-cols-2 lg:grid-rows-2 gap-4 md:gap-5 h-[550px] md:h-[600px] lg:h-[600px] animate-fade-in relative">
             <div className="col-span-2 lg:col-span-1 lg:row-span-2 relative transform transition-transform duration-700 hover:scale-[1.02]">
-                <ProductCard product={products[0].product_data || products[0]} variant="bento-large" />
+                <ProductCard 
+                    product={products[0].product_data || products[0]} 
+                    variant="bento-large" 
+                    priority={isFirstSection}
+                />
             </div>
             <div className="col-span-1 lg:row-span-1 relative transform transition-transform duration-700 hover:scale-[1.02]">
                 {products[1] ? (
