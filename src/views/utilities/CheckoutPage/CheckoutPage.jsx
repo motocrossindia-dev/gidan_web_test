@@ -1806,7 +1806,7 @@ const CheckoutPage = () => {
                 <p className="font-bold text-sm tracking-wide">Order Summary</p>
               </div>
 
-              <div className="p-4 space-y-5 max-h-[80vh] overflow-y-auto">
+              <div className="p-4 space-y-5">
                 <div>
                   <p className="text-[10px] uppercase font-bold text-gray-400 tracking-widest mb-2">
                     Items ({data?.order_items?.length ?? 0})
