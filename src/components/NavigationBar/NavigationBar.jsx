@@ -111,52 +111,7 @@ const NavBar = () => {
 
   const displayUsername = isMounted ? username : "Guest";
 
-  // Check if we are on the checkout page to show the simplified 'Checkout Mode' header
-  const isCheckoutPage = pathname === '/checkout' || pathname === '/checkout/';
 
-  if (isCheckoutPage) {
-    return (
-      <div className="relative z-[1000]">
-        <nav className="w-full px-3 md:px-12 py-2 md:py-4 bg-white font-sans border-b border-white shadow-sm">
-          <div className="max-w-[1920px] mx-auto grid grid-cols-3 items-center">
-            
-            {/* LEFT: Logo */}
-            <div className="flex items-center">
-              <Link href="/" className="flex-shrink-0">
-                <Image
-                  src={logo}
-                  alt="Gidan Logo"
-                  width={140}
-                  height={70}
-                  className="h-7 md:h-11 w-auto object-contain"
-                  priority
-                />
-              </Link>
-            </div>
-
-            {/* CENTER: Checkout Title */}
-            <div className="flex justify-center text-center">
-              <h1 className="text-[15px] md:text-xl font-sans font-semibold text-[#173113] tracking-[0.02em] uppercase whitespace-nowrap">
-                Secure <span className="text-[#173113]">Checkout</span>
-              </h1>
-            </div>
-
-            {/* RIGHT: Back to Cart Action (Desktop Only) */}
-            <div className="hidden md:flex justify-end">
-              <Link 
-                href="/cart" 
-                className="group flex items-center gap-1.5 md:gap-2 text-[12px] md:text-base text-slate-500 hover:text-[#173113] transition-all font-medium"
-              >
-                <span className="hidden md:inline group-hover:-translate-x-1 transition-transform">←</span>
-                <span>Back<span className="hidden md:inline"> to Cart</span></span>
-              </Link>
-            </div>
-
-          </div>
-        </nav>
-      </div>
-    );
-  }
 
   return (
     <div className="relative z-[1000]">
