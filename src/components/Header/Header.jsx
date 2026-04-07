@@ -35,7 +35,7 @@ const Header = () => {
   }, [isActive, announcements]);
 
   return (
-    <header className="bg-[#375421] font-poppins relative overflow-hidden min-h-[34px] md:h-auto flex items-center py-1.5 md:py-2.5 w-full">
+    <header className="bg-[#375421] font-poppins relative overflow-hidden min-h-[28px] md:h-auto flex items-center py-1 md:py-2 w-full">
       <div className="w-full flex items-center justify-center text-white px-2">
         <div className="relative w-full font-medium">
           

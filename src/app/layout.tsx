@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
-import { headers } from "next/headers";
 import Script from "next/script";
 import { Providers } from "./providers";
 import Header from "@/components/Header/Header";
@@ -99,15 +98,11 @@ export const viewport: Viewport = {
   themeColor: "#000000",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const headerList = await headers();
-  const pathname = headerList.get("x-pathname") || "";
-  const isCheckoutPage = pathname === "/checkout" || pathname === "/checkout/";
-
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -170,23 +165,13 @@ export default async function RootLayout({
           <DownloadAppPopup />
           <TawkChat />
           
-          {!isCheckoutPage && (
-            <header className="fixed top-0 left-0 w-full z-[1000] bg-white shadow-sm">
-              <Header />
-              <NavBar />
-            </header>
-          )}
+          <header className="fixed top-0 left-0 w-full z-[1000] bg-white shadow-sm">
+            <Header />
+            <NavBar />
+          </header>
 
-          {isCheckoutPage && (
-            <div className="fixed top-0 left-0 w-full z-[1000]">
-              <NavBar />
-            </div>
-          )}
-
-          {/* Spacer for fixed header */}
-          {!isCheckoutPage && (
-            <div className="h-[105px] md:h-[130px] w-full" aria-hidden="true" />
-          )}
+          {/* Spacer for fixed header (actual heights: Mobile ~75px, Desktop ~130px) */}
+          <div className="h-[75px] md:h-[130px] w-full" aria-hidden="true" />
 
           <div className="landing-page-layout w-full min-h-screen flex flex-col relative min-w-0">
             <main className="main-content w-full min-w-0">
