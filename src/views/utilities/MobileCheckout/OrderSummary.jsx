@@ -239,69 +239,72 @@ const OrderSummary = () => {
 
             {/* GST Section */}
             {(() => {
-              const summaryData = order?.gst_summary;
               const breakdown = order?.gst_breakdown || {};
+              const summary = breakdown.summary || {};
               
-              let gstItems = [];
-              let totalGst = 0;
+              let gstGroups = [];
+              let totalTax = 0;
 
-              if (summaryData) {
-                Object.keys(summaryData).forEach(rate => {
-                  const val = Number(summaryData[rate]);
-                  if (!isNaN(val) && val > 0) {
-                    gstItems.push({ rate: rate.includes('%') ? rate : `${rate}%`, amount: val });
-                    totalGst += val;
-                  }
-                });
-              } else if (breakdown.summary || Object.keys(breakdown).some(k => k.startsWith('gst_'))) {
-                const sumObj = breakdown.summary || breakdown;
-                Object.keys(sumObj).filter(k => k.startsWith('gst_')).forEach(key => {
+              // Extract from structured breakdown summary (gst_0, gst_5, etc)
+              Object.keys(summary).forEach(key => {
+                if (key.startsWith('gst_')) {
+                  const data = summary[key];
+                  const amount = Number(data.total || (Number(data.cgst || 0) + Number(data.sgst || 0)) || 0);
                   const rate = key.split('_')[1];
-                  const val = Number(sumObj[key].total || 0);
-                  if (val > 0) {
-                    gstItems.push({ rate: `${rate}%`, amount: val });
-                    totalGst += val;
+                  
+                  if (amount > 0) {
+                    gstGroups.push({ 
+                      label: `GST (${rate}%)`, 
+                      amount,
+                      details: data.cgst > 0 ? `(CGST: ${data.cgst}, SGST: ${data.sgst})` : ""
+                    });
+                    totalTax += amount;
                   }
-                });
-              } else if (breakdown.groups) {
-                Object.keys(breakdown.groups).forEach(rate => {
-                  const group = breakdown.groups[rate];
-                  const val = Number(group.total_amount || group.igst || (Number(group.cgst || 0) + Number(group.sgst || 0)) || 0);
-                  if (val > 0) {
-                    gstItems.push({ rate: `${rate}%`, amount: val });
-                    totalGst += val;
+                }
+              });
+
+              // Fallback to simpler summaryData if breakdown is empty
+              if (gstGroups.length === 0 && order?.gst_summary) {
+                Object.entries(order.gst_summary).forEach(([rate, val]) => {
+                  const amount = Number(val);
+                  if (amount > 0) {
+                    gstGroups.push({ label: `GST (${rate}%)`, amount });
+                    totalTax += amount;
                   }
                 });
               }
 
-              if (gstItems.length === 0) return null;
+              if (gstGroups.length === 0) return null;
 
               const isExpanded = !!expandedGst['all_taxes'];
 
               return (
                 <div className="space-y-1 py-1">
                   <div
-                    className="flex justify-between text-xs text-gray-600 font-medium cursor-pointer"
+                    className="flex justify-between text-xs text-gray-600 font-medium cursor-pointer group"
                     onClick={() => setExpandedGst(prev => ({ ...prev, all_taxes: !prev.all_taxes }))}
                   >
                     <span className="flex items-center gap-1">
                       <span
-                        className="text-[8px] transition-transform duration-200"
+                        className="text-[8px] transition-transform duration-200 text-bio-green"
                         style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}
                       >
                         ▶
                       </span>
                       Taxes (GST)
                     </span>
-                    <span>₹{totalGst.toFixed(2)}</span>
+                    <span className="font-bold underline decoration-dotted decoration-gray-300">₹{totalTax.toFixed(2)}</span>
                   </div>
 
                   {isExpanded && (
-                    <div className="space-y-1 pl-4 border-l border-gray-100 ml-1 mt-1 animate-in fade-in slide-in-from-top-1 duration-200">
-                      {gstItems.map((item, idx) => (
-                        <div key={idx} className="flex justify-between text-[10px] text-gray-400">
-                          <span>GST ({item.rate})</span>
-                          <span>₹{item.amount.toFixed(2)}</span>
+                    <div className="space-y-1 pl-4 border-l-2 border-bio-green/10 ml-1 mt-1 animate-in fade-in slide-in-from-top-1 duration-200">
+                      {gstGroups.map((group, idx) => (
+                        <div key={idx} className="flex justify-between text-[11px] text-gray-500 font-medium py-0.5">
+                          <div className="flex flex-col">
+                            <span>{group.label}</span>
+                            {group.details && <span className="text-[9px] text-gray-400 font-normal">{group.details}</span>}
+                          </div>
+                          <span>₹{group.amount.toFixed(2)}</span>
                         </div>
                       ))}
                     </div>
