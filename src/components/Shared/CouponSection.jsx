@@ -35,23 +35,11 @@ const CouponSection = ({
     const fetchCoupons = async () => {
         setIsFetching(true);
         try {
-            // Updated: Try the most likely camelCase endpoint, with a fallback logic
-            let endpoint = orderId 
-                ? `/order/availableCoupons/?order_id=${orderId}` 
-                : `/order/availableCoupons/`;
-            
-            let response;
-            try {
-                response = await axiosInstance.get(endpoint);
-            } catch (err) {
-                if (err.response?.status === 404) {
-                    // Fallback to simpler plural 'coupons' endpoint if camelCase fails
-                    endpoint = orderId ? `/order/coupons/?order_id=${orderId}` : `/order/coupons/`;
-                    response = await axiosInstance.get(endpoint);
-                } else {
-                    throw err;
-                }
-            }
+            let endpoint = orderId
+                ? `/coupon/coupons/?order_id=${orderId}`
+                : `/coupon/coupons/`;
+
+            let response = await axiosInstance.get(endpoint);
 
             if (response.status === 200) {
                 const fetchedCoupons = response.data.coupons || response.data.data?.coupons || [];

@@ -239,119 +239,75 @@ const OrderSummary = () => {
 
             {/* GST Section */}
             {(() => {
-              const breakdownGroups = order?.gst_breakdown?.groups;
-              const summary = order?.gst_summary;
-              const newSummary = order?.summary || order?.gst_breakdown?.summary;
+              const summaryData = order?.gst_summary;
+              const breakdown = order?.gst_breakdown || {};
+              
+              let gstItems = [];
+              let totalGst = 0;
 
-              // 1. Priority: New "summary" format (gst_18: { cgst, sgst, total })
-              if (newSummary && Object.keys(newSummary).some(k => k.startsWith('gst_'))) {
-                return Object.entries(newSummary).map(([key, gData]) => {
+              if (summaryData) {
+                Object.keys(summaryData).forEach(rate => {
+                  const val = Number(summaryData[rate]);
+                  if (!isNaN(val) && val > 0) {
+                    gstItems.push({ rate: rate.includes('%') ? rate : `${rate}%`, amount: val });
+                    totalGst += val;
+                  }
+                });
+              } else if (breakdown.summary || Object.keys(breakdown).some(k => k.startsWith('gst_'))) {
+                const sumObj = breakdown.summary || breakdown;
+                Object.keys(sumObj).filter(k => k.startsWith('gst_')).forEach(key => {
                   const rate = key.split('_')[1];
-                  const totalGst = Number(gData.total || 0);
-                  if (totalGst === 0) return null;
-                  const isExpanded = !!expandedGst[rate];
+                  const val = Number(sumObj[key].total || 0);
+                  if (val > 0) {
+                    gstItems.push({ rate: `${rate}%`, amount: val });
+                    totalGst += val;
+                  }
+                });
+              } else if (breakdown.groups) {
+                Object.keys(breakdown.groups).forEach(rate => {
+                  const group = breakdown.groups[rate];
+                  const val = Number(group.total_amount || group.igst || (Number(group.cgst || 0) + Number(group.sgst || 0)) || 0);
+                  if (val > 0) {
+                    gstItems.push({ rate: `${rate}%`, amount: val });
+                    totalGst += val;
+                  }
+                });
+              }
 
-                  return (
-                    <div key={rate} className="space-y-1 py-1 transition-all duration-300">
-                      <div
-                        className="flex justify-between text-xs text-gray-600 font-medium cursor-pointer"
-                        onClick={() => setExpandedGst(prev => ({ ...prev, [rate]: !prev[rate] }))}
+              if (gstItems.length === 0) return null;
+
+              const isExpanded = !!expandedGst['all_taxes'];
+
+              return (
+                <div className="space-y-1 py-1">
+                  <div
+                    className="flex justify-between text-xs text-gray-600 font-medium cursor-pointer"
+                    onClick={() => setExpandedGst(prev => ({ ...prev, all_taxes: !prev.all_taxes }))}
+                  >
+                    <span className="flex items-center gap-1">
+                      <span
+                        className="text-[8px] transition-transform duration-200"
+                        style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}
                       >
-                        <span className="flex items-center gap-1">
-                          <span className={`text-[8px] transition-transform duration-200`} style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>▶</span>
-                          GST ({rate}%)
-                        </span>
-                        <span>₹{totalGst.toFixed(2)}</span>
-                      </div>
+                        ▶
+                      </span>
+                      Taxes (GST)
+                    </span>
+                    <span>₹{totalGst.toFixed(2)}</span>
+                  </div>
 
-                      {isExpanded && (
-                        <div className="space-y-1 pl-4 border-l border-gray-100 ml-1 mt-1 animate-in fade-in slide-in-from-top-1 duration-200">
-                          {Number(gData.cgst || 0) > 0 && (
-                            <div className="flex justify-between text-[10px] text-gray-400">
-                              <span>CGST ({Number(rate) / 2}%)</span>
-                              <span>₹{Number(gData.cgst).toFixed(2)}</span>
-                            </div>
-                          )}
-                          {Number(gData.sgst || 0) > 0 && (
-                            <div className="flex justify-between text-[10px] text-gray-400">
-                              <span>SGST ({Number(rate) / 2}%)</span>
-                              <span>₹{Number(gData.sgst).toFixed(2)}</span>
-                            </div>
-                          )}
-                          {(Number(gData.total || 0) > (Number(gData.cgst || 0) + Number(gData.sgst || 0)) + 0.01) && (
-                            <div className="flex justify-between text-[10px] text-gray-400">
-                              <span>IGST ({rate}%)</span>
-                              <span>₹{(Number(gData.total) - (Number(gData.cgst || 0) + Number(gData.sgst || 0))).toFixed(2)}</span>
-                            </div>
-                          )}
+                  {isExpanded && (
+                    <div className="space-y-1 pl-4 border-l border-gray-100 ml-1 mt-1 animate-in fade-in slide-in-from-top-1 duration-200">
+                      {gstItems.map((item, idx) => (
+                        <div key={idx} className="flex justify-between text-[10px] text-gray-400">
+                          <span>GST ({item.rate})</span>
+                          <span>₹{item.amount.toFixed(2)}</span>
                         </div>
-                      )}
+                      ))}
                     </div>
-                  );
-                });
-              }
-
-              if (breakdownGroups) {
-                return Object.entries(breakdownGroups).map(([rate, group]) => {
-                  const totalGst = Number(group.total_amount || group.igst || (Number(group.cgst || 0) + Number(group.sgst || 0)) || 0);
-                  if (Number(rate) === 0 || totalGst === 0) return null;
-                  const isExpanded = !!expandedGst[rate];
-
-                  return (
-                    <div key={rate} className="space-y-1 py-1">
-                      <div
-                        className="flex justify-between text-xs text-gray-600 font-medium cursor-pointer"
-                        onClick={() => setExpandedGst(prev => ({ ...prev, [rate]: !prev[rate] }))}
-                      >
-                        <span className="flex items-center gap-1">
-                          <span className={`text-[8px] transition-transform duration-200`} style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>▶</span>
-                          GST ({rate}%)
-                        </span>
-                        <span>₹{totalGst.toFixed(2)}</span>
-                      </div>
-
-                      {isExpanded && (
-                        <div className="space-y-1 pl-4 border-l border-gray-100 ml-1 mt-1">
-                          {Number(group.cgst || 0) > 0 && (
-                            <div className="flex justify-between text-[10px] text-gray-400">
-                              <span>CGST ({Number(rate) / 2}%)</span>
-                              <span>₹{Number(group.cgst).toFixed(2)}</span>
-                            </div>
-                          )}
-                          {Number(group.sgst || 0) > 0 && (
-                            <div className="flex justify-between text-[10px] text-gray-400">
-                              <span>SGST ({Number(rate) / 2}%)</span>
-                              <span>₹{Number(group.sgst).toFixed(2)}</span>
-                            </div>
-                          )}
-                          {Number(group.igst || 0) > 0 && (
-                            <div className="flex justify-between text-[10px] text-gray-400">
-                              <span>IGST ({rate}%)</span>
-                              <span>₹{Number(group.igst).toFixed(2)}</span>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  );
-                });
-              }
-
-              if (summary) {
-                return Object.entries(summary).map(([rateStr, amount]) => {
-                  const rate = parseFloat(rateStr);
-                  const totalGst = Number(amount);
-                  if (rate === 0 || totalGst === 0) return null;
-                  return (
-                    <div key={rateStr} className="flex justify-between text-xs text-gray-600 font-medium py-1">
-                      <span>GST ({rate}%)</span>
-                      <span>₹{totalGst.toFixed(2)}</span>
-                    </div>
-                  );
-                });
-              }
-
-              return null;
+                  )}
+                </div>
+              );
             })()}
 
             <div className="flex justify-between font-medium pt-2 border-t">

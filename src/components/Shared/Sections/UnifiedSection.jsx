@@ -129,79 +129,90 @@ const ActionButtons = ({ data, config, isDark, type }) => {
     const shadowStyle2 = isP2Hovered ? 'none' : `6px 6px 0px 0px ${hexToRgba(p2Color, 0.2)}`;
 
     return (
-        <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-4 lg:gap-5 pt-3 overflow-x-visible">
-            {data.btn1_text && (
-                <a
-                    href={data.btn1_link}
-                    onMouseEnter={() => setIsP1Hovered(true)}
-                    onMouseLeave={() => setIsP1Hovered(false)}
-                    className="w-full lg:w-auto px-12 py-4.5 rounded-2xl text-[12px] font-black uppercase tracking-[0.1em] flex items-center justify-center gap-2 transition-all duration-300 active:scale-[0.96] border-2 whitespace-nowrap shrink-0"
-                    style={{ 
-                        backgroundColor: b1Bg, 
-                        color: b1Text,
-                        borderColor: p2Color,
-                        boxShadow: shadowStyle1
-                    }}
-                >
-                    {cleanButtonText(data.btn1_text)} {(isClimateStory || type === 'hero') && <ArrowRight size={14} strokeWidth={3} className="group-hover:translate-x-1 transition-transform" />}
-                </a>
+        <div className="flex flex-col gap-3 pt-3">
+            {data.extra?.extra_text && (
+                <div className={`text-[10px] md:text-[11px] font-black tracking-[0.1em] uppercase flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2 ${isDark ? 'text-[#a8e070]' : 'text-[#2d5a1b]'}`}>
+                    <Sparkles size={14} className="animate-pulse" strokeWidth={3} />
+                    {data.extra.extra_text}
+                </div>
             )}
-            {data.btn2_text && (
-                <a
-                    href={data.btn2_link}
-                    onMouseEnter={() => setIsP2Hovered(true)}
-                    onMouseLeave={() => setIsP2Hovered(false)}
-                    className="w-full lg:w-auto px-12 py-4.5 rounded-2xl text-[12px] font-black uppercase tracking-[0.1em] flex items-center justify-center gap-2 transition-all duration-300 backdrop-blur-md border-2 active:scale-[0.96] whitespace-nowrap shrink-0"
-                    style={{
-                        backgroundColor: b2Bg,
-                        color: b2Text,
-                        borderColor: p2Color,
-                        boxShadow: shadowStyle2
-                    }}
-                >
-                    {cleanButtonText(data.btn2_text)}
-                </a>
-            )}
+            <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-4 lg:gap-5 overflow-x-visible">
+                {data.btn1_text && (
+                    <a
+                        href={data.btn1_link}
+                        onMouseEnter={() => setIsP1Hovered(true)}
+                        onMouseLeave={() => setIsP1Hovered(false)}
+                        className="w-full lg:w-auto px-12 py-4.5 rounded-2xl text-[12px] font-black uppercase tracking-[0.1em] flex items-center justify-center gap-2 transition-all duration-300 active:scale-[0.96] border-2 whitespace-nowrap shrink-0"
+                        style={{ 
+                            backgroundColor: b1Bg, 
+                            color: b1Text,
+                            borderColor: p2Color,
+                            boxShadow: shadowStyle1
+                        }}
+                    >
+                        {cleanButtonText(data.btn1_text)} {(isClimateStory || type === 'hero') && <ArrowRight size={14} strokeWidth={3} className="group-hover:translate-x-1 transition-transform" />}
+                    </a>
+                )}
+                {data.btn2_text && (
+                    <a
+                        href={data.btn2_link}
+                        onMouseEnter={() => setIsP2Hovered(true)}
+                        onMouseLeave={() => setIsP2Hovered(false)}
+                        className="w-full lg:w-auto px-12 py-4.5 rounded-2xl text-[12px] font-black uppercase tracking-[0.1em] flex items-center justify-center gap-2 transition-all duration-300 backdrop-blur-md border-2 active:scale-[0.96] whitespace-nowrap shrink-0"
+                        style={{
+                            backgroundColor: b2Bg,
+                            color: b2Text,
+                            borderColor: p2Color,
+                            boxShadow: shadowStyle2
+                        }}
+                    >
+                        {cleanButtonText(data.btn2_text)}
+                    </a>
+                )}
+            </div>
         </div>
     );
 };
 const StatsRenderer = ({ data, isDark }) => {
-    const statCount = data.extra?.stat_count || "12,847";
-    const statLabel = data.extra?.stat_label || "happy gardeners across India";
-    const statRating = parseFloat(data.extra?.stat_rating || "4.8");
+    const statCount = data.extra?.stat_count;
+    const statLabel = data.extra?.stat_label;
+    const statRating = parseFloat(data.extra?.stat_rating || "0");
+
+    if (!statCount) return null;
 
     return (
         <div className="pt-12 mt-12 border-t border-white/10">
             <div className="flex flex-wrap items-center gap-6">
-                {/* Profile Bubbles */}
-                <div className="flex -space-x-3">
-                    {['P', 'R', 'A', 'S'].map((char, i) => (
-                        <div key={i} className={`w-11 h-11 rounded-full ${isDark ? 'bg-[#2d5a1b] border-2 border-[#1a3d0a]' : 'bg-[#f0f9ea] border-2 border-white'} flex items-center justify-center text-[13px] font-bold text-white shadow-lg`}>
-                            {char}
-                        </div>
-                    ))}
-                    <div className={`w-11 h-11 rounded-full ${isDark ? 'bg-[#4a8a2a] border-2 border-[#1a3d0a]' : 'bg-[#d4e8a0] border-2 border-white'} flex items-center justify-center text-[13px] font-bold text-white shadow-lg`}>
-                        +
+                {/* Profile Bubbles - Only render if images exist */}
+                {data.extra?.stat_images?.length > 0 && (
+                    <div className="flex -space-x-3">
+                        {data.extra.stat_images.map((img, i) => (
+                            <div key={i} className={`w-11 h-11 rounded-full ${isDark ? 'bg-[#2d5a1b] border-2 border-[#1a3d0a]' : 'bg-[#f0f9ea] border-2 border-white'} overflow-hidden shadow-lg`}>
+                                <img src={img} alt={`User ${i}`} className="w-full h-full object-cover" />
+                            </div>
+                        ))}
                     </div>
-                </div>
+                )}
 
                 {/* Stars & Text */}
                 <div className="space-y-1">
-                    <div className="flex gap-1 text-orange-400">
-                        {[1, 2, 3, 4, 5].map((s) => (
-                            <Star
-                                key={s}
-                                size={16}
-                                fill={s <= Math.round(statRating) ? "currentColor" : "none"}
-                                className={s <= Math.round(statRating) ? "" : "text-white/20"}
-                            />
-                        ))}
-                    </div>
+                    {statRating > 0 && (
+                        <div className="flex gap-1 text-orange-400">
+                            {[1, 2, 3, 4, 5].map((s) => (
+                                <Star
+                                    key={s}
+                                    size={16}
+                                    fill={s <= Math.round(statRating) ? "currentColor" : "none"}
+                                    className={s <= Math.round(statRating) ? "" : "text-white/20"}
+                                />
+                            ))}
+                        </div>
+                    )}
                     <p
                         className={`text-[15px] font-medium ${!data.extra?.text_color && (isDark ? 'text-white/80' : 'text-black/70')}`}
                         style={data.extra?.text_color ? { color: data.extra.text_color } : {}}
                     >
-                        <span className="font-bold">{statCount}</span> <span>{statLabel}</span>
+                        <span className="font-bold">{statCount}</span> {statLabel && <span>{statLabel}</span>}
                     </p>
                 </div>
             </div>
