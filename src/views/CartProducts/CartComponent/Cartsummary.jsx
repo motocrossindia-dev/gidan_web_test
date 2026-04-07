@@ -156,10 +156,10 @@ const CartSummary = ({
 
         <button
           onClick={handlePlaceOrder}
-          className="w-full mt-8 bg-green-700 text-white py-4 px-4 rounded-2xl font-black uppercase tracking-widest hover:bg-green-800 transition-all shadow-xl shadow-green-100 active:scale-95 flex items-center justify-between gap-3 group"
+          className="hidden sm:flex w-full mt-8 bg-green-700 text-white py-4 px-4 rounded-2xl font-black uppercase tracking-widest hover:bg-green-800 transition-all shadow-xl shadow-green-100 active:scale-95 items-center justify-between gap-3 group"
         >
           <Lock className="w-4 h-4 shrink-0" />
-          <span className="text-[11px] sm:text-[13px] leading-tight flex-1 text-center">
+          <span className="text-[11px] sm:text-[13px] leading-tight flex-1 text-center font-black">
             Proceed to Checkout
           </span>
           <ChevronRight className="w-5 h-5 shrink-0 group-hover:translate-x-1 transition-transform" />

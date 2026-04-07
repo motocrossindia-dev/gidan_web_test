@@ -499,9 +499,9 @@ const Cart = () => {
              <div className="max-w-md mx-auto">
                 <button
                   onClick={handlePlaceOrder}
-                  className="w-full bg-white text-[#375421] border-2 border-[#375421] py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
+                  className="w-full bg-[#375421] text-white py-4 rounded-2xl font-black uppercase tracking-widest shadow-2xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all border-2 border-white/10"
                 >
-                  Place Order
+                  Proceed to Checkout
                   <ChevronRight size={18} strokeWidth={3} />
                 </button>
              </div>
