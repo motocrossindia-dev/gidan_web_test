@@ -358,7 +358,7 @@ const SubscriptionForm = ({ data, config, isDark }) => {
     );
 };
 
-const StaticImageGrid = ({ data, isDark }) => (
+const StaticImageGrid = ({ data, isDark, isFirstSection = false }) => (
     <div className="grid grid-cols-2 gap-5 h-[400px] lg:h-[640px] animate-fade-in relative">
         <div
             className="relative bg-[#cee8a0] rounded-[60px] overflow-hidden row-span-2 shadow-2xl group border-8 border-white/10"
@@ -397,7 +397,7 @@ const StaticImageGrid = ({ data, isDark }) => (
     </div>
 );
 
-const BentoProductGrid = ({ products, isDark, data }) => {
+const BentoProductGrid = ({ products, isDark, data, isFirstSection = false }) => {
     const [activeIdx, setActiveIdx] = useState(0);
     const rotatorProducts = products.slice(2);
 
@@ -509,13 +509,13 @@ const UnifiedSection = ({ data, isFirstSection = false }) => {
                     {/* Visual Column: Bento Grid or Items or Static Images */}
                     <div className="w-full lg:w-[58%] animate-fade-in mt-12 lg:mt-0">
                         {hasProducts ? (
-                            <BentoProductGrid products={products} isDark={isDark} data={data} />
+                            <BentoProductGrid products={products} isDark={isDark} data={data} isFirstSection={isFirstSection} />
                         ) : hasItems ? (
                             <div className="animate-fade-in">
                                 <ItemsRenderer items={items} isDark={isDark} data={data} />
                             </div>
                         ) : (
-                            <StaticImageGrid data={data} isDark={isDark} />
+                            <StaticImageGrid data={data} isDark={isDark} isFirstSection={isFirstSection} />
                         )}
                     </div>
                 </div>
