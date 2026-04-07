@@ -8,7 +8,7 @@ export default function HeaderSpacer() {
   
   return (
     <div 
-      className="h-[60px] md:h-[130px] w-full transition-all duration-300" 
+      className={`${isCheckout ? 'h-[85px]' : 'h-[60px] md:h-[130px]'} w-full transition-all duration-300`} 
       aria-hidden="true" 
     />
   );

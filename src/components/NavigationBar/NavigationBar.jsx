@@ -111,6 +111,53 @@ const NavBar = () => {
 
   const displayUsername = isMounted ? username : "Guest";
 
+  // Check if we are on the checkout page to show the simplified 'Checkout Mode' header
+  const isCheckoutPage = pathname === '/checkout' || pathname === '/checkout/';
+
+  if (isCheckoutPage) {
+    return (
+      <div className="relative z-[1000] checkout-nav-wrapper">
+        <nav className="w-full px-4 md:px-12 py-3 md:py-5 bg-white font-sans border-b border-gray-100 shadow-sm">
+          <div className="max-w-[1440px] mx-auto grid grid-cols-3 items-center">
+            
+            {/* LEFT: Logo */}
+            <div className="flex items-center">
+              <Link href="/" className="flex-shrink-0">
+                <Image
+                  src={logo}
+                  alt="Gidan Logo"
+                  width={140}
+                  height={70}
+                  className="h-8 md:h-12 w-auto object-contain"
+                  priority
+                />
+              </Link>
+            </div>
+
+            {/* CENTER: Checkout Title */}
+            <div className="flex justify-center text-center">
+              <h1 className="text-sm md:text-xl font-sans font-bold text-[#173113] tracking-[0.05em] uppercase whitespace-nowrap">
+                Secure <span className="text-[#375421]">Checkout</span>
+              </h1>
+            </div>
+
+            {/* RIGHT: Back to Cart Action */}
+            <div className="flex justify-end">
+              <Link 
+                href="/cart" 
+                className="group flex items-center gap-1.5 md:gap-2 text-[10px] md:text-sm text-gray-500 hover:text-[#375421] transition-all font-bold uppercase tracking-wider"
+              >
+                <span className="hidden md:inline group-hover:-translate-x-1 transition-transform">←</span>
+                <span>Back<span className="hidden md:inline"> to Cart</span></span>
+              </Link>
+            </div>
+
+          </div>
+        </nav>
+      </div>
+    );
+  }
+
 
 
   return (
