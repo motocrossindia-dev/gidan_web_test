@@ -1688,31 +1688,31 @@ const CheckoutPage = () => {
         </div>
 
         {/* ── Breadcrumb (Hidden on Mobile, shown on Desktop) ── */}
-        <div className="hidden md:block bg-white border-b py-6 lg:py-8 sticky top-0 z-50 shadow-sm">
-          <div className="max-w-5xl mx-auto px-4 overflow-x-auto scrollbar-hide">
+        <div className="hidden md:block bg-white border-b py-4 lg:py-5 sticky top-0 z-50 shadow-sm">
+          <div className="max-w-3xl mx-auto px-4 overflow-x-auto scrollbar-hide">
             <div className="flex items-center justify-between min-w-[680px] lg:min-w-0 w-full relative px-2">
               {/* Step 1: Cart */}
-              <div className="flex items-center gap-3 relative z-10 group cursor-pointer shrink-0" onClick={() => router.push('/cart')}>
-                <div className="w-10 h-10 rounded-full border-2 border-[#e6edde] bg-[#f2f7ec] flex items-center justify-center transition-all group-hover:border-[#375421]">
-                  <Check size={16} className="text-[#375421]" strokeWidth={3} />
+              <div className="flex items-center gap-2 relative z-10 group cursor-pointer shrink-0" onClick={() => router.push('/cart')}>
+                <div className="w-8 h-8 rounded-full border-2 border-[#e6edde] bg-[#f2f7ec] flex items-center justify-center transition-all group-hover:border-[#375421]">
+                  <Check size={14} className="text-[#375421]" strokeWidth={3} />
                 </div>
-                <span className="text-[13px] font-bold text-gray-400 uppercase tracking-wide group-hover:text-gray-600 transition-colors">Shopping Cart</span>
+                <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wide group-hover:text-gray-600 transition-colors">Cart</span>
               </div>
 
               {/* Line 1 */}
               <div className="flex-1 h-[2px] mx-4 bg-[#e6edde] shrink-0" />
 
               {/* Step 2: Checkout */}
-              <div className="flex items-center gap-3 relative z-10 shrink-0">
-                <div className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all duration-500
+              <div className="flex items-center gap-2 relative z-10 shrink-0">
+                <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all duration-500
                   ${!showPaymentStep ? 'bg-[#375421] border-[#375421] shadow-lg shadow-green-100' : 'bg-[#f2f7ec] border-[#e6edde] opacity-80'}`}>
                   {showPaymentStep ? (
-                    <Check size={16} className="text-[#375421]" strokeWidth={3} />
+                    <Check size={14} className="text-[#375421]" strokeWidth={3} />
                   ) : (
-                    <span className="text-sm font-black text-white">2</span>
+                    <span className="text-xs font-black text-white">2</span>
                   )}
                 </div>
-                <span className={`text-[13px] font-bold uppercase tracking-wide transition-colors
+                <span className={`text-[11px] font-bold uppercase tracking-wide transition-colors
                   ${!showPaymentStep ? 'text-[#375421]' : 'text-gray-400'}`}>Checkout</span>
               </div>
 
@@ -1720,12 +1720,12 @@ const CheckoutPage = () => {
               <div className={`flex-1 h-[2px] mx-4 transition-colors duration-500 shrink-0 ${showPaymentStep ? 'bg-[#375421]' : 'bg-[#e6edde]'}`} />
 
               {/* Step 3: Payment */}
-              <div className="flex items-center gap-3 relative z-10 shrink-0">
-                <div className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all duration-500
+              <div className="flex items-center gap-2 relative z-10 shrink-0">
+                <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all duration-500
                   ${showPaymentStep ? 'bg-[#375421] border-[#375421] shadow-lg shadow-green-100' : 'bg-[#f2f7ec] border-[#e6edde]'}`}>
-                  <span className={`text-sm font-black transition-colors ${showPaymentStep ? 'text-white' : 'text-gray-400 opacity-60'}`}>3</span>
+                  <span className={`text-xs font-black transition-colors ${showPaymentStep ? 'text-white' : 'text-gray-400 opacity-60'}`}>3</span>
                 </div>
-                <span className={`text-[13px] font-bold uppercase tracking-wide transition-colors
+                <span className={`text-[11px] font-bold uppercase tracking-wide transition-colors
                   ${showPaymentStep ? 'text-[#375421]' : 'text-gray-400'}`}>Payment</span>
               </div>
 
@@ -1733,11 +1733,11 @@ const CheckoutPage = () => {
               <div className="flex-1 h-[2px] mx-4 bg-[#e6edde] shrink-0" />
 
               {/* Step 4: Confirmation */}
-              <div className="flex items-center gap-3 relative z-10 opacity-60 shrink-0">
-                <div className="w-10 h-10 rounded-full border-2 border-[#e6edde] bg-[#f2f7ec] flex items-center justify-center">
-                  <span className="text-sm font-black text-gray-400 opacity-60">4</span>
+              <div className="flex items-center gap-2 relative z-10 opacity-60 shrink-0">
+                <div className="w-8 h-8 rounded-full border-2 border-[#e6edde] bg-[#f2f7ec] flex items-center justify-center">
+                  <span className="text-xs font-black text-gray-400 opacity-60">4</span>
                 </div>
-                <span className="text-[13px] font-bold text-gray-400 uppercase tracking-wide">Confirmation</span>
+                <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wide">Done</span>
               </div>
             </div>
           </div>
