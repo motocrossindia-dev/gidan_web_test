@@ -5,10 +5,16 @@ import Link from "next/link";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { usePathname } from "next/navigation";
+
 const Header = () => {
+  const pathname = usePathname();
+  const isCheckoutPage = pathname === '/checkout' || pathname === '/checkout/';
   const [announcements, setAnnouncements] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isActive, setIsActive] = useState(false);
+
+  if (isCheckoutPage) return null;
 
   useEffect(() => {
     const fetchAnnouncements = async () => {
