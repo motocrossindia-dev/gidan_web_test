@@ -117,11 +117,11 @@ const NavBar = () => {
   if (isCheckoutPage) {
     return (
       <div className="relative z-[1000]">
-        <nav className="w-full px-3 md:px-12 py-2 md:py-4 bg-white font-sans border-none">
-          <div className="max-w-[1920px] mx-auto grid grid-cols-3 items-center">
+        <nav className="w-full px-3 md:px-12 py-2 md:py-4 bg-white font-sans border-b border-gray-100 shadow-sm">
+          <div className="max-w-[1920px] mx-auto flex items-center justify-between gap-4">
             
             {/* LEFT: Logo */}
-            <div className="flex items-center">
+            <div className="flex items-center flex-1">
               <Link href="/" className="flex-shrink-0">
                 <Image
                   src={logo}
@@ -135,20 +135,21 @@ const NavBar = () => {
             </div>
 
             {/* CENTER: Checkout Title */}
-            <div className="flex justify-center text-center">
-              <h1 className="text-[15px] md:text-xl font-sans font-semibold text-[#173113] tracking-[0.02em] uppercase whitespace-nowrap">
+            <div className="flex justify-center text-center flex-1">
+              <h1 className="text-[14px] md:text-lg font-sans font-semibold text-[#173113] tracking-[0.02em] uppercase whitespace-nowrap flex items-center gap-2">
+                <span className="hidden sm:inline-block">🔒</span>
                 Secure <span className="text-[#173113]">Checkout</span>
               </h1>
             </div>
 
-            {/* RIGHT: Back to Cart Action (Desktop Only) */}
-            <div className="hidden md:flex justify-end">
+            {/* RIGHT: Back to Cart Action */}
+            <div className="flex justify-end flex-1">
               <Link 
                 href="/cart" 
-                className="group flex items-center gap-1.5 md:gap-2 text-[12px] md:text-base text-slate-500 hover:text-[#173113] transition-all font-medium"
+                className="group flex items-center gap-1.5 md:gap-2 text-[10px] md:text-sm text-slate-500 hover:text-[#173113] transition-all font-medium uppercase tracking-wider"
               >
-                <span className="hidden md:inline group-hover:-translate-x-1 transition-transform">←</span>
-                <span>Back<span className="hidden md:inline"> to Cart</span></span>
+                <span className="group-hover:-translate-x-1 transition-transform">←</span>
+                <span>Back<span className="hidden sm:inline"> to Cart</span></span>
               </Link>
             </div>
 
