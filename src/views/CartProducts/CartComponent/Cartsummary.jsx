@@ -191,32 +191,47 @@ const CartSummary = ({
 
       {/* Complete Your Garden - Mobile Only (Below Summary) */}
       {completeYourGarden.length > 0 && (
-        <div className="lg:hidden p-6 bg-white rounded-2xl border border-gray-100 shadow-sm mt-6">
+        <div className="lg:hidden mt-8 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-orange-50 rounded-lg flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-orange-400" />
+                <Sparkles className="w-4 h-4 text-orange-400 fill-orange-400" />
               </div>
-              <h3 className="text-[13px] font-black text-gray-900 uppercase tracking-tight">Complete your garden</h3>
+              <div>
+                <h3 className="text-[14px] font-black text-gray-900 uppercase tracking-tight">Complete your garden</h3>
+                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Top Picks</p>
+              </div>
             </div>
           </div>
 
           <div className="space-y-4">
             {completeYourGarden.slice(0, 3).map((item) => (
-              <div key={item.id} className="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl border border-gray-100 group transition-all">
-                <div className="w-16 h-16 bg-white rounded-xl overflow-hidden shrink-0 border border-gray-100">
-                  <img src={item.image.startsWith('http') ? item.image : `https://backend.gidan.store${item.image}`} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-[11px] font-black text-gray-900 uppercase truncate mb-1">{item.name}</h4>
-                  <p className="text-sm font-black text-[#375421]">₹{Math.round(item.selling_price)}</p>
-                </div>
-                <button 
-                  onClick={() => handleAddToCart(item.main_prod_id || item.product_id || item.id)}
-                  className="w-10 h-10 bg-[#375421] text-white rounded-xl flex items-center justify-center shadow-lg active:scale-90 transition-transform"
+              <div key={item.id} className="group bg-gray-50/30 rounded-[2rem] p-4 border border-transparent hover:border-green-100 transition-all duration-500">
+                <div 
+                  onClick={() => router.push(`/product/${item.slug || item.id}`)}
+                  className="aspect-square bg-white rounded-[1.5rem] overflow-hidden mb-4 relative cursor-pointer border border-gray-100"
                 >
-                  <Tag className="w-4 h-4" />
-                </button>
+                  <img 
+                    src={item.image.startsWith('http') ? item.image : `https://backend.gidan.store${item.image}`} 
+                    alt={item.name} 
+                    className="w-full h-full object-cover transition-transform duration-700"
+                  />
+                </div>
+                
+                <div className="space-y-1 mb-4 px-1">
+                  <h4 className="text-[12px] font-black text-gray-900 uppercase truncate leading-tight group-hover:text-[#375421] transition-colors">{item.name}</h4>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Professional Selection</p>
+                </div>
+
+                <div className="flex items-center justify-between px-1">
+                  <span className="text-lg font-black text-gray-900">₹{Math.round(item.selling_price)}</span>
+                  <button 
+                    onClick={() => handleAddToCart(item.main_prod_id || item.product_id || item.id)}
+                    className="w-10 h-10 bg-white border border-gray-100 text-[#375421] rounded-xl flex items-center justify-center hover:bg-[#375421] hover:text-white transition-all shadow-sm active:scale-95 group/btn"
+                  >
+                    <Plus size={18} strokeWidth={3} className="group-hover/btn:rotate-90 transition-transform duration-300" />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
