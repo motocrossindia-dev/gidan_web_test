@@ -1289,9 +1289,9 @@ const CheckoutPage = () => {
                 sessionStorage.setItem('recent_payment_success', 'true');
                 sessionStorage.setItem('recent_order_id', String(id));
 
-                // Wait for the success animation and sound before redirecting
+                // Use router.push for instant client-side transition (prerendered feel)
                 setTimeout(() => {
-                  window.location.href = `/successpage?order_id=${id}`;
+                  router.push(`/successpage?order_id=${id}`);
                 }, 2000);
               } else {
                 // If it wasn't a standard success but handled at Razropay, 
@@ -1300,7 +1300,7 @@ const CheckoutPage = () => {
                 setVerifySuccess(true);
                 // Removed success sound as requested
                 setTimeout(() => {
-                  window.location.href = `/successpage?order_id=${id}`;
+                  router.push(`/successpage?order_id=${id}`);
                 }, 2000);
               }
             } catch (err) {
@@ -1314,7 +1314,7 @@ const CheckoutPage = () => {
               setVerifySuccess(true);
               // Removed success sound as requested
               setTimeout(() => {
-                window.location.href = `/successpage?order_id=${id}`;
+                router.push(`/successpage?order_id=${id}`);
               }, 2000);
             }
           },

@@ -195,27 +195,7 @@ const SuccesspageContent = () => {
     }
   };
 
-  if (loading && !orderDetails) {
-    return (
-      <div className="min-h-screen bg-[#fafafa] flex flex-col items-center justify-center p-8 text-center animate-in fade-in duration-700">
-        <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-8 shadow-sm animate-pulse border border-gray-100">
-           <Loader2 className="w-10 h-10 text-[#375421] animate-spin" />
-        </div>
-        <div className="space-y-4 max-w-sm w-full">
-           <div className="h-8 bg-gray-200/50 rounded-2xl w-3/4 mx-auto animate-pulse" />
-           <p className="text-gray-400 font-bold text-[10px] uppercase tracking-widest leading-relaxed animate-pulse">
-             Finalizing your plant delivery details...
-           </p>
-        </div>
-        
-        {/* Skeleton content area below to maintain layout height */}
-        <div className="mt-16 w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 opacity-20 pointer-events-none">
-           <div className="h-64 bg-gray-200/30 rounded-[2rem]" />
-           <div className="h-64 bg-gray-200/30 rounded-[2rem]" />
-        </div>
-      </div>
-    );
-  }
+  // Removed: Full-page loader is gone to allow 'instant' success UI with skeletons below
 
   const { order, order_items = [], delivery_address = {}, care_guides = [] } = orderDetails || {};
   const currentStatusDisplay = orderDetails?.current_status_display || "Processing";
